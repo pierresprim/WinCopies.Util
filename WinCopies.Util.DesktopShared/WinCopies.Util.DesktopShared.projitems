@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>02122768-dc6a-467c-a5f5-ae5bf2669308</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>WinCopies.Util.DesktopShared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)BackgroundWorker.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Collections\INotifyCollectionChanging.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Collections\ObservableCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Collections\ObservableTreeNode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Collections\ReadOnlyObservableCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Collections\ReadOnlyObservableTreeNode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\ApplicationCommands.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\CommandAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\Commands.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\DialogCommands.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\FileSystemCommands.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\KeyCommandHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataTemplateSelectors.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\BooleanToVisibilityConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\CheckableObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\CoalesceConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\ConverterArray.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\ConverterBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\EnumToBooleanConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\EnumToReversedBooleanConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\EnumToStringArrayConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\IsNullConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\MenuItem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\MultiConverterBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\MultiValueConversionAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\NamedObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\ObjectToTypeConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\PercentConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\PropertyChangedEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\ReverseBooleanConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\ReversedBooleanToVisibilityConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\ValueChangedEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\ValueObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\ViewModels.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\VisibilityToBooleanConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\VisibilityToReversedBooleanConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MergedStylesMarkupExtension.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Resources.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RoutedEventArgs.cs" />
+  </ItemGroup>
+</Project>
