@@ -1,6 +1,9 @@
 <Project Sdk="MSBuild.Sdk.Extras/2.0.54">
 
   <PropertyGroup>
+    <PackageId>WinCopies.Util.Desktop</PackageId>
+    <AssemblyName>WinCopies.Util.Desktop</AssemblyName>
+    <Title>WinCopies.Util.Desktop</Title>
     <TargetFrameworks>netcoreapp3.0;net472</TargetFrameworks>
     <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
     <UseWPF>true</UseWPF>
@@ -10,6 +13,7 @@
     <Copyright>Copyright © 2020 Pierre Sprimont</Copyright>
     <AssemblyOriginatorKeyFile>WinCopies.Util.Desktop.snk</AssemblyOriginatorKeyFile>
     <DocumentationFile>WinCopies.Util.Desktop.xml</DocumentationFile>
+    <PackageTags>WinCopies</PackageTags>
   </PropertyGroup>
 
   <Import Project="..\WinCopies.Util.Desktop.Shared\WinCopies.Util.Desktop.Shared.projitems" Label="Shared" />

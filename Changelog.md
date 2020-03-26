@@ -12,7 +12,8 @@ Updates
 03/26/2020 2.2
 ==============
 
-Available for 32 bits and 64 bits Windows platforms.
+- Available for 32 bits and 64 bits Windows platforms.
+- Some types have moved to the WinCopies.Util.Desktop package.
 
 WinCopies.Util (2.2)
 --------------------

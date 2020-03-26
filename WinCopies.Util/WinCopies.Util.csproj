@@ -1,6 +1,9 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras/2.0.54">
 
   <PropertyGroup>
+    <PackageId>WinCopies.Util</PackageId>
+    <AssemblyName>WinCopies.Util</AssemblyName>
+    <Title>WinCopies.Util</Title>
     <TargetFrameworks>netcoreapp3.0;net472;netstandard2.1</TargetFrameworks>
     <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
     <DocumentationFile>WinCopies.Util.xml</DocumentationFile>
@@ -9,6 +12,7 @@
     <VersionSuffix>preview1</VersionSuffix>
     <Description>WinCopies framework utilities</Description>
     <Copyright>Copyright © 2020 Pierre Sprimont</Copyright>
+    <PackageTags>WinCopies</PackageTags>
   </PropertyGroup>
 
   <Import Project="..\WinCopies.Util.Shared\WinCopies.Util.Shared.projitems" Label="Shared" />

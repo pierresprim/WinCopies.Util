@@ -4,7 +4,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Product>WinCopies framework ($(TargetFramework) $(RuntimeIdentifier))</Product>
+    <Product>WinCopies framework</Product>
     <Authors>Pierre Sprimont</Authors>
     <RepositoryUrl>https://github.com/pierresprim/WinCopies.Util.git</RepositoryUrl>
     <PackageProjectUrl>https://wincopies.com/</PackageProjectUrl>
