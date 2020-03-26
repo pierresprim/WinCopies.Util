@@ -9,14 +9,16 @@ CHANGELOG
 Updates
 -------
 
-???? 2.2
-========
+03/26/2020 2.2
+==============
+
+Available for 32 bits and 64 bits Windows platforms.
 
 WinCopies.Util (2.2)
 --------------------
 
 - Existing items behavior updates:
-	- The interfaces and enumerators of the WinCopies.Collections namespace for uint-indexed collections have been replaced by the new interfaces for uint-indexed collections in the WinCopies.Collections.DotNetFix namespace and are now obsoletes.
+	- The interfaces and enumerators of the WinCopies.Collections namespace for uint-indexed collections have been replaced by the new interfaces for uint-indexed collections in the WinCopies.Collections.DotNetFix namespace and are now obsolete.
 
 - Addings:
 	- Interfaces:

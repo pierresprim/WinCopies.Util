@@ -1,41 +1,49 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
-VisualStudioVersion = 16.0.29911.84
+VisualStudioVersion = 16.0.29920.165
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinCopies.Util", "WinCopies.Util\WinCopies.Util.csproj", "{4AB4D347-D930-4E74-9E5F-539C55212A02}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinCopies.Util", "WinCopies.Util\WinCopies.Util.csproj", "{386A44D6-D6D7-4868-9E96-D1B7B4CE068A}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "WinCopies.UtilShared", "WinCopies.UtilShared\WinCopies.UtilShared.shproj", "{E2160F13-964F-409C-9A4F-1FDBBDA1B76C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BC999358-BABA-47D2-B239-C0CEC4D0B44F}"
+	ProjectSection(SolutionItems) = preProject
+		Changelog.md = Changelog.md
+		Directory.Build.props = Directory.Build.props
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinCopies.Util.Desktop", "WinCopies.Util.Desktop\WinCopies.Util.Desktop.csproj", "{1F4B3FF7-8206-48BC-A3D0-A6A12E752E97}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinCopies.Util.Desktop", "WinCopies.Util.Desktop\WinCopies.Util.Desktop.csproj", "{10A0855F-FBC1-4499-AA2E-2B19D8B29E95}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "WinCopies.Util.DesktopShared", "WinCopies.Util.DesktopShared\WinCopies.Util.DesktopShared.shproj", "{02122768-DC6A-467C-A5F5-AE5BF2669308}"
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "WinCopies.Util.Shared", "WinCopies.Util.Shared\WinCopies.Util.Shared.shproj", "{E2160F13-964F-409C-9A4F-1FDBBDA1B76C}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "WinCopies.Util.Desktop.Shared", "WinCopies.Util.Desktop.Shared\WinCopies.Util.Desktop.Shared.shproj", "{02122768-DC6A-467C-A5F5-AE5BF2669308}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		WinCopies.Util.DesktopShared\WinCopies.Util.DesktopShared.projitems*{02122768-dc6a-467c-a5f5-ae5bf2669308}*SharedItemsImports = 13
-		WinCopies.Util.DesktopShared\WinCopies.Util.DesktopShared.projitems*{1f4b3ff7-8206-48bc-a3d0-a6a12e752e97}*SharedItemsImports = 5
-		WinCopies.UtilShared\WinCopies.UtilShared.projitems*{4ab4d347-d930-4e74-9e5f-539c55212a02}*SharedItemsImports = 5
-		WinCopies.UtilShared\WinCopies.UtilShared.projitems*{e2160f13-964f-409c-9a4f-1fdbbda1b76c}*SharedItemsImports = 13
+		WinCopies.Util.Desktop.Shared\WinCopies.Util.Desktop.Shared.projitems*{02122768-dc6a-467c-a5f5-ae5bf2669308}*SharedItemsImports = 13
+		WinCopies.Util.Desktop.Shared\WinCopies.Util.Desktop.Shared.projitems*{10a0855f-fbc1-4499-aa2e-2b19d8b29e95}*SharedItemsImports = 5
+		WinCopies.Util.Shared\WinCopies.Util.Shared.projitems*{386a44d6-d6d7-4868-9e96-d1b7b4ce068a}*SharedItemsImports = 5
+		WinCopies.Util.Shared\WinCopies.Util.Shared.projitems*{e2160f13-964f-409c-9a4f-1fdbbda1b76c}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4AB4D347-D930-4E74-9E5F-539C55212A02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4AB4D347-D930-4E74-9E5F-539C55212A02}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4AB4D347-D930-4E74-9E5F-539C55212A02}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4AB4D347-D930-4E74-9E5F-539C55212A02}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1F4B3FF7-8206-48BC-A3D0-A6A12E752E97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1F4B3FF7-8206-48BC-A3D0-A6A12E752E97}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1F4B3FF7-8206-48BC-A3D0-A6A12E752E97}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1F4B3FF7-8206-48BC-A3D0-A6A12E752E97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{386A44D6-D6D7-4868-9E96-D1B7B4CE068A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{386A44D6-D6D7-4868-9E96-D1B7B4CE068A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{386A44D6-D6D7-4868-9E96-D1B7B4CE068A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{386A44D6-D6D7-4868-9E96-D1B7B4CE068A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10A0855F-FBC1-4499-AA2E-2B19D8B29E95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10A0855F-FBC1-4499-AA2E-2B19D8B29E95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10A0855F-FBC1-4499-AA2E-2B19D8B29E95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10A0855F-FBC1-4499-AA2E-2B19D8B29E95}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {103CED39-E5AD-48F3-AA07-6A0713AE64F7}
+		SolutionGuid = {AC8E2D74-F33E-4845-A513-58D1E7556181}
 	EndGlobalSection
 EndGlobal

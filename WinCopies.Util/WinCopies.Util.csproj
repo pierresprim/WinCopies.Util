@@ -1,56 +1,17 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="MSBuild.Sdk.Extras/2.0.54">
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.0;net472;netstandard2.1</TargetFrameworks>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
     <DocumentationFile>WinCopies.Util.xml</DocumentationFile>
-    <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>WinCopies.Util.snk</AssemblyOriginatorKeyFile>
-    <Version>2.2.0</Version>
-    <Authors>Pierre Sprimont</Authors>
-    <Product>WinCopies framework</Product>
+    <VersionPrefix>2.2.0</VersionPrefix>
+    <VersionSuffix>preview1</VersionSuffix>
     <Description>WinCopies framework utilities</Description>
     <Copyright>Copyright © 2020 Pierre Sprimont</Copyright>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <RepositoryUrl>https://github.com/pierresprim/WinCopies.Util.git</RepositoryUrl>
-    <PackageProjectUrl>https://wincopies.com/</PackageProjectUrl>
-    <RepositoryType>Git</RepositoryType>
-    <PackageReleaseNotes>See https://github.com/pierresprim/WinCopies.Util/blob/master/Changelog.md</PackageReleaseNotes>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp3.0|AnyCPU'">
-    <DefineConstants>TRACE;NETCORE</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netcoreapp3.0|AnyCPU'">
-    <DefineConstants>NETCORE</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net472|AnyCPU'">
-    <DefineConstants>TRACE;NETFRAMEWORK</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net472|AnyCPU'">
-    <DefineConstants>NETFRAMEWORK</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.1|AnyCPU'">
-    <DefineConstants>TRACE;NETCORE</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.1|AnyCPU'">
-    <DefineConstants>NETCORE</DefineConstants>
-  </PropertyGroup>
-
-  <Import Project="..\WinCopies.UtilShared\WinCopies.UtilShared.projitems" Label="Shared" />
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
+  <Import Project="..\WinCopies.Util.Shared\WinCopies.Util.Shared.projitems" Label="Shared" />
 
   <ItemGroup>
     <Compile Update="Resources\ExceptionMessages.Designer.cs">
@@ -65,13 +26,6 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
   </ItemGroup>
 
 </Project>

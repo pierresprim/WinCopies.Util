@@ -1,23 +1,18 @@
-<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+<Project Sdk="MSBuild.Sdk.Extras/2.0.54">
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.0;net472</TargetFrameworks>
+    <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
     <UseWPF>true</UseWPF>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Version>2.2.0</Version>
-    <Authors>Pierre Sprimont</Authors>
-    <Product>WinCopies framework</Product>
+    <VersionPrefix>2.2.0</VersionPrefix>
+    <VersionSuffix>preview1</VersionSuffix>
     <Description>WinCopies framework desktop utilities</Description>
     <Copyright>Copyright © 2020 Pierre Sprimont</Copyright>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageProjectUrl>https://wincopies.com/</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/pierresprim/WinCopies.Util.git</RepositoryUrl>
-    <RepositoryType>Git</RepositoryType>
-    <PackageReleaseNotes>See https://github.com/pierresprim/WinCopies.Util/blob/master/Changelog.md</PackageReleaseNotes>
+    <AssemblyOriginatorKeyFile>WinCopies.Util.Desktop.snk</AssemblyOriginatorKeyFile>
+    <DocumentationFile>WinCopies.Util.Desktop.xml</DocumentationFile>
   </PropertyGroup>
 
-  <Import Project="..\WinCopies.Util.DesktopShared\WinCopies.Util.DesktopShared.projitems" Label="Shared" />
+  <Import Project="..\WinCopies.Util.Desktop.Shared\WinCopies.Util.Desktop.Shared.projitems" Label="Shared" />
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0">
