@@ -1,11 +1,10 @@
-<Project Sdk="MSBuild.Sdk.Extras/2.0.54">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <PackageId>WinCopies.Util.Desktop</PackageId>
     <AssemblyName>WinCopies.Util.Desktop</AssemblyName>
     <Title>WinCopies.Util.Desktop</Title>
     <TargetFrameworks>netcoreapp3.0;net472</TargetFrameworks>
-    <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
     <UseWPF>true</UseWPF>
     <VersionPrefix>2.2.0</VersionPrefix>
     <VersionSuffix>preview1</VersionSuffix>

@@ -9,10 +9,15 @@ CHANGELOG
 Updates
 -------
 
-03/26/2020 2.2
-==============
+03/27/2020 2.2.0-preview2
+=========================
 
-- Available for 32 bits and 64 bits Windows platforms.
+- Available for Any CPU configuration.
+
+03/26/2020 2.2.0-preview1
+=========================
+
+- Available for 32- and 64-bit Windows platforms.
 - Some types have moved to the WinCopies.Util.Desktop package.
 
 WinCopies.Util (2.2)

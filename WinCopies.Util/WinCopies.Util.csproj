@@ -1,11 +1,10 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras/2.0.54">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <PackageId>WinCopies.Util</PackageId>
     <AssemblyName>WinCopies.Util</AssemblyName>
     <Title>WinCopies.Util</Title>
     <TargetFrameworks>netcoreapp3.0;net472;netstandard2.1</TargetFrameworks>
-    <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
     <DocumentationFile>WinCopies.Util.xml</DocumentationFile>
     <AssemblyOriginatorKeyFile>WinCopies.Util.snk</AssemblyOriginatorKeyFile>
     <VersionPrefix>2.2.0</VersionPrefix>
