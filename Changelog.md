@@ -9,6 +9,11 @@ CHANGELOG
 Updates
 -------
 
+??/??/???? ????
+===============
+
+- Add build property to build symbol packages.
+
 03/27/2020 2.2.0-preview2
 =========================
 
