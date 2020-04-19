@@ -27,8 +27,6 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Windows;
-using System.Windows.Input;
 using WinCopies.Collections;
 using IList = System.Collections.IList;
 using static WinCopies.Util.Util;
@@ -3325,7 +3323,7 @@ namespace WinCopies.Util
             // If not, we have to check if the given value is a power of 2.
 
             double valueDouble = (double)Convert.ChangeType(value, TypeCode.Double);
-
+            
             // If yes and if we reached this point, that means that the value is a power of 2 -- and therefore represents a flag in the enum --, but is not defined in the enum.
 
             double log = Math.Log(valueDouble, 2);
@@ -3852,6 +3850,70 @@ namespace WinCopies.Util
             obj.ThrowIfDisposedInternal(objectName);
 
             obj.ThrowIfDisposingInternal(objectName);
+
+        }
+
+        public static int GetCapacity<T>(this ArrayBuilder<T>[] arrayBuilders) => (arrayBuilders ?? throw GetArgumentNullException(nameof(arrayBuilders))).GetCapacityInternal();
+
+        private static int GetCapacityInternal<T>(this ArrayBuilder<T>[] arrayBuilders)
+
+        {
+
+            int capacity = 0;
+
+            foreach (ArrayBuilder<T> arrayBuilder in arrayBuilders)
+
+                capacity += arrayBuilder.Count;
+
+            return capacity;
+
+        }
+
+        public static T[] ToArray<T>(this ArrayBuilder<T>[] arrayBuilders, in bool remove = false)
+
+        {
+
+            ThrowIfNull(arrayBuilders, nameof(arrayBuilders));
+
+            var items = new T[arrayBuilders.GetCapacityInternal()];
+
+            foreach (ArrayBuilder<T> arrayBuilder in arrayBuilders)
+
+                arrayBuilder.ToArray(items, remove);
+
+            return items;
+
+        }
+
+        public static ArrayList ToArrayList<T>(this ArrayBuilder<T>[] arrayBuilders, in bool remove = false)
+
+        {
+
+            ThrowIfNull(arrayBuilders, nameof(arrayBuilders));
+
+            var items = new ArrayList(arrayBuilders.GetCapacityInternal());
+
+            foreach (ArrayBuilder<T> arrayBuilder in arrayBuilders)
+
+                arrayBuilder.ToArrayList(items, remove);
+
+            return items;
+
+        }
+
+        public static List<T> ToList<T>(this ArrayBuilder<T>[] arrayBuilders, in bool remove = false)
+
+        {
+
+            ThrowIfNull(arrayBuilders, nameof(arrayBuilders));
+
+            var items = new List<T>(arrayBuilders.GetCapacityInternal());
+
+            foreach (ArrayBuilder<T> arrayBuilder in arrayBuilders)
+
+                arrayBuilder.ToList(items, remove);
+
+            return items;
 
         }
 

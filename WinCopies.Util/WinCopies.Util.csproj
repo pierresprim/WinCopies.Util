@@ -8,7 +8,7 @@
     <DocumentationFile>WinCopies.Util.xml</DocumentationFile>
     <AssemblyOriginatorKeyFile>WinCopies.Util.snk</AssemblyOriginatorKeyFile>
     <VersionPrefix>2.2.0</VersionPrefix>
-    <VersionSuffix>preview2</VersionSuffix>
+    <VersionSuffix>preview3</VersionSuffix>
     <Description>WinCopies framework utilities</Description>
     <Copyright>Copyright © 2020 Pierre Sprimont</Copyright>
     <PackageTags>WinCopies</PackageTags>

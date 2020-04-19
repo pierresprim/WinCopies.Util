@@ -17,14 +17,14 @@ Description
 
 Some utilities to extend the .NET framework capabilities, such as:
 
-- Some commands for WPF;
-- Some data converters WPF;
-- Some basic objects and interfaces to work easier with WPF data binding;
+- Commands for WPF;
+- Data converters for WPF;
+- Basic objects and interfaces to work easier with WPF data binding;
 - (Routed)EventArgs's;
 - An advanced background worker;
 - (ReadOnly)(Observable)Collections;
-- Some extension methods, mainly for array, enumerables and collections and for easier INotifyPropertyChanged and Enum gesture;
-- Some utility static methods, such as advanced 'if' functions;
+- Extension methods, mainly for arrays, enumerables and collections and for easier INotifyPropertyChanged and Enum handling;
+- Utility static methods, such as advanced 'if' functions;
 - Base view model classes
 - 'ToString' extension method for the 'IEnumerable' type to display the content of a given IEnumerable
 

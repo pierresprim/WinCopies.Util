@@ -15,9 +15,12 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
+using System;
+
 namespace WinCopies.Util
 {
 
+    [Obsolete("Use the TaskCompletedEventHandler delegate instead.")]
     public delegate void SucceededEventHandler(object sender, SucceededEventArgs e);
 
     public class SucceededEventArgs
@@ -26,6 +29,18 @@ namespace WinCopies.Util
         public bool Succeeded { get; } = false;
 
         public SucceededEventArgs(bool succeeded) => Succeeded = succeeded;
+
+    }
+
+    public delegate void TaskCompletedEventHandler(object sender, TaskCompletedEventArgs e);
+
+    [Obsolete("Use the TaskCompletedEventArgs class instead.")]
+    public class TaskCompletedEventArgs
+    {
+
+        public bool Succeeded { get; } = false;
+
+        public TaskCompletedEventArgs(bool succeeded) => Succeeded = succeeded;
 
     }
 

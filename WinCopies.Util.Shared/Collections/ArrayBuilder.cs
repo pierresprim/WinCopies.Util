@@ -1,4 +1,4 @@
-﻿/* Copyright © Pierre Sprimont, 2019
+﻿/* Copyright © Pierre Sprimont, 2020
  *
  * This file is part of the WinCopies Framework.
  *
@@ -28,242 +28,8 @@ using WinCopies.Collections.DotNetFix;
 using WinCopies.Util;
 using WinCopies.Util.Resources;
 
-namespace WinCopies.Collections.DotNetFix
-{
-
-    public interface ILinkedList<T> : ICollection<T>, IEnumerable<T>, ICollection, IReadOnlyCollection<T>, ISerializable, IDeserializationCallback
-
-    {
-
-        LinkedListNode<T> Last { get; }
-
-        LinkedListNode<T> First { get; }
-
-        new int Count { get; }
-
-        LinkedListNode<T> AddAfter(LinkedListNode<T> node, T value);
-
-        void AddAfter(LinkedListNode<T> node, LinkedListNode<T> newNode);
-
-        LinkedListNode<T> AddBefore(LinkedListNode<T> node, T value);
-
-        void AddBefore(LinkedListNode<T> node, LinkedListNode<T> newNode);
-
-        LinkedListNode<T> AddFirst(T value);
-
-        void AddFirst(LinkedListNode<T> node);
-
-        LinkedListNode<T> AddLast(T value);
-
-        void AddLast(LinkedListNode<T> node);
-
-        LinkedListNode<T> Find(T value);
-
-        LinkedListNode<T> FindLast(T value);
-
-        new System.Collections.Generic.LinkedList<T>.Enumerator GetEnumerator();
-
-        void Remove(LinkedListNode<T> node);
-
-        void RemoveFirst();
-
-        void RemoveLast();
-
-    }
-
-    [DebuggerDisplay("Count = {Count}")]
-    public class LinkedList<T> : System.Collections.Generic.LinkedList<T>, ILinkedList<T>
-
-    {
-
-
-
-    }
-
-}
-
 namespace WinCopies.Collections
 {
-
-    [DebuggerDisplay("Count = {Count}")]
-    public class LinkedList<T> : ILinkedList<T>
-    {
-
-        protected System.Collections.Generic.LinkedList<T> InnerList { get; }
-
-        public LinkedList(System.Collections.Generic.LinkedList<T> list) => InnerList = list;
-
-        public LinkedListNode<T> Last => InnerList.Last;
-
-        public LinkedListNode<T> First => InnerList.First;
-
-        public int Count => InnerList.Count;
-
-        bool ICollection<T>.IsReadOnly => false;
-
-        object ICollection.SyncRoot => ((ICollection)InnerList).SyncRoot;
-
-        bool ICollection.IsSynchronized => ((ICollection)InnerList).IsSynchronized;
-
-        void ICollection<T>.Add(T item) => ((ICollection<T>)InnerList).Add(item);
-
-        public LinkedListNode<T> AddAfter(LinkedListNode<T> node, T value) => InnerList.AddAfter(node, value);
-
-        public void AddAfter(LinkedListNode<T> node, LinkedListNode<T> newNode) => InnerList.AddAfter(node, newNode);
-
-        public LinkedListNode<T> AddBefore(LinkedListNode<T> node, T value) => InnerList.AddBefore(node, value);
-
-        public void AddBefore(LinkedListNode<T> node, LinkedListNode<T> newNode) => InnerList.AddBefore(node, newNode);
-
-        public LinkedListNode<T> AddFirst(T value) => InnerList.AddFirst(value);
-
-        public void AddFirst(LinkedListNode<T> node) => InnerList.AddFirst(node);
-
-        public LinkedListNode<T> AddLast(T value) => InnerList.AddLast(value);
-
-        public void AddLast(LinkedListNode<T> node) => InnerList.AddLast(node);
-
-        public void Clear() => InnerList.Clear();
-
-        public bool Contains(T value) => InnerList.Contains(value);
-
-        public void CopyTo(T[] array, int index) => InnerList.CopyTo(array, index);
-
-        public LinkedListNode<T> Find(T value) => InnerList.Find(value);
-
-        public LinkedListNode<T> FindLast(T value) => InnerList.FindLast(value);
-
-        public System.Collections.Generic.LinkedList<T>.Enumerator GetEnumerator() => InnerList.GetEnumerator();
-
-        IEnumerator<T> IEnumerable<T>.GetEnumerator() => ((IEnumerable<T>)InnerList).GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerList).GetEnumerator();
-
-        public virtual void GetObjectData(SerializationInfo info, StreamingContext context) => InnerList.GetObjectData(info, context);
-
-        public virtual void OnDeserialization(object sender) => InnerList.OnDeserialization(sender);
-
-        public bool Remove(T value) => InnerList.Remove(value);
-
-        public void Remove(LinkedListNode<T> node) => InnerList.Remove(node);
-
-        public void RemoveFirst() => InnerList.RemoveFirst();
-
-        public void RemoveLast() => InnerList.RemoveLast();
-
-        public void CopyTo(Array array, int index) => ((ICollection)InnerList).CopyTo(array, index);
-
-    }
-
-    [DebuggerDisplay("Count = {Count}")]
-    public class ReadOnlyLinkedList<T> : ILinkedList<T>
-
-    {
-
-        protected ILinkedList<T> InnerList { get; }
-
-        public LinkedListNode<T> Last => InnerList.Last;
-
-        public LinkedListNode<T> First => InnerList.First;
-
-        public int Count => InnerList.Count;
-
-        bool ICollection<T>.IsReadOnly => true;
-
-        object ICollection.SyncRoot => ((ICollection)InnerList).SyncRoot;
-
-        bool ICollection.IsSynchronized => ((ICollection)InnerList).IsSynchronized;
-
-        public bool Contains(T value) => InnerList.Contains(value);
-
-        public void CopyTo(T[] array, int index) => InnerList.CopyTo(array, index);
-
-        public LinkedListNode<T> Find(T value) => InnerList.Find(value);
-
-        public LinkedListNode<T> FindLast(T value) => InnerList.FindLast(value);
-
-        public System.Collections.Generic.LinkedList<T>.Enumerator GetEnumerator() => InnerList.GetEnumerator();
-
-        public virtual void GetObjectData(SerializationInfo info, StreamingContext context) => InnerList.GetObjectData(info, context);
-
-        public virtual void OnDeserialization(object sender) => InnerList.OnDeserialization(sender);
-
-        void ICollection<T>.Add(T item) => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
-
-        void ICollection<T>.Clear() => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
-
-        bool ICollection<T>.Contains(T item) => InnerList.Contains(item);
-
-        void ICollection<T>.CopyTo(T[] array, int arrayIndex) => InnerList.CopyTo(array, arrayIndex);
-
-        bool ICollection<T>.Remove(T item) => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
-
-        IEnumerator<T> IEnumerable<T>.GetEnumerator() => InnerList.GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => InnerList.GetEnumerator();
-
-        void ICollection.CopyTo(Array array, int index) => ((ICollection)InnerList).CopyTo(array, index);
-
-        public LinkedListNode<T> AddAfter(LinkedListNode<T> node, T value) => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
-
-        public void AddAfter(LinkedListNode<T> node, LinkedListNode<T> newNode) => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
-
-        public LinkedListNode<T> AddBefore(LinkedListNode<T> node, T value) => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
-
-        public void AddBefore(LinkedListNode<T> node, LinkedListNode<T> newNode) => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
-
-        public LinkedListNode<T> AddFirst(T value) => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
-
-        public void AddFirst(LinkedListNode<T> node) => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
-
-        public LinkedListNode<T> AddLast(T value) => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
-
-        public void AddLast(LinkedListNode<T> node) => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
-
-        public void Remove(LinkedListNode<T> node) => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
-
-        public void RemoveFirst() => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
-
-        public void RemoveLast() => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
-
-    }
-
-    public class EnumeratorCollection : Collection<IEnumerator>
-    {
-
-        public int EnumerableVersion { get; private set; }
-
-        public EnumeratorCollection() : base() { }
-
-        public EnumeratorCollection(IList<IEnumerator> list) : base(list) { }
-
-        protected override void ClearItems()
-        {
-            base.ClearItems();
-
-            EnumerableVersion = 0;
-        }
-
-        protected override void RemoveItem(int index)
-        {
-            RemoveItem(index);
-
-            if (Count == 0)
-
-                EnumerableVersion = 0;
-        }
-
-        public void OnCollectionUpdated()
-
-        {
-
-            if (Count > 0)
-
-                EnumerableVersion++ ; 
-
-        }
-
-    }
 
     /// <summary>
     /// Builds arrays and lists by sizing them only when required. This class can be used to initialize your array or list before adding or removing values to it.
@@ -294,7 +60,7 @@ namespace WinCopies.Collections
         /// Initializes a new instance of the <see cref="ArrayBuilder{T}"/> class with a given <see cref="IEnumerable{T}"/>.
         /// </summary>
         /// <param name="enumerable"></param>
-        public ArrayBuilder(IEnumerable<T> enumerable)
+        public ArrayBuilder(in IEnumerable<T> enumerable)
         {
             Enumerators = new EnumeratorCollection();
 
@@ -305,7 +71,7 @@ namespace WinCopies.Collections
         /// Initializes a new instance of the <see cref="ArrayBuilder{T}"/> class using a custom <see cref="System.Collections.Generic.LinkedList{T}"/> to build the arrays and collections.
         /// </summary>
         /// <param name="innerList"></param>
-        protected ArrayBuilder(System.Collections.Generic.LinkedList<T> innerList)
+        protected ArrayBuilder(in System.Collections.Generic.LinkedList<T> innerList)
         {
             Enumerators = new EnumeratorCollection();
 
@@ -379,7 +145,7 @@ namespace WinCopies.Collections
         /// <exception cref="InvalidOperationException">node is not in the current <see cref="ArrayBuilder{T}"/>.</exception>
         public LinkedListNode<T> AddBefore(LinkedListNode<T> node, T value)
         {
-            var result = InnerList.AddBefore(node, value);
+            LinkedListNode<T> result = InnerList.AddBefore(node, value);
 
             OnUpdate();
 
@@ -407,7 +173,7 @@ namespace WinCopies.Collections
         /// <returns>The new <see cref="LinkedListNode{T}"/> containing value.</returns>
         public LinkedListNode<T> AddFirst(T value)
         {
-            var result = InnerList.AddFirst(value);
+            LinkedListNode<T> result = InnerList.AddFirst(value);
 
             OnUpdate();
 
@@ -434,7 +200,7 @@ namespace WinCopies.Collections
         /// <returns>The new <see cref="LinkedListNode{T}"/> containing value.</returns>
         public LinkedListNode<T> AddLast(T value)
         {
-            var result = InnerList.AddLast(value);
+            LinkedListNode<T> result = InnerList.AddLast(value);
 
             OnUpdate();
 
@@ -468,19 +234,37 @@ namespace WinCopies.Collections
         /// </summary>
         /// <param name="array">The values to add to this <see cref="ArrayBuilder{T}"/></param>
         /// <returns>The added <see cref="LinkedListNode{T}"/>'s.</returns>
-        public LinkedListNode<T>[] AddRangeFirst(IEnumerable<T> array) => InnerList.First == null ? AddRangeLast(array) : AddRangeBefore(InnerList.First, array);
+        public LinkedListNode<T>[] AddRangeFirst(in IEnumerable<T> array) => InnerList.First == null ? AddRangeLast(array) : AddRangeBefore(InnerList.First, array);
 
         /// <summary>
         /// Add multiple <see cref="LinkedListNode{T}"/>'s at the top of this <see cref="ArrayBuilder{T}"/>.
         /// </summary>
         /// <param name="nodes">The <see cref="LinkedListNode{T}"/>'s to add to this <see cref="ArrayBuilder{T}"/></param>
-        public void AddRangeFirst(params LinkedListNode<T>[] nodes) { if (InnerList.First == null) AddRangeLast(nodes); else AddRangeBefore(InnerList.First, nodes); }
+        public void AddRangeFirst(params LinkedListNode<T>[] nodes)
+        {
+            if (InnerList.First == null)
+
+                AddRangeLast(nodes);
+
+            else
+
+                AddRangeBefore(InnerList.First, nodes);
+        }
 
         /// <summary>
         /// Add multiple <see cref="LinkedListNode{T}"/>'s at the top of this <see cref="ArrayBuilder{T}"/>.
         /// </summary>
         /// <param name="array">The <see cref="LinkedListNode{T}"/>'s to add to this <see cref="ArrayBuilder{T}"/></param>
-        public void AddRangeFirst(IEnumerable<LinkedListNode<T>> array) { if (InnerList.First == null) AddRangeLast(array); else AddRangeBefore(InnerList.First, array); }
+        public void AddRangeFirst(in IEnumerable<LinkedListNode<T>> array) 
+        { 
+            if (InnerList.First == null) 
+                
+                AddRangeLast(array); 
+            
+            else 
+                
+                AddRangeBefore(InnerList.First, array); 
+        }
 
         /// <summary>
         /// Add multiple values at the end of this <see cref="ArrayBuilder{T}"/>.
@@ -505,7 +289,7 @@ namespace WinCopies.Collections
         /// </summary>
         /// <param name="array">The values to add to this <see cref="ArrayBuilder{T}"/></param>
         /// <returns>The added <see cref="LinkedListNode{T}"/>'s.</returns>
-        public LinkedListNode<T>[] AddRangeLast(IEnumerable<T> array)
+        public LinkedListNode<T>[] AddRangeLast(in IEnumerable<T> array)
 
         {
 
@@ -556,7 +340,7 @@ namespace WinCopies.Collections
         /// Add multiple <see cref="LinkedListNode{T}"/>'s at the end of this <see cref="ArrayBuilder{T}"/>.
         /// </summary>
         /// <param name="array">The <see cref="LinkedListNode{T}"/>'s to add to this <see cref="ArrayBuilder{T}"/></param>
-        public void AddRangeLast(IEnumerable<LinkedListNode<T>> array)
+        public void AddRangeLast(in IEnumerable<LinkedListNode<T>> array)
 
         {
 
@@ -572,7 +356,7 @@ namespace WinCopies.Collections
         /// <param name="node">The node before which to add the values</param>
         /// <param name="values">The values to add to this <see cref="ArrayBuilder{T}"/></param>
         /// <returns>The added <see cref="LinkedListNode{T}"/>'s.</returns>
-        public LinkedListNode<T>[] AddRangeBefore(LinkedListNode<T> node, params T[] values)
+        public LinkedListNode<T>[] AddRangeBefore(in LinkedListNode<T> node, params T[] values)
         {
 
             var result = new LinkedListNode<T>[values.Length];
@@ -591,7 +375,7 @@ namespace WinCopies.Collections
         /// <param name="node">The node before which to add the values</param>
         /// <param name="array">The values to add to this <see cref="ArrayBuilder{T}"/></param>
         /// <returns>The added <see cref="LinkedListNode{T}"/>'s.</returns>
-        public LinkedListNode<T>[] AddRangeBefore(LinkedListNode<T> node, IEnumerable<T> array)
+        public LinkedListNode<T>[] AddRangeBefore(in LinkedListNode<T> node, in IEnumerable<T> array)
 
         {
 
@@ -618,14 +402,14 @@ namespace WinCopies.Collections
         /// </summary>
         /// <param name="node">The node before which to add the values</param>
         /// <param name="nodes">The <see cref="LinkedListNode{T}"/>'s to add to this <see cref="ArrayBuilder{T}"/></param>
-        public void AddRangeBefore(LinkedListNode<T> node, params LinkedListNode<T>[] nodes) => AddRangeBefore(node, (IEnumerable<LinkedListNode<T>>)nodes);
+        public void AddRangeBefore(in LinkedListNode<T> node, params LinkedListNode<T>[] nodes) => AddRangeBefore(node, (IEnumerable<LinkedListNode<T>>)nodes);
 
         /// <summary>
         /// Add multiple values before a specified node in this <see cref="ArrayBuilder{T}"/>.
         /// </summary>
         /// <param name="node">The node before which to add the values</param>
         /// <param name="array">The values to add to this <see cref="ArrayBuilder{T}"/></param>
-        public void AddRangeBefore(LinkedListNode<T> node, IEnumerable<LinkedListNode<T>> array)
+        public void AddRangeBefore(in LinkedListNode<T> node, in IEnumerable<LinkedListNode<T>> array)
 
         {
 
@@ -641,7 +425,7 @@ namespace WinCopies.Collections
         /// <param name="node">The node after which to add the values</param>
         /// <param name="values">The values to add to this <see cref="ArrayBuilder{T}"/></param>
         /// <returns>The added <see cref="LinkedListNode{T}"/>'s.</returns>
-        public LinkedListNode<T>[] AddRangeAfter(LinkedListNode<T> node, params T[] values) => node.Next == null ? AddRangeLast(values) : AddRangeBefore(node.Next, values);
+        public LinkedListNode<T>[] AddRangeAfter(in LinkedListNode<T> node, params T[] values) => node.Next == null ? AddRangeLast(values) : AddRangeBefore(node.Next, values);
 
         /// <summary>
         /// Add multiple values after a specified node in this <see cref="ArrayBuilder{T}"/>.
@@ -649,21 +433,21 @@ namespace WinCopies.Collections
         /// <param name="node">The node after which to add the values</param>
         /// <param name="array">The values to add to this <see cref="ArrayBuilder{T}"/></param>
         /// <returns>The added <see cref="LinkedListNode{T}"/>'s.</returns>
-        public LinkedListNode<T>[] AddRangeAfter(LinkedListNode<T> node, IEnumerable<T> array) => node.Next == null ? AddRangeLast(array) : AddRangeBefore(node.Next, array);
+        public LinkedListNode<T>[] AddRangeAfter(in LinkedListNode<T> node, in IEnumerable<T> array) => node.Next == null ? AddRangeLast(array) : AddRangeBefore(node.Next, array);
 
         /// <summary>
         /// Add multiple values after a specified node in this <see cref="ArrayBuilder{T}"/>.
         /// </summary>
         /// <param name="node">The node after which to add the values</param>
         /// <param name="nodes">The values to add to this <see cref="ArrayBuilder{T}"/></param>
-        public void AddRangeAfter(LinkedListNode<T> node, params LinkedListNode<T>[] nodes) { if (node.Next == null) AddRangeLast(nodes); else AddRangeBefore(node.Next, nodes); }
+        public void AddRangeAfter(in LinkedListNode<T> node, params LinkedListNode<T>[] nodes) { if (node.Next == null) AddRangeLast(nodes); else AddRangeBefore(node.Next, nodes); }
 
         /// <summary>
         /// Add multiple values after a specified node in this <see cref="ArrayBuilder{T}"/>.
         /// </summary>
         /// <param name="node">The node after which to add the values</param>
         /// <param name="array">The values to add to this <see cref="ArrayBuilder{T}"/></param>
-        public void AddRangeAfter(LinkedListNode<T> node, IEnumerable<LinkedListNode<T>> array) { if (node.Next == null) AddRangeLast(array); else AddRangeBefore(node.Next, array); }
+        public void AddRangeAfter(in LinkedListNode<T> node, in IEnumerable<LinkedListNode<T>> array) { if (node.Next == null) AddRangeLast(array); else AddRangeBefore(node.Next, array); }
 
         #endregion
 
@@ -743,7 +527,7 @@ namespace WinCopies.Collections
         /// <returns><see langword="true"/> if the element containing value is successfully removed; otherwise, <see langword="false"/>. This method also returns <see langword="false"/> if value was not found in the original <see cref="ArrayBuilder{T}"/>.</returns>
         public bool Remove(T value)
         {
-            var result = InnerList.Remove(value);
+            bool result = InnerList.Remove(value);
 
             OnUpdate();
 
@@ -785,64 +569,126 @@ namespace WinCopies.Collections
             OnUpdate();
         }
 
+        // The enumerators returned by the following GetEnumerator methods are not added to the Enumerators collection, because they are implemented by the inner LinkedList, so it is this LinkedList that checks if an enumerator actually can move next.
+
         System.Collections.Generic.LinkedList<T>.Enumerator ILinkedList<T>.GetEnumerator() => InnerList.GetEnumerator();
 
         IEnumerator<T> IEnumerable<T>.GetEnumerator() => ((IEnumerable<T>)InnerList).GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<T>)InnerList).GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerList).GetEnumerator();
 
         /// <summary>
         /// Returns an array with the items of this <see cref="ArrayBuilder{T}"/>.
         /// </summary>
+        /// <param name="remove">Indicates whether items have to be removed from the current <see cref="ArrayBuilder{T}"/> after they has been added to the new list.</param>
         /// <returns>An array with the items of this <see cref="ArrayBuilder{T}"/>.</returns>
-        public T[] ToArray()
+        public T[] ToArray(in bool remove = false)
+        {
+            var array = new T[InnerList.Count];
+
+            ToArray(array, remove);
+
+            return array;
+        }
+
+        public void ToArray(in T[] array, in bool remove = false)
 
         {
 
-            var result = new T[InnerList.Count];
-
             int i = 0;
 
-            foreach (T item in InnerList)
+            if (remove)
 
-                result[i++] = item;
+                while (Count != 0)
 
-            return result;
+                {
+
+                    array[i++] = InnerList.First.Value;
+
+                    InnerList.RemoveFirst();
+
+                }
+
+            else
+
+                foreach (T item in InnerList)
+
+                    array[i++] = item;
 
         }
 
         /// <summary>
         /// Returns an <see cref="ArrayList"/> with the items of this <see cref="ArrayBuilder{T}"/>.
         /// </summary>
+        /// <param name="remove">Indicates whether items have to be removed from the current <see cref="ArrayBuilder{T}"/> after they has been added to the new list.</param>
         /// <returns>An <see cref="ArrayList"/> with the items of this <see cref="ArrayBuilder{T}"/>.</returns>
-        public ArrayList ToArrayList()
+        public ArrayList ToArrayList(in bool remove = false)
+        {
+            var arrayList = new ArrayList(InnerList.Count);
+
+            ToArrayList(arrayList, remove);
+
+            return arrayList;
+        }
+
+        public void ToArrayList(in ArrayList arrayList, in bool remove = false)
         {
 
-            var result = new ArrayList(InnerList.Count);
+            if (remove)
 
-            foreach (T item in InnerList)
+                while (Count != 0)
 
-                _ = result.Add(item);
+                {
 
-            return result;
+                    _ = arrayList.Add(InnerList.First.Value);
+
+                    InnerList.RemoveFirst();
+
+                }
+
+            else
+
+                foreach (T item in InnerList)
+
+                    _ = arrayList.Add(item);
 
         }
 
         /// <summary>
         /// Returns a <see cref="List{T}"/> with the items of this <see cref="ArrayBuilder{T}"/>.
         /// </summary>
+        /// <param name="remove">Indicates whether items have to be removed from the current <see cref="ArrayBuilder{T}"/> after they has been added to the new list.</param>
         /// <returns>A <see cref="List{T}"/> with the items of this <see cref="ArrayBuilder{T}"/>.</returns>
-        public List<T> ToList()
+        public List<T> ToList(in bool remove = false)
+        {
+            var list = new List<T>(Count);
+
+            ToList(list, remove);
+
+            return list;
+        }
+
+        public void ToList(in IList<T> list, in bool remove = false)
 
         {
 
-            var result = new List<T>(Count);
+            if (remove)
 
-            foreach (T item in InnerList)
+                while (Count != 0)
 
-                result.Add(item);
+                {
 
-            return result;
+                    list.Add(InnerList.First.Value);
+
+                    InnerList.RemoveFirst();
+
+                }
+
+            else
+
+                foreach (T item in InnerList)
+
+                    list.Add(item);
 
         }
 
@@ -857,13 +703,13 @@ namespace WinCopies.Collections
 
             private ArrayBuilder<T> _arrayBuilder;
 
-            private int _version;
+            private readonly int _version;
 
             public LinkedListNode<T> Current { get; private set; }
 
             object IEnumerator.Current => Current;
 
-            internal Enumerator(ArrayBuilder<T> arrayBuilder)
+            internal Enumerator(in ArrayBuilder<T> arrayBuilder)
 
             {
 
@@ -880,7 +726,7 @@ namespace WinCopies.Collections
 
                 Reset();
 
-                _arrayBuilder.Enumerators.Remove(this);
+                _ = _arrayBuilder.Enumerators.Remove(this);
 
                 _arrayBuilder = null;
 

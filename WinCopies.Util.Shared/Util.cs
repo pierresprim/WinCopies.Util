@@ -22,7 +22,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Windows.Input;
 using IfCT = WinCopies.Util.Util.ComparisonType;
 using IfCM = WinCopies.Util.Util.ComparisonMode;
 using IfComp = WinCopies.Util.Util.Comparison;
@@ -1724,7 +1723,7 @@ namespace WinCopies.Util
         /// Throws an <see cref="ArgumentNullException"/> if a given object is null.
         /// </summary>
         /// <param name="obj">The object to check.</param>
-        /// <param name="argumentName">The argument name for the <see cref="ArgumentNullException"/> that is returned.</param>
+        /// <param name="argumentName">The argument name for the <see cref="ArgumentNullException"/> that is thrown.</param>
         public static void ThrowIfNull(in object obj, in string argumentName)
         {
 
@@ -1734,6 +1733,12 @@ namespace WinCopies.Util
 
         }
 
+        /// <summary>
+        /// Throws an <see cref="ArgumentNullException"/> if a given object is null.
+        /// </summary>
+        /// <typeparam name="T">The type of <paramref name="obj"/>. This must be a class type.</typeparam>
+        /// <param name="obj">The object to check.</param>
+        /// <param name="argumentName">The argument name for the <see cref="ArgumentNullException"/> that is thrown.</param>
         public static void ThrowIfNull<T>(in T obj, in string argumentName) where T : class
 
         {
@@ -1744,8 +1749,21 @@ namespace WinCopies.Util
 
         }
 
+        /// <summary>
+        /// Returns <paramref name="obj"/> if it is not null, otherwise throws the <see cref="ArgumentNullException"/> that is returned by the <see cref="GetArgumentNullException(in string)"/> method.
+        /// </summary>
+        /// <param name="obj">The object to check.</param>
+        /// <param name="argumentName">The argument name for the <see cref="ArgumentNullException"/> that is thrown.</param>
+        /// <returns></returns>
         public static object GetOrThrowIfNull(in object obj, in string argumentName) => obj ?? throw GetArgumentNullException(argumentName);
 
+        /// <summary>
+        /// Returns <paramref name="obj"/> if it is not null, otherwise throws the <see cref="ArgumentNullException"/> that is returned by the <see cref="GetArgumentNullException(in string)"/> method.
+        /// </summary>
+        /// <typeparam name="T">The type of <paramref name="obj"/>. This must be a class type.</typeparam>
+        /// <param name="obj">The object to check.</param>
+        /// <param name="argumentName">The argument name for the <see cref="ArgumentNullException"/> that is thrown.</param>
+        /// <returns></returns>
         public static T GetOrThrowIfNull<T>(in T obj, in string argumentName) where T : class => obj ?? throw GetArgumentNullException(argumentName);
 
         /// <summary>
@@ -1755,7 +1773,16 @@ namespace WinCopies.Util
         /// <param name="objTypeName">The type name of the object of the exception.</param>
         /// <param name="argumentName">The argument name for the <see cref="Exception"/> that is returned.</param>
         /// <returns>An <see cref="ArgumentException"/> with the given argument name.</returns>
-        public static Exception GetExceptionForInvalidType<T>(in string objTypeName, in string argumentName) => new ArgumentException($"{argumentName} must be an instance of {typeof(T).ToString()}. {argumentName} is an instance of {objTypeName}", argumentName);
+        public static Exception GetExceptionForInvalidType<T>(in string objTypeName, in string argumentName) => new ArgumentException($"{argumentName} must be an instance of {typeof(T)}. {argumentName} is an instance of {objTypeName}", argumentName);
+
+        /// <summary>
+        /// Returns an <see cref="ArgumentNullException"/> for the given object and argument name.
+        /// </summary>
+        /// <typeparam name="T">The type to check.</typeparam>
+        /// <param name="objType">The type of the object of the exception.</param>
+        /// <param name="argumentName">The argument name for the <see cref="Exception"/> that is returned.</param>
+        /// <returns>An <see cref="ArgumentException"/> with the given argument name.</returns>
+        public static Exception GetExceptionForInvalidType<T>(in Type objType, in string argumentName) => new ArgumentException($"{argumentName} must be an instance of {typeof(T)}. {argumentName} is an instance of {objType}", argumentName);
 
         /// <summary>
         /// If <paramref name="obj"/> is not <typeparamref name="T"/>, throws the exception that is returned by the <see cref="GetExceptionForInvalidType{T}(in string, in string)"/> method.
@@ -1794,27 +1821,11 @@ namespace WinCopies.Util
 
         public static T GetOrThrowIfNotTypeOrNull<T>(in object obj, in string argumentName) where T : class => (obj ?? throw GetArgumentNullException(argumentName)) is T _obj ? _obj : throw GetExceptionForInvalidType<T>(obj.GetType().ToString(), argumentName);
 
-        public static InvalidOperationException GetExceptionForDispose(in string objectName, in bool forWhenDisposing)
-        {
-            if (forWhenDisposing)
+        public static InvalidOperationException GetExceptionForDispose(in string objectName, in bool forWhenDisposing) => forWhenDisposing
+                ? new ObjectDisposingException(objectName)
+                : (InvalidOperationException)new ObjectDisposedException(objectName, "The current object or value is disposed.");
 
-                return new ObjectDisposingException(objectName);
-
-            else
-
-                return new ObjectDisposedException(objectName, "The current object or value is disposed.");
-        }
-
-        public static InvalidOperationException GetExceptionForDispose(in bool forWhenDisposing)
-        {
-            if (forWhenDisposing)
-
-                return new InvalidOperationException("The current object or value is disposing.");
-
-            else
-
-                return new InvalidOperationException("The current object or value is disposed.");
-        }
+        public static InvalidOperationException GetExceptionForDispose(in bool forWhenDisposing) => new InvalidOperationException($"The current object or value is {(forWhenDisposing ? "disposing" : "disposed")}.");
 
         public static object GetIf(in object x, in object y, in WinCopies.Collections.Comparison comparison, in Func lower, in Func equals, in Func greater)
 
@@ -1938,15 +1949,15 @@ namespace WinCopies.Util
 
         }
 
-        public static void ThrowIfDisposingOrDisposed(IDisposable obj, in string objectName)
+        public static void ThrowIfDisposingOrDisposed(IDisposable obj)
 
         {
 
             ThrowIfNull(obj, nameof(obj));
 
-            obj.ThrowIfDisposedInternal(objectName);
+            ThrowIfDisposedInternal(obj);
 
-            obj.ThrowIfDisposingInternal(objectName);
+            ThrowIfDisposingInternal(obj);
 
         }
 

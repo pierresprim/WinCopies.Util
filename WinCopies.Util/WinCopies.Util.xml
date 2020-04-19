@@ -1733,7 +1733,32 @@
             Throws an <see cref="T:System.ArgumentNullException"/> if a given object is null.
             </summary>
             <param name="obj">The object to check.</param>
-            <param name="argumentName">The argument name for the <see cref="T:System.ArgumentNullException"/> that is returned.</param>
+            <param name="argumentName">The argument name for the <see cref="T:System.ArgumentNullException"/> that is thrown.</param>
+        </member>
+        <member name="M:WinCopies.Util.Util.ThrowIfNull``1(``0@,System.String@)">
+            <summary>
+            Throws an <see cref="T:System.ArgumentNullException"/> if a given object is null.
+            </summary>
+            <typeparam name="T">The type of <paramref name="obj"/>. This must be a class type.</typeparam>
+            <param name="obj">The object to check.</param>
+            <param name="argumentName">The argument name for the <see cref="T:System.ArgumentNullException"/> that is thrown.</param>
+        </member>
+        <member name="M:WinCopies.Util.Util.GetOrThrowIfNull(System.Object@,System.String@)">
+            <summary>
+            Returns <paramref name="obj"/> if it is not null, otherwise throws the <see cref="T:System.ArgumentNullException"/> that is returned by the <see cref="M:WinCopies.Util.Util.GetArgumentNullException(System.String@)"/> method.
+            </summary>
+            <param name="obj">The object to check.</param>
+            <param name="argumentName">The argument name for the <see cref="T:System.ArgumentNullException"/> that is thrown.</param>
+            <returns></returns>
+        </member>
+        <member name="M:WinCopies.Util.Util.GetOrThrowIfNull``1(``0@,System.String@)">
+            <summary>
+            Returns <paramref name="obj"/> if it is not null, otherwise throws the <see cref="T:System.ArgumentNullException"/> that is returned by the <see cref="M:WinCopies.Util.Util.GetArgumentNullException(System.String@)"/> method.
+            </summary>
+            <typeparam name="T">The type of <paramref name="obj"/>. This must be a class type.</typeparam>
+            <param name="obj">The object to check.</param>
+            <param name="argumentName">The argument name for the <see cref="T:System.ArgumentNullException"/> that is thrown.</param>
+            <returns></returns>
         </member>
         <member name="M:WinCopies.Util.Util.GetExceptionForInvalidType``1(System.String@,System.String@)">
             <summary>
@@ -1741,6 +1766,15 @@
             </summary>
             <typeparam name="T">The type to check.</typeparam>
             <param name="objTypeName">The type name of the object of the exception.</param>
+            <param name="argumentName">The argument name for the <see cref="T:System.Exception"/> that is returned.</param>
+            <returns>An <see cref="T:System.ArgumentException"/> with the given argument name.</returns>
+        </member>
+        <member name="M:WinCopies.Util.Util.GetExceptionForInvalidType``1(System.Type@,System.String@)">
+            <summary>
+            Returns an <see cref="T:System.ArgumentNullException"/> for the given object and argument name.
+            </summary>
+            <typeparam name="T">The type to check.</typeparam>
+            <param name="objType">The type of the object of the exception.</param>
             <param name="argumentName">The argument name for the <see cref="T:System.Exception"/> that is returned.</param>
             <returns>An <see cref="T:System.ArgumentException"/> with the given argument name.</returns>
         </member>

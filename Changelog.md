@@ -9,15 +9,33 @@ CHANGELOG
 Updates
 -------
 
-??/??/???? ????
-===============
+??/??/???? 2.2.0-preview3
+=========================
 
 - Add build property to build symbol packages.
+
+WinCopies.Util (2.2.0-preview3)
+-------------------------------
+
+- Existing items behavior updates:
+	- The ThrowIfDisposingOrDisposed(IDisposable obj, string objectName) static method has changed to ThrowIfDisposingOrDisposed(IDisposable obj).
+
+- Additions:
+	- GetExceptionForInvalidType<T>(in Type objType, in string argumentName); static method.
+	- ArrayBuilder (extension) methods and method parameters.
+	- Math static methods.
+
+WinCopies.Util.Desktop (2.0.0-preview3)
+---------------------------------------
+
+- Additions:
+	- APIs:
+		- AttachedCommandBehavior (this API is licensed under a specific license).
 
 03/27/2020 2.2.0-preview2
 =========================
 
-- Available for Any CPU configuration.
+- Available for Any CPU configuration only.
 
 03/26/2020 2.2.0-preview1
 =========================
@@ -25,13 +43,13 @@ Updates
 - Available for 32- and 64-bit Windows platforms.
 - Some types have moved to the WinCopies.Util.Desktop package.
 
-WinCopies.Util (2.2)
---------------------
+WinCopies.Util (2.2.0-preview1)
+-------------------------------
 
 - Existing items behavior updates:
 	- The interfaces and enumerators of the WinCopies.Collections namespace for uint-indexed collections have been replaced by the new interfaces for uint-indexed collections in the WinCopies.Collections.DotNetFix namespace and are now obsolete.
 
-- Addings:
+- Additions:
 	- Interfaces:
 		- New interfaces for uint-indexed collections, partially designed like the .Net collection interfaces (WinCopies.Collections.DotNetFix namespace).
 	- Extension and static methods:
@@ -48,7 +66,7 @@ Available for .Net Framework, .Net Core and .Net Standard*
 - Existing items behavior updates:
 	- This assembly now targets the 4.7.2 version of the .Net Framework instead of version 4.8 for the .Net Framework version of this assembly.
 
-- Addings:
+- Additions:
 	- Interfaces:
 		- IUIntIndexedCollection and IUIntIndexedCollection<T\>
 		- UIntIndexedCollectionEnumeratorBase, UIntIndexedCollectionEnumerator and UIntIndexedCollectionEnumerator<T\>
@@ -116,7 +134,7 @@ Available for .Net Framework, .Net Core and .Net Standard*
 		- The Microsoft.Shell namespace members are now available from the version 1.1.0 and later of the following NuGet package: https://www.nuget.org/packages/WinCopies.WindowsAPICodePack.Win32Native
 		- The WinCopies.Util.Commands.ApplicationCommands.CloseWindow is now obsolete. Please use the System.Windows.Input.ApplicationCommands.Close command instead.
 
-- Addings:
+- Additions:
 	- Classes:
 		- EnumComparer
 		- ArrayBuilder class to build arrays, lists and observable collections.
