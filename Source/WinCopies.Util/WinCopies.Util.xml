@@ -902,6 +902,13 @@
             <param name="enum">The enum for which get the corresponding numeric value.</param>
             <returns>The numeric value corresponding to this enum, in the given enum type underlying type.</returns>
         </member>
+        <member name="M:WinCopies.Util.Extensions.GetNumValue``1(``0)">
+            <summary>
+            Gets the numeric value for an enum.
+            </summary>
+            <param name="enum">The enum for which get the corresponding numeric value.</param>
+            <returns>The numeric value corresponding to this enum, in the given enum type underlying type.</returns>
+        </member>
         <member name="M:WinCopies.Util.Extensions.HasMultipleFlags(System.Enum)">
             <summary>
             Determines whether an enum has multiple flags.
@@ -1859,82 +1866,6 @@
             <param name="obj">The <see cref="T:WinCopies.Util.IReadOnlyValueObject`1"/> for which to return the hash code.</param>
             <returns>The hash code of <paramref name="obj"/>'s <see cref="P:WinCopies.Util.IReadOnlyValueObject`1.Value"/> if <paramref name="obj"/> has a value, otherwise the <paramref name="obj"/>'s hash code.</returns>
         </member>
-        <member name="P:WinCopies.Collections.DotNetFix.IUIntIndexedCollection.Count">
-            <summary>
-            Gets the number of items in the collection.
-            </summary>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.IUIntIndexedCollection.CopyTo(System.Array@,System.Int32)">
-            <summary>
-            Copies the items of this collection to a given array starting at a given index.
-            </summary>
-            <param name="array">The array to copy the items.</param>
-            <param name="index">The index in the array from which to start to copy.</param>
-        </member>
-        <member name="P:WinCopies.Collections.DotNetFix.IUIntIndexedList.Item(System.UInt32)">
-            <summary>
-            Gets the item at a given index in the list.
-            </summary>
-            <param name="index">The index of the item.</param>
-            <returns>The item at <paramref name="index"/>.</returns>
-        </member>
-        <member name="P:WinCopies.Collections.DotNetFix.IUIntIndexedList.IsFixedSize">
-            <summary>
-            Gets a value that indicates whether the current list is fixed size.
-            </summary>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.IUIntIndexedList.Add(System.Object@)">
-            <summary>
-            Adds a value to the list.
-            </summary>
-            <param name="value">The value to add.</param>
-            <returns>The index of the new value in the list.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.IUIntIndexedList.Clear">
-            <summary>
-            Removes all items from the list.
-            </summary>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.IUIntIndexedList.Insert(System.UInt32@,System.Object@)">
-            <summary>
-            Inserts a value to the list.
-            </summary>
-            <param name="index">The index at which to add the value.</param>
-            <param name="value">The value to add.</param>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.IUIntIndexedList.Remove(System.Object@)">
-            <summary>
-            Removes a given value from the list.
-            </summary>
-            <param name="value">The value to remove.</param>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.IUIntIndexedList.RemoveAt(System.UInt32@)">
-            <summary>
-            Removes a value from the list at a given index.
-            </summary>
-            <param name="index">The index of the value to remove.</param>
-        </member>
-        <member name="P:WinCopies.Collections.DotNetFix.IReadOnlyUIntIndexedList.Item(System.UInt32)">
-            <summary>
-            Gets or sets an item at a given index in the list.
-            </summary>
-            <param name="index">The index of the item.</param>
-            <returns>The item at <paramref name="index"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.IReadOnlyUIntIndexedList.Contains(System.Object@)">
-            <summary>
-            Checks if the list contains a given value.
-            </summary>
-            <param name="value">The value to check.</param>
-            <returns><see langword="true"/> if the list contains <paramref name="value"/>, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.IReadOnlyUIntIndexedList.IndexOf(System.Object@)">
-            <summary>
-            Returns the index of a given value in the list.
-            </summary>
-            <param name="value">The value for which return the index.</param>
-            <returns>The index of <paramref name="value"/> if it was found, or <see langword="null"/> otherwise.</returns>
-        </member>
         <member name="T:WinCopies.Collections.ArrayBuilder`1">
             <summary>
             Builds arrays and lists by sizing them only when required. This class can be used to initialize your array or list before adding or removing values to it.
@@ -1951,13 +1882,13 @@
             Initializes a new instance of the <see cref="T:WinCopies.Collections.ArrayBuilder`1"/> class.
             </summary>
         </member>
-        <member name="M:WinCopies.Collections.ArrayBuilder`1.#ctor(System.Collections.Generic.IEnumerable{`0})">
+        <member name="M:WinCopies.Collections.ArrayBuilder`1.#ctor(System.Collections.Generic.IEnumerable{`0}@)">
             <summary>
             Initializes a new instance of the <see cref="T:WinCopies.Collections.ArrayBuilder`1"/> class with a given <see cref="T:System.Collections.Generic.IEnumerable`1"/>.
             </summary>
             <param name="enumerable"></param>
         </member>
-        <member name="M:WinCopies.Collections.ArrayBuilder`1.#ctor(System.Collections.Generic.LinkedList{`0})">
+        <member name="M:WinCopies.Collections.ArrayBuilder`1.#ctor(System.Collections.Generic.LinkedList{`0}@)">
             <summary>
             Initializes a new instance of the <see cref="T:WinCopies.Collections.ArrayBuilder`1"/> class using a custom <see cref="T:System.Collections.Generic.LinkedList`1"/> to build the arrays and collections.
             </summary>
@@ -2056,7 +1987,7 @@
             <param name="values">The values to add to this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/></param>
             <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
         </member>
-        <member name="M:WinCopies.Collections.ArrayBuilder`1.AddRangeFirst(System.Collections.Generic.IEnumerable{`0})">
+        <member name="M:WinCopies.Collections.ArrayBuilder`1.AddRangeFirst(System.Collections.Generic.IEnumerable{`0}@)">
             <summary>
             Add multiple values at the top of this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/>.
             </summary>
@@ -2069,7 +2000,7 @@
             </summary>
             <param name="nodes">The <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s to add to this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/></param>
         </member>
-        <member name="M:WinCopies.Collections.ArrayBuilder`1.AddRangeFirst(System.Collections.Generic.IEnumerable{System.Collections.Generic.LinkedListNode{`0}})">
+        <member name="M:WinCopies.Collections.ArrayBuilder`1.AddRangeFirst(System.Collections.Generic.IEnumerable{System.Collections.Generic.LinkedListNode{`0}}@)">
             <summary>
             Add multiple <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s at the top of this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/>.
             </summary>
@@ -2082,7 +2013,7 @@
             <param name="values">The values to add to this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/></param>
             <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
         </member>
-        <member name="M:WinCopies.Collections.ArrayBuilder`1.AddRangeLast(System.Collections.Generic.IEnumerable{`0})">
+        <member name="M:WinCopies.Collections.ArrayBuilder`1.AddRangeLast(System.Collections.Generic.IEnumerable{`0}@)">
             <summary>
             Add multiple values at the end of this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/>.
             </summary>
@@ -2096,13 +2027,13 @@
             <param name="nodes">The <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s to add to this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/></param>
             <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
         </member>
-        <member name="M:WinCopies.Collections.ArrayBuilder`1.AddRangeLast(System.Collections.Generic.IEnumerable{System.Collections.Generic.LinkedListNode{`0}})">
+        <member name="M:WinCopies.Collections.ArrayBuilder`1.AddRangeLast(System.Collections.Generic.IEnumerable{System.Collections.Generic.LinkedListNode{`0}}@)">
             <summary>
             Add multiple <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s at the end of this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/>.
             </summary>
             <param name="array">The <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s to add to this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/></param>
         </member>
-        <member name="M:WinCopies.Collections.ArrayBuilder`1.AddRangeBefore(System.Collections.Generic.LinkedListNode{`0},`0[])">
+        <member name="M:WinCopies.Collections.ArrayBuilder`1.AddRangeBefore(System.Collections.Generic.LinkedListNode{`0}@,`0[])">
             <summary>
             Add multiple values before a specified node in this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/>.
             </summary>
@@ -2110,7 +2041,7 @@
             <param name="values">The values to add to this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/></param>
             <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
         </member>
-        <member name="M:WinCopies.Collections.ArrayBuilder`1.AddRangeBefore(System.Collections.Generic.LinkedListNode{`0},System.Collections.Generic.IEnumerable{`0})">
+        <member name="M:WinCopies.Collections.ArrayBuilder`1.AddRangeBefore(System.Collections.Generic.LinkedListNode{`0}@,System.Collections.Generic.IEnumerable{`0}@)">
             <summary>
             Add multiple values before a specified node in this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/>.
             </summary>
@@ -2118,21 +2049,21 @@
             <param name="array">The values to add to this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/></param>
             <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
         </member>
-        <member name="M:WinCopies.Collections.ArrayBuilder`1.AddRangeBefore(System.Collections.Generic.LinkedListNode{`0},System.Collections.Generic.LinkedListNode{`0}[])">
+        <member name="M:WinCopies.Collections.ArrayBuilder`1.AddRangeBefore(System.Collections.Generic.LinkedListNode{`0}@,System.Collections.Generic.LinkedListNode{`0}[])">
             <summary>
             Add multiple values before a specified node in this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/>.
             </summary>
             <param name="node">The node before which to add the values</param>
             <param name="nodes">The <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s to add to this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/></param>
         </member>
-        <member name="M:WinCopies.Collections.ArrayBuilder`1.AddRangeBefore(System.Collections.Generic.LinkedListNode{`0},System.Collections.Generic.IEnumerable{System.Collections.Generic.LinkedListNode{`0}})">
+        <member name="M:WinCopies.Collections.ArrayBuilder`1.AddRangeBefore(System.Collections.Generic.LinkedListNode{`0}@,System.Collections.Generic.IEnumerable{System.Collections.Generic.LinkedListNode{`0}}@)">
             <summary>
             Add multiple values before a specified node in this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/>.
             </summary>
             <param name="node">The node before which to add the values</param>
             <param name="array">The values to add to this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/></param>
         </member>
-        <member name="M:WinCopies.Collections.ArrayBuilder`1.AddRangeAfter(System.Collections.Generic.LinkedListNode{`0},`0[])">
+        <member name="M:WinCopies.Collections.ArrayBuilder`1.AddRangeAfter(System.Collections.Generic.LinkedListNode{`0}@,`0[])">
             <summary>
             Add multiple values after a specified node in this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/>.
             </summary>
@@ -2140,7 +2071,7 @@
             <param name="values">The values to add to this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/></param>
             <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
         </member>
-        <member name="M:WinCopies.Collections.ArrayBuilder`1.AddRangeAfter(System.Collections.Generic.LinkedListNode{`0},System.Collections.Generic.IEnumerable{`0})">
+        <member name="M:WinCopies.Collections.ArrayBuilder`1.AddRangeAfter(System.Collections.Generic.LinkedListNode{`0}@,System.Collections.Generic.IEnumerable{`0}@)">
             <summary>
             Add multiple values after a specified node in this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/>.
             </summary>
@@ -2148,14 +2079,14 @@
             <param name="array">The values to add to this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/></param>
             <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
         </member>
-        <member name="M:WinCopies.Collections.ArrayBuilder`1.AddRangeAfter(System.Collections.Generic.LinkedListNode{`0},System.Collections.Generic.LinkedListNode{`0}[])">
+        <member name="M:WinCopies.Collections.ArrayBuilder`1.AddRangeAfter(System.Collections.Generic.LinkedListNode{`0}@,System.Collections.Generic.LinkedListNode{`0}[])">
             <summary>
             Add multiple values after a specified node in this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/>.
             </summary>
             <param name="node">The node after which to add the values</param>
             <param name="nodes">The values to add to this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/></param>
         </member>
-        <member name="M:WinCopies.Collections.ArrayBuilder`1.AddRangeAfter(System.Collections.Generic.LinkedListNode{`0},System.Collections.Generic.IEnumerable{System.Collections.Generic.LinkedListNode{`0}})">
+        <member name="M:WinCopies.Collections.ArrayBuilder`1.AddRangeAfter(System.Collections.Generic.LinkedListNode{`0}@,System.Collections.Generic.IEnumerable{System.Collections.Generic.LinkedListNode{`0}}@)">
             <summary>
             Add multiple values after a specified node in this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/>.
             </summary>
@@ -2246,23 +2177,102 @@
             </summary>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.ArrayBuilder`1"/> is empty.</exception>
         </member>
-        <member name="M:WinCopies.Collections.ArrayBuilder`1.ToArray">
+        <member name="M:WinCopies.Collections.ArrayBuilder`1.ToArray(System.Boolean@)">
             <summary>
             Returns an array with the items of this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/>.
             </summary>
+            <param name="remove">Indicates whether items have to be removed from the current <see cref="T:WinCopies.Collections.ArrayBuilder`1"/> after they has been added to the new list.</param>
             <returns>An array with the items of this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.ArrayBuilder`1.ToArrayList">
+        <member name="M:WinCopies.Collections.ArrayBuilder`1.ToArrayList(System.Boolean@)">
             <summary>
             Returns an <see cref="T:System.Collections.ArrayList"/> with the items of this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/>.
             </summary>
+            <param name="remove">Indicates whether items have to be removed from the current <see cref="T:WinCopies.Collections.ArrayBuilder`1"/> after they has been added to the new list.</param>
             <returns>An <see cref="T:System.Collections.ArrayList"/> with the items of this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.ArrayBuilder`1.ToList">
+        <member name="M:WinCopies.Collections.ArrayBuilder`1.ToList(System.Boolean@)">
             <summary>
             Returns a <see cref="T:System.Collections.Generic.List`1"/> with the items of this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/>.
             </summary>
+            <param name="remove">Indicates whether items have to be removed from the current <see cref="T:WinCopies.Collections.ArrayBuilder`1"/> after they has been added to the new list.</param>
             <returns>A <see cref="T:System.Collections.Generic.List`1"/> with the items of this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/>.</returns>
+        </member>
+        <member name="P:WinCopies.Collections.DotNetFix.IUIntIndexedCollection.Count">
+            <summary>
+            Gets the number of items in the collection.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.IUIntIndexedCollection.CopyTo(System.Array@,System.Int32)">
+            <summary>
+            Copies the items of this collection to a given array starting at a given index.
+            </summary>
+            <param name="array">The array to copy the items.</param>
+            <param name="index">The index in the array from which to start to copy.</param>
+        </member>
+        <member name="P:WinCopies.Collections.DotNetFix.IUIntIndexedList.Item(System.UInt32)">
+            <summary>
+            Gets the item at a given index in the list.
+            </summary>
+            <param name="index">The index of the item.</param>
+            <returns>The item at <paramref name="index"/>.</returns>
+        </member>
+        <member name="P:WinCopies.Collections.DotNetFix.IUIntIndexedList.IsFixedSize">
+            <summary>
+            Gets a value that indicates whether the current list is fixed size.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.IUIntIndexedList.Add(System.Object@)">
+            <summary>
+            Adds a value to the list.
+            </summary>
+            <param name="value">The value to add.</param>
+            <returns>The index of the new value in the list.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.IUIntIndexedList.Clear">
+            <summary>
+            Removes all items from the list.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.IUIntIndexedList.Insert(System.UInt32@,System.Object@)">
+            <summary>
+            Inserts a value to the list.
+            </summary>
+            <param name="index">The index at which to add the value.</param>
+            <param name="value">The value to add.</param>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.IUIntIndexedList.Remove(System.Object@)">
+            <summary>
+            Removes a given value from the list.
+            </summary>
+            <param name="value">The value to remove.</param>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.IUIntIndexedList.RemoveAt(System.UInt32@)">
+            <summary>
+            Removes a value from the list at a given index.
+            </summary>
+            <param name="index">The index of the value to remove.</param>
+        </member>
+        <member name="P:WinCopies.Collections.DotNetFix.IReadOnlyUIntIndexedList.Item(System.UInt32)">
+            <summary>
+            Gets or sets an item at a given index in the list.
+            </summary>
+            <param name="index">The index of the item.</param>
+            <returns>The item at <paramref name="index"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.IReadOnlyUIntIndexedList.Contains(System.Object@)">
+            <summary>
+            Checks if the list contains a given value.
+            </summary>
+            <param name="value">The value to check.</param>
+            <returns><see langword="true"/> if the list contains <paramref name="value"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.IReadOnlyUIntIndexedList.IndexOf(System.Object@)">
+            <summary>
+            Returns the index of a given value in the list.
+            </summary>
+            <param name="value">The value for which return the index.</param>
+            <returns>The index of <paramref name="value"/> if it was found, or <see langword="null"/> otherwise.</returns>
         </member>
         <member name="T:WinCopies.Collections.Comparison">
             <summary>

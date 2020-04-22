@@ -1,4 +1,4 @@
-﻿/* Copyright © Pierre Sprimont, 2019
+﻿/* Copyright © Pierre Sprimont, 2020
  *
  * This file is part of the WinCopies Framework.
  *
@@ -3139,7 +3139,15 @@ namespace WinCopies.Util
         /// </summary>
         /// <param name="enum">The enum for which get the corresponding numeric value.</param>
         /// <returns>The numeric value corresponding to this enum, in the given enum type underlying type.</returns>
+        [Obsolete("Please use the generic version instead.")]
         public static object GetNumValue(this Enum @enum) => Convert.ChangeType(@enum, Enum.GetUnderlyingType(@enum.GetType()));
+
+        /// <summary>
+        /// Gets the numeric value for an enum.
+        /// </summary>
+        /// <param name="enum">The enum for which get the corresponding numeric value.</param>
+        /// <returns>The numeric value corresponding to this enum, in the given enum type underlying type.</returns>
+        public static object GetNumValue<T>(this T @enum) where T : Enum => Convert.ChangeType(@enum, Enum.GetUnderlyingType(typeof(T)));
 
         // public static object GetNumValue(this Enum @enum) => GetNumValue(@enum, @enum.ToString());
 
@@ -3326,13 +3334,13 @@ namespace WinCopies.Util
             
             // If yes and if we reached this point, that means that the value is a power of 2 -- and therefore represents a flag in the enum --, but is not defined in the enum.
 
-            double log = Math.Log(valueDouble, 2);
+            double log = System. Math.Log(valueDouble, 2);
 
-            if (Math.Truncate(log) == log) return false;
+            if (System.Math.Truncate(log) == log) return false;
 
             // If not, we have to check if all the flags represented by the given value are actually set in the enum.
 
-            double _value = Math.Pow(2, Math.Ceiling(log));
+            double _value = System.Math.Pow(2, System.Math.Ceiling(log));
 
             double valueToCheck;
 
@@ -3342,9 +3350,7 @@ namespace WinCopies.Util
 
                 valueToCheck = _value - valueDouble;
 
-                if (valueToCheck > long.MaxValue && !enumType.IsEnumDefined(Enum.ToObject(enumType, (ulong)valueToCheck))) return false;
-
-                else if (!enumType.IsEnumDefined(Enum.ToObject(enumType, (long)valueToCheck))) return false;
+                if (!enumType.IsEnumDefined(Enum.ToObject(enumType, valueToCheck))) return false;
 
                 valueDouble -= valueToCheck;
 

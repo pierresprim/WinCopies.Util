@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection.Metadata.Ecma335;
 using System.Text;
 
 namespace WinCopies
@@ -12,7 +11,7 @@ namespace WinCopies
 
         {
 
-            if (power == 0) return 1;
+            if (power == 0) return 1UL;
 
             if (power == 1) return b;
 
@@ -30,7 +29,7 @@ namespace WinCopies
 
         {
 
-            if (power == 0) return 1;
+            if (power == 0) return 1L;
 
             if (power == 1) return b;
 
@@ -76,7 +75,7 @@ namespace WinCopies
 
         {
 
-            if (power == 0) return 1;
+            if (power == 0) return 1UL;
 
             if (power == 1) return s;
 
@@ -94,7 +93,7 @@ namespace WinCopies
 
         {
 
-            if (power == 0) return 1;
+            if (power == 0) return 1L;
 
             if (power == 1) return s;
 
@@ -140,7 +139,7 @@ namespace WinCopies
 
         {
 
-            if (power == 0u) return 1u;
+            if (power == 0u) return 1UL;
 
             if (power == 1u) return i;
 
@@ -260,7 +259,99 @@ namespace WinCopies
 
                 result *= value;
 
-            return result * value;
+            return result ;
+
+        }
+
+        public static float Pow(in float value, in float power)
+
+        {
+
+            if (power == 0) return 1f;
+
+            if (power == 1) return value;
+
+            if (power == -1)
+
+                return 1 / value;
+
+            float result;
+
+            if (power < 0)
+
+            {
+
+                if (power < -1)
+
+                {
+
+                    result = (float)(value * value);
+
+                    for (float i = -3; i >= power; i--)
+
+                        result *= value;
+
+                    result = 1 / result;
+
+                    return result;
+
+                }
+
+            }
+
+            result = (float)(value * value);
+
+            for (float i = 3; i <= power; i++)
+
+                result *= value;
+
+            return result ;
+
+        }
+
+        public static decimal Pow(in decimal value, in decimal power)
+
+        {
+
+            if (power == 0) return 1m;
+
+            if (power == 1) return value;
+
+            if (power == -1)
+
+                return 1 / value;
+
+            decimal result;
+
+            if (power < 0)
+
+            {
+
+                if (power < -1)
+
+                {
+
+                    result = (decimal)(value * value);
+
+                    for (decimal i = -3; i >= power; i--)
+
+                        result *= value;
+
+                    result = 1 / result;
+
+                    return result;
+
+                }
+
+            }
+
+            result = (decimal)(value * value);
+
+            for (decimal i = 3; i <= power; i++)
+
+                result *= value;
+
+            return result ;
 
         }
     }

@@ -1,4 +1,4 @@
-﻿/* Copyright © Pierre Sprimont, 2019
+﻿/* Copyright © Pierre Sprimont, 2020
  *
  * This file is part of the WinCopies Framework.
  *
@@ -1821,11 +1821,11 @@ namespace WinCopies.Util
 
         public static T GetOrThrowIfNotTypeOrNull<T>(in object obj, in string argumentName) where T : class => (obj ?? throw GetArgumentNullException(argumentName)) is T _obj ? _obj : throw GetExceptionForInvalidType<T>(obj.GetType().ToString(), argumentName);
 
-        public static InvalidOperationException GetExceptionForDispose(in string objectName, in bool forWhenDisposing) => forWhenDisposing
+        public static InvalidOperationException GetExceptionForDispose(in string objectName, in bool forDisposing) => forDisposing
                 ? new ObjectDisposingException(objectName)
                 : (InvalidOperationException)new ObjectDisposedException(objectName, "The current object or value is disposed.");
 
-        public static InvalidOperationException GetExceptionForDispose(in bool forWhenDisposing) => new InvalidOperationException($"The current object or value is {(forWhenDisposing ? "disposing" : "disposed")}.");
+        public static InvalidOperationException GetExceptionForDispose(in bool forDisposing) => new InvalidOperationException($"The current object or value is {(forDisposing ? "disposing" : "disposed")}.");
 
         public static object GetIf(in object x, in object y, in WinCopies.Collections.Comparison comparison, in Func lower, in Func equals, in Func greater)
 
