@@ -27,6 +27,7 @@ using IfCM = WinCopies.Util.Util.ComparisonMode;
 using IfComp = WinCopies.Util.Util.Comparison;
 using WinCopies.Collections;
 using IComparer = System.Collections.IComparer;
+using WinCopies.Util.Resources;
 
 namespace WinCopies.Util
 {
@@ -76,9 +77,14 @@ namespace WinCopies.Util
 
         // todo: key-value pairs to raise an argument exception
 
-        public static void ThrowOnNotValidEnumValue(params Enum[] values)
+            [Obsolete("This method has been replaced by the WinCopies.Util.Extensions.ThrowIfInvalidEnumValue(params Enum[] values) method.")]
+        public static void ThrowOnNotValidEnumValue(params Enum[] values) => ThrowIfInvalidEnumValue(values);
+
+        public static void ThrowIfInvalidEnumValue(params Enum[] values)
 
         {
+
+            ThrowIfNull(values, nameof(values));
 
             foreach (Enum value in values)
 
@@ -86,17 +92,33 @@ namespace WinCopies.Util
 
         }
 
-        public static void ThrowOnEnumNotValidEnumValue(in Enum value, params Enum[] values)
+        public static void ThrowIfInvalidEnumValue(in string argumentName, params Enum[] values)
 
         {
 
-            foreach (Enum _value in values)
+            ThrowIfNull(values, nameof(values));
 
-                if (_value == value)
+            foreach (Enum value in values)
 
-                    throw new InvalidOperationException($"'{_value.ToString()}' is not an expected value.");
+                value.ThrowIfNotValidEnumValue(argumentName);
 
         }
+
+        [Obsolete("This method has been replaced by the WinCopies.Util.Extensions.ThrowIfInvalidEnumValue(this Enum, bool, params Enum[]) method.")]
+        public static void ThrowOnEnumNotValidEnumValue(in Enum value, params Enum[] values) => value.ThrowIfInvalidEnumValue(false,  values);
+
+        public static ArgumentException GetExceptionForNonFlagsEnum(in string argumentName) => new ArgumentException(ExceptionMessages.NonFlagsEnumException, argumentName);
+
+        public static TypeArgumentException GetExceptionForNonFlagsEnumType(in string typeArgumentName) => new TypeArgumentException(ExceptionMessages.NonFlagsEnumTypeException, typeArgumentName);
+
+        public static void ThrowIfNotFlagsEnumType<T>(in string typeArgumentName) where T : Enum
+        {
+            if (!IsFlagsEnum<T>())
+
+                throw GetExceptionForNonFlagsEnum(typeArgumentName);
+        }
+
+        public static bool IsFlagsEnum<T>() where T : Enum => typeof(T).GetCustomAttribute<FlagsAttribute>() is object;
 
         // public static KeyValuePair<TKey, Func<bool>>[] GetIfKeyValuePairPredicateArray<TKey>(params KeyValuePair<TKey, Func<bool>>[] keyValuePairs) => keyValuePairs;
 
@@ -202,7 +224,7 @@ namespace WinCopies.Util
 
         {
 
-            ThrowOnNotValidEnumValue(comparisonType, comparisonMode, comparison);
+            ThrowIfInvalidEnumValue(comparisonType, comparisonMode, comparison);
 
             if (comparison == IfComp.ReferenceEqual)
 
@@ -214,7 +236,7 @@ namespace WinCopies.Util
 
         {
 
-            ThrowOnNotValidEnumValue(comparisonType, comparisonMode);
+            ThrowIfInvalidEnumValue(comparisonType, comparisonMode);
 
             if (!(comparison == IfComp.Equal || comparison == IfComp.NotEqual || comparison == IfComp.ReferenceEqual))
 
@@ -1767,7 +1789,7 @@ namespace WinCopies.Util
         public static T GetOrThrowIfNull<T>(in T obj, in string argumentName) where T : class => obj ?? throw GetArgumentNullException(argumentName);
 
         /// <summary>
-        /// Returns an <see cref="ArgumentNullException"/> for the given object and argument name.
+        /// Returns an <see cref="ArgumentException"/> for the given object and argument name.
         /// </summary>
         /// <typeparam name="T">The type to check.</typeparam>
         /// <param name="objTypeName">The type name of the object of the exception.</param>
@@ -1776,7 +1798,7 @@ namespace WinCopies.Util
         public static Exception GetExceptionForInvalidType<T>(in string objTypeName, in string argumentName) => new ArgumentException($"{argumentName} must be an instance of {typeof(T)}. {argumentName} is an instance of {objTypeName}", argumentName);
 
         /// <summary>
-        /// Returns an <see cref="ArgumentNullException"/> for the given object and argument name.
+        /// Returns an <see cref="ArgumentException"/> for the given object and argument name.
         /// </summary>
         /// <typeparam name="T">The type to check.</typeparam>
         /// <param name="objType">The type of the object of the exception.</param>
@@ -1817,8 +1839,22 @@ namespace WinCopies.Util
                 throw GetExceptionForInvalidType<T>(obj.GetType().ToString(), argumentName);
         }
 
+        /// <summary>
+        /// Returns a given object when it is an instance of a given type, otherwise throws an <see cref="ArgumentException"/> with a given argument name.
+        /// </summary>
+        /// <typeparam name="T">The type to check.</typeparam>
+        /// <param name="obj">The object to check.</param>
+        /// <param name="argumentName">The argument name for the <see cref="ArgumentException"/>.</param>
+        /// <returns><paramref name="obj"/> when it is an instance of <typeparamref name="T"/>, otherwise throws an <see cref="ArgumentException"/> with <paramref name="argumentName"/> for the argument name.</returns>
         public static T GetOrThrowIfNotType<T>(in object obj, in string argumentName) where T : struct => obj is T _obj ? _obj : throw GetExceptionForInvalidType<T>(obj.GetType().ToString(), argumentName);
 
+        /// <summary>
+        /// Returns a given object when it is an instance of a given type, otherwise throws an <see cref="ArgumentNullException"/> if <paramref name="obj"/> is <see langword="null"/> or an <see cref="ArgumentException"/> with a given argument name otherwise.
+        /// </summary>
+        /// <typeparam name="T">The type to check.</typeparam>
+        /// <param name="obj">The object to check.</param>
+        /// <param name="argumentName">The argument name for the <see cref="ArgumentException"/>.</param>
+        /// <returns><paramref name="obj"/> when it is an instance of <typeparamref name="T"/>, otherwise throws an <see cref="ArgumentNullException"/> if <paramref name="obj"/> is <see langword="null"/> or an <see cref="ArgumentException"/> with <paramref name="argumentName"/> for the argument name otherwise.</returns>
         public static T GetOrThrowIfNotTypeOrNull<T>(in object obj, in string argumentName) where T : class => (obj ?? throw GetArgumentNullException(argumentName)) is T _obj ? _obj : throw GetExceptionForInvalidType<T>(obj.GetType().ToString(), argumentName);
 
         public static InvalidOperationException GetExceptionForDispose(in string objectName, in bool forDisposing) => forDisposing
@@ -1827,6 +1863,18 @@ namespace WinCopies.Util
 
         public static InvalidOperationException GetExceptionForDispose(in bool forDisposing) => new InvalidOperationException($"The current object or value is {(forDisposing ? "disposing" : "disposed")}.");
 
+        /// <summary>
+        /// Returns a value obtained by a <see cref="Func"/>, depending on the result of a comparison.
+        /// </summary>
+        /// <param name="x">The value to compare to <paramref name="y"/>.</param>
+        /// <param name="y">The value to compare to <paramref name="x"/>.</param>
+        /// <param name="comparison">The comparison delegate.</param>
+        /// <param name="lower">The <see cref="Func"/> that provides the value for <paramref name="x"/> is lower than <paramref name="y"/>.</param>
+        /// <param name="equals">The <see cref="Func"/> that provides the value for <paramref name="x"/> is equal to <paramref name="y"/>.</param>
+        /// <param name="greater">The <see cref="Func"/> that provides the value for <paramref name="x"/> is greater than <paramref name="y"/>.</param>
+        /// <returns>A value obtained by a <see cref="Func"/>, depending on the result of a comparison.</returns>
+        /// <exception cref="ArgumentNullException">One or more of the given <see cref="Func"/>s are <see langword="null"/>.</exception>
+        /// <remarks>See <see cref="GetIf{TValues, TResult}(in TValues, in TValues, in Comparison{TValues}, in Func{TResult}, in Func{TResult}, in Func{TResult})"/> for the generic version.</remarks>
         public static object GetIf(in object x, in object y, in WinCopies.Collections.Comparison comparison, in Func lower, in Func equals, in Func greater)
 
         {
@@ -1841,6 +1889,18 @@ namespace WinCopies.Util
 
         }
 
+        /// <summary>
+        /// Returns a value obtained by a <see cref="Func"/>, depending on the result of a comparison.
+        /// </summary>
+        /// <param name="x">The value to compare to <paramref name="y"/>.</param>
+        /// <param name="y">The value to compare to <paramref name="x"/>.</param>
+        /// <param name="comparison">The comparison delegate.</param>
+        /// <param name="lower">The <see cref="Func"/> that provides the value for <paramref name="x"/> is lower than <paramref name="y"/>.</param>
+        /// <param name="equals">The <see cref="Func"/> that provides the value for <paramref name="x"/> is equal to <paramref name="y"/>.</param>
+        /// <param name="greater">The <see cref="Func"/> that provides the value for <paramref name="x"/> is greater than <paramref name="y"/>.</param>
+        /// <returns>A value obtained by a <see cref="Func"/>, depending on the result of a comparison.</returns>
+        /// <exception cref="ArgumentNullException">One or more of the given <see cref="Func"/>s are <see langword="null"/>.</exception>
+        /// <remarks>See <see cref="GetIf(in object, in object, in Collections.Comparison, in Func, in Func, in Func)"/> for the non-generic version.</remarks>
         public static TResult GetIf<TValues, TResult>(in TValues x, in TValues y, in Comparison<TValues> comparison, in Func<TResult> lower, in Func<TResult> equals, in Func<TResult> greater)
 
         {

@@ -17,13 +17,21 @@ Updates
 WinCopies.Util (2.2.0-preview3)
 -------------------------------
 
+- Update doc.
+
 - Existing items behavior updates:
 	- The ThrowIfDisposingOrDisposed(IDisposable obj, string objectName) static method has changed to ThrowIfDisposingOrDisposed(IDisposable obj).
 
 - Additions:
-	- GetExceptionForInvalidType<T>(in Type objType, in string argumentName); static method.
-	- ArrayBuilder (extension) methods and method parameters.
-	- Math static methods.
+	- Classes:
+		- TypeArgumentException exception.
+	- Methods:
+		- GetExceptionForInvalidType<T>(in Type objType, in string argumentName); static method.
+		- ArrayBuilder (extension) methods and method parameters.
+		- Math static methods.
+		- Enum static and extension methods.
+	- Constructors:
+		- Default constructor for the ObjectDisposingException exception.
 
 WinCopies.Util.Desktop (2.0.0-preview3)
 ---------------------------------------

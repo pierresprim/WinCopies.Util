@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace WinCopies
+namespace WinCopies.Util
 {
     public static class Math
     {

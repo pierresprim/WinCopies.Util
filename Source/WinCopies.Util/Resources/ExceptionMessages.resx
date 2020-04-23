@@ -120,6 +120,9 @@
   <data name="ArrayWithMoreThanOneDimension" xml:space="preserve">
     <value>Arrays must have only one dimension.</value>
   </data>
+  <data name="CurrentObjectIsDisposing" xml:space="preserve">
+    <value>The current object or value is disposing.</value>
+  </data>
   <data name="DeclaringTypesNotCorrespond" xml:space="preserve">
     <value>The declaring types of '{0}' and '{1}' do not correspond. The declaring types of '{0}' and '{1}' must correspond for read-only properties when an integrity check is performed.</value>
   </data>
@@ -129,11 +132,20 @@
   <data name="InvalidEnumValue" xml:space="preserve">
     <value>The enum value is not in the enum values range. The enum value is {0}.</value>
   </data>
+  <data name="NonFlagsEnumException" xml:space="preserve">
+    <value>The given enum does not have the FlagsAttribute attribute.</value>
+  </data>
+  <data name="NonFlagsEnumTypeException" xml:space="preserve">
+    <value>The given enum type does not have the FlagsAttribute attribute.</value>
+  </data>
   <data name="NoValidEnumValue" xml:space="preserve">
     <value>'{0}' must be one of the {1} enum values.</value>
   </data>
   <data name="OneOrMoreSameKey" xml:space="preserve">
     <value>'{0}' has one or more same key.</value>
+  </data>
+  <data name="ParameterIsNotAnExpectedValue" xml:space="preserve">
+    <value>'{0}' is not an expected value.</value>
   </data>
   <data name="ReadOnlyCollection" xml:space="preserve">
     <value>This collection is read-only.</value>

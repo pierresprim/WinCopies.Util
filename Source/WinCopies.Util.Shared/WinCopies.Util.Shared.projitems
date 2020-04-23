@@ -20,14 +20,15 @@
     <Compile Include="$(MSBuildThisFileDirectory)Collections\ReadOnlyTreeNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\TreeNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Date.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Exceptions\TypeArgumentException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IBackgroundWorker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IDeepCloneable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IDisposable.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)InvalidEnumArgumentException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Exceptions\InvalidEnumArgumentException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Math.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ObjectDisposingException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Exceptions\ObjectDisposingException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SelectionChangedEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SingleInstance.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StringComparer.cs" />

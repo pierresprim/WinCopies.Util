@@ -31,6 +31,8 @@ using WinCopies.Collections;
 using IList = System.Collections.IList;
 using static WinCopies.Util.Util;
 using WinCopies.Collections.DotNetFix;
+using IfCT = WinCopies.Util.Util.ComparisonType;
+using WinCopies.Util.Resources;
 
 namespace WinCopies.Util
 {
@@ -3130,7 +3132,7 @@ namespace WinCopies.Util
         /// <param name="enumName">Not used.</param>
         /// <returns>The numeric value corresponding to this enum, in the given enum type underlying type.</returns>
         [Obsolete("This method has been replaced by the GetNumValue(this Enum @enum) and the WinCopies.Util.GetNumValue(Type enumType, string fieldName) methods and will be removed in later versions.")]
-        public static object GetNumValue(this Enum @enum, string enumName) => @enum.GetNumValue();
+        public static object GetNumValue(this Enum @enum, in string enumName) => @enum.GetNumValue();
 
         // todo: IFormatProvider
 
@@ -3139,7 +3141,6 @@ namespace WinCopies.Util
         /// </summary>
         /// <param name="enum">The enum for which get the corresponding numeric value.</param>
         /// <returns>The numeric value corresponding to this enum, in the given enum type underlying type.</returns>
-        [Obsolete("Please use the generic version instead.")]
         public static object GetNumValue(this Enum @enum) => Convert.ChangeType(@enum, Enum.GetUnderlyingType(@enum.GetType()));
 
         /// <summary>
@@ -3211,8 +3212,8 @@ namespace WinCopies.Util
         /// <remarks>This method doesn't read all the enum fields, but only takes care of the first and last numeric enum fields, so if the value is 1, and the enum has only defined fields for 0 and 2, this method still returns <see langword="true"/>. For a method that actually reads all the enum fields, see the <see cref="Type.IsEnumDefined(object)"/> method.</remarks>
         /// <seealso cref="ThrowIfNotValidEnumValue(Enum)"/>
         /// <seealso cref="ThrowIfNotDefinedEnumValue(Enum)"/>
-        /// <seealso cref="ThrowIfNotValidEnumValue(Enum, string)"/>
-        /// <seealso cref="ThrowIfNotDefinedEnumValue(Enum, string)"/>
+        /// <seealso cref="ThrowIfNotValidEnumValue(Enum, in string)"/>
+        /// <seealso cref="ThrowIfNotDefinedEnumValue(Enum,in string)"/>
         public static bool IsValidEnumValue(this Enum @enum)
 
         {
@@ -3233,7 +3234,7 @@ namespace WinCopies.Util
         /// <param name="enum">The enum value to check.</param>
         /// <remarks>This method doesn't read all the enum fields, but only takes care of the first and last numeric enum fields, so if the value is 1, and the enum has only defined fields for 0 and 2, this method still doesn't throw. For a method that actually reads all the enum fields, see the <see cref="ThrowIfNotDefinedEnumValue(Enum)"/> method.</remarks>
         /// <seealso cref="IsValidEnumValue(Enum)"/>
-        /// <seealso cref="ThrowIfNotValidEnumValue(Enum, string)"/>
+        /// <seealso cref="ThrowIfNotValidEnumValue(Enum,in string)"/>
         public static void ThrowIfNotValidEnumValue(this Enum @enum)
 
         {
@@ -3250,7 +3251,7 @@ namespace WinCopies.Util
         /// <remarks>This method doesn't read all the enum fields, but only takes care of the first and last numeric enum fields, so if the value is 1, and the enum has only defined fields for 0 and 2, this method still doesn't throw. For a method that actually reads all the enum fields, see the <see cref="ThrowIfNotDefinedEnumValue(Enum)"/> method.</remarks>
         /// <seealso cref="IsValidEnumValue(Enum)"/>
         /// <seealso cref="ThrowIfNotValidEnumValue(Enum)"/>
-        public static void ThrowIfNotValidEnumValue(this Enum @enum, string argumentName)
+        public static void ThrowIfNotValidEnumValue(this Enum @enum, in string argumentName)
 
         {
 
@@ -3264,7 +3265,7 @@ namespace WinCopies.Util
         /// </summary>
         /// <param name="enum">The enum value to check.</param>
         /// <seealso cref="Type.IsEnumDefined(object)"/>
-        /// <seealso cref="ThrowIfNotDefinedEnumValue(Enum, string)"/>
+        /// <seealso cref="ThrowIfNotDefinedEnumValue(Enum,in string)"/>
         public static void ThrowIfNotDefinedEnumValue(this Enum @enum)
 
         {
@@ -3281,13 +3282,15 @@ namespace WinCopies.Util
         /// <remarks>This method doesn't read all the enum fields, but only takes care of the first and last numeric enum fields, so if the value is 1, and the enum has only defined fields for 0 and 2, this method still doesn't throw. For a method that actually reads all the enum fields, see the <see cref="ThrowIfNotDefinedEnumValue(Enum)"/> method.</remarks>
         /// <seealso cref="IsValidEnumValue(Enum)"/>
         /// <seealso cref="ThrowIfNotDefinedEnumValue(Enum)"/>
-        public static void ThrowIfNotDefinedEnumValue(this Enum @enum, string argumentName)
+        public static void ThrowIfNotDefinedEnumValue(this Enum @enum, in string argumentName)
 
         {
 
             if (!@enum.GetType().IsEnumDefined(@enum)) throw new InvalidEnumArgumentException(argumentName, @enum);
 
         }
+
+        public static bool IsFlagsEnum(this Enum @enum) => @enum.GetType().GetCustomAttribute<FlagsAttribute>() is object;
 
         /// <summary>
         /// Determines whether the current enum value is within the enum values range.
@@ -3298,9 +3301,9 @@ namespace WinCopies.Util
         /// <returns><see langword="true"/> if the given value is in the enum values range, otherwise <see langword="false"/>.</returns>
         /// <exception cref="ArgumentException"><paramref name="enum"/> does not have the <see cref="FlagsAttribute"/> and <paramref name="throwIfNotFlagsEnum"/> is set to <see langword="true"/>.</exception>
         /// <exception cref="InvalidEnumArgumentException"><paramref name="enum"/> is equal to zero and the <paramref name="throwIfZero"/> parameter is set to true or <paramref name="enum"/> is lesser than zero.</exception>
-        /// <seealso cref="ThrowIfNotValidFlagsEnumValue( Enum, bool, bool)"/>
-        /// <seealso cref="ThrowIfNotValidFlagsEnumValue(Enum, string, bool, bool)"/>
-        public static bool IsValidFlagsEnumValue(this Enum @enum, bool throwIfNotFlagsEnum, bool throwIfZero)
+        /// <seealso cref="ThrowIfNotValidFlagsEnumValue(Enum, in bool, in bool)"/>
+        /// <seealso cref="ThrowIfNotValidFlagsEnumValue(Enum, in string, in bool, in bool)"/>
+        public static bool IsValidFlagsEnumValue(this Enum @enum, in bool throwIfNotFlagsEnum, in bool throwIfZero)
 
         {
 
@@ -3318,9 +3321,9 @@ namespace WinCopies.Util
 
                 throw new InvalidEnumArgumentException("The given value must be greater than zero if the 'throwIfZero' parameter is set to true, or greater or equal to zero otherwise.", nameof(@enum), value is long ? (long)value : (int)value, enumType);
 
-            if (enumType.GetCustomAttribute<FlagsAttribute>() == null)
+            if (!@enum.IsFlagsEnum())
 
-                return throwIfNotFlagsEnum ? throw new ArgumentException("The given enum does not have the FlagsAttribute.", nameof(@enum)) : false;
+                return throwIfNotFlagsEnum ? throw GetExceptionForNonFlagsEnum(nameof(@enum)) : false;
 
             // Now, we have to check if the given value is directly defined in the enum.
 
@@ -3331,10 +3334,10 @@ namespace WinCopies.Util
             // If not, we have to check if the given value is a power of 2.
 
             double valueDouble = (double)Convert.ChangeType(value, TypeCode.Double);
-            
+
             // If yes and if we reached this point, that means that the value is a power of 2 -- and therefore represents a flag in the enum --, but is not defined in the enum.
 
-            double log = System. Math.Log(valueDouble, 2);
+            double log = System.Math.Log(valueDouble, 2);
 
             if (System.Math.Truncate(log) == log) return false;
 
@@ -3371,8 +3374,8 @@ namespace WinCopies.Util
         /// <exception cref="ArgumentException"><paramref name="enum"/> does not have the <see cref="FlagsAttribute"/> and <paramref name="throwIfNotFlagsEnum"/> is set to <see langword="true"/>.</exception>
         /// <exception cref="InvalidEnumArgumentException"><paramref name="enum"/> is equal to zero and the <paramref name="throwIfZero"/> parameter is set to true or <paramref name="enum"/> is lesser than zero.</exception>
         /// <seealso cref="IsValidEnumValue(Enum)"/>
-        /// <seealso cref="ThrowIfNotValidEnumValue(Enum, string)"/>
-        public static void ThrowIfNotValidFlagsEnumValue(this Enum @enum, bool throwIfNotFlagsEnum, bool throwIfZero)
+        /// <seealso cref="ThrowIfNotValidEnumValue(Enum, in string)"/>
+        public static void ThrowIfNotValidFlagsEnumValue(this Enum @enum, in bool throwIfNotFlagsEnum, in bool throwIfZero)
 
         {
 
@@ -3393,13 +3396,161 @@ namespace WinCopies.Util
         /// <exception cref="InvalidEnumArgumentException"><paramref name="enum"/> is equal to zero and the <paramref name="throwIfZero"/> parameter is set to true or <paramref name="enum"/> is lesser than zero.</exception>
         /// <seealso cref="IsValidEnumValue(Enum)"/>
         /// <seealso cref="ThrowIfNotValidEnumValue(Enum)"/>
-        public static void ThrowIfNotValidFlagsEnumValue(this Enum @enum, string argumentName, bool throwIfNotFlagsEnum, bool throwIfZero)
+        public static void ThrowIfNotValidFlagsEnumValue(this Enum @enum, in string argumentName, in bool throwIfNotFlagsEnum, in bool throwIfZero)
 
         {
 
             if (!@enum.IsValidFlagsEnumValue(throwIfNotFlagsEnum, throwIfZero))
 
                 throw new InvalidEnumArgumentException(argumentName, (int)Convert.ChangeType(@enum, TypeCode.Int32), @enum.GetType());
+
+        }
+
+        public static void ThrowIfNotFlagsEnum(this Enum value, in string argumentName)
+        {
+            if (!value.IsFlagsEnum())
+
+                throw GetExceptionForNonFlagsEnum(argumentName);
+        }
+
+        public static bool IsValidFlagsEnumValue<T>(this T value, in IfCT comparisonType, in string argumentName, params T[] values) where T : Enum
+
+        {
+
+            ThrowIfNull(values, nameof(values));
+
+            ThrowIfNotFlagsEnumType<T>(nameof(T));
+
+            comparisonType.ThrowIfNotValidEnumValue(nameof(comparisonType));
+
+            switch (comparisonType)
+            {
+                case IfCT.And:
+
+                    foreach (T _value in values)
+
+                        if (!value.HasFlag(_value))
+
+                            return false;
+
+                    return true;
+
+                case IfCT.Or:
+
+                    foreach (T _value in values)
+
+                        if (value.HasFlag(_value))
+
+                            return true;
+
+                    return false;
+
+                case IfCT.Xor:
+
+                    bool oneResultFound = false;
+
+                    foreach (T _value in values)
+
+                        if (value.HasFlag(_value))
+
+                            if (oneResultFound)
+
+                                return false;
+
+                            else
+
+                                oneResultFound = true;
+
+                    return oneResultFound;
+
+                default:
+
+                    Debug.Assert(false);
+
+                    return false;
+            }
+
+        }
+
+        public static bool IsValidEnumValue<T>(this T value, in bool valuesAreExpected, params T[] values) where T : Enum
+
+        {
+
+            ThrowIfNull(values, nameof(values));
+
+            if (valuesAreExpected)
+
+            {
+
+                foreach (T _value in values)
+
+                    if ((Enum)_value == (Enum)value)
+
+                        return true;
+
+                return false;
+
+            }
+
+            foreach (T _value in values)
+
+                if ((Enum)_value == (Enum)value)
+
+                    return false;
+
+            return true;
+
+        }
+
+        public static void ThrowIfInvalidEnumValue(this Enum value, in bool valuesAreExpected, params Enum[] values)
+
+        {
+
+            if (!value.IsValidEnumValue(valuesAreExpected, values))
+
+                throw new InvalidOperationException(string.Format(ExceptionMessages.ParameterIsNotAnExpectedValue, value));
+
+        }
+
+        public static void ThrowIfInvalidEnumValue(this Enum value, in bool valuesAreExpected, in string argumentName, params Enum[] values)
+
+        {
+
+            if (!value.IsValidEnumValue(valuesAreExpected, values))
+
+                throw value.GetInvalidEnumArgumentException(argumentName);
+
+        }
+
+        public static void ThrowIfInvalidEnumValue<T>(this T value, in bool valuesAreExpected, params T[] values) where T : Enum
+
+        {
+
+            if (!value.IsValidEnumValue(valuesAreExpected, values))
+
+                throw new InvalidOperationException(string.Format(ExceptionMessages.ParameterIsNotAnExpectedValue, value));
+
+        }
+
+        public static void ThrowIfInvalidEnumValue<T>(this T value, in bool valuesAreExpected, in string argumentName, params T[] values) where T : Enum
+
+        {
+
+            if (!value.IsValidEnumValue(valuesAreExpected, values))
+
+                throw value.GetInvalidEnumArgumentException(argumentName);
+
+        }
+
+        public static InvalidEnumArgumentException GetInvalidEnumArgumentException(this Enum value, string argumentName) => new InvalidEnumArgumentException(string.Format(ExceptionMessages.ParameterIsNotAnExpectedValue, value), argumentName, value);
+
+        public static void ThrowInInvalidFlagsEnumValue<T>(this T value, in IfCT comparisonType, in string argumentName, params T[] values) where T : Enum
+
+        {
+
+            if (!value.IsValidFlagsEnumValue(comparisonType, argumentName, values))
+
+                throw GetInvalidEnumArgumentException(value, argumentName);
 
         }
 
