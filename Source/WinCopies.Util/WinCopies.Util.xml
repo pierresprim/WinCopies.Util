@@ -6,59 +6,130 @@
     <members>
         <member name="T:WinCopies.Util.Resources.ExceptionMessages">
             <summary>
-              Une classe de ressource fortement typée destinée, entre autres, à la consultation des chaînes localisées.
+              A strongly-typed resource class, for looking up localized strings, etc.
             </summary>
         </member>
         <member name="P:WinCopies.Util.Resources.ExceptionMessages.ResourceManager">
             <summary>
-              Retourne l'instance ResourceManager mise en cache utilisée par cette classe.
+              Returns the cached ResourceManager instance used by this class.
             </summary>
         </member>
         <member name="P:WinCopies.Util.Resources.ExceptionMessages.Culture">
             <summary>
-              Remplace la propriété CurrentUICulture du thread actuel pour toutes
-              les recherches de ressources à l'aide de cette classe de ressource fortement typée.
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
             </summary>
         </member>
         <member name="P:WinCopies.Util.Resources.ExceptionMessages.ArrayWithMoreThanOneDimension">
             <summary>
-              Recherche une chaîne localisée semblable à Arrays must have only one dimension..
+              Looks up a localized string similar to Arrays must have only one dimension..
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.Resources.ExceptionMessages.CurrentObjectIsDisposing">
+            <summary>
+              Looks up a localized string similar to The current object or value is disposing..
             </summary>
         </member>
         <member name="P:WinCopies.Util.Resources.ExceptionMessages.DeclaringTypesNotCorrespond">
             <summary>
-              Recherche une chaîne localisée semblable à The declaring types of &apos;{0}&apos; and &apos;{1}&apos; do not correspond. The declaring types of &apos;{0}&apos; and &apos;{1}&apos; must correspond for read-only properties when an integrity check is performed..
+              Looks up a localized string similar to The declaring types of &apos;{0}&apos; and &apos;{1}&apos; do not correspond. The declaring types of &apos;{0}&apos; and &apos;{1}&apos; must correspond for read-only properties when an integrity check is performed..
             </summary>
         </member>
         <member name="P:WinCopies.Util.Resources.ExceptionMessages.FieldOrPropertyNotFound">
             <summary>
-              Recherche une chaîne localisée semblable à &apos;{0}&apos; couldn&apos;t be found in &apos;{1}&apos;..
+              Looks up a localized string similar to &apos;{0}&apos; couldn&apos;t be found in &apos;{1}&apos;..
             </summary>
         </member>
         <member name="P:WinCopies.Util.Resources.ExceptionMessages.InvalidEnumValue">
             <summary>
-              Recherche une chaîne localisée semblable à The enum value is not in the enum values range. The enum value is {0}..
+              Looks up a localized string similar to The enum value is not in the enum values range. The enum value is {0}..
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.Resources.ExceptionMessages.NonFlagsEnumException">
+            <summary>
+              Looks up a localized string similar to The given enum does not have the FlagsAttribute attribute..
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.Resources.ExceptionMessages.NonFlagsEnumTypeException">
+            <summary>
+              Looks up a localized string similar to The given enum type does not have the FlagsAttribute attribute..
             </summary>
         </member>
         <member name="P:WinCopies.Util.Resources.ExceptionMessages.NoValidEnumValue">
             <summary>
-              Recherche une chaîne localisée semblable à &apos;{0}&apos; must be one of the {1} enum values..
+              Looks up a localized string similar to &apos;{0}&apos; must be one of the {1} enum values..
             </summary>
         </member>
         <member name="P:WinCopies.Util.Resources.ExceptionMessages.OneOrMoreSameKey">
             <summary>
-              Recherche une chaîne localisée semblable à &apos;{0}&apos; has one or more same key..
+              Looks up a localized string similar to &apos;{0}&apos; has one or more same key..
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.Resources.ExceptionMessages.ParameterIsNotAnExpectedValue">
+            <summary>
+              Looks up a localized string similar to &apos;{0}&apos; is not an expected value..
             </summary>
         </member>
         <member name="P:WinCopies.Util.Resources.ExceptionMessages.ReadOnlyCollection">
             <summary>
-              Recherche une chaîne localisée semblable à This collection is read-only..
+              Looks up a localized string similar to This collection is read-only..
             </summary>
         </member>
         <member name="P:WinCopies.Util.Resources.ExceptionMessages.StringParameterEmptyOrWhiteSpaces">
             <summary>
-              Recherche une chaîne localisée semblable à &apos;{0}&apos; is empty or white spaces..
+              Looks up a localized string similar to &apos;{0}&apos; is empty or white spaces..
             </summary>
+        </member>
+        <member name="M:WinCopies.Util.TypeArgumentException.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Util.TypeArgumentException"/> class.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.TypeArgumentException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Util.TypeArgumentException"/> class with a specified
+            error message.
+            </summary>
+            <param name="message">The error message that explains the reason for the exception.</param>
+        </member>
+        <member name="M:WinCopies.Util.TypeArgumentException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Util.TypeArgumentException"/> class with a specified
+            error message and a reference to the inner exception that is the cause of this
+            exception.
+            </summary>
+            <param name="message">The error message that explains the reason for the exception.</param>
+            <param name="innerException">The exception that is the cause of the current exception. If the <paramref name="innerException"/>
+            parameter is not a <see langword="null"/> reference, the current exception is raised in a catch
+            block that handles the inner exception.</param>
+        </member>
+        <member name="M:WinCopies.Util.TypeArgumentException.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Util.TypeArgumentException"/> class with a specified
+            error message and the name of the parameter that causes this exception.
+            </summary>
+            <param name="message">The error message that explains the reason for the exception.</param>
+            <param name="paramName">The name of the parameter that caused the current exception.</param>
+        </member>
+        <member name="M:WinCopies.Util.TypeArgumentException.#ctor(System.String,System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Util.TypeArgumentException"/> class with a specified
+            error message, the parameter name, and a reference to the inner exception that
+            is the cause of this exception.
+            </summary>
+            <param name="message">The error message that explains the reason for the exception.</param>
+            <param name="paramName">The name of the parameter that caused the current exception.</param>
+            <param name="innerException">The exception that is the cause of the current exception. If the <paramref name="innerException"/>
+            parameter is not a <see langword="null"/> reference, the current exception is raised in a catch
+            block that handles the inner exception.</param>
+        </member>
+        <member name="M:WinCopies.Util.TypeArgumentException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Util.TypeArgumentException"/> class with serialized
+            data.
+            </summary>
+            <param name="info">The object that holds the serialized object data.</param>
+            <param name="context">The contextual information about the source or destination.</param>
         </member>
         <member name="T:WinCopies.Util.Extensions">
             <summary>
@@ -887,7 +958,7 @@
             <exception cref="T:System.ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
             <exception cref="T:System.Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="T:System.ArgumentException"/> otherwise.</exception>
         </member>
-        <member name="M:WinCopies.Util.Extensions.GetNumValue(System.Enum,System.String)">
+        <member name="M:WinCopies.Util.Extensions.GetNumValue(System.Enum,System.String@)">
             <summary>
             Gets the numeric value for an enum.
             </summary>
@@ -926,8 +997,8 @@
             <remarks>This method doesn't read all the enum fields, but only takes care of the first and last numeric enum fields, so if the value is 1, and the enum has only defined fields for 0 and 2, this method still returns <see langword="true"/>. For a method that actually reads all the enum fields, see the <see cref="M:System.Type.IsEnumDefined(System.Object)"/> method.</remarks>
             <seealso cref="M:WinCopies.Util.Extensions.ThrowIfNotValidEnumValue(System.Enum)"/>
             <seealso cref="M:WinCopies.Util.Extensions.ThrowIfNotDefinedEnumValue(System.Enum)"/>
-            <seealso cref="M:WinCopies.Util.Extensions.ThrowIfNotValidEnumValue(System.Enum,System.String)"/>
-            <seealso cref="M:WinCopies.Util.Extensions.ThrowIfNotDefinedEnumValue(System.Enum,System.String)"/>
+            <seealso cref="M:WinCopies.Util.Extensions.ThrowIfNotValidEnumValue(System.Enum,System.String@)"/>
+            <seealso cref="M:WinCopies.Util.Extensions.ThrowIfNotDefinedEnumValue(System.Enum,System.String@)"/>
         </member>
         <member name="M:WinCopies.Util.Extensions.ThrowIfNotValidEnumValue(System.Enum)">
             <summary>
@@ -936,9 +1007,9 @@
             <param name="enum">The enum value to check.</param>
             <remarks>This method doesn't read all the enum fields, but only takes care of the first and last numeric enum fields, so if the value is 1, and the enum has only defined fields for 0 and 2, this method still doesn't throw. For a method that actually reads all the enum fields, see the <see cref="M:WinCopies.Util.Extensions.ThrowIfNotDefinedEnumValue(System.Enum)"/> method.</remarks>
             <seealso cref="M:WinCopies.Util.Extensions.IsValidEnumValue(System.Enum)"/>
-            <seealso cref="M:WinCopies.Util.Extensions.ThrowIfNotValidEnumValue(System.Enum,System.String)"/>
+            <seealso cref="M:WinCopies.Util.Extensions.ThrowIfNotValidEnumValue(System.Enum,System.String@)"/>
         </member>
-        <member name="M:WinCopies.Util.Extensions.ThrowIfNotValidEnumValue(System.Enum,System.String)">
+        <member name="M:WinCopies.Util.Extensions.ThrowIfNotValidEnumValue(System.Enum,System.String@)">
             <summary>
             Throws an <see cref="T:WinCopies.Util.InvalidEnumArgumentException"/> if the enum value is not in the required enum value range. See the Remarks section.
             </summary>
@@ -954,9 +1025,9 @@
             </summary>
             <param name="enum">The enum value to check.</param>
             <seealso cref="M:System.Type.IsEnumDefined(System.Object)"/>
-            <seealso cref="M:WinCopies.Util.Extensions.ThrowIfNotDefinedEnumValue(System.Enum,System.String)"/>
+            <seealso cref="M:WinCopies.Util.Extensions.ThrowIfNotDefinedEnumValue(System.Enum,System.String@)"/>
         </member>
-        <member name="M:WinCopies.Util.Extensions.ThrowIfNotDefinedEnumValue(System.Enum,System.String)">
+        <member name="M:WinCopies.Util.Extensions.ThrowIfNotDefinedEnumValue(System.Enum,System.String@)">
             <summary>
             Throws an <see cref="T:WinCopies.Util.InvalidEnumArgumentException"/> if the enum value is not in the required enum value range. See the Remarks section.
             </summary>
@@ -966,7 +1037,7 @@
             <seealso cref="M:WinCopies.Util.Extensions.IsValidEnumValue(System.Enum)"/>
             <seealso cref="M:WinCopies.Util.Extensions.ThrowIfNotDefinedEnumValue(System.Enum)"/>
         </member>
-        <member name="M:WinCopies.Util.Extensions.IsValidFlagsEnumValue(System.Enum,System.Boolean,System.Boolean)">
+        <member name="M:WinCopies.Util.Extensions.IsValidFlagsEnumValue(System.Enum,System.Boolean@,System.Boolean@)">
             <summary>
             Determines whether the current enum value is within the enum values range.
             </summary>
@@ -976,10 +1047,10 @@
             <returns><see langword="true"/> if the given value is in the enum values range, otherwise <see langword="false"/>.</returns>
             <exception cref="T:System.ArgumentException"><paramref name="enum"/> does not have the <see cref="T:System.FlagsAttribute"/> and <paramref name="throwIfNotFlagsEnum"/> is set to <see langword="true"/>.</exception>
             <exception cref="T:WinCopies.Util.InvalidEnumArgumentException"><paramref name="enum"/> is equal to zero and the <paramref name="throwIfZero"/> parameter is set to true or <paramref name="enum"/> is lesser than zero.</exception>
-            <seealso cref="M:WinCopies.Util.Extensions.ThrowIfNotValidFlagsEnumValue(System.Enum,System.Boolean,System.Boolean)"/>
-            <seealso cref="M:WinCopies.Util.Extensions.ThrowIfNotValidFlagsEnumValue(System.Enum,System.String,System.Boolean,System.Boolean)"/>
+            <seealso cref="M:WinCopies.Util.Extensions.ThrowIfNotValidFlagsEnumValue(System.Enum,System.Boolean@,System.Boolean@)"/>
+            <seealso cref="M:WinCopies.Util.Extensions.ThrowIfNotValidFlagsEnumValue(System.Enum,System.String@,System.Boolean@,System.Boolean@)"/>
         </member>
-        <member name="M:WinCopies.Util.Extensions.ThrowIfNotValidFlagsEnumValue(System.Enum,System.Boolean,System.Boolean)">
+        <member name="M:WinCopies.Util.Extensions.ThrowIfNotValidFlagsEnumValue(System.Enum,System.Boolean@,System.Boolean@)">
             <summary>
             Throws an <see cref="T:System.InvalidOperationException"/> if the enum value is not in the required enum value range.
             </summary>
@@ -989,9 +1060,9 @@
             <exception cref="T:System.ArgumentException"><paramref name="enum"/> does not have the <see cref="T:System.FlagsAttribute"/> and <paramref name="throwIfNotFlagsEnum"/> is set to <see langword="true"/>.</exception>
             <exception cref="T:WinCopies.Util.InvalidEnumArgumentException"><paramref name="enum"/> is equal to zero and the <paramref name="throwIfZero"/> parameter is set to true or <paramref name="enum"/> is lesser than zero.</exception>
             <seealso cref="M:WinCopies.Util.Extensions.IsValidEnumValue(System.Enum)"/>
-            <seealso cref="M:WinCopies.Util.Extensions.ThrowIfNotValidEnumValue(System.Enum,System.String)"/>
+            <seealso cref="M:WinCopies.Util.Extensions.ThrowIfNotValidEnumValue(System.Enum,System.String@)"/>
         </member>
-        <member name="M:WinCopies.Util.Extensions.ThrowIfNotValidFlagsEnumValue(System.Enum,System.String,System.Boolean,System.Boolean)">
+        <member name="M:WinCopies.Util.Extensions.ThrowIfNotValidFlagsEnumValue(System.Enum,System.String@,System.Boolean@,System.Boolean@)">
             <summary>
             Throws an <see cref="T:WinCopies.Util.InvalidEnumArgumentException"/> if the enum value is not in the required enum value range.
             </summary>
@@ -1769,7 +1840,7 @@
         </member>
         <member name="M:WinCopies.Util.Util.GetExceptionForInvalidType``1(System.String@,System.String@)">
             <summary>
-            Returns an <see cref="T:System.ArgumentNullException"/> for the given object and argument name.
+            Returns an <see cref="T:System.ArgumentException"/> for the given object and argument name.
             </summary>
             <typeparam name="T">The type to check.</typeparam>
             <param name="objTypeName">The type name of the object of the exception.</param>
@@ -1778,7 +1849,7 @@
         </member>
         <member name="M:WinCopies.Util.Util.GetExceptionForInvalidType``1(System.Type@,System.String@)">
             <summary>
-            Returns an <see cref="T:System.ArgumentNullException"/> for the given object and argument name.
+            Returns an <see cref="T:System.ArgumentException"/> for the given object and argument name.
             </summary>
             <typeparam name="T">The type to check.</typeparam>
             <param name="objType">The type of the object of the exception.</param>
@@ -1800,6 +1871,52 @@
             <typeparam name="T">The type to check.</typeparam>
             <param name="obj">The object to check.</param>
             <param name="argumentName">The argument name for the <see cref="T:System.Exception"/> that is thrown.</param>
+        </member>
+        <member name="M:WinCopies.Util.Util.GetOrThrowIfNotType``1(System.Object@,System.String@)">
+            <summary>
+            Returns a given object when it is an instance of a given type, otherwise throws an <see cref="T:System.ArgumentException"/> with a given argument name.
+            </summary>
+            <typeparam name="T">The type to check.</typeparam>
+            <param name="obj">The object to check.</param>
+            <param name="argumentName">The argument name for the <see cref="T:System.ArgumentException"/>.</param>
+            <returns><paramref name="obj"/> when it is an instance of <typeparamref name="T"/>, otherwise throws an <see cref="T:System.ArgumentException"/> with <paramref name="argumentName"/> for the argument name.</returns>
+        </member>
+        <member name="M:WinCopies.Util.Util.GetOrThrowIfNotTypeOrNull``1(System.Object@,System.String@)">
+            <summary>
+            Returns a given object when it is an instance of a given type, otherwise throws an <see cref="T:System.ArgumentNullException"/> if <paramref name="obj"/> is <see langword="null"/> or an <see cref="T:System.ArgumentException"/> with a given argument name otherwise.
+            </summary>
+            <typeparam name="T">The type to check.</typeparam>
+            <param name="obj">The object to check.</param>
+            <param name="argumentName">The argument name for the <see cref="T:System.ArgumentException"/>.</param>
+            <returns><paramref name="obj"/> when it is an instance of <typeparamref name="T"/>, otherwise throws an <see cref="T:System.ArgumentNullException"/> if <paramref name="obj"/> is <see langword="null"/> or an <see cref="T:System.ArgumentException"/> with <paramref name="argumentName"/> for the argument name otherwise.</returns>
+        </member>
+        <member name="M:WinCopies.Util.Util.GetIf(System.Object@,System.Object@,WinCopies.Collections.Comparison@,WinCopies.Util.Func@,WinCopies.Util.Func@,WinCopies.Util.Func@)">
+            <summary>
+            Returns a value obtained by a <see cref="T:WinCopies.Util.Func"/>, depending on the result of a comparison.
+            </summary>
+            <param name="x">The value to compare to <paramref name="y"/>.</param>
+            <param name="y">The value to compare to <paramref name="x"/>.</param>
+            <param name="comparison">The comparison delegate.</param>
+            <param name="lower">The <see cref="T:WinCopies.Util.Func"/> that provides the value for <paramref name="x"/> is lower than <paramref name="y"/>.</param>
+            <param name="equals">The <see cref="T:WinCopies.Util.Func"/> that provides the value for <paramref name="x"/> is equal to <paramref name="y"/>.</param>
+            <param name="greater">The <see cref="T:WinCopies.Util.Func"/> that provides the value for <paramref name="x"/> is greater than <paramref name="y"/>.</param>
+            <returns>A value obtained by a <see cref="T:WinCopies.Util.Func"/>, depending on the result of a comparison.</returns>
+            <exception cref="T:System.ArgumentNullException">One or more of the given <see cref="T:WinCopies.Util.Func"/>s are <see langword="null"/>.</exception>
+            <remarks>See <see cref="M:WinCopies.Util.Util.GetIf``2(``0@,``0@,System.Comparison{``0}@,System.Func{``1}@,System.Func{``1}@,System.Func{``1}@)"/> for the generic version.</remarks>
+        </member>
+        <member name="M:WinCopies.Util.Util.GetIf``2(``0@,``0@,System.Comparison{``0}@,System.Func{``1}@,System.Func{``1}@,System.Func{``1}@)">
+            <summary>
+            Returns a value obtained by a <see cref="T:WinCopies.Util.Func"/>, depending on the result of a comparison.
+            </summary>
+            <param name="x">The value to compare to <paramref name="y"/>.</param>
+            <param name="y">The value to compare to <paramref name="x"/>.</param>
+            <param name="comparison">The comparison delegate.</param>
+            <param name="lower">The <see cref="T:WinCopies.Util.Func"/> that provides the value for <paramref name="x"/> is lower than <paramref name="y"/>.</param>
+            <param name="equals">The <see cref="T:WinCopies.Util.Func"/> that provides the value for <paramref name="x"/> is equal to <paramref name="y"/>.</param>
+            <param name="greater">The <see cref="T:WinCopies.Util.Func"/> that provides the value for <paramref name="x"/> is greater than <paramref name="y"/>.</param>
+            <returns>A value obtained by a <see cref="T:WinCopies.Util.Func"/>, depending on the result of a comparison.</returns>
+            <exception cref="T:System.ArgumentNullException">One or more of the given <see cref="T:WinCopies.Util.Func"/>s are <see langword="null"/>.</exception>
+            <remarks>See <see cref="M:WinCopies.Util.Util.GetIf(System.Object@,System.Object@,WinCopies.Collections.Comparison@,WinCopies.Util.Func@,WinCopies.Util.Func@,WinCopies.Util.Func@)"/> for the non-generic version.</remarks>
         </member>
         <member name="T:WinCopies.Util.IValueObject">
             <summary>
