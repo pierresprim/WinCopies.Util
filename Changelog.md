@@ -13,6 +13,7 @@ Updates
 =========================
 
 - Add build property to build symbol packages.
+- Supports .Net Framework 4.7.2, .Net Core 3.0 and .Net Standard 2.0.
 
 WinCopies.Util (2.2.0-preview3)
 -------------------------------
