@@ -327,7 +327,7 @@ namespace WinCopies.Util
 
             if (comparison != IfComp.NotEqual && !predicateResult()) return false;
 
-#if NETFRAMEWORK
+#if CS7
 
             switch (comparison)
             {
@@ -381,7 +381,7 @@ namespace WinCopies.Util
 
             if (comparison != IfComp.NotEqual && !predicateResult()) return false;
 
-#if NETFRAMEWORK
+#if CS7
 
             switch (comparison)
             {
@@ -1598,7 +1598,7 @@ namespace WinCopies.Util
 
             }
 
-#if NETFRAMEWORK
+#if CS7
 
             arrays[arrays.Length - 1].CopyTo(newArray, totalArraysIndex);
 

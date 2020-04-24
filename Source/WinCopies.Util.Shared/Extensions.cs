@@ -2667,7 +2667,7 @@ namespace WinCopies.Util
 
         {
 
-#if !NETFRAMEWORK
+#if !CS7
 
             static
 
@@ -2675,7 +2675,7 @@ namespace WinCopies.Util
 
                 bool predicateByVal(TKey keyA, TKey keyB) => Equals(keyA, keyB);
 
-#if !NETFRAMEWORK
+#if !CS7
 
             static
 
@@ -3600,7 +3600,7 @@ namespace WinCopies.Util
 
         //}
 
-        //#if NETFRAMEWORK
+        //CS7
 
         //        /// <summary>
         //        /// Converts a <see cref="Bitmap"/> to an <see cref="ImageSource"/>.

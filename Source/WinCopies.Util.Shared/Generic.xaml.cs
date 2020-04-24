@@ -31,7 +31,7 @@
 //using System.Text;
 //using System.Threading.Tasks;
 
-//#if NETFRAMEWORK
+//CS7
 
 //namespace WinCopies.Util
 //{

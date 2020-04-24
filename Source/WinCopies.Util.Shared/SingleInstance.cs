@@ -8,7 +8,7 @@
 // </summary>
 //-----------------------------------------------------------------------
 
-//#if NETFRAMEWORK
+//CS7
 
 //using System;
 //using System.Collections;

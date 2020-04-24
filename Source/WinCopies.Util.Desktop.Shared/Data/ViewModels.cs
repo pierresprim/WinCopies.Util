@@ -108,7 +108,7 @@ namespace WinCopies.Util.Data
 
     {
 
-#if NETFRAMEWORK
+#if CS7
 
         public object GetModelFromPropertyChangeScope(PropertyChangeScope propertyChangeScope)
 

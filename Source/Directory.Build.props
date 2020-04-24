@@ -27,15 +27,15 @@
   </PropertyGroup>
 
     <PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp3.0'">
-      <DefineConstants>NETCORE;$(DefineConstants)</DefineConstants>
+      <DefineConstants>CS8;$(DefineConstants)</DefineConstants>
     </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)'=='net472'">
-    <DefineConstants>NETFRAMEWORK;$(DefineConstants)</DefineConstants>
+    <DefineConstants>CS7;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.1'">
-    <DefineConstants>NETSTANDARD;$(DefineConstants)</DefineConstants>
+  <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
+    <DefineConstants>CS7;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Platform)'=='x64'">
