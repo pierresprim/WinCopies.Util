@@ -23,6 +23,8 @@ WinCopies.Util.Desktop (2.2.0-preview4)
 
 - Existing items behavior updates:
 	- All command-related items have moved to the WinCopies.Util.Commands namespace.
+	- Change the type of the WinCopies.Util.Commands.DelegateCommand.CanExecuteDelegate property for the non-generic class from System.Predicate<object> to WinCopies.Util.Predicate.
+	- Add explicit constructors to the WinCopies.Util.Commands.DelegateCommand classes (generic and non-generic).
 
 04/24/2020 2.2.0-preview3
 =========================
