@@ -26,9 +26,13 @@
     <DefineConstants>TRACE;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
 
-    <PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp3.0'">
+    <PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp3.1'">
       <DefineConstants>CS8;$(DefineConstants)</DefineConstants>
     </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp3.0'">
+    <DefineConstants>CS7;$(DefineConstants)</DefineConstants>
+  </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)'=='net472'">
     <DefineConstants>CS7;$(DefineConstants)</DefineConstants>

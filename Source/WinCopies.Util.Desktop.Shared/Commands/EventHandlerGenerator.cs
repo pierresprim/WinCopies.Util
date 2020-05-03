@@ -32,7 +32,7 @@ using System.Text;
 using System.Reflection.Emit;
 using System.Reflection;
 
-namespace AttachedCommandBehavior
+namespace WinCopies.Util.Commands
 {
     /// <summary>
     /// Generates delegates according to the specified signature on runtime

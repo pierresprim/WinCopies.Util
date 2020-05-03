@@ -30,7 +30,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 
-namespace AttachedCommandBehavior
+namespace WinCopies.Util.Commands
 {
     /// <summary>
     /// Defines the attached properties to create a CommandBehaviorBinding

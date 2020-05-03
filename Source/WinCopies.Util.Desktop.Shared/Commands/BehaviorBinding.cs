@@ -29,7 +29,7 @@ using System;
 using System.Windows;
 using System.Windows.Input;
 
-namespace AttachedCommandBehavior
+namespace WinCopies.Util.Commands
 {
     /// <summary>
     /// Provides a base class for behaviors.

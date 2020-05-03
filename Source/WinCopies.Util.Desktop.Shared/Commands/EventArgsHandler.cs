@@ -32,7 +32,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace AttachedCommandBehavior
+namespace WinCopies.Util.Commands
 {
     public class EventArgsHandler<T> : Behavior where T : class
     {

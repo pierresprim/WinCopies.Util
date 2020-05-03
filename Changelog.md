@@ -9,6 +9,21 @@ CHANGELOG
 Updates
 -------
 
+??/??/???? 2.2.0-preview4
+=========================
+
+WinCopies.Util (2.2.0-preview4)
+-------------------------------
+
+- Removals:
+	- WinCopies.Util.IDisposable.IsDisposed property, as WinCopies.Util.IDisposable implements WinCopies.Util.DotNetFix.IDisposable, that implements this property.
+
+WinCopies.Util.Desktop (2.2.0-preview4)
+---------------------------------------
+
+- Existing items behavior updates:
+	- All command-related items have moved to the WinCopies.Util.Commands namespace.
+
 04/24/2020 2.2.0-preview3
 =========================
 

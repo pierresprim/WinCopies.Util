@@ -31,7 +31,7 @@
 using System;
 using System.Windows.Input;
 
-namespace AttachedCommandBehavior
+namespace WinCopies.Util.Commands
 {
 
     /// <summary>
