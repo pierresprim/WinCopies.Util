@@ -31,12 +31,12 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
 
-namespace AttachedCommandBehavior
+namespace WinCopies.Util.Commands
 {
     /// <summary>
     /// Defines the command behavior binding
     /// </summary>
-    public class CommandBehaviorBinding : IDisposable
+    public class CommandBehaviorBinding : System. IDisposable
     {
         #region Properties
 

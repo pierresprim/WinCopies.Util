@@ -27,7 +27,7 @@
 
 using System;
 
-namespace AttachedCommandBehavior
+namespace WinCopies.Util.Commands
 {
     /// <summary>
     /// Defines the interface for a strategy of execution for the CommandBehaviorBinding

@@ -1,10 +1,32 @@
-﻿using System;
+﻿/* Copyright © Pierre Sprimont, 2020
+ *
+ * This file is part of the WinCopies Framework.
+ *
+ * The WinCopies Framework is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * The WinCopies Framework is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
+
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using static WinCopies.Util.Util;
 
 namespace WinCopies.Util
 {
@@ -342,5 +364,50 @@ namespace WinCopies.Util
         public static (bool propertyChanged, IDisposable oldValue) DisposeAndSetBackgroundWorkerProperty(this IBackgroundWorker obj, string propertyName, IDisposable newValue, Type declaringType, bool throwIfBusy, bool throwIfReadOnly = true, BindingFlags bindingFlags = Util.DefaultBindingFlagsForPropertySet, string paramName = null, bool setOnlyIfNotNull = false, bool throwIfNull = false, PropertyValidateValueCallback validateValueCallback = null, bool throwIfValidationFails = false, PropertyValueChangedCallback valueChangedCallback = null) => obj.IsBusy
                 ? throwIfBusy ? throw new InvalidOperationException(WinCopies.Util.Desktop.Resources.ExceptionMessages.BackgroundWorkerIsBusy) : (false, (IDisposable)GetProperty(propertyName, declaringType, bindingFlags).GetValue(obj))
                 : obj.DisposeAndSetProperty(propertyName, newValue, declaringType, throwIfReadOnly, bindingFlags, paramName, setOnlyIfNotNull, throwIfNull, validateValueCallback, throwIfValidationFails, valueChangedCallback);
+
+        /// <summary>
+        /// Converts a <see cref="Bitmap"/> to an <see cref="ImageSource"/>.
+        /// </summary>
+        /// <param name="bitmap">The <see cref="Bitmap"/> to convert.</param>
+        /// <returns>The <see cref="ImageSource"/> obtained from the given <see cref="Bitmap"/>.</returns>
+        public static ImageSource ToImageSource(this Bitmap bitmap)
+
+        {
+
+            (bitmap ?? throw GetArgumentNullException(nameof(bitmap))).MakeTransparent();
+
+            IntPtr hBitmap = bitmap.GetHbitmap();
+
+            ImageSource wpfBitmap = Imaging.CreateBitmapSourceFromHBitmap(
+                hBitmap,
+                IntPtr.Zero,
+                Int32Rect.Empty,
+                BitmapSizeOptions.FromEmptyOptions());
+
+            if (!Microsoft.WindowsAPICodePack.Win32Native.GDI.GDI.DeleteObject(hBitmap))
+
+                Marshal.ThrowExceptionForHR(Marshal.GetHRForLastWin32Error());
+
+            return wpfBitmap;
+
+            //            //using (MemoryStream stream = new MemoryStream())
+            //            //{
+            //            //    bitmap.Save(stream, ImageFormat.Png); // Was .Bmp, but this did not show a transparent background.
+
+            //            //    stream.Position = 0;
+            //            //    BitmapImage result = new BitmapImage();
+            //            //    result.BeginInit();
+            //            //    // According to MSDN, "The default OnDemand cache option retains access to the stream until the image is needed."
+            //            //    // Force the bitmap to load right now so we can dispose the stream.
+            //            //    result.CacheOption = BitmapCacheOption.OnLoad;
+            //            //    result.StreamSource = stream;
+            //            //    result.EndInit();
+            //            //    result.Freeze();
+            //            //    return result;
+            //            //}
+
+            //            return wpfBitmap;
+
+        }
     }
 }

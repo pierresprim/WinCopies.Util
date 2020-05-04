@@ -31,7 +31,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Windows;
 
-namespace AttachedCommandBehavior
+namespace WinCopies.Util.Commands
 {
     public class CommandBehaviorCollection
     {

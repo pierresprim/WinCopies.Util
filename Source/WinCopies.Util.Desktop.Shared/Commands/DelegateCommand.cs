@@ -31,7 +31,7 @@
 using System;
 using System.Windows.Input;
 
-namespace AttachedCommandBehavior
+namespace WinCopies.Util.Commands
 {
 
     /// <summary>
@@ -43,12 +43,19 @@ namespace AttachedCommandBehavior
         /// <summary>
         /// Gets or sets the Predicate to execute when the CanExecute of the command gets called
         /// </summary>
-        public Predicate<object> CanExecuteDelegate { get; set; }
+        public Predicate CanExecuteDelegate { get; set; }
 
         /// <summary>
         /// Gets or sets the action to be called when the Execute method of the command gets called
         /// </summary>
         public Action<object> ExecuteDelegate { get; set; }
+
+        public DelegateCommand(Predicate canExecuteDelegate, Action<object> executeDelegate)
+        {
+            CanExecuteDelegate = canExecuteDelegate;
+
+            ExecuteDelegate = executeDelegate;
+        }
 
         #region ICommand Members
 
@@ -59,9 +66,11 @@ namespace AttachedCommandBehavior
         /// <returns>Returns true if the command can execute. By default true is returned so that if the user of SimpleCommand does not specify a CanExecuteCommand delegate the command still executes.</returns>
         public bool CanExecute(object parameter)
         {
-            if (CanExecuteDelegate != null)
-                return CanExecuteDelegate(parameter);
-            return true;// if there is no can execute default to true
+            if (CanExecuteDelegate == null)
+
+                return true;// if there is no can execute default to true
+
+            return CanExecuteDelegate(parameter);
         }
 
         public event EventHandler CanExecuteChanged
@@ -74,11 +83,7 @@ namespace AttachedCommandBehavior
         /// Executes the actual command
         /// </summary>
         /// <param name="parameter">THe command parameter to be passed</param>
-        public void Execute(object parameter)
-        {
-            if (ExecuteDelegate != null)
-                ExecuteDelegate(parameter);
-        }
+        public void Execute(object parameter) => ExecuteDelegate?.Invoke(parameter);
 
         #endregion
     }
@@ -99,6 +104,13 @@ namespace AttachedCommandBehavior
         /// </summary>
         public Action<T> ExecuteDelegate { get; set; }
 
+        public DelegateCommand(Predicate<T> canExecuteDelegate, Action<T> executeDelegate)
+        {
+            CanExecuteDelegate = canExecuteDelegate;
+
+            ExecuteDelegate = executeDelegate;
+        }
+
         #region ICommand Members
 
         /// <summary>
@@ -108,9 +120,9 @@ namespace AttachedCommandBehavior
         /// <returns>Returns true if the command can execute. By default true is returned so that if the user of SimpleCommand does not specify a CanExecuteCommand delegate the command still executes.</returns>
         public bool CanExecute(T parameter)
         {
-            if (CanExecuteDelegate != null)
-                return CanExecuteDelegate(parameter);
-            return true;// if there is no can execute default to true
+            if (CanExecuteDelegate == null)
+                return true;// if there is no can execute default to true
+            return CanExecuteDelegate(parameter);
         }
 
         bool ICommand.CanExecute(object parameter) => CanExecute((T)parameter);
@@ -125,11 +137,7 @@ namespace AttachedCommandBehavior
         /// Executes the actual command
         /// </summary>
         /// <param name="parameter">THe command parameter to be passed</param>
-        public void Execute(T parameter)
-        {
-            if (ExecuteDelegate != null)
-                ExecuteDelegate(parameter);
-        }
+        public void Execute(T parameter) => ExecuteDelegate?.Invoke(parameter);
 
         void ICommand.Execute(object parameter) => Execute((T)parameter);
 

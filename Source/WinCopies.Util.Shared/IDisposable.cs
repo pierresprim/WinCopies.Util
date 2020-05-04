@@ -28,8 +28,6 @@ namespace WinCopies.Util
 
         bool IsDisposing { get; }
 
-        bool IsDisposed { get; }
-
     }
 }
 

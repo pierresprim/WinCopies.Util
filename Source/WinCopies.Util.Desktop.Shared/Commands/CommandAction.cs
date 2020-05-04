@@ -21,8 +21,6 @@ using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Input;
 
-
-
 namespace WinCopies.Util.Commands
 {
     public class CommandAction : TriggerAction<DependencyObject>

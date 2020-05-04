@@ -1,4 +1,4 @@
-<Project ToolsVersion="15.0"  DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project>
   <PropertyGroup>
     <!-- SourceLink related properties https://github.com/dotnet/SourceLink#using-sourcelink -->
     <!-- Optional: Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
@@ -14,6 +14,8 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Product>WinCopies framework</Product>
+    <VersionPrefix>2.2.0</VersionPrefix>
+    <VersionSuffix>preview4</VersionSuffix>
     <Authors>Pierre Sprimont</Authors>
     <RepositoryUrl>https://github.com/pierresprim/WinCopies.Util.git</RepositoryUrl>
     <PackageProjectUrl>https://wincopies.com/</PackageProjectUrl>
@@ -26,9 +28,13 @@
     <DefineConstants>TRACE;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
 
-    <PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp3.0'">
+    <PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp3.1'">
       <DefineConstants>CS8;$(DefineConstants)</DefineConstants>
     </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp3.0'">
+    <DefineConstants>CS7;$(DefineConstants)</DefineConstants>
+  </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)'=='net472'">
     <DefineConstants>CS7;$(DefineConstants)</DefineConstants>
@@ -44,6 +50,10 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.6">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

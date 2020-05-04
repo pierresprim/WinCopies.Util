@@ -24,8 +24,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WinCopies.Collections
-{
+//namespace WinCopies.Collections
+//{
     ///// <summary>
     ///// Represents an observable <see cref="TreeNode{TValue, TItems}"/>.
     ///// </summary>
@@ -262,4 +262,4 @@ namespace WinCopies.Collections
 
     //    #endregion
     //}
-}
+//}

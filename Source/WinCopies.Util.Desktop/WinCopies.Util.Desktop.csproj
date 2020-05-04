@@ -6,8 +6,6 @@
     <Title>WinCopies.Util.Desktop</Title>
     <TargetFrameworks>netcoreapp3.0;net472</TargetFrameworks>
     <UseWPF>true</UseWPF>
-    <VersionPrefix>2.2.0</VersionPrefix>
-    <VersionSuffix>preview3</VersionSuffix>
     <Description>WinCopies framework desktop utilities</Description>
     <Copyright>Copyright © 2020 Pierre Sprimont</Copyright>
     <AssemblyOriginatorKeyFile>WinCopies.Util.Desktop.snk</AssemblyOriginatorKeyFile>
@@ -18,12 +16,21 @@
   <Import Project="..\WinCopies.Util.Desktop.Shared\WinCopies.Util.Desktop.Shared.projitems" Label="Shared" />
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.19" />
     <PackageReference Include="System.Reactive.Linq" Version="4.0.0" />
+    <PackageReference Include="WinCopies.WindowsAPICodePack.Win32Native" Version="2.0.0-preview6" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)'!='netcoreapp3.1'">
+    <!--<PackageReference Include="Microsoft.Win32.Registry" Version="4.7.0" />-->
+    <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
+    <!--<PackageReference Include="System.Management" Version="4.7.0" />-->
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)'!='netcoreapp3.0'">
+    <!--<PackageReference Include="Microsoft.Win32.Registry" Version="4.6.0" />-->
+    <PackageReference Include="System.Drawing.Common" Version="4.6.0" />
+    <!--<PackageReference Include="System.Management" Version="4.6.0" />-->
   </ItemGroup>
 
   <ItemGroup>
