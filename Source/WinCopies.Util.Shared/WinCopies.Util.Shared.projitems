@@ -37,7 +37,4 @@
     <Compile Include="$(MSBuildThisFileDirectory)Util.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ValueObject.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)README.md" />
-  </ItemGroup>
 </Project>
