@@ -14,6 +14,8 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Product>WinCopies framework</Product>
+    <VersionPrefix>2.2.0</VersionPrefix>
+    <VersionSuffix>preview4</VersionSuffix>
     <Authors>Pierre Sprimont</Authors>
     <RepositoryUrl>https://github.com/pierresprim/WinCopies.Util.git</RepositoryUrl>
     <PackageProjectUrl>https://wincopies.com/</PackageProjectUrl>

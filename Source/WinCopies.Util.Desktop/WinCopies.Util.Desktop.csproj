@@ -6,8 +6,6 @@
     <Title>WinCopies.Util.Desktop</Title>
     <TargetFrameworks>netcoreapp3.0;net472</TargetFrameworks>
     <UseWPF>true</UseWPF>
-    <VersionPrefix>2.2.0</VersionPrefix>
-    <VersionSuffix>preview3</VersionSuffix>
     <Description>WinCopies framework desktop utilities</Description>
     <Copyright>Copyright © 2020 Pierre Sprimont</Copyright>
     <AssemblyOriginatorKeyFile>WinCopies.Util.Desktop.snk</AssemblyOriginatorKeyFile>
