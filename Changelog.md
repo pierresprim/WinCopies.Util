@@ -9,7 +9,7 @@ CHANGELOG
 Updates
 -------
 
-??/??/???? 2.2.0-preview4
+05/04/2020 2.2.0-preview4
 =========================
 
 WinCopies.Util (2.2.0-preview4)
