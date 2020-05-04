@@ -1,4 +1,4 @@
-﻿///* Copyright © Pierre Sprimont, 2019
+﻿/* Copyright © Pierre Sprimont, 2019
 // *
 // * This file is part of the WinCopies Framework.
 // *

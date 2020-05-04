@@ -15,11 +15,21 @@ Updates
 WinCopies.Util (2.2.0-preview4)
 -------------------------------
 
+- Additions:
+	- Classes:
+		- WinCopies.Linq.Extensions
+
 - Removals:
 	- WinCopies.Util.IDisposable.IsDisposed property, as WinCopies.Util.IDisposable implements WinCopies.Util.DotNetFix.IDisposable, that implements this property.
 
 WinCopies.Util.Desktop (2.2.0-preview4)
 ---------------------------------------
+
+- Additions:
+	- Classes:
+		- IconToImageSourceConverter
+	- Extension methods:
+		- ToImageSource(this Bitmap bitmap)
 
 - Existing items behavior updates:
 	- All command-related items have moved to the WinCopies.Util.Commands namespace.

@@ -39,6 +39,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\EnumToBooleanConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\EnumToReversedBooleanConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\EnumToStringArrayConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\IconToImageSourceConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\IsNullConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\MenuItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\MultiConverterBase.cs" />
