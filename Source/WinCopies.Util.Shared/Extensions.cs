@@ -2648,7 +2648,7 @@ namespace WinCopies.Util
             return value;
         }
 
-        public static bool RemoveAll<T>(this IList<T> collection, T itemToKeep, bool onlyOne, bool throwIfMultiple) where T : class
+        public static bool RemoveAll<T>(this IList<T> collection,in T itemToKeep, in bool onlyOne, in bool throwIfMultiple) where T : class
         {
             while (collection.Count != 1)
 
@@ -2706,7 +2706,7 @@ namespace WinCopies.Util
             return false;
         }
 
-        public static bool RemoveAllEquatable<T>(this IList<T> collection, T itemToKeep, bool onlyOne, bool throwIfMultiple) where T : IEquatable<T>
+        public static bool RemoveAllEquatable<T>(this IList<T> collection, in T itemToKeep, in bool onlyOne, in bool throwIfMultiple) where T : IEquatable<T>
         {
             while (collection.Count != 1)
 
@@ -2764,7 +2764,7 @@ namespace WinCopies.Util
             return false;
         }
 
-        public static bool RemoveAll<T>(this IList<T> collection, T itemToKeep, Comparison<T> comparison, bool onlyOne, bool throwIfMultiple) 
+        public static bool RemoveAll<T>(this IList<T> collection, in T itemToKeep, in Comparison<T> comparison, in bool onlyOne, in bool throwIfMultiple) 
         {
             while (collection.Count != 1)
 
@@ -2822,7 +2822,7 @@ namespace WinCopies.Util
             return false;
         }
 
-        public static bool RemoveAll<T>(this IList<T> collection, T itemToKeep, System.Collections.Generic.IComparer<T> comparer, bool onlyOne, bool throwIfMultiple) 
+        public static bool RemoveAll<T>(this IList<T> collection, in T itemToKeep, in System.Collections.Generic.IComparer<T> comparer, in bool onlyOne, in bool throwIfMultiple) 
         {
             while (collection.Count != 1)
 
