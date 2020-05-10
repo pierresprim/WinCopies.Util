@@ -20,6 +20,7 @@ WinCopies.Util (2.2.0-preview5)
 		- ICountableEnumerable (generic and non-generic).
 	- Extension methods:
 		- RemoveAndGetFirstValue and RemoveAndGetLastValue for System.Collection.Generic.LinkedList and WinCopies framework's ILinkedList.
+		- RemoveAll methods.
 	- Method parameters:
 		- startIndex to applicable methods of ArrayBuilder.
 

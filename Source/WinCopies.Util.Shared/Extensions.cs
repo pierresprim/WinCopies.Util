@@ -2648,6 +2648,238 @@ namespace WinCopies.Util
             return value;
         }
 
+        public static bool RemoveAll<T>(this IList<T> collection, T itemToKeep, bool onlyOne, bool throwIfMultiple) where T : class
+        {
+            while (collection.Count != 1)
+
+            {
+
+                if (collection[0] == itemToKeep)
+
+                {
+
+                    if (onlyOne)
+                    {
+
+                        while (collection.Count != 1)
+
+                        {
+
+                            if (collection[1] == itemToKeep)
+
+                            {
+
+                                if (throwIfMultiple)
+
+                                    throw new InvalidOperationException("More than one occurences was found.");
+
+                                else
+
+                                    while (collection.Count != 1)
+
+                                        collection.RemoveAt(1);
+
+                                return false;
+
+                            }
+
+                            collection.RemoveAt(1);
+
+                            return true;
+
+                        }
+
+                    }
+
+                    while (collection.Count != 1)
+
+                        collection.RemoveAt(1);
+
+                    return true;
+
+                }
+
+                collection.RemoveAt(0);
+
+            }
+
+            return false;
+        }
+
+        public static bool RemoveAllEquatable<T>(this IList<T> collection, T itemToKeep, bool onlyOne, bool throwIfMultiple) where T : IEquatable<T>
+        {
+            while (collection.Count != 1)
+
+            {
+
+                if (collection[0]?.Equals( itemToKeep) == true ) 
+
+                {
+
+                    if (onlyOne)
+                    {
+
+                        while (collection.Count != 1)
+
+                        {
+
+                            if (collection[1] ?.Equals( itemToKeep)==true)
+
+                            {
+
+                                if (throwIfMultiple)
+
+                                    throw new InvalidOperationException("More than one occurences was found.");
+
+                                else
+
+                                    while (collection.Count != 1)
+
+                                        collection.RemoveAt(1);
+
+                                return false;
+
+                            }
+
+                            collection.RemoveAt(1);
+
+                            return true;
+
+                        }
+
+                    }
+
+                    while (collection.Count != 1)
+
+                        collection.RemoveAt(1);
+
+                    return true;
+
+                }
+
+                collection.RemoveAt(0);
+
+            }
+
+            return false;
+        }
+
+        public static bool RemoveAll<T>(this IList<T> collection, T itemToKeep, Comparison<T> comparison, bool onlyOne, bool throwIfMultiple) 
+        {
+            while (collection.Count != 1)
+
+            {
+
+                if (comparison(collection[0] , itemToKeep)==0)
+
+                {
+
+                    if (onlyOne)
+                    {
+
+                        while (collection.Count != 1)
+
+                        {
+
+                            if (comparison(collection[1] , itemToKeep)==0)
+
+                            {
+
+                                if (throwIfMultiple)
+
+                                    throw new InvalidOperationException("More than one occurences was found.");
+
+                                else
+
+                                    while (collection.Count != 1)
+
+                                        collection.RemoveAt(1);
+
+                                return false;
+
+                            }
+
+                            collection.RemoveAt(1);
+
+                            return true;
+
+                        }
+
+                    }
+
+                    while (collection.Count != 1)
+
+                        collection.RemoveAt(1);
+
+                    return true;
+
+                }
+
+                collection.RemoveAt(0);
+
+            }
+
+            return false;
+        }
+
+        public static bool RemoveAll<T>(this IList<T> collection, T itemToKeep, System.Collections.Generic.IComparer<T> comparer, bool onlyOne, bool throwIfMultiple) 
+        {
+            while (collection.Count != 1)
+
+            {
+
+                if (comparer.Compare(collection[0] , itemToKeep)==0)
+
+                {
+
+                    if (onlyOne)
+                    {
+
+                        while (collection.Count != 1)
+
+                        {
+
+                            if (comparer.Compare(collection[1] , itemToKeep)==0)
+
+                            {
+
+                                if (throwIfMultiple)
+
+                                    throw new InvalidOperationException("More than one occurences was found.");
+
+                                else
+
+                                    while (collection.Count != 1)
+
+                                        collection.RemoveAt(1);
+
+                                return false;
+
+                            }
+
+                            collection.RemoveAt(1);
+
+                            return true;
+
+                        }
+
+                    }
+
+                    while (collection.Count != 1)
+
+                        collection.RemoveAt(1);
+
+                    return true;
+
+                }
+
+                collection.RemoveAt(0);
+
+            }
+
+            return false;
+        }
+
         #endregion
 
         /// <summary>
