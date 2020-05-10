@@ -9,6 +9,24 @@ CHANGELOG
 Updates
 -------
 
+??/??/???? 2.2.0-preview5
+=========================
+
+WinCopies.Util (2.2.0-preview5)
+-------------------------------
+
+- Additions:
+	- Interfaces:
+		- ICountableEnumerable (generic and non-generic).
+
+WinCopies.Util.Desktop (2.2.0-preview5)
+---------------------------------------
+
+- Additions:
+	- New commands.
+- Existing items behavior updates:
+	- The WinCopies.Util.Commands.ApplicationCommands.CloseAllTabs has now the Shift modifier key instead of Alt.
+
 05/04/2020 2.2.0-preview4
 =========================
 

@@ -124,13 +124,13 @@
     <value>New Window in a new _process</value>
   </data>
   <data name="CloseTab" xml:space="preserve">
-    <value>C_lose tab</value>
+    <value>_Close tab</value>
   </data>
   <data name="CloseAllTabs" xml:space="preserve">
     <value>Close _all tabs</value>
   </data>
   <data name="CloseWindow" xml:space="preserve">
-    <value>Clos_e window</value>
+    <value>_Close window</value>
   </data>
   <data name="DeselectAll" xml:space="preserve">
     <value>_Deselect all</value>
@@ -140,5 +140,11 @@
   </data>
   <data name="NewWindow" xml:space="preserve">
     <value>New _window</value>
+  </data>
+  <data name="CloseOtherTabs" xml:space="preserve">
+    <value>Close other _tabs</value>
+  </data>
+  <data name="Quit" xml:space="preserve">
+    <value>_Quit</value>
   </data>
 </root>
