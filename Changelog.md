@@ -18,6 +18,13 @@ WinCopies.Util (2.2.0-preview5)
 - Additions:
 	- Interfaces:
 		- ICountableEnumerable (generic and non-generic).
+	- Extension methods:
+		- RemoveAndGetFirstValue and RemoveAndGetLastValue for System.Collection.Generic.LinkedList and WinCopies framework's ILinkedList.
+	- Method parameters:
+		- startIndex to applicable methods of ArrayBuilder.
+
+- Existing items behavior updates:
+	- The WinCopies.Collections.DotNetFix.IReadOnlyLinkedList interface implements WinCopies.Collections.DotNetFix.ICountableEnumerable.
 
 WinCopies.Util.Desktop (2.2.0-preview5)
 ---------------------------------------

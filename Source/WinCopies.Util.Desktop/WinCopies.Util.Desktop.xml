@@ -6,58 +6,68 @@
     <members>
         <member name="T:WinCopies.Util.Desktop.Resources.Commands.WPF.ApplicationCommands">
             <summary>
-              Une classe de ressource fortement typée destinée, entre autres, à la consultation des chaînes localisées.
+              A strongly-typed resource class, for looking up localized strings, etc.
             </summary>
         </member>
         <member name="P:WinCopies.Util.Desktop.Resources.Commands.WPF.ApplicationCommands.ResourceManager">
             <summary>
-              Retourne l'instance ResourceManager mise en cache utilisée par cette classe.
+              Returns the cached ResourceManager instance used by this class.
             </summary>
         </member>
         <member name="P:WinCopies.Util.Desktop.Resources.Commands.WPF.ApplicationCommands.Culture">
             <summary>
-              Remplace la propriété CurrentUICulture du thread actuel pour toutes
-              les recherches de ressources à l'aide de cette classe de ressource fortement typée.
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
             </summary>
         </member>
         <member name="P:WinCopies.Util.Desktop.Resources.Commands.WPF.ApplicationCommands.CloseAllTabs">
             <summary>
-              Recherche une chaîne localisée semblable à Close _all tabs.
+              Looks up a localized string similar to Close _all tabs.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.Desktop.Resources.Commands.WPF.ApplicationCommands.CloseOtherTabs">
+            <summary>
+              Looks up a localized string similar to Close other _tabs.
             </summary>
         </member>
         <member name="P:WinCopies.Util.Desktop.Resources.Commands.WPF.ApplicationCommands.CloseTab">
             <summary>
-              Recherche une chaîne localisée semblable à C_lose tab.
+              Looks up a localized string similar to _Close tab.
             </summary>
         </member>
         <member name="P:WinCopies.Util.Desktop.Resources.Commands.WPF.ApplicationCommands.CloseWindow">
             <summary>
-              Recherche une chaîne localisée semblable à Clos_e window.
+              Looks up a localized string similar to _Close window.
             </summary>
         </member>
         <member name="P:WinCopies.Util.Desktop.Resources.Commands.WPF.ApplicationCommands.DeselectAll">
             <summary>
-              Recherche une chaîne localisée semblable à _Deselect all.
+              Looks up a localized string similar to _Deselect all.
             </summary>
         </member>
         <member name="P:WinCopies.Util.Desktop.Resources.Commands.WPF.ApplicationCommands.NewTab">
             <summary>
-              Recherche une chaîne localisée semblable à New _tab.
+              Looks up a localized string similar to New _tab.
             </summary>
         </member>
         <member name="P:WinCopies.Util.Desktop.Resources.Commands.WPF.ApplicationCommands.NewWindow">
             <summary>
-              Recherche une chaîne localisée semblable à New _window.
+              Looks up a localized string similar to New _window.
             </summary>
         </member>
         <member name="P:WinCopies.Util.Desktop.Resources.Commands.WPF.ApplicationCommands.NewWindowInNewInstance">
             <summary>
-              Recherche une chaîne localisée semblable à New Window in a new _process.
+              Looks up a localized string similar to New Window in a new _process.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.Desktop.Resources.Commands.WPF.ApplicationCommands.Quit">
+            <summary>
+              Looks up a localized string similar to _Quit.
             </summary>
         </member>
         <member name="P:WinCopies.Util.Desktop.Resources.Commands.WPF.ApplicationCommands.ReverseSelection">
             <summary>
-              Recherche une chaîne localisée semblable à _Reverse selection.
+              Looks up a localized string similar to _Reverse selection.
             </summary>
         </member>
         <member name="T:WinCopies.Util.Desktop.Resources.Commands.WPF.DialogCommands">

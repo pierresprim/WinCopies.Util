@@ -2612,6 +2612,42 @@ namespace WinCopies.Util
 
         }
 
+        public static LinkedListNode<T> RemoveAndGetFirstValue<T>(this System.Collections.Generic.LinkedList<T> items)
+        {
+            LinkedListNode<T> value = (items ?? throw GetArgumentNullException(nameof(items))).First;
+
+            items.RemoveFirst();
+
+            return value;
+        }
+
+        public static LinkedListNode<T> RemoveAndGetFirstValue<T>(this ILinkedList<T> items)
+        {
+            LinkedListNode<T> value = (items ?? throw GetArgumentNullException(nameof(items))).First;
+
+            items.RemoveFirst();
+
+            return value;
+        }
+
+        public static LinkedListNode<T> RemoveAndGetLastValue<T>(this System.Collections.Generic.LinkedList<T> items)
+        {
+            LinkedListNode<T> value = (items ?? throw GetArgumentNullException(nameof(items))).Last;
+
+            items.RemoveLast();
+
+            return value;
+        }
+
+        public static LinkedListNode<T> RemoveAndGetLastValue<T>(this ILinkedList<T> items)
+        {
+            LinkedListNode<T> value = (items ?? throw GetArgumentNullException(nameof(items))).Last;
+
+            items.RemoveLast();
+
+            return value;
+        }
+
         #endregion
 
         /// <summary>
@@ -2673,7 +2709,7 @@ namespace WinCopies.Util
 
 #endif
 
-                bool predicateByVal(TKey keyA, TKey keyB) => Equals(keyA, keyB);
+            bool predicateByVal(TKey keyA, TKey keyB) => Equals(keyA, keyB);
 
 #if !CS7
 
@@ -2681,7 +2717,7 @@ namespace WinCopies.Util
 
 #endif
 
-                bool predicateByRef(TKey keyA, TKey keyB) => ReferenceEquals(keyA, keyB);
+            bool predicateByRef(TKey keyA, TKey keyB) => ReferenceEquals(keyA, keyB);
 
             Func<TKey, TKey, bool> predicate = typeof(TKey).IsClass ? predicateByRef : (Func<TKey, TKey, bool>)predicateByVal;
 

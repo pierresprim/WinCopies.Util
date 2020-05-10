@@ -29,7 +29,7 @@ namespace WinCopies.Collections.DotNetFix
 
     // todo: add 'in' parameter keyword?
 
-    public interface IReadOnlyLinkedList<T> : ICollection<T>, IEnumerable<T>, ICollection, IReadOnlyCollection<T>, ISerializable, IDeserializationCallback
+    public interface IReadOnlyLinkedList<T> : ICollection<T>, ICountableEnumerable<T>, ICollection, IReadOnlyCollection<T>, ISerializable, IDeserializationCallback
 
     {
 
@@ -190,6 +190,17 @@ namespace WinCopies.Collections.DotNetFix
 
 namespace WinCopies.Collections
 {
+
+    public interface ILinkedListNode<T>
+    {
+        ILinkedList<T> List { get; }
+
+        ILinkedListNode<T> Next { get; }
+
+        ILinkedListNode<T> Previous { get; }
+
+        T Value { get; }
+    }
 
     [Obsolete("Please use the WinCopies.Collections.DotNetFix.LinkedList<T> instead.")]
     [DebuggerDisplay("Count = {Count}")]

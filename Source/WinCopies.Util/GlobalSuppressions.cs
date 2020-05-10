@@ -7,3 +7,4 @@ using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "Validated with the ThrowIfNull method.", Scope = "member", Target = "~M:WinCopies.Linq.Extensions.Where``1(System.Collections.Generic.IEnumerable{``0},System.Predicate{``0})~System.Collections.Generic.IEnumerable{``0}")]
 [assembly: SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "Validated with the ThrowIfNull method.", Scope = "member", Target = "~M:WinCopies.Linq.Extensions.Where(System.Collections.IEnumerable,WinCopies.Util.Predicate)~System.Collections.IEnumerable")]
+[assembly: SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "Validated in the ValidateParameters method.", Scope = "member", Target = "~M:WinCopies.Collections.ArrayBuilder`1.ToArray(`0[]@,System.Boolean@,System.Int32@)")]
