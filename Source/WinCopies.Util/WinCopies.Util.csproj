@@ -14,13 +14,13 @@
 
   <Import Project="..\WinCopies.Util.Shared\WinCopies.Util.Shared.projitems" Label="Shared" />
 
-  <!--<ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789.`))' == 'netstandard'">
-    <PackageReference Include="System.Collections.Immutable" Version="1.7.0" />
-  </ItemGroup>
+  <PropertyGroup Condition="'$(TargetFramework.TrimEnd(`0123456789.`))' == 'netstandard'">
+    <DefineConstants>NETSTANDARD;$(DefineConstants)</DefineConstants>
+  </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789.`))' == 'net'">
-    <PackageReference Include="System.Collections.Immutable" Version="1.7.0" />
-  </ItemGroup>-->
+  <PropertyGroup Condition="'$(TargetFramework.TrimEnd(`0123456789.`))' == 'netcoreapp'">
+    <DefineConstants>NETCORE;$(DefineConstants)</DefineConstants>
+  </PropertyGroup>
 
   <ItemGroup>
     <Compile Update="Resources\ExceptionMessages.Designer.cs">

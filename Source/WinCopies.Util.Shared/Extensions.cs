@@ -33,6 +33,7 @@ using static WinCopies.Util.Util;
 using WinCopies.Collections.DotNetFix;
 using IfCT = WinCopies.Util.Util.ComparisonType;
 using WinCopies.Util.Resources;
+using System.Runtime.CompilerServices;
 
 namespace WinCopies.Util
 {
@@ -50,6 +51,46 @@ namespace WinCopies.Util
     /// </summary>
     public static class Extensions
     {
+
+        /// <summary>
+        /// Tries to add multiple values to an <see cref="System.Collections.ICollection"/> if it does not contain them already.
+        /// </summary>
+        /// <param name="collection">The collection to which try to add the value</param>
+        /// <param name="values">The values to try to add to the collection</param>
+        /// <returns><see langword="true"/> if the value has been added to the collection, otherwise <see langword="false"/>.</returns>
+        [Obsolete("This method has been replaced by the AddRangeIfNotContains(this System.Collections.IList collection, params object[] values) method.")]
+        public static object[] AddRangeIfNotContains(this System.Collections.ICollection collection, params object[] values) => collection.AddRangeIfNotContains((IEnumerable)values);
+
+        [Obsolete("This method has been replaced by the RemoveRangeIfContains<T>(this IList<T> collection, params T[] values) method.")]
+        public static T[] RemoveRangeIfContains<T>(this ICollection<T> collection, params T[] values) => collection.RemoveRangeIfContains((IEnumerable<T>)values);
+
+        [Obsolete("This method has been replaced by the RemoveRangeIfContains<T>(this IList<T> collection, in IEnumerable<T> values) method.")]
+        public static T[] RemoveRangeIfContains<T>(this ICollection<T> collection, in IEnumerable<T> values)
+
+        {
+
+            ThrowIfNull(collection, nameof(collection));
+            ThrowIfNull(values, nameof(values));
+
+            var removedValues = new ArrayBuilder<T>();
+
+            foreach (T value in values)
+
+                if (collection.Contains(value))
+
+                {
+
+                    // todo: RemoveAt()
+
+                    _ = collection.Remove(value);
+
+                    _ = removedValues.AddLast(value);
+
+                }
+
+            return removedValues.ToArray();
+
+        }
 
         #region Enumerables extension methods
 
@@ -215,9 +256,7 @@ namespace WinCopies.Util
 
         {
 
-            ThrowIfNull(collection, nameof(collection));
-
-            if (collection.Contains(value)) return false;
+            if ((collection ?? throw GetArgumentNullException(nameof(collection))).Contains(value)) return false;
 
             _ = collection.Add(value);
 
@@ -226,13 +265,12 @@ namespace WinCopies.Util
         }
 
         /// <summary>
-        /// Tries to add multiple values to an <see cref="System.Collections.ICollection"/> if it does not contain them already.
+        /// Tries to add multiple values to an <see cref="System.Collections.IList"/> if it does not contain them already.
         /// </summary>
-        /// <typeparam name="T">The value type</typeparam>
         /// <param name="collection">The collection to which try to add the value</param>
         /// <param name="values">The values to try to add to the collection</param>
         /// <returns><see langword="true"/> if the value has been added to the collection, otherwise <see langword="false"/>.</returns>
-        public static object[] AddRangeIfNotContains(this System.Collections.ICollection collection, params object[] values) => collection.AddRangeIfNotContains((IEnumerable)values);
+        public static object[] AddRangeIfNotContains(this System.Collections.IList collection, params object[] values) => collection.AddRangeIfNotContains((IEnumerable)values);
 
         /// <summary>
         /// Tries to add multiple values to an <see cref="System.Collections.IList"/> if it does not contain them already.
@@ -279,9 +317,7 @@ namespace WinCopies.Util
 
         {
 
-            ThrowIfNull(collection, nameof(collection));
-
-            if (collection.Contains(value)) return false;
+            if ((collection ?? throw GetArgumentNullException(nameof(collection))).Contains(value)) return false;
 
             collection.Add(value);
 
@@ -334,13 +370,18 @@ namespace WinCopies.Util
 
         #region Insert(Range)IfNotContains methods
 
+        /// <summary>
+        /// Inserts a value at the specified index in a given collection if the value does not already exists in the collection.
+        /// </summary>
+        /// <param name="collection">The collection in which to add the value.</param>
+        /// <param name="index">The index at the collection to which add the value.</param>
+        /// <param name="value">The value to add in the collection.</param>
+        /// <returns><see langword="true"/> if the value is added to the collection, otherwise <see langword="false"/>.</returns>
         public static bool InsertIfNotContains(this IList collection, in int index, in object value)
 
         {
 
-            ThrowIfNull(collection, nameof(collection));
-
-            if (collection.Contains(value)) return false;
+            if ((collection ?? throw GetArgumentNullException(nameof(collection))).Contains(value)) return false;
 
             collection.Insert(index, value);
 
@@ -426,9 +467,7 @@ namespace WinCopies.Util
 
         {
 
-            ThrowIfNull(collection, nameof(collection));
-
-            if (collection.Contains(value))
+            if ((collection ?? throw GetArgumentNullException(nameof(collection))).Contains(value))
 
             {
 
@@ -473,29 +512,11 @@ namespace WinCopies.Util
 
 
 
-        public static bool RemoveIfContains<T>(this ICollection<T> collection, in T value)
+        public static bool RemoveIfContains<T>(this ICollection<T> collection, in T value) => (collection ?? throw GetArgumentNullException(nameof(collection))).Contains(value) ? collection.Remove(value) : false;
 
-        {
+        public static T[] RemoveRangeIfContains<T>(this IList<T> collection, params T[] values) => collection.RemoveRangeIfContains((IEnumerable<T>)values);
 
-            ThrowIfNull(collection, nameof(collection));
-
-            if (collection.Contains(value))
-
-            {
-
-                _ = collection.Remove(value);
-
-                return true;
-
-            }
-
-            return false;
-
-        }
-
-        public static T[] RemoveRangeIfContains<T>(this ICollection<T> collection, params T[] values) => collection.RemoveRangeIfContains((IEnumerable<T>)values);
-
-        public static T[] RemoveRangeIfContains<T>(this ICollection<T> collection, in IEnumerable<T> values)
+        public static T[] RemoveRangeIfContains<T>(this IList<T> collection, in IEnumerable<T> values)
 
         {
 
@@ -506,17 +527,19 @@ namespace WinCopies.Util
 
             foreach (T value in values)
 
-                if (collection.Contains(value))
+                for (int i = 0; i < collection.Count; i++)
 
-                {
+                    if (collection[i].Equals(value))
 
-                    // todo: RemoveAt()
+                    {
 
-                    _ = collection.Remove(value);
+                        // todo: RemoveAt()
 
-                    _ = removedValues.AddLast(value);
+                        collection.RemoveAt(i);
 
-                }
+                        _ = removedValues.AddLast(value);
+
+                    }
 
             return removedValues.ToArray();
 
@@ -2648,7 +2671,7 @@ namespace WinCopies.Util
             return value;
         }
 
-        public static bool RemoveAll<T>(this IList<T> collection,in T itemToKeep, in bool onlyOne, in bool throwIfMultiple) where T : class
+        public static bool RemoveAll<T>(this IList<T> collection, in T itemToKeep, in bool onlyOne, in bool throwIfMultiple) where T : class
         {
             while (collection.Count != 1)
 
@@ -2712,7 +2735,7 @@ namespace WinCopies.Util
 
             {
 
-                if (collection[0]?.Equals( itemToKeep) == true ) 
+                if (collection[0]?.Equals(itemToKeep) == true)
 
                 {
 
@@ -2723,7 +2746,7 @@ namespace WinCopies.Util
 
                         {
 
-                            if (collection[1] ?.Equals( itemToKeep)==true)
+                            if (collection[1]?.Equals(itemToKeep) == true)
 
                             {
 
@@ -2764,13 +2787,13 @@ namespace WinCopies.Util
             return false;
         }
 
-        public static bool RemoveAll<T>(this IList<T> collection, in T itemToKeep, in Comparison<T> comparison, in bool onlyOne, in bool throwIfMultiple) 
+        public static bool RemoveAll<T>(this IList<T> collection, in T itemToKeep, in Comparison<T> comparison, in bool onlyOne, in bool throwIfMultiple)
         {
             while (collection.Count != 1)
 
             {
 
-                if (comparison(collection[0] , itemToKeep)==0)
+                if (comparison(collection[0], itemToKeep) == 0)
 
                 {
 
@@ -2781,7 +2804,7 @@ namespace WinCopies.Util
 
                         {
 
-                            if (comparison(collection[1] , itemToKeep)==0)
+                            if (comparison(collection[1], itemToKeep) == 0)
 
                             {
 
@@ -2822,13 +2845,13 @@ namespace WinCopies.Util
             return false;
         }
 
-        public static bool RemoveAll<T>(this IList<T> collection, in T itemToKeep, in System.Collections.Generic.IComparer<T> comparer, in bool onlyOne, in bool throwIfMultiple) 
+        public static bool RemoveAll<T>(this IList<T> collection, in T itemToKeep, in System.Collections.Generic.IComparer<T> comparer, in bool onlyOne, in bool throwIfMultiple)
         {
             while (collection.Count != 1)
 
             {
 
-                if (comparer.Compare(collection[0] , itemToKeep)==0)
+                if (comparer.Compare(collection[0], itemToKeep) == 0)
 
                 {
 
@@ -2839,7 +2862,7 @@ namespace WinCopies.Util
 
                         {
 
-                            if (comparer.Compare(collection[1] , itemToKeep)==0)
+                            if (comparer.Compare(collection[1], itemToKeep) == 0)
 
                             {
 
@@ -4247,6 +4270,96 @@ namespace WinCopies.Util
 
             return items;
 
+        }
+
+        public static string Repeat(this char c, in int length) => c.Repeat(null, null, length);
+
+        public static string Repeat(this char c, in char left, in char right, in int length) => c.Repeat(left, right, length);
+
+        private static string Repeat(this char c, in char? left, in char? right, in int length)
+        {
+            var sb = new StringBuilder();
+
+            Action action;
+
+            if (left.HasValue)
+
+            {
+
+                char _left = left.Value;
+
+                if (right.HasValue)
+
+                {
+
+                    char _right = right.Value;
+
+                    action = () => { _ = sb.Append(_left); _ = sb.Append(c); _ = sb.Append(_right); };
+
+                }
+
+                else
+
+                    action = () => { _ = sb.Append(_left); _ = sb.Append(c); };
+
+            }
+
+            else if (right.HasValue)
+
+            {
+
+                char _right = right.Value;
+
+                action = () => { _ = sb.Append(c); _ = sb.Append(_right); };
+
+            }
+
+            else
+
+                action = () => sb.Append(c);
+
+            for (int i = 0; i < length; i++)
+
+                action();
+
+            return sb.ToString();
+        }
+
+        public static string Repeat(this string s, in int length) => s.Repeat(null, null, length);
+
+        public static string Repeat(this string s, string left, string right, in int length)
+        {
+            var sb = new StringBuilder();
+
+            Action action;
+
+            if (left != null)
+
+            {
+
+                if (right == null)
+
+                    action = () => { _ = sb.Append(left); _ = sb.Append(s); };
+
+                else
+
+                    action = () => { _ = sb.Append(left); _ = sb.Append(s); _ = sb.Append(right); };
+
+            }
+
+            else if (right != null)
+
+                action = () => { _=sb.Append(s); _=sb.Append(right); };
+
+            else
+
+                action = () => sb.Append(s);
+
+            for (int i = 0; i < length; i++)
+
+                action();
+
+            return sb.ToString();
         }
 
     }

@@ -21,10 +21,16 @@ WinCopies.Util (2.2.0-preview5)
 	- Extension methods:
 		- RemoveAndGetFirstValue and RemoveAndGetLastValue for System.Collection.Generic.LinkedList and WinCopies framework's ILinkedList.
 		- RemoveAll methods.
+		- Char and String Repeat methods.
+	- Static methods:
+		- StartProcessNetCore(in string url) and StartProcessNetCore(in System.Uri url);
 	- Method parameters:
 		- startIndex to applicable methods of ArrayBuilder.
 
 - Existing items behavior updates:
+	- The WinCopies.UtiL.Util.AddRangeIfNotContains(this System.Collections.ICollection collection, params object[] values) now has the following signature: AddRangeIfNotContains(this System.Collections.IList collection, params object[] values). The old method is still supported.
+	- The WinCopies.Util.Util.RemoveRangeIfContains<T>(this ICollection<T> collection, params T[] values) now has the following signature: WinCopies.Util.Util.RemoveRangeIfContains<T>(this IList<T> collection, params T[] values). The old method is still supported.
+	- The WinCopies.Util.Util.RemoveRangeIfContains<T>(this ICollection<T> collection, in IEnumerable<T> values) now has the following signature: RemoveRangeIfContains<T>(this IList<T> collection, in IEnumerable<T> values). The old method is still supported.
 	- The WinCopies.Collections.DotNetFix.IReadOnlyLinkedList interface implements WinCopies.Collections.DotNetFix.ICountableEnumerable.
 
 WinCopies.Util.Desktop (2.2.0-preview5)
