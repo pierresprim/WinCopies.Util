@@ -13,7 +13,12 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "WinCopies.Util.Desktop.Shar
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "WinCopies.Util.Shared", "..\Source\WinCopies.Util.Shared\WinCopies.Util.Shared.shproj", "{E2160F13-964F-409C-9A4F-1FDBBDA1B76C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.NetCore", "Tests.NetCore\Tests.NetCore.csproj", "{B4BD2519-786B-4827-A4F0-EDB6315551DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.NetCore", "Tests.NetCore\Tests.NetCore.csproj", "{B4BD2519-786B-4827-A4F0-EDB6315551DE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{992C7EB1-21C6-4B2A-B2FF-EC5308D188E9}"
+	ProjectSection(SolutionItems) = preProject
+		..\Changelog.md = ..\Changelog.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution

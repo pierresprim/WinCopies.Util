@@ -12,15 +12,15 @@ namespace WinCopies.Tests.Util.Util
     [TestClass]
     public class Util
     {
-        public enum TestEnum:ushort
+        public enum TestEnum : ushort
         {
-            None=0,
+            None = 0,
 
-            Value1=1,
+            Value1 = 1,
 
-            Value2=2,
+            Value2 = 2,
 
-            Value3=3
+            Value3 = 3
         }
 
         [Flags]
@@ -34,7 +34,7 @@ namespace WinCopies.Tests.Util.Util
 
             Value3 = 4,
 
-            Value4=8
+            Value4 = 8
         }
 
         [TestMethod]
@@ -96,7 +96,7 @@ namespace WinCopies.Tests.Util.Util
 
             Assert.IsFalse(testEnumFlags.HasMultipleFlags());
 
-            testEnumFlags = TestEnumFlags.Value1| TestEnumFlags.Value2;
+            testEnumFlags = TestEnumFlags.Value1 | TestEnumFlags.Value2;
 
             Assert.IsTrue(testEnumFlags.HasMultipleFlags());
 
@@ -120,7 +120,7 @@ namespace WinCopies.Tests.Util.Util
 
             Assert.IsTrue(testEnumFlags.HasMultipleFlags());
 
-            testEnumFlags = TestEnumFlags.Value1 | TestEnumFlags.Value2| TestEnumFlags.Value3;
+            testEnumFlags = TestEnumFlags.Value1 | TestEnumFlags.Value2 | TestEnumFlags.Value3;
 
             Assert.IsTrue(testEnumFlags.HasMultipleFlags());
 
@@ -128,7 +128,7 @@ namespace WinCopies.Tests.Util.Util
 
             Assert.IsTrue(testEnumFlags.HasMultipleFlags());
 
-            testEnumFlags = TestEnumFlags.Value1 | TestEnumFlags.Value2 | TestEnumFlags.Value3| TestEnumFlags.Value4;
+            testEnumFlags = TestEnumFlags.Value1 | TestEnumFlags.Value2 | TestEnumFlags.Value3 | TestEnumFlags.Value4;
 
             Assert.IsTrue(testEnumFlags.HasMultipleFlags());
 

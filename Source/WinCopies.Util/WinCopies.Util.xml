@@ -136,6 +136,14 @@
             Provides some static extension methods.
             </summary>
         </member>
+        <member name="M:WinCopies.Util.Extensions.AddRangeIfNotContains(System.Collections.ICollection,System.Object[])">
+            <summary>
+            Tries to add multiple values to an <see cref="T:System.Collections.ICollection"/> if it does not contain them already.
+            </summary>
+            <param name="collection">The collection to which try to add the value</param>
+            <param name="values">The values to try to add to the collection</param>
+            <returns><see langword="true"/> if the value has been added to the collection, otherwise <see langword="false"/>.</returns>
+        </member>
         <member name="M:WinCopies.Util.Extensions.AddIfNotContains(System.Collections.IList,System.Object@)">
             <summary>
             Tries to add a value to an <see cref="T:System.Collections.IList"/> if it does not contain it already.
@@ -144,11 +152,10 @@
             <param name="value">The value to try to add to the collection</param>
             <returns><see langword="true"/> if the value has been added to the collection, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Util.Extensions.AddRangeIfNotContains(System.Collections.ICollection,System.Object[])">
+        <member name="M:WinCopies.Util.Extensions.AddRangeIfNotContains(System.Collections.IList,System.Object[])">
             <summary>
-            Tries to add multiple values to an <see cref="T:System.Collections.ICollection"/> if it does not contain them already.
+            Tries to add multiple values to an <see cref="T:System.Collections.IList"/> if it does not contain them already.
             </summary>
-            <typeparam name="T">The value type</typeparam>
             <param name="collection">The collection to which try to add the value</param>
             <param name="values">The values to try to add to the collection</param>
             <returns><see langword="true"/> if the value has been added to the collection, otherwise <see langword="false"/>.</returns>
@@ -188,6 +195,15 @@
             <param name="collection">The collection to which try to add the value</param>
             <param name="values">The values to try to add to the collection</param>
             <returns><see langword="true"/> if the value has been added to the collection, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Util.Extensions.InsertIfNotContains(System.Collections.IList,System.Int32@,System.Object@)">
+            <summary>
+            Inserts a value at the specified index in a given collection if the value does not already exists in the collection.
+            </summary>
+            <param name="collection">The collection in which to add the value.</param>
+            <param name="index">The index at the collection to which add the value.</param>
+            <param name="value">The value to add in the collection.</param>
+            <returns><see langword="true"/> if the value is added to the collection, otherwise <see langword="false"/>.</returns>
         </member>
         <member name="M:WinCopies.Util.Extensions.AddRangeFirst``1(System.Collections.Generic.LinkedList{``0},``0[])">
             <summary>

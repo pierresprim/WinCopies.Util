@@ -24,6 +24,8 @@ WinCopies.Util (2.2.0-preview5)
 		- Char and String Repeat methods.
 	- Static methods:
 		- StartProcessNetCore(in string url) and StartProcessNetCore(in System.Uri url);
+		- Math class:
+			- IsAdditionResultInRange, TryAdd, IsMultiplicationResultInRange and TryMultiply for unsigned types.
 	- Method parameters:
 		- startIndex to applicable methods of ArrayBuilder.
 
