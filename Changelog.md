@@ -28,6 +28,8 @@ WinCopies.Util (2.2.0-preview5)
 			- IsAdditionResultInRange, TryAdd, IsMultiplicationResultInRange and TryMultiply for unsigned types.
 	- Method parameters:
 		- startIndex to applicable methods of ArrayBuilder.
+	- Structs:
+		- CheckedUInt64
 
 - Existing items behavior updates:
 	- The WinCopies.UtiL.Util.AddRangeIfNotContains(this System.Collections.ICollection collection, params object[] values) now has the following signature: AddRangeIfNotContains(this System.Collections.IList collection, params object[] values). The old method is still supported.

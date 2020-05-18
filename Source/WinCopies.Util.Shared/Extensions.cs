@@ -4349,7 +4349,7 @@ namespace WinCopies.Util
 
             else if (right != null)
 
-                action = () => { _=sb.Append(s); _=sb.Append(right); };
+                action = () => { _ = sb.Append(s); _ = sb.Append(right); };
 
             else
 
