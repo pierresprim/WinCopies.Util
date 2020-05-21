@@ -9,10 +9,10 @@ CHANGELOG
 Updates
 -------
 
-??/??/???? 2.2.0-preview5
+05/21/2020 2.3.0-preview5
 =========================
 
-WinCopies.Util (2.2.0-preview5)
+WinCopies.Util (2.3.0-preview5)
 -------------------------------
 
 - Additions:
@@ -37,7 +37,7 @@ WinCopies.Util (2.2.0-preview5)
 	- The WinCopies.Util.Util.RemoveRangeIfContains<T>(this ICollection<T> collection, in IEnumerable<T> values) now has the following signature: RemoveRangeIfContains<T>(this IList<T> collection, in IEnumerable<T> values). The old method is still supported.
 	- The WinCopies.Collections.DotNetFix.IReadOnlyLinkedList interface implements WinCopies.Collections.DotNetFix.ICountableEnumerable.
 
-WinCopies.Util.Desktop (2.2.0-preview5)
+WinCopies.Util.Desktop (2.3.0-preview5)
 ---------------------------------------
 
 - Additions:

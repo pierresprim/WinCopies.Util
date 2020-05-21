@@ -55,30 +55,62 @@ namespace WinCopies.Util
         }
 
         public int CompareTo(
-#if NETCORE
+#if CS8
             [AllowNull]
 #endif
         CheckedUInt64 other) =>
-#if NETCORE
+#if CS8
             other == null ||
 #endif
             this < other ? -1 : this == other ? 0 : 1;
 
-        public int CompareTo([AllowNull] long other) => other < 0 ? 1 : this < other ? -1 : this == other ? 0 : 1;
+        public int CompareTo(
+#if CS8
+            [AllowNull]
+        #endif
+        long other) => other < 0 ? 1 : this < other ? -1 : this == other ? 0 : 1;
 
-        public int CompareTo([AllowNull] int other) => other < 0 ? 1 : this < other ? -1 : this == other ? 0 : 1;
+        public int CompareTo(
+#if CS8
+            [AllowNull]
+        #endif
+        int other) => other < 0 ? 1 : this < other ? -1 : this == other ? 0 : 1;
 
-        public int CompareTo([AllowNull] short other) => other < 0 ? 1 : this < other ? -1 : this == other ? 0 : 1;
+        public int CompareTo(
+#if CS8
+            [AllowNull]
+        #endif
+        short other) => other < 0 ? 1 : this < other ? -1 : this == other ? 0 : 1;
 
-        public int CompareTo([AllowNull] sbyte other) => other < 0 ? 1 : this < other ? -1 : this == other ? 0 : 1;
+        public int CompareTo(
+#if CS8
+            [AllowNull]
+        #endif
+        sbyte other) => other < 0 ? 1 : this < other ? -1 : this == other ? 0 : 1;
 
-        public int CompareTo([AllowNull] ulong other) => this < other ? -1 : this == other ? 0 : 1;
+        public int CompareTo(
+#if CS8
+            [AllowNull]
+        #endif
+        ulong other) => this < other ? -1 : this == other ? 0 : 1;
 
-        public int CompareTo([AllowNull] uint other) => this < other ? -1 : this == other ? 0 : 1;
+        public int CompareTo(
+#if CS8
+            [AllowNull]
+        #endif
+        uint other) => this < other ? -1 : this == other ? 0 : 1;
 
-        public int CompareTo([AllowNull] ushort other) => this < other ? -1 : this == other ? 0 : 1;
+        public int CompareTo(
+#if CS8
+            [AllowNull]
+        #endif
+        ushort other) => this < other ? -1 : this == other ? 0 : 1;
 
-        public int CompareTo([AllowNull] byte other) => this < other ? -1 : this == other ? 0 : 1;
+        public int CompareTo(
+#if CS8
+            [AllowNull]
+        #endif
+        byte other) => this < other ? -1 : this == other ? 0 : 1;
 
 
 
@@ -760,9 +792,9 @@ namespace WinCopies.Util
 
         #region ushort operators
 
-        public static CheckedUInt64 operator +(in ushort @short, in CheckedUInt64 s) => s+@short;
+        public static CheckedUInt64 operator +(in ushort @short, in CheckedUInt64 s) => s + @short;
 
-        public static CheckedUInt64 operator *(in ushort @short, in CheckedUInt64 s) => s*@short;
+        public static CheckedUInt64 operator *(in ushort @short, in CheckedUInt64 s) => s * @short;
 
         #endregion
 
@@ -780,9 +812,9 @@ namespace WinCopies.Util
 
         #region uint operators
 
-        public static CheckedUInt64 operator +(in uint i, in CheckedUInt64 s) => s+i;
+        public static CheckedUInt64 operator +(in uint i, in CheckedUInt64 s) => s + i;
 
-        public static CheckedUInt64 operator *(in uint i, in CheckedUInt64 s) => s*i;
+        public static CheckedUInt64 operator *(in uint i, in CheckedUInt64 s) => s * i;
 
         #endregion
 
@@ -790,9 +822,9 @@ namespace WinCopies.Util
 
         #region long operators
 
-        public static CheckedUInt64 operator +(in long l, in CheckedUInt64 s) => s+l;
+        public static CheckedUInt64 operator +(in long l, in CheckedUInt64 s) => s + l;
 
-        public static CheckedUInt64 operator *(in long l, in CheckedUInt64 s) => s*l;
+        public static CheckedUInt64 operator *(in long l, in CheckedUInt64 s) => s * l;
 
         #endregion
 
@@ -800,9 +832,9 @@ namespace WinCopies.Util
 
         #region ulong operators
 
-        public static CheckedUInt64 operator +(in ulong l, in CheckedUInt64 s) => s+l;
+        public static CheckedUInt64 operator +(in ulong l, in CheckedUInt64 s) => s + l;
 
-        public static CheckedUInt64 operator *(in ulong l, in CheckedUInt64 s) => s*l;
+        public static CheckedUInt64 operator *(in ulong l, in CheckedUInt64 s) => s * l;
 
         #endregion
 
@@ -864,7 +896,7 @@ namespace WinCopies.Util
 
         #region CheckedUInt64 to numeric value
 
-        public static explicit operator sbyte(CheckedUInt64 s) => s.IsNaN ? throw new InvalidOperationException($"{nameof(s)} is not a number.") :    (sbyte) s._value.Value ; 
+        public static explicit operator sbyte(CheckedUInt64 s) => s.IsNaN ? throw new InvalidOperationException($"{nameof(s)} is not a number.") : (sbyte)s._value.Value;
 
         public static explicit operator byte(CheckedUInt64 s) => s.IsNaN ? throw new InvalidOperationException($"{nameof(s)} is not a number.") : (byte)s._value.Value;
 
