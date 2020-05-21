@@ -9,6 +9,42 @@ CHANGELOG
 Updates
 -------
 
+05/21/2020 2.3.0-preview5
+=========================
+
+WinCopies.Util (2.3.0-preview5)
+-------------------------------
+
+- Additions:
+	- Interfaces:
+		- ICountableEnumerable (generic and non-generic).
+	- Extension methods:
+		- RemoveAndGetFirstValue and RemoveAndGetLastValue for System.Collection.Generic.LinkedList and WinCopies framework's ILinkedList.
+		- RemoveAll methods.
+		- Char and String Repeat methods.
+	- Static methods:
+		- StartProcessNetCore(in string url) and StartProcessNetCore(in System.Uri url);
+		- Math class:
+			- IsAdditionResultInRange, TryAdd, IsMultiplicationResultInRange and TryMultiply for unsigned types.
+	- Method parameters:
+		- startIndex to applicable methods of ArrayBuilder.
+	- Structs:
+		- CheckedUInt64
+
+- Existing items behavior updates:
+	- The WinCopies.UtiL.Util.AddRangeIfNotContains(this System.Collections.ICollection collection, params object[] values) now has the following signature: AddRangeIfNotContains(this System.Collections.IList collection, params object[] values). The old method is still supported.
+	- The WinCopies.Util.Util.RemoveRangeIfContains<T>(this ICollection<T> collection, params T[] values) now has the following signature: WinCopies.Util.Util.RemoveRangeIfContains<T>(this IList<T> collection, params T[] values). The old method is still supported.
+	- The WinCopies.Util.Util.RemoveRangeIfContains<T>(this ICollection<T> collection, in IEnumerable<T> values) now has the following signature: RemoveRangeIfContains<T>(this IList<T> collection, in IEnumerable<T> values). The old method is still supported.
+	- The WinCopies.Collections.DotNetFix.IReadOnlyLinkedList interface implements WinCopies.Collections.DotNetFix.ICountableEnumerable.
+
+WinCopies.Util.Desktop (2.3.0-preview5)
+---------------------------------------
+
+- Additions:
+	- New commands.
+- Existing items behavior updates:
+	- The WinCopies.Util.Commands.ApplicationCommands.CloseAllTabs has now the Shift modifier key instead of Alt.
+
 05/04/2020 2.2.0-preview4
 =========================
 

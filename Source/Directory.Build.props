@@ -14,8 +14,8 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Product>WinCopies framework</Product>
-    <VersionPrefix>2.2.0</VersionPrefix>
-    <VersionSuffix>preview4</VersionSuffix>
+    <VersionPrefix>2.3.0</VersionPrefix>
+    <VersionSuffix>preview5</VersionSuffix>
     <Authors>Pierre Sprimont</Authors>
     <RepositoryUrl>https://github.com/pierresprim/WinCopies.Util.git</RepositoryUrl>
     <PackageProjectUrl>https://wincopies.com/</PackageProjectUrl>
@@ -33,15 +33,23 @@
     </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp3.0'">
-    <DefineConstants>CS7;$(DefineConstants)</DefineConstants>
+    <DefineConstants>CS8;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)'=='net472'">
     <DefineConstants>CS7;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(TargetFramework)'=='net48'">
+    <DefineConstants>CS7;$(DefineConstants)</DefineConstants>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
     <DefineConstants>CS7;$(DefineConstants)</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.1'">
+    <DefineConstants>CS8;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Platform)'=='x64'">

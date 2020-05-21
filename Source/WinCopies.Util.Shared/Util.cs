@@ -28,6 +28,7 @@ using IfComp = WinCopies.Util.Util.Comparison;
 using WinCopies.Collections;
 using IComparer = System.Collections.IComparer;
 using WinCopies.Util.Resources;
+using System.Diagnostics;
 
 namespace WinCopies.Util
 {
@@ -77,7 +78,7 @@ namespace WinCopies.Util
 
         // todo: key-value pairs to raise an argument exception
 
-            [Obsolete("This method has been replaced by the WinCopies.Util.Extensions.ThrowIfInvalidEnumValue(params Enum[] values) method.")]
+        [Obsolete("This method has been replaced by the WinCopies.Util.Extensions.ThrowIfInvalidEnumValue(params Enum[] values) method.")]
         public static void ThrowOnNotValidEnumValue(params Enum[] values) => ThrowIfInvalidEnumValue(values);
 
         public static void ThrowIfInvalidEnumValue(params Enum[] values)
@@ -105,7 +106,7 @@ namespace WinCopies.Util
         }
 
         [Obsolete("This method has been replaced by the WinCopies.Util.Extensions.ThrowIfInvalidEnumValue(this Enum, bool, params Enum[]) method.")]
-        public static void ThrowOnEnumNotValidEnumValue(in Enum value, params Enum[] values) => value.ThrowIfInvalidEnumValue(false,  values);
+        public static void ThrowOnEnumNotValidEnumValue(in Enum value, params Enum[] values) => value.ThrowIfInvalidEnumValue(false, values);
 
         public static ArgumentException GetExceptionForNonFlagsEnum(in string argumentName) => new ArgumentException(ExceptionMessages.NonFlagsEnumException, argumentName);
 
@@ -1578,7 +1579,7 @@ namespace WinCopies.Util
 
                 // todo : in a newer version, instead, get the maximum rank of arrays in params Array[] arrays and add a gesture of this in the process (also for the ConcatenateLong method) ; and not forgetting to change the comments of the xmldoc about this.
 
-                if (array.Rank != 1) throw new ArgumentException(Resources.ExceptionMessages.ArrayWithMoreThanOneDimension);
+                if (array.Rank != 1) throw new ArgumentException(ExceptionMessages.ArrayWithMoreThanOneDimension);
 
                 totalArraysLength += array.Length;
 
@@ -2020,6 +2021,52 @@ namespace WinCopies.Util
             ThrowIfDisposingInternal(obj);
 
         }
+
+#if NETCORE || NETSTANDARD
+        // https://brockallen.com/2016/09/24/process-start-for-urls-on-net-core/
+
+        public static void StartProcessNetCore(in string url)
+        {
+            // hack because of this: https://github.com/dotnet/corefx/issues/10361
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+
+                _ = Process.Start(new ProcessStartInfo("cmd", $"/c start {url.Replace("&", "^&")}") { CreateNoWindow = true });
+
+            //else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            //{
+            //    Process.Start("xdg-open", url);
+            //}
+            //else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            //{
+            //    Process.Start("open", url);
+            //}
+            //else
+            //{
+            //    throw;
+            //}
+        }
+
+        public static void StartProcessNetCore(in Uri url)
+        {
+            // hack because of this: https://github.com/dotnet/corefx/issues/10361
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+
+                _ = Process.Start(new ProcessStartInfo("cmd", $"/c start {url.ToString().Replace("&", "^&")}") { CreateNoWindow = true });
+
+            //else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            //{
+            //    Process.Start("xdg-open", url);
+            //}
+            //else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            //{
+            //    Process.Start("open", url);
+            //}
+            //else
+            //{
+            //    throw;
+            //}
+        }
+#endif
 
     }
 

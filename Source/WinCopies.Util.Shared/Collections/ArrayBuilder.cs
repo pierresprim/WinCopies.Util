@@ -27,6 +27,7 @@ using System.Threading.Tasks;
 using WinCopies.Collections.DotNetFix;
 using WinCopies.Util;
 using WinCopies.Util.Resources;
+using static WinCopies.Util.Util;
 
 namespace WinCopies.Collections
 {
@@ -255,15 +256,15 @@ namespace WinCopies.Collections
         /// Add multiple <see cref="LinkedListNode{T}"/>'s at the top of this <see cref="ArrayBuilder{T}"/>.
         /// </summary>
         /// <param name="array">The <see cref="LinkedListNode{T}"/>'s to add to this <see cref="ArrayBuilder{T}"/></param>
-        public void AddRangeFirst(in IEnumerable<LinkedListNode<T>> array) 
-        { 
-            if (InnerList.First == null) 
-                
-                AddRangeLast(array); 
-            
-            else 
-                
-                AddRangeBefore(InnerList.First, array); 
+        public void AddRangeFirst(in IEnumerable<LinkedListNode<T>> array)
+        {
+            if (InnerList.First == null)
+
+                AddRangeLast(array);
+
+            else
+
+                AddRangeBefore(InnerList.First, array);
         }
 
         /// <summary>
@@ -577,6 +578,19 @@ namespace WinCopies.Collections
 
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerList).GetEnumerator();
 
+        private void ValidateParameters(in T[] array, in int? startIndex) => ValidateParameters((array ?? throw GetArgumentNullException(nameof(array))).Length, startIndex, true);
+
+        private void ValidateParameters(in ArrayList arrayList, in int? startIndex) => ValidateParameters((arrayList ?? throw GetArgumentNullException(nameof(arrayList))).Count, startIndex, false);
+
+        private void ValidateParameters(in IList<T> list, in int? startIndex) => ValidateParameters((list ?? throw GetArgumentNullException(nameof(list))).Count, startIndex, false);
+
+        private void ValidateParameters(in int count, in int? startIndex, in bool isFixedSize)
+        {
+            if (startIndex.HasValue && ((isFixedSize ? startIndex + Count : startIndex) > count))
+
+                throw new IndexOutOfRangeException($"{nameof(startIndex)} is not in the value range.");
+        }
+
         /// <summary>
         /// Returns an array with the items of this <see cref="ArrayBuilder{T}"/>.
         /// </summary>
@@ -586,16 +600,20 @@ namespace WinCopies.Collections
         {
             var array = new T[InnerList.Count];
 
-            ToArray(array, remove);
+            ToArrayPrivate(array, remove, 0);
 
             return array;
         }
 
-        public void ToArray(in T[] array, in bool remove = false)
-
+        public void ToArray(in T[] array, in bool remove = false, in int startIndex = 0)
         {
+            ValidateParameters(array, startIndex);
 
-            int i = 0;
+            ToArrayPrivate(array, remove, startIndex);
+        }
+
+        private void ToArrayPrivate(in T[] array, in bool remove, int startIndex)
+        {
 
             if (remove)
 
@@ -603,7 +621,7 @@ namespace WinCopies.Collections
 
                 {
 
-                    array[i++] = InnerList.First.Value;
+                    array[startIndex++] = InnerList.First.Value;
 
                     InnerList.RemoveFirst();
 
@@ -613,7 +631,7 @@ namespace WinCopies.Collections
 
                 foreach (T item in InnerList)
 
-                    array[i++] = item;
+                    array[startIndex++] = item;
 
         }
 
@@ -626,31 +644,72 @@ namespace WinCopies.Collections
         {
             var arrayList = new ArrayList(InnerList.Count);
 
-            ToArrayList(arrayList, remove);
+            ToArrayListPrivate(arrayList, remove, null);
 
             return arrayList;
         }
 
-        public void ToArrayList(in ArrayList arrayList, in bool remove = false)
+        public void ToArrayList(in ArrayList arrayList, in bool remove = false, in int? startIndex = null)
+        {
+            ValidateParameters(arrayList, startIndex);
+
+            ToArrayListPrivate(arrayList, remove, startIndex);
+        }
+
+        private void ToArrayListPrivate(ArrayList arrayList, in bool remove, in int? startIndex)
         {
 
             if (remove)
 
-                while (Count != 0)
+            {
+
+                Action action;
+
+                if (startIndex.HasValue)
 
                 {
 
-                    _ = arrayList.Add(InnerList.First.Value);
+                    int index = startIndex.Value;
 
-                    InnerList.RemoveFirst();
+                    action = () => arrayList.Insert(index++, InnerList.RemoveAndGetFirstValue().Value);
 
                 }
 
+                else
+
+                    action = () => _ = arrayList.Add(InnerList.RemoveAndGetFirstValue().Value);
+
+                while (Count != 0)
+
+                    action();
+
+            }
+
             else
+
+            {
+
+                Action<T> action;
+
+                if (startIndex.HasValue)
+
+                {
+
+                    int index = startIndex.Value;
+
+                    action = item => arrayList.Insert(index++, item);
+
+                }
+
+                else
+
+                    action = item => _ = arrayList.Add(item);
 
                 foreach (T item in InnerList)
 
-                    _ = arrayList.Add(item);
+                    action(item);
+
+            }
 
         }
 
@@ -663,32 +722,72 @@ namespace WinCopies.Collections
         {
             var list = new List<T>(Count);
 
-            ToList(list, remove);
+            ToListPrivate(list, remove, null);
 
             return list;
         }
 
-        public void ToList(in IList<T> list, in bool remove = false)
+        public void ToList(in IList<T> list, in bool remove = false, in int? startIndex = null)
+        {
+            ValidateParameters(list, startIndex);
 
+            ToListPrivate(list, remove, startIndex);
+        }
+
+        private void ToListPrivate(IList<T> list, in bool remove, in int? startIndex)
         {
 
             if (remove)
 
-                while (Count != 0)
+            {
+
+                Action action;
+
+                if (startIndex.HasValue)
 
                 {
 
-                    list.Add(InnerList.First.Value);
+                    int index = startIndex.Value;
 
-                    InnerList.RemoveFirst();
+                    action = () => list.Insert(index++, InnerList.RemoveAndGetFirstValue().Value);
 
                 }
 
+                else
+
+                    action = () => list.Add(InnerList.RemoveAndGetFirstValue().Value);
+
+                while (Count != 0)
+
+                    action();
+
+            }
+
             else
+
+            {
+
+                Action<T> action;
+
+                if (startIndex.HasValue)
+
+                {
+
+                    int index = startIndex.Value;
+
+                    action = item => list.Insert(index++, item);
+
+                }
+
+                else
+
+                    action = item => list.Add(item);
 
                 foreach (T item in InnerList)
 
-                    list.Add(item);
+                    action(item);
+
+            }
 
         }
 

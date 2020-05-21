@@ -29,6 +29,13 @@ using static WinCopies.Util.Util;
 
 namespace WinCopies.Collections.DotNetFix
 {
+    public interface ICountableEnumerable:IEnumerable
+    {
+        int Count { get; }
+    }
+
+    public interface ICountableEnumerable<out T> : IEnumerable<T>, ICountableEnumerable { } 
+
     public interface IUIntIndexedCollection : IEnumerable
     {
         /// <summary>

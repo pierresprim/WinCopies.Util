@@ -247,7 +247,7 @@ namespace WinCopies.Util
 
                     result = 1 / result;
 
-                    return result; 
+                    return result;
 
                 }
 
@@ -259,7 +259,7 @@ namespace WinCopies.Util
 
                 result *= value;
 
-            return result ;
+            return result;
 
         }
 
@@ -305,7 +305,7 @@ namespace WinCopies.Util
 
                 result *= value;
 
-            return result ;
+            return result;
 
         }
 
@@ -351,8 +351,96 @@ namespace WinCopies.Util
 
                 result *= value;
 
-            return result ;
+            return result;
 
+        }
+
+        public static bool IsAdditionResultInRange(in ulong left, in ulong right, in ulong maxValue) => left <= maxValue && maxValue - left >= right;
+
+        public static ulong? TryAdd(in ulong left, in ulong right, in ulong maxValue)
+        {
+            if (IsAdditionResultInRange(left, right, maxValue))
+
+                return left + right;
+
+            return null;
+        }
+
+        public static bool IsMultiplicationResultInRange(in ulong left, in ulong right, in ulong maxValue) => left==0|| maxValue / left >= right;
+
+        public static ulong? TryMultiply(in ulong left, in ulong right, in ulong maxValue)
+        {
+            if (IsMultiplicationResultInRange(left, right, maxValue))
+
+                return left * right;
+
+            return null;
+        }
+
+        public static bool IsAdditionResultInRange(in uint left, in uint right, in uint maxValue) => left <= maxValue && maxValue - left >= right;
+
+        public static uint? TryAdd(in uint left, in uint right, in uint maxValue)
+        {
+            if (IsAdditionResultInRange(left, right, maxValue))
+
+                return left + right;
+
+            return null;
+        }
+
+        public static bool IsMultiplicationResultInRange(in uint left, in uint right, in uint maxValue) => left == 0 || maxValue / left >= right;
+
+        public static uint? TryMultiply(in uint left, in uint right, in uint maxValue)
+        {
+            if (IsMultiplicationResultInRange(left, right, maxValue))
+
+                return left * right;
+
+            return null;
+        }
+
+        public static bool IsAdditionResultInRange(in ushort left, in ushort right, in ushort maxValue) => left <= maxValue && maxValue - left >= right;
+
+        public static ushort? TryAdd(in ushort left, in ushort right, in ushort maxValue)
+        {
+            if (IsAdditionResultInRange(left, right, maxValue))
+
+                return (ushort)(left + right);
+
+            return null;
+        }
+
+        public static bool IsMultiplicationResultInRange(in ushort left, in ushort right, in ushort maxValue) => left == 0 || maxValue / left >= right;
+
+        public static ushort? TryMultiply(in ushort left, in ushort right, in ushort maxValue)
+        {
+            if (IsMultiplicationResultInRange(left, right, maxValue))
+
+                return (ushort)(left * right);
+
+            return null;
+        }
+
+        public static bool IsAdditionResultInRange(in byte left, in byte right, in byte maxValue) => left <= maxValue && maxValue - left >= right;
+
+        public static byte? TryAdd(in byte left, in byte right, in byte maxValue)
+        {
+            if (IsAdditionResultInRange(left, right, maxValue))
+
+                return (byte)(left + right);
+
+            return null;
+        }
+
+        public static bool IsMultiplicationResultInRange(in byte left, in byte right, in byte maxValue) => left == 0 || maxValue / left >= right;
+
+        public static byte? TryMultiply(in byte left, in byte right, in byte maxValue)
+        {
+            if (IsMultiplicationResultInRange(left, right, maxValue))
+
+                return (byte)(left * right);
+
+            return null;
         }
     }
 }
