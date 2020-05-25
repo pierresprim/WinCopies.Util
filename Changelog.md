@@ -9,6 +9,15 @@ CHANGELOG
 Updates
 -------
 
+??/??/???? 2.4.0-preview6
+=========================
+
+WinCopies.Util (2.4.0-preview6)
+-------------------------------
+
+- Existing items behavior updates:
+	- The WinCopies.Util.Util.StartProcessNetCore method returns the process that is launched.
+
 05/21/2020 2.3.0-preview5
 =========================
 

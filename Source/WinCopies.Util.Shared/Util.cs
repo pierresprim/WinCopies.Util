@@ -2025,12 +2025,12 @@ namespace WinCopies.Util
 #if NETCORE || NETSTANDARD
         // https://brockallen.com/2016/09/24/process-start-for-urls-on-net-core/
 
-        public static void StartProcessNetCore(in string url)
+        public static Process StartProcessNetCore(in string url)
         {
             // hack because of this: https://github.com/dotnet/corefx/issues/10361
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            // if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 
-                _ = Process.Start(new ProcessStartInfo("cmd", $"/c start {url.Replace("&", "^&")}") { CreateNoWindow = true });
+                return Process.Start(new ProcessStartInfo("cmd", $"/c start {url.Replace("&", "^&")}") { CreateNoWindow = true });
 
             //else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             //{
