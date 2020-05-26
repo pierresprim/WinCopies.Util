@@ -5,8 +5,6 @@ The WinCopies® software framework
 
 [![NuGet Badge](https://buildstats.info/nuget/WinCopies.Util)](https://www.nuget.org/packages/WinCopies.Util/)
 
-[![NuGet Badge](https://buildstats.info/nuget/WinCopies.Util)](https://www.nuget.org/packages/WinCopies.Util/)
-
 README
 ======
 
