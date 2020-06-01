@@ -20,100 +20,99 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.Serialization;
-using System.Text;
-using WinCopies.Collections.DotNetFix;
 using WinCopies.Util.Resources;
 
-namespace WinCopies.Collections
+namespace WinCopies.Collections.DotNetFix
 {
 
-    public interface ILinkedListNode<T>
-    {
-        ILinkedList<T> List { get; }
+    // todo: add 'in' parameter keyword?
 
-        ILinkedListNode<T> Next { get; }
+    public interface IReadOnlyLinkedList<T> : ICollection<T>, ICountableEnumerable<T>, ICollection, IReadOnlyCollection<T>, ISerializable, IDeserializationCallback
 
-        ILinkedListNode<T> Previous { get; }
-
-        T Value { get; }
-    }
-
-    [Obsolete("Please use the WinCopies.Collections.DotNetFix.LinkedList<T> instead.")]
-    [DebuggerDisplay("Count = {Count}")]
-    public class LinkedList<T> : ILinkedList<T>
     {
 
-        protected System.Collections.Generic.LinkedList<T> InnerList { get; }
+        LinkedListNode<T> Last { get; }
 
-        public LinkedList(System.Collections.Generic.LinkedList<T> list) => InnerList = list;
+        LinkedListNode<T> First { get; }
 
-        public LinkedListNode<T> Last => InnerList.Last;
+        new int Count { get; }
 
-        public LinkedListNode<T> First => InnerList.First;
+        LinkedListNode<T> Find(T value);
 
-        public int Count => InnerList.Count;
+        LinkedListNode<T> FindLast(T value);
 
-        bool ICollection<T>.IsReadOnly => false;
+        // todo: to remove
 
-        object ICollection.SyncRoot => ((ICollection)InnerList).SyncRoot;
-
-        bool ICollection.IsSynchronized => ((ICollection)InnerList).IsSynchronized;
-
-        void ICollection<T>.Add(T item) => ((ICollection<T>)InnerList).Add(item);
-
-        public LinkedListNode<T> AddAfter(LinkedListNode<T> node, T value) => InnerList.AddAfter(node, value);
-
-        public void AddAfter(LinkedListNode<T> node, LinkedListNode<T> newNode) => InnerList.AddAfter(node, newNode);
-
-        public LinkedListNode<T> AddBefore(LinkedListNode<T> node, T value) => InnerList.AddBefore(node, value);
-
-        public void AddBefore(LinkedListNode<T> node, LinkedListNode<T> newNode) => InnerList.AddBefore(node, newNode);
-
-        public LinkedListNode<T> AddFirst(T value) => InnerList.AddFirst(value);
-
-        public void AddFirst(LinkedListNode<T> node) => InnerList.AddFirst(node);
-
-        public LinkedListNode<T> AddLast(T value) => InnerList.AddLast(value);
-
-        public void AddLast(LinkedListNode<T> node) => InnerList.AddLast(node);
-
-        public void Clear() => InnerList.Clear();
-
-        public bool Contains(T value) => InnerList.Contains(value);
-
-        public void CopyTo(T[] array, int index) => InnerList.CopyTo(array, index);
-
-        public LinkedListNode<T> Find(T value) => InnerList.Find(value);
-
-        public LinkedListNode<T> FindLast(T value) => InnerList.FindLast(value);
-
-        public System.Collections.Generic.LinkedList<T>.Enumerator GetEnumerator() => InnerList.GetEnumerator();
-
-        IEnumerator<T> IEnumerable<T>.GetEnumerator() => ((IEnumerable<T>)InnerList).GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerList).GetEnumerator();
-
-        public virtual void GetObjectData(SerializationInfo info, StreamingContext context) => InnerList.GetObjectData(info, context);
-
-        public virtual void OnDeserialization(object sender) => InnerList.OnDeserialization(sender);
-
-        public bool Remove(T value) => InnerList.Remove(value);
-
-        public void Remove(LinkedListNode<T> node) => InnerList.Remove(node);
-
-        public void RemoveFirst() => InnerList.RemoveFirst();
-
-        public void RemoveLast() => InnerList.RemoveLast();
-
-        public void CopyTo(Array array, int index) => ((ICollection)InnerList).CopyTo(array, index);
+        new System.Collections.Generic.LinkedList<T>.Enumerator GetEnumerator();
 
     }
 
-    [Obsolete("Please use the WinCopies.Collections.DotNetFix.ReadOnlyLinkedList<T> instead.")]
-    [DebuggerDisplay("Count = {Count}")]
-    public class ReadOnlyLinkedList<T> : ILinkedList<T>
+    public interface ILinkedList<T> : ICollection<T>, IEnumerable<T>, ICollection, IReadOnlyCollection<T>, ISerializable, IDeserializationCallback
 
     {
+
+        LinkedListNode<T> Last { get; }
+
+        LinkedListNode<T> First { get; }
+
+        new int Count { get; }
+
+        LinkedListNode<T> AddAfter(LinkedListNode<T> node, T value);
+
+        void AddAfter(LinkedListNode<T> node, LinkedListNode<T> newNode);
+
+        LinkedListNode<T> AddBefore(LinkedListNode<T> node, T value);
+
+        void AddBefore(LinkedListNode<T> node, LinkedListNode<T> newNode);
+
+        LinkedListNode<T> AddFirst(T value);
+
+        void AddFirst(LinkedListNode<T> node);
+
+        LinkedListNode<T> AddLast(T value);
+
+        void AddLast(LinkedListNode<T> node);
+
+        LinkedListNode<T> Find(T value);
+
+        LinkedListNode<T> FindLast(T value);
+
+        //todo: to remove
+
+        new System.Collections.Generic.LinkedList<T>.Enumerator GetEnumerator();
+
+        void Remove(LinkedListNode<T> node);
+
+        void RemoveFirst();
+
+        void RemoveLast();
+
+    }
+
+    public interface ILinkedList2<T> : ILinkedList<T>
+    {
+
+        bool IsReadOnly { get; }
+
+    }
+
+    [DebuggerDisplay("Count = {Count}")]
+    public class LinkedList<T> : System.Collections.Generic.LinkedList<T>, ILinkedList2<T>
+
+    {
+
+        // todo: remove the explicit interface implementation and make this property public.
+
+        bool ILinkedList2<T>.IsReadOnly => false;
+
+    }
+
+    [DebuggerDisplay("Count = {Count}")]
+    public class ReadOnlyLinkedList<T> : IReadOnlyLinkedList<T>, ILinkedList2<T>
+
+    {
+
+        public bool IsReadOnly => true;
 
         protected ILinkedList<T> InnerList { get; }
 
@@ -125,9 +124,9 @@ namespace WinCopies.Collections
 
         bool ICollection<T>.IsReadOnly => true;
 
-        object ICollection.SyncRoot => ((ICollection)InnerList).SyncRoot;
+        object ICollection.SyncRoot => InnerList.SyncRoot;
 
-        bool ICollection.IsSynchronized => ((ICollection)InnerList).IsSynchronized;
+        bool ICollection.IsSynchronized => InnerList.IsSynchronized;
 
         public bool Contains(T value) => InnerList.Contains(value);
 
@@ -136,6 +135,8 @@ namespace WinCopies.Collections
         public LinkedListNode<T> Find(T value) => InnerList.Find(value);
 
         public LinkedListNode<T> FindLast(T value) => InnerList.FindLast(value);
+
+        // todo: to remove
 
         public System.Collections.Generic.LinkedList<T>.Enumerator GetEnumerator() => InnerList.GetEnumerator();
 

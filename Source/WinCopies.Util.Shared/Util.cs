@@ -56,6 +56,8 @@ namespace WinCopies.Util
     public static class Util
     {
 
+        public const string NotApplicable = "N/A";
+
         public const BindingFlags DefaultBindingFlagsForPropertySet = BindingFlags.Public | BindingFlags.NonPublic |
                          BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly;
 

@@ -13,6 +13,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Collections\ArrayBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\Collections.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\Comparers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Collections\DotNetFix\Collections.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Collections\DotNetFix\LinkedList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Collections\DotNetFix\LinkedListCollections.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\EnumComparer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\EnumeratorCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\ITreeNode.cs" />

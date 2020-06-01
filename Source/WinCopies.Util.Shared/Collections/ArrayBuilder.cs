@@ -40,7 +40,7 @@ namespace WinCopies.Collections
     public class ArrayBuilder<T> : ILinkedList<T>
     {
 
-        protected EnumeratorCollection Enumerators { get; }
+        protected EnumeratorCollection Enumerators { get; } = new EnumeratorCollection();
 
         /// <summary>
         /// Gets the <see cref="System.Collections.Generic.LinkedList{T}"/> that is used to build the arrays and collections.
@@ -50,34 +50,19 @@ namespace WinCopies.Collections
         /// <summary>
         /// Initializes a new instance of the <see cref="ArrayBuilder{T}"/> class.
         /// </summary>
-        public ArrayBuilder()
-        {
-            Enumerators = new EnumeratorCollection();
-
-            InnerList = new System.Collections.Generic.LinkedList<T>();
-        }
+        public ArrayBuilder() : this(new System.Collections.Generic.LinkedList<T>()) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ArrayBuilder{T}"/> class with a given <see cref="IEnumerable{T}"/>.
         /// </summary>
         /// <param name="enumerable"></param>
-        public ArrayBuilder(in IEnumerable<T> enumerable)
-        {
-            Enumerators = new EnumeratorCollection();
-
-            InnerList = new System.Collections.Generic.LinkedList<T>(enumerable);
-        }
+        public ArrayBuilder(in IEnumerable<T> enumerable) : this(new System.Collections.Generic.LinkedList<T>(enumerable)) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ArrayBuilder{T}"/> class using a custom <see cref="System.Collections.Generic.LinkedList{T}"/> to build the arrays and collections.
         /// </summary>
         /// <param name="innerList"></param>
-        protected ArrayBuilder(in System.Collections.Generic.LinkedList<T> innerList)
-        {
-            Enumerators = new EnumeratorCollection();
-
-            InnerList = innerList;
-        }
+        protected ArrayBuilder(in System.Collections.Generic.LinkedList<T> innerList) => InnerList = innerList;
 
         /// <summary>
         /// Gets the last node of this <see cref="ArrayBuilder{T}"/>.
