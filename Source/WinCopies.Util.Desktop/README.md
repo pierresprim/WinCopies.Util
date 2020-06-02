@@ -16,7 +16,6 @@ Description
 
 Some utilities to extend the .NET framework capabilities, such as:
 
-- An array and list builder;
 - Some commands for WPF;
 - Some data converters WPF;
 - Some basic objects and interfaces to work easier with WPF data binding;
