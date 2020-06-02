@@ -1744,6 +1744,8 @@ namespace WinCopies.Util
         /// <returns>An <see cref="ArgumentNullException"/> with the given argument name.</returns>
         public static ArgumentNullException GetArgumentNullException(in string argumentName) => new ArgumentNullException(argumentName);
 
+#if WinCopies2
+
         /// <summary>
         /// Throws an <see cref="ArgumentNullException"/> if a given object is null.
         /// </summary>
@@ -1757,6 +1759,8 @@ namespace WinCopies.Util
                 throw GetArgumentNullException(argumentName);
 
         }
+
+#endif
 
         /// <summary>
         /// Throws an <see cref="ArgumentNullException"/> if a given object is null.

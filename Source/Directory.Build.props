@@ -14,16 +14,11 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Product>WinCopies framework</Product>
-    <VersionPrefix>2.4.0</VersionPrefix>
-    <VersionSuffix>preview6</VersionSuffix>
-    <AssemblyVersion>2.4.0.6</AssemblyVersion>
-    <FileVersion>2.4.0.6</FileVersion>
     <Authors>Pierre Sprimont</Authors>
     <RepositoryUrl>https://github.com/pierresprim/WinCopies.Util.git</RepositoryUrl>
     <PackageProjectUrl>https://wincopies.com/</PackageProjectUrl>
     <RepositoryType>Git</RepositoryType>
     <PackageReleaseNotes>See https://github.com/pierresprim/WinCopies.Util/blob/master/Changelog.md</PackageReleaseNotes>
-    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">

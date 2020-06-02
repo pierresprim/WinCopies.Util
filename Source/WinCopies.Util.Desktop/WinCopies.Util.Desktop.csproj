@@ -8,9 +8,14 @@
     <UseWPF>true</UseWPF>
     <Description>WinCopies framework desktop utilities</Description>
     <Copyright>Copyright © 2020 Pierre Sprimont</Copyright>
+    <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>WinCopies.Util.Desktop.snk</AssemblyOriginatorKeyFile>
     <DocumentationFile>WinCopies.Util.Desktop.xml</DocumentationFile>
     <PackageTags>WinCopies</PackageTags>
+    <VersionPrefix>2.4</VersionPrefix>
+    <VersionSuffix>preview6.1</VersionSuffix>
+    <AssemblyVersion>2.4.6.1</AssemblyVersion>
+    <FileVersion>2.4.6.1</FileVersion>
   </PropertyGroup>
 
   <Import Project="..\WinCopies.Util.Desktop.Shared\WinCopies.Util.Desktop.Shared.projitems" Label="Shared" />

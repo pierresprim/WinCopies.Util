@@ -9,7 +9,15 @@ CHANGELOG
 Updates
 -------
 
-??/??/???? 2.4.0-preview6
+06/02/2020 2.4-preview6.1
+=========================
+
+WinCopies.Util (2.4-preview6.1)
+-------------------------------
+
+Bug fixes and improvements for the latest features.
+
+06/02/2020 2.4.0-preview6
 =========================
 
 WinCopies.Util (2.4.0-preview6)
