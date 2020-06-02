@@ -536,6 +536,8 @@ namespace WinCopies.Collections.DotNetFix
             RaiseCountPropertyChangedEvent();
         }
 
+#if NETCORE
+
         protected override bool TryDequeueItem([MaybeNullWhen(false)] out T result)
         {
             bool succeeded = base.TryDequeueItem(out result);
@@ -544,6 +546,9 @@ namespace WinCopies.Collections.DotNetFix
 
             return succeeded;
         }
+
+#endif
+
     }
 
     public class ObservableStackCollection<T> : StackCollection<T>, INotifyPropertyChanged
@@ -583,14 +588,19 @@ namespace WinCopies.Collections.DotNetFix
             RaiseCountPropertyChangedEvent();
         }
 
+#if NETCORE
+
         protected override bool TryPopItem(out T result)
         {
             bool succeeded = base.TryPopItem(out result);
 
             RaiseCountPropertyChangedEvent();
 
-            return succeeded ; 
+            return succeeded;
         }
+
+#endif
+
     }
 
     public class ObservableLinkedCollection<T> : LinkedCollection<T>, INotifyPropertyChanged
@@ -616,11 +626,11 @@ namespace WinCopies.Collections.DotNetFix
 
         protected override LinkedListNode<T> AddFirstItem(T value)
         {
-           LinkedListNode<T> result =    base.AddFirstItem(value);
+            LinkedListNode<T> result = base.AddFirstItem(value);
 
             RaiseCountPropertyChangedEvent();
 
-            return result; 
+            return result;
         }
 
         protected override void AddItem(T item)
@@ -639,11 +649,11 @@ namespace WinCopies.Collections.DotNetFix
 
         protected override LinkedListNode<T> AddItemAfter(LinkedListNode<T> node, T value)
         {
-           LinkedListNode<T> result =    base.AddItemAfter(node, value);
+            LinkedListNode<T> result = base.AddItemAfter(node, value);
 
             RaiseCountPropertyChangedEvent();
 
-            return result; 
+            return result;
         }
 
         protected override void AddItemBefore(LinkedListNode<T> node, LinkedListNode<T> newNode)
@@ -655,7 +665,7 @@ namespace WinCopies.Collections.DotNetFix
 
         protected override LinkedListNode<T> AddItemBefore(LinkedListNode<T> node, T value)
         {
-           LinkedListNode<T> result =    base.AddItemBefore(node, value);
+            LinkedListNode<T> result = base.AddItemBefore(node, value);
 
             RaiseCountPropertyChangedEvent();
 
@@ -671,11 +681,11 @@ namespace WinCopies.Collections.DotNetFix
 
         protected override LinkedListNode<T> AddLastItem(T value)
         {
-           LinkedListNode<T> result =    base.AddLastItem(value);
+            LinkedListNode<T> result = base.AddLastItem(value);
 
             RaiseCountPropertyChangedEvent();
 
-            return result ; 
+            return result;
         }
 
         protected override void ClearItems()
@@ -701,11 +711,11 @@ namespace WinCopies.Collections.DotNetFix
 
         protected override bool RemoveItem(T item)
         {
-           bool result =    base.RemoveItem(item);
+            bool result = base.RemoveItem(item);
 
             RaiseCountPropertyChangedEvent();
 
-            return result ; 
+            return result;
         }
 
         protected override void RemoveLastItem()
