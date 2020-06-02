@@ -344,7 +344,7 @@ namespace WinCopies.Collections.DotNetFix
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerStack).GetEnumerator();
     }
 
-    public class LinkedListCollection<T> : ICollection<T>, IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection, IDeserializationCallback, ISerializable
+    public class LinkedCollection<T> : ICollection<T>, IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection, IDeserializationCallback, ISerializable
     {
         protected System.Collections.Generic.LinkedList<T> InnerList { get; }
 
@@ -360,9 +360,9 @@ namespace WinCopies.Collections.DotNetFix
 
         bool ICollection<T>.IsReadOnly => false;
 
-        public LinkedListCollection() : this(new LinkedList<T>()) { }
+        public LinkedCollection() : this(new LinkedList<T>()) { }
 
-        public LinkedListCollection(in LinkedList<T> list) => InnerList = list;
+        public LinkedCollection(in LinkedList<T> list) => InnerList = list;
 
         protected virtual void AddItem(T item) => ((ICollection<T>)InnerList).Add(item);
 
@@ -371,59 +371,59 @@ namespace WinCopies.Collections.DotNetFix
         protected virtual void AddItemAfter(LinkedListNode<T> node, LinkedListNode<T> newNode) => InnerList.AddAfter(node, newNode);
 
         /// <summary>
-        /// Adds the specified new node after the specified existing node in the <see cref="LinkedListCollection{T}"/>. Override the <see cref="AddItemAfter(LinkedListNode{T}, LinkedListNode{T})"/> method to provide a custom implementation.
+        /// Adds the specified new node after the specified existing node in the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddItemAfter(LinkedListNode{T}, LinkedListNode{T})"/> method to provide a custom implementation.
         /// </summary>
         /// <param name="node">The <see cref="System.Collections.Generic.LinkedListNode{T}"/> after which to insert <paramref name="newNode"/>.</param>
-        /// <param name="newNode">The new <see cref="System.Collections.Generic.LinkedListNode{T}"/> to add to the <see cref="LinkedListCollection{T}"/>.</param>
+        /// <param name="newNode">The new <see cref="System.Collections.Generic.LinkedListNode{T}"/> to add to the <see cref="LinkedCollection{T}"/>.</param>
         /// <exception cref="ArgumentNullException"><paramref name="node"/> is <see langword="null"/>. -or- <paramref name="newNode"/> is <see langword="null"/>.</exception>
-        /// <exception cref="InvalidOperationException"><paramref name="node"/> is not in the current <see cref="LinkedListCollection{T}"/>. -or- <paramref name="newNode"/> belongs to another <see cref="System.Collections.Generic.LinkedList{T}"/>.</exception>
+        /// <exception cref="InvalidOperationException"><paramref name="node"/> is not in the current <see cref="LinkedCollection{T}"/>. -or- <paramref name="newNode"/> belongs to another <see cref="System.Collections.Generic.LinkedList{T}"/>.</exception>
         /// <seealso cref="AddAfter(LinkedListNode{T}, T)"/>
         public void AddAfter(in LinkedListNode<T> node, in LinkedListNode<T> newNode) => AddItemAfter(node, newNode);
 
         protected virtual LinkedListNode<T> AddItemAfter(LinkedListNode<T> node, T value) => InnerList.AddAfter(node, value);
 
         /// <summary>
-        /// Adds a new node containing the specified value after the specified existing node in the <see cref="LinkedListCollection{T}"/>. Override the <see cref="AddItemAfter(LinkedListNode{T}, T)"/> method to provide a custom implementation.
+        /// Adds a new node containing the specified value after the specified existing node in the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddItemAfter(LinkedListNode{T}, T)"/> method to provide a custom implementation.
         /// </summary>
         /// <param name="node">The <see cref="System.Collections.Generic.LinkedListNode{T}"/> after which to insert a new <see cref="System.Collections.Generic.LinkedListNode{T}"/> containing value.</param>
-        /// <param name="value">The value to add to the <see cref="LinkedListCollection{T}"/>.</param>
+        /// <param name="value">The value to add to the <see cref="LinkedCollection{T}"/>.</param>
         /// <returns>The new <see cref="System.Collections.Generic.LinkedListNode{T}"/> containing value.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
-        /// <exception cref="InvalidOperationException"><paramref name="node"/> is not in the current <see cref="LinkedListCollection{T}"/>.</exception>
+        /// <exception cref="InvalidOperationException"><paramref name="node"/> is not in the current <see cref="LinkedCollection{T}"/>.</exception>
         /// <seealso cref="AddAfter(in LinkedListNode{T}, in LinkedListNode{T})"/>
         public LinkedListNode<T> AddAfter(LinkedListNode<T> node, T value) => AddItemAfter(node, value);
 
         protected virtual void AddItemBefore(LinkedListNode<T> node, LinkedListNode<T> newNode) => InnerList.AddBefore(node, newNode);
 
         /// <summary>
-        /// Adds the specified new node before the specified existing node in the <see cref="LinkedListCollection{T}"/>. Override the <see cref="AddItemBefore(LinkedListNode{T}, LinkedListNode{T})"/> method to provide a custom implementation.
+        /// Adds the specified new node before the specified existing node in the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddItemBefore(LinkedListNode{T}, LinkedListNode{T})"/> method to provide a custom implementation.
         /// </summary>
         /// <param name="node">The <see cref="System.Collections.Generic.LinkedListNode{T}"/> before which to insert <paramref name="newNode"/>.</param>
-        /// <param name="newNode">The new <see cref="System.Collections.Generic.LinkedListNode{T}"/> to add to the <see cref="LinkedListCollection{T}"/>.</param>
+        /// <param name="newNode">The new <see cref="System.Collections.Generic.LinkedListNode{T}"/> to add to the <see cref="LinkedCollection{T}"/>.</param>
         /// <exception cref="ArgumentNullException"><paramref name="node"/> is <see langword="null"/>. -or- <paramref name="newNode"/> is <see langword="null"/>.</exception>
-        /// <exception cref="InvalidOperationException"><paramref name="node"/> is not in the current <see cref="LinkedListCollection{T}"/>. -or- <paramref name="newNode"/> belongs to another <see cref="System.Collections.Generic.LinkedList{T}"/>.</exception>
+        /// <exception cref="InvalidOperationException"><paramref name="node"/> is not in the current <see cref="LinkedCollection{T}"/>. -or- <paramref name="newNode"/> belongs to another <see cref="System.Collections.Generic.LinkedList{T}"/>.</exception>
         /// <seealso cref="AddBefore(in LinkedListNode{T}, in T)"/>
         public void AddBefore(in LinkedListNode<T> node, in LinkedListNode<T> newNode) => AddItemBefore(node, newNode);
 
         protected virtual LinkedListNode<T> AddItemBefore(LinkedListNode<T> node, T value) => InnerList.AddBefore(node, value);
 
         /// <summary>
-        /// Adds a new node containing the specified value before the specified existing node in the <see cref="LinkedListCollection{T}"/>. Override the <see cref="AddItemBefore(LinkedListNode{T}, T)"/> method to provide a custom implementation.
+        /// Adds a new node containing the specified value before the specified existing node in the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddItemBefore(LinkedListNode{T}, T)"/> method to provide a custom implementation.
         /// </summary>
         /// <param name="node">The <see cref="System.Collections.Generic.LinkedListNode{T}"/> before which to insert a new <see cref="System.Collections.Generic.LinkedListNode{T}"/> containing value.</param>
-        /// <param name="value">The value to add to the <see cref="LinkedListCollection{T}"/>.</param>
+        /// <param name="value">The value to add to the <see cref="LinkedCollection{T}"/>.</param>
         /// <returns>The new <see cref="System.Collections.Generic.LinkedListNode{T}"/> containing value.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
-        /// <exception cref="InvalidOperationException"><paramref name="node"/> is not in the current <see cref="LinkedListCollection{T}"/>.</exception>
+        /// <exception cref="InvalidOperationException"><paramref name="node"/> is not in the current <see cref="LinkedCollection{T}"/>.</exception>
         /// <seealso cref="AddBefore(in LinkedListNode{T}, in LinkedListNode{T})"/>
         public LinkedListNode<T> AddBefore(in LinkedListNode<T> node, in T value) => AddItemBefore(node, value);
 
         protected virtual void AddFirstItem(LinkedListNode<T> node) => InnerList.AddFirst(node);
 
         /// <summary>
-        /// Adds the specified new node at the start of the <see cref="LinkedListCollection{T}"/>. Override the <see cref="AddFirstItem(LinkedListNode{T})"/> method to provide a custom implementation.
+        /// Adds the specified new node at the start of the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddFirstItem(LinkedListNode{T})"/> method to provide a custom implementation.
         /// </summary>
-        /// <param name="node">The new <see cref="System.Collections.Generic.LinkedListNode{T}"/> to add at the start of the <see cref="LinkedListCollection{T}"/>.</param>
+        /// <param name="node">The new <see cref="System.Collections.Generic.LinkedListNode{T}"/> to add at the start of the <see cref="LinkedCollection{T}"/>.</param>
         /// <exception cref="ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="node"/> belongs to another <see cref="System.Collections.Generic.LinkedList{T}"/>.</exception>
         /// <seealso cref="AddFirst(in T)"/>
@@ -432,9 +432,9 @@ namespace WinCopies.Collections.DotNetFix
         protected virtual LinkedListNode<T> AddFirstItem(T value) => InnerList.AddFirst(value);
 
         /// <summary>
-        /// Adds a new node containing the specified value at the start of the <see cref="LinkedListCollection{T}"/>. Override the <see cref="AddFirstItem(T)"/> method to provide a custom implementation.
+        /// Adds a new node containing the specified value at the start of the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddFirstItem(T)"/> method to provide a custom implementation.
         /// </summary>
-        /// <param name="value">The value to add at the start of the <see cref="LinkedListCollection{T}"/>.</param>
+        /// <param name="value">The value to add at the start of the <see cref="LinkedCollection{T}"/>.</param>
         /// <returns>The new <see cref="System.Collections.Generic.LinkedListNode{T}"/> containing value.</returns>
         /// <seealso cref="AddFirst(in T)"/>
         public LinkedListNode<T> AddFirst(in T value) => AddFirstItem(value);
@@ -442,9 +442,9 @@ namespace WinCopies.Collections.DotNetFix
         protected virtual void AddLastItem(LinkedListNode<T> node) => InnerList.AddLast(node);
 
         /// <summary>
-        /// Adds the specified new node at the end of the <see cref="LinkedListCollection{T}"/>. Override the <see cref="AddLastItem(LinkedListNode{T})"/> method to provide a custom implementation.
+        /// Adds the specified new node at the end of the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddLastItem(LinkedListNode{T})"/> method to provide a custom implementation.
         /// </summary>
-        /// <param name="node">The new <see cref="System.Collections.Generic.LinkedListNode{T}"/> to add at the end of the <see cref="LinkedListCollection{T}"/>.</param>
+        /// <param name="node">The new <see cref="System.Collections.Generic.LinkedListNode{T}"/> to add at the end of the <see cref="LinkedCollection{T}"/>.</param>
         /// <exception cref="ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="node"/> belongs to another <see cref="System.Collections.Generic.LinkedList{T}"/>.</exception>
         /// <seealso cref="AddLast(in T)"/>
@@ -453,9 +453,9 @@ namespace WinCopies.Collections.DotNetFix
         protected virtual LinkedListNode<T> AddLastItem(T value) => InnerList.AddLast(value);
 
         /// <summary>
-        /// Adds a new node containing the specified value at the end of the <see cref="LinkedListCollection{T}"/>. Override the <see cref="AddLastItem(T)"/> method to provide a custom implementation.
+        /// Adds a new node containing the specified value at the end of the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddLastItem(T)"/> method to provide a custom implementation.
         /// </summary>
-        /// <param name="value">The value to add at the end of the <see cref="LinkedListCollection{T}"/>.</param>
+        /// <param name="value">The value to add at the end of the <see cref="LinkedCollection{T}"/>.</param>
         /// <returns>The new <see cref="System.Collections.Generic.LinkedListNode{T}"/> containing value.</returns>
         /// <seealso cref="AddLast(in LinkedListNode{T})"/>
         public LinkedListNode<T> AddLast(in T value) => AddLastItem(value);
@@ -593,13 +593,13 @@ namespace WinCopies.Collections.DotNetFix
         }
     }
 
-    public class ObservableLinkedListCollection<T> : LinkedListCollection<T>, INotifyPropertyChanged
+    public class ObservableLinkedCollection<T> : LinkedCollection<T>, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public ObservableLinkedListCollection() : base() { }
+        public ObservableLinkedCollection() : base() { }
 
-        public ObservableLinkedListCollection(in LinkedList<T> list) : base(list) { }
+        public ObservableLinkedCollection(in LinkedList<T> list) : base(list) { }
 
         protected void RaisePropertyChangedEvent(in PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
 

@@ -16,10 +16,11 @@ WinCopies.Util (2.4.0-preview6)
 -------------------------------
 
 - Existing items behavior updates:
+	- WinCopies.Linq.Extensions.Where has been renamed to WinCopies.Linq.Extensions.WherePredicate. Fixes #4.
 	- The WinCopies.Util.Util.StartProcessNetCore method returns the process that is launched.
 
 - Additions:
-	- (Observable)Stack/Queue/LinkedListCollection classes. Fixes #5.
+	- (Observable)Stack/Queue/LinkedCollection classes. Fixes #5.
 	- WinCopies.Util.Util.NotApplicable const.
 
 05/21/2020 2.3.0-preview5

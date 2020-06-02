@@ -10,7 +10,7 @@ namespace WinCopies.Linq
 {
    public static class Extensions
     {
-        public static IEnumerable<T> Where<T>(this IEnumerable<T> enumerable, Predicate<T> func)
+        public static IEnumerable<T> WherePredicate<T>(this IEnumerable<T> enumerable, Predicate<T> func)
         {
             ThrowIfNull(enumerable, nameof(enumerable));
 
@@ -21,7 +21,7 @@ namespace WinCopies.Linq
                     yield return value;
         }
 
-        public static IEnumerable Where(this IEnumerable enumerable, Predicate func)
+        public static IEnumerable WherePredicate(this IEnumerable enumerable, Predicate func)
         {
             ThrowIfNull(enumerable, nameof(enumerable));
 
