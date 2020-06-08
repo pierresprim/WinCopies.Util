@@ -21,7 +21,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+#if WinCopies2
 namespace WinCopies.Util
+#else
+namespace WinCopies
+#endif
 {
 
     /// <summary>

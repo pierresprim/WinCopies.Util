@@ -30,7 +30,11 @@ using IComparer = System.Collections.IComparer;
 using WinCopies.Util.Resources;
 using System.Diagnostics;
 
+#if WinCopies2
 namespace WinCopies.Util
+#else
+namespace WinCopies
+#endif
 {
 
     /// <summary>
@@ -125,13 +129,13 @@ namespace WinCopies.Util
 
         // public static KeyValuePair<TKey, Func<bool>>[] GetIfKeyValuePairPredicateArray<TKey>(params KeyValuePair<TKey, Func<bool>>[] keyValuePairs) => keyValuePairs;
 
-        #region 'If' methods
+#region 'If' methods
 
         public static KeyValuePair<TKey, TValue> GetKeyValuePair<TKey, TValue>(in TKey key, in TValue value) => new KeyValuePair<TKey, TValue>(key, value);
 
         public static KeyValuePair<TKey, Func<bool>> GetIfKeyValuePairPredicate<TKey>(in TKey key, in Func<bool> predicate) => new KeyValuePair<TKey, Func<bool>>(key, predicate);
 
-        #region Enums
+#region Enums
 
         /// <summary>
         /// Comparison types for the If functions.
@@ -219,9 +223,9 @@ namespace WinCopies.Util
 
         }
 
-        #endregion
+#endregion
 
-        #region 'Throw' methods
+#region 'Throw' methods
 
         private static void ThrowOnInvalidIfMethodArg(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison)
 
@@ -277,9 +281,9 @@ namespace WinCopies.Util
 
         }
 
-        #endregion
+#endregion
 
-        #region 'Check comparison' methods
+#region 'Check comparison' methods
 
         private static bool CheckIfComparison(in IfComp comparison, in Func<bool> predicateResult, in int result)
         {
@@ -426,16 +430,16 @@ namespace WinCopies.Util
                 _ => false
             };
 
-#endif 
+#endif
         }
 
         private delegate bool CheckIfComparisonDelegate(in object value, in Func<bool> predicate);
 
         private delegate bool CheckIfComparisonDelegate<T>(in T value, in Func<bool> predicate);
 
-        #endregion
+#endregion
 
-        #region Enumerables
+#region Enumerables
 
         private interface IIfValuesEnumerable
         {
@@ -653,7 +657,7 @@ namespace WinCopies.Util
 
         }
 
-        #endregion
+#endregion
 
         private static bool IfInternal(in IfCT comparisonType, in IfCM comparisonMode, CheckIfComparisonDelegate comparisonDelegate, in IIfValuesEnumerable values)
 
@@ -1119,9 +1123,9 @@ namespace WinCopies.Util
 
         }
 
-        #region Non generic methods
+#region Non generic methods
 
-        #region Comparisons without key notification
+#region Comparisons without key notification
 
         /// <summary>
         /// Performs a comparison by testing a value compared to an array of values.
@@ -1279,9 +1283,9 @@ namespace WinCopies.Util
 
         }
 
-        #endregion
+#endregion
 
-        #region Comparisons with key notification
+#region Comparisons with key notification
 
         /// <summary>
         /// Performs a comparison by testing a value compared to an array of objects or values.
@@ -1377,13 +1381,13 @@ namespace WinCopies.Util
 
         }
 
-        #endregion
+#endregion
 
-        #endregion
+#endregion
 
-        #region Generic methods
+#region Generic methods
 
-        #region Comparisons without key notification
+#region Comparisons without key notification
 
         /// <summary>
         /// Performs a comparison by testing a value compared to an array of objects or values.
@@ -1457,9 +1461,9 @@ namespace WinCopies.Util
 
         }
 
-        #endregion
+#endregion
 
-        #region Comparisons with key notification
+#region Comparisons with key notification
 
         /// <summary>
         /// Performs a comparison by testing a value compared to an array of objects or values.
@@ -1531,11 +1535,11 @@ namespace WinCopies.Util
 
         }
 
-        #endregion
+#endregion
 
-        #endregion
+#endregion
 
-        #endregion
+#endregion
 
         public static bool IsNullEmptyOrWhiteSpace(in string value) => string.IsNullOrEmpty(value) || string.IsNullOrWhiteSpace(value);
 

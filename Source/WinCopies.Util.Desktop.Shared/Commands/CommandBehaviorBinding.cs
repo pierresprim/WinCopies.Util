@@ -31,14 +31,18 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
 
+#if WinCopies2
 namespace WinCopies.Util.Commands
+#else
+namespace WinCopies.Commands
+#endif
 {
     /// <summary>
     /// Defines the command behavior binding
     /// </summary>
     public class CommandBehaviorBinding : System. IDisposable
     {
-        #region Properties
+#region Properties
 
         /// <summary>
         /// Get the owner of the CommandBinding ex: a Button
@@ -59,7 +63,7 @@ namespace WinCopies.Util.Commands
         /// </summary>
         public Delegate EventHandler { get; private set; }
 
-        #region Execution
+#region Execution
         //stores the strategy of how to execute the event handler
         IExecutionStrategy strategy;
 
@@ -98,9 +102,9 @@ namespace WinCopies.Util.Commands
                 strategy = new ActionExecutionStrategy { Behavior = this };
             }
         }
-        #endregion
+#endregion
 
-        #endregion
+#endregion
 
         /// <summary>
         /// Creates an <see cref="System. EventHandler"/> on runtime and registers that handler to the Event specified
@@ -128,7 +132,7 @@ namespace WinCopies.Util.Commands
         /// </summary>
         public void Execute() => strategy.Execute(CommandParameter);
 
-        #region IDisposable Members
+#region IDisposable Members
 
         bool disposed = false;
 
@@ -145,6 +149,6 @@ namespace WinCopies.Util.Commands
             disposed = true;
         }
 
-        #endregion
+#endregion
     }
 }

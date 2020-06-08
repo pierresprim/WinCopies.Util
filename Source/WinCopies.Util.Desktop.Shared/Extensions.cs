@@ -28,7 +28,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using static WinCopies.Util.Util;
 
+#if WinCopies2
 namespace WinCopies.Util
+#else
+namespace WinCopies
+#endif
 {
     public static class Extensions
     {

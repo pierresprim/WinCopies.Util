@@ -24,7 +24,11 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
 
+#if WinCopies2
 namespace WinCopies.Util
+#else
+namespace WinCopies
+#endif
 {
     public class InterfaceDataTemplateSelector : DataTemplateSelector
     {

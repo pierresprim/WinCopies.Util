@@ -32,7 +32,11 @@ using System.Text;
 using System.Reflection.Emit;
 using System.Reflection;
 
+#if WinCopies2
 namespace WinCopies.Util.Commands
+#else
+namespace WinCopies.Commands
+#endif
 {
     /// <summary>
     /// Generates delegates according to the specified signature on runtime

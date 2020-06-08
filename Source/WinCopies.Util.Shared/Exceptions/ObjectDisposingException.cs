@@ -19,7 +19,11 @@ using System;
 using System.Runtime.Serialization;
 using WinCopies.Util.Resources;
 
+#if WinCopies2
 namespace WinCopies.Util
+#else
+namespace WinCopies
+#endif
 {
     /// <summary>
     /// The exception that is thrown when an operation is performed on a disposing object.
@@ -27,7 +31,7 @@ namespace WinCopies.Util
     public class ObjectDisposingException : InvalidOperationException
     {
 
-        #region
+#region
 
         public ObjectDisposingException() : base(ExceptionMessages.CurrentObjectIsDisposing) { }
 
@@ -51,7 +55,7 @@ namespace WinCopies.Util
         /// <param name="message">The error message that explains the reason for the exception.</param>
         public ObjectDisposingException(string objectName, string message) : base(message) => ObjectName = objectName;
 
-        #endregion
+#endregion
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ObjectDisposingException"/> class with serialized data.

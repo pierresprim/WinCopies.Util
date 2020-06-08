@@ -18,8 +18,6 @@
 using System;
 using WinCopies.Util;
 
-
-
 namespace WinCopies.Util.Data
 {
 

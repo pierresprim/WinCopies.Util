@@ -18,7 +18,11 @@
 using System;
 using System.Runtime.Serialization;
 
+#if WinCopies2
 namespace WinCopies.Util
+#else
+namespace WinCopies
+#endif
 {
     public class TypeArgumentException : ArgumentException
     {

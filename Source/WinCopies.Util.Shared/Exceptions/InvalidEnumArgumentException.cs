@@ -24,7 +24,11 @@ using System.Text;
 using System.Threading.Tasks;
 using WinCopies.Collections;
 
+#if WinCopies2
 namespace WinCopies.Util
+#else
+namespace WinCopies
+#endif
 {
     public class InvalidEnumArgumentException : System.ComponentModel.InvalidEnumArgumentException
     {

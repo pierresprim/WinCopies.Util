@@ -22,8 +22,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
-
 namespace WinCopies.Util.Data
 {
     public class CoalesceConverter : ConverterBase

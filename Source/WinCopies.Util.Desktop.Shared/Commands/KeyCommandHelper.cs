@@ -25,9 +25,11 @@ using System.Windows;
 using System.Windows.Input;
 using WinCopies.Util;
 
-
-
+#if WinCopies2
 namespace WinCopies.Util.Commands
+#else
+namespace WinCopies.Commands
+#endif
 {
     public static class KeyCommandHelper
     {

@@ -26,12 +26,14 @@
 *
 * For more information, please refer to <http://unlicense.org> */
 
-
-
 using System;
 using System.Windows.Input;
 
+#if WinCopies2
 namespace WinCopies.Util.Commands
+#else
+namespace WinCopies.Commands
+#endif
 {
 
     /// <summary>
@@ -57,7 +59,7 @@ namespace WinCopies.Util.Commands
             ExecuteDelegate = executeDelegate;
         }
 
-        #region ICommand Members
+#region ICommand Members
 
         /// <summary>
         /// Checks if the command Execute method can run
@@ -85,7 +87,7 @@ namespace WinCopies.Util.Commands
         /// <param name="parameter">THe command parameter to be passed</param>
         public void Execute(object parameter) => ExecuteDelegate?.Invoke(parameter);
 
-        #endregion
+#endregion
     }
 
     /// <summary>
@@ -111,7 +113,7 @@ namespace WinCopies.Util.Commands
             ExecuteDelegate = executeDelegate;
         }
 
-        #region ICommand Members
+#region ICommand Members
 
         /// <summary>
         /// Checks if the command Execute method can run
@@ -141,6 +143,6 @@ namespace WinCopies.Util.Commands
 
         void ICommand.Execute(object parameter) => Execute((T)parameter);
 
-        #endregion
+#endregion
     }
 }

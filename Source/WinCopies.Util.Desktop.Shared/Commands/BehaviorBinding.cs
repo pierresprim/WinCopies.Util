@@ -29,7 +29,11 @@ using System;
 using System.Windows;
 using System.Windows.Input;
 
+#if WinCopies2
 namespace WinCopies.Util.Commands
+#else
+namespace WinCopies.Commands
+#endif
 {
     /// <summary>
     /// Provides a base class for behaviors.
@@ -82,7 +86,7 @@ namespace WinCopies.Util.Commands
         /// </summary>
         internal CommandBehaviorBinding Behavior => behavior ?? (behavior = new CommandBehaviorBinding());
 
-        #region Command
+#region Command
 
         /// <summary>
         /// Command Dependency Property
@@ -111,9 +115,9 @@ namespace WinCopies.Util.Commands
         /// </summary>
         protected virtual void OnCommandChanged(DependencyPropertyChangedEventArgs e) => Behavior.Command = Command;
 
-        #endregion
+#endregion
 
-        #region Action
+#region Action
 
         /// <summary>
         /// Action Dependency Property
@@ -142,9 +146,9 @@ namespace WinCopies.Util.Commands
         /// </summary>
         protected virtual void OnActionChanged(DependencyPropertyChangedEventArgs e) => Behavior.Action = Action;
 
-        #endregion
+#endregion
 
-        #region CommandParameter
+#region CommandParameter
 
         /// <summary>
         /// CommandParameter Dependency Property
@@ -173,9 +177,9 @@ namespace WinCopies.Util.Commands
         /// </summary>
         protected virtual void OnCommandParameterChanged(DependencyPropertyChangedEventArgs e) => Behavior.CommandParameter = CommandParameter;
 
-        #endregion
+#endregion
 
-        #region Event
+#region Event
 
         /// <summary>
         /// Event Dependency Property
@@ -227,7 +231,7 @@ namespace WinCopies.Util.Commands
 
         protected override Freezable CreateInstanceCore() => new BehaviorBinding();
 
-        #endregion
+#endregion
 
 
 

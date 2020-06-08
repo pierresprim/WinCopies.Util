@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
+#if WinCopies2
 namespace WinCopies.Util
+#else
+namespace WinCopies
+#endif
 {
     public static class Math
     {

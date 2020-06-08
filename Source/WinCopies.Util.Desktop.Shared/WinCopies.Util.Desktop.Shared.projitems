@@ -56,6 +56,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\VisibilityToBooleanConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\VisibilityToReversedBooleanConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IBackgroundWorker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MergedStylesMarkupExtension.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Resources.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RoutedEventArgs.cs" />

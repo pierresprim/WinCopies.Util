@@ -22,7 +22,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
+#if WinCopies2
 namespace WinCopies.Util.Commands
+#else
+namespace WinCopies.Commands
+#endif
 {
     public static class Commands
     {

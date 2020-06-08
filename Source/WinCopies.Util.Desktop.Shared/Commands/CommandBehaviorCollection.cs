@@ -31,7 +31,11 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Windows;
 
+#if WinCopies2
 namespace WinCopies.Util.Commands
+#else
+namespace WinCopies.Commands
+#endif
 {
     public class CommandBehaviorCollection
     {
@@ -39,7 +43,7 @@ namespace WinCopies.Util.Commands
         private const string BehaviorsInternal = "BehaviorsInternal";
         private const string StyleBehaviors = "StyleBehaviors";
 
-        #region Behaviors
+#region Behaviors
 
         /// <summary>
         /// Behaviors Read-Only Dependency Property
@@ -297,7 +301,7 @@ namespace WinCopies.Util.Commands
             }
         }
 
-        #endregion
+#endregion
 
     }
 

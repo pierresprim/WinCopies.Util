@@ -32,11 +32,15 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
+#if WinCopies2
 namespace WinCopies.Util.Commands
+#else
+namespace WinCopies.Commands
+#endif
 {
     public class EventArgsHandler<T> : Behavior where T : class
     {
-        #region LastEventArgs
+#region LastEventArgs
 
         /// <summary>
         /// LastEventArgs dependency property
@@ -54,9 +58,9 @@ namespace WinCopies.Util.Commands
 
         public static void SetLastEventArgs(DependencyObject d, EventArgs value) => d.SetValue(LastEventArgsProperty, value);
 
-        #endregion 
+#endregion
 
-        #region HandleEventHandler 
+#region HandleEventHandler 
 
         private static Dictionary<object, Dictionary<string, Delegate>> dico = null;
 
@@ -145,11 +149,11 @@ namespace WinCopies.Util.Commands
 
         {
 
-#if DEBUG 
+#if DEBUG
 
             Debug.WriteLine(nameof(ControlEventHandler));
 
-#endif 
+#endif
 
             if (a is DependencyObject c && b is EventArgs d)
 
@@ -164,7 +168,7 @@ namespace WinCopies.Util.Commands
             // Nothing to do here ...
         }
 
-        #endregion
+#endregion
     }
 
     public class EventArgsHandler : EventArgsHandler<EventArgs>

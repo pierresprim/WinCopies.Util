@@ -20,12 +20,15 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "WinCopies.Util.Shared", "Wi
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "WinCopies.Util.Desktop.Shared", "WinCopies.Util.Desktop.Shared\WinCopies.Util.Desktop.Shared.shproj", "{02122768-DC6A-467C-A5F5-AE5BF2669308}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinCopies.Util.3.0", "WinCopies.Util.3.0\WinCopies.Util.3.0.csproj", "{24F45CA6-CAE9-4ED0-8354-D99AE06D372D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinCopies.Util.3.0", "WinCopies.Util.3.0\WinCopies.Util.3.0.csproj", "{24F45CA6-CAE9-4ED0-8354-D99AE06D372D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinCopies.Util.Desktop.3.0", "WinCopies.Util.Desktop.3.0\WinCopies.Util.Desktop.3.0.csproj", "{23EEA35A-BABC-4C2D-BFAE-84429FB54745}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		WinCopies.Util.Desktop.Shared\WinCopies.Util.Desktop.Shared.projitems*{02122768-dc6a-467c-a5f5-ae5bf2669308}*SharedItemsImports = 13
 		WinCopies.Util.Desktop.Shared\WinCopies.Util.Desktop.Shared.projitems*{10a0855f-fbc1-4499-aa2e-2b19d8b29e95}*SharedItemsImports = 5
+		WinCopies.Util.Desktop.Shared\WinCopies.Util.Desktop.Shared.projitems*{23eea35a-babc-4c2d-bfae-84429fb54745}*SharedItemsImports = 5
 		WinCopies.Util.Shared\WinCopies.Util.Shared.projitems*{24f45ca6-cae9-4ed0-8354-d99ae06d372d}*SharedItemsImports = 5
 		WinCopies.Util.Shared\WinCopies.Util.Shared.projitems*{386a44d6-d6d7-4868-9e96-d1b7b4ce068a}*SharedItemsImports = 5
 		WinCopies.Util.Shared\WinCopies.Util.Shared.projitems*{e2160f13-964f-409c-9a4f-1fdbbda1b76c}*SharedItemsImports = 13
@@ -47,6 +50,10 @@ Global
 		{24F45CA6-CAE9-4ED0-8354-D99AE06D372D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{24F45CA6-CAE9-4ED0-8354-D99AE06D372D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{24F45CA6-CAE9-4ED0-8354-D99AE06D372D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23EEA35A-BABC-4C2D-BFAE-84429FB54745}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23EEA35A-BABC-4C2D-BFAE-84429FB54745}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23EEA35A-BABC-4C2D-BFAE-84429FB54745}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23EEA35A-BABC-4C2D-BFAE-84429FB54745}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

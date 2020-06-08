@@ -35,7 +35,11 @@ using IfCT = WinCopies.Util.Util.ComparisonType;
 using WinCopies.Util.Resources;
 using System.Runtime.CompilerServices;
 
+#if WinCopies2
 namespace WinCopies.Util
+#else
+namespace WinCopies
+#endif
 {
 
     public delegate (bool result, Exception ex) FieldValidateValueCallback(object obj, object value, FieldInfo field, string paramName);

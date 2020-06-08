@@ -18,8 +18,8 @@
 using System.ComponentModel;
 using System.Threading;
 
-#if WinCopies2
-namespace WinCopies.Util
+#if !WinCopies2
+namespace WinCopies
 {
 
     ///// <para>FR: Représente un BackgroundWorker qui s'exécute par défaut dans un thread MTA et qui arrête automatiquement l'exécution en arrière-plan lors d'un rapport du progrès.</para>

@@ -15,13 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-
-
 using System;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 
+#if WinCopies2
 namespace WinCopies.Util
+#else
+namespace WinCopies
+#endif
 {
     /// <summary>
     /// Encapsulates a common <see cref="EventArgs"/> into a <see cref="RoutedEventArgs"/> in an event delegate.

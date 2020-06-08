@@ -19,7 +19,11 @@ using System;
 using System.ComponentModel;
 using System.Threading;
 
+#if WinCopies2
 namespace WinCopies.Util
+#else
+namespace WinCopies
+#endif
 {
 
     /// <summary>
