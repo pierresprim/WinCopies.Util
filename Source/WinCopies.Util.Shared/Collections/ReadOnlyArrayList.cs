@@ -20,11 +20,9 @@ using System.Collections;
 
 namespace WinCopies.Collections
 {
-
     [Obsolete("This interface is obsolete and will be removed in later versions.")]
     public interface IReadOnlyList : IList
     {
-
         object this[int index] { get; }
 
     }
@@ -32,7 +30,6 @@ namespace WinCopies.Collections
     [Obsolete("This class is obsolete and will be removed in later versions. Please use the ArrayList.ReadOnly method instead.")]
     public class ReadOnlyArrayList : IEnumerable, IList, ICollection, IReadOnlyList
     {
-
         private IList innerList = null;
 
         public ReadOnlyArrayList(IList list) => innerList = list;
@@ -68,7 +65,5 @@ namespace WinCopies.Collections
         void IList.Remove(object value) => throw new NotImplementedException();
 
         void IList.RemoveAt(int index) => throw new NotImplementedException();
-
     }
-
 }

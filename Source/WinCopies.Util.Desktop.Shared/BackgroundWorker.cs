@@ -25,13 +25,11 @@ namespace WinCopies.Util
 namespace WinCopies
 #endif
 {
-
     /// <summary>
     /// Represents a BackgroundWorker that runs in a MTA thread by default and automatically stops on background when reports progress.
     /// </summary>
     public class BackgroundWorker : Component, IBackgroundWorker
     {
-
         /// <summary>
         /// <para>This event is called when the background thread starts. Put your background working code here.</para>
         /// <para>The event handler is running in the background thread.</para>
@@ -85,11 +83,9 @@ namespace WinCopies
         /// </summary>
         public bool WorkerReportsProgress
         {
-
             get => workerReportsProgress;
 
             set => this.SetBackgroundWorkerProperty(nameof(WorkerReportsProgress), nameof(workerReportsProgress), value, typeof(BackgroundWorker), true);
-
         }
 
         private readonly bool workerSupportsCancellation = false;
@@ -98,13 +94,10 @@ namespace WinCopies
         /// Gets or sets a value that indicates whether the thread supports the cancellation.
         /// </summary>
         public bool WorkerSupportsCancellation
-
         {
-
             get => workerSupportsCancellation;
 
             set => this.SetBackgroundWorkerProperty(nameof(WorkerReportsProgress), nameof(workerSupportsCancellation), value, typeof(BackgroundWorker), true);
-
         }
 
         /// <summary>
@@ -117,12 +110,10 @@ namespace WinCopies
         /// </summary>
         public ApartmentState ApartmentState
         {
-
             get => _ApartmentState;
 
             set
             {
-
                 if (_ApartmentState == value)
 
                     return;
@@ -134,12 +125,8 @@ namespace WinCopies
                     throw new ArgumentException(string.Format("The {0} value is not valid for the {1} class.", nameof(ApartmentState.Unknown), nameof(BackgroundWorker)));
 
                 _ = this.SetBackgroundWorkerProperty(nameof(ApartmentState), nameof(_ApartmentState), value, typeof(BackgroundWorker), true);
-
             }
-
         }
-
-
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BackgroundWorker"/> class.
@@ -205,7 +192,6 @@ namespace WinCopies
         /// </param>
         public void RunWorkerAsync(object argument)
         {
-
             if (IsBusy)
 
                 // todo:
@@ -228,7 +214,6 @@ namespace WinCopies
             _Thread.SetApartmentState(_ApartmentState);
 
             _Thread.Start();
-
         }
 
         /// <summary>
@@ -236,14 +221,9 @@ namespace WinCopies
         /// </summary>
         private void ThreadStart(DoWorkEventArgs e)
         {
-
-
-
             bool isCancelled = false;
 
             Exception error = null;
-
-
 
             try
             {
@@ -280,7 +260,6 @@ namespace WinCopies
         /// </summary>
         private void ThreadCompleted(object args)
         {
-
             (object result, Exception ex, bool isCancelled) = (ValueTuple<object, Exception, bool>)args;
 
             var e = new RunWorkerCompletedEventArgs(result, ex, isCancelled);
@@ -292,7 +271,6 @@ namespace WinCopies
             // IsCancelled = r.Item3;    
 
             RunWorkerCompleted?.Invoke(this, e);
-
         }
 
         /// <summary>
@@ -319,12 +297,9 @@ namespace WinCopies
 
         private void Cancel(bool abort, object stateInfo)
         {
-
             if (!WorkerSupportsCancellation)
 
                 // todo:
-
-                //Ce traitement ne supporte pas l'annulation.
 
                 throw new InvalidOperationException("This BackgroundWorker does not support cancellation.");
 
@@ -345,7 +320,6 @@ namespace WinCopies
             else
 
                 CancellationPending = true;
-
         }
 
         /// <summary>
@@ -375,7 +349,6 @@ namespace WinCopies
         /// </param>
         public void ReportProgress(int percentProgress, object userState)
         {
-
             if (!WorkerReportsProgress)
 
                 //Ce BackgroundWorker ne permet pas de notifier de la progression.
@@ -387,28 +360,22 @@ namespace WinCopies
             var e = new ProgressChangedEventArgs(Progress, userState);
 
             _SyncContext.Send(OnProgressChanged, e);
-
         }
 
         /// <summary>
         /// Suspends the current thread.
         /// </summary>
         public void Suspend()
-
         {
-
             _ = _event.Reset();
 
             _ = _event.WaitOne();
-
         }
 
         /// <summary>
         /// Resumes the current thread.
         /// </summary>
-        public void Resume() =>
-
-            _event.Set();
+        public void Resume() => _event.Set();
 
         /// <summary>
         /// Gets a value that indicates whether the current <see cref="BackgroundWorker"/> is disposed.
@@ -427,9 +394,7 @@ namespace WinCopies
         /// <param name="disposing"><see langword="true"/> to release both managed and unmanaged resources; <see langword="false"/> to release only unmanaged resources.</param>
         /// <exception cref="InvalidOperationException">The <see cref="BackgroundWorker"/> is busy and does not support cancellation.</exception>
         protected override void Dispose(bool disposing)
-
         {
-
             if (IsBusy)
 
                 //    throw new InvalidOperationException(BackgroundWorkerIsBusy);
@@ -445,9 +410,6 @@ namespace WinCopies
             _event.Dispose();
 
             IsDisposed = true;
-
         }
-
     }
-
 }

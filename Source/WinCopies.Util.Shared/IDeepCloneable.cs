@@ -15,19 +15,12 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 #if WinCopies2
 namespace WinCopies.Util
 #else
 namespace WinCopies
 #endif
 {
-
     /// <summary>
     /// Provides a delegate to indicate to a method (e.g. a constructor) how to create a deep clone of an object or value. All Ids should be preserved, if any. See the Remarks section.
     /// </summary>
@@ -55,7 +48,6 @@ namespace WinCopies
     /// <seealso cref="NeedsObjectsOrValuesReconstruction"/>
     public interface IDeepCloneable // This interface is not generic because if it was, we could specify a type that might not be a type available in the inheritance of the one that implemented the interface.
     {
-
         /// <summary>
         /// Gets a value that indicates whether the current object or value has to reconstruct objects or values on deep cloning. If the current object or value contains objects or values that all implement this interface, this property should be <see langword="true"/>, unless at least one of these objects or values contains itself one or more objects and/or values that does not implement this interface.
         /// </summary>
@@ -66,7 +58,6 @@ namespace WinCopies
         /// </summary>
         /// <returns>A deep clone of the current object or value.</returns>
         object DeepClone();
-
     }
 
     /// <summary>
@@ -74,14 +65,11 @@ namespace WinCopies
     /// </summary>
     public interface IIDObjectDeepCloneable : IDeepCloneable // This interface is not generic because if it was, we could specify a type that might not be a type available in the inheritance of the one that implemented the interface.
     {
-
         /// <summary>
         /// Creates a deep clone of the current object or value.
         /// </summary>
         /// <param name="preserveIds">Whether to preserve IDs, if any.</param>
         /// <returns>A deep clone of the current object or value.</returns>
         object DeepClone(bool preserveIds);
-
     }
-
 }

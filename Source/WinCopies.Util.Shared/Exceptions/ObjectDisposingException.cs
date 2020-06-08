@@ -30,8 +30,7 @@ namespace WinCopies
     /// </summary>
     public class ObjectDisposingException : InvalidOperationException
     {
-
-#region
+        #region
 
         public ObjectDisposingException() : base(ExceptionMessages.CurrentObjectIsDisposing) { }
 
@@ -55,7 +54,7 @@ namespace WinCopies
         /// <param name="message">The error message that explains the reason for the exception.</param>
         public ObjectDisposingException(string objectName, string message) : base(message) => ObjectName = objectName;
 
-#endregion
+        #endregion
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ObjectDisposingException"/> class with serialized data.
@@ -82,11 +81,9 @@ namespace WinCopies
         [System.Security.SecurityCritical]
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-
             base.GetObjectData(info, context);
 
             info.AddValue(nameof(ObjectName), ObjectName, typeof(string));
-
         }
     }
 }

@@ -27,7 +27,6 @@ namespace WinCopies.Util.Data
     {
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-
             if (parameter != null && !(parameter is Visibility))
 
                 // todo:
@@ -35,11 +34,8 @@ namespace WinCopies.Util.Data
                 throw new ArgumentException("parameter must be a value of the System.Windows.Visibility enum.");
 
             return (bool)value ? parameter ?? Visibility.Collapsed : Visibility.Visible;
-
         }
 
         public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => (Visibility)value == Visibility.Visible;
     }
 }
-
- 

@@ -39,11 +39,10 @@ namespace WinCopies.Commands
 {
     public class CommandBehaviorCollection
     {
-
         private const string BehaviorsInternal = "BehaviorsInternal";
         private const string StyleBehaviors = "StyleBehaviors";
 
-#region Behaviors
+        #region Behaviors
 
         /// <summary>
         /// Behaviors Read-Only Dependency Property
@@ -64,6 +63,7 @@ namespace WinCopies.Commands
         public static BehaviorBindingCollection GetBehaviors(DependencyObject d)
         {
             if (d == null)
+
                 throw new InvalidOperationException("The dependency object trying to attach to is set to null");
 
             if (!(d.GetValue(BehaviorsProperty) is BehaviorBindingCollection collection))
@@ -72,8 +72,10 @@ namespace WinCopies.Commands
                 {
                     Owner = d
                 };
+
                 SetBehaviors(d, collection);
             }
+
             return collection;
         }
 
@@ -92,22 +94,27 @@ namespace WinCopies.Commands
 
         static void CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            BehaviorBindingCollection sourceCollection = (BehaviorBindingCollection)sender;
+            var sourceCollection = (BehaviorBindingCollection)sender;
+
             switch (e.Action)
             {
                 //when an item(s) is added we need to set the Owner property implicitly
                 case NotifyCollectionChangedAction.Add:
+
                     if (e.NewItems != null)
+
                         foreach (Behavior item in e.NewItems)
                         {
                             item.Owner = sourceCollection.Owner;
                             item.Id = GetId(sourceCollection);
                         }
+
                     break;
 
                 //when an item(s) is removed we should Dispose the BehaviorBinding
                 case NotifyCollectionChangedAction.Remove:
                 case NotifyCollectionChangedAction.Reset:
+
                     if (e.OldItems != null)
 
                         TryRemoveStyleBehaviors(GetStyleBehaviors(sourceCollection.Owner), e.OldItems, true);
@@ -122,21 +129,30 @@ namespace WinCopies.Commands
                     break;
 
                 case NotifyCollectionChangedAction.Move:
+
                     if (e.OldStartingIndex == e.NewStartingIndex) break;
+
                     int difference = e.OldStartingIndex - e.NewStartingIndex;
                     int id;
+
                     FreezableCollection<Behavior> styleBehaviors = GetStyleBehaviors(sourceCollection.Owner);
+
                     foreach (Behavior item in e.OldItems)
                     {
                         id = item.Id;
                         item.Id -= difference;
+
                         foreach (Behavior styleItem in styleBehaviors)
+
                             if (styleItem.Id == id)
+
                                 styleItem.Id = item.Id;
                     }
+
                     void updateId(int startIndex, int length)
                     {
                         int count = length + startIndex;
+
                         for (int i = startIndex; i < count; i++)
                         {
                             id = sourceCollection[startIndex].Id;
@@ -146,19 +162,25 @@ namespace WinCopies.Commands
                                     styleItem.Id = sourceCollection[startIndex].Id;
                         }
                     }
+
                     int _startIndex;
+
                     if (e.NewStartingIndex < e.OldStartingIndex)
                     {
                         _startIndex = e.NewStartingIndex + e.OldItems.Count;
                         updateId(_startIndex, e.OldStartingIndex + e.OldItems.Count - _startIndex + 1);
                     }
+
                     else
                     {
                         _startIndex = e.OldStartingIndex;
                         updateId(_startIndex, e.NewStartingIndex - _startIndex + 1);
                     }
+
                     break;
+
                 default:
+
                     break;
             }
         }
@@ -170,59 +192,39 @@ namespace WinCopies.Commands
         public static void SetStyleBehaviors(DependencyObject obj, BehaviorBindingCollection value) => obj.SetValue(StyleBehaviorsProperty, value);
 
         private static void StyleBehaviorsChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
-
         {
-
             if (obj != null)
-
             {
-
                 if (e.OldValue != null)
-
                 {
-
                     ((INotifyCollectionChanged)e.OldValue).CollectionChanged -= StyleCollectionChanged;
 
                     TryRemoveStyleBehaviors(GetBehaviors(obj), e.OldValue as FreezableCollection<Behavior>, false);
-
                 }
 
                 if (e.NewValue != null)
-
                 {
-
                     ((INotifyCollectionChanged)e.NewValue).CollectionChanged += StyleCollectionChanged;
 
                     AddStyleBehaviors(GetBehaviors(obj), e.NewValue as FreezableCollection<Behavior>);
-
                 }
-
             }
-
         }
 
         private static void AddStyleBehaviors(BehaviorBindingCollection behaviors, IList behaviorsToAdd)
-
         {
-
             foreach (Behavior behavior in behaviorsToAdd)
-
             {
-
-                Behavior _behavior = behavior.Clone() as Behavior;
+                var _behavior = behavior.Clone() as Behavior;
 
                 behaviors.Add(_behavior as Behavior);
 
                 behavior.Id = _behavior.Id;
-
             }
-
         }
 
         private static void TryRemoveStyleBehaviors(BehaviorBindingCollection behaviors, IList behaviorsToRemove, bool disposeBehaviors)
-
         {
-
             if (disposeBehaviors)
 
                 foreach (BehaviorBinding behavior in behaviorsToRemove.OfType<BehaviorBinding>())
@@ -240,32 +242,35 @@ namespace WinCopies.Commands
                             // We don't need to dispose the behaviors from the 'behaviors' colelction parameter here, because they will be disposed automatically by the CollectionChanged event handler
 
                             behaviors.RemoveAt(j);
-
         }
 
         private static void TryReplaceStyleBehaviors(BehaviorBindingCollection behaviors, IList oldBehaviors, IList newBehaviors, bool disposeBehaviors)
-
         {
-
             for (int i = 0; i < oldBehaviors.Count; i++)
             {
-                Behavior oldItem = (Behavior)oldBehaviors[i];
-                Behavior newItem = (Behavior)newBehaviors[i];
-                Behavior clonedBehavior = newItem.Clone() as Behavior;
+                var oldItem = (Behavior)oldBehaviors[i];
+                var newItem = (Behavior)newBehaviors[i];
+                var clonedBehavior = newItem.Clone() as Behavior;
+
                 newItem.Owner = clonedBehavior.Owner = behaviors.Owner;
                 newItem.Id = oldItem.Id;
+
                 if (disposeBehaviors)
+
                     (oldItem as BehaviorBinding)?.Behavior.Dispose();
+
                 for (int j = 0; j < behaviors.Count; j++)
+
                     if (behaviors[j].Id == oldItem.Id)
+
                         behaviors[j] = clonedBehavior;
             }
-
         }
 
         static void StyleCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            BehaviorBindingCollection sourceCollection = (BehaviorBindingCollection)sender;
+            var sourceCollection = (BehaviorBindingCollection)sender;
+
             switch (e.Action)
             {
                 //when an item(s) is added we need to set the Owner property implicitly
@@ -279,6 +284,7 @@ namespace WinCopies.Commands
                 //when an item(s) is removed we should Dispose the BehaviorBinding
                 case NotifyCollectionChangedAction.Remove:
                 case NotifyCollectionChangedAction.Reset:
+
                     if (e.OldItems != null)
 
                         TryRemoveStyleBehaviors(GetBehaviors(sourceCollection.Owner), e.OldItems, false);
@@ -297,12 +303,12 @@ namespace WinCopies.Commands
                     throw new InvalidOperationException("Move is not supported for style behaviors");
 
                 default:
+
                     break;
             }
         }
 
-#endregion
-
+        #endregion
     }
 
     /// <summary>

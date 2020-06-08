@@ -24,13 +24,10 @@ using WinCopies.Util.Resources;
 
 namespace WinCopies.Collections.DotNetFix
 {
-
     // todo: add 'in' parameter keyword?
 
     public interface IReadOnlyLinkedList<T> : ICollection<T>, ICountableEnumerable<T>, ICollection, IReadOnlyCollection<T>, ISerializable, IDeserializationCallback
-
     {
-
         LinkedListNode<T> Last { get; }
 
         LinkedListNode<T> First { get; }
@@ -44,13 +41,10 @@ namespace WinCopies.Collections.DotNetFix
         // todo: to remove
 
         new System.Collections.Generic.LinkedList<T>.Enumerator GetEnumerator();
-
     }
 
     public interface ILinkedList<T> : ICollection<T>, IEnumerable<T>, ICollection, IReadOnlyCollection<T>, ISerializable, IDeserializationCallback
-
     {
-
         LinkedListNode<T> Last { get; }
 
         LinkedListNode<T> First { get; }
@@ -86,32 +80,24 @@ namespace WinCopies.Collections.DotNetFix
         void RemoveFirst();
 
         void RemoveLast();
-
     }
 
     public interface ILinkedList2<T> : ILinkedList<T>
     {
-
         bool IsReadOnly { get; }
-
     }
 
     [DebuggerDisplay("Count = {Count}")]
     public class LinkedList<T> : System.Collections.Generic.LinkedList<T>, ILinkedList2<T>
-
     {
-
         // todo: remove the explicit interface implementation and make this property public.
 
         bool ILinkedList2<T>.IsReadOnly => false;
-
     }
 
     [DebuggerDisplay("Count = {Count}")]
     public class ReadOnlyLinkedList<T> : IReadOnlyLinkedList<T>, ILinkedList2<T>
-
     {
-
         public bool IsReadOnly => true;
 
         protected ILinkedList<T> InnerList { get; }
@@ -181,7 +167,5 @@ namespace WinCopies.Collections.DotNetFix
         public void RemoveFirst() => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
 
         public void RemoveLast() => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
-
     }
-
 }

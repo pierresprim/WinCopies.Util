@@ -15,36 +15,32 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 #if WinCopies2
 namespace WinCopies.Util
 #else
 namespace WinCopies
 #endif
 {
-    public interface IDisposable : WinCopies.Util.DotNetFix.IDisposable
+    public interface IDisposable :
+#if WinCopies2
+        WinCopies.Util.DotNetFix.IDisposable
+#else
+        WinCopies.DotNetFix.IDisposable
+#endif
     {
-
         bool IsDisposing { get; }
 
     }
 }
 
+#if WinCopies2
 namespace WinCopies.Util.DotNetFix
-
+#else
+namespace WinCopies.DotNetFix
+#endif
 {
-
     public interface IDisposable : System.IDisposable
-
     {
-
         bool IsDisposed { get; }
-
     }
-
 }

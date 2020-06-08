@@ -40,30 +40,34 @@ namespace WinCopies.Commands
     /// <summary>
     /// Defines the command behavior binding
     /// </summary>
-    public class CommandBehaviorBinding : System. IDisposable
+    public class CommandBehaviorBinding : System.IDisposable
     {
-#region Properties
+        #region Properties
 
         /// <summary>
         /// Get the owner of the CommandBinding ex: a Button
         /// This property can only be set from the BindEvent Method
         /// </summary>
         public DependencyObject Owner { get; private set; }
+
         /// <summary>
         /// The event name to hook up to
         /// This property can only be set from the BindEvent Method
         /// </summary>
         public string EventName { get; private set; }
+
         /// <summary>
         /// The event info of the event
         /// </summary>
         public EventInfo Event { get; private set; }
+
         /// <summary>
         /// Gets the EventHandler for the binding with the event
         /// </summary>
         public Delegate EventHandler { get; private set; }
 
-#region Execution
+        #region Execution
+
         //stores the strategy of how to execute the event handler
         IExecutionStrategy strategy;
 
@@ -102,9 +106,9 @@ namespace WinCopies.Commands
                 strategy = new ActionExecutionStrategy { Behavior = this };
             }
         }
-#endregion
+        #endregion
 
-#endregion
+        #endregion
 
         /// <summary>
         /// Creates an <see cref="System. EventHandler"/> on runtime and registers that handler to the Event specified
@@ -113,11 +117,12 @@ namespace WinCopies.Commands
         /// <param name="eventName">The event name</param>
         public void BindEvent(DependencyObject owner, string eventName)
         {
-
             EventName = eventName;
             Owner = owner;
             Event = Owner.GetType().GetEvent(EventName, BindingFlags.Public | BindingFlags.Instance);
+
             if (Event == null)
+
                 throw new InvalidOperationException(string.Format("Could not resolve event name {0}", EventName));
 
             //Create an event handler for the event that will call the ExecuteCommand method
@@ -132,7 +137,7 @@ namespace WinCopies.Commands
         /// </summary>
         public void Execute() => strategy.Execute(CommandParameter);
 
-#region IDisposable Members
+        #region IDisposable Members
 
         bool disposed = false;
 
@@ -149,6 +154,6 @@ namespace WinCopies.Commands
             disposed = true;
         }
 
-#endregion
+        #endregion
     }
 }

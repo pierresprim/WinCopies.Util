@@ -18,21 +18,20 @@
 using System;
 using System.Collections.Generic;
 using WinCopies.Util;
+#if WinCopies2
 using static WinCopies.Util.Util;
+#else
+using static WinCopies.UtilHelpers;
+#endif
 
 namespace WinCopies.Collections
 {
     public class EnumComparer : System.Collections.Generic.Comparer<Enum>
-
     {
-
         public virtual int CompareToObject(Enum x, object y)
         {
-
             if (IsNumber(y))
-
             {
-
                 object o = x.GetNumValue();
 
                 if (o is sbyte sb) return sb.CompareTo(y);
@@ -56,22 +55,17 @@ namespace WinCopies.Collections
                     // We shouldn't reach this point.
 
                     return 0;
-
             }
 
             else
 
                 throw new ArgumentException("'y' is not from a numeric type.");
-
         }
 
         public virtual int CompareToEnum(object x, Enum y)
         {
-
             if (IsNumber(x))
-
             {
-
                 object o = y.GetNumValue();
 
                 if (o is sbyte sb) return -sb.CompareTo(x);
@@ -95,58 +89,45 @@ namespace WinCopies.Collections
                     // We shouldn't reach this point.
 
                     return 0;
-
             }
 
             else
 
                 throw new ArgumentException("'x' is not from a numeric type.");
-
         }
 
         public override int Compare(Enum x, Enum y) => x.CompareTo(y);
-
     }
 
     public class CustomizableSortingTypeEnumComparer : EnumComparer, IComparer<Enum>
-
     {
-
         public SortingType SortingType { get; set; }
 
         protected virtual int CompareToObjectOverride(Enum x, object y) => base.CompareToObject(x, y);
 
         public sealed override int CompareToObject(Enum x, object y)
         {
-
             int result = CompareToObjectOverride(x, y);
 
             return SortingType == SortingType.Ascending ? result : -result;
-
         }
 
         protected virtual int CompareToEnumOverride(object x, Enum y) => base.CompareToEnum(x, y);
 
         public sealed override int CompareToEnum(object x, Enum y)
         {
-
             int result = CompareToEnumOverride(x, y);
 
             return SortingType == SortingType.Ascending ? result : -result;
-
         }
 
         protected virtual int CompareOverride(Enum x, Enum y) => base.Compare(x, y);
 
         public sealed override int Compare(Enum x, Enum y)
         {
-
             int result = CompareOverride(x, y);
 
             return SortingType == SortingType.Ascending ? result : -result;
-
         }
-
     }
-
 }

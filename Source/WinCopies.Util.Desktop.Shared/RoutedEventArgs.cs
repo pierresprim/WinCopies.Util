@@ -44,7 +44,6 @@ namespace WinCopies
     /// <seealso cref="UIElement.RaiseEvent(RoutedEventArgs)"/>
     public class RoutedEventArgs<T> : RoutedEventArgs where T : EventArgs
     {
-
         /// <summary>
         /// The original <see cref="EventArgs"/>.
         /// </summary>
@@ -94,8 +93,5 @@ namespace WinCopies
         /// <para>Null values for <see cref="RoutedEventArgs.OriginalSource"/> are populated based on the element that raised the event and passed on through the routing, but will read <see langword="null"/> prior to invocation.</para>
         /// <para>Use this signature when passing <see cref="RoutedEventArgs"/> to virtuals such as <see cref="TextBoxBase.OnSelectionChanged"/>, where the arguments are used to call <see cref="UIElement.RaiseEvent(RoutedEventArgs)"/> internally.</para>
         public RoutedEventArgs(RoutedEvent routedEvent, object source, T originalEventArgs) : base(routedEvent, source) => OriginalEventArgs = originalEventArgs;
-
     }
 }
-
- 

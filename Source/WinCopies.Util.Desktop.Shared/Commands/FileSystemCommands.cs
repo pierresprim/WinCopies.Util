@@ -15,7 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-using System.Windows;
 using System.Windows.Input;
 
 #if WinCopies2
@@ -24,13 +23,11 @@ namespace WinCopies.Util.Commands
 namespace WinCopies.Commands
 #endif
 {
-
     /// <summary>
     /// Provides some standard commands for file system gesture.
     /// </summary>
     public static class FileSystemCommands
     {
-
         /// <summary>
         /// Gets the <b>NewFolder</b> command.
         /// </summary>
@@ -55,8 +52,5 @@ namespace WinCopies.Commands
         /// Gets the <b>DeletePermanently</b> command.
         /// </summary>
         public static RoutedUICommand DeletePermanently { get; } = new RoutedUICommand(WinCopies.Util.Desktop.Resources.Commands.WPF.FileSystemCommands.DeletePermanently, nameof(DeletePermanently), typeof(FileSystemCommands), new InputGestureCollection() { new KeyGesture(Key.Delete, ModifierKeys.Shift) });
-
     }
 }
-
-

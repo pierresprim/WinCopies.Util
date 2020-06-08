@@ -36,11 +36,9 @@ namespace WinCopies
 
             else
             {
-
                 _value = null;
 
                 MaxValue = 0;
-
             }
         }
 

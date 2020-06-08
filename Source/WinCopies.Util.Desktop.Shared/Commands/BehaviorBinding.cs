@@ -41,7 +41,6 @@ namespace WinCopies.Commands
     /// </summary>
     public abstract class Behavior : Freezable
     {
-
         internal int Id { get; set; }
 
         DependencyObject owner;
@@ -77,7 +76,6 @@ namespace WinCopies.Commands
     /// Defines a Command Binding
     /// </summary>
     public class BehaviorBinding : Behavior
-
     {
         CommandBehaviorBinding behavior;
 
@@ -86,7 +84,7 @@ namespace WinCopies.Commands
         /// </summary>
         internal CommandBehaviorBinding Behavior => behavior ?? (behavior = new CommandBehaviorBinding());
 
-#region Command
+        #region Command
 
         /// <summary>
         /// Command Dependency Property
@@ -115,9 +113,9 @@ namespace WinCopies.Commands
         /// </summary>
         protected virtual void OnCommandChanged(DependencyPropertyChangedEventArgs e) => Behavior.Command = Command;
 
-#endregion
+        #endregion
 
-#region Action
+        #region Action
 
         /// <summary>
         /// Action Dependency Property
@@ -146,9 +144,9 @@ namespace WinCopies.Commands
         /// </summary>
         protected virtual void OnActionChanged(DependencyPropertyChangedEventArgs e) => Behavior.Action = Action;
 
-#endregion
+        #endregion
 
-#region CommandParameter
+        #region CommandParameter
 
         /// <summary>
         /// CommandParameter Dependency Property
@@ -177,9 +175,9 @@ namespace WinCopies.Commands
         /// </summary>
         protected virtual void OnCommandParameterChanged(DependencyPropertyChangedEventArgs e) => Behavior.CommandParameter = CommandParameter;
 
-#endregion
+        #endregion
 
-#region Event
+        #region Event
 
         /// <summary>
         /// Event Dependency Property
@@ -213,27 +211,19 @@ namespace WinCopies.Commands
         /// </summary>
         protected override void ResetBehavior()
         {
-
             if (Owner != null) //only do this when the Owner is set
-
             {
-
                 //check if the Event is set. If yes we need to rebind the Command to the new event and unregister the old one
                 if (Behavior.Event != null && Behavior.Owner != null)
                     Behavior.Dispose();
 
                 //bind the new event to the command
                 Behavior.BindEvent(Owner, Event);
-
             }
-
         }
 
         protected override Freezable CreateInstanceCore() => new BehaviorBinding();
 
-#endregion
-
-
-
+        #endregion
     }
 }

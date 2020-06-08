@@ -22,14 +22,12 @@ using System.Windows.Markup;
 
 namespace WinCopies.Util.Data
 {
-
     /// <summary>
     /// Provides a base-class for any data <see cref="Binding"/> converter.
     /// </summary>
     [MarkupExtensionReturnType(typeof(IValueConverter))]
     public abstract class ConverterBase : MarkupExtension, IValueConverter
     {
-
         /// <summary>
         /// Converts a value.
         /// </summary>
@@ -39,7 +37,6 @@ namespace WinCopies.Util.Data
         /// <param name="culture">The culture to use in the converter.</param>
         /// <returns>A converted value. If the method returns <see langword="null"/>, the valid null value is used.</returns>
         public abstract object Convert(object value, Type targetType, object parameter, CultureInfo culture);
-
 
         /// <summary>
         /// Converts a value.
@@ -57,9 +54,5 @@ namespace WinCopies.Util.Data
         /// <param name="serviceProvider">A service provider helper that can provide services for the markup extension.</param>
         /// <returns>The object value to set on the property where the extension is applied.</returns>
         public override object ProvideValue(IServiceProvider serviceProvider) => this;
-
     }
-
 }
-
- 

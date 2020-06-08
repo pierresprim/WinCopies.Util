@@ -22,14 +22,12 @@ using System.Windows.Data;
 
 namespace WinCopies.Util.Data
 {
-
     /// <summary>
     /// Provides a converter for conversion from a <see langword="bool"/> value to a <see cref="Visibility"/> value.
     /// </summary>
     [ValueConversion(typeof(Visibility), typeof(bool), ParameterType = typeof(Visibility))]
     public class VisibilityToBooleanConverter : ConverterBase
     {
-
         /// <summary>
         /// Converts a <see cref="Visibility"/> value to a <see langword="bool"/> value. If the value is <see cref="Visibility.Visible"/>, the returned value will be <see langword="true"/>, otherwise false.
         /// </summary>
@@ -50,7 +48,6 @@ namespace WinCopies.Util.Data
         /// <returns><see cref="Visibility.Visible"/> if the value to convert is <see langword="true"/>, if not, the value of the parameter if it is not null, otherwise <see cref="Visibility.Collapsed"/>.</returns>
         public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-
             if (parameter != null && (!(parameter is Visibility) || (Visibility)parameter == Visibility.Visible))
 
                 // todo:
@@ -58,9 +55,6 @@ namespace WinCopies.Util.Data
                 throw new ArgumentException("parameter must be a value of the System.Windows.Visibility enum and can't be the System.Windows.Visibility.Visible value.");
 
             return (bool)value ? Visibility.Visible : parameter ?? Visibility.Collapsed;
-
         }
     }
 }
-
- 

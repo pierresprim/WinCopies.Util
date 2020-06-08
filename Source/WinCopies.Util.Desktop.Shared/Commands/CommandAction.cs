@@ -29,11 +29,9 @@ namespace WinCopies.Commands
 {
     public class CommandAction : TriggerAction<DependencyObject>
     {
-
-
         public static readonly DependencyProperty CommandProperty =
-         DependencyProperty.Register("Command", typeof(ICommand), typeof(CommandAction),
-         new PropertyMetadata(null, OnCommandChanged));
+ DependencyProperty.Register("Command", typeof(ICommand), typeof(CommandAction),
+ new PropertyMetadata(null, OnCommandChanged));
 
         public static readonly DependencyProperty CommandParameterProperty =
          DependencyProperty.Register("CommandParameter", typeof(object), typeof(CommandAction),
@@ -80,9 +78,5 @@ namespace WinCopies.Commands
         }
 
         protected override void Invoke(object parameter) => Command?.Execute(CommandParameter);
-
-
     }
 }
-
-

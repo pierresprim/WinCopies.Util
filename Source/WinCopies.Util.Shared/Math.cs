@@ -1,6 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿/* Copyright © Pierre Sprimont, 2020
+ *
+ * This file is part of the WinCopies Framework.
+ *
+ * The WinCopies Framework is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * The WinCopies Framework is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if WinCopies2
 namespace WinCopies.Util
@@ -10,11 +23,8 @@ namespace WinCopies
 {
     public static class Math
     {
-
         public static ulong Pow(in byte b, in byte power)
-
         {
-
             if (power == 0) return 1UL;
 
             if (power == 1) return b;
@@ -26,13 +36,10 @@ namespace WinCopies
                 result *= b;
 
             return result;
-
         }
 
         public static long Pow(in sbyte b, in sbyte power)
-
         {
-
             if (power == 0) return 1L;
 
             if (power == 1) return b;
@@ -44,13 +51,9 @@ namespace WinCopies
             long result;
 
             if (power < 0)
-
             {
-
                 if (power < -1)
-
                 {
-
                     result = (long)(b * b);
 
                     for (sbyte i = -3; i >= power; i--)
@@ -60,9 +63,7 @@ namespace WinCopies
                     result = 1 / result;
 
                     return result;
-
                 }
-
             }
 
             result = b * b;
@@ -72,13 +73,10 @@ namespace WinCopies
                 result *= b;
 
             return result;
-
         }
 
         public static ulong Pow(in ushort s, in ushort power)
-
         {
-
             if (power == 0) return 1UL;
 
             if (power == 1) return s;
@@ -90,13 +88,10 @@ namespace WinCopies
                 result *= s;
 
             return result;
-
         }
 
         public static long Pow(in short s, in short power)
-
         {
-
             if (power == 0) return 1L;
 
             if (power == 1) return s;
@@ -108,13 +103,9 @@ namespace WinCopies
             long result;
 
             if (power < 0)
-
             {
-
                 if (power < -1)
-
                 {
-
                     result = (long)(s * s);
 
                     for (short i = -3; i >= power; i--)
@@ -124,9 +115,7 @@ namespace WinCopies
                     result = 1 / result;
 
                     return result;
-
                 }
-
             }
 
             result = s * s;
@@ -136,13 +125,10 @@ namespace WinCopies
                 result *= s;
 
             return result;
-
         }
 
         public static ulong Pow(in uint i, in uint power)
-
         {
-
             if (power == 0u) return 1UL;
 
             if (power == 1u) return i;
@@ -154,13 +140,10 @@ namespace WinCopies
                 result *= i;
 
             return result;
-
         }
 
         public static long Pow(in int i, in int power)
-
         {
-
             if (power == 0) return 1L;
 
             if (power == 1) return i;
@@ -172,13 +155,9 @@ namespace WinCopies
             long result;
 
             if (power < 0)
-
             {
-
                 if (power < -1)
-
                 {
-
                     result = (long)(i * i);
 
                     for (int _i = -3; _i >= power; _i--)
@@ -188,9 +167,7 @@ namespace WinCopies
                     result = 1 / result;
 
                     return result;
-
                 }
-
             }
 
             result = i * i;
@@ -200,13 +177,10 @@ namespace WinCopies
                 result *= i;
 
             return result;
-
         }
 
         public static ulong Pow(in ulong value, in ulong power)
-
         {
-
             if (power == 0) return 1UL;
 
             if (power == 1) return value;
@@ -218,13 +192,10 @@ namespace WinCopies
                 result *= value;
 
             return result;
-
         }
 
         public static long Pow(in long value, in long power)
-
         {
-
             if (power == 0) return 1L;
 
             if (power == 1) return value;
@@ -236,13 +207,9 @@ namespace WinCopies
             long result;
 
             if (power < 0)
-
             {
-
                 if (power < -1)
-
                 {
-
                     result = value * value;
 
                     for (long i = -3; i >= power; i--)
@@ -252,9 +219,7 @@ namespace WinCopies
                     result = 1 / result;
 
                     return result;
-
                 }
-
             }
 
             result = value * value;
@@ -264,13 +229,10 @@ namespace WinCopies
                 result *= value;
 
             return result;
-
         }
 
         public static float Pow(in float value, in float power)
-
         {
-
             if (power == 0) return 1f;
 
             if (power == 1) return value;
@@ -282,13 +244,9 @@ namespace WinCopies
             float result;
 
             if (power < 0)
-
             {
-
                 if (power < -1)
-
                 {
-
                     result = (float)(value * value);
 
                     for (float i = -3; i >= power; i--)
@@ -298,9 +256,7 @@ namespace WinCopies
                     result = 1 / result;
 
                     return result;
-
                 }
-
             }
 
             result = (float)(value * value);
@@ -310,13 +266,10 @@ namespace WinCopies
                 result *= value;
 
             return result;
-
         }
 
         public static decimal Pow(in decimal value, in decimal power)
-
         {
-
             if (power == 0) return 1m;
 
             if (power == 1) return value;
@@ -328,13 +281,9 @@ namespace WinCopies
             decimal result;
 
             if (power < 0)
-
             {
-
                 if (power < -1)
-
                 {
-
                     result = (decimal)(value * value);
 
                     for (decimal i = -3; i >= power; i--)
@@ -344,9 +293,7 @@ namespace WinCopies
                     result = 1 / result;
 
                     return result;
-
                 }
-
             }
 
             result = (decimal)(value * value);
@@ -356,7 +303,6 @@ namespace WinCopies
                 result *= value;
 
             return result;
-
         }
 
         public static bool IsAdditionResultInRange(in ulong left, in ulong right, in ulong maxValue) => left <= maxValue && maxValue - left >= right;
@@ -370,7 +316,7 @@ namespace WinCopies
             return null;
         }
 
-        public static bool IsMultiplicationResultInRange(in ulong left, in ulong right, in ulong maxValue) => left==0|| maxValue / left >= right;
+        public static bool IsMultiplicationResultInRange(in ulong left, in ulong right, in ulong maxValue) => left == 0 || maxValue / left >= right;
 
         public static ulong? TryMultiply(in ulong left, in ulong right, in ulong maxValue)
         {

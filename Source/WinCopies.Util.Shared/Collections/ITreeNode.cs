@@ -15,29 +15,20 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WinCopies.Util;
 
 namespace WinCopies.Collections
 {
-
     /// <summary>
     /// Represents a tree node.
     /// </summary>
     public interface IReadOnlyTreeNode
     {
-
         /// <summary>
         /// Gets the parent of the current node.
         /// </summary>
         IReadOnlyTreeNode Parent { get; }
-
     }
 
     ///// <summary>
@@ -67,18 +58,8 @@ namespace WinCopies.Collections
 
     }
 
-    public interface IObservableTreeNode<T> : IReadOnlyTreeNode, ITreeNode<T>, IReadOnlyObservableTreeNode<T>, IReadOnlyTreeNode<T>, IValueObject<T>, IValueObject, System.Collections.Generic.IList<ITreeNode<T>>, System.Collections.Generic.ICollection<T>, IEnumerable<T>, /*IEnumerable, System.Collections.IList, System.Collections.ICollection,*/ System.Collections.Generic.IReadOnlyList<ITreeNode<T>>, System.Collections.Generic.IReadOnlyCollection<ITreeNode<T>>, System.IDisposable, System.Collections.Specialized.INotifyCollectionChanged, INotifyPropertyChanged
-    {
+    public interface IObservableTreeNode<T> : IReadOnlyTreeNode, ITreeNode<T>, IReadOnlyObservableTreeNode<T>, IReadOnlyTreeNode<T>, IValueObject<T>, IValueObject, System.Collections.Generic.IList<ITreeNode<T>>, System.Collections.Generic.ICollection<T>, IEnumerable<T>, /*IEnumerable, System.Collections.IList, System.Collections.ICollection,*/ System.Collections.Generic.IReadOnlyList<ITreeNode<T>>, System.Collections.Generic.IReadOnlyCollection<ITreeNode<T>>, System.IDisposable, System.Collections.Specialized.INotifyCollectionChanged, INotifyPropertyChanged { }
 
-
-
-    }
-
-    public interface IReadOnlyObservableTreeNode<T> : IReadOnlyTreeNode, IReadOnlyTreeNode<T>, IReadOnlyValueObject<T>, IReadOnlyValueObject, System.Collections.Generic.IReadOnlyList<IReadOnlyTreeNode<T>>, System.Collections.Generic.IReadOnlyCollection<IReadOnlyTreeNode<T>>, IEnumerable<IReadOnlyTreeNode<T>>, /*IEnumerable,*/ System.IDisposable, System.Collections.Specialized.INotifyCollectionChanged, INotifyPropertyChanged
-    {
-
-
-
-    }
+    public interface IReadOnlyObservableTreeNode<T> : IReadOnlyTreeNode, IReadOnlyTreeNode<T>, IReadOnlyValueObject<T>, IReadOnlyValueObject, System.Collections.Generic.IReadOnlyList<IReadOnlyTreeNode<T>>, System.Collections.Generic.IReadOnlyCollection<IReadOnlyTreeNode<T>>, IEnumerable<IReadOnlyTreeNode<T>>, /*IEnumerable,*/ System.IDisposable, System.Collections.Specialized.INotifyCollectionChanged, INotifyPropertyChanged { }
 
 }

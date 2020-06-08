@@ -15,10 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -27,7 +25,6 @@ namespace WinCopies.Util.Data
 {
     public class MenuItem : ViewModelBase
     {
-
         private readonly object _header;
 
         /// <summary>
@@ -93,18 +90,14 @@ namespace WinCopies.Util.Data
         public MenuItem(object header) => _header = header;
 
         public MenuItem(object header, ImageSource icon)
-
         {
-
             _header = header;
 
             _icon = icon;
-
         }
 
         public MenuItem(object header, ImageSource icon, ICommand command, object commandParameter, IInputElement commandTarget)
         {
-
             _header = header;
 
             _icon = icon;
@@ -114,23 +107,18 @@ namespace WinCopies.Util.Data
             _commandParameter = commandParameter;
 
             _commandTarget = commandTarget;
-
         }
 
         public MenuItem(object header, IEnumerable<MenuItem> items)
         {
-
             _header = header;
 
             Items.AddRange(items);
-
         }
-
     }
 
     public class MenuItem<THeader, TChildren> : ViewModelBase
     {
-
         private readonly THeader _header;
 
         /// <summary>
@@ -193,18 +181,14 @@ namespace WinCopies.Util.Data
         public MenuItem(THeader header) => _header = header;
 
         public MenuItem(THeader header, ImageSource icon)
-
         {
-
             _header = header;
 
             _icon = icon;
-
         }
 
         public MenuItem(THeader header, ImageSource icon, ICommand command, object commandParameter, IInputElement commandTarget)
         {
-
             _header = header;
 
             _icon = icon;
@@ -214,19 +198,13 @@ namespace WinCopies.Util.Data
             _commandParameter = commandParameter;
 
             _commandTarget = commandTarget;
-
         }
 
         public MenuItem(THeader header, IEnumerable<MenuItem> items)
         {
-
             _header = header;
 
             Items.AddRange(items);
-
         }
-
     }
 }
-
- 

@@ -4,7 +4,7 @@
     <PackageId>WinCopies.Util.Desktop</PackageId>
     <AssemblyName>WinCopies.Util.Desktop</AssemblyName>
     <Title>WinCopies.Util.Desktop</Title>
-    <TargetFrameworks>netcoreapp3.0;net472</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.0;netcoreapp3.1;net472</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <Description>WinCopies framework desktop utilities</Description>
     <Copyright>Copyright © 2020 Pierre Sprimont</Copyright>
@@ -21,7 +21,7 @@
 
   <PropertyGroup>
     <DefineConstants>WinCopies3;$(DefineConstants)</DefineConstants>
-    <RootNamespace>WinCopies.Util</RootNamespace>
+    <RootNamespace>WinCopies.Util.Desktop</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -43,7 +43,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WinCopies.Util\WinCopies.Util.csproj" />
+    <ProjectReference Include="..\WinCopies.Util.3.0\WinCopies.Util.3.0.csproj" />
   </ItemGroup>
 
   <ItemGroup>

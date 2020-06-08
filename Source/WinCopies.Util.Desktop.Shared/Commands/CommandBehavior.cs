@@ -47,7 +47,7 @@ namespace WinCopies.Commands
         private const string CommandParameter = "CommandParameter";
         private const string Event = "Event";
 
-#region Behavior
+        #region Behavior
 
         /// <summary>
         /// Behavior Attached Dependency Property
@@ -66,9 +66,9 @@ namespace WinCopies.Commands
         /// </summary>
         private static void SetBehavior(DependencyObject d, CommandBehaviorBinding value) => d.SetValue(BehaviorProperty, value);
 
-#endregion
+        #endregion
 
-#region Command
+        #region Command
 
         /// <summary>
         /// Command Attached Dependency Property
@@ -93,9 +93,9 @@ namespace WinCopies.Commands
         /// </summary>
         private static void OnCommandChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => FetchOrCreateBinding(d).Command = (ICommand)e.NewValue;
 
-#endregion
+        #endregion
 
-#region Action
+        #region Action
 
         /// <summary>
         /// Action Attached Dependency Property
@@ -120,9 +120,9 @@ namespace WinCopies.Commands
         /// </summary>
         private static void OnActionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => FetchOrCreateBinding(d).Action = (Action<object>)e.NewValue;
 
-#endregion
+        #endregion
 
-#region CommandParameter
+        #region CommandParameter
 
         /// <summary>
         /// CommandParameter Attached Dependency Property
@@ -147,9 +147,9 @@ namespace WinCopies.Commands
         /// </summary>
         private static void OnCommandParameterChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => FetchOrCreateBinding(d).CommandParameter = e.NewValue;
 
-#endregion
+        #endregion
 
-#region Event
+        #region Event
 
         /// <summary>
         /// Event Attached Dependency Property
@@ -194,9 +194,9 @@ namespace WinCopies.Commands
             binding.BindEvent(d, e.NewValue.ToString());
         }
 
-#endregion
+        #endregion
 
-#region Helpers
+        #region Helpers
         //tries to get a CommandBehaviorBinding from the element. Creates a new instance if there is not one attached
         private static CommandBehaviorBinding FetchOrCreateBinding(DependencyObject d)
         {
@@ -208,8 +208,6 @@ namespace WinCopies.Commands
             }
             return binding;
         }
-#endregion
-
+        #endregion
     }
-
 }

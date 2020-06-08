@@ -17,14 +17,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Markup;
-using WinCopies.Collections;
 
 #if WinCopies2
 namespace WinCopies.Util
@@ -33,10 +28,9 @@ namespace WinCopies
 #endif
 {
     [MarkupExtensionReturnType(typeof(Style))]
-        [DefaultProperty("Styles")]
+    [DefaultProperty("Styles")]
     public class MergedStylesExtension : MarkupExtension, INotifyPropertyChanged
     {
-
         private IEnumerable<Style> _styles;
 
         private Style _mergedStyle;
@@ -55,55 +49,45 @@ namespace WinCopies
 
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
-
             if (_mergedStyle == null)
-
             {
-
                 IEnumerator<Style> enumerator = _styles.GetEnumerator();
 
                 if (enumerator.MoveNext())
-
                 {
-
                     _mergedStyle = new Style();
-                    
+
                     MergeStyles(_mergedStyle, enumerator.Current);
 
                     // todo: sort styles by target types
 
-                //    ArrayBuilder<SetterBase> setters = new ArrayBuilder<SetterBase>();
+                    //    ArrayBuilder<SetterBase> setters = new ArrayBuilder<SetterBase>();
 
-                //    for (int i = 0; i < _mergedStyle.Setters.Count; i++)
+                    //    for (int i = 0; i < _mergedStyle.Setters.Count; i++)
 
-                //    {
+                    //    {
 
-                //        if (_mergedStyle.Setters[i] is Setter setter)
+                    //        if (_mergedStyle.Setters[i] is Setter setter)
 
-                //            foreach (SetterBase item in propertyNames)
+                    //            foreach (SetterBase item in propertyNames)
 
-                //                    if (item is Setter _setter && setter.Property == _setter.Property)
+                    //                    if (item is Setter _setter && setter.Property == _setter.Property)
 
 
 
-                //            }
+                    //            }
 
                     while (enumerator.MoveNext())
 
                         MergeStyles(_mergedStyle, enumerator.Current);
-
                 }
-
             }
 
             return _mergedStyle;
-
         }
 
         public static void MergeStyles(Style s1, Style s2)
-
         {
-
             if (s2.BasedOn != null)
 
                 MergeStyles(s1, s2.BasedOn);
@@ -111,9 +95,6 @@ namespace WinCopies
             s1.Setters.AddRange(s2.Setters);
 
             s1.Triggers.AddRange(s2.Triggers);
-
         }
     }
 }
-
- 

@@ -15,16 +15,10 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WinCopies.Collections
 {
-
     /// <summary>
     /// Delegate for a non-generic comparison.
     /// </summary>
@@ -50,26 +44,19 @@ namespace WinCopies.Collections
     public delegate bool EqualityComparison<in T>(T x, T y);
 
     public enum SortingType
-
     {
-
         Ascending,
 
         Descending
-
     }
 
     public interface IComparer : System.Collections.IComparer
     {
-
         SortingType SortingType { get; set; }
-
     }
 
     public sealed class Comparer : IComparer
-
     {
-
         public static readonly Comparer Default = new Comparer(System.Threading.Thread.CurrentThread.CurrentCulture);
 
         public static readonly Comparer DefaultInvariant = new Comparer(CultureInfo.InvariantCulture);
@@ -81,21 +68,16 @@ namespace WinCopies.Collections
         public Comparer(CultureInfo cultureInfo) => _comparer = new System.Collections.Comparer(cultureInfo);
 
         public int Compare(object x, object y)
-
         {
 
             int result = _comparer.Compare(x, y);
 
             return SortingType == SortingType.Ascending ? result : -result;
-
         }
-
     }
 
     public sealed class CaseInsensitiveComparer : IComparer
-
     {
-
         public static CaseInsensitiveComparer Default => new CaseInsensitiveComparer(System.Threading.Thread.CurrentThread.CurrentCulture);
 
         public static CaseInsensitiveComparer DefaultInvariant => new CaseInsensitiveComparer(CultureInfo.InvariantCulture);
@@ -107,41 +89,29 @@ namespace WinCopies.Collections
         public CaseInsensitiveComparer(CultureInfo cultureInfo) => _comparer = new System.Collections.CaseInsensitiveComparer(cultureInfo);
 
         public int Compare(object x, object y)
-
         {
-
             int result = _comparer.Compare(x, y);
 
             return SortingType == SortingType.Ascending ? result : -result;
-
         }
-
     }
 
-    public interface IComparer< in T> : System.Collections.Generic.IComparer<T>
-
+    public interface IComparer<in T> : System.Collections.Generic.IComparer<T>
     {
-
         SortingType SortingType { get; set; }
-
     }
 
     public abstract class Comparer<T> : System.Collections.Generic.Comparer<T>, IComparer<T>
-
     {
-
         public SortingType SortingType { get; set; }
 
         protected abstract int CompareOverride(T x, T y);
 
         public sealed override int Compare(T x, T y)
         {
-
             int result = CompareOverride(x, y);
 
             return SortingType == SortingType.Ascending ? result : -result;
-
         }
     }
-
 }

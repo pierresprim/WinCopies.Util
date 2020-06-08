@@ -16,16 +16,8 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Windows;
-using System.Windows.Interop;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using WinCopies.Util;
 
 namespace WinCopies.Util.Data
 {

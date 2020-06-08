@@ -55,7 +55,7 @@ namespace WinCopies.Commands
     /// </summary>
     public class CommandExecutionStrategy : IExecutionStrategy
     {
-#region IExecutionStrategy Members
+        #region IExecutionStrategy Members
         /// <summary>
         /// Gets or sets the Behavior that we execute this strategy
         /// </summary>
@@ -73,7 +73,7 @@ namespace WinCopies.Commands
                 Behavior.Command.Execute(Behavior.CommandParameter);
         }
 
-#endregion
+        #endregion
     }
 
     /// <summary>
@@ -81,8 +81,7 @@ namespace WinCopies.Commands
     /// </summary>
     public class ActionExecutionStrategy : IExecutionStrategy
     {
-
-#region IExecutionStrategy Members
+        #region IExecutionStrategy Members
 
         /// <summary>
         /// Gets or sets the Behavior that we execute this strategy
@@ -94,8 +93,6 @@ namespace WinCopies.Commands
         /// </summary>
         /// <param name="parameter">The parameter to pass to the Action</param>
         public void Execute(object parameter) => Behavior.Action(parameter);
-
-#endregion
+        #endregion
     }
-
 }

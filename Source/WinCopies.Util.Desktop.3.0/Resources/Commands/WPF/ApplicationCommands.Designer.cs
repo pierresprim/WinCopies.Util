@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WinCopies.Util.Resources.Commands.WPF {
+namespace WinCopies.Util.Desktop.Resources.Commands.WPF {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace WinCopies.Util.Resources.Commands.WPF {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("WinCopies.Util.Resources.Commands.WPF.ApplicationCommands", typeof(ApplicationCommands).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("WinCopies.Util.Desktop.Resources.Commands.WPF.ApplicationCommands", typeof(ApplicationCommands).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

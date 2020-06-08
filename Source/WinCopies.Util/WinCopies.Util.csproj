@@ -21,6 +21,7 @@
 
   <PropertyGroup>
     <DefineConstants>WinCopies2;$(DefineConstants)</DefineConstants>
+    <RootNamespace>WinCopies.Util</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework.TrimEnd(`0123456789.`))' == 'netstandard'">

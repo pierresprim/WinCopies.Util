@@ -16,12 +16,8 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
 using System.Security;
-using System.Text;
-using System.Threading.Tasks;
 using WinCopies.Collections;
 
 #if WinCopies2
@@ -32,33 +28,23 @@ namespace WinCopies
 {
     public class InvalidEnumArgumentException : System.ComponentModel.InvalidEnumArgumentException
     {
-
         /// <summary>
         /// Initializes a new instance of the <see cref="InvalidEnumArgumentException"/> class.
         /// </summary>
-        public InvalidEnumArgumentException() : base()
-        {
-
-        }
+        public InvalidEnumArgumentException() : base() { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InvalidEnumArgumentException"/> class with a specified error message.
         /// </summary>
         /// <param name="message">The message that describes the error.</param>
-        public InvalidEnumArgumentException(string message) : base(message)
-        {
-
-        }
+        public InvalidEnumArgumentException(string message) : base(message) { }
 
         /// <summary>
         /// Initializes a new instance of the System.Exception class with a specified error message and a reference to the inner exception that is the cause of this exception.
         /// </summary>
         /// <param name="message">The error message that explains the reason for the exception.</param>
         /// <param name="innerException">The exception that is the cause of the current exception, or a <see langword="null"/> reference (<see langword="Nothing"/> in Visual Basic) if no inner exception is specified.</param>
-        public InvalidEnumArgumentException(string message, Exception innerException) : base(message, innerException)
-        {
-
-        }
+        public InvalidEnumArgumentException(string message, Exception innerException) : base(message, innerException) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InvalidEnumArgumentException"/> class with serialized data.
@@ -105,13 +91,11 @@ namespace WinCopies
         /// <param name="enumClass">A <see cref="Type"/> that represents the enumeration class with the valid values.</param>
         public InvalidEnumArgumentException(string message, string argumentName, int invalidValue, Type enumClass) : base(argumentName, invalidValue, enumClass)
         {
-
             _message = message;
 
             _paramName = argumentName;
 
             InvalidValue = (Enum)Enum.ToObject(enumClass, invalidValue);
-
         }
 
         /// <summary>
@@ -121,16 +105,14 @@ namespace WinCopies
         /// <param name="argumentName">The name of the argument that caused the exception.</param>
         /// <param name="invalidValue">The value of the argument that failed.</param>
         /// <param name="enumClass">A <see cref="Type"/> that represents the enumeration class with the valid values.</param>
-        public InvalidEnumArgumentException(string message, string argumentName, long invalidValue, Type enumClass) : base(argumentName, invalidValue <= int.MaxValue? (int) invalidValue : 0, enumClass)
+        public InvalidEnumArgumentException(string message, string argumentName, long invalidValue, Type enumClass) : base(argumentName, invalidValue <= int.MaxValue ? (int)invalidValue : 0, enumClass)
         {
-
             _message = message;
 
             _paramName = argumentName;
 
-            InvalidValue = (Enum) Enum.ToObject(enumClass, invalidValue);
-
-    }
+            InvalidValue = (Enum)Enum.ToObject(enumClass, invalidValue);
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InvalidEnumArgumentException"/> class with a message generated from the argument, the invalid value, and an enumeration class.
@@ -138,15 +120,13 @@ namespace WinCopies
         /// <param name="message">A custom message describing this exception.</param>
         /// <param name="argumentName">The name of the argument that caused the exception.</param>
         /// <param name="invalidValue">The value of the argument that failed.</param>
-        public InvalidEnumArgumentException( string message, string argumentName, Enum invalidValue) : base(argumentName, new EnumComparer().CompareToObject(invalidValue, int.MaxValue) <= 0 ? (int)invalidValue.GetNumValue() : 0, invalidValue.GetType())
+        public InvalidEnumArgumentException(string message, string argumentName, Enum invalidValue) : base(argumentName, new EnumComparer().CompareToObject(invalidValue, int.MaxValue) <= 0 ? (int)invalidValue.GetNumValue() : 0, invalidValue.GetType())
         {
-
             _message = message;
 
             _paramName = argumentName;
 
             InvalidValue = invalidValue;
-
         }
 
         private readonly string _message = null;

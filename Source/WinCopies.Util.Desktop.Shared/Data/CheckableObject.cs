@@ -16,37 +16,26 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using System;
-using WinCopies.Util;
 
 namespace WinCopies.Util.Data
 {
-
     /// <summary>
     /// Provides an object that defines a value that can be checked and notifies of the checked status or value change. For example, this interface can be used in a view for items that can be selected.
     /// </summary>
     [Obsolete("This interface has been replaced by the ICheckBoxModel interface of the WinCopies.GUI.Models assembly, and will be removed in later versions.")]
     public interface ICheckableObject : IValueObject
-
     {
-
         /// <summary>
         /// Gets or sets a value that indicates whether this object is checked.
         /// </summary>
         bool IsChecked { get; set; }
-
     }
 
     /// <summary>
     /// Provides an object that defines a value that can be checked and notifies of the checked status or value change. For example, this interface can be used in a view for items that can be selected.
     /// </summary>
     [Obsolete("This interface has been replaced by the ICheckBoxModel interface of the WinCopies.GUI.Models assembly, and will be removed in later versions.")]
-    public interface ICheckableObject<T> : ICheckableObject, IValueObject<T>
-
-    {
-
-    }
-
-
+    public interface ICheckableObject<T> : ICheckableObject, IValueObject<T> { }
 
     /// <summary>
     /// Provides an object that defines a value that can be checked and notifies of the checked status or value change. For example, this class can be used in a view for items that can be selected.
@@ -54,7 +43,6 @@ namespace WinCopies.Util.Data
     [Obsolete("This class has been replaced by the CheckBoxModel class of the WinCopies.GUI.Models assembly, and will be removed in later versions.")]
     public class CheckableObject : ViewModelBase, ICheckableObject
     {
-
         public bool IsReadOnly => false;
 
         private readonly bool _isChecked = false;
@@ -69,14 +57,20 @@ namespace WinCopies.Util.Data
         /// </summary>
         /// <param name="obj">Object to compare to the current object.</param>
         /// <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
-        public bool Equals(WinCopies.Util.IValueObject obj) => new ValueObjectEqualityComparer().Equals(this, obj);
+        public bool Equals(
+#if WinCopies2
+            WinCopies.Util.IValueObject
+#else
+            WinCopies.IValueObject
+#endif
+            obj) => new ValueObjectEqualityComparer().Equals(this, obj);
 
         /// <summary>
         /// Determines whether this object is equal to a given object.
         /// </summary>
         /// <param name="obj">Object to compare to the current object.</param>
         /// <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
-        public bool Equals(WinCopies.Util.IReadOnlyValueObject obj) => new ValueObjectEqualityComparer().Equals(this, obj);
+        public bool Equals(IReadOnlyValueObject obj) => new ValueObjectEqualityComparer().Equals(this, obj);
 
         private readonly object _value;
 
@@ -97,14 +91,12 @@ namespace WinCopies.Util.Data
         /// <param name="value">The value of the object.</param>
         public CheckableObject(bool isChecked, object value)
         {
-
             _value = value;
 
             _isChecked = isChecked;
-
         }
 
-#region IDisposable Support
+        #region IDisposable Support
         private bool disposedValue = false;
 
         /// <summary>
@@ -113,7 +105,6 @@ namespace WinCopies.Util.Data
         /// <param name="disposing"><see langword="true"/> to dispose managed resources, otherwise <see langword="false"/>.</param>
         protected virtual void Dispose(bool disposing)
         {
-
             if (disposedValue)
 
                 return;
@@ -123,25 +114,17 @@ namespace WinCopies.Util.Data
                 _value.Dispose();
 
             disposedValue = true;
-
         }
 
-        ~CheckableObject()
-        {
-
-            Dispose(false);
-
-        }
+        ~CheckableObject() => Dispose(false);
 
         public void Dispose()
         {
-
             Dispose(true);
 
             GC.SuppressFinalize(this);
-
         }
-#endregion
+        #endregion
     }
 
     /// <summary>
@@ -151,7 +134,6 @@ namespace WinCopies.Util.Data
     [Obsolete("This class has been replaced by the CheckBoxModel class of the WinCopies.GUI.Models assembly, and will be removed in later versions.")]
     public class CheckableObject<T> : ViewModelBase, ICheckableObject<T>
     {
-
         public bool IsReadOnly => false;
 
         private readonly bool _isChecked = false;
@@ -166,28 +148,40 @@ namespace WinCopies.Util.Data
         /// </summary>
         /// <param name="obj">Object to compare to the current object.</param>
         /// <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
-        public bool Equals(WinCopies.Util.IValueObject obj) => new ValueObjectEqualityComparer().Equals(this, obj);
+        public bool Equals(
+#if WinCopies2
+            WinCopies.Util.IValueObject
+#else
+            WinCopies.IValueObject
+#endif
+        obj) => new ValueObjectEqualityComparer().Equals(this, obj);
 
         /// <summary>
         /// Determines whether this object is equal to a given object.
         /// </summary>
         /// <param name="obj">Object to compare to the current object.</param>
         /// <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
-        public bool Equals(WinCopies.Util.IReadOnlyValueObject obj) => new ValueObjectEqualityComparer().Equals(this, obj);
+        public bool Equals(IReadOnlyValueObject obj) => new ValueObjectEqualityComparer().Equals(this, obj);
 
         /// <summary>
         /// Determines whether this object is equal to a given object.
         /// </summary>
         /// <param name="obj">Object to compare to the current object.</param>
         /// <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
-        public bool Equals(WinCopies.Util.IReadOnlyValueObject<T> obj) => new ValueObjectEqualityComparer().Equals(this, obj);
+        public bool Equals(IReadOnlyValueObject<T> obj) => new ValueObjectEqualityComparer().Equals(this, obj);
 
         /// <summary>
         /// Determines whether this object is equal to a given object.
         /// </summary>
         /// <param name="obj">Object to compare to the current object.</param>
         /// <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
-        public bool Equals(WinCopies.Util.IValueObject<T> obj) => new ValueObjectEqualityComparer<T>().Equals(this, obj);
+        public bool Equals(
+#if WinCopies2
+            WinCopies.Util.IValueObject<T>
+#else
+            WinCopies.IValueObject<T>
+#endif
+            obj) => new ValueObjectEqualityComparer<T>().Equals(this, obj);
 
         private readonly T _value;
 
@@ -198,24 +192,14 @@ namespace WinCopies.Util.Data
 
         object IReadOnlyValueObject.Value => _value;
 
-        object WinCopies.Util.IValueObject.Value
-        {
-
-            get => _value; set
-
-            {
-
-                if (value is T _value)
-
-                    Value = _value;
-
-                else
-
-                    throw new ArgumentException("Invalid type.", nameof(value));
-
-            }
-
-        }
+        object
+#if WinCopies2
+WinCopies.Util.IValueObject
+#else
+            WinCopies.IValueObject
+#endif
+            .Value
+        { get => _value; set => Value = value is T _value ? _value : throw new ArgumentException("Invalid type.", nameof(value)); }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CheckableObject{T}"/> class.
@@ -229,14 +213,12 @@ namespace WinCopies.Util.Data
         /// <param name="value">The value of the object.</param>
         public CheckableObject(bool isChecked, T value)
         {
-
             _value = value;
 
             _isChecked = isChecked;
-
         }
 
-#region IDisposable Support
+        #region IDisposable Support
         private bool disposedValue = false;
 
         /// <summary>
@@ -245,7 +227,6 @@ namespace WinCopies.Util.Data
         /// <param name="disposing"><see langword="true"/> to dispose managed resources, otherwise <see langword="false"/>.</param>
         protected virtual void Dispose(bool disposing)
         {
-
             if (disposedValue)
 
                 return;
@@ -255,25 +236,17 @@ namespace WinCopies.Util.Data
                 _value.Dispose();
 
             disposedValue = true;
-
         }
 
-        ~CheckableObject()
-        {
-
-            Dispose(false);
-
-        }
+        ~CheckableObject() => Dispose(false);
 
         public void Dispose()
         {
-
             Dispose(true);
 
             GC.SuppressFinalize(this);
-
         }
-#endregion
+        #endregion
 
         //private void SetProperty(string propertyName, string fieldName, object newValue)
 
@@ -312,11 +285,5 @@ namespace WinCopies.Util.Data
         //    } 
 
         //}
-
     }
-
-
-
 }
-
-

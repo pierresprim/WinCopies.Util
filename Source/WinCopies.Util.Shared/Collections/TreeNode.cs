@@ -36,11 +36,7 @@ namespace WinCopies.Collections
     ///// Represents a tree node.
     ///// </summary>
     ///// <typeparam name="T">The value type.</typeparam>
-    //public abstract class TreeNode<T> : ITreeNode<T>
-
-    //{
-
-    //}
+    //public abstract class TreeNode<T> : ITreeNode<T> { }
 
     /// <summary>
     /// Represents a tree node.
@@ -50,7 +46,6 @@ namespace WinCopies.Collections
     [DebuggerDisplay("Value = {Value}, Count = {Count}")]
     public class TreeNode<T> : IReadOnlyTreeNode, WinCopies.Util.IValueObject, ITreeNode<T>, ICollection<TreeNode<T>>, System.Collections.Generic.IList<TreeNode<T>>, ICollection, System.Collections.IList, IReadOnlyCollection<TreeNode<T>>, System.Collections.Generic.IReadOnlyList<TreeNode<T>>, IReadOnlyCollection<T>, System.Collections.Generic.IReadOnlyList<T>
     {
-
         /// <summary>
         /// Gets a value that indicates whether this <see cref="TreeNode{T}"/> is read-only. This value is always <see langword="false"/> for this class.
         /// </summary>
@@ -221,7 +216,7 @@ namespace WinCopies.Collections
 
         ITreeNode<T> System.Collections.Generic.IList<ITreeNode<T>>.this[int index] { get => this[index]; set => this[index] = GetOrThrowIfNotTypeOrNull<TreeNode<T>>(value, nameof(value)); }
 
-        IReadOnlyTreeNode<T> System.Collections.Generic. IReadOnlyList<IReadOnlyTreeNode<T>> . this[int index] { get => this[index]; }
+        IReadOnlyTreeNode<T> System.Collections.Generic.IReadOnlyList<IReadOnlyTreeNode<T>>.this[int index] { get => this[index]; }
 
         /// <summary>
         /// Gets the number of items that this <see cref="TreeNode{T}"/> directly contains.
@@ -265,9 +260,7 @@ namespace WinCopies.Collections
         /// <param name="item">The <see cref="TreeNode{T}"/> to look for.</param>
         /// <returns><see langword="true"/> if this <see cref="TreeNode{T}"/> directly contains the given <see cref="TreeNode{T}"/>, otherwise <see langword="false"/>.</returns>
         public bool Contains(TreeNode<T> item)
-
         {
-
             if (item is null)
 
                 return false;
@@ -281,7 +274,6 @@ namespace WinCopies.Collections
                     return true;
 
             return false;
-
         }
 
         /// <summary>
@@ -290,9 +282,7 @@ namespace WinCopies.Collections
         /// <param name="item">The item to look for.</param>
         /// <returns><see langword="true"/> if this <see cref="TreeNode{T}"/> directly contains the given item, otherwise <see langword="false"/>.</returns>
         public bool Contains(T item)
-
         {
-
             if (!(item is object))
 
                 return false;
@@ -306,7 +296,6 @@ namespace WinCopies.Collections
                     return true;
 
             return false;
-
         }
 
         bool System.Collections.IList.Contains(object value) => value is T item ? Contains(item) : false;
@@ -319,9 +308,7 @@ namespace WinCopies.Collections
         /// <param name="item">The item for which to find the index.</param>
         /// <returns>The index of <paramref name="item"/> if this <see cref="TreeNode{T}"/> contains <paramref name="item"/>, otherwise -1.</returns>
         public int IndexOf(TreeNode<T> item)
-
         {
-
             if (item is null)
 
                 return -1;
@@ -335,7 +322,6 @@ namespace WinCopies.Collections
                     return i;
 
             return -1;
-
         }
 
         int System.Collections.Generic.IList<ITreeNode<T>>.IndexOf(ITreeNode<T> item) => item is TreeNode<T> _item ? IndexOf(_item) : -1;
@@ -346,9 +332,7 @@ namespace WinCopies.Collections
         /// <param name="item">The item for which to find out the index.</param>
         /// <returns>The index of <paramref name="item"/> if this <see cref="TreeNode{T}"/> contains <paramref name="item"/>, otherwise -1.</returns>
         public int IndexOf(T item)
-
         {
-
             if (!(item is object))
 
                 return -1;
@@ -362,7 +346,6 @@ namespace WinCopies.Collections
                     return i;
 
             return -1;
-
         }
 
         int System.Collections.IList.IndexOf(object value) => value is T item ? IndexOf(item) : -1;
@@ -383,23 +366,17 @@ namespace WinCopies.Collections
         /// <returns><see langword="true"/> if <paramref name="item"/> is removed, otherwise <see langword="false"/>.</returns>
         /// <seealso cref="RemoveItem(int)"/>
         public bool Remove(TreeNode<T> item)
-
         {
-
             int index = IndexOf(item);
 
             if (index > -1)
-
             {
-
                 RemoveItem(index);
 
                 return true;
-
             }
 
             return false;
-
         }
 
         /// <summary>
@@ -409,9 +386,7 @@ namespace WinCopies.Collections
         /// <returns><see langword="true"/> if <paramref name="item"/> is removed, otherwise <see langword="false"/>.</returns>
         /// <seealso cref="RemoveItem(int)"/>
         public bool Remove(T item)
-
         {
-
             if (!(item is object))
 
                 return false;
@@ -421,17 +396,13 @@ namespace WinCopies.Collections
             for (int i = 0; i < Count; i++)
 
                 if (comp.Equals(this[i].Value, item))
-
                 {
-
                     RemoveItem(i);
 
                     return true;
-
                 }
 
             return false;
-
         }
 
         bool ICollection<ITreeNode<T>>.Remove(ITreeNode<T> item) => Remove(item as TreeNode<T> ?? throw new ArgumentException($"The given item is not a {typeof(TreeNode<T>).FullName}."));
@@ -463,17 +434,13 @@ namespace WinCopies.Collections
 
         void ICollection<ITreeNode<T>>.CopyTo(ITreeNode<T>[] array, int arrayIndex)
         {
-
             ThrowOnInvalidCopyToArrayOperation(array, arrayIndex, Count, nameof(array), nameof(arrayIndex));
 
             if (array is TreeNode<T>[] _array)
-
             {
-
                 CopyTo(_array, arrayIndex);
 
                 return;
-
             }
 
             //if (array is T[] itemsArray)
@@ -492,19 +459,14 @@ namespace WinCopies.Collections
 
             try
             {
-
                 foreach (TreeNode<T> item in this)
 
                     array[arrayIndex++] = item;
-
             }
 
             catch (ArrayTypeMismatchException)
-
             {
-
                 throw new ArgumentException("Invalid array type.");
-
             }
 
         }
@@ -575,9 +537,7 @@ namespace WinCopies.Collections
         //}
 
         private void ThrowOnInvalidItem(TreeNode<T> item)
-
         {
-
             if (item.Parent is object)
 
                 throw new InvalidOperationException("The given item already has a parent node.");
@@ -585,12 +545,10 @@ namespace WinCopies.Collections
             if (item.IsReadOnly)
 
                 throw new ArgumentException("The given item is read-only.");
-
         }
 
         private void InsertItem(int index, TreeNode<T> item)
         {
-
             ThrowOnInvalidItem(item);
 
             item.Parent = this;
@@ -602,7 +560,6 @@ namespace WinCopies.Collections
             else
 
                 Items.Insert(index, item);
-
         }
 
         /// <summary>
@@ -637,7 +594,6 @@ namespace WinCopies.Collections
 
             Items[index] = item;
         }
-
     }
 
     //[Serializable]
