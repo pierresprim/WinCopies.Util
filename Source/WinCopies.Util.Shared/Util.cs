@@ -24,6 +24,7 @@ using WinCopies.Collections;
 using IComparer = System.Collections.IComparer;
 using WinCopies.Util.Resources;
 using System.Diagnostics;
+using System.ComponentModel;
 
 #if WinCopies2
 using IfCT = WinCopies.Util.Util.ComparisonType;

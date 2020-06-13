@@ -24,7 +24,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WinCopies.Util;
+#if WinCopies2
 using static WinCopies.Util.Util;
+#else
+using static WinCopies.UtilHelpers;
+#endif
 // using WinCopies.Util.Data;
 
 namespace WinCopies.Collections
@@ -44,7 +48,11 @@ namespace WinCopies.Collections
     /// <typeparam name="T">The value and item type.</typeparam>
     [Serializable]
     [DebuggerDisplay("Value = {Value}, Count = {Count}")]
-    public class TreeNode<T> : IReadOnlyTreeNode, WinCopies.Util.IValueObject, ITreeNode<T>, ICollection<TreeNode<T>>, System.Collections.Generic.IList<TreeNode<T>>, ICollection, System.Collections.IList, IReadOnlyCollection<TreeNode<T>>, System.Collections.Generic.IReadOnlyList<TreeNode<T>>, IReadOnlyCollection<T>, System.Collections.Generic.IReadOnlyList<T>
+    public class TreeNode<T> : IReadOnlyTreeNode, WinCopies
+#if WinCopies2
+.Util
+#endif
+        .IValueObject, ITreeNode<T>, ICollection<TreeNode<T>>, System.Collections.Generic.IList<TreeNode<T>>, ICollection, System.Collections.IList, IReadOnlyCollection<TreeNode<T>>, System.Collections.Generic.IReadOnlyList<TreeNode<T>>, IReadOnlyCollection<T>, System.Collections.Generic.IReadOnlyList<T>
     {
         /// <summary>
         /// Gets a value that indicates whether this <see cref="TreeNode{T}"/> is read-only. This value is always <see langword="false"/> for this class.
@@ -112,7 +120,7 @@ namespace WinCopies.Collections
 
         public override string ToString() => Value?.ToString() ?? base.ToString();
 
-        #region IDisposable Support
+#region IDisposable Support
         private bool disposedValue = false;
 
         /// <summary>
@@ -153,7 +161,7 @@ namespace WinCopies.Collections
             GC.SuppressFinalize(this);
 
         }
-        #endregion
+#endregion
 
         /// <summary>
         /// Returns the default comparer for <see cref="TreeNode{T}"/> objects.
@@ -216,7 +224,7 @@ namespace WinCopies.Collections
 
         ITreeNode<T> System.Collections.Generic.IList<ITreeNode<T>>.this[int index] { get => this[index]; set => this[index] = GetOrThrowIfNotTypeOrNull<TreeNode<T>>(value, nameof(value)); }
 
-        IReadOnlyTreeNode<T> System.Collections.Generic.IReadOnlyList<IReadOnlyTreeNode<T>>.this[int index] { get => this[index]; }
+        IReadOnlyTreeNode<T> System.Collections.Generic.IReadOnlyList<IReadOnlyTreeNode<T>>.this[int index] => this[index];
 
         /// <summary>
         /// Gets the number of items that this <see cref="TreeNode{T}"/> directly contains.

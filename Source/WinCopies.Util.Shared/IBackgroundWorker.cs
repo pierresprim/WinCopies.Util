@@ -16,6 +16,9 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if WinCopies2
+using System.ComponentModel;
+using System.Threading;
+
 namespace WinCopies.Util
 {
     /// <summary>

@@ -23,7 +23,11 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 
+#if WinCopies2
 using static WinCopies.Util.Util;
+#else
+using static WinCopies.UtilHelpers;
+#endif
 
 namespace WinCopies.Collections
 {
@@ -155,7 +159,7 @@ namespace WinCopies.Collections
             {
                 CheckReentrancy();
 
-                OnCollectionChanging(new NotifyCollectionChangedEventArgs(new ReadOnlyCollection<T>(this.ToList())));
+                OnCollectionChanging(new NotifyCollectionChangedEventArgs(new ReadOnlyCollection<T>(this)));
 
                 base.ClearItems();
             }
@@ -172,6 +176,8 @@ namespace WinCopies.Collections
             }
         }
     }
+
+#if WinCopies2
 
     [Obsolete("This class has been moved to the WinCopies.Collections.DotNetFix namespace. This implementation is still here temporarily only.")]
     public class NotifyCollectionChangedEventArgs : System.Collections.Specialized.NotifyCollectionChangedEventArgs
@@ -208,7 +214,6 @@ namespace WinCopies.Collections
         public NotifyCollectionChangedEventArgs(bool isChangingEvent, NotifyCollectionChangedAction action, IList changedItems, int index, int oldIndex) : base(action, changedItems, index, oldIndex) => IsChangingEvent = isChangingEvent;
     }
 
-    [Obsolete("This class has been moved to the WinCopies.Collections.DotNetFix namespace. This implementation is still here temporarily only.")]
     /// <summary>
     /// Represents a dynamic data collection that provides notifications when items get added, removed, or when the whole list is refreshed.
     /// </summary>
@@ -222,6 +227,7 @@ namespace WinCopies.Collections
     /// <para>For more information, see "Binding to Collections" in the Data Binding Overview article at: https://docs.microsoft.com/en-us/dotnet/framework/wpf/data/data-binding-overview?view=netframework-4.8</para>
     /// <para>For notes on XAML usage, see the following article: https://docs.microsoft.com/en-us/dotnet/api/system.collections.objectmodel.observablecollection-1?view=netframework-4.8</para>
     /// </remarks>
+    [Obsolete("This class has been moved to the WinCopies.Collections.DotNetFix namespace. This implementation is still here temporarily only.")]
     [Serializable]
     public class ObservableCollection<T> : System.Collections.ObjectModel.ObservableCollection<T>, IObservableCollection<T>, INotifyCollectionChanging
     {
@@ -316,6 +322,8 @@ namespace WinCopies.Collections
                     CollectionChanging(this, e);
         }
     }
+
+#endif
 
     public delegate void NotifyCollectionChangingEventHandler(object sender, DotNetFix.NotifyCollectionChangedEventArgs e);
 

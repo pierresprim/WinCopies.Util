@@ -27,6 +27,7 @@ using WinCopies.Collections;
 using IList = System.Collections.IList;
 using WinCopies.Collections.DotNetFix;
 using WinCopies.Util.Resources;
+using System.Runtime.InteropServices;
 
 #if WinCopies2
 using static WinCopies.Util.Util;
@@ -40,6 +41,31 @@ using IfCT = WinCopies.ComparisonType;
 namespace WinCopies
 #endif
 {
+    public interface ISplitFactory<T, U, V, TContainer>
+    {
+        TContainer Container { get; }
+
+        int SubCount { get; }
+
+        void Add(V enumerable);
+
+        V GetEnumerable();
+
+        void SubClear();
+
+        void SubAdd(U value);
+    }
+
+    public interface IValueSplitFactory<T, U, V, TContainer> : ISplitFactory<T, U, V, TContainer> where T : struct
+    {
+        U GetValueContainer(T? value);
+    }
+
+    public interface IRefSplitFactory<T, U, V, TContainer> : ISplitFactory<T, U, V, TContainer> where T : class
+    {
+        U GetValueContainer(T value);
+    }
+
     public delegate (bool result, Exception ex) FieldValidateValueCallback(object obj, object value, FieldInfo field, string paramName);
 
     public delegate void FieldValueChangedCallback(object obj, object value, FieldInfo field, string paramName);
@@ -2700,7 +2726,7 @@ namespace WinCopies
         /// <exception cref="InvalidOperationException">The declaring types of the given property and field name doesn't correspond. OR The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
         /// <exception cref="ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
         /// <exception cref="Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="ArgumentException"/> otherwise.</exception>
-        public static (bool propertyChanged, object oldValue) SetProperty(this object obj, string propertyName, string fieldName, object newValue, Type declaringType, bool throwIfReadOnly = true, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, string paramName = null, bool setOnlyIfNotNull = false, bool throwIfNull = false, FieldValidateValueCallback validateValueCallback = null, bool throwIfValidationFails = false, FieldValueChangedCallback valueChangedCallback = null)
+        public static (bool propertyChanged, object oldValue) SetProperty(this object obj, string propertyName, string fieldName, object newValue, Type declaringType, in bool throwIfReadOnly = true, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, string paramName = null, in bool setOnlyIfNotNull = false, in bool throwIfNull = false, FieldValidateValueCallback validateValueCallback = null, in bool throwIfValidationFails = false, FieldValueChangedCallback valueChangedCallback = null)
         {
             //BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic |
             //             BindingFlags.Static | BindingFlags.Instance |
@@ -2769,7 +2795,7 @@ namespace WinCopies
         /// <exception cref="InvalidOperationException">The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
         /// <exception cref="ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
         /// <exception cref="Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="ArgumentException"/> otherwise.</exception>
-        public static (bool propertyChanged, object oldValue) SetProperty(this object obj, string propertyName, object newValue, Type declaringType, bool throwIfReadOnly = true, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, string paramName = null, bool setOnlyIfNotNull = false, bool throwIfNull = false, PropertyValidateValueCallback validateValueCallback = null, bool throwIfValidationFails = false, PropertyValueChangedCallback valueChangedCallback = null)
+        public static (bool propertyChanged, object oldValue) SetProperty(this object obj, string propertyName, object newValue, Type declaringType, in bool throwIfReadOnly = true, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, string paramName = null, in bool setOnlyIfNotNull = false, in bool throwIfNull = false, PropertyValidateValueCallback validateValueCallback = null, in bool throwIfValidationFails = false, PropertyValueChangedCallback valueChangedCallback = null)
         {
             PropertyInfo property = GetProperty(propertyName, declaringType, bindingFlags);
 
@@ -2836,7 +2862,7 @@ namespace WinCopies
         /// <exception cref="InvalidOperationException">The declaring types of the given property and field name doesn't correspond. OR The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
         /// <exception cref="ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
         /// <exception cref="Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="ArgumentException"/> otherwise.</exception>
-        public static (bool propertyChanged, IDisposable oldValue) DisposeAndSetProperty(this object obj, string propertyName, string fieldName, IDisposable newValue, Type declaringType, bool throwIfReadOnly = true, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, string paramName = null, bool setOnlyIfNotNull = false, bool throwIfNull = false, FieldValidateValueCallback validateValueCallback = null, bool throwIfValidationFails = false, FieldValueChangedCallback valueChangedCallback = null)
+        public static (bool propertyChanged, IDisposable oldValue) DisposeAndSetProperty(this object obj, string propertyName, string fieldName, IDisposable newValue, Type declaringType, in bool throwIfReadOnly = true, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, string paramName = null, in bool setOnlyIfNotNull = false, in bool throwIfNull = false, FieldValidateValueCallback validateValueCallback = null, in bool throwIfValidationFails = false, FieldValueChangedCallback valueChangedCallback = null)
         {
             //BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic |
             //             BindingFlags.Static | BindingFlags.Instance |
@@ -2905,7 +2931,7 @@ namespace WinCopies
         /// <exception cref="InvalidOperationException">The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
         /// <exception cref="ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
         /// <exception cref="Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="ArgumentException"/> otherwise.</exception>
-        public static (bool propertyChanged, IDisposable oldValue) DisposeAndSetProperty(this object obj, string propertyName, IDisposable newValue, Type declaringType, bool throwIfReadOnly = true, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, string paramName = null, bool setOnlyIfNotNull = false, bool throwIfNull = false, PropertyValidateValueCallback validateValueCallback = null, bool throwIfValidationFails = false, PropertyValueChangedCallback valueChangedCallback = null)
+        public static (bool propertyChanged, IDisposable oldValue) DisposeAndSetProperty(this object obj, string propertyName, IDisposable newValue, Type declaringType, in bool throwIfReadOnly = true, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, string paramName = null, in bool setOnlyIfNotNull = false, in bool throwIfNull = false, PropertyValidateValueCallback validateValueCallback = null, in bool throwIfValidationFails = false, PropertyValueChangedCallback valueChangedCallback = null)
         {
             PropertyInfo property = GetProperty(propertyName, declaringType, bindingFlags);
 
@@ -3433,7 +3459,462 @@ namespace WinCopies
         /// <returns><see langword="true"/> if <paramref name="d"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         public static bool Between(this decimal d, decimal x, decimal y) => d >= x && d <= y;
 
+        public static void SplitValues<T, U, V, TContainer>(this IEnumerable<T> enumerable, in bool skipEmptyValues, IValueSplitFactory<T, U, V, TContainer> splitFactory, params T[] separators) where T : struct where U : INullableValueEntry<T> where V : IEnumerable<U>
+        {
+            ThrowIfNull(enumerable, nameof(enumerable));
+            ThrowIfNull(splitFactory, nameof(splitFactory));
+            // ThrowIfNull(enumerableNullableValueEntryCallback, nameof(enumerableNullableValueEntryCallback));
+            ThrowIfNull(separators, nameof(separators));
+
+            if (separators.Length == 0)
+
+                throw new ArgumentException($"{nameof(separators)} does not contain values.");
+
+            Predicate<T> predicate;
+
+            if (separators.Length == 1)
+
+                predicate = value => /*value != null && */ value.Equals(separators[0]);
+
+            else
+
+                predicate = value => separators.Contains(value);
+
+            IEnumerator<T> enumerator = enumerable.GetEnumerator();
+
+            enumerable = null;
+
+            void subAddAndAdd(in T? value)
+            {
+                splitFactory.SubAdd(splitFactory.GetValueContainer(value));
+
+                splitFactory.Add(splitFactory.GetEnumerable());
+            }
+
+            if (skipEmptyValues)
+            {
+                if (enumerator.MoveNext())
+                {
+                    T? value = enumerator.Current;
+
+                    if (enumerator.MoveNext()) // There are more than one value.
+                    {
+                        value = null;
+
+                        void tryAdd()
+                        {
+                            if (predicate(enumerator.Current) && splitFactory.SubCount > 0)
+                            {
+                                splitFactory.Add(splitFactory.GetEnumerable());
+
+                                splitFactory.SubClear();
+                            }
+
+                            else
+
+                                splitFactory.SubAdd(splitFactory.GetValueContainer(enumerator.Current));
+                        }
+
+                        tryAdd();
+
+                        while (enumerator.MoveNext())
+
+                            tryAdd();
+                    }
+
+                    else // There is one value.
+                    {
+                        if (predicate(value.Value))
+
+                            return;
+
+                        else
+
+                            subAddAndAdd(enumerator.Current);
+                    }
+                }
+
+                else // There is no value.
+
+                    return;
+            }
+
+            else if (enumerator.MoveNext())
+            {
+                T? value = enumerator.Current;
+
+                if (enumerator.MoveNext()) // There are more than one value.
+                {
+                    value = null;
+
+                    void tryAdd()
+                    {
+                        if (predicate(enumerator.Current))
+                        {
+                            if (splitFactory.SubCount == 0)
+                            {
+                                splitFactory.SubAdd(splitFactory.GetValueContainer(null));
+
+                                splitFactory.Add(splitFactory.GetEnumerable());
+                            }
+
+                            else
+                            {
+                                splitFactory.Add(splitFactory.GetEnumerable());
+
+                                splitFactory.SubClear();
+                            }
+                        }
+
+                        else
+
+                            splitFactory.SubAdd(splitFactory.GetValueContainer(enumerator.Current));
+                    }
+
+                    tryAdd();
+
+                    while (enumerator.MoveNext())
+
+                        tryAdd();
+                }
+
+                else // There is one value.
+                {
+                    if (predicate(value.Value))
+                    {
+                        subAddAndAdd(null);
+
+                        subAddAndAdd(null);
+                    }
+
+                    else
+
+                        subAddAndAdd(enumerator.Current);
+                }
+            }
+
+            else // There is no value.
+            {
+                splitFactory.SubAdd(splitFactory.GetValueContainer(null));
+
+                splitFactory.Add(splitFactory.GetEnumerable());
+            }
+        }
+
+        public static void SplitReferences<T, U, V, TContainer>(this IEnumerable<T> enumerable, in bool skipEmptyValues, IRefSplitFactory<T, U, V, TContainer> splitFactory, params T[] separators) where T : class where U : INullableRefEntry<T> where V : IEnumerable<U>
+        {
+            ThrowIfNull(enumerable, nameof(enumerable));
+            ThrowIfNull(splitFactory, nameof(splitFactory));
+            // ThrowIfNull(enumerableNullableValueEntryCallback, nameof(enumerableNullableValueEntryCallback));
+            ThrowIfNull(separators, nameof(separators));
+
+            if (separators.Length == 0)
+
+                throw new ArgumentException($"{nameof(separators)} does not contain values.");
+
+            Predicate<T> predicate;
+
+            if (separators.Length == 1)
+
+                predicate = value => value == null ? separators[0]==null: value.Equals(separators[0]);
+
+            else
+
+                predicate = value => separators.Contains(value);
+
+            IEnumerator<T> enumerator = enumerable.GetEnumerator();
+
+            enumerable = null;
+
+            void subAddAndAdd(in T value)
+            {
+                splitFactory.SubAdd(splitFactory.GetValueContainer(value));
+
+                splitFactory.Add(splitFactory.GetEnumerable());
+            }
+
+            if (skipEmptyValues)
+            {
+                if (enumerator.MoveNext())
+                {
+                    T value = enumerator.Current;
+
+                    if (enumerator.MoveNext()) // There are more than one value.
+                    {
+                        value = null;
+
+                        void tryAdd()
+                        {
+                            if (predicate(enumerator.Current) && splitFactory.SubCount > 0)
+                            {
+                                splitFactory.Add(splitFactory.GetEnumerable());
+
+                                splitFactory.SubClear();
+                            }
+
+                            else
+
+                                splitFactory.SubAdd(splitFactory.GetValueContainer(enumerator.Current));
+                        }
+
+                        tryAdd();
+
+                        while (enumerator.MoveNext())
+
+                            tryAdd();
+                    }
+
+                    else // There is one value.
+                    {
+                        if (predicate(value))
+
+                            return;
+
+                        else
+
+                            subAddAndAdd(enumerator.Current);
+                    }
+                }
+
+                else // There is no value.
+
+                    return;
+            }
+
+            else if (enumerator.MoveNext())
+            {
+                T value = enumerator.Current;
+
+                if (enumerator.MoveNext()) // There are more than one value.
+                {
+                    value = null;
+
+                    void tryAdd()
+                    {
+                        if (predicate(enumerator.Current))
+                        {
+                            if (splitFactory.SubCount == 0)
+                            {
+                                splitFactory.SubAdd(splitFactory.GetValueContainer(null));
+
+                                splitFactory.Add(splitFactory.GetEnumerable());
+                            }
+
+                            else
+                            {
+                                splitFactory.Add(splitFactory.GetEnumerable());
+
+                                splitFactory.SubClear();
+                            }
+                        }
+
+                        else
+
+                            splitFactory.SubAdd(splitFactory.GetValueContainer(enumerator.Current));
+                    }
+
+                    tryAdd();
+
+                    while (enumerator.MoveNext())
+
+                        tryAdd();
+                }
+
+                else // There is one value.
+                {
+                    if (predicate(value))
+                    {
+                        subAddAndAdd(null);
+
+                        subAddAndAdd(null);
+                    }
+
+                    else
+
+                        subAddAndAdd(enumerator.Current);
+                }
+            }
+
+            else // There is no value.
+            {
+                splitFactory.SubAdd(splitFactory.GetValueContainer(null));
+
+                splitFactory.Add(splitFactory.GetEnumerable());
+            }
+        }
+
         #region String extension methods
+
+        #region Split
+
+        private static void Split(this string s, in bool skipEmptyValues, in StringBuilder stringBuilder, in Action<string> action, params char[] separators)
+        {
+            ThrowIfNull(s, nameof(s));
+            ThrowIfNull(stringBuilder, nameof(stringBuilder));
+            ThrowIfNull(separators, nameof(separators));
+
+            if (separators.Length == 0)
+
+                throw new ArgumentException($"{nameof(separators)} does not contain values.");
+
+            Debug.Assert(action != null, $"{nameof(action)} must be not null.");
+
+            Predicate<char> getPredicate()
+            {
+                Predicate<char> predicate;
+
+                if (separators.Length == 1)
+
+                    predicate = __c => __c == separators[0];
+
+                else
+
+                    predicate = __c => separators.Contains(__c);
+
+                return predicate;
+            }
+
+            if (skipEmptyValues)
+
+                if (s.Length == 0)
+
+                    return;
+
+                else if (s.Length == 1)
+
+                    if ((separators.Length == 1 && s[0] == separators[0]) || separators.Contains(s[0]))
+
+                        return;
+
+                    else
+
+                        action(s);
+
+                else
+                {
+                    Predicate<char> predicate = getPredicate();
+
+                    foreach (char _c in s)
+
+                        if (predicate(_c) && stringBuilder.Length > 0)
+                        {
+                            action(stringBuilder.ToString());
+
+                            _ = stringBuilder.Clear();
+                        }
+
+                        else
+
+                            _ = stringBuilder.Append(_c);
+                }
+
+            else if (s.Length == 0)
+
+                action("");
+
+            else if (s.Length == 1)
+
+                if ((separators.Length == 1 && s[0] == separators[0]) || separators.Contains(s[0]))
+                {
+                    action("");
+
+                    action("");
+                }
+
+                else
+
+                    action(s);
+
+            else
+            {
+                Predicate<char> predicate = getPredicate();
+
+                foreach (char _c in s)
+
+                    if (predicate(_c))
+
+                        if (stringBuilder.Length == 0)
+
+                            action("");
+
+                        else
+                        {
+                            action(stringBuilder.ToString());
+
+                            _ = stringBuilder.Clear();
+                        }
+
+                    else
+
+                        _ = stringBuilder.Append(_c);
+            }
+        }
+
+        public static Queue<string> SplitToQueue(this string s, in bool skipEmptyValues, params char[] separators)
+        {
+            var queue = new Queue<string>();
+
+            SplitToQueue(s, skipEmptyValues, new StringBuilder(), queue, separators);
+
+            return queue;
+        }
+
+        public static void SplitToQueue(this string s, in bool skipEmptyValues, in StringBuilder stringBuilder, Queue<string> queue, params char[] separators)
+        {
+            ThrowIfNull(queue, nameof(queue));
+
+            Split(s, skipEmptyValues, stringBuilder, _s => queue.Enqueue(_s), separators);
+        }
+
+        public static Stack<string> SplitToStack(this string s, in bool splitEmptyValues, params char[] separators)
+        {
+            var stack = new Stack<string>();
+
+            SplitToStack(s, splitEmptyValues, new StringBuilder(), stack, separators);
+
+            return stack;
+        }
+
+        public static void SplitToStack(this string s, in bool splitEmptyValues, in StringBuilder stringBuilder, Stack<string> stack, params char[] separators)
+        {
+            ThrowIfNull(stack, nameof(stack));
+
+            Split(s, splitEmptyValues, stringBuilder, _s => stack.Push(_s), separators);
+        }
+
+        public static System.Collections.Generic.LinkedList<string> SplitToLinkedList(this string s, in bool splitEmptyValues, params char[] separators)
+        {
+            var list = new System.Collections.Generic.LinkedList<string>();
+
+            SplitToLinkedList(s, splitEmptyValues, new StringBuilder(), list, separators);
+
+            return list;
+        }
+
+        public static void SplitToLinkedList(this string s, in bool splitEmptyValues, in StringBuilder stringBuilder, System.Collections.Generic.LinkedList<string> list, params char[] separators)
+        {
+            ThrowIfNull(list, nameof(list));
+
+            Split(s, splitEmptyValues, stringBuilder, _s => list.AddLast(_s), separators);
+        }
+
+        public static ILinkedList<string> SplitToILinkedList(this string s, in bool splitEmptyValues, params char[] separators)
+        {
+            var list = new Collections.DotNetFix.LinkedList<string>();
+
+            SplitToILinkedList(s, splitEmptyValues, new StringBuilder(), list, separators);
+
+            return list;
+        }
+
+        public static void SplitToILinkedList(this string s, in bool splitEmptyValues, in StringBuilder stringBuilder, ILinkedList<string> list, params char[] separators)
+        {
+            ThrowIfNull(list, nameof(list));
+
+            Split(s, splitEmptyValues, stringBuilder, _s => list.AddLast(_s), separators);
+        }
+
+        #endregion
 
         // todo: add other methods and overloads for StringComparison, IEqualityComparer<char>, Comparer<char>, Comparison<char>, ignore case and CultureInfo parameters
 

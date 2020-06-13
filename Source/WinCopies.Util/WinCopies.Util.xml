@@ -888,7 +888,7 @@
             <param name="types">The types to compare</param>
             <returns><see langword="true"/> if the current object is assignable from at least one of the given types, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Util.Extensions.SetProperty(System.Object,System.String,System.String,System.Object,System.Type,System.Boolean,System.Reflection.BindingFlags,System.String,System.Boolean,System.Boolean,WinCopies.Util.FieldValidateValueCallback,System.Boolean,WinCopies.Util.FieldValueChangedCallback)">
+        <member name="M:WinCopies.Util.Extensions.SetProperty(System.Object,System.String,System.String,System.Object,System.Type,System.Boolean@,System.Reflection.BindingFlags,System.String,System.Boolean@,System.Boolean@,WinCopies.Util.FieldValidateValueCallback,System.Boolean@,WinCopies.Util.FieldValueChangedCallback)">
             <summary>
             Sets a value to a property if the new value is different.
             </summary>
@@ -910,7 +910,7 @@
             <exception cref="T:System.ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
             <exception cref="T:System.Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="T:System.ArgumentException"/> otherwise.</exception>
         </member>
-        <member name="M:WinCopies.Util.Extensions.SetProperty(System.Object,System.String,System.Object,System.Type,System.Boolean,System.Reflection.BindingFlags,System.String,System.Boolean,System.Boolean,WinCopies.Util.PropertyValidateValueCallback,System.Boolean,WinCopies.Util.PropertyValueChangedCallback)">
+        <member name="M:WinCopies.Util.Extensions.SetProperty(System.Object,System.String,System.Object,System.Type,System.Boolean@,System.Reflection.BindingFlags,System.String,System.Boolean@,System.Boolean@,WinCopies.Util.PropertyValidateValueCallback,System.Boolean@,WinCopies.Util.PropertyValueChangedCallback)">
             <summary>
             Sets a value to a property if the new value is different.
             </summary>
@@ -931,7 +931,7 @@
             <exception cref="T:System.ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
             <exception cref="T:System.Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="T:System.ArgumentException"/> otherwise.</exception>
         </member>
-        <member name="M:WinCopies.Util.Extensions.DisposeAndSetProperty(System.Object,System.String,System.String,WinCopies.Util.IDisposable,System.Type,System.Boolean,System.Reflection.BindingFlags,System.String,System.Boolean,System.Boolean,WinCopies.Util.FieldValidateValueCallback,System.Boolean,WinCopies.Util.FieldValueChangedCallback)">
+        <member name="M:WinCopies.Util.Extensions.DisposeAndSetProperty(System.Object,System.String,System.String,WinCopies.Util.IDisposable,System.Type,System.Boolean@,System.Reflection.BindingFlags,System.String,System.Boolean@,System.Boolean@,WinCopies.Util.FieldValidateValueCallback,System.Boolean@,WinCopies.Util.FieldValueChangedCallback)">
             <summary>
             Disposes an old value of a property then sets a new value to the given property if the new value is different.
             </summary>
@@ -953,7 +953,7 @@
             <exception cref="T:System.ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
             <exception cref="T:System.Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="T:System.ArgumentException"/> otherwise.</exception>
         </member>
-        <member name="M:WinCopies.Util.Extensions.DisposeAndSetProperty(System.Object,System.String,WinCopies.Util.IDisposable,System.Type,System.Boolean,System.Reflection.BindingFlags,System.String,System.Boolean,System.Boolean,WinCopies.Util.PropertyValidateValueCallback,System.Boolean,WinCopies.Util.PropertyValueChangedCallback)">
+        <member name="M:WinCopies.Util.Extensions.DisposeAndSetProperty(System.Object,System.String,WinCopies.Util.IDisposable,System.Type,System.Boolean@,System.Reflection.BindingFlags,System.String,System.Boolean@,System.Boolean@,WinCopies.Util.PropertyValidateValueCallback,System.Boolean@,WinCopies.Util.PropertyValueChangedCallback)">
             <summary>
             Disposes an old value of a property then sets a new value to the given property if the new value is different.
             </summary>
@@ -2431,6 +2431,25 @@
             <param name="value">The value for which return the index.</param>
             <returns>The index of <paramref name="value"/> if it was found, or <see langword="null"/> otherwise.</returns>
         </member>
+        <member name="M:WinCopies.Collections.DotNetFix.LinkedList`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Collections.Generic.LinkedList`1"/> class that is empty.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.LinkedList`1.#ctor(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Collections.Generic.LinkedList`1"/> class that contains elements copied from the specified <see cref="T:System.Collections.IEnumerable"/> and has sufficient capacity to accommodate the number of elements copied.
+            </summary>
+            <param name="collection">The <see cref="T:System.Collections.IEnumerable"/> whose elements are copied to the new <see cref="T:System.Collections.Generic.LinkedList`1"/>.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="collection"/> is <see langword="null"/>.</exception>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.LinkedList`1.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Collections.Generic.LinkedList`1"/> class that is serializable with the specified <see cref="T:System.Runtime.Serialization.SerializationInfo"/> and <see cref="T:System.Runtime.Serialization.StreamingContext"/>.
+            </summary>
+            <param name="info">A <see cref="T:System.Runtime.Serialization.SerializationInfo"/> object containing the information required to serialize the <see cref="T:System.Collections.Generic.LinkedList`1"/>.</param>
+            <param name="context">A <see cref="T:System.Runtime.Serialization.StreamingContext"/> object containing the source and destination of the serialized stream associated with the <see cref="T:System.Collections.Generic.LinkedList`1"/>.</param>
+        </member>
         <member name="M:WinCopies.Collections.DotNetFix.Extensions.LinkedCollection`1.AddAfter(System.Collections.Generic.LinkedListNode{`0}@,System.Collections.Generic.LinkedListNode{`0}@)">
             <summary>
             Adds the specified new node after the specified existing node in the <see cref="T:WinCopies.Collections.DotNetFix.Extensions.LinkedCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.Extensions.LinkedCollection`1.AddItemAfter(System.Collections.Generic.LinkedListNode{`0},System.Collections.Generic.LinkedListNode{`0})"/> method to provide a custom implementation.
@@ -2660,7 +2679,7 @@
             </summary>
             <returns>The object that is removed from the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryDequeue(`0@)"/>
+            <seealso cref="!:TryDequeue(out T)"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.EnqueueItem(`0)">
             <summary>
@@ -2680,7 +2699,7 @@
             </summary>
             <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryPeek(`0@)"/>
+            <seealso cref="!:TryPeek(out T)"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.ToArray">
             <summary>
@@ -2692,29 +2711,6 @@
             <summary>
             Sets the capacity to the actual number of elements in the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>, if that number is less than 90 percent of current capacity.
             </summary>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryDequeueItem(`0@)">
-            <summary>
-            Tries to remove and return the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. Override this method to provide a custom implementation.
-            </summary>
-            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
-            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been removed and retrieved.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryDequeue(`0@)">
-            <summary>
-            Tries to remove and return the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryDequeueItem(`0@)"/> method to provide a custom implementation.
-            </summary>
-            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
-            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been removed and retrieved.</returns>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.QueueCollection`1.Dequeue"/>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryPeek(`0@)">
-            <summary>
-            Tries to peek the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> without removing it.
-            </summary>
-            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
-            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been retrieved.</returns>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.QueueCollection`1.Peek"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.GetEnumerator">
             <summary>

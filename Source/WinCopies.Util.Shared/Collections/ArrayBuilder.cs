@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 using WinCopies.Collections.DotNetFix;
+using WinCopies.Util;
 #if WinCopies2
 using static WinCopies.Util.Util;
 #else

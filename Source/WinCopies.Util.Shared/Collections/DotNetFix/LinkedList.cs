@@ -93,6 +93,25 @@ namespace WinCopies.Collections.DotNetFix
         // todo: remove the explicit interface implementation and make this property public.
 
         bool ILinkedList2<T>.IsReadOnly => false;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="System.Collections.Generic.LinkedList{T}"/> class that is empty.
+        /// </summary>
+        public LinkedList() : base() { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="System.Collections.Generic.LinkedList{T}"/> class that contains elements copied from the specified <see cref="IEnumerable"/> and has sufficient capacity to accommodate the number of elements copied.
+        /// </summary>
+        /// <param name="collection">The <see cref="IEnumerable"/> whose elements are copied to the new <see cref="System.Collections.Generic.LinkedList{T}"/>.</param>
+        /// <exception cref="System.ArgumentNullException"><paramref name="collection"/> is <see langword="null"/>.</exception>
+        public LinkedList(IEnumerable<T> collection) : base(collection) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="System.Collections.Generic.LinkedList{T}"/> class that is serializable with the specified <see cref="SerializationInfo"/> and <see cref="StreamingContext"/>.
+        /// </summary>
+        /// <param name="info">A <see cref="SerializationInfo"/> object containing the information required to serialize the <see cref="System.Collections.Generic.LinkedList{T}"/>.</param>
+        /// <param name="context">A <see cref="StreamingContext"/> object containing the source and destination of the serialized stream associated with the <see cref="System.Collections.Generic.LinkedList{T}"/>.</param>
+        protected LinkedList(SerializationInfo info, StreamingContext context) : base(info, context) { } 
     }
 
     [DebuggerDisplay("Count = {Count}")]

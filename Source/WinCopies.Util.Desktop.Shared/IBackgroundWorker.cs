@@ -21,13 +21,11 @@ using System.Threading;
 #if !WinCopies2
 namespace WinCopies
 {
-
     /// <summary>
     /// Represents a BackgroundWorker that runs in a MTA thread by default and automatically stops on background when reports progress.
     /// </summary>
     public interface IBackgroundWorker : IComponent
     {
-
         /// <summary>
         /// Gets the <see cref="System.Threading.ApartmentState"/> of this thread.
         /// </summary>
@@ -129,7 +127,6 @@ namespace WinCopies
         /// <para>The event handler is running in the background thread.</para>
         /// </summary>
         event RunWorkerCompletedEventHandler RunWorkerCompleted;
-
     }
 }
 #endif

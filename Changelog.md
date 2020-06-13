@@ -9,6 +9,20 @@ CHANGELOG
 Updates
 -------
 
+??/??/???? 2.5-preview7
+=======================
+
+WinCopies.Util (2.5-preview7)
+-----------------------------
+
+- Additions:
+	- Split extension methods.
+	- Constructors:
+		- WinCopies.Collections.DotNetFix.LinkedList\<T>:
+			- LinkedList()
+			- LinkedList(IEnumerable\<T> collection)
+			- LinkedList(SerializationInfo info, StreamingContext context)
+
 06/02/2020 2.4-preview6.1
 =========================
 

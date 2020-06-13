@@ -43,7 +43,15 @@ namespace WinCopies.Collections
     /// <summary>
     /// Represents a tree node.
     /// </summary>
-    public interface ITreeNode<T> : IReadOnlyTreeNode, IReadOnlyTreeNode<T>, IValueObject<T>, IValueObject, System.Collections.Generic.IList<ITreeNode<T>>, System.Collections.Generic.ICollection<ITreeNode<T>>, IEnumerable<ITreeNode<T>>, /*IEnumerable, System.Collections.IList, System.Collections.ICollection,*/ System.Collections.Generic.IReadOnlyList<ITreeNode<T>>, System.Collections.Generic.IReadOnlyCollection<ITreeNode<T>>, System.IDisposable // where TNode : ITreeNode<TNode, TItem>
+    public interface ITreeNode<T> : IReadOnlyTreeNode, IReadOnlyTreeNode<T>, WinCopies.
+#if WinCopies2
+        Util.
+#endif
+        IValueObject<T>, WinCopies.
+#if WinCopies2
+        Util.
+#endif
+        IValueObject, System.Collections.Generic.IList<ITreeNode<T>>, System.Collections.Generic.ICollection<ITreeNode<T>>, IEnumerable<ITreeNode<T>>, /*IEnumerable, System.Collections.IList, System.Collections.ICollection,*/ System.Collections.Generic.IReadOnlyList<ITreeNode<T>>, System.Collections.Generic.IReadOnlyCollection<ITreeNode<T>>, System.IDisposable // where TNode : ITreeNode<TNode, TItem>
     {
 
     }
@@ -51,15 +59,41 @@ namespace WinCopies.Collections
     /// <summary>
     /// Represents a tree node.
     /// </summary>
-    public interface IReadOnlyTreeNode<T> : IReadOnlyTreeNode, IReadOnlyValueObject<T>, IReadOnlyValueObject, System.Collections.Generic.IReadOnlyList<IReadOnlyTreeNode<T>>, System.Collections.Generic.IReadOnlyCollection<IReadOnlyTreeNode<T>>, IEnumerable<IReadOnlyTreeNode<T>>, /*IEnumerable,*/ System.IDisposable // where TNode : ITreeNode<TNode, TItem>
+    public interface IReadOnlyTreeNode<T> : IReadOnlyTreeNode, WinCopies.
+#if WinCopies2
+        Util.
+#endif
+        IReadOnlyValueObject<T>, WinCopies.
+#if WinCopies2
+        Util.
+#endif
+        IReadOnlyValueObject, System.Collections.Generic.IReadOnlyList<IReadOnlyTreeNode<T>>, System.Collections.Generic.IReadOnlyCollection<IReadOnlyTreeNode<T>>, IEnumerable<IReadOnlyTreeNode<T>>, /*IEnumerable,*/ System.IDisposable // where TNode : ITreeNode<TNode, TItem>
     {
 
         bool Contains(T item);
 
     }
 
-    public interface IObservableTreeNode<T> : IReadOnlyTreeNode, ITreeNode<T>, IReadOnlyObservableTreeNode<T>, IReadOnlyTreeNode<T>, IValueObject<T>, IValueObject, System.Collections.Generic.IList<ITreeNode<T>>, System.Collections.Generic.ICollection<T>, IEnumerable<T>, /*IEnumerable, System.Collections.IList, System.Collections.ICollection,*/ System.Collections.Generic.IReadOnlyList<ITreeNode<T>>, System.Collections.Generic.IReadOnlyCollection<ITreeNode<T>>, System.IDisposable, System.Collections.Specialized.INotifyCollectionChanged, INotifyPropertyChanged { }
+    public interface IObservableTreeNode<T> : IReadOnlyTreeNode, ITreeNode<T>, IReadOnlyObservableTreeNode<T>, IReadOnlyTreeNode<T>, WinCopies.
+#if WinCopies2
+        Util.
+#endif
+        IValueObject<T>, WinCopies.
+#if WinCopies2
+        Util.
+#endif
+        IValueObject, System.Collections.Generic.IList<ITreeNode<T>>, System.Collections.Generic.ICollection<T>, IEnumerable<T>, /*IEnumerable, System.Collections.IList, System.Collections.ICollection,*/ System.Collections.Generic.IReadOnlyList<ITreeNode<T>>, System.Collections.Generic.IReadOnlyCollection<ITreeNode<T>>, System.IDisposable, System.Collections.Specialized.INotifyCollectionChanged, INotifyPropertyChanged
+    { }
 
-    public interface IReadOnlyObservableTreeNode<T> : IReadOnlyTreeNode, IReadOnlyTreeNode<T>, IReadOnlyValueObject<T>, IReadOnlyValueObject, System.Collections.Generic.IReadOnlyList<IReadOnlyTreeNode<T>>, System.Collections.Generic.IReadOnlyCollection<IReadOnlyTreeNode<T>>, IEnumerable<IReadOnlyTreeNode<T>>, /*IEnumerable,*/ System.IDisposable, System.Collections.Specialized.INotifyCollectionChanged, INotifyPropertyChanged { }
+    public interface IReadOnlyObservableTreeNode<T> : IReadOnlyTreeNode, IReadOnlyTreeNode<T>, WinCopies.
+#if WinCopies2
+        Util.
+#endif
+        IReadOnlyValueObject<T>, WinCopies.
+#if WinCopies2
+        Util.
+#endif
+        IReadOnlyValueObject, System.Collections.Generic.IReadOnlyList<IReadOnlyTreeNode<T>>, System.Collections.Generic.IReadOnlyCollection<IReadOnlyTreeNode<T>>, IEnumerable<IReadOnlyTreeNode<T>>, /*IEnumerable,*/ System.IDisposable, System.Collections.Specialized.INotifyCollectionChanged, INotifyPropertyChanged
+    { }
 
 }
