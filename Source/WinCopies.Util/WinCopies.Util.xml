@@ -2679,7 +2679,7 @@
             </summary>
             <returns>The object that is removed from the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryDequeue(`0@)"/>
+            <seealso cref="!:TryDequeue(out T)"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.EnqueueItem(`0)">
             <summary>
@@ -2699,7 +2699,7 @@
             </summary>
             <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryPeek(`0@)"/>
+            <seealso cref="!:TryPeek(out T)"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.ToArray">
             <summary>
@@ -2711,29 +2711,6 @@
             <summary>
             Sets the capacity to the actual number of elements in the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>, if that number is less than 90 percent of current capacity.
             </summary>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryDequeueItem(`0@)">
-            <summary>
-            Tries to remove and return the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. Override this method to provide a custom implementation.
-            </summary>
-            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
-            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been removed and retrieved.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryDequeue(`0@)">
-            <summary>
-            Tries to remove and return the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryDequeueItem(`0@)"/> method to provide a custom implementation.
-            </summary>
-            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
-            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been removed and retrieved.</returns>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.QueueCollection`1.Dequeue"/>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryPeek(`0@)">
-            <summary>
-            Tries to peek the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> without removing it.
-            </summary>
-            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
-            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been retrieved.</returns>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.QueueCollection`1.Peek"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.GetEnumerator">
             <summary>
@@ -2907,15 +2884,7 @@
             </summary>
             <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.TryPeek(`0@)"/>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.TryPeek(`0@)">
-            <summary>
-            Tries to peek the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> without removing it.
-            </summary>
-            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
-            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been retrieved.</returns>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.Peek"/>
+            <seealso cref="!:TryPeek(out T)"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.GetEnumerator">
             <summary>

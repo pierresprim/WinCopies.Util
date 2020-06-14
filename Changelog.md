@@ -9,14 +9,14 @@ CHANGELOG
 Updates
 -------
 
-??/??/???? 2.5-preview7
+06/14/2020 2.5-preview7
 =======================
 
 WinCopies.Util (2.5-preview7)
 -----------------------------
 
 - Changes:
-	- Some breaking changes in (ReadOnly)(Observable)Stack/Queue/LinkedCollections and relative code.
+	- Some breaking changes in (ReadOnly)(Observable)Stack/Queue/LinkedCollections and relative code. Fixes #8.
 - Additions:
 	- Split extension methods.
 	- Constructors:

@@ -6,6 +6,10 @@ The WinCopies® software framework
 README
 ======
 
+This version is still in development and is NOT released yet.
+
+Current released version: (https://github.com/pierresprim/WinCopies.Util/tree/master/Source/WinCopies.Util.Desktop)[https://github.com/pierresprim/WinCopies.Util/tree/master/Source/WinCopies.Util.Desktop]
+
 Updates
 -------
 
