@@ -15,20 +15,16 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 
 namespace WinCopies.Collections
 {
-
     // todo: to linked list?
 
     public class EnumeratorCollection : Collection<IEnumerator>
     {
-
         public int EnumerableVersion { get; private set; }
 
         public EnumeratorCollection() : base() { }
@@ -52,14 +48,10 @@ namespace WinCopies.Collections
         }
 
         public void OnCollectionUpdated()
-
         {
-
             if (Count > 0)
 
                 EnumerableVersion++;
-
         }
-
     }
 }

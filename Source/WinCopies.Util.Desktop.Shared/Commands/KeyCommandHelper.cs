@@ -25,23 +25,20 @@ using System.Windows;
 using System.Windows.Input;
 using WinCopies.Util;
 
-
-
+#if WinCopies2
 namespace WinCopies.Util.Commands
+#else
+namespace WinCopies.Commands
+#endif
 {
     public static class KeyCommandHelper
     {
-
         public static bool CanRaiseCommand(ICommandSource commandSource, KeyEventArgs e) => CanRaiseCommand(commandSource.Command, commandSource.CommandParameter, commandSource.CommandTarget, e);
 
         public static bool CanRaiseCommand(ICommand command, object commandParameter, IInputElement commandTarget, KeyEventArgs e)
-
         {
-
             if (command is RoutedCommand routedCommand)
-
             {
-
                 if (routedCommand.InputGestures == null) return false;
 
                 foreach (object inputGesture in routedCommand.InputGestures)
@@ -49,14 +46,9 @@ namespace WinCopies.Util.Commands
                     if (inputGesture is KeyGesture keyGesture && e.Key == keyGesture.Key && e.KeyboardDevice.Modifiers == keyGesture.Modifiers)
 
                         return command.CanExecute(commandParameter, commandTarget);
-
             }
 
             return false;
-
         }
-
     }
 }
-
-

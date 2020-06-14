@@ -1,0 +1,98 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageId>WinCopies.Util.Desktop</PackageId>
+    <AssemblyName>WinCopies.Util.Desktop</AssemblyName>
+    <Title>WinCopies.Util.Desktop</Title>
+    <TargetFrameworks>netcoreapp3.0;netcoreapp3.1;net472</TargetFrameworks>
+    <UseWPF>true</UseWPF>
+    <Description>WinCopies framework desktop utilities</Description>
+    <Copyright>Copyright © 2020 Pierre Sprimont</Copyright>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>WinCopies.Util.Desktop.snk</AssemblyOriginatorKeyFile>
+    <DocumentationFile>WinCopies.Util.Desktop.xml</DocumentationFile>
+    <PackageTags>WinCopies</PackageTags>
+    <Version>3.0</Version>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <FileVersion>3.0.0.0</FileVersion>
+  </PropertyGroup>
+
+  <Import Project="..\WinCopies.Util.Desktop.Shared\WinCopies.Util.Desktop.Shared.projitems" Label="Shared" />
+
+  <PropertyGroup>
+    <DefineConstants>WinCopies3;$(DefineConstants)</DefineConstants>
+    <RootNamespace>WinCopies.Util.Desktop</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.19" />
+    <PackageReference Include="System.Reactive.Linq" Version="4.0.0" />
+    <PackageReference Include="WinCopies.WindowsAPICodePack.Win32Native" Version="2.0.0-preview6" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)'!='netcoreapp3.1'">
+    <!--<PackageReference Include="Microsoft.Win32.Registry" Version="4.7.0" />-->
+    <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
+    <!--<PackageReference Include="System.Management" Version="4.7.0" />-->
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)'!='netcoreapp3.0'">
+    <!--<PackageReference Include="Microsoft.Win32.Registry" Version="4.6.0" />-->
+    <PackageReference Include="System.Drawing.Common" Version="4.6.0" />
+    <!--<PackageReference Include="System.Management" Version="4.6.0" />-->
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WinCopies.Util.3.0\WinCopies.Util.3.0.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources\Commands\WPF\ApplicationCommands.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ApplicationCommands.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Commands\WPF\DialogCommands.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DialogCommands.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Commands\WPF\FileSystemCommands.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>FileSystemCommands.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\ExceptionMessages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ExceptionMessages.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Commands\WPF\ApplicationCommands.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ApplicationCommands.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Commands\WPF\DialogCommands.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>DialogCommands.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Commands\WPF\FileSystemCommands.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>FileSystemCommands.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\ExceptionMessages.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>

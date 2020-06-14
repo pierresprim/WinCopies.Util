@@ -5,7 +5,11 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Text;
 
+#if WinCopies2
 namespace WinCopies.Util
+#else
+namespace WinCopies
+#endif
 {
     public struct CheckedUInt64 : IComparable<CheckedUInt64>/*, IComparable<CheckedUInt32>, IComparable<CheckedUInt16>, IComparable<CheckedByte>*/
     {
@@ -32,11 +36,9 @@ namespace WinCopies.Util
 
             else
             {
-
                 _value = null;
 
                 MaxValue = 0;
-
             }
         }
 

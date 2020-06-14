@@ -26,20 +26,20 @@
 *
 * For more information, please refer to <http://unlicense.org> */
 
-
-
 using System;
 using System.Windows.Input;
 
+#if WinCopies2
 namespace WinCopies.Util.Commands
+#else
+namespace WinCopies.Commands
+#endif
 {
-
     /// <summary>
     /// Provides a base class for WPF commands.
     /// </summary>
     public class DelegateCommand : ICommand
     {
-
         /// <summary>
         /// Gets or sets the Predicate to execute when the CanExecute of the command gets called
         /// </summary>
@@ -64,19 +64,14 @@ namespace WinCopies.Util.Commands
         /// </summary>
         /// <param name="parameter">THe command parameter to be passed</param>
         /// <returns>Returns true if the command can execute. By default true is returned so that if the user of SimpleCommand does not specify a CanExecuteCommand delegate the command still executes.</returns>
-        public bool CanExecute(object parameter)
-        {
-            if (CanExecuteDelegate == null)
-
-                return true;// if there is no can execute default to true
-
-            return CanExecuteDelegate(parameter);
-        }
+        public bool CanExecute(object parameter) => CanExecuteDelegate == null ?
+                true : // if there is no can execute default to true
+             CanExecuteDelegate(parameter);
 
         public event EventHandler CanExecuteChanged
         {
-            add { CommandManager.RequerySuggested += value; }
-            remove { CommandManager.RequerySuggested -= value; }
+            add => CommandManager.RequerySuggested += value;
+            remove => CommandManager.RequerySuggested -= value;
         }
 
         /// <summary>
@@ -93,7 +88,6 @@ namespace WinCopies.Util.Commands
     /// </summary>
     public class DelegateCommand<T> : ICommand
     {
-
         /// <summary>
         /// Gets or sets the Predicate to execute when the CanExecute of the command gets called
         /// </summary>
@@ -118,19 +112,16 @@ namespace WinCopies.Util.Commands
         /// </summary>
         /// <param name="parameter">THe command parameter to be passed</param>
         /// <returns>Returns true if the command can execute. By default true is returned so that if the user of SimpleCommand does not specify a CanExecuteCommand delegate the command still executes.</returns>
-        public bool CanExecute(T parameter)
-        {
-            if (CanExecuteDelegate == null)
-                return true;// if there is no can execute default to true
-            return CanExecuteDelegate(parameter);
-        }
+        public bool CanExecute(T parameter) => CanExecuteDelegate == null ?
+                true : // if there is no can execute default to true
+            CanExecuteDelegate(parameter);
 
         bool ICommand.CanExecute(object parameter) => CanExecute((T)parameter);
 
         public event EventHandler CanExecuteChanged
         {
-            add { CommandManager.RequerySuggested += value; }
-            remove { CommandManager.RequerySuggested -= value; }
+            add => CommandManager.RequerySuggested += value;
+            remove => CommandManager.RequerySuggested -= value;
         }
 
         /// <summary>

@@ -31,12 +31,16 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
 
+#if WinCopies2
 namespace WinCopies.Util.Commands
+#else
+namespace WinCopies.Commands
+#endif
 {
     /// <summary>
     /// Defines the command behavior binding
     /// </summary>
-    public class CommandBehaviorBinding : System. IDisposable
+    public class CommandBehaviorBinding : System.IDisposable
     {
         #region Properties
 
@@ -45,21 +49,25 @@ namespace WinCopies.Util.Commands
         /// This property can only be set from the BindEvent Method
         /// </summary>
         public DependencyObject Owner { get; private set; }
+
         /// <summary>
         /// The event name to hook up to
         /// This property can only be set from the BindEvent Method
         /// </summary>
         public string EventName { get; private set; }
+
         /// <summary>
         /// The event info of the event
         /// </summary>
         public EventInfo Event { get; private set; }
+
         /// <summary>
         /// Gets the EventHandler for the binding with the event
         /// </summary>
         public Delegate EventHandler { get; private set; }
 
         #region Execution
+
         //stores the strategy of how to execute the event handler
         IExecutionStrategy strategy;
 
@@ -109,11 +117,12 @@ namespace WinCopies.Util.Commands
         /// <param name="eventName">The event name</param>
         public void BindEvent(DependencyObject owner, string eventName)
         {
-
             EventName = eventName;
             Owner = owner;
             Event = Owner.GetType().GetEvent(EventName, BindingFlags.Public | BindingFlags.Instance);
+
             if (Event == null)
+
                 throw new InvalidOperationException(string.Format("Could not resolve event name {0}", EventName));
 
             //Create an event handler for the event that will call the ExecuteCommand method

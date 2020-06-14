@@ -20,11 +20,8 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-
-
 namespace WinCopies.Util.Data
-{ 
-
+{
     // todo: already exists in the System.Windows.Controls namespace with a bit of features less.
 
     /// <summary>
@@ -33,7 +30,6 @@ namespace WinCopies.Util.Data
     [ValueConversion(typeof(bool), typeof(Visibility), ParameterType = typeof(Visibility))]
     public class BooleanToVisibilityConverter : ConverterBase
     {
-
         /// <summary>
         /// Converts a <see langword="bool"/> value to a <see cref="Visibility"/> value. If the value is <see langword="true"/>, the returned value will be the <see cref="Visibility.Visible"/> value, if not and if parameter is not null, it will be the value of the parameter, otherwise it will be <see cref="Visibility.Collapsed"/>.
         /// </summary>
@@ -44,15 +40,13 @@ namespace WinCopies.Util.Data
         /// <returns><see cref="Visibility.Visible"/> if the value to convert is <see langword="true"/>, if not, the value of the parameter if it is not null, otherwise <see cref="Visibility.Collapsed"/>.</returns>
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-
-            if (parameter != null && (!(parameter is Visibility) || (Visibility)parameter == Visibility.Visible) )    
+            if (parameter != null && (!(parameter is Visibility) || (Visibility)parameter == Visibility.Visible))
 
                 // todo:
 
                 throw new ArgumentException("parameter must be a value of the System.Windows.Visibility enum and can't be the System.Windows.Visibility.Visible value.");
 
             return (bool)value ? Visibility.Visible : parameter ?? Visibility.Collapsed;
-
         }
 
         /// <summary>
@@ -66,5 +60,3 @@ namespace WinCopies.Util.Data
         public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => (Visibility)value == Visibility.Visible;
     }
 }
-
-

@@ -15,8 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-
-
 using System;
 using System.Globalization;
 using System.Windows;
@@ -31,7 +29,6 @@ namespace WinCopies.Util.Data
 
         public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-
             if (parameter != null && !(parameter is Visibility))
 
                 // todo:
@@ -39,10 +36,6 @@ namespace WinCopies.Util.Data
                 throw new ArgumentException("parameter must be a value of the System.Windows.Visibility enum.");
 
             return (bool)value ? parameter ?? Visibility.Collapsed : Visibility.Visible;
-
         }
-        
     }
 }
-
- 

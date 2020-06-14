@@ -28,16 +28,13 @@ namespace WinCopies.Util.Data
 
         public object NewValue { get; set; } = null;
 
-        public PropertyChangedEventArgs(string propertyName) : base(propertyName)        { }
+        public PropertyChangedEventArgs(string propertyName) : base(propertyName) { }
 
         public PropertyChangedEventArgs(string propertyName, object previousValue, object newValue) : base(propertyName)
-
         {
-
             PreviousValue = previousValue;
 
             NewValue = newValue;
-
         }
     }
 }

@@ -15,13 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-
-
 using System;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 
+#if WinCopies2
 namespace WinCopies.Util
+#else
+namespace WinCopies
+#endif
 {
     /// <summary>
     /// Encapsulates a common <see cref="EventArgs"/> into a <see cref="RoutedEventArgs"/> in an event delegate.
@@ -42,7 +44,6 @@ namespace WinCopies.Util
     /// <seealso cref="UIElement.RaiseEvent(RoutedEventArgs)"/>
     public class RoutedEventArgs<T> : RoutedEventArgs where T : EventArgs
     {
-
         /// <summary>
         /// The original <see cref="EventArgs"/>.
         /// </summary>
@@ -92,8 +93,5 @@ namespace WinCopies.Util
         /// <para>Null values for <see cref="RoutedEventArgs.OriginalSource"/> are populated based on the element that raised the event and passed on through the routing, but will read <see langword="null"/> prior to invocation.</para>
         /// <para>Use this signature when passing <see cref="RoutedEventArgs"/> to virtuals such as <see cref="TextBoxBase.OnSelectionChanged"/>, where the arguments are used to call <see cref="UIElement.RaiseEvent(RoutedEventArgs)"/> internally.</para>
         public RoutedEventArgs(RoutedEvent routedEvent, object source, T originalEventArgs) : base(routedEvent, source) => OriginalEventArgs = originalEventArgs;
-
     }
 }
-
- 

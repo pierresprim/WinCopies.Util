@@ -21,15 +21,17 @@ using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Input;
 
+#if WinCopies2
 namespace WinCopies.Util.Commands
+#else
+namespace WinCopies.Commands
+#endif
 {
     public class CommandAction : TriggerAction<DependencyObject>
     {
-
-
         public static readonly DependencyProperty CommandProperty =
-         DependencyProperty.Register("Command", typeof(ICommand), typeof(CommandAction),
-         new PropertyMetadata(null, OnCommandChanged));
+ DependencyProperty.Register("Command", typeof(ICommand), typeof(CommandAction),
+ new PropertyMetadata(null, OnCommandChanged));
 
         public static readonly DependencyProperty CommandParameterProperty =
          DependencyProperty.Register("CommandParameter", typeof(object), typeof(CommandAction),
@@ -76,9 +78,5 @@ namespace WinCopies.Util.Commands
         }
 
         protected override void Invoke(object parameter) => Command?.Execute(CommandParameter);
-
-
     }
 }
-
-

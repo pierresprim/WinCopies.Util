@@ -15,8 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-
-
 using System;
 using System.Globalization;
 using System.Windows.Data;
@@ -24,14 +22,12 @@ using System.Windows.Markup;
 
 namespace WinCopies.Util.Data
 {
-
     /// <summary>
     /// Provides a base-class for any data-<see cref="MultiBinding"/> converter.
     /// </summary>
     [MarkupExtensionReturnType(typeof(IMultiValueConverter))]
     public abstract class MultiConverterBase : MarkupExtension, IMultiValueConverter
     {
-
         /// <summary>
         /// Converts source values to a value for the binding target. The data binding engine calls this method when it propagates the values from source bindings to the binding target.
         /// </summary>
@@ -41,8 +37,6 @@ namespace WinCopies.Util.Data
         /// <param name="culture">The culture to use in the converter.</param>
         /// <returns>A converted value.</returns>
         public abstract object Convert(object[] values, Type targetType, object parameter, CultureInfo culture);
-
-
 
         /// <summary>
         /// Converts a binding target value to the source binding values.
@@ -60,9 +54,5 @@ namespace WinCopies.Util.Data
         /// <param name="serviceProvider">A service provider helper that can provide services for the markup extension.</param>
         /// <returns>The object value to set on the property where the extension is applied.</returns>
         public override object ProvideValue(IServiceProvider serviceProvider) => this;
-
     }
-
 }
-
- 

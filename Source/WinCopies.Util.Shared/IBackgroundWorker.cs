@@ -15,19 +15,17 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
+#if WinCopies2
 using System.ComponentModel;
 using System.Threading;
 
 namespace WinCopies.Util
 {
-
-    ///// <para>FR: Représente un BackgroundWorker qui s'exécute par défaut dans un thread MTA et qui arrête automatiquement l'exécution en arrière-plan lors d'un rapport du progrès.</para>
     /// <summary>
     /// Represents a BackgroundWorker that runs in a MTA thread by default and automatically stops on background when reports progress.
     /// </summary>
     public interface IBackgroundWorker : IComponent
     {
-
         /// <summary>
         /// Gets the <see cref="System.Threading.ApartmentState"/> of this thread.
         /// </summary>
@@ -129,6 +127,6 @@ namespace WinCopies.Util
         /// <para>The event handler is running in the background thread.</para>
         /// </summary>
         event RunWorkerCompletedEventHandler RunWorkerCompleted;
-
     }
 }
+#endif

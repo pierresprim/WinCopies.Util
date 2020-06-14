@@ -18,25 +18,53 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Text;
 using WinCopies.Collections;
 using IList = System.Collections.IList;
-using static WinCopies.Util.Util;
 using WinCopies.Collections.DotNetFix;
-using IfCT = WinCopies.Util.Util.ComparisonType;
 using WinCopies.Util.Resources;
-using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+
+#if WinCopies2
+using static WinCopies.Util.Util;
+using IfCT = WinCopies.Util.Util.ComparisonType;
 
 namespace WinCopies.Util
+#else
+using static WinCopies.UtilHelpers;
+using IfCT = WinCopies.ComparisonType;
+
+namespace WinCopies
+#endif
 {
+    public interface ISplitFactory<T, U, V, TContainer>
+    {
+        TContainer Container { get; }
+
+        int SubCount { get; }
+
+        void Add(V enumerable);
+
+        V GetEnumerable();
+
+        void SubClear();
+
+        void SubAdd(U value);
+    }
+
+    public interface IValueSplitFactory<T, U, V, TContainer> : ISplitFactory<T, U, V, TContainer> where T : struct
+    {
+        U GetValueContainer(T? value);
+    }
+
+    public interface IRefSplitFactory<T, U, V, TContainer> : ISplitFactory<T, U, V, TContainer> where T : class
+    {
+        U GetValueContainer(T value);
+    }
 
     public delegate (bool result, Exception ex) FieldValidateValueCallback(object obj, object value, FieldInfo field, string paramName);
 
@@ -51,6 +79,7 @@ namespace WinCopies.Util
     /// </summary>
     public static class Extensions
     {
+#if WinCopies2
 
         /// <summary>
         /// Tries to add multiple values to an <see cref="System.Collections.ICollection"/> if it does not contain them already.
@@ -66,9 +95,7 @@ namespace WinCopies.Util
 
         [Obsolete("This method has been replaced by the RemoveRangeIfContains<T>(this IList<T> collection, in IEnumerable<T> values) method.")]
         public static T[] RemoveRangeIfContains<T>(this ICollection<T> collection, in IEnumerable<T> values)
-
         {
-
             ThrowIfNull(collection, nameof(collection));
             ThrowIfNull(values, nameof(values));
 
@@ -77,20 +104,17 @@ namespace WinCopies.Util
             foreach (T value in values)
 
                 if (collection.Contains(value))
-
                 {
-
                     // todo: RemoveAt()
 
                     _ = collection.Remove(value);
 
                     _ = removedValues.AddLast(value);
-
                 }
 
             return removedValues.ToArray();
-
-        }
+                    }
+#endif
 
         #region Enumerables extension methods
 
@@ -253,15 +277,12 @@ namespace WinCopies.Util
         /// <param name="value">The value to try to add to the collection</param>
         /// <returns><see langword="true"/> if the value has been added to the collection, otherwise <see langword="false"/>.</returns>
         public static bool AddIfNotContains(this IList collection, in object value)
-
         {
-
             if ((collection ?? throw GetArgumentNullException(nameof(collection))).Contains(value)) return false;
 
             _ = collection.Add(value);
 
             return true;
-
         }
 
         /// <summary>
@@ -280,31 +301,23 @@ namespace WinCopies.Util
         /// <param name="values">The values to try to add to the collection</param>
         /// <returns><see langword="true"/> if the value has been added to the collection, otherwise <see langword="false"/>.</returns>
         public static object[] AddRangeIfNotContains(this System.Collections.IList collection, in IEnumerable values)
-
         {
-
             ThrowIfNull(collection, nameof(collection));
             ThrowIfNull(values, nameof(values));
 
             var addedValues = new ArrayBuilder<object>();
 
             foreach (object value in values)
-
             {
-
                 if (collection.Contains(value)) continue;
 
                 _ = collection.Add(value);
 
                 _ = addedValues.AddLast(value);
-
             }
 
             return addedValues.ToArray();
-
         }
-
-
 
         /// <summary>
         /// Tries to add a value to an <see cref="ICollection{T}"/> if it does not contain it already.
@@ -314,15 +327,12 @@ namespace WinCopies.Util
         /// <param name="value">The value to try to add to the collection</param>
         /// <returns><see langword="true"/> if the value has been added to the collection, otherwise <see langword="false"/>.</returns>
         public static bool AddIfNotContains<T>(this ICollection<T> collection, in T value)
-
         {
-
             if ((collection ?? throw GetArgumentNullException(nameof(collection))).Contains(value)) return false;
 
             collection.Add(value);
 
             return true;
-
         }
 
         /// <summary>
@@ -342,28 +352,22 @@ namespace WinCopies.Util
         /// <param name="values">The values to try to add to the collection</param>
         /// <returns><see langword="true"/> if the value has been added to the collection, otherwise <see langword="false"/>.</returns>
         public static T[] AddRangeIfNotContains<T>(this ICollection<T> collection, in IEnumerable<T> values)
-
         {
-
             ThrowIfNull(collection, nameof(collection));
             ThrowIfNull(values, nameof(values));
 
             var addedValues = new ArrayBuilder<T>();
 
             foreach (T value in values)
-
             {
-
                 if (collection.Contains(value)) continue;
 
                 collection.Add(value);
 
                 _ = addedValues.AddLast(value);
-
             }
 
             return addedValues.ToArray();
-
         }
 
         #endregion
@@ -378,50 +382,37 @@ namespace WinCopies.Util
         /// <param name="value">The value to add in the collection.</param>
         /// <returns><see langword="true"/> if the value is added to the collection, otherwise <see langword="false"/>.</returns>
         public static bool InsertIfNotContains(this IList collection, in int index, in object value)
-
         {
-
             if ((collection ?? throw GetArgumentNullException(nameof(collection))).Contains(value)) return false;
 
             collection.Insert(index, value);
 
             return true;
-
         }
 
         public static object[] InsertRangeIfNotContains(this IList collection, in int index, params object[] values) => collection.InsertRangeIfNotContains(index, (IEnumerable)values);
 
         public static object[] InsertRangeIfNotContains(this IList collection, in int index, in IEnumerable values)
-
         {
-
             ThrowIfNull(collection, nameof(collection));
             ThrowIfNull(values, nameof(values));
 
             var addedValues = new ArrayBuilder<object>();
 
             foreach (object value in values)
-
             {
-
                 if (collection.Contains(value)) continue;
 
                 collection.Insert(index, value);
 
                 _ = addedValues.AddLast(value);
-
             }
 
             return addedValues.ToArray();
-
         }
 
-
-
         public static bool InsertIfNotContains<T>(this System.Collections.Generic.IList<T> collection, in int index, in T value)
-
         {
-
             ThrowIfNull(collection, nameof(collection));
 
             if (collection.Contains(value)) return false;
@@ -429,34 +420,27 @@ namespace WinCopies.Util
             collection.Insert(index, value);
 
             return true;
-
         }
 
         public static T[] InsertRangeIfNotContains<T>(this System.Collections.Generic.IList<T> collection, in int index, params T[] values) => collection.InsertRangeIfNotContains(index, (IEnumerable<T>)values);
 
         public static T[] InsertRangeIfNotContains<T>(this System.Collections.Generic.IList<T> collection, in int index, in IEnumerable<T> values)
-
         {
-
             ThrowIfNull(collection, nameof(collection));
             ThrowIfNull(values, nameof(values));
 
             var addedValues = new ArrayBuilder<T>();
 
             foreach (T value in values)
-
             {
-
                 if (collection.Contains(value)) continue;
 
                 collection.Insert(index, value);
 
                 _ = addedValues.AddLast(value);
-
             }
 
             return addedValues.ToArray();
-
         }
 
         #endregion
@@ -464,29 +448,21 @@ namespace WinCopies.Util
         #region Remove(Range)IfContains methods
 
         public static bool RemoveIfContains(this IList collection, in object value)
-
         {
-
             if ((collection ?? throw GetArgumentNullException(nameof(collection))).Contains(value))
-
             {
-
                 collection.Remove(value);
 
                 return true;
-
             }
 
             return false;
-
         }
 
         public static object[] RemoveRangeIfContains(this IList collection, params object[] values) => collection.RemoveRangeIfContains((IEnumerable)values);
 
         public static object[] RemoveRangeIfContains(this IList collection, in IEnumerable values)
-
         {
-
             ThrowIfNull(collection, nameof(collection));
             ThrowIfNull(values, nameof(values));
 
@@ -495,31 +471,23 @@ namespace WinCopies.Util
             foreach (object value in values)
 
                 if (collection.Contains(value))
-
                 {
-
                     // todo: RemoveAt()
 
                     collection.Remove(value);
 
                     _ = removedValues.AddLast(value);
-
                 }
 
             return removedValues.ToArray();
-
         }
-
-
 
         public static bool RemoveIfContains<T>(this ICollection<T> collection, in T value) => (collection ?? throw GetArgumentNullException(nameof(collection))).Contains(value) ? collection.Remove(value) : false;
 
         public static T[] RemoveRangeIfContains<T>(this IList<T> collection, params T[] values) => collection.RemoveRangeIfContains((IEnumerable<T>)values);
 
         public static T[] RemoveRangeIfContains<T>(this IList<T> collection, in IEnumerable<T> values)
-
         {
-
             ThrowIfNull(collection, nameof(collection));
             ThrowIfNull(values, nameof(values));
 
@@ -530,19 +498,15 @@ namespace WinCopies.Util
                 for (int i = 0; i < collection.Count; i++)
 
                     if (collection[i].Equals(value))
-
                     {
-
                         // todo: RemoveAt()
 
                         collection.RemoveAt(i);
 
                         _ = removedValues.AddLast(value);
-
                     }
 
             return removedValues.ToArray();
-
         }
 
         #endregion
@@ -552,91 +516,69 @@ namespace WinCopies.Util
         public static void AddRange(this IList collection, params object[] values) => collection.AddRange((IEnumerable)values);
 
         public static void AddRange(this IList collection, in IEnumerable array)
-
         {
-
             ThrowIfNull(collection, nameof(collection));
             ThrowIfNull(array, nameof(array));
 
             foreach (object item in array)
 
                 _ = collection.Add(item);
-
         }
 
         public static void AddRange(this IList collection, in int start, in int length, params object[] values)
-
         {
-
             ThrowIfNull(collection, nameof(collection));
 
             for (int i = start; i < length; i++)
 
                 _ = collection.Add(values[i]);
-
         }
 
         // todo: to add a version of the methods like this one with a 'contains' check:
 
         public static void AddRange(this IList collection, in IList values, in int start, in int length)
-
         {
-
             ThrowIfNull(collection, nameof(collection));
             ThrowIfNull(values, nameof(values));
 
             for (int i = start; i < length; i++)
 
                 _ = collection.Add(values[i]);
-
         }
 
         public static void AddRange(this IList collection, in IEnumerable array, in int start, in int length) => collection.AddRange(array.ToArray(), start, length);
 
-
-
         public static void AddRange<T>(this ICollection<T> collection, params T[] values) => collection.AddRange((IEnumerable<T>)values);
 
         public static void AddRange<T>(this ICollection<T> collection, in IEnumerable<T> array)
-
         {
-
             ThrowIfNull(collection, nameof(collection));
             ThrowIfNull(array, nameof(array));
 
             foreach (T item in array)
 
                 collection.Add(item);
-
         }
 
         public static void AddRange<T>(this ICollection<T> collection, in int start, in int length, params T[] values)
-
         {
-
             ThrowIfNull(collection, nameof(collection));
 
             for (int i = start; i < length; i++)
 
                 collection.Add(values[i]);
-
         }
 
         public static void AddRange<T>(this ICollection<T> collection, in System.Collections.Generic.IList<T> values, in int start, in int length)
-
         {
-
             ThrowIfNull(collection, nameof(collection));
 
             for (int i = start; i < length; i++)
 
                 collection.Add(values[i]);
-
         }
 
         public static void AddRange<T>(this ICollection<T> collection, in IEnumerable<T> array, in int start, in int length) => collection.AddRange(array.ToArray<T>(), start, length);
-
-
 
         /// <summary>
         /// Add multiple values at the top of a <see cref="System.Collections.Generic.LinkedList{T}"/>. For better performance, use the <see cref="ArrayBuilder{T}"/> class.
@@ -715,9 +657,7 @@ namespace WinCopies.Util
         /// <param name="array">The values to add to a <see cref="System.Collections.Generic.LinkedList{T}"/></param>
         /// <returns>The added <see cref="LinkedListNode{T}"/>'s.</returns>
         public static LinkedListNode<T>[] AddRangeLast<T>(this System.Collections.Generic.LinkedList<T> collection, in IEnumerable<T> array)
-
         {
-
             ThrowIfNull(collection, nameof(collection));
             ThrowIfNull(array, nameof(array));
 
@@ -728,7 +668,6 @@ namespace WinCopies.Util
                 _ = result.AddLast(collection.AddLast(item));
 
             return result.ToArray<LinkedListNode<T>>();
-
         }
 
         /// <summary>
@@ -745,16 +684,13 @@ namespace WinCopies.Util
         /// <param name="collection">The <see cref="System.Collections.Generic.LinkedList{T}"/> into which add the values.</param>
         /// <param name="array">The <see cref="LinkedListNode{T}"/>'s to add to a <see cref="System.Collections.Generic.LinkedList{T}"/></param>
         public static void AddRangeLast<T>(this System.Collections.Generic.LinkedList<T> collection, in IEnumerable<LinkedListNode<T>> array)
-
         {
-
             ThrowIfNull(collection, nameof(collection));
             ThrowIfNull(array, nameof(array));
 
             foreach (LinkedListNode<T> item in array)
 
                 collection.AddLast(item);
-
         }
 
         /// <summary>
@@ -774,9 +710,7 @@ namespace WinCopies.Util
         /// <param name="array">The values to add to a <see cref="System.Collections.Generic.LinkedList{T}"/></param>
         /// <returns>The added <see cref="LinkedListNode{T}"/>'s.</returns>
         public static LinkedListNode<T>[] AddRangeBefore<T>(this System.Collections.Generic.LinkedList<T> collection, in LinkedListNode<T> node, in IEnumerable<T> array)
-
         {
-
             ThrowIfNull(collection, nameof(collection));
             ThrowIfNull(array, nameof(array));
 
@@ -787,7 +721,6 @@ namespace WinCopies.Util
                 _ = result.AddLast(collection.AddBefore(node, item));
 
             return result.ToArray<LinkedListNode<T>>();
-
         }
 
         /// <summary>
@@ -805,16 +738,13 @@ namespace WinCopies.Util
         /// <param name="node">The node before which to add the values</param>
         /// <param name="array">The values to add to a <see cref="System.Collections.Generic.LinkedList{T}"/></param>
         public static void AddRangeBefore<T>(this System.Collections.Generic.LinkedList<T> collection, in LinkedListNode<T> node, in IEnumerable<LinkedListNode<T>> array)
-
         {
-
             ThrowIfNull(collection, nameof(collection));
             ThrowIfNull(array, nameof(array));
 
             foreach (LinkedListNode<T> item in array)
 
                 collection.AddBefore(node, item);
-
         }
 
         /// <summary>
@@ -852,7 +782,6 @@ namespace WinCopies.Util
         /// <param name="node">The node after which to add the values</param>
         /// <param name="nodes">The values to add to a <see cref="System.Collections.Generic.LinkedList{T}"/></param>
         public static void AddRangeAfter<T>(this System.Collections.Generic.LinkedList<T> collection, in LinkedListNode<T> node, params LinkedListNode<T>[] nodes)
-
         {
             ThrowIfNull(node, nameof(node));
 
@@ -872,7 +801,6 @@ namespace WinCopies.Util
         /// <param name="node">The node after which to add the values</param>
         /// <param name="array">The values to add to a <see cref="System.Collections.Generic.LinkedList{T}"/></param>
         public static void AddRangeAfter<T>(this System.Collections.Generic.LinkedList<T> collection, in LinkedListNode<T> node, in IEnumerable<LinkedListNode<T>> array)
-
         {
             ThrowIfNull(node, nameof(node));
 
@@ -884,8 +812,6 @@ namespace WinCopies.Util
 
                 collection.AddRangeBefore(node.Next, array);
         }
-
-
 
         /// <summary>
         /// Add multiple values at the top of a <see cref="ILinkedList{T}"/>. For better performance, use the <see cref="ArrayBuilder{T}"/> class.
@@ -964,9 +890,7 @@ namespace WinCopies.Util
         /// <param name="array">The values to add to a <see cref="ILinkedList{T}"/></param>
         /// <returns>The added <see cref="LinkedListNode{T}"/>'s.</returns>
         public static LinkedListNode<T>[] AddRangeLast<T>(this ILinkedList<T> collection, in IEnumerable<T> array)
-
         {
-
             ThrowIfNull(collection, nameof(collection));
             ThrowIfNull(array, nameof(array));
 
@@ -977,7 +901,6 @@ namespace WinCopies.Util
                 _ = result.AddLast(collection.AddLast(item));
 
             return result.ToArray<LinkedListNode<T>>();
-
         }
 
         /// <summary>
@@ -994,16 +917,13 @@ namespace WinCopies.Util
         /// <param name="collection">The <see cref="ILinkedList{T}"/> into which add the values.</param>
         /// <param name="array">The <see cref="LinkedListNode{T}"/>'s to add to a <see cref="ILinkedList{T}"/></param>
         public static void AddRangeLast<T>(this ILinkedList<T> collection, in IEnumerable<LinkedListNode<T>> array)
-
         {
-
             ThrowIfNull(collection, nameof(collection));
             ThrowIfNull(array, nameof(array));
 
             foreach (LinkedListNode<T> item in array)
 
                 collection.AddLast(item);
-
         }
 
         /// <summary>
@@ -1023,9 +943,7 @@ namespace WinCopies.Util
         /// <param name="array">The values to add to a <see cref="ILinkedList{T}"/></param>
         /// <returns>The added <see cref="LinkedListNode{T}"/>'s.</returns>
         public static LinkedListNode<T>[] AddRangeBefore<T>(this ILinkedList<T> collection, in LinkedListNode<T> node, in IEnumerable<T> array)
-
         {
-
             ThrowIfNull(collection, nameof(collection));
             ThrowIfNull(array, nameof(array));
 
@@ -1036,7 +954,6 @@ namespace WinCopies.Util
                 _ = result.AddLast(collection.AddBefore(node, item));
 
             return result.ToArray<LinkedListNode<T>>();
-
         }
 
         /// <summary>
@@ -1054,16 +971,13 @@ namespace WinCopies.Util
         /// <param name="node">The node before which to add the values</param>
         /// <param name="array">The values to add to a <see cref="ILinkedList{T}"/></param>
         public static void AddRangeBefore<T>(this ILinkedList<T> collection, in LinkedListNode<T> node, in IEnumerable<LinkedListNode<T>> array)
-
         {
-
             ThrowIfNull(collection, nameof(collection));
             ThrowIfNull(array, nameof(array));
 
             foreach (LinkedListNode<T> item in array)
 
                 collection.AddBefore(node, item);
-
         }
 
         /// <summary>
@@ -1101,7 +1015,6 @@ namespace WinCopies.Util
         /// <param name="node">The node after which to add the values</param>
         /// <param name="nodes">The values to add to a <see cref="ILinkedList{T}"/></param>
         public static void AddRangeAfter<T>(this ILinkedList<T> collection, in LinkedListNode<T> node, params LinkedListNode<T>[] nodes)
-
         {
             ThrowIfNull(node, nameof(node));
 
@@ -1121,7 +1034,6 @@ namespace WinCopies.Util
         /// <param name="node">The node after which to add the values</param>
         /// <param name="array">The values to add to a <see cref="ILinkedList{T}"/></param>
         public static void AddRangeAfter<T>(this ILinkedList<T> collection, in LinkedListNode<T> node, in IEnumerable<LinkedListNode<T>> array)
-
         {
             ThrowIfNull(node, nameof(node));
 
@@ -1133,7 +1045,6 @@ namespace WinCopies.Util
 
                 collection.AddRangeBefore(node.Next, array);
         }
-
         #endregion
 
         public static ArrayList ToList(this IEnumerable array) => array.ToList(0);
@@ -1146,17 +1057,13 @@ namespace WinCopies.Util
         /// <param name="length">The length of items to copy in the out <see cref="ArrayList"/>. Leave this parameter to null if you want to copy all the source <see cref="IEnumerable"/>.</param>
         /// <returns>The result <see cref="ArrayList"/>.</returns>
         public static ArrayList ToList(this IEnumerable array, in int startIndex, in int? length = null)
-
         {
-
             ThrowIfNull(array, nameof(array));
 
             int i = 0;
 
             if (length == null)
-
             {
-
                 var arrayBuilder = new ArrayBuilder<object>();
 
                 foreach (object value in array)
@@ -1168,45 +1075,34 @@ namespace WinCopies.Util
                         _ = arrayBuilder.AddLast(value);
 
                 return arrayBuilder.ToArrayList();
-
             }
 
             else
-
             {
-
                 var arrayList = new ArrayList(length.Value);
 
                 int count = 0;
 
                 foreach (object value in array)
-
                 {
-
                     if (i < startIndex)
 
                         i++;
 
                     else
-
                     {
-
                         _ = arrayList.Add(value);
 
                         count++;
-
                     }
 
                     if (count == length)
 
                         break;
-
                 }
 
                 return arrayList;
-
             }
-
         }
 
         //public static List<T> ToList<T>(this IEnumerable<T> array)
@@ -1231,17 +1127,13 @@ namespace WinCopies.Util
         /// <param name="length">The length of items to copy in the out <see cref="List{T}"/>. Leave this parameter to null if you want to copy all the source <see cref="IEnumerable"/>.</param>
         /// <returns>The result <see cref="List{T}"/>.</returns>
         public static List<T> ToList<T>(this IEnumerable<T> array, in int startIndex, in int? length = null)
-
         {
-
             ThrowIfNull(array, nameof(array));
 
             int i = 0;
 
             if (length == null)
-
             {
-
                 var arrayBuilder = new ArrayBuilder<T>();
 
                 foreach (T value in array)
@@ -1253,51 +1145,38 @@ namespace WinCopies.Util
                         _ = arrayBuilder.AddLast(value);
 
                 return arrayBuilder.ToList();
-
             }
 
             else
-
             {
-
                 var arrayList = new List<T>(length.Value);
 
                 int count = 0;
 
                 foreach (T value in array)
-
                 {
-
                     if (i < startIndex)
 
                         i++;
 
                     else
-
                     {
-
                         arrayList.Add(value);
 
                         count++;
-
                     }
 
                     if (count == length)
 
                         break;
-
                 }
 
                 return arrayList;
-
             }
-
         }
 
         public static object[] ToArray(this IEnumerable array)
-
         {
-
             ThrowIfNull(array, nameof(array));
 
             var _array = new System.Collections.Generic.LinkedList<object>();
@@ -1307,7 +1186,6 @@ namespace WinCopies.Util
                 _ = _array.AddLast(value);
 
             return _array.ToArray<object>();
-
         }
 
         //public static T[] ToArray<T>(this IEnumerable<T> array)
@@ -1343,9 +1221,7 @@ namespace WinCopies.Util
         //}
 
         public static object[] ToArray(this IEnumerable array, in int startIndex, in int length)
-
         {
-
             ThrowIfNull(array, nameof(array));
 
             object[] _array = new object[length];
@@ -1355,9 +1231,7 @@ namespace WinCopies.Util
             int count = 0;
 
             foreach (object value in array)
-
             {
-
                 if (i < startIndex)
 
                     i++;
@@ -1369,17 +1243,13 @@ namespace WinCopies.Util
                 if (count == length)
 
                     break;
-
             }
 
             return _array;
-
         }
 
         public static T[] ToArray<T>(this IEnumerable<T> array, in int startIndex, in int length)
-
         {
-
             ThrowIfNull(array, nameof(array));
 
             var _array = new T[length];
@@ -1389,9 +1259,7 @@ namespace WinCopies.Util
             int count = 0;
 
             foreach (T value in array)
-
             {
-
                 if (i < startIndex)
 
                     i++;
@@ -1403,17 +1271,13 @@ namespace WinCopies.Util
                 if (count == length)
 
                     break;
-
             }
 
             return _array;
-
         }
 
         public static ArrayList ToList(this object[] array, in int startIndex, in int length)
-
         {
-
             ThrowIfNull(array, nameof(array));
 
             var arrayList = new ArrayList(length);
@@ -1427,13 +1291,10 @@ namespace WinCopies.Util
                 _ = arrayList.Add(array[i]);
 
             return arrayList;
-
         }
 
         public static List<T> ToList<T>(this T[] array, in int startIndex, in int length)
-
         {
-
             ThrowIfNull(array, nameof(array));
 
             var arrayList = new List<T>(length);
@@ -1447,13 +1308,10 @@ namespace WinCopies.Util
                 arrayList.Add(array[i]);
 
             return arrayList;
-
         }
 
         public static object[] ToArray(this IList arrayList, in int startIndex, in int length)
-
         {
-
             ThrowIfNull(arrayList, nameof(arrayList));
 
             object[] array = new object[length];
@@ -1465,13 +1323,10 @@ namespace WinCopies.Util
                 array[i] = arrayList[i + startIndex];
 
             return array;
-
         }
 
         public static T[] ToArray<T>(this System.Collections.Generic.IList<T> arrayList, in int startIndex, in int length)
-
         {
-
             ThrowIfNull(arrayList, nameof(arrayList));
 
             var array = new T[length];
@@ -1483,7 +1338,6 @@ namespace WinCopies.Util
                 array[i] = arrayList[i + startIndex];
 
             return array;
-
         }
 
         // todo: add null checks, out-of-range checks, ...
@@ -1497,15 +1351,12 @@ namespace WinCopies.Util
         /// <param name="start">The start index in the collection from which delete the items.</param>
         /// <param name="length">The length to remove.</param>
         public static void RemoveRange(this IList collection, in int start, in int length)
-
         {
-
             ThrowIfNull(collection, nameof(collection));
 
             for (int i = 0; i < length; i++)
 
                 collection.RemoveAt(start);
-
         }
 
         /// <summary>
@@ -1530,9 +1381,7 @@ namespace WinCopies.Util
         /// <typeparam name="T">The type of the values in the <see cref="System.Collections.ObjectModel.ObservableCollection{T}"/>.</typeparam>
         /// <param name="oc">The <see cref="System.Collections.ObjectModel.ObservableCollection{T}"/> to sort.</param>
         public static void Sort<T>(this System.Collections.ObjectModel.ObservableCollection<T> oc)
-
         {
-
             ThrowIfNull(oc, nameof(oc));
 
             System.Collections.Generic.IList<T> sorted = oc.OrderBy(x => x).ToList<T>();
@@ -1540,7 +1389,6 @@ namespace WinCopies.Util
             for (int i = 0; i < sorted.Count; i++)
 
                 oc.Move(oc.IndexOf(sorted[i]), i);
-
         }
 
         /// <summary>
@@ -1550,9 +1398,7 @@ namespace WinCopies.Util
         /// <param name="oc">The <see cref="System.Collections.ObjectModel.ObservableCollection{T}"/> to sort.</param>
         /// <param name="comparer">An <see cref="System.Collections.Generic.IComparer{T}"/> providing comparison for sorting the <see cref="System.Collections.ObjectModel.ObservableCollection{T}"/>.</param>
         public static void Sort<T>(this System.Collections.ObjectModel.ObservableCollection<T> oc, in System.Collections.Generic.IComparer<T> comparer)
-
         {
-
             ThrowIfNull(oc, nameof(oc));
 
             System.Collections.Generic.IList<T> sorted = oc.OrderBy(x => x, comparer).ToList<T>();
@@ -1560,7 +1406,6 @@ namespace WinCopies.Util
             for (int i = 0; i < sorted.Count; i++)
 
                 oc.Move(oc.IndexOf(sorted[i]), i);
-
         }
 
         #region Contains methods
@@ -1570,9 +1415,7 @@ namespace WinCopies.Util
         #region ContainsOneValue overloads
 
         public static bool ContainsOneValue(this IEnumerable array, in EqualityComparison comparison, out bool containsMoreThanOneValue, in object[] values)
-
         {
-
             ThrowIfNull(array, nameof(array));
 
             bool matchFound = false;
@@ -1582,27 +1425,20 @@ namespace WinCopies.Util
                 foreach (object _value in values)
 
                     if (comparison(value, _value))
-
                     {
-
                         if (matchFound)
-
                         {
-
                             containsMoreThanOneValue = true;
 
                             return false;
-
                         }
 
                         matchFound = true;
-
                     }
 
             containsMoreThanOneValue = false;
 
             return matchFound;
-
         }
 
         /// <summary>
@@ -1623,16 +1459,14 @@ namespace WinCopies.Util
         /// <param name="values">The values to compare</param>
         /// <returns><see langword="true"/> if <i>exactly</i> one value has been found, otherwise <see langword="false"/>.</returns>
         public static bool ContainsOneValue(this IEnumerable array, System.Collections.IComparer comparer, out bool containsMoreThanOneValue, params object[] values)
-
         {
-
             ThrowIfNull(comparer, nameof(comparer));
 
             return ContainsOneValue(array, (object value, object _value) => comparer.Compare(value, _value) == 0, out containsMoreThanOneValue, values);
-
         }
 
-        /// <summary>
+#if WinCopies2
+/// <summary>
         /// Checks whether an array contains <i>exactly</i> one value of a given array using a custom comparer.
         /// </summary>
         /// <param name="array">The array to browse</param>
@@ -1642,6 +1476,7 @@ namespace WinCopies.Util
         /// <returns><see langword="true"/> if <i>exactly</i> one value has been found, otherwise <see langword="false"/>.</returns>
         [Obsolete("This method has been replaced by the overload with the comparison parameter from WinCopies.Collections.Comparison.")]
         public static bool ContainsOneValue(this IEnumerable array, Comparison<object> comparison, out bool containsMoreThanOneValue, params object[] values) => ContainsOneValue(array, new WinCopies.Collections.Comparison((object x, object y) => comparison(x, y)), out containsMoreThanOneValue, values);
+#endif
 
         /// <summary>
         /// Checks whether an array contains <i>exactly</i> one value of a given array using a custom comparer.
@@ -1652,13 +1487,10 @@ namespace WinCopies.Util
         /// <param name="values">The values to compare</param>
         /// <returns><see langword="true"/> if <i>exactly</i> one value has been found, otherwise <see langword="false"/>.</returns>
         public static bool ContainsOneValue(this IEnumerable array, WinCopies.Collections.Comparison comparison, out bool containsMoreThanOneValue, params object[] values)
-
         {
-
             ThrowIfNull(comparison, nameof(comparison));
 
             return ContainsOneValue(array, (object value, object _value) => comparison(value, _value) == 0, out containsMoreThanOneValue, values);
-
         }
 
         /// <summary>
@@ -1670,23 +1502,17 @@ namespace WinCopies.Util
         /// <param name="values">The values to compare</param>
         /// <returns><see langword="true"/> if <i>exactly</i> one value has been found, otherwise <see langword="false"/>.</returns>
         public static bool ContainsOneValue(this IEnumerable array, IEqualityComparer equalityComparer, out bool containsMoreThanOneValue, params object[] values)
-
         {
-
             ThrowIfNull(equalityComparer, nameof(equalityComparer));
 
             return ContainsOneValue(array, (object value, object _value) => equalityComparer.Equals(value, _value), out containsMoreThanOneValue, values);
-
         }
-
         #endregion
 
         #region ContainsOneOrMoreValues with notification whether contains more than one values overloads
 
         public static bool ContainsOneOrMoreValues(IEnumerable array, in EqualityComparison comparison, out bool containsMoreThanOneValue, object[] values)
-
         {
-
             ThrowIfNull(array, nameof(array));
 
             bool matchFound = false;
@@ -1696,27 +1522,20 @@ namespace WinCopies.Util
                 foreach (object _value in values)
 
                     if (comparison(value, _value))
-
                     {
-
                         if (matchFound)
-
                         {
-
                             containsMoreThanOneValue = true;
 
                             return true;
-
                         }
 
                         matchFound = true;
-
                     }
 
             containsMoreThanOneValue = false;
 
             return matchFound;
-
         }
 
         /// <summary>
@@ -1737,13 +1556,10 @@ namespace WinCopies.Util
         /// <param name="values">The values to compare</param>
         /// <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         public static bool ContainsOneOrMoreValues(this IEnumerable array, System.Collections.IComparer comparer, out bool containsMoreThanOneValue, params object[] values)
-
         {
-
             ThrowIfNull(comparer, nameof(comparer));
 
             return ContainsOneOrMoreValues(array, (object value, object _value) => comparer.Compare(value, _value) == 0, out containsMoreThanOneValue, values);
-
         }
 
         /// <summary>
@@ -1755,13 +1571,10 @@ namespace WinCopies.Util
         /// <param name="values">The values to compare</param>
         /// <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         public static bool ContainsOneOrMoreValues(this IEnumerable array, Comparison<object> comparison, out bool containsMoreThanOneValue, params object[] values)
-
         {
-
             ThrowIfNull(comparison, nameof(comparison));
 
             return ContainsOneOrMoreValues(array, (object value, object _value) => comparison(value, _value) == 0, out containsMoreThanOneValue, values);
-
         }
 
         /// <summary>
@@ -1773,23 +1586,17 @@ namespace WinCopies.Util
         /// <param name="values">The values to compare</param>
         /// <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         public static bool ContainsOneOrMoreValues(this IEnumerable array, IEqualityComparer equalityComparer, out bool containsMoreThanOneValue, params object[] values)
-
         {
-
             ThrowIfNull(equalityComparer, nameof(equalityComparer));
 
             return ContainsOneOrMoreValues(array, (object value, object _value) => equalityComparer.Equals(value, _value), out containsMoreThanOneValue, values);
-
         }
-
         #endregion
 
         #region ContainsOneOrMoreValues without notification whether contains more than one values overloads
 
         public static bool ContainsOneOrMoreValues(IEnumerable array, in Func<object, object, bool> comparison, object[] values)
-
         {
-
             ThrowIfNull(array, nameof(array));
 
             foreach (object value in array)
@@ -1801,7 +1608,6 @@ namespace WinCopies.Util
                         return true;
 
             return false;
-
         }
 
         /// <summary>
@@ -1820,13 +1626,10 @@ namespace WinCopies.Util
         /// <param name="values">The values to compare</param>
         /// <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         public static bool ContainsOneOrMoreValues(this IEnumerable array, System.Collections.IComparer comparer, params object[] values)
-
         {
-
             ThrowIfNull(comparer, nameof(comparer));
 
             return ContainsOneOrMoreValues(array, (object value, object _value) => comparer.Compare(value, _value) == 0, values);
-
         }
 
         /// <summary>
@@ -1837,13 +1640,10 @@ namespace WinCopies.Util
         /// <param name="values">The values to compare</param>
         /// <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         public static bool ContainsOneOrMoreValues(this IEnumerable array, Comparison<object> comparison, params object[] values)
-
         {
-
             ThrowIfNull(comparison, nameof(comparison));
 
             return ContainsOneOrMoreValues(array, (object value, object _value) => comparison(value, _value) == 0, values);
-
         }
 
         /// <summary>
@@ -1854,53 +1654,40 @@ namespace WinCopies.Util
         /// <param name="values">The values to compare</param>
         /// <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         public static bool ContainsOneOrMoreValues(this IEnumerable array, IEqualityComparer equalityComparer, params object[] values)
-
         {
-
             ThrowIfNull(equalityComparer, nameof(equalityComparer));
 
             return ContainsOneOrMoreValues(array, (object value, object _value) => equalityComparer.Equals(value, _value), values);
-
         }
-
         #endregion
 
         #region Contains array overloads
 
         public static bool Contains(IEnumerable array, in EqualityComparison comparison, object[] values)
-
         {
-
             ThrowIfNull(array, nameof(array));
 
             bool matchFound;
 
             foreach (object value in array)
-
             {
-
                 matchFound = false;
 
                 foreach (object _value in values)
 
                     if (comparison(value, _value))
-
                     {
-
                         matchFound = true;
 
                         break;
-
                     }
 
                 if (!matchFound)
 
                     return false;
-
             }
 
             return true;
-
         }
 
         /// <summary>
@@ -1919,13 +1706,10 @@ namespace WinCopies.Util
         /// <param name="values">The values to compare</param>
         /// <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         public static bool Contains(this IEnumerable array, System.Collections.IComparer comparer, params object[] values)
-
         {
-
             ThrowIfNull(comparer, nameof(comparer));
 
             return Contains(array, (object value, object _value) => comparer.Compare(value, _value) == 0, values);
-
         }
 
         /// <summary>
@@ -1936,13 +1720,10 @@ namespace WinCopies.Util
         /// <param name="values">The values to compare</param>
         /// <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         public static bool Contains(this IEnumerable array, Comparison<object> comparison, params object[] values)
-
         {
-
             ThrowIfNull(comparison, nameof(comparison));
 
             return Contains(array, (object value, object _value) => comparison(value, _value) == 0, values);
-
         }
 
         /// <summary>
@@ -1953,15 +1734,11 @@ namespace WinCopies.Util
         /// <param name="values">The values to compare</param>
         /// <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         public static bool Contains(this IEnumerable array, IEqualityComparer equalityComparer, params object[] values)
-
         {
-
             ThrowIfNull(equalityComparer, nameof(equalityComparer));
 
             return Contains(array, (object value, object _value) => equalityComparer.Equals(value, _value), values);
-
         }
-
         #endregion
 
         #endregion
@@ -1971,9 +1748,7 @@ namespace WinCopies.Util
         #region ContainsOneValue overloads
 
         public static bool ContainsOneValue<T>(IEnumerable<T> array, in EqualityComparison<T> comparison, out bool containsMoreThanOneValue, in T[] values)
-
         {
-
             ThrowIfNull(array, nameof(array));
 
             bool matchFound = false;
@@ -1983,27 +1758,19 @@ namespace WinCopies.Util
                 foreach (T _value in values)
 
                     if (comparison(value, _value))
-
                     {
-
                         if (matchFound)
-
                         {
-
                             containsMoreThanOneValue = true;
 
                             return false;
-
                         }
-
                         matchFound = true;
-
                     }
 
             containsMoreThanOneValue = false;
 
             return matchFound;
-
         }
 
         /// <summary>
@@ -2024,13 +1791,10 @@ namespace WinCopies.Util
         /// <param name="values">The values to compare</param>
         /// <returns><see langword="true"/> if <i>exactly</i> one value has been found, otherwise <see langword="false"/>.</returns>
         public static bool ContainsOneValue<T>(this IEnumerable<T> array, System.Collections.Generic.IComparer<T> comparer, out bool containsMoreThanOneValue, params T[] values)
-
         {
-
             ThrowIfNull(comparer, nameof(comparer));
 
             return ContainsOneValue(array, (T value, T _value) => comparer.Compare(value, _value) == 0, out containsMoreThanOneValue, values);
-
         }
 
         /// <summary>
@@ -2042,13 +1806,10 @@ namespace WinCopies.Util
         /// <param name="values">The values to compare</param>
         /// <returns><see langword="true"/> if <i>exactly</i> one value has been found, otherwise <see langword="false"/>.</returns>
         public static bool ContainsOneValue<T>(this IEnumerable<T> array, Comparison<T> comparison, out bool containsMoreThanOneValue, params T[] values)
-
         {
-
             ThrowIfNull(comparison, nameof(comparison));
 
             return ContainsOneValue(array, (T value, T _value) => comparison(value, _value) == 0, out containsMoreThanOneValue, values);
-
         }
 
         /// <summary>
@@ -2060,23 +1821,17 @@ namespace WinCopies.Util
         /// <param name="values">The values to compare</param>
         /// <returns><see langword="true"/> if <i>exactly</i> one value has been found, otherwise <see langword="false"/>.</returns>
         public static bool ContainsOneValue<T>(this IEnumerable<T> array, IEqualityComparer<T> equalityComparer, out bool containsMoreThanOneValue, params T[] values)
-
         {
-
             ThrowIfNull(equalityComparer, nameof(equalityComparer));
 
             return ContainsOneValue(array, (T value, T _value) => equalityComparer.Equals(value, _value), out containsMoreThanOneValue, values); ;
-
         }
-
         #endregion
 
         #region ContainsOneOrMoreValues with notification whether contains more than one values overloads
 
         public static bool ContainsOneOrMoreValues<T>(IEnumerable<T> array, in EqualityComparison<T> comparison, out bool containsMoreThanOneValue, in T[] values)
-
         {
-
             ThrowIfNull(array, nameof(array));
 
             bool matchFound = false;
@@ -2086,27 +1841,20 @@ namespace WinCopies.Util
                 foreach (T _value in values)
 
                     if (comparison(value, _value))
-
                     {
-
                         if (matchFound)
-
                         {
-
                             containsMoreThanOneValue = true;
 
                             return true;
-
                         }
 
                         matchFound = true;
-
                     }
 
             containsMoreThanOneValue = false;
 
             return matchFound;
-
         }
 
         /// <summary>
@@ -2127,13 +1875,10 @@ namespace WinCopies.Util
         /// <param name="values">The values to compare</param>
         /// <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         public static bool ContainsOneOrMoreValues<T>(this IEnumerable<T> array, System.Collections.Generic.IComparer<T> comparer, out bool containsMoreThanOneValue, params T[] values)
-
         {
-
             ThrowIfNull(comparer, nameof(comparer));
 
             return ContainsOneOrMoreValues(array, (T value, T _value) => comparer.Compare(value, _value) == 0, out containsMoreThanOneValue, values);
-
         }
 
         /// <summary>
@@ -2145,13 +1890,10 @@ namespace WinCopies.Util
         /// <param name="values">The values to compare</param>
         /// <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         public static bool ContainsOneOrMoreValues<T>(this IEnumerable<T> array, Comparison<T> comparison, out bool containsMoreThanOneValue, params T[] values)
-
         {
-
             ThrowIfNull(comparison, nameof(comparison));
 
             return ContainsOneOrMoreValues(array, (T value, T _value) => comparison(value, _value) == 0, out containsMoreThanOneValue, values);
-
         }
 
         /// <summary>
@@ -2163,23 +1905,17 @@ namespace WinCopies.Util
         /// <param name="values">The values to compare</param>
         /// <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         public static bool ContainsOneOrMoreValues<T>(this IEnumerable<T> array, IEqualityComparer<T> equalityComparer, out bool containsMoreThanOneValue, params T[] values)
-
         {
-
             ThrowIfNull(equalityComparer, nameof(equalityComparer));
 
             return ContainsOneOrMoreValues(array, (T value, T _value) => equalityComparer.Equals(value, _value), out containsMoreThanOneValue, values);
-
         }
-
         #endregion
 
         #region ContainsOneOrMoreValues without notification whether contains more than one values overloads
 
         public static bool ContainsOneOrMoreValues<T>(IEnumerable<T> array, in EqualityComparison<T> comparison, in T[] values)
-
         {
-
             ThrowIfNull(array, nameof(array));
 
             foreach (T value in array)
@@ -2191,7 +1927,6 @@ namespace WinCopies.Util
                         return true;
 
             return false;
-
         }
 
         /// <summary>
@@ -2210,13 +1945,10 @@ namespace WinCopies.Util
         /// <param name="values">The values to compare</param>
         /// <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         public static bool ContainsOneOrMoreValues<T>(this IEnumerable<T> array, System.Collections.Generic.IComparer<T> comparer, params T[] values)
-
         {
-
             ThrowIfNull(comparer, nameof(comparer));
 
             return ContainsOneOrMoreValues(array, (T value, T _value) => comparer.Compare(value, _value) == 0, values);
-
         }
 
         /// <summary>
@@ -2227,13 +1959,10 @@ namespace WinCopies.Util
         /// <param name="values">The values to compare</param>
         /// <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         public static bool ContainsOneOrMoreValues<T>(this IEnumerable<T> array, Comparison<T> comparison, params T[] values)
-
         {
-
             ThrowIfNull(comparison, nameof(comparison));
 
             return ContainsOneOrMoreValues(array, (T value, T _value) => comparison(value, _value) == 0, values);
-
         }
 
         /// <summary>
@@ -2244,53 +1973,40 @@ namespace WinCopies.Util
         /// <param name="values">The values to compare</param>
         /// <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         public static bool ContainsOneOrMoreValues<T>(this IEnumerable<T> array, IEqualityComparer<T> equalityComparer, params T[] values)
-
         {
-
             ThrowIfNull(equalityComparer, nameof(equalityComparer));
 
             return ContainsOneOrMoreValues(array, (T value, T _value) => equalityComparer.Equals(value, _value), values);
-
         }
-
         #endregion
 
         #region Contains array overloads
 
         public static bool Contains<T>(IEnumerable<T> array, in EqualityComparison<T> comparison, in T[] values)
-
         {
-
             ThrowIfNull(array, nameof(array));
 
             bool matchFound;
 
             foreach (T value in array)
-
             {
-
                 matchFound = false;
 
                 foreach (T _value in values)
 
                     if (comparison(value, _value))
-
                     {
-
                         matchFound = true;
 
                         break;
-
                     }
 
                 if (!matchFound)
 
                     return false;
-
             }
 
             return true;
-
         }
 
         /// <summary>
@@ -2309,13 +2025,10 @@ namespace WinCopies.Util
         /// <param name="values">The values to compare</param>
         /// <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         public static bool Contains<T>(this IEnumerable<T> array, System.Collections.Generic.IComparer<T> comparer, params T[] values)
-
         {
-
             ThrowIfNull(comparer, nameof(comparer));
 
             return Contains(array, (T value, T _value) => comparer.Compare(value, _value) == 0, values);
-
         }
 
         /// <summary>
@@ -2326,13 +2039,10 @@ namespace WinCopies.Util
         /// <param name="values">The values to compare</param>
         /// <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         public static bool Contains<T>(this IEnumerable<T> array, Comparison<T> comparison, params T[] values)
-
         {
-
             ThrowIfNull(comparison, nameof(comparison));
 
             return Contains(array, (T value, T _value) => comparison(value, _value) == 0, values);
-
         }
 
         /// <summary>
@@ -2343,15 +2053,11 @@ namespace WinCopies.Util
         /// <param name="values">The values to compare</param>
         /// <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         public static bool Contains<T>(this IEnumerable<T> array, IEqualityComparer<T> equalityComparer, params T[] values)
-
         {
-
             ThrowIfNull(equalityComparer, nameof(equalityComparer));
 
             return Contains(array, (T value, T _value) => equalityComparer.Equals(value, _value), values);
-
         }
-
         #endregion
 
         #endregion
@@ -2359,9 +2065,7 @@ namespace WinCopies.Util
         #endregion
 
         public static string ToString(this IEnumerable array, in bool parseSubEnumerables, in bool parseStrings = false)
-
         {
-
             ThrowIfNull(array, nameof(array));
 
             var stringBuilder = new StringBuilder();
@@ -2369,13 +2073,11 @@ namespace WinCopies.Util
             array.ToString(ref stringBuilder, parseSubEnumerables, parseStrings);
 
             return stringBuilder.ToString(0, stringBuilder.Length - 2);
-
         }
 
         static void Append(object _value, ref StringBuilder stringBuilder, in bool parseStrings, in bool parseSubEnumerables)
 
         {
-
             ThrowIfNull(stringBuilder, nameof(stringBuilder));
 
             if ((_value is string && parseStrings) || (!(_value is string) && _value is IEnumerable && parseSubEnumerables))
@@ -2385,13 +2087,10 @@ namespace WinCopies.Util
             else
 
                 _ = stringBuilder.AppendFormat("{0}, ", _value?.ToString());
-
         }
 
         private static void ToString(this IEnumerable array, ref StringBuilder stringBuilder, in bool parseSubEnumerables, in bool parseStrings = false)
-
         {
-
             _ = stringBuilder.Append("{");
 
             IEnumerator enumerator = array.GetEnumerator();
@@ -2413,7 +2112,6 @@ namespace WinCopies.Util
                 Append(enumerator.Current, ref stringBuilder, parseStrings, parseSubEnumerables);
 
             _ = atLeastOneLoop ? stringBuilder.Insert(stringBuilder.Length - 2, "}") : stringBuilder.Append("}");
-
         }
 
         /// <summary>
@@ -2422,15 +2120,12 @@ namespace WinCopies.Util
         /// <param name="enumerable">An <see cref="IEnumerable"/> to consider as a <see cref="IEnumerable{Object}"/>.</param>
         /// <returns>Yield returns the same enumerable as the given <paramref name="enumerable"/>, as an <see cref="IEnumerable{Object}"/>.</returns>
         public static IEnumerable<object> AsObjectEnumerable(this IEnumerable enumerable)
-
         {
-
             ThrowIfNull(enumerable, nameof(enumerable));
 
             foreach (object item in enumerable)
 
                 yield return item;
-
         }
 
         /// <summary>
@@ -2443,9 +2138,7 @@ namespace WinCopies.Util
         /// <seealso cref="FirstOrDefault{T}(IEnumerable, in Predicate{T})"/>
         /// <seealso cref="LastOrDefault{T}(IEnumerable, in Predicate{T})"/>
         public static T FirstOrDefault<T>(this IEnumerable enumerable)
-
         {
-
             ThrowIfNull(enumerable, nameof(enumerable));
 
             foreach (object item in enumerable)
@@ -2453,7 +2146,6 @@ namespace WinCopies.Util
                 if (item is T _item) return _item;
 
             return default;
-
         }
 
         /// <summary>
@@ -2467,9 +2159,7 @@ namespace WinCopies.Util
         /// <seealso cref="FirstOrDefault{T}(IEnumerable)"/>
         /// <seealso cref="LastOrDefault{T}(IEnumerable)"/>
         public static T FirstOrDefault<T>(this IEnumerable enumerable, in Predicate<T> predicate)
-
         {
-
             ThrowIfNull(enumerable, nameof(enumerable));
 
             foreach (object item in enumerable)
@@ -2477,7 +2167,6 @@ namespace WinCopies.Util
                 if (item is T _item && predicate(_item)) return _item;
 
             return default;
-
         }
 
         /// <summary>
@@ -2490,9 +2179,7 @@ namespace WinCopies.Util
         /// <seealso cref="FirstOrDefault{T}(IEnumerable, in Predicate{T})"/>
         /// <seealso cref="LastOrDefault{T}(IEnumerable, in Predicate{T})"/>
         public static T LastOrDefault<T>(this IEnumerable enumerable)
-
         {
-
             ThrowIfNull(enumerable, nameof(enumerable));
 
             T value = default;
@@ -2504,7 +2191,6 @@ namespace WinCopies.Util
                     value = _item;
 
             return value;
-
         }
 
         /// <summary>
@@ -2518,9 +2204,7 @@ namespace WinCopies.Util
         /// <seealso cref="FirstOrDefault{T}(IEnumerable)"/>
         /// <seealso cref="LastOrDefault{T}(IEnumerable)"/>
         public static T LastOrDefault<T>(this IEnumerable enumerable, in Predicate<T> predicate)
-
         {
-
             ThrowIfNull(enumerable, nameof(enumerable));
 
             T value = default;
@@ -2532,13 +2216,10 @@ namespace WinCopies.Util
                     value = _item;
 
             return value;
-
         }
 
         public static T FirstOrDefault<T>(this IEnumerable enumerable, in Func<object, object> func)
-
         {
-
             ThrowIfNull(enumerable, nameof(enumerable));
 
             foreach (object item in enumerable)
@@ -2546,13 +2227,10 @@ namespace WinCopies.Util
                 if (func(item) is T _item) return _item;
 
             return default;
-
         }
 
         public static T LastOrDefault<T>(this IEnumerable enumerable, in Func<object, object> func)
-
         {
-
             ThrowIfNull(enumerable, nameof(enumerable));
 
             T value = default;
@@ -2564,13 +2242,10 @@ namespace WinCopies.Util
                     value = _item;
 
             return value;
-
         }
 
         public static TOut FirstOrDefault<TIn, TOut>(this IEnumerable<TIn> enumerable, in Func<TIn, object> func)
-
         {
-
             ThrowIfNull(enumerable, nameof(enumerable));
 
             foreach (TIn item in enumerable)
@@ -2578,13 +2253,10 @@ namespace WinCopies.Util
                 if (func(item) is TOut _item) return _item;
 
             return default;
-
         }
 
         public static TOut LastOrDefault<TIn, TOut>(this IEnumerable enumerable, in Func<TIn, object> func)
-
         {
-
             ThrowIfNull(enumerable, nameof(enumerable));
 
             TOut value = default;
@@ -2596,13 +2268,10 @@ namespace WinCopies.Util
                     value = _item;
 
             return value;
-
         }
 
         public static IEnumerable AppendValues(this IEnumerable enumerable, params IEnumerable[] newValues)
-
         {
-
             ThrowIfNull(enumerable, nameof(enumerable));
 
             foreach (object obj in enumerable)
@@ -2614,13 +2283,11 @@ namespace WinCopies.Util
                 foreach (object _obj in _enumerable)
 
                     yield return _obj;
-
         }
 
         public static IEnumerable<T> AppendValues<T>(this IEnumerable<T> enumerable, params IEnumerable<T>[] newValues)
 
         {
-
             ThrowIfNull(enumerable, nameof(enumerable));
 
             foreach (T obj in enumerable)
@@ -2632,7 +2299,6 @@ namespace WinCopies.Util
                 foreach (T _obj in _enumerable)
 
                     yield return _obj;
-
         }
 
         public static LinkedListNode<T> RemoveAndGetFirstValue<T>(this System.Collections.Generic.LinkedList<T> items)
@@ -2674,24 +2340,15 @@ namespace WinCopies.Util
         public static bool RemoveAll<T>(this IList<T> collection, in T itemToKeep, in bool onlyOne, in bool throwIfMultiple) where T : class
         {
             while (collection.Count != 1)
-
             {
-
                 if (collection[0] == itemToKeep)
-
                 {
-
                     if (onlyOne)
                     {
-
                         while (collection.Count != 1)
-
                         {
-
                             if (collection[1] == itemToKeep)
-
                             {
-
                                 if (throwIfMultiple)
 
                                     throw new InvalidOperationException("More than one occurences was found.");
@@ -2703,15 +2360,12 @@ namespace WinCopies.Util
                                         collection.RemoveAt(1);
 
                                 return false;
-
                             }
 
                             collection.RemoveAt(1);
 
                             return true;
-
                         }
-
                     }
 
                     while (collection.Count != 1)
@@ -2719,11 +2373,9 @@ namespace WinCopies.Util
                         collection.RemoveAt(1);
 
                     return true;
-
                 }
 
                 collection.RemoveAt(0);
-
             }
 
             return false;
@@ -2732,24 +2384,15 @@ namespace WinCopies.Util
         public static bool RemoveAllEquatable<T>(this IList<T> collection, in T itemToKeep, in bool onlyOne, in bool throwIfMultiple) where T : IEquatable<T>
         {
             while (collection.Count != 1)
-
             {
-
                 if (collection[0]?.Equals(itemToKeep) == true)
-
                 {
-
                     if (onlyOne)
                     {
-
                         while (collection.Count != 1)
-
                         {
-
                             if (collection[1]?.Equals(itemToKeep) == true)
-
                             {
-
                                 if (throwIfMultiple)
 
                                     throw new InvalidOperationException("More than one occurences was found.");
@@ -2761,15 +2404,12 @@ namespace WinCopies.Util
                                         collection.RemoveAt(1);
 
                                 return false;
-
                             }
 
                             collection.RemoveAt(1);
 
                             return true;
-
                         }
-
                     }
 
                     while (collection.Count != 1)
@@ -2777,11 +2417,9 @@ namespace WinCopies.Util
                         collection.RemoveAt(1);
 
                     return true;
-
                 }
 
                 collection.RemoveAt(0);
-
             }
 
             return false;
@@ -2792,22 +2430,14 @@ namespace WinCopies.Util
             while (collection.Count != 1)
 
             {
-
                 if (comparison(collection[0], itemToKeep) == 0)
-
                 {
-
                     if (onlyOne)
                     {
-
                         while (collection.Count != 1)
-
                         {
-
                             if (comparison(collection[1], itemToKeep) == 0)
-
                             {
-
                                 if (throwIfMultiple)
 
                                     throw new InvalidOperationException("More than one occurences was found.");
@@ -2819,7 +2449,6 @@ namespace WinCopies.Util
                                         collection.RemoveAt(1);
 
                                 return false;
-
                             }
 
                             collection.RemoveAt(1);
@@ -2827,7 +2456,6 @@ namespace WinCopies.Util
                             return true;
 
                         }
-
                     }
 
                     while (collection.Count != 1)
@@ -2835,11 +2463,9 @@ namespace WinCopies.Util
                         collection.RemoveAt(1);
 
                     return true;
-
                 }
 
                 collection.RemoveAt(0);
-
             }
 
             return false;
@@ -2848,22 +2474,18 @@ namespace WinCopies.Util
         public static bool RemoveAll<T>(this IList<T> collection, in T itemToKeep, in System.Collections.Generic.IComparer<T> comparer, in bool onlyOne, in bool throwIfMultiple)
         {
             while (collection.Count != 1)
-
             {
 
                 if (comparer.Compare(collection[0], itemToKeep) == 0)
-
                 {
 
                     if (onlyOne)
                     {
 
                         while (collection.Count != 1)
-
                         {
 
                             if (comparer.Compare(collection[1], itemToKeep) == 0)
-
                             {
 
                                 if (throwIfMultiple)
@@ -2877,7 +2499,6 @@ namespace WinCopies.Util
                                         collection.RemoveAt(1);
 
                                 return false;
-
                             }
 
                             collection.RemoveAt(1);
@@ -2885,7 +2506,6 @@ namespace WinCopies.Util
                             return true;
 
                         }
-
                     }
 
                     while (collection.Count != 1)
@@ -2893,11 +2513,9 @@ namespace WinCopies.Util
                         collection.RemoveAt(1);
 
                     return true;
-
                 }
 
                 collection.RemoveAt(0);
-
             }
 
             return false;
@@ -2913,9 +2531,7 @@ namespace WinCopies.Util
         /// <param name="types">The types to compare</param>
         /// <returns><see langword="true"/> if the current object is assignable from at least one of the given types, otherwise <see langword="false"/>.</returns>
         public static bool Is(this object obj, in bool typeEquality, params Type[] types)
-
         {
-
             ThrowIfNull(obj, nameof(obj));
 
             Type objType = obj.GetType();
@@ -2927,37 +2543,28 @@ namespace WinCopies.Util
                     return true;
 
             return false;
-
         }
 
         public static IEnumerable<TKey> GetKeys<TKey, TValue>(this KeyValuePair<TKey, TValue>[] array)
-
         {
-
             ThrowIfNull(array, nameof(array));
 
             foreach (KeyValuePair<TKey, TValue> value in array)
 
                 yield return value.Key;
-
         }
 
         public static IEnumerable<TValue> GetValues<TKey, TValue>(this KeyValuePair<TKey, TValue>[] array)
-
         {
-
             ThrowIfNull(array, nameof(array));
 
             foreach (KeyValuePair<TKey, TValue> value in array)
 
                 yield return value.Value;
-
         }
 
         public static bool CheckIntegrity<TKey, TValue>(this KeyValuePair<TKey, TValue>[] array)
-
         {
-
 #if !CS7
 
             static
@@ -2983,17 +2590,13 @@ namespace WinCopies.Util
             bool foundOneOccurrence = false;
 
             foreach (TKey key in keys)
-
             {
-
                 if (key == null)
 
                     throw new ArgumentException("One or more key is null.");
 
                 foreach (TKey _key in _keys)
-
                 {
-
                     if (predicate(key, _key))
 
                         if (foundOneOccurrence)
@@ -3003,28 +2606,19 @@ namespace WinCopies.Util
                         else
 
                             foundOneOccurrence = true;
-
                 }
 
                 foundOneOccurrence = false;
-
             }
 
             return true;
-
         }
 
-        public static bool CheckPropertySetIntegrity(Type propertyObjectType, in string propertyName, out string methodName, in int skipFrames, in BindingFlags bindingFlags = Util.DefaultBindingFlagsForPropertySet)
-
+        public static bool CheckPropertySetIntegrity(Type propertyObjectType, in string propertyName, out string methodName, in int skipFrames, in BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet)
         {
-
             ThrowIfNull(propertyObjectType, nameof(propertyObjectType));
 
-            PropertyInfo property = propertyObjectType.GetProperty(propertyName, bindingFlags);
-
-            if (property == null)
-
-                throw new ArgumentException(string.Format(Resources.ExceptionMessages.FieldOrPropertyNotFound, propertyName, propertyObjectType));
+            PropertyInfo property = propertyObjectType.GetProperty(propertyName, bindingFlags) ?? throw new ArgumentException(string.Format(WinCopies.Util.Resources.ExceptionMessages.FieldOrPropertyNotFound, propertyName, propertyObjectType));
 
             MethodBase method = new StackFrame(skipFrames).GetMethod();
 
@@ -3041,19 +2635,16 @@ namespace WinCopies.Util
             // todo: tuple and check DeclaringTypeNotCorrespond throws
 
             return (property.CanWrite && property.GetSetMethod() != null) || property.DeclaringType == method.DeclaringType;
-
         }
 
-        internal static FieldInfo GetField(in string fieldName, in Type objectType, in BindingFlags bindingFlags) => objectType.GetField(fieldName, bindingFlags) ?? throw new ArgumentException(string.Format(Resources.ExceptionMessages.FieldOrPropertyNotFound, fieldName, objectType));
+        internal static FieldInfo GetField(in string fieldName, in Type objectType, in BindingFlags bindingFlags) => objectType.GetField(fieldName, bindingFlags) ?? throw new ArgumentException(string.Format(WinCopies.Util.Resources.ExceptionMessages.FieldOrPropertyNotFound, fieldName, objectType));
 
-        internal static PropertyInfo GetProperty(in string propertyName, in Type objectType, in BindingFlags bindingFlags) => objectType.GetProperty(propertyName, bindingFlags) ?? throw new ArgumentException(string.Format(Resources.ExceptionMessages.FieldOrPropertyNotFound, propertyName, objectType));
+        internal static PropertyInfo GetProperty(in string propertyName, in Type objectType, in BindingFlags bindingFlags) => objectType.GetProperty(propertyName, bindingFlags) ?? throw new ArgumentException(string.Format(WinCopies.Util.Resources.ExceptionMessages.FieldOrPropertyNotFound, propertyName, objectType));
 
         // todo: use attributes
 
         private static (bool fieldChanged, object oldValue) SetField(this object obj, in FieldInfo field, in object previousValue, in object newValue, in string paramName, in bool setOnlyIfNotNull, in bool throwIfNull, in bool disposeOldValue, in FieldValidateValueCallback validateValueCallback, in bool throwIfValidationFails, in FieldValueChangedCallback valueChangedCallback)
-
         {
-
             if (newValue is null)
 
                 if (throwIfNull)
@@ -3069,9 +2660,7 @@ namespace WinCopies.Util
             if (validationResult)
 
                 if ((newValue == null && previousValue != null) || (newValue != null && !newValue.Equals(previousValue)))
-
                 {
-
                     if (disposeOldValue)
 
                         ((IDisposable)previousValue).Dispose();
@@ -3086,7 +2675,6 @@ namespace WinCopies.Util
                     //             BindingFlags.Static | BindingFlags.Instance |
                     //             BindingFlags.DeclaredOnly;
                     //this.GetType().GetField(fieldName, flags).SetValue(this, newValue);
-
                 }
 
                 else
@@ -3096,31 +2684,24 @@ namespace WinCopies.Util
             else
 
                 return throwIfValidationFails ? throw (validationException ?? new ArgumentException("Validation error.", paramName)) : (false, previousValue);
-
         }
 
-        public static (bool fieldChanged, object oldValue) SetField(this object obj, in string fieldName, in object newValue, in Type declaringType, in BindingFlags bindingFlags = Util.DefaultBindingFlagsForPropertySet, in string paramName = null, in bool setOnlyIfNotNull = false, in bool throwIfNull = false, in FieldValidateValueCallback validateValueCallback = null, in bool throwIfValidationFails = false, in FieldValueChangedCallback valueChangedCallback = null)
-
+        public static (bool fieldChanged, object oldValue) SetField(this object obj, in string fieldName, in object newValue, in Type declaringType, in BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, in string paramName = null, in bool setOnlyIfNotNull = false, in bool throwIfNull = false, in FieldValidateValueCallback validateValueCallback = null, in bool throwIfValidationFails = false, in FieldValueChangedCallback valueChangedCallback = null)
         {
-
             ThrowIfNull(declaringType, nameof(declaringType));
 
             FieldInfo field = GetField(fieldName, declaringType, bindingFlags);
 
             return obj.SetField(field, field.GetValue(obj), newValue, paramName, setOnlyIfNotNull, throwIfNull, false, validateValueCallback, throwIfValidationFails, valueChangedCallback);
-
         }
 
-        public static (bool fieldChanged, IDisposable oldValue) DisposeAndSetField(this object obj, in string fieldName, in IDisposable newValue, in Type declaringType, in BindingFlags bindingFlags = Util.DefaultBindingFlagsForPropertySet, in string paramName = null, in bool setOnlyIfNotNull = false, in bool throwIfNull = false, in FieldValidateValueCallback validateValueCallback = null, in bool throwIfValidationFails = false, in FieldValueChangedCallback valueChangedCallback = null)
-
+        public static (bool fieldChanged, IDisposable oldValue) DisposeAndSetField(this object obj, in string fieldName, in IDisposable newValue, in Type declaringType, in BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, in string paramName = null, in bool setOnlyIfNotNull = false, in bool throwIfNull = false, in FieldValidateValueCallback validateValueCallback = null, in bool throwIfValidationFails = false, in FieldValueChangedCallback valueChangedCallback = null)
         {
-
             ThrowIfNull(declaringType, nameof(declaringType));
 
             FieldInfo field = GetField(fieldName, declaringType, bindingFlags);
 
             return ((bool, IDisposable))obj.SetField(field, field.GetValue(obj), newValue, paramName, setOnlyIfNotNull, throwIfNull, true, validateValueCallback, throwIfValidationFails, valueChangedCallback);
-
         }
 
         // todo: update code (in, throw if null)
@@ -3145,10 +2726,8 @@ namespace WinCopies.Util
         /// <exception cref="InvalidOperationException">The declaring types of the given property and field name doesn't correspond. OR The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
         /// <exception cref="ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
         /// <exception cref="Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="ArgumentException"/> otherwise.</exception>
-        public static (bool propertyChanged, object oldValue) SetProperty(this object obj, string propertyName, string fieldName, object newValue, Type declaringType, bool throwIfReadOnly = true, BindingFlags bindingFlags = Util.DefaultBindingFlagsForPropertySet, string paramName = null, bool setOnlyIfNotNull = false, bool throwIfNull = false, FieldValidateValueCallback validateValueCallback = null, bool throwIfValidationFails = false, FieldValueChangedCallback valueChangedCallback = null)
-
+        public static (bool propertyChanged, object oldValue) SetProperty(this object obj, string propertyName, string fieldName, object newValue, Type declaringType, in bool throwIfReadOnly = true, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, string paramName = null, in bool setOnlyIfNotNull = false, in bool throwIfNull = false, FieldValidateValueCallback validateValueCallback = null, in bool throwIfValidationFails = false, FieldValueChangedCallback valueChangedCallback = null)
         {
-
             //BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic |
             //             BindingFlags.Static | BindingFlags.Instance |
             //             BindingFlags.DeclaredOnly;
@@ -3188,7 +2767,7 @@ namespace WinCopies.Util
 
             if (!CheckPropertySetIntegrity(declaringType, propertyName, out string methodName, 3, bindingFlags))
 
-                throw new InvalidOperationException(string.Format(Resources.ExceptionMessages.DeclaringTypesNotCorrespond, propertyName, methodName));
+                throw new InvalidOperationException(string.Format(WinCopies.Util.Resources.ExceptionMessages.DeclaringTypesNotCorrespond, propertyName, methodName));
 
             PropertyInfo property = GetProperty(propertyName, declaringType, bindingFlags);
 
@@ -3216,10 +2795,8 @@ namespace WinCopies.Util
         /// <exception cref="InvalidOperationException">The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
         /// <exception cref="ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
         /// <exception cref="Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="ArgumentException"/> otherwise.</exception>
-        public static (bool propertyChanged, object oldValue) SetProperty(this object obj, string propertyName, object newValue, Type declaringType, bool throwIfReadOnly = true, BindingFlags bindingFlags = Util.DefaultBindingFlagsForPropertySet, string paramName = null, bool setOnlyIfNotNull = false, bool throwIfNull = false, PropertyValidateValueCallback validateValueCallback = null, bool throwIfValidationFails = false, PropertyValueChangedCallback valueChangedCallback = null)
-
+        public static (bool propertyChanged, object oldValue) SetProperty(this object obj, string propertyName, object newValue, Type declaringType, in bool throwIfReadOnly = true, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, string paramName = null, in bool setOnlyIfNotNull = false, in bool throwIfNull = false, PropertyValidateValueCallback validateValueCallback = null, in bool throwIfValidationFails = false, PropertyValueChangedCallback valueChangedCallback = null)
         {
-
             PropertyInfo property = GetProperty(propertyName, declaringType, bindingFlags);
 
             object previousValue = property.GetValue(obj);
@@ -3243,9 +2820,7 @@ namespace WinCopies.Util
             if (validationResult)
 
                 if ((newValue == null && previousValue != null) || (newValue != null && !newValue.Equals(previousValue)))
-
                 {
-
                     property.SetValue(obj, newValue);
 
                     valueChangedCallback?.Invoke(obj, newValue, property, paramName);
@@ -3256,7 +2831,6 @@ namespace WinCopies.Util
                     //             BindingFlags.Static | BindingFlags.Instance |
                     //             BindingFlags.DeclaredOnly;
                     //this.GetType().GetField(fieldName, flags).SetValue(this, newValue);
-
                 }
 
                 else
@@ -3266,9 +2840,7 @@ namespace WinCopies.Util
             else
 
                 return throwIfValidationFails ? throw (validationException ?? new ArgumentException("Validation error.", paramName)) : (false, previousValue);
-
         }
-
 
         /// <summary>
         /// Disposes an old value of a property then sets a new value to the given property if the new value is different.
@@ -3290,10 +2862,8 @@ namespace WinCopies.Util
         /// <exception cref="InvalidOperationException">The declaring types of the given property and field name doesn't correspond. OR The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
         /// <exception cref="ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
         /// <exception cref="Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="ArgumentException"/> otherwise.</exception>
-        public static (bool propertyChanged, IDisposable oldValue) DisposeAndSetProperty(this object obj, string propertyName, string fieldName, IDisposable newValue, Type declaringType, bool throwIfReadOnly = true, BindingFlags bindingFlags = Util.DefaultBindingFlagsForPropertySet, string paramName = null, bool setOnlyIfNotNull = false, bool throwIfNull = false, FieldValidateValueCallback validateValueCallback = null, bool throwIfValidationFails = false, FieldValueChangedCallback valueChangedCallback = null)
-
+        public static (bool propertyChanged, IDisposable oldValue) DisposeAndSetProperty(this object obj, string propertyName, string fieldName, IDisposable newValue, Type declaringType, in bool throwIfReadOnly = true, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, string paramName = null, in bool setOnlyIfNotNull = false, in bool throwIfNull = false, FieldValidateValueCallback validateValueCallback = null, in bool throwIfValidationFails = false, FieldValueChangedCallback valueChangedCallback = null)
         {
-
             //BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic |
             //             BindingFlags.Static | BindingFlags.Instance |
             //             BindingFlags.DeclaredOnly;
@@ -3333,7 +2903,7 @@ namespace WinCopies.Util
 
             if (!CheckPropertySetIntegrity(declaringType, propertyName, out string methodName, 3, bindingFlags))
 
-                throw new InvalidOperationException(string.Format(Resources.ExceptionMessages.DeclaringTypesNotCorrespond, propertyName, methodName));
+                throw new InvalidOperationException(string.Format(WinCopies.Util.Resources.ExceptionMessages.DeclaringTypesNotCorrespond, propertyName, methodName));
 
             PropertyInfo property = GetProperty(propertyName, declaringType, bindingFlags);
 
@@ -3361,10 +2931,8 @@ namespace WinCopies.Util
         /// <exception cref="InvalidOperationException">The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
         /// <exception cref="ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
         /// <exception cref="Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="ArgumentException"/> otherwise.</exception>
-        public static (bool propertyChanged, IDisposable oldValue) DisposeAndSetProperty(this object obj, string propertyName, IDisposable newValue, Type declaringType, bool throwIfReadOnly = true, BindingFlags bindingFlags = Util.DefaultBindingFlagsForPropertySet, string paramName = null, bool setOnlyIfNotNull = false, bool throwIfNull = false, PropertyValidateValueCallback validateValueCallback = null, bool throwIfValidationFails = false, PropertyValueChangedCallback valueChangedCallback = null)
-
+        public static (bool propertyChanged, IDisposable oldValue) DisposeAndSetProperty(this object obj, string propertyName, IDisposable newValue, Type declaringType, in bool throwIfReadOnly = true, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, string paramName = null, in bool setOnlyIfNotNull = false, in bool throwIfNull = false, PropertyValidateValueCallback validateValueCallback = null, in bool throwIfValidationFails = false, PropertyValueChangedCallback valueChangedCallback = null)
         {
-
             PropertyInfo property = GetProperty(propertyName, declaringType, bindingFlags);
 
             var previousValue = (IDisposable)property.GetValue(obj);
@@ -3388,9 +2956,7 @@ namespace WinCopies.Util
             if (validationResult)
 
                 if ((newValue == null && previousValue != null) || (newValue != null && !newValue.Equals(previousValue)))
-
                 {
-
                     previousValue.Dispose();
 
                     property.SetValue(obj, newValue);
@@ -3403,7 +2969,6 @@ namespace WinCopies.Util
                     //             BindingFlags.Static | BindingFlags.Instance |
                     //             BindingFlags.DeclaredOnly;
                     //this.GetType().GetField(fieldName, flags).SetValue(this, newValue);
-
                 }
 
                 else
@@ -3413,10 +2978,11 @@ namespace WinCopies.Util
             else
 
                 return throwIfValidationFails ? throw (validationException ?? new ArgumentException("Validation error.", paramName)) : (false, previousValue);
-
         }
 
-        /// <summary>
+#if WinCopies2
+
+/// <summary>
         /// Gets the numeric value for an enum.
         /// </summary>
         /// <param name="enum">The enum for which get the corresponding numeric value.</param>
@@ -3424,6 +2990,8 @@ namespace WinCopies.Util
         /// <returns>The numeric value corresponding to this enum, in the given enum type underlying type.</returns>
         [Obsolete("This method has been replaced by the GetNumValue(this Enum @enum) and the WinCopies.Util.GetNumValue(Type enumType, string fieldName) methods and will be removed in later versions.")]
         public static object GetNumValue(this Enum @enum, in string enumName) => @enum.GetNumValue();
+
+#endif
 
         // todo: IFormatProvider
 
@@ -3452,9 +3020,7 @@ namespace WinCopies.Util
         /// <returns><see langword="true"/> if <paramref name="flagsEnum"/> type has the <see cref="FlagsAttribute"/> and has multiple flags; otherwise, <see langword="false"/>.</returns>
         /// <remarks><paramref name="flagsEnum"/> type must have the <see cref="FlagsAttribute"/>.</remarks>
         public static bool HasMultipleFlags(this Enum flagsEnum)
-
         {
-
             Type type = flagsEnum.GetType();
 
             if (type.GetCustomAttributes(typeof(FlagsAttribute)).Count() == 0)
@@ -3472,9 +3038,7 @@ namespace WinCopies.Util
 
 
             foreach (string s in type.GetEnumNames())
-
             {
-
                 enumValue = (Enum)Enum.Parse(type, s);
 
 
@@ -3488,11 +3052,9 @@ namespace WinCopies.Util
                     if (alreadyFoundAFlag) return true;
 
                     else alreadyFoundAFlag = true;
-
             }
 
             return false;
-
         }
 
         /// <summary>
@@ -3508,7 +3070,6 @@ namespace WinCopies.Util
         public static bool IsValidEnumValue(this Enum @enum)
 
         {
-
             var values = new ArrayList(@enum.GetType().GetEnumValues());
 
             values.Sort();
@@ -3516,7 +3077,6 @@ namespace WinCopies.Util
             // object _value = Convert.ChangeType(value, value.GetType().GetEnumUnderlyingType());
 
             return @enum.CompareTo(values[0]) >= 0 && @enum.CompareTo(values[values.Count - 1]) <= 0;
-
         }
 
         /// <summary>
@@ -3527,11 +3087,8 @@ namespace WinCopies.Util
         /// <seealso cref="IsValidEnumValue(Enum)"/>
         /// <seealso cref="ThrowIfNotValidEnumValue(Enum,in string)"/>
         public static void ThrowIfNotValidEnumValue(this Enum @enum)
-
         {
-
-            if (!@enum.IsValidEnumValue()) throw new InvalidOperationException(string.Format(Resources.ExceptionMessages.InvalidEnumValue, @enum.ToString()));
-
+            if (!@enum.IsValidEnumValue()) throw new InvalidOperationException(string.Format(WinCopies.Util.Resources.ExceptionMessages.InvalidEnumValue, @enum.ToString()));
         }
 
         /// <summary>
@@ -3543,12 +3100,9 @@ namespace WinCopies.Util
         /// <seealso cref="IsValidEnumValue(Enum)"/>
         /// <seealso cref="ThrowIfNotValidEnumValue(Enum)"/>
         public static void ThrowIfNotValidEnumValue(this Enum @enum, in string argumentName)
-
         {
-
             if (!@enum.IsValidEnumValue()) throw new InvalidEnumArgumentException(argumentName, (int)Convert.ChangeType(@enum, TypeCode.Int32), @enum.GetType());
             // .GetType().IsEnumDefined(@enum)
-
         }
 
         /// <summary>
@@ -3558,11 +3112,8 @@ namespace WinCopies.Util
         /// <seealso cref="Type.IsEnumDefined(object)"/>
         /// <seealso cref="ThrowIfNotDefinedEnumValue(Enum,in string)"/>
         public static void ThrowIfNotDefinedEnumValue(this Enum @enum)
-
         {
-
-            if (!@enum.GetType().IsEnumDefined(@enum)) throw new InvalidOperationException(string.Format(Resources.ExceptionMessages.InvalidEnumValue, @enum.ToString()));
-
+            if (!@enum.GetType().IsEnumDefined(@enum)) throw new InvalidOperationException(string.Format(WinCopies.Util.Resources.ExceptionMessages.InvalidEnumValue, @enum.ToString()));
         }
 
         /// <summary>
@@ -3574,11 +3125,10 @@ namespace WinCopies.Util
         /// <seealso cref="IsValidEnumValue(Enum)"/>
         /// <seealso cref="ThrowIfNotDefinedEnumValue(Enum)"/>
         public static void ThrowIfNotDefinedEnumValue(this Enum @enum, in string argumentName)
-
         {
+            if (!@enum.GetType().IsEnumDefined(@enum))
 
-            if (!@enum.GetType().IsEnumDefined(@enum)) throw new InvalidEnumArgumentException(argumentName, @enum);
-
+                throw new InvalidEnumArgumentException(argumentName, @enum);
         }
 
         public static bool IsFlagsEnum(this Enum @enum) => @enum.GetType().GetCustomAttribute<FlagsAttribute>() is object;
@@ -3595,9 +3145,7 @@ namespace WinCopies.Util
         /// <seealso cref="ThrowIfNotValidFlagsEnumValue(Enum, in bool, in bool)"/>
         /// <seealso cref="ThrowIfNotValidFlagsEnumValue(Enum, in string, in bool, in bool)"/>
         public static bool IsValidFlagsEnumValue(this Enum @enum, in bool throwIfNotFlagsEnum, in bool throwIfZero)
-
         {
-
             Type enumType = @enum.GetType();
 
             var enumComparer = new EnumComparer();
@@ -3639,21 +3187,17 @@ namespace WinCopies.Util
             double valueToCheck;
 
             do
-
             {
-
                 valueToCheck = _value - valueDouble;
 
                 if (!enumType.IsEnumDefined(Enum.ToObject(enumType, valueToCheck))) return false;
 
                 valueDouble -= valueToCheck;
-
             }
 
             while (valueDouble > 0);
 
             return true;
-
         }
 
         /// <summary>
@@ -3667,13 +3211,10 @@ namespace WinCopies.Util
         /// <seealso cref="IsValidEnumValue(Enum)"/>
         /// <seealso cref="ThrowIfNotValidEnumValue(Enum, in string)"/>
         public static void ThrowIfNotValidFlagsEnumValue(this Enum @enum, in bool throwIfNotFlagsEnum, in bool throwIfZero)
-
         {
-
             if (!@enum.IsValidFlagsEnumValue(throwIfNotFlagsEnum, throwIfZero))
 
-                throw new InvalidOperationException(string.Format(Resources.ExceptionMessages.InvalidEnumValue, @enum.ToString()));
-
+                throw new InvalidOperationException(string.Format(WinCopies.Util.Resources.ExceptionMessages.InvalidEnumValue, @enum.ToString()));
         }
 
         /// <summary>
@@ -3688,13 +3229,10 @@ namespace WinCopies.Util
         /// <seealso cref="IsValidEnumValue(Enum)"/>
         /// <seealso cref="ThrowIfNotValidEnumValue(Enum)"/>
         public static void ThrowIfNotValidFlagsEnumValue(this Enum @enum, in string argumentName, in bool throwIfNotFlagsEnum, in bool throwIfZero)
-
         {
-
             if (!@enum.IsValidFlagsEnumValue(throwIfNotFlagsEnum, throwIfZero))
 
                 throw new InvalidEnumArgumentException(argumentName, (int)Convert.ChangeType(@enum, TypeCode.Int32), @enum.GetType());
-
         }
 
         public static void ThrowIfNotFlagsEnum(this Enum value, in string argumentName)
@@ -3707,7 +3245,6 @@ namespace WinCopies.Util
         public static bool IsValidFlagsEnumValue<T>(this T value, in IfCT comparisonType, in string argumentName, params T[] values) where T : Enum
 
         {
-
             ThrowIfNull(values, nameof(values));
 
             ThrowIfNotFlagsEnumType<T>(nameof(T));
@@ -3760,19 +3297,14 @@ namespace WinCopies.Util
 
                     return false;
             }
-
         }
 
         public static bool IsValidEnumValue<T>(this T value, in bool valuesAreExpected, params T[] values) where T : Enum
-
         {
-
             ThrowIfNull(values, nameof(values));
 
             if (valuesAreExpected)
-
             {
-
                 foreach (T _value in values)
 
                     if ((Enum)_value == (Enum)value)
@@ -3780,7 +3312,6 @@ namespace WinCopies.Util
                         return true;
 
                 return false;
-
             }
 
             foreach (T _value in values)
@@ -3790,59 +3321,43 @@ namespace WinCopies.Util
                     return false;
 
             return true;
-
         }
 
         public static void ThrowIfInvalidEnumValue(this Enum value, in bool valuesAreExpected, params Enum[] values)
-
         {
-
             if (!value.IsValidEnumValue(valuesAreExpected, values))
 
                 throw new InvalidOperationException(string.Format(ExceptionMessages.ParameterIsNotAnExpectedValue, value));
-
         }
 
         public static void ThrowIfInvalidEnumValue(this Enum value, in bool valuesAreExpected, in string argumentName, params Enum[] values)
-
         {
-
             if (!value.IsValidEnumValue(valuesAreExpected, values))
 
                 throw value.GetInvalidEnumArgumentException(argumentName);
-
         }
 
         public static void ThrowIfInvalidEnumValue<T>(this T value, in bool valuesAreExpected, params T[] values) where T : Enum
-
         {
-
             if (!value.IsValidEnumValue(valuesAreExpected, values))
 
                 throw new InvalidOperationException(string.Format(ExceptionMessages.ParameterIsNotAnExpectedValue, value));
-
         }
 
         public static void ThrowIfInvalidEnumValue<T>(this T value, in bool valuesAreExpected, in string argumentName, params T[] values) where T : Enum
-
         {
-
             if (!value.IsValidEnumValue(valuesAreExpected, values))
 
                 throw value.GetInvalidEnumArgumentException(argumentName);
-
         }
 
         public static InvalidEnumArgumentException GetInvalidEnumArgumentException(this Enum value, string argumentName) => new InvalidEnumArgumentException(string.Format(ExceptionMessages.ParameterIsNotAnExpectedValue, value), argumentName, value);
 
         public static void ThrowInInvalidFlagsEnumValue<T>(this T value, in IfCT comparisonType, in string argumentName, params T[] values) where T : Enum
-
         {
-
             if (!value.IsValidFlagsEnumValue(comparisonType, argumentName, values))
 
                 throw GetInvalidEnumArgumentException(value, argumentName);
-
         }
 
         /// <summary>
@@ -3944,21 +3459,476 @@ namespace WinCopies.Util
         /// <returns><see langword="true"/> if <paramref name="d"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         public static bool Between(this decimal d, decimal x, decimal y) => d >= x && d <= y;
 
+        public static void SplitValues<T, U, V, TContainer>(this IEnumerable<T> enumerable, in bool skipEmptyValues, IValueSplitFactory<T, U, V, TContainer> splitFactory, params T[] separators) where T : struct where U : INullableValueEntry<T> where V : IEnumerable<U>
+        {
+            ThrowIfNull(enumerable, nameof(enumerable));
+            ThrowIfNull(splitFactory, nameof(splitFactory));
+            // ThrowIfNull(enumerableNullableValueEntryCallback, nameof(enumerableNullableValueEntryCallback));
+            ThrowIfNull(separators, nameof(separators));
+
+            if (separators.Length == 0)
+
+                throw new ArgumentException($"{nameof(separators)} does not contain values.");
+
+            Predicate<T> predicate;
+
+            if (separators.Length == 1)
+
+                predicate = value => /*value != null && */ value.Equals(separators[0]);
+
+            else
+
+                predicate = value => separators.Contains(value);
+
+            IEnumerator<T> enumerator = enumerable.GetEnumerator();
+
+            enumerable = null;
+
+            void subAddAndAdd(in T? value)
+            {
+                splitFactory.SubAdd(splitFactory.GetValueContainer(value));
+
+                splitFactory.Add(splitFactory.GetEnumerable());
+            }
+
+            if (skipEmptyValues)
+            {
+                if (enumerator.MoveNext())
+                {
+                    T? value = enumerator.Current;
+
+                    if (enumerator.MoveNext()) // There are more than one value.
+                    {
+                        value = null;
+
+                        void tryAdd()
+                        {
+                            if (predicate(enumerator.Current) && splitFactory.SubCount > 0)
+                            {
+                                splitFactory.Add(splitFactory.GetEnumerable());
+
+                                splitFactory.SubClear();
+                            }
+
+                            else
+
+                                splitFactory.SubAdd(splitFactory.GetValueContainer(enumerator.Current));
+                        }
+
+                        tryAdd();
+
+                        while (enumerator.MoveNext())
+
+                            tryAdd();
+                    }
+
+                    else // There is one value.
+                    {
+                        if (predicate(value.Value))
+
+                            return;
+
+                        else
+
+                            subAddAndAdd(enumerator.Current);
+                    }
+                }
+
+                else // There is no value.
+
+                    return;
+            }
+
+            else if (enumerator.MoveNext())
+            {
+                T? value = enumerator.Current;
+
+                if (enumerator.MoveNext()) // There are more than one value.
+                {
+                    value = null;
+
+                    void tryAdd()
+                    {
+                        if (predicate(enumerator.Current))
+                        {
+                            if (splitFactory.SubCount == 0)
+                            {
+                                splitFactory.SubAdd(splitFactory.GetValueContainer(null));
+
+                                splitFactory.Add(splitFactory.GetEnumerable());
+                            }
+
+                            else
+                            {
+                                splitFactory.Add(splitFactory.GetEnumerable());
+
+                                splitFactory.SubClear();
+                            }
+                        }
+
+                        else
+
+                            splitFactory.SubAdd(splitFactory.GetValueContainer(enumerator.Current));
+                    }
+
+                    tryAdd();
+
+                    while (enumerator.MoveNext())
+
+                        tryAdd();
+                }
+
+                else // There is one value.
+                {
+                    if (predicate(value.Value))
+                    {
+                        subAddAndAdd(null);
+
+                        subAddAndAdd(null);
+                    }
+
+                    else
+
+                        subAddAndAdd(enumerator.Current);
+                }
+            }
+
+            else // There is no value.
+            {
+                splitFactory.SubAdd(splitFactory.GetValueContainer(null));
+
+                splitFactory.Add(splitFactory.GetEnumerable());
+            }
+        }
+
+        public static void SplitReferences<T, U, V, TContainer>(this IEnumerable<T> enumerable, in bool skipEmptyValues, IRefSplitFactory<T, U, V, TContainer> splitFactory, params T[] separators) where T : class where U : INullableRefEntry<T> where V : IEnumerable<U>
+        {
+            ThrowIfNull(enumerable, nameof(enumerable));
+            ThrowIfNull(splitFactory, nameof(splitFactory));
+            // ThrowIfNull(enumerableNullableValueEntryCallback, nameof(enumerableNullableValueEntryCallback));
+            ThrowIfNull(separators, nameof(separators));
+
+            if (separators.Length == 0)
+
+                throw new ArgumentException($"{nameof(separators)} does not contain values.");
+
+            Predicate<T> predicate;
+
+            if (separators.Length == 1)
+
+                predicate = value => value == null ? separators[0]==null: value.Equals(separators[0]);
+
+            else
+
+                predicate = value => separators.Contains(value);
+
+            IEnumerator<T> enumerator = enumerable.GetEnumerator();
+
+            enumerable = null;
+
+            void subAddAndAdd(in T value)
+            {
+                splitFactory.SubAdd(splitFactory.GetValueContainer(value));
+
+                splitFactory.Add(splitFactory.GetEnumerable());
+            }
+
+            if (skipEmptyValues)
+            {
+                if (enumerator.MoveNext())
+                {
+                    T value = enumerator.Current;
+
+                    if (enumerator.MoveNext()) // There are more than one value.
+                    {
+                        value = null;
+
+                        void tryAdd()
+                        {
+                            if (predicate(enumerator.Current) && splitFactory.SubCount > 0)
+                            {
+                                splitFactory.Add(splitFactory.GetEnumerable());
+
+                                splitFactory.SubClear();
+                            }
+
+                            else
+
+                                splitFactory.SubAdd(splitFactory.GetValueContainer(enumerator.Current));
+                        }
+
+                        tryAdd();
+
+                        while (enumerator.MoveNext())
+
+                            tryAdd();
+                    }
+
+                    else // There is one value.
+                    {
+                        if (predicate(value))
+
+                            return;
+
+                        else
+
+                            subAddAndAdd(enumerator.Current);
+                    }
+                }
+
+                else // There is no value.
+
+                    return;
+            }
+
+            else if (enumerator.MoveNext())
+            {
+                T value = enumerator.Current;
+
+                if (enumerator.MoveNext()) // There are more than one value.
+                {
+                    value = null;
+
+                    void tryAdd()
+                    {
+                        if (predicate(enumerator.Current))
+                        {
+                            if (splitFactory.SubCount == 0)
+                            {
+                                splitFactory.SubAdd(splitFactory.GetValueContainer(null));
+
+                                splitFactory.Add(splitFactory.GetEnumerable());
+                            }
+
+                            else
+                            {
+                                splitFactory.Add(splitFactory.GetEnumerable());
+
+                                splitFactory.SubClear();
+                            }
+                        }
+
+                        else
+
+                            splitFactory.SubAdd(splitFactory.GetValueContainer(enumerator.Current));
+                    }
+
+                    tryAdd();
+
+                    while (enumerator.MoveNext())
+
+                        tryAdd();
+                }
+
+                else // There is one value.
+                {
+                    if (predicate(value))
+                    {
+                        subAddAndAdd(null);
+
+                        subAddAndAdd(null);
+                    }
+
+                    else
+
+                        subAddAndAdd(enumerator.Current);
+                }
+            }
+
+            else // There is no value.
+            {
+                splitFactory.SubAdd(splitFactory.GetValueContainer(null));
+
+                splitFactory.Add(splitFactory.GetEnumerable());
+            }
+        }
+
         #region String extension methods
+
+        #region Split
+
+        private static void Split(this string s, in bool skipEmptyValues, in StringBuilder stringBuilder, in Action<string> action, params char[] separators)
+        {
+            ThrowIfNull(s, nameof(s));
+            ThrowIfNull(stringBuilder, nameof(stringBuilder));
+            ThrowIfNull(separators, nameof(separators));
+
+            if (separators.Length == 0)
+
+                throw new ArgumentException($"{nameof(separators)} does not contain values.");
+
+            Debug.Assert(action != null, $"{nameof(action)} must be not null.");
+
+            Predicate<char> getPredicate()
+            {
+                Predicate<char> predicate;
+
+                if (separators.Length == 1)
+
+                    predicate = __c => __c == separators[0];
+
+                else
+
+                    predicate = __c => separators.Contains(__c);
+
+                return predicate;
+            }
+
+            if (skipEmptyValues)
+
+                if (s.Length == 0)
+
+                    return;
+
+                else if (s.Length == 1)
+
+                    if ((separators.Length == 1 && s[0] == separators[0]) || separators.Contains(s[0]))
+
+                        return;
+
+                    else
+
+                        action(s);
+
+                else
+                {
+                    Predicate<char> predicate = getPredicate();
+
+                    foreach (char _c in s)
+
+                        if (predicate(_c) && stringBuilder.Length > 0)
+                        {
+                            action(stringBuilder.ToString());
+
+                            _ = stringBuilder.Clear();
+                        }
+
+                        else
+
+                            _ = stringBuilder.Append(_c);
+                }
+
+            else if (s.Length == 0)
+
+                action("");
+
+            else if (s.Length == 1)
+
+                if ((separators.Length == 1 && s[0] == separators[0]) || separators.Contains(s[0]))
+                {
+                    action("");
+
+                    action("");
+                }
+
+                else
+
+                    action(s);
+
+            else
+            {
+                Predicate<char> predicate = getPredicate();
+
+                foreach (char _c in s)
+
+                    if (predicate(_c))
+
+                        if (stringBuilder.Length == 0)
+
+                            action("");
+
+                        else
+                        {
+                            action(stringBuilder.ToString());
+
+                            _ = stringBuilder.Clear();
+                        }
+
+                    else
+
+                        _ = stringBuilder.Append(_c);
+            }
+        }
+
+        public static Queue<string> SplitToQueue(this string s, in bool skipEmptyValues, params char[] separators)
+        {
+            var queue = new Queue<string>();
+
+            SplitToQueue(s, skipEmptyValues, new StringBuilder(), queue, separators);
+
+            return queue;
+        }
+
+        public static void SplitToQueue(this string s, in bool skipEmptyValues, in StringBuilder stringBuilder, Queue<string> queue, params char[] separators)
+        {
+            ThrowIfNull(queue, nameof(queue));
+
+            Split(s, skipEmptyValues, stringBuilder, _s => queue.Enqueue(_s), separators);
+        }
+
+        public static Stack<string> SplitToStack(this string s, in bool splitEmptyValues, params char[] separators)
+        {
+            var stack = new Stack<string>();
+
+            SplitToStack(s, splitEmptyValues, new StringBuilder(), stack, separators);
+
+            return stack;
+        }
+
+        public static void SplitToStack(this string s, in bool splitEmptyValues, in StringBuilder stringBuilder, Stack<string> stack, params char[] separators)
+        {
+            ThrowIfNull(stack, nameof(stack));
+
+            Split(s, splitEmptyValues, stringBuilder, _s => stack.Push(_s), separators);
+        }
+
+        public static System.Collections.Generic.LinkedList<string> SplitToLinkedList(this string s, in bool splitEmptyValues, params char[] separators)
+        {
+            var list = new System.Collections.Generic.LinkedList<string>();
+
+            SplitToLinkedList(s, splitEmptyValues, new StringBuilder(), list, separators);
+
+            return list;
+        }
+
+        public static void SplitToLinkedList(this string s, in bool splitEmptyValues, in StringBuilder stringBuilder, System.Collections.Generic.LinkedList<string> list, params char[] separators)
+        {
+            ThrowIfNull(list, nameof(list));
+
+            Split(s, splitEmptyValues, stringBuilder, _s => list.AddLast(_s), separators);
+        }
+
+        public static ILinkedList<string> SplitToILinkedList(this string s, in bool splitEmptyValues, params char[] separators)
+        {
+            var list = new Collections.DotNetFix.LinkedList<string>();
+
+            SplitToILinkedList(s, splitEmptyValues, new StringBuilder(), list, separators);
+
+            return list;
+        }
+
+        public static void SplitToILinkedList(this string s, in bool splitEmptyValues, in StringBuilder stringBuilder, ILinkedList<string> list, params char[] separators)
+        {
+            ThrowIfNull(list, nameof(list));
+
+            Split(s, splitEmptyValues, stringBuilder, _s => list.AddLast(_s), separators);
+        }
+
+        #endregion
 
         // todo: add other methods and overloads for StringComparison, IEqualityComparer<char>, Comparer<char>, Comparison<char>, ignore case and CultureInfo parameters
 
-        [Obsolete("This method has been replaced by the Contains(this string, string, IEqualityComparer<char>) method.")]
+#if WinCopies2
+
+[Obsolete("This method has been replaced by the Contains(this string, string, IEqualityComparer<char>) method.")]
         public static bool Contains(this string s, IEqualityComparer<char> comparer, string value) => s.Contains(value, comparer);
 
+#endif
+
         public static bool Contains(this string s, string value, IEqualityComparer<char> comparer)
-
         {
-
             bool contains(ref int i)
-
             {
-
                 for (int j = 0; j < value.Length; j++)
 
                     if (!comparer.Equals(s[i + j], value[j]))
@@ -3966,13 +3936,10 @@ namespace WinCopies.Util
                         return false;
 
                 return true;
-
             }
 
             for (int i = 0; i < s.Length; i++)
-
             {
-
                 if (value.Length > s.Length - i)
 
                     return false;
@@ -3980,45 +3947,33 @@ namespace WinCopies.Util
                 if (contains(ref i))
 
                     return true;
-
             }
 
             return false;
-
         }
 
         // todo: To replace by arrays-common methods
 
         public static bool Contains(this string s, char value, out int index)
-
         {
-
             for (int i = 0; i < s.Length; i++)
 
                 if (s[i] == value)
-
                 {
-
                     index = i;
 
                     return true;
-
                 }
 
             index = default;
 
             return false;
-
         }
 
         public static bool Contains(this string s, string value, out int index)
-
         {
-
             bool contains(ref int i)
-
             {
-
                 for (int j = 0; j < value.Length; j++)
 
                     if (s[i + j] != value[j])
@@ -4026,72 +3981,57 @@ namespace WinCopies.Util
                         return false;
 
                 return true;
-
             }
 
             for (int i = 0; i < s.Length; i++)
-
             {
 
                 if (value.Length > s.Length - i)
-
                 {
-
                     index = -1;
 
                     return false;
-
                 }
 
                 if (contains(ref i))
-
                 {
-
                     index = i;
 
                     return true;
-
                 }
-
             }
 
             index = -1;
 
             return false;
-
         }
 
-        [Obsolete("This method has been replaced by arrays-common methods.")]
+#if WinCopies2
+
+[Obsolete("This method has been replaced by arrays-common methods.")]
         public static bool Contains(this string s, char value, IEqualityComparer<char> comparer, out int index)
-
         {
-
             for (int i = 0; i < s.Length; i++)
 
                 if (comparer.Equals(s[i], value))
 
                 {
-
                     index = i;
 
                     return true;
-
                 }
 
             index = default;
 
             return false;
-
         }
 
+#endif
+
         public static bool Contains(this string s, string value, IEqualityComparer<char> comparer, out int index)
-
         {
-
             bool contains(ref int i)
-
             {
-
                 for (int j = 0; j < value.Length; j++)
 
                     if (!comparer.Equals(s[i + j], value[j]))
@@ -4099,50 +4039,38 @@ namespace WinCopies.Util
                         return false;
 
                 return true;
-
             }
 
             for (int i = 0; i < s.Length; i++)
 
             {
-
                 if (value.Length > s.Length - i)
-
                 {
-
                     index = -1;
 
                     return false;
-
                 }
 
                 if (contains(ref i))
-
                 {
-
                     index = i;
 
                     return true;
-
                 }
-
             }
 
             index = -1;
 
             return false;
-
         }
 
         public static bool StartsWith(this string s, char value) => s[0] == value;
 
         public static string RemoveAccents(this string s)
-
         {
-
             var stringBuilder = new StringBuilder();
 
-            s = s.Normalize(System.Text.NormalizationForm.FormD);
+            s = s.Normalize(NormalizationForm.FormD);
 
             foreach (char c in s)
 
@@ -4151,69 +4079,63 @@ namespace WinCopies.Util
                     _ = stringBuilder.Append(c);
 
             return stringBuilder.ToString().Normalize(System.Text.NormalizationForm.FormC);
-
         }
 
         #endregion
 
-        internal static void ThrowIfDisposedInternal(this WinCopies.Util.DotNetFix.IDisposable obj, in string objectName)
-
+        internal static void ThrowIfDisposedInternal(this
+#if WinCopies2
+            WinCopies.Util.DotNetFix.IDisposable 
+#else
+            WinCopies.DotNetFix.IDisposable
+#endif
+            obj, in string objectName)
         {
-
             if (obj.IsDisposed)
 
                 throw GetExceptionForDispose(objectName, false);
-
         }
 
-        public static void ThrowIfDisposed(this WinCopies.Util.DotNetFix.IDisposable obj, in string objectName)
-
+        public static void ThrowIfDisposed(this
+#if WinCopies2
+            WinCopies.Util.DotNetFix.IDisposable 
+#else
+            WinCopies.DotNetFix.IDisposable
+#endif
+            obj, in string objectName)
         {
-
             ThrowIfNull(obj, nameof(obj));
 
             obj.ThrowIfDisposedInternal(objectName);
-
         }
 
         internal static void ThrowIfDisposingInternal(this IDisposable obj, in string objectName)
-
         {
-
             if (obj.IsDisposing)
 
                 throw GetExceptionForDispose(objectName, true);
-
         }
 
         public static void ThrowIfDisposing(this IDisposable obj, in string objectName)
-
         {
-
             ThrowIfNull(obj, nameof(obj));
 
             obj.ThrowIfDisposingInternal(objectName);
-
         }
 
         public static void ThrowIfDisposingOrDisposed(this IDisposable obj, in string objectName)
-
         {
-
             ThrowIfNull(obj, nameof(obj));
 
             obj.ThrowIfDisposedInternal(objectName);
 
             obj.ThrowIfDisposingInternal(objectName);
-
         }
 
         public static int GetCapacity<T>(this ArrayBuilder<T>[] arrayBuilders) => (arrayBuilders ?? throw GetArgumentNullException(nameof(arrayBuilders))).GetCapacityInternal();
 
         private static int GetCapacityInternal<T>(this ArrayBuilder<T>[] arrayBuilders)
-
         {
-
             int capacity = 0;
 
             foreach (ArrayBuilder<T> arrayBuilder in arrayBuilders)
@@ -4221,13 +4143,10 @@ namespace WinCopies.Util
                 capacity += arrayBuilder.Count;
 
             return capacity;
-
         }
 
         public static T[] ToArray<T>(this ArrayBuilder<T>[] arrayBuilders, in bool remove = false)
-
         {
-
             ThrowIfNull(arrayBuilders, nameof(arrayBuilders));
 
             var items = new T[arrayBuilders.GetCapacityInternal()];
@@ -4237,13 +4156,10 @@ namespace WinCopies.Util
                 arrayBuilder.ToArray(items, remove);
 
             return items;
-
         }
 
         public static ArrayList ToArrayList<T>(this ArrayBuilder<T>[] arrayBuilders, in bool remove = false)
-
         {
-
             ThrowIfNull(arrayBuilders, nameof(arrayBuilders));
 
             var items = new ArrayList(arrayBuilders.GetCapacityInternal());
@@ -4253,13 +4169,10 @@ namespace WinCopies.Util
                 arrayBuilder.ToArrayList(items, remove);
 
             return items;
-
         }
 
         public static List<T> ToList<T>(this ArrayBuilder<T>[] arrayBuilders, in bool remove = false)
-
         {
-
             ThrowIfNull(arrayBuilders, nameof(arrayBuilders));
 
             var items = new List<T>(arrayBuilders.GetCapacityInternal());
@@ -4269,7 +4182,6 @@ namespace WinCopies.Util
                 arrayBuilder.ToList(items, remove);
 
             return items;
-
         }
 
         public static string Repeat(this char c, in int length) => c.Repeat(null, null, length);
@@ -4291,11 +4203,9 @@ namespace WinCopies.Util
                 if (right.HasValue)
 
                 {
-
                     char _right = right.Value;
 
                     action = () => { _ = sb.Append(_left); _ = sb.Append(c); _ = sb.Append(_right); };
-
                 }
 
                 else
@@ -4307,11 +4217,9 @@ namespace WinCopies.Util
             else if (right.HasValue)
 
             {
-
                 char _right = right.Value;
 
                 action = () => { _ = sb.Append(c); _ = sb.Append(_right); };
-
             }
 
             else
@@ -4361,6 +4269,5 @@ namespace WinCopies.Util
 
             return sb.ToString();
         }
-
     }
 }

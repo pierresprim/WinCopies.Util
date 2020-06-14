@@ -15,18 +15,16 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows.Input;
 
-
-
+#if WinCopies2
 namespace WinCopies.Util.Commands
+#else
+namespace WinCopies.Commands
+#endif
 {
     public static class DialogCommands
     {
-
         public static RoutedUICommand Ok { get; } = new RoutedUICommand(WinCopies.Util.Desktop.Resources.Commands.WPF.DialogCommands.Ok, nameof(Ok), typeof(DialogCommands));
 
         public static RoutedUICommand Cancel { get; } = new RoutedUICommand(WinCopies.Util.Desktop.Resources.Commands.WPF.DialogCommands.Cancel, nameof(Cancel), typeof(DialogCommands));
@@ -48,8 +46,5 @@ namespace WinCopies.Util.Commands
         public static RoutedUICommand Abort { get; } = new RoutedUICommand(WinCopies.Util.Desktop.Resources.Commands.WPF.DialogCommands.Abort, nameof(Abort), typeof(DialogCommands));
 
         public static RoutedUICommand Continue { get; } = new RoutedUICommand(WinCopies.Util.Desktop.Resources.Commands.WPF.DialogCommands.Continue, nameof(Continue), typeof(DialogCommands));
-
     }
 }
-
-

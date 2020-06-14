@@ -32,7 +32,11 @@ using System.Text;
 using System.Reflection.Emit;
 using System.Reflection;
 
+#if WinCopies2
 namespace WinCopies.Util.Commands
+#else
+namespace WinCopies.Commands
+#endif
 {
     /// <summary>
     /// Generates delegates according to the specified signature on runtime
@@ -47,24 +51,26 @@ namespace WinCopies.Util.Commands
         /// <param name="methodToInvoke">The method to invoke</param>
         /// <param name="methodInvoker">The object where the method resides</param>
         /// <returns>Returns a delegate with the same signature as eventHandlerType that calls the methodToInvoke inside</returns>
-        public static Delegate CreateDelegate(Type eventHandlerType, MethodInfo methodToInvoke, object methodInvoker)    
+        public static Delegate CreateDelegate(Type eventHandlerType, MethodInfo methodToInvoke, object methodInvoker)
         {
-
             if (typeof(Delegate).IsAssignableFrom(eventHandlerType))
             {
                 //Get the eventHandlerType signature
-                var eventHandlerInfo = eventHandlerType.GetMethod("Invoke");
+                MethodInfo eventHandlerInfo = eventHandlerType.GetMethod("Invoke");
                 Type returnType = eventHandlerInfo.ReturnParameter.ParameterType;
+
                 if (returnType == typeof(void))
                 {
                     ParameterInfo[] delegateParameters = eventHandlerInfo.GetParameters();
                     //Get the list of type of parameters. Please note that we do + 1 because we have to push the object where the method resides i.e methodInvoker parameter
-                    Type[] hookupParameters = new Type[delegateParameters.Length + 1];
+                    var hookupParameters = new Type[delegateParameters.Length + 1];
                     hookupParameters[0] = methodInvoker.GetType();
+
                     for (int i = 0; i < delegateParameters.Length; i++)
+
                         hookupParameters[i + 1] = delegateParameters[i].ParameterType;
 
-                    DynamicMethod handler = new DynamicMethod("", null,
+                    var handler = new DynamicMethod("", null,
                         hookupParameters, typeof(EventHandlerGenerator));
 
                     ILGenerator eventIL = handler.GetILGenerator();
@@ -97,13 +103,12 @@ namespace WinCopies.Util.Commands
 
                     //create a delegate from the dynamic method
                     return handler.CreateDelegate(eventHandlerType, methodInvoker);
-                }    
+                }
                 else
                     throw new ApplicationException("Delegate has a return type. This only supprts event handlers that are void");
             }
             else
                 throw new ArgumentException($"The {nameof(Delegate)} type must be assignable from {nameof(eventHandlerType)}");
         }
-
     }
 }

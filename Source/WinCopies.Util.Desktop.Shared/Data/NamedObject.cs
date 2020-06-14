@@ -16,42 +16,30 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using System;
-using WinCopies.Util;
 
 namespace WinCopies.Util.Data
 {
-
     /// <summary>
     /// Provides an object that defines a value with an associated name and notifies of the name or value change.
     /// </summary>
     public interface INamedObject : IValueObject
-
     {
-
         /// <summary>
         /// Gets or sets the name of this object.
         /// </summary>
         string Name { get; set; }
-
     }
 
     /// <summary>
     /// Provides an object that defines a value with an associated name and notifies of the name or value change.
     /// </summary>
-    public interface INamedObject<T> : INamedObject, IValueObject<T>
-
-    {
-
-    }
-
-
+    public interface INamedObject<T> : INamedObject, IValueObject<T> { }
 
     /// <summary>
     /// Provides an object that defines a value with an associated name and notifies of the name or value change.
     /// </summary>
     public class NamedObject : ViewModelBase, INamedObject
     {
-
         public bool IsReadOnly => false;
 
         private readonly string _name = null;
@@ -66,14 +54,22 @@ namespace WinCopies.Util.Data
         /// </summary>
         /// <param name="obj">Object to compare to the current object.</param>
         /// <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
-        public bool Equals(WinCopies.Util.IValueObject obj) => new ValueObjectEqualityComparer().Equals(this, obj);
+        public bool Equals(WinCopies.
+            #if WinCopies2
+            Util.
+            #endif
+            IValueObject obj) => new ValueObjectEqualityComparer().Equals(this, obj);
 
         /// <summary>
         /// Determines whether this object is equal to a given object.
         /// </summary>
         /// <param name="obj">Object to compare to the current object.</param>
         /// <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
-        public bool Equals(WinCopies.Util.IReadOnlyValueObject obj) => new ValueObjectEqualityComparer().Equals(this, obj);
+        public bool Equals(WinCopies.
+#if WinCopies2
+            Util.
+#endif
+            IReadOnlyValueObject obj) => new ValueObjectEqualityComparer().Equals(this, obj);
 
         private readonly object _value;
 
@@ -94,14 +90,13 @@ namespace WinCopies.Util.Data
         /// <param name="value"></param>
         public NamedObject(string name, object value)
         {
-
             _name = name;
 
             _value = value;
-
         }
 
         #region IDisposable Support
+
         private bool disposedValue = false;
 
         /// <summary>
@@ -110,7 +105,6 @@ namespace WinCopies.Util.Data
         /// <param name="disposing"><see langword="true"/> to dispose managed resources, otherwise <see langword="false"/>.</param>
         protected virtual void Dispose(bool disposing)
         {
-
             if (disposedValue)
 
                 return;
@@ -120,24 +114,17 @@ namespace WinCopies.Util.Data
                 _value.Dispose();
 
             disposedValue = true;
-
         }
 
-        ~NamedObject()
-        {
-
-            Dispose(false);
-
-        }
+        ~NamedObject() => Dispose(false);
 
         public void Dispose()
         {
-
             Dispose(true);
 
             GC.SuppressFinalize(this);
-
         }
+
         #endregion
     }
 
@@ -147,7 +134,6 @@ namespace WinCopies.Util.Data
     /// <typeparam name="T">The type of the value of this object.</typeparam>
     public class NamedObject<T> : ViewModelBase, INamedObject<T>
     {
-
         public bool IsReadOnly => false;
 
         private readonly string _name = null;
@@ -169,14 +155,22 @@ namespace WinCopies.Util.Data
         /// </summary>
         /// <param name="obj">Object to compare to the current object.</param>
         /// <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
-        public bool Equals(WinCopies.Util.IValueObject<T> obj) => new ValueObjectEqualityComparer<T>().Equals(this, obj);
+        public bool Equals(WinCopies
+#if WinCopies2
+            .Util
+#endif
+            .IValueObject<T> obj) => new ValueObjectEqualityComparer<T>().Equals(this, obj);
 
         /// <summary>
         /// Determines whether this object is equal to a given object.
         /// </summary>
         /// <param name="obj">Object to compare to the current object.</param>
         /// <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
-        public bool Equals(WinCopies.Util.IReadOnlyValueObject obj) => new ValueObjectEqualityComparer().Equals(this, obj);
+        public bool Equals(WinCopies.
+#if WinCopies2
+            Util.
+#endif
+            IReadOnlyValueObject obj) => new ValueObjectEqualityComparer().Equals(this, obj);
 
         /// <summary>
         /// Determines whether this object is equal to a given object.
@@ -196,11 +190,8 @@ namespace WinCopies.Util.Data
 
         object WinCopies.Util.IValueObject.Value
         {
-
             get => _value; set
-
             {
-
                 if (value is T _value)
 
                     Value = _value;
@@ -208,9 +199,7 @@ namespace WinCopies.Util.Data
                 else
 
                     throw new ArgumentException("Invalid type.", nameof(value));
-
             }
-
         }
 
         /// <summary>
@@ -225,11 +214,9 @@ namespace WinCopies.Util.Data
         /// <param name="value"></param>
         public NamedObject(string name, T value)
         {
-
             _value = value;
 
             _name = name;
-
         }
 
         #region IDisposable Support
@@ -241,7 +228,6 @@ namespace WinCopies.Util.Data
         /// <param name="disposing"><see langword="true"/> to dispose managed resources, otherwise <see langword="false"/>.</param>
         protected virtual void Dispose(bool disposing)
         {
-
             if (disposedValue)
 
                 return;
@@ -251,27 +237,17 @@ namespace WinCopies.Util.Data
                 _value.Dispose();
 
             disposedValue = true;
-
         }
 
-        ~NamedObject()
-        {
-
-            Dispose(false);
-
-        }
+        ~NamedObject() => Dispose(false);
 
         public void Dispose()
         {
-
             Dispose(true);
 
             GC.SuppressFinalize(this);
-
         }
         #endregion
     }
-
-
 
 }

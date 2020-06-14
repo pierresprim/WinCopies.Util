@@ -16,33 +16,35 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
-using WinCopies.Util;
 
 namespace WinCopies.Util.Data
 {
+    /// <summary>
+    /// Provides an object that defines a value and notifies of the value change.
+    /// </summary>
+    [Obsolete("This interface has been replaced by the WinCopies.Util.IValueObject interface and will be removed in later versions.")]
+    public interface IValueObject :
+#if WinCopies2
+        WinCopies.Util.IValueObject
+#else
+        WinCopies.IValueObject
+#endif
+        , INotifyPropertyChanged
+    { }
 
     /// <summary>
     /// Provides an object that defines a value and notifies of the value change.
     /// </summary>
     [Obsolete("This interface has been replaced by the WinCopies.Util.IValueObject interface and will be removed in later versions.")]
-    public interface IValueObject : WinCopies.Util.IValueObject, INotifyPropertyChanged
-
-    {
-
-    }
-
-    /// <summary>
-    /// Provides an object that defines a value and notifies of the value change.
-    /// </summary>
-    [Obsolete("This interface has been replaced by the WinCopies.Util.IValueObject interface and will be removed in later versions.")]
-    public interface IValueObject<T> : WinCopies.Util.IValueObject<T>, IValueObject
-
-    {
-
-    }
+    public interface IValueObject<T> :
+#if WinCopies2
+        WinCopies.Util.IValueObject<T>
+#else
+        WinCopies.IValueObject<T>
+#endif
+        , IValueObject
+    { }
 
     /// <summary>
     /// Provides an object that defines a value and notifies of the value change.
@@ -50,7 +52,6 @@ namespace WinCopies.Util.Data
     [Obsolete("This class has been replaced by the ViewModelBase class and will be removed in laters versions.")]
     public class ValueObject : IValueObject
     {
-
         /// <summary>
         /// Gets a value that indicates whether this object is read-only.
         /// </summary>
@@ -68,7 +69,13 @@ namespace WinCopies.Util.Data
         /// </summary>
         /// <param name="obj">Object to compare to the current object.</param>
         /// <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
-        public bool Equals(WinCopies.Util.IValueObject obj) => new ValueObjectEqualityComparer().Equals(this, obj);
+        public bool Equals(
+#if WinCopies2
+WinCopies.Util.IValueObject
+#else
+            WinCopies.IValueObject
+#endif
+            obj) => new ValueObjectEqualityComparer().Equals(this, obj);
 
         bool IEquatable<IReadOnlyValueObject>.Equals(IReadOnlyValueObject obj) => new ValueObjectEqualityComparer().Equals(this, obj);
 
@@ -97,13 +104,12 @@ namespace WinCopies.Util.Data
         /// <param name="declaringType">The declaring type of both the property and its associated field</param>
         // /// <remarks>To use this method, you need to work with the WinCopies Framework Property changed notification pattern. See the website of the WinCopies Framework for more details.</remarks>
         protected virtual void OnPropertyChanged(string propertyName, string fieldName, object newValue, Type declaringType = null)
-
         {
-
             (bool propertyChanged, object oldValue) = ((INotifyPropertyChanged)this).SetProperty(propertyName, fieldName, newValue, declaringType);
 
-            if (propertyChanged) OnPropertyChanged(propertyName, oldValue, newValue);
+            if (propertyChanged)
 
+                OnPropertyChanged(propertyName, oldValue, newValue);
         }
 
         /// <summary>
@@ -115,15 +121,15 @@ namespace WinCopies.Util.Data
         protected virtual void OnPropertyChanged(string propertyName, object oldValue, object newValue) => PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
 
         #region IDisposable Support
+
         private bool disposedValue = false;
 
         /// <summary>
-        /// Removes the unmanaged resources and the managed resources if needed. If you override this method, you should call this implementation of this method in your override implementation to avoid unexpected results when using this object laater.
+        /// Removes the unmanaged resources and the managed resources if needed. If you override this method, you should call this implementation of this method in your override implementation to avoid unexpected results when using this object later.
         /// </summary>
         /// <param name="disposing"><see langword="true"/> to dispose managed resources, otherwise <see langword="false"/>.</param>
         protected virtual void Dispose(bool disposing)
         {
-
             if (disposedValue)
 
                 return;
@@ -133,26 +139,18 @@ namespace WinCopies.Util.Data
                 _value.Dispose();
 
             disposedValue = true;
-
         }
 
-        ~ValueObject()
-        {
-
-            Dispose(false);
-
-        }
+        ~ValueObject() => Dispose(false);
 
         public void Dispose()
         {
-
             Dispose(true);
 
             GC.SuppressFinalize(this);
-
         }
-        #endregion
 
+        #endregion
     }
 
     /// <summary>
@@ -162,7 +160,6 @@ namespace WinCopies.Util.Data
     [Obsolete("This class has been replaced by the ViewModelBase class and will be removed in laters versions.")]
     public class ValueObject<T> : IValueObject<T>
     {
-
         /// <summary>
         /// Gets a value that indicates whether this object is read-only.
         /// </summary>
@@ -175,7 +172,14 @@ namespace WinCopies.Util.Data
         /// </summary>
         public T Value { get => _value; set => OnPropertyChanged(nameof(Value), nameof(_value), value, typeof(ValueObject<T>)); }
 
-        object WinCopies.Util.IValueObject.Value { get => _value; set => Value = (T)value; }
+        object
+#if WinCopies2
+WinCopies.Util.IValueObject
+#else
+            WinCopies.IValueObject
+#endif
+            .Value
+        { get => _value; set => Value = (T)value; }
 
         object IReadOnlyValueObject.Value => _value;
 
@@ -184,14 +188,26 @@ namespace WinCopies.Util.Data
         /// </summary>
         /// <param name="obj">Object to compare to the current object.</param>
         /// <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
-        public bool Equals(WinCopies.Util.IValueObject obj) => new ValueObjectEqualityComparer().Equals(this, obj);
+        public bool Equals(
+#if WinCopies2
+            WinCopies.Util.IValueObject
+#else
+            WinCopies.IValueObject
+#endif
+            obj) => new ValueObjectEqualityComparer().Equals(this, obj);
 
         /// <summary>
         /// Determines whether this object is equal to a given object.
         /// </summary>
         /// <param name="obj">Object to compare to the current object.</param>
         /// <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
-        public bool Equals(WinCopies.Util.IValueObject<T> obj) => new ValueObjectEqualityComparer<T>().Equals(this, obj);
+        public bool Equals(
+#if WinCopies2
+WinCopies.Util.IValueObject<T>
+#else
+            WinCopies.IValueObject<T>
+#endif
+            obj) => new ValueObjectEqualityComparer<T>().Equals(this, obj);
 
         bool IEquatable<IReadOnlyValueObject>.Equals(IReadOnlyValueObject obj) => new ValueObjectEqualityComparer().Equals(this, obj);
 
@@ -224,11 +240,11 @@ namespace WinCopies.Util.Data
         protected virtual void OnPropertyChanged(string propertyName, string fieldName, object newValue, Type declaringType = null)
 
         {
-
             (bool propertyChanged, object oldValue) = ((INotifyPropertyChanged)this).SetProperty(propertyName, fieldName, newValue, declaringType);
 
-            if (propertyChanged) OnPropertyChanged(propertyName, oldValue, newValue);
+            if (propertyChanged)
 
+                OnPropertyChanged(propertyName, oldValue, newValue);
         }
 
         /// <summary>
@@ -240,6 +256,7 @@ namespace WinCopies.Util.Data
         protected virtual void OnPropertyChanged(string propertyName, object oldValue, object newValue) => PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
 
         #region IDisposable Support
+
         private bool disposedValue = false;
 
         /// <summary>
@@ -248,7 +265,6 @@ namespace WinCopies.Util.Data
         /// <param name="disposing"><see langword="true"/> to dispose managed resources, otherwise <see langword="false"/>.</param>
         protected virtual void Dispose(bool disposing)
         {
-
             if (disposedValue)
 
                 return;
@@ -258,25 +274,17 @@ namespace WinCopies.Util.Data
                 _value.Dispose();
 
             disposedValue = true;
-
         }
 
-        ~ValueObject()
-        {
-
-            Dispose(false);
-
-        }
+        ~ValueObject() => Dispose(false);
 
         public void Dispose()
         {
-
             Dispose(true);
 
             GC.SuppressFinalize(this);
-
         }
-        #endregion
 
+        #endregion
     }
 }

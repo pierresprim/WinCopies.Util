@@ -18,20 +18,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 using WinCopies.Collections.DotNetFix;
 using WinCopies.Util;
-using WinCopies.Util.Resources;
+#if WinCopies2
 using static WinCopies.Util.Util;
+#else
+using static WinCopies.UtilHelpers;
+#endif
 
 namespace WinCopies.Collections
 {
-
     /// <summary>
     /// Builds arrays and lists by sizing them only when required. This class can be used to initialize your array or list before adding or removing values to it.
     /// </summary>
@@ -39,7 +37,6 @@ namespace WinCopies.Collections
     [DebuggerDisplay("Count = {Count}")]
     public class ArrayBuilder<T> : ILinkedList<T>
     {
-
         protected EnumeratorCollection Enumerators { get; } = new EnumeratorCollection();
 
         /// <summary>
@@ -259,7 +256,6 @@ namespace WinCopies.Collections
         /// <returns>The added <see cref="LinkedListNode{T}"/>'s.</returns>
         public LinkedListNode<T>[] AddRangeLast(params T[] values)
         {
-
             var result = new LinkedListNode<T>[values.Length];
 
             for (int i = 0; i < values.Length; i++)
@@ -267,7 +263,6 @@ namespace WinCopies.Collections
                 result[i] = AddLast(values[i]);
 
             return result;
-
         }
 
         /// <summary>
@@ -276,9 +271,7 @@ namespace WinCopies.Collections
         /// <param name="array">The values to add to this <see cref="ArrayBuilder{T}"/></param>
         /// <returns>The added <see cref="LinkedListNode{T}"/>'s.</returns>
         public LinkedListNode<T>[] AddRangeLast(in IEnumerable<T> array)
-
         {
-
             if (array is T[] _array) return AddRangeLast(_array);
 
             LinkedListNode<T>[] result;
@@ -286,9 +279,7 @@ namespace WinCopies.Collections
             int i = 0;
 
             if (array is IList<T> __array)
-
             {
-
                 result = new LinkedListNode<T>[__array.Count];
 
                 for (; i < __array.Count; i++)
@@ -296,7 +287,6 @@ namespace WinCopies.Collections
                     result[i] = AddLast(__array[i]);
 
                 return result;
-
             }
 
             var values = new System.Collections.Generic.LinkedList<LinkedListNode<T>>();
@@ -312,7 +302,6 @@ namespace WinCopies.Collections
                 result[i++] = item;
 
             return result;
-
         }
 
         /// <summary>
@@ -327,13 +316,10 @@ namespace WinCopies.Collections
         /// </summary>
         /// <param name="array">The <see cref="LinkedListNode{T}"/>'s to add to this <see cref="ArrayBuilder{T}"/></param>
         public void AddRangeLast(in IEnumerable<LinkedListNode<T>> array)
-
         {
-
             foreach (LinkedListNode<T> item in array)
 
                 AddLast(item);
-
         }
 
         /// <summary>
@@ -344,7 +330,6 @@ namespace WinCopies.Collections
         /// <returns>The added <see cref="LinkedListNode{T}"/>'s.</returns>
         public LinkedListNode<T>[] AddRangeBefore(in LinkedListNode<T> node, params T[] values)
         {
-
             var result = new LinkedListNode<T>[values.Length];
 
             for (int i = 0; i < values.Length; i++)
@@ -352,7 +337,6 @@ namespace WinCopies.Collections
                 result[i] = AddBefore(node, values[i]);
 
             return result;
-
         }
 
         /// <summary>
@@ -362,9 +346,7 @@ namespace WinCopies.Collections
         /// <param name="array">The values to add to this <see cref="ArrayBuilder{T}"/></param>
         /// <returns>The added <see cref="LinkedListNode{T}"/>'s.</returns>
         public LinkedListNode<T>[] AddRangeBefore(in LinkedListNode<T> node, in IEnumerable<T> array)
-
         {
-
             var values = new System.Collections.Generic.LinkedList<LinkedListNode<T>>();
 
             foreach (T item in array)
@@ -380,7 +362,6 @@ namespace WinCopies.Collections
                 result[i++] = item;
 
             return result;
-
         }
 
         /// <summary>
@@ -396,13 +377,10 @@ namespace WinCopies.Collections
         /// <param name="node">The node before which to add the values</param>
         /// <param name="array">The values to add to this <see cref="ArrayBuilder{T}"/></param>
         public void AddRangeBefore(in LinkedListNode<T> node, in IEnumerable<LinkedListNode<T>> array)
-
         {
-
             foreach (LinkedListNode<T> item in array)
 
                 AddBefore(node, item);
-
         }
 
         /// <summary>
@@ -599,17 +577,14 @@ namespace WinCopies.Collections
 
         private void ToArrayPrivate(in T[] array, in bool remove, int startIndex)
         {
-
             if (remove)
 
                 while (Count != 0)
 
                 {
-
                     array[startIndex++] = InnerList.First.Value;
 
                     InnerList.RemoveFirst();
-
                 }
 
             else
@@ -617,7 +592,6 @@ namespace WinCopies.Collections
                 foreach (T item in InnerList)
 
                     array[startIndex++] = item;
-
         }
 
         /// <summary>
@@ -643,21 +617,15 @@ namespace WinCopies.Collections
 
         private void ToArrayListPrivate(ArrayList arrayList, in bool remove, in int? startIndex)
         {
-
             if (remove)
-
             {
-
                 Action action;
 
                 if (startIndex.HasValue)
-
                 {
-
                     int index = startIndex.Value;
 
                     action = () => arrayList.Insert(index++, InnerList.RemoveAndGetFirstValue().Value);
-
                 }
 
                 else
@@ -667,23 +635,17 @@ namespace WinCopies.Collections
                 while (Count != 0)
 
                     action();
-
             }
 
             else
-
             {
-
                 Action<T> action;
 
                 if (startIndex.HasValue)
-
                 {
-
                     int index = startIndex.Value;
 
                     action = item => arrayList.Insert(index++, item);
-
                 }
 
                 else
@@ -693,9 +655,7 @@ namespace WinCopies.Collections
                 foreach (T item in InnerList)
 
                     action(item);
-
             }
-
         }
 
         /// <summary>
@@ -721,21 +681,15 @@ namespace WinCopies.Collections
 
         private void ToListPrivate(IList<T> list, in bool remove, in int? startIndex)
         {
-
             if (remove)
-
             {
-
                 Action action;
 
                 if (startIndex.HasValue)
-
                 {
-
                     int index = startIndex.Value;
 
                     action = () => list.Insert(index++, InnerList.RemoveAndGetFirstValue().Value);
-
                 }
 
                 else
@@ -745,23 +699,17 @@ namespace WinCopies.Collections
                 while (Count != 0)
 
                     action();
-
             }
 
             else
-
             {
-
                 Action<T> action;
 
                 if (startIndex.HasValue)
-
                 {
-
                     int index = startIndex.Value;
 
                     action = item => list.Insert(index++, item);
-
                 }
 
                 else
@@ -771,9 +719,7 @@ namespace WinCopies.Collections
                 foreach (T item in InnerList)
 
                     action(item);
-
             }
-
         }
 
         void ICollection<T>.Add(T item) => ((ICollection<T>)InnerList).Add(item);
@@ -782,9 +728,7 @@ namespace WinCopies.Collections
 
         [Serializable]
         public struct Enumerator : IEnumerator<LinkedListNode<T>>, IEnumerator
-
         {
-
             private ArrayBuilder<T> _arrayBuilder;
 
             private readonly int _version;
@@ -794,39 +738,31 @@ namespace WinCopies.Collections
             object IEnumerator.Current => Current;
 
             internal Enumerator(in ArrayBuilder<T> arrayBuilder)
-
             {
-
                 _arrayBuilder = arrayBuilder;
 
                 _version = arrayBuilder.Enumerators.EnumerableVersion;
 
                 Current = null;
-
             }
 
             public void Dispose()
             {
-
                 Reset();
 
                 _ = _arrayBuilder.Enumerators.Remove(this);
 
                 _arrayBuilder = null;
-
             }
 
             public bool MoveNext()
             {
-
                 if (_arrayBuilder.Enumerators.EnumerableVersion != _version)
 
                     throw new InvalidOperationException("The collection has changed during enumeration.");
 
                 if (Current is null)
-
                 {
-
                     if (_arrayBuilder.First is null)
 
                         return false;
@@ -834,7 +770,6 @@ namespace WinCopies.Collections
                     Current = _arrayBuilder.First;
 
                     return true;
-
                 }
 
                 else if (Current.Next is null)
@@ -842,19 +777,14 @@ namespace WinCopies.Collections
                     return false;
 
                 else
-
                 {
-
                     Current = Current.Next;
 
                     return true;
-
                 }
-
             }
 
             public void Reset() => Current = null;
-
         }
     }
 }

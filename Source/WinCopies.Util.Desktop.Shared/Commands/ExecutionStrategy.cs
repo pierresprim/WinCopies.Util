@@ -27,7 +27,11 @@
 
 using System;
 
+#if WinCopies2
 namespace WinCopies.Util.Commands
+#else
+namespace WinCopies.Commands
+#endif
 {
     /// <summary>
     /// Defines the interface for a strategy of execution for the CommandBehaviorBinding
@@ -77,7 +81,6 @@ namespace WinCopies.Util.Commands
     /// </summary>
     public class ActionExecutionStrategy : IExecutionStrategy
     {
-
         #region IExecutionStrategy Members
 
         /// <summary>
@@ -90,8 +93,6 @@ namespace WinCopies.Util.Commands
         /// </summary>
         /// <param name="parameter">The parameter to pass to the Action</param>
         public void Execute(object parameter) => Behavior.Action(parameter);
-
         #endregion
     }
-
 }

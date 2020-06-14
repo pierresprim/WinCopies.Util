@@ -29,35 +29,27 @@ namespace WinCopies.Util.Data
 
     public class EventArgs<T> : EventArgs
     {
-
         public T Value { get; } = default;
 
         public EventArgs(T value) => Value = value;
-
     }
 
     public class ValueChangedEventArgs : EventArgs
     {
-
         public object OldValue { get; } = null;
 
         public object NewValue { get; } = null;
 
         public ValueChangedEventArgs(object oldValue, object newValue)
-
         {
-
             OldValue = oldValue;
 
             NewValue = newValue;
-
         }
-
     }
 
     public class ValueChangedEventArgs<T> : EventArgs
     {
-
         public T OldValue { get; } = default;
 
         public T NewValue { get; } = default;
@@ -65,31 +57,23 @@ namespace WinCopies.Util.Data
         public ValueChangedEventArgs(T oldValue, T newValue)
 
         {
-
             OldValue = oldValue;
 
             NewValue = newValue;
-
         }
-
     }
 
     public class ValueChangedEventArgs<TOldValue, TNewValue> : EventArgs
     {
-
         public TOldValue OldValue { get; } = default;
 
         public TNewValue NewValue { get; } = default;
 
         public ValueChangedEventArgs(TOldValue oldValue, TNewValue newValue)
-
         {
-
             OldValue = oldValue;
 
             NewValue = newValue;
-
         }
-
     }
 }

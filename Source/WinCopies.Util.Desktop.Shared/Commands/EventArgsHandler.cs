@@ -32,7 +32,11 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
+#if WinCopies2
 namespace WinCopies.Util.Commands
+#else
+namespace WinCopies.Commands
+#endif
 {
     public class EventArgsHandler<T> : Behavior where T : class
     {
@@ -54,7 +58,7 @@ namespace WinCopies.Util.Commands
 
         public static void SetLastEventArgs(DependencyObject d, EventArgs value) => d.SetValue(LastEventArgsProperty, value);
 
-        #endregion 
+        #endregion
 
         #region HandleEventHandler 
 
@@ -74,87 +78,69 @@ namespace WinCopies.Util.Commands
         /// </summary>
         private static void OnEventHandlerChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-
             if (e.NewValue == null)
-
             {
 
                 if (dico != null && dico.ContainsKey(d))
 
-                    dico.Remove(d);
+                    _ = dico.Remove(d);
 
                 if (dico.Count == 0)
 
                     dico = null;
-
             }
 
             else
-
             {
-
+#if CS7
                 if (dico == null)
 
                     dico = new Dictionary<object, Dictionary<string, Delegate>>();
+#else
+                dico ??= new Dictionary<object, Dictionary<string, Delegate>>();
+#endif
 
                 if (d is Control control)
-
                 {
-
                     if (e.NewValue is IEnumerable<string> _e)
-
                     {
-
                         if (!dico.ContainsKey(control))
 
                             dico.Add(control, new Dictionary<string, Delegate>());
 
-                        foreach (var _event in control.GetType().GetEvents())
+                        foreach (System.Reflection.EventInfo _event in control.GetType().GetEvents())
 
                             if (_e.Contains(_event.Name))
-
                             {
-
                                 var new_delegate = Delegate.CreateDelegate(_event.EventHandlerType, typeof(EventArgsHandler<T>).GetMethod(nameof(ControlEventHandler)));
 
                                 dico[control].Add(_event.Name, new_delegate);
 
                                 _event.AddEventHandler(control, new_delegate);
-
                             }
 
                             else if (dico.ContainsKey(_event.Name))
-
                             {
-
                                 _event.RemoveEventHandler(control, dico[control][_event.Name]);
 
                                 dico[control].Remove(_event.Name);
-
                             }
-
                     }
-
                 }
-
             }
-
         }
 
         public static void ControlEventHandler(dynamic a, dynamic b)
-
         {
-
-#if DEBUG 
+#if DEBUG
 
             Debug.WriteLine(nameof(ControlEventHandler));
 
-#endif 
+#endif
 
             if (a is DependencyObject c && b is EventArgs d)
 
                 SetLastEventArgs(c as DependencyObject, d);
-
         }
 
         protected override Freezable CreateInstanceCore() => throw new NotImplementedException();
@@ -167,11 +153,5 @@ namespace WinCopies.Util.Commands
         #endregion
     }
 
-    public class EventArgsHandler : EventArgsHandler<EventArgs>
-
-    {
-
-
-
-    }    
+    public class EventArgsHandler : EventArgsHandler<EventArgs> { }
 }

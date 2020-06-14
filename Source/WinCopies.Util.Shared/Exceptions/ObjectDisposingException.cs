@@ -19,14 +19,17 @@ using System;
 using System.Runtime.Serialization;
 using WinCopies.Util.Resources;
 
+#if WinCopies2
 namespace WinCopies.Util
+#else
+namespace WinCopies
+#endif
 {
     /// <summary>
     /// The exception that is thrown when an operation is performed on a disposing object.
     /// </summary>
     public class ObjectDisposingException : InvalidOperationException
     {
-
         #region
 
         public ObjectDisposingException() : base(ExceptionMessages.CurrentObjectIsDisposing) { }
@@ -78,11 +81,9 @@ namespace WinCopies.Util
         [System.Security.SecurityCritical]
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-
             base.GetObjectData(info, context);
 
             info.AddValue(nameof(ObjectName), ObjectName, typeof(string));
-
         }
     }
 }

@@ -8,6 +8,10 @@ The WinCopies® software framework
 README
 ======
 
+This version is still in development and is NOT released yet.
+
+Current released version: (https://github.com/pierresprim/WinCopies.Util/tree/master/Source/WinCopies.Util)[https://github.com/pierresprim/WinCopies.Util/tree/master/Source/WinCopies.Util]
+
 Updates
 -------
 
@@ -20,7 +24,7 @@ Some utilities to extend the .NET framework capabilities, such as:
 
 - An array and list builder;
 - (ReadOnly)Collections;
-- (Observable)Stack/Queue/LinkedCollections;
+- (ReadOnly)(Observable)Stack/Queue/LinkedCollections;
 - Some extension methods, mainly for arrays, enumerables, collections and enums;
 - Some utility static methods, such as advanced 'if' functions;
 - 'ToString' extension method for the 'IEnumerable' type to display the content of a given IEnumerable

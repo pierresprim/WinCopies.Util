@@ -34,6 +34,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Linq\Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Math.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\ObjectDisposingException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NullableEntry.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SelectionChangedEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SingleInstance.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StringComparer.cs" />

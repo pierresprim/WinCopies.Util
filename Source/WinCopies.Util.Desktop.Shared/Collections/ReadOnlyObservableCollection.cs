@@ -16,14 +16,9 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using WinCopies.Util;
 
 namespace WinCopies.Collections
 {
-
     //public interface IReadOnlyObservableCollection<T> : IReadOnlyList<T>, INotifyCollectionChanged, INotifyPropertyChanged, INotifyCollectionChanging
 
     //{
@@ -55,27 +50,25 @@ namespace WinCopies.Collections
     //    T IReadOnlyList<T>.this[int index] { get => this[index]; set => ((IReadOnlyList<T>)this)[index] = value; }
 
     //}using WinCopies.Util;
-
     namespace DotNetFix
     {
         [Serializable]
         public class ReadOnlyObservableCollection<T> : System.Collections.ObjectModel.ReadOnlyObservableCollection<T>, INotifyCollectionChanging
         {
-
             public event NotifyCollectionChangingEventHandler CollectionChanging;
 
-            public ReadOnlyObservableCollection(ObservableCollection<T> list) : base(list) => list.CollectionChanging += (object sender, DotNetFix.NotifyCollectionChangedEventArgs e) => CollectionChanging?.Invoke(this, e);
+            public ReadOnlyObservableCollection(ObservableCollection<T> list) : base(list) => list.CollectionChanging += (object sender, NotifyCollectionChangedEventArgs e) => CollectionChanging?.Invoke(this, e);
         }
     }
 
+#if WinCopies2
     [Obsolete("This class has been moved to the WinCopies.Collections.DotNetFix namespace. This implementation is still here temporarily only.")]
     [Serializable]
     public class ReadOnlyObservableCollection<T> : System.Collections.ObjectModel.ReadOnlyObservableCollection<T>, INotifyCollectionChanging
     {
-
         public event NotifyCollectionChangingEventHandler CollectionChanging;
 
         public ReadOnlyObservableCollection(ObservableCollection<T> list) : base(list) => list.CollectionChanging += (object sender, DotNetFix.NotifyCollectionChangedEventArgs e) => CollectionChanging?.Invoke(this, e);
     }
-
+#endif
 }

@@ -30,7 +30,11 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 
+#if WinCopies2
 namespace WinCopies.Util.Commands
+#else
+namespace WinCopies.Commands
+#endif
 {
     /// <summary>
     /// Defines the attached properties to create a CommandBehaviorBinding
@@ -205,7 +209,5 @@ namespace WinCopies.Util.Commands
             return binding;
         }
         #endregion
-
     }
-
 }

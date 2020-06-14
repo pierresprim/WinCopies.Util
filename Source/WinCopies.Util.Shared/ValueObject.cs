@@ -18,21 +18,19 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
+#if WinCopies2
 namespace WinCopies.Util
+#else
+namespace WinCopies
+#endif
 {
-
     /// <summary>
     /// Represents a value container. See the <see cref="IValueObject{T}"/> for a generic version of this class.
     /// </summary>
     public interface IValueObject : IReadOnlyValueObject, System.IDisposable
     {
-
         new object Value { get; set; }
-
     }
 
     /// <summary>
@@ -40,18 +38,14 @@ namespace WinCopies.Util
     /// </summary>
     public interface IValueObject<T> : IReadOnlyValueObject<T>, IValueObject, System.IDisposable
     {
-
         /// <summary>
         /// Gets or sets the value of the object.
         /// </summary>
         new T Value { get; set; }
-
     }
 
     public interface IReadOnlyValueObject : IEquatable<IReadOnlyValueObject>, System.IDisposable
-
     {
-
         /// <summary>
         /// Gets a value that indicates whether this object is read-only.
         /// </summary>
@@ -61,15 +55,11 @@ namespace WinCopies.Util
         /// Gets or sets the value of the object.
         /// </summary>
         object Value { get; }
-
     }
 
     public interface IReadOnlyValueObject<T> : IReadOnlyValueObject, IEquatable<IReadOnlyValueObject<T>>, System.IDisposable
-
     {
-
         new T Value { get; }
-
     }
 
     /// <summary>
@@ -77,7 +67,6 @@ namespace WinCopies.Util
     /// </summary>
     public sealed class ValueObjectEqualityComparer : IEqualityComparer<IReadOnlyValueObject>
     {
-
         /// <summary>
         /// Checks if two <see cref="IReadOnlyValueObject"/>s are equal.
         /// </summary>
@@ -92,7 +81,6 @@ namespace WinCopies.Util
         /// <param name="obj">The <see cref="IReadOnlyValueObject"/> for which to return the hash code.</param>
         /// <returns>The hash code of <paramref name="obj"/>'s <see cref="IReadOnlyValueObject.Value"/> if <paramref name="obj"/> has a value, otherwise the <paramref name="obj"/>'s hash code.</returns>
         public int GetHashCode(IReadOnlyValueObject obj) => (obj.Value is object ? obj.Value : obj).GetHashCode();
-
     }
 
     /// <summary>
@@ -100,7 +88,6 @@ namespace WinCopies.Util
     /// </summary>
     public class ValueObjectEqualityComparer<T> : IEqualityComparer<IReadOnlyValueObject<T>>
     {
-
         /// <summary>
         /// Checks if two <see cref="IReadOnlyValueObject{T}"/>s are equal.
         /// </summary>
@@ -115,13 +102,11 @@ namespace WinCopies.Util
         /// <param name="obj">The <see cref="IReadOnlyValueObject{T}"/> for which to return the hash code.</param>
         /// <returns>The hash code of <paramref name="obj"/>'s <see cref="IReadOnlyValueObject{T}.Value"/> if <paramref name="obj"/> has a value, otherwise the <paramref name="obj"/>'s hash code.</returns>
         public int GetHashCode(IReadOnlyValueObject<T> obj) => obj.Value is object ? obj.Value.GetHashCode() : obj.GetHashCode();
-
     }
 
     [Serializable]
     public struct ValueObjectEnumerator<T> : IEnumerator<T>, IEnumerator
     {
-
         private IEnumerator<IReadOnlyValueObject<T>> _enumerator;
 
         public T Current { get; private set; }
@@ -130,11 +115,9 @@ namespace WinCopies.Util
 
         public ValueObjectEnumerator(IEnumerator<IReadOnlyValueObject<T>> enumerator)
         {
-
             _enumerator = enumerator;
 
             Current = default;
-
         }
 
         public void Dispose()
@@ -147,13 +130,10 @@ namespace WinCopies.Util
         public bool MoveNext()
         {
             if (_enumerator.MoveNext())
-
             {
-
                 Current = _enumerator.Current.Value;
 
                 return true;
-
             }
 
             else return false;
@@ -166,5 +146,4 @@ namespace WinCopies.Util
             Current = default;
         }
     }
-
 }

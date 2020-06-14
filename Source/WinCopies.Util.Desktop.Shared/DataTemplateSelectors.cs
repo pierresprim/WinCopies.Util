@@ -16,22 +16,20 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Markup;
 
+#if WinCopies2
 namespace WinCopies.Util
+#else
+namespace WinCopies
+#endif
 {
     public class InterfaceDataTemplateSelector : DataTemplateSelector
     {
-
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
-
             if (item == null || !(container is FrameworkElement containerElement))
 
                 return base.SelectTemplate(item, container);
@@ -40,29 +38,22 @@ namespace WinCopies.Util
 
             return Enumerable.Repeat(itemType, 1).Concat(itemType.GetInterfaces())
                     .FirstOrDefault<DataTemplate>(t => containerElement.TryFindResource(new DataTemplateKey(t))) ?? base.SelectTemplate(item, container);
-
         }
-
     }
 
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     public class TypeForDataTemplateAttribute : Attribute
-
     {
-
         public Type Type { get; }
 
         public TypeForDataTemplateAttribute(Type type) => Type = type;
-
     }
 
     public class AttributeDataTemplateSelector : DataTemplateSelector
     {
-
         public override DataTemplate SelectTemplate(object item, DependencyObject container) => item == null || !(container is FrameworkElement containerElement)
                 ? base.SelectTemplate(item, container)
                 : ((TypeForDataTemplateAttribute[])item.GetType().GetCustomAttributes(typeof(TypeForDataTemplateAttribute), false))
-                    .FirstOrDefault< TypeForDataTemplateAttribute, DataTemplate>(t => containerElement.TryFindResource(new DataTemplateKey(t.Type))) ?? base.SelectTemplate(item, container);
-
+                    .FirstOrDefault<TypeForDataTemplateAttribute, DataTemplate>(t => containerElement.TryFindResource(new DataTemplateKey(t.Type))) ?? base.SelectTemplate(item, container);
     }
 }

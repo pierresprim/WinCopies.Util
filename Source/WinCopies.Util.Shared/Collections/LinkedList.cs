@@ -20,13 +20,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.Serialization;
-using System.Text;
 using WinCopies.Collections.DotNetFix;
 using WinCopies.Util.Resources;
 
 namespace WinCopies.Collections
 {
-
     public interface ILinkedListNode<T>
     {
         ILinkedList<T> List { get; }
@@ -38,11 +36,11 @@ namespace WinCopies.Collections
         T Value { get; }
     }
 
+#if WinCopies2
     [Obsolete("Please use the WinCopies.Collections.DotNetFix.LinkedList<T> instead.")]
     [DebuggerDisplay("Count = {Count}")]
     public class LinkedList<T> : ILinkedList<T>
     {
-
         protected System.Collections.Generic.LinkedList<T> InnerList { get; }
 
         public LinkedList(System.Collections.Generic.LinkedList<T> list) => InnerList = list;
@@ -106,15 +104,12 @@ namespace WinCopies.Collections
         public void RemoveLast() => InnerList.RemoveLast();
 
         public void CopyTo(Array array, int index) => ((ICollection)InnerList).CopyTo(array, index);
-
     }
 
     [Obsolete("Please use the WinCopies.Collections.DotNetFix.ReadOnlyLinkedList<T> instead.")]
     [DebuggerDisplay("Count = {Count}")]
     public class ReadOnlyLinkedList<T> : ILinkedList<T>
-
     {
-
         protected ILinkedList<T> InnerList { get; }
 
         public LinkedListNode<T> Last => InnerList.Last;
@@ -180,7 +175,6 @@ namespace WinCopies.Collections
         public void RemoveFirst() => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
 
         public void RemoveLast() => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
-
     }
-
+#endif
 }

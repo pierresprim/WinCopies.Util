@@ -29,7 +29,11 @@ using System;
 using System.Windows;
 using System.Windows.Input;
 
+#if WinCopies2
 namespace WinCopies.Util.Commands
+#else
+namespace WinCopies.Commands
+#endif
 {
     /// <summary>
     /// Provides a base class for behaviors.
@@ -37,7 +41,6 @@ namespace WinCopies.Util.Commands
     /// </summary>
     public abstract class Behavior : Freezable
     {
-
         internal int Id { get; set; }
 
         DependencyObject owner;
@@ -73,7 +76,6 @@ namespace WinCopies.Util.Commands
     /// Defines a Command Binding
     /// </summary>
     public class BehaviorBinding : Behavior
-
     {
         CommandBehaviorBinding behavior;
 
@@ -209,27 +211,19 @@ namespace WinCopies.Util.Commands
         /// </summary>
         protected override void ResetBehavior()
         {
-
             if (Owner != null) //only do this when the Owner is set
-
             {
-
                 //check if the Event is set. If yes we need to rebind the Command to the new event and unregister the old one
                 if (Behavior.Event != null && Behavior.Owner != null)
                     Behavior.Dispose();
 
                 //bind the new event to the command
                 Behavior.BindEvent(Owner, Event);
-
             }
-
         }
 
         protected override Freezable CreateInstanceCore() => new BehaviorBinding();
 
         #endregion
-
-
-
     }
 }

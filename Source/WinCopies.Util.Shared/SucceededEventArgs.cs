@@ -17,31 +17,31 @@
 
 using System;
 
+#if WinCopies2
 namespace WinCopies.Util
+#else
+namespace WinCopies
+#endif
 {
-
+#if WinCopies2
     [Obsolete("Use the TaskCompletedEventHandler delegate instead.")]
     public delegate void SucceededEventHandler(object sender, SucceededEventArgs e);
 
+    [Obsolete("Use the TaskCompletedEventArgs class instead.")]
     public class SucceededEventArgs
     {
-
-        public bool Succeeded { get; } = false;
+            public bool Succeeded { get; } = false;
 
         public SucceededEventArgs(bool succeeded) => Succeeded = succeeded;
-
-    }
+            }
+#endif
 
     public delegate void TaskCompletedEventHandler(object sender, TaskCompletedEventArgs e);
 
-    [Obsolete("Use the TaskCompletedEventArgs class instead.")]
     public class TaskCompletedEventArgs
     {
-
         public bool Succeeded { get; } = false;
 
         public TaskCompletedEventArgs(bool succeeded) => Succeeded = succeeded;
-
     }
-
 }

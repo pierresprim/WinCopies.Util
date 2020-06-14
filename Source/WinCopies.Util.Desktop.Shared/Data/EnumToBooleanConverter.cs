@@ -15,22 +15,18 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-
-
 using System;
 using System.Globalization;
 using System.Windows.Data;
 
 namespace WinCopies.Util.Data
 {
-
     /// <summary>
     /// Data converter for checking wheter an enum equals a parameter.
     /// </summary>
     /// <remarks>This class can also work for numeric types (int, ...)</remarks>
     public class EnumToBooleanConverter : ConverterBase
     {
-
         /// <summary>
         /// Checks if an enum value equals a parameter.
         /// </summary>
@@ -46,9 +42,5 @@ namespace WinCopies.Util.Data
             value.Equals(parameter);
 
         public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => (bool)value ? parameter : Binding.DoNothing;
-
     }
-
 }
-
- 
