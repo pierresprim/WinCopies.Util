@@ -18,14 +18,24 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
+using static WinCopies.
+#if WinCopies2
+    Util.Util;
+using WinCopies.Util;
+#else
+    UtilHelpers;
+using WinCopies;
+#endif
 
 namespace WinCopies.Collections.DotNetFix
 {
     namespace Extensions
     {
+        [Serializable]
         internal sealed class LinkedListNodeEnumerator<T> : IEnumerator<LinkedListNode<T>>, IEnumerable<LinkedListNode<T>>
         {
             private ILinkedList<T> _list;
@@ -79,6 +89,7 @@ namespace WinCopies.Collections.DotNetFix
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 
+        [Serializable]
         public class LinkedCollection<T> : ICollection<T>, IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection, IDeserializationCallback, ISerializable
         {
             protected ILinkedList<T> InnerList { get; }
@@ -234,55 +245,56 @@ namespace WinCopies.Collections.DotNetFix
             public IEnumerator<T> GetEnumerator() => InnerList.GetEnumerator();
         }
 
-        public interface INotifySimpleLinkedCollectionChanged<T>
-        {
-            event SimpleLinkedCollectionChangedEventHandler<T> CollectionChanged;
-        }
+        //public interface INotifySimpleLinkedCollectionChanged<T>
+        //{
+        //    event SimpleLinkedCollectionChangedEventHandler<T> CollectionChanged;
+        //}
 
-        public enum LinkedCollectionChangeAction : byte
-        {
-            AddedFirst = 0,
+        //public enum LinkedCollectionChangeAction : byte
+        //{
+        //    AddedFirst = 0,
 
-            AddedLast = 1,
+        //    AddedLast = 1,
 
-            AddedBefore = 2,
+        //    AddedBefore = 2,
 
-            AddedAfter = 3,
+        //    AddedAfter = 3,
 
-            Removed = 4,
+        //    Removed = 4,
 
-            Cleared = 5,
-        }
+        //    Cleared = 5,
+        //}
 
-        public class LinkedCollectionChangedEventArgs<T>
-        {
-            public LinkedCollectionChangeAction Action { get; }
+        //public class LinkedCollectionChangedEventArgs<T>
+        //{
+        //    public LinkedCollectionChangeAction Action { get; }
 
-            public LinkedListNode<T> AddedBeforeOrAfter { get; }
+        //    public LinkedListNode<T> AddedBeforeOrAfter { get; }
 
-            public LinkedListNode<T> Node { get; }
+        //    public LinkedListNode<T> Node { get; }
 
-            public LinkedCollectionChangedEventArgs(LinkedCollectionChangeAction action, LinkedListNode<T> addedBeforeOrAfter, LinkedListNode<T> node)
-            {
-                if (((action == LinkedCollectionChangeAction.AddedBefore || action == LinkedCollectionChangeAction.AddedAfter) && addedBeforeOrAfter == null) || ((action != LinkedCollectionChangeAction.AddedBefore && action != LinkedCollectionChangeAction.AddedAfter) && addedBeforeOrAfter != null) || (action == LinkedCollectionChangeAction.Removed && (node == null || addedBeforeOrAfter != null)) || (action == LinkedCollectionChangeAction.Cleared && (node != null || addedBeforeOrAfter != null)))
+        //    public LinkedCollectionChangedEventArgs(LinkedCollectionChangeAction action, LinkedListNode<T> addedBeforeOrAfter, LinkedListNode<T> node)
+        //    {
+        //        if (((action == LinkedCollectionChangeAction.AddedBefore || action == LinkedCollectionChangeAction.AddedAfter) && addedBeforeOrAfter == null) || ((action != LinkedCollectionChangeAction.AddedBefore && action != LinkedCollectionChangeAction.AddedAfter) && addedBeforeOrAfter != null) || (action == LinkedCollectionChangeAction.Removed && (node == null || addedBeforeOrAfter != null)) || (action == LinkedCollectionChangeAction.Cleared && (node != null || addedBeforeOrAfter != null)))
 
-                    throw new ArgumentException($"Invalid combination of {nameof(action)} and {nameof(node)} or {nameof(addedBeforeOrAfter)}.");
+        //            throw new ArgumentException($"Invalid combination of {nameof(action)} and {nameof(node)} or {nameof(addedBeforeOrAfter)}.");
 
-                Action = action;
+        //        Action = action;
 
-                AddedBeforeOrAfter = addedBeforeOrAfter;
+        //        AddedBeforeOrAfter = addedBeforeOrAfter;
 
-                Node = node;
-            }
-        }
+        //        Node = node;
+        //    }
+        //}
 
-        public delegate void LinkedCollectionChangedEventHandler<T>(object sender, LinkedCollectionChangedEventArgs<T> e);
+        //public delegate void LinkedCollectionChangedEventHandler<T>(object sender, LinkedCollectionChangedEventArgs<T> e);
 
-        public interface INotifyLinkedCollectionChanged<T>
-        {
-            event LinkedCollectionChangedEventHandler<T> CollectionChanged;
-        }
+        //public interface INotifyLinkedCollectionChanged<T>
+        //{
+        //    event LinkedCollectionChangedEventHandler<T> CollectionChanged;
+        //}
 
+        [Serializable]
         public class ObservableLinkedCollection<T> : LinkedCollection<T>, INotifyPropertyChanged, INotifyLinkedCollectionChanged<T>
         {
             public event PropertyChangedEventHandler PropertyChanged;
@@ -291,7 +303,7 @@ namespace WinCopies.Collections.DotNetFix
 
             public ObservableLinkedCollection() : base() { }
 
-            public ObservableLinkedCollection(in LinkedList<T> list) : base(list) { }
+            public ObservableLinkedCollection(in ILinkedList<T> list) : base(list) { }
 
             protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
 
@@ -301,7 +313,7 @@ namespace WinCopies.Collections.DotNetFix
 
             protected virtual void OnCollectionChanged(LinkedCollectionChangedEventArgs<T> e) => CollectionChanged?.Invoke(this, e);
 
-            protected void RaiseCollectionChangedEvent(in LinkedCollectionChangeAction action, in LinkedListNode<T> addedBeforeOrAfter, in LinkedListNode<T> node) => OnCollectionChanged(new LinkedCollectionChangedEventArgs<T>(action, addedBeforeOrAfter, node));
+            protected void RaiseCollectionChangedEvent(in LinkedCollectionChangedAction action, in LinkedListNode<T> addedBefore, in LinkedListNode<T> addedAfter, in LinkedListNode<T> node) => OnCollectionChanged(new LinkedCollectionChangedEventArgs<T>(action, addedBefore, addedAfter, node));
 
             protected override void AddFirstItem(LinkedListNode<T> node)
             {
@@ -309,7 +321,7 @@ namespace WinCopies.Collections.DotNetFix
 
                 RaiseCountPropertyChangedEvent();
 
-                RaiseCollectionChangedEvent(LinkedCollectionChangeAction.AddedFirst, null, node);
+                RaiseCollectionChangedEvent(LinkedCollectionChangedAction.AddFirst, null, null, node);
             }
 
             protected override LinkedListNode<T> AddFirstItem(T value)
@@ -318,7 +330,7 @@ namespace WinCopies.Collections.DotNetFix
 
                 RaiseCountPropertyChangedEvent();
 
-                RaiseCollectionChangedEvent(LinkedCollectionChangeAction.AddedFirst, null, result);
+                RaiseCollectionChangedEvent(LinkedCollectionChangedAction.AddFirst, null, null, result);
 
                 return result;
             }
@@ -331,7 +343,7 @@ namespace WinCopies.Collections.DotNetFix
 
                 // Assumming that items are added to the end of the list.
 
-                RaiseCollectionChangedEvent(LinkedCollectionChangeAction.AddedLast, null, InnerList.Last);
+                RaiseCollectionChangedEvent(LinkedCollectionChangedAction.AddLast, null, null, InnerList.Last);
             }
 
             protected override void AddItemAfter(LinkedListNode<T> node, LinkedListNode<T> newNode)
@@ -340,7 +352,7 @@ namespace WinCopies.Collections.DotNetFix
 
                 RaiseCountPropertyChangedEvent();
 
-                RaiseCollectionChangedEvent(LinkedCollectionChangeAction.AddedAfter, node, newNode);
+                RaiseCollectionChangedEvent(LinkedCollectionChangedAction.AddAfter, null, node, newNode);
             }
 
             protected override LinkedListNode<T> AddItemAfter(LinkedListNode<T> node, T value)
@@ -349,7 +361,7 @@ namespace WinCopies.Collections.DotNetFix
 
                 RaiseCountPropertyChangedEvent();
 
-                RaiseCollectionChangedEvent(LinkedCollectionChangeAction.AddedAfter, node, result);
+                RaiseCollectionChangedEvent(LinkedCollectionChangedAction.AddAfter, null, node, result);
 
                 return result;
             }
@@ -360,7 +372,7 @@ namespace WinCopies.Collections.DotNetFix
 
                 RaiseCountPropertyChangedEvent();
 
-                RaiseCollectionChangedEvent(LinkedCollectionChangeAction.AddedBefore, node, newNode);
+                RaiseCollectionChangedEvent(LinkedCollectionChangedAction.AddBefore, node, null, newNode);
             }
 
             protected override LinkedListNode<T> AddItemBefore(LinkedListNode<T> node, T value)
@@ -369,7 +381,7 @@ namespace WinCopies.Collections.DotNetFix
 
                 RaiseCountPropertyChangedEvent();
 
-                RaiseCollectionChangedEvent(LinkedCollectionChangeAction.AddedBefore, node, result);
+                RaiseCollectionChangedEvent(LinkedCollectionChangedAction.AddBefore, node, null, result);
 
                 return result;
             }
@@ -380,7 +392,7 @@ namespace WinCopies.Collections.DotNetFix
 
                 RaiseCountPropertyChangedEvent();
 
-                RaiseCollectionChangedEvent(LinkedCollectionChangeAction.AddedLast, null, node);
+                RaiseCollectionChangedEvent(LinkedCollectionChangedAction.AddLast, null, null, node);
             }
 
             protected override LinkedListNode<T> AddLastItem(T value)
@@ -389,7 +401,7 @@ namespace WinCopies.Collections.DotNetFix
 
                 RaiseCountPropertyChangedEvent();
 
-                RaiseCollectionChangedEvent(LinkedCollectionChangeAction.AddedLast, null, result);
+                RaiseCollectionChangedEvent(LinkedCollectionChangedAction.AddLast, null, null, result);
 
                 return result;
             }
@@ -400,7 +412,7 @@ namespace WinCopies.Collections.DotNetFix
 
                 RaiseCountPropertyChangedEvent();
 
-                RaiseCollectionChangedEvent(LinkedCollectionChangeAction.Cleared, null, null);
+                RaiseCollectionChangedEvent(LinkedCollectionChangedAction.Reset, null, null, null);
             }
 
             protected override void RemoveFirstItem()
@@ -411,7 +423,7 @@ namespace WinCopies.Collections.DotNetFix
 
                 RaiseCountPropertyChangedEvent();
 
-                RaiseCollectionChangedEvent(LinkedCollectionChangeAction.Removed, null, node);
+                RaiseCollectionChangedEvent(LinkedCollectionChangedAction.Remove, null, null, node);
             }
 
             protected override void RemoveItem(LinkedListNode<T> node)
@@ -420,7 +432,7 @@ namespace WinCopies.Collections.DotNetFix
 
                 RaiseCountPropertyChangedEvent();
 
-                RaiseCollectionChangedEvent(LinkedCollectionChangeAction.Removed, null, node);
+                RaiseCollectionChangedEvent(LinkedCollectionChangedAction.Remove, null, null, node);
             }
 
             protected override bool RemoveItem(T item)
@@ -433,7 +445,7 @@ namespace WinCopies.Collections.DotNetFix
 
                         RaiseCountPropertyChangedEvent();
 
-                        RaiseCollectionChangedEvent(LinkedCollectionChangeAction.Removed, null, node);
+                        RaiseCollectionChangedEvent(LinkedCollectionChangedAction.Remove, null, null, node);
 
                         return true;
                     }
@@ -449,11 +461,12 @@ namespace WinCopies.Collections.DotNetFix
 
                 RaiseCountPropertyChangedEvent();
 
-                RaiseCollectionChangedEvent(LinkedCollectionChangeAction.Removed, null, node);
+                RaiseCollectionChangedEvent(LinkedCollectionChangedAction.Remove, null, null, node);
             }
         }
     }
 
+    [Serializable]
     internal sealed class LinkedListNodeEnumerator<T> : IEnumerator<LinkedListNode<T>>, IEnumerable<LinkedListNode<T>>
     {
         private System.Collections.Generic.LinkedList<T> _list;
@@ -507,15 +520,18 @@ namespace WinCopies.Collections.DotNetFix
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 
+    [Serializable]
     public class QueueCollection : IEnumerable, ICollection, ICloneable
     {
-        protected Queue InnerQueue { get; }
+        protected internal Queue InnerQueue { get; }
 
         /// <summary>
         /// Gets the number of elements contained in the <see cref="QueueCollection"/>.
         /// </summary>
         /// <value>The number of elements contained in the <see cref="QueueCollection"/>.</value>
         public int Count => InnerQueue.Count;
+
+        public bool IsReadOnly => false;
 
         bool ICollection.IsSynchronized => ((ICollection)InnerQueue).IsSynchronized;
 
@@ -612,15 +628,18 @@ namespace WinCopies.Collections.DotNetFix
         public IEnumerator GetEnumerator() => InnerQueue.GetEnumerator();
     }
 
+    [Serializable]
     public class QueueCollection<T> : IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection
     {
-        protected Queue<T> InnerQueue { get; }
+        protected internal Queue<T> InnerQueue { get; }
 
         /// <summary>
         /// Gets the number of elements contained in the <see cref="QueueCollection{T}"/>.
         /// </summary>
         /// <value>The number of elements contained in the <see cref="QueueCollection{T}"/>.</value>
         public int Count => InnerQueue.Count;
+
+        public bool IsReadOnly => false;
 
         bool ICollection.IsSynchronized => ((ICollection)InnerQueue).IsSynchronized;
 
@@ -748,11 +767,14 @@ namespace WinCopies.Collections.DotNetFix
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerQueue).GetEnumerator();
     }
 
+    [Serializable]
     public class StackCollection : IEnumerable, ICollection, ICloneable
     {
-        protected Stack InnerStack { get; }
+        protected internal Stack InnerStack { get; }
 
         public int Count => InnerStack.Count;
+
+        public bool IsReadOnly => false;
 
         public bool IsSynchronized => InnerStack.IsSynchronized;
 
@@ -787,11 +809,14 @@ namespace WinCopies.Collections.DotNetFix
         public IEnumerator GetEnumerator() => InnerStack.GetEnumerator();
     }
 
+    [Serializable]
     public class StackCollection<T> : IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection
     {
-        protected Stack<T> InnerStack { get; }
+        protected internal Stack<T> InnerStack { get; }
 
         public int Count => InnerStack.Count;
+
+        public bool IsReadOnly => false;
 
         bool ICollection.IsSynchronized => ((ICollection)InnerStack).IsSynchronized;
 
@@ -840,9 +865,10 @@ namespace WinCopies.Collections.DotNetFix
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerStack).GetEnumerator();
     }
 
+    [Serializable]
     public class LinkedCollection<T> : ICollection<T>, IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection, IDeserializationCallback, ISerializable
     {
-        protected System.Collections.Generic.LinkedList<T> InnerList { get; }
+        protected internal System.Collections.Generic.LinkedList<T> InnerList { get; }
 
         public LinkedListNode<T> Last => InnerList.Last;
 
@@ -858,7 +884,7 @@ namespace WinCopies.Collections.DotNetFix
 
         public LinkedCollection() : this(new LinkedList<T>()) { }
 
-        public LinkedCollection(in LinkedList<T> list) => InnerList = list;
+        public LinkedCollection(in System.Collections.Generic.LinkedList<T> list) => InnerList = list;
 
         protected virtual void AddItem(T item) => ((ICollection<T>)InnerList).Add(item);
 
@@ -995,22 +1021,13 @@ namespace WinCopies.Collections.DotNetFix
         public IEnumerator<T> GetEnumerator() => InnerList.GetEnumerator();
     }
 
-    public enum SimpleLinkedCollectionChangeAction : byte
-    {
-        Added = 0,
-
-        Removed = 1,
-
-        Cleared = 2
-    }
-
     public class SimpleLinkedCollectionChangedEventArgs<T>
     {
-        public SimpleLinkedCollectionChangeAction Action { get; }
+        public NotifyCollectionChangedAction Action { get; }
 
         public T Item { get; }
 
-        public SimpleLinkedCollectionChangedEventArgs(SimpleLinkedCollectionChangeAction action, T item)
+        public SimpleLinkedCollectionChangedEventArgs(NotifyCollectionChangedAction action, T item)
         {
             Action = action;
 
@@ -1025,38 +1042,54 @@ namespace WinCopies.Collections.DotNetFix
         event SimpleLinkedCollectionChangedEventHandler<T> CollectionChanged;
     }
 
-    public enum LinkedCollectionChangeAction : byte
+    public enum LinkedCollectionChangedAction : byte
     {
-        AddedFirst = 0,
+        AddFirst = 0,
 
-        AddedLast = 1,
+        AddLast = 1,
 
-        AddedBefore = 2,
+        AddBefore = 2,
 
-        AddedAfter = 3,
+        AddAfter = 3,
 
-        Removed = 4,
+        Remove = 4,
 
-        Cleared = 5,
+        //Replace = 5,
+
+        Move = 6,
+
+        Reset = 7,
     }
 
     public class LinkedCollectionChangedEventArgs<T>
     {
-        public LinkedCollectionChangeAction Action { get; }
+        public LinkedCollectionChangedAction Action { get; }
 
-        public LinkedListNode<T> AddedBeforeOrAfter { get; }
+        public LinkedListNode<T> AddedBefore { get; }
+
+        public LinkedListNode<T> AddedAfter { get; }
 
         public LinkedListNode<T> Node { get; }
 
-        public LinkedCollectionChangedEventArgs(LinkedCollectionChangeAction action, LinkedListNode<T> addedBeforeOrAfter, LinkedListNode<T> node)
+        public LinkedCollectionChangedEventArgs(LinkedCollectionChangedAction action, LinkedListNode<T> addedBefore, LinkedListNode<T> addedAfter, LinkedListNode<T> node)
         {
-            if (((action == LinkedCollectionChangeAction.AddedBefore || action == LinkedCollectionChangeAction.AddedAfter) && addedBeforeOrAfter == null) || ((action != LinkedCollectionChangeAction.AddedBefore && action != LinkedCollectionChangeAction.AddedAfter) && addedBeforeOrAfter != null) || (action == LinkedCollectionChangeAction.Removed && (node == null || addedBeforeOrAfter != null)) || (action == LinkedCollectionChangeAction.Cleared && (node != null || addedBeforeOrAfter != null)))
+            bool check(LinkedCollectionChangedAction _action, LinkedListNode<T> parameter) => (_action == action && parameter == null) || !(_action == action || parameter == null);
 
-                throw new ArgumentException($"Invalid combination of {nameof(action)} and {nameof(node)} or {nameof(addedBeforeOrAfter)}.");
+            if ((action == LinkedCollectionChangedAction.Reset && (node != null || addedBefore != null || addedAfter != null))
+                || (action != LinkedCollectionChangedAction.Reset && node == null)
+                || (action.IsValidEnumValue(true, LinkedCollectionChangedAction.AddFirst, LinkedCollectionChangedAction.AddLast) && (addedBefore != null || addedAfter != null))
+                || (action == LinkedCollectionChangedAction.Move && addedBefore == null && addedAfter == null)
+                || check(LinkedCollectionChangedAction.AddBefore, addedBefore)
+                || check(LinkedCollectionChangedAction.AddAfter, addedAfter)
+                || (action.IsValidEnumValue(true, LinkedCollectionChangedAction.Remove, LinkedCollectionChangedAction.Reset) && !(addedBefore == null && addedAfter == null)))
+
+                throw new ArgumentException($"Invalid combination of {nameof(action)} and {nameof(node)}, {nameof(addedBefore)} or {nameof(addedAfter)}.");
 
             Action = action;
 
-            AddedBeforeOrAfter = addedBeforeOrAfter;
+            AddedBefore = addedBefore;
+
+            AddedAfter = addedAfter;
 
             Node = node;
         }
@@ -1069,6 +1102,7 @@ namespace WinCopies.Collections.DotNetFix
         event LinkedCollectionChangedEventHandler<T> CollectionChanged;
     }
 
+    [Serializable]
     public class ObservableQueueCollection<T> : QueueCollection<T>, INotifyPropertyChanged, INotifySimpleLinkedCollectionChanged<T>
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -1087,7 +1121,7 @@ namespace WinCopies.Collections.DotNetFix
 
         protected virtual void OnCollectionChanged(SimpleLinkedCollectionChangedEventArgs<T> e) => CollectionChanged?.Invoke(this, e);
 
-        protected void RaiseCollectionChangedEvent(SimpleLinkedCollectionChangeAction action, T item) => OnCollectionChanged(new SimpleLinkedCollectionChangedEventArgs<T>(action, item));
+        protected void RaiseCollectionChangedEvent(NotifyCollectionChangedAction action, T item) => OnCollectionChanged(new SimpleLinkedCollectionChangedEventArgs<T>(action, item));
 
         protected override void ClearItems()
         {
@@ -1095,7 +1129,7 @@ namespace WinCopies.Collections.DotNetFix
 
             RaiseCountPropertyChangedEvent();
 
-            OnCollectionChanged(new SimpleLinkedCollectionChangedEventArgs<T>(SimpleLinkedCollectionChangeAction.Cleared, default));
+            OnCollectionChanged(new SimpleLinkedCollectionChangedEventArgs<T>(NotifyCollectionChangedAction.Reset, default));
         }
 
         protected override T DequeueItem()
@@ -1104,7 +1138,7 @@ namespace WinCopies.Collections.DotNetFix
 
             RaiseCountPropertyChangedEvent();
 
-            RaiseCollectionChangedEvent(SimpleLinkedCollectionChangeAction.Removed, result);
+            RaiseCollectionChangedEvent(NotifyCollectionChangedAction.Remove, result);
 
             return result;
         }
@@ -1115,7 +1149,7 @@ namespace WinCopies.Collections.DotNetFix
 
             RaiseCountPropertyChangedEvent();
 
-            RaiseCollectionChangedEvent(SimpleLinkedCollectionChangeAction.Added, item);
+            RaiseCollectionChangedEvent(NotifyCollectionChangedAction.Add, item);
         }
 
 #if NETCORE
@@ -1128,7 +1162,7 @@ namespace WinCopies.Collections.DotNetFix
             {
                 RaiseCountPropertyChangedEvent();
 
-                RaiseCollectionChangedEvent(SimpleLinkedCollectionChangeAction.Removed, result);
+                RaiseCollectionChangedEvent(NotifyCollectionChangedAction.Remove, result);
             }
 
             return succeeded;
@@ -1138,6 +1172,7 @@ namespace WinCopies.Collections.DotNetFix
 
     }
 
+    [Serializable]
     public class ObservableStackCollection<T> : StackCollection<T>, INotifyPropertyChanged, INotifySimpleLinkedCollectionChanged<T>
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -1156,7 +1191,7 @@ namespace WinCopies.Collections.DotNetFix
 
         protected virtual void OnCollectionChanged(SimpleLinkedCollectionChangedEventArgs<T> e) => CollectionChanged?.Invoke(this, e);
 
-        protected void RaiseCollectionChangedEvent(SimpleLinkedCollectionChangeAction action, T item) => OnCollectionChanged(new SimpleLinkedCollectionChangedEventArgs<T>(action, item));
+        protected void RaiseCollectionChangedEvent(NotifyCollectionChangedAction action, T item) => OnCollectionChanged(new SimpleLinkedCollectionChangedEventArgs<T>(action, item));
 
         protected override void ClearItems()
         {
@@ -1164,7 +1199,7 @@ namespace WinCopies.Collections.DotNetFix
 
             RaiseCountPropertyChangedEvent();
 
-            RaiseCollectionChangedEvent(SimpleLinkedCollectionChangeAction.Cleared, default);
+            RaiseCollectionChangedEvent(NotifyCollectionChangedAction.Reset, default);
         }
 
         protected override T PopItem()
@@ -1173,7 +1208,7 @@ namespace WinCopies.Collections.DotNetFix
 
             RaiseCountPropertyChangedEvent();
 
-            RaiseCollectionChangedEvent(SimpleLinkedCollectionChangeAction.Removed, result);
+            RaiseCollectionChangedEvent(NotifyCollectionChangedAction.Remove, result);
 
             return result;
         }
@@ -1184,7 +1219,7 @@ namespace WinCopies.Collections.DotNetFix
 
             RaiseCountPropertyChangedEvent();
 
-            RaiseCollectionChangedEvent(SimpleLinkedCollectionChangeAction.Added, item);
+            RaiseCollectionChangedEvent(NotifyCollectionChangedAction.Add, item);
         }
 
 #if NETCORE
@@ -1197,7 +1232,7 @@ namespace WinCopies.Collections.DotNetFix
             {
                 RaiseCountPropertyChangedEvent();
 
-                RaiseCollectionChangedEvent(SimpleLinkedCollectionChangeAction.Removed, result);
+                RaiseCollectionChangedEvent(NotifyCollectionChangedAction.Remove, result);
             }
 
             return succeeded;
@@ -1206,6 +1241,7 @@ namespace WinCopies.Collections.DotNetFix
 #endif
     }
 
+    [Serializable]
     public class ObservableLinkedCollection<T> : LinkedCollection<T>, INotifyPropertyChanged, INotifyLinkedCollectionChanged<T>
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -1224,7 +1260,7 @@ namespace WinCopies.Collections.DotNetFix
 
         protected virtual void OnCollectionChanged(LinkedCollectionChangedEventArgs<T> e) => CollectionChanged?.Invoke(this, e);
 
-        protected void RaiseCollectionChangedEvent(in LinkedCollectionChangeAction action, in LinkedListNode<T> addedBeforeOrAfter, in LinkedListNode<T> node) => OnCollectionChanged(new LinkedCollectionChangedEventArgs<T>(action, addedBeforeOrAfter, node));
+        protected void RaiseCollectionChangedEvent(in LinkedCollectionChangedAction action, in LinkedListNode<T> addedBefore, in LinkedListNode<T> addedAfter, in LinkedListNode<T> node) => OnCollectionChanged(new LinkedCollectionChangedEventArgs<T>(action, addedBefore, addedAfter, node));
 
         protected override void AddFirstItem(LinkedListNode<T> node)
         {
@@ -1232,7 +1268,7 @@ namespace WinCopies.Collections.DotNetFix
 
             RaiseCountPropertyChangedEvent();
 
-            RaiseCollectionChangedEvent(LinkedCollectionChangeAction.AddedFirst, null, node);
+            RaiseCollectionChangedEvent(LinkedCollectionChangedAction.AddFirst, null, null, node);
         }
 
         protected override LinkedListNode<T> AddFirstItem(T value)
@@ -1241,7 +1277,7 @@ namespace WinCopies.Collections.DotNetFix
 
             RaiseCountPropertyChangedEvent();
 
-            RaiseCollectionChangedEvent(LinkedCollectionChangeAction.AddedFirst, null, result);
+            RaiseCollectionChangedEvent(LinkedCollectionChangedAction.AddFirst, null, null, result);
 
             return result;
         }
@@ -1254,7 +1290,7 @@ namespace WinCopies.Collections.DotNetFix
 
             // Assumming that items are added to the end of the list.
 
-            RaiseCollectionChangedEvent(LinkedCollectionChangeAction.AddedLast, null, InnerList.Last);
+            RaiseCollectionChangedEvent(LinkedCollectionChangedAction.AddLast, null, null, InnerList.Last);
         }
 
         protected override void AddItemAfter(LinkedListNode<T> node, LinkedListNode<T> newNode)
@@ -1263,7 +1299,7 @@ namespace WinCopies.Collections.DotNetFix
 
             RaiseCountPropertyChangedEvent();
 
-            RaiseCollectionChangedEvent(LinkedCollectionChangeAction.AddedAfter, node, newNode);
+            RaiseCollectionChangedEvent(LinkedCollectionChangedAction.AddAfter, null, node, newNode);
         }
 
         protected override LinkedListNode<T> AddItemAfter(LinkedListNode<T> node, T value)
@@ -1272,7 +1308,7 @@ namespace WinCopies.Collections.DotNetFix
 
             RaiseCountPropertyChangedEvent();
 
-            RaiseCollectionChangedEvent(LinkedCollectionChangeAction.AddedAfter, node, result);
+            RaiseCollectionChangedEvent(LinkedCollectionChangedAction.AddAfter, null, node, result);
 
             return result;
         }
@@ -1283,7 +1319,7 @@ namespace WinCopies.Collections.DotNetFix
 
             RaiseCountPropertyChangedEvent();
 
-            RaiseCollectionChangedEvent(LinkedCollectionChangeAction.AddedBefore, node, newNode);
+            RaiseCollectionChangedEvent(LinkedCollectionChangedAction.AddBefore, node, null, newNode);
         }
 
         protected override LinkedListNode<T> AddItemBefore(LinkedListNode<T> node, T value)
@@ -1292,7 +1328,7 @@ namespace WinCopies.Collections.DotNetFix
 
             RaiseCountPropertyChangedEvent();
 
-            RaiseCollectionChangedEvent(LinkedCollectionChangeAction.AddedBefore, node, result);
+            RaiseCollectionChangedEvent(LinkedCollectionChangedAction.AddBefore, node, null, result);
 
             return result;
         }
@@ -1303,7 +1339,7 @@ namespace WinCopies.Collections.DotNetFix
 
             RaiseCountPropertyChangedEvent();
 
-            RaiseCollectionChangedEvent(LinkedCollectionChangeAction.AddedLast, null, node);
+            RaiseCollectionChangedEvent(LinkedCollectionChangedAction.AddLast, null, null, node);
         }
 
         protected override LinkedListNode<T> AddLastItem(T value)
@@ -1312,7 +1348,7 @@ namespace WinCopies.Collections.DotNetFix
 
             RaiseCountPropertyChangedEvent();
 
-            RaiseCollectionChangedEvent(LinkedCollectionChangeAction.AddedLast, null, result);
+            RaiseCollectionChangedEvent(LinkedCollectionChangedAction.AddLast, null, null, result);
 
             return result;
         }
@@ -1323,7 +1359,7 @@ namespace WinCopies.Collections.DotNetFix
 
             RaiseCountPropertyChangedEvent();
 
-            RaiseCollectionChangedEvent(LinkedCollectionChangeAction.Cleared, null, null);
+            RaiseCollectionChangedEvent(LinkedCollectionChangedAction.Reset, null, null, null);
         }
 
         protected override void RemoveFirstItem()
@@ -1334,7 +1370,7 @@ namespace WinCopies.Collections.DotNetFix
 
             RaiseCountPropertyChangedEvent();
 
-            RaiseCollectionChangedEvent(LinkedCollectionChangeAction.Removed, null, node);
+            RaiseCollectionChangedEvent(LinkedCollectionChangedAction.Remove, null, null, node);
         }
 
         protected override void RemoveItem(LinkedListNode<T> node)
@@ -1343,7 +1379,7 @@ namespace WinCopies.Collections.DotNetFix
 
             RaiseCountPropertyChangedEvent();
 
-            RaiseCollectionChangedEvent(LinkedCollectionChangeAction.Removed, null, node);
+            RaiseCollectionChangedEvent(LinkedCollectionChangedAction.Remove, null, null, node);
         }
 
         protected override bool RemoveItem(T item)
@@ -1356,7 +1392,7 @@ namespace WinCopies.Collections.DotNetFix
 
                     RaiseCountPropertyChangedEvent();
 
-                    RaiseCollectionChangedEvent(LinkedCollectionChangeAction.Removed, null, node);
+                    RaiseCollectionChangedEvent(LinkedCollectionChangedAction.Remove, null, null, node);
 
                     return true;
                 }
@@ -1372,7 +1408,408 @@ namespace WinCopies.Collections.DotNetFix
 
             RaiseCountPropertyChangedEvent();
 
-            RaiseCollectionChangedEvent(LinkedCollectionChangeAction.Removed, null, node);
+            RaiseCollectionChangedEvent(LinkedCollectionChangedAction.Remove, null, null, node);
         }
+    }
+
+
+
+    [Serializable]
+    public class ReadOnlyQueueCollection : IEnumerable, ICollection, ICloneable
+    {
+        protected Queue InnerQueue { get; }
+
+        /// <summary>
+        /// Gets the number of elements contained in the <see cref="QueueCollection"/>.
+        /// </summary>
+        /// <value>The number of elements contained in the <see cref="QueueCollection"/>.</value>
+        public int Count => InnerQueue.Count;
+
+        public bool IsReadOnly => true;
+
+        bool ICollection.IsSynchronized => ((ICollection)InnerQueue).IsSynchronized;
+
+        object ICollection.SyncRoot => ((ICollection)InnerQueue).SyncRoot;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="QueueCollection"/> class with a custom <see cref="Queue"/>.
+        /// </summary>
+        /// <param name="queue">The inner <see cref="Queue"/> for this <see cref="QueueCollection"/>.</param>
+        public ReadOnlyQueueCollection(in Queue queue) => InnerQueue = queue;
+
+        public ReadOnlyQueueCollection(in QueueCollection queueCollection) : this(queueCollection.InnerQueue) { }
+
+        /// <summary>
+        /// Creates a shallow copy of the <see cref="QueueCollection"/>.
+        /// </summary>
+        /// <returns>A shallow copy of the <see cref="QueueCollection"/>.</returns>
+        public object Clone() => InnerQueue.Clone();
+
+        /// <summary>
+        /// Determines whether an element is in the <see cref="QueueCollection"/>.
+        /// </summary>
+        /// <param name="item">The object to locate in the <see cref="QueueCollection"/>. The value can be <see langword="null"/> for reference types.</param>
+        /// <returns><see langword="true"/> if <paramref name="item"/> is found in the <see cref="System.Collections.Queue"/>; otherwise, <see langword="false"/>.</returns>
+        public bool Contains(object item) => InnerQueue.Contains(item);
+
+        /// <summary>
+        /// Copies the <see cref="QueueCollection"/> elements to an existing one-dimensional <see cref="System.Array"/>, starting at the specified array index.
+        /// </summary>
+        /// <param name="array">The one-dimensional <see cref="System.Array"/> that is the destination of the elements copied from <see cref="QueueCollection"/>. The <see cref="System.Array"/> must have zero-based indexing.</param>
+        /// <param name="index">The zero-based index in array at which copying begins.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="array"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is less than zero.</exception>
+        /// <exception cref="ArgumentException"><paramref name="array"/> is multidimensional. -or- The number of elements in the source <see cref="QueueCollection"/> is greater than the available space from index to the end of the destination array.</exception>
+        /// <exception cref="ArrayTypeMismatchException">The type of the source <see cref="QueueCollection"/> cannot be cast automatically to the type of the destination array.</exception>
+        public void CopyTo(Array array, int index) => InnerQueue.CopyTo(array, index);
+
+        /// <summary>
+        /// Returns the object at the beginning of the <see cref="QueueCollection"/> without removing it.
+        /// </summary>
+        /// <returns>The object at the beginning of the <see cref="QueueCollection"/>.</returns>
+        /// <exception cref="InvalidOperationException">The <see cref="QueueCollection"/> is empty.</exception>
+        public object Peek() => InnerQueue.Peek();
+
+        /// <summary>
+        /// Copies the <see cref="QueueCollection"/> elements to a new array.
+        /// </summary>
+        /// <returns>A new array containing elements copied from the <see cref="QueueCollection"/>.</returns>
+        public object[] ToArray() => InnerQueue.ToArray();
+
+        /// <summary>
+        /// Returns an enumerator that iterates through the <see cref="QueueCollection"/>.
+        /// </summary>
+        /// <returns>An <see cref="IEnumerator"/> for the <see cref="QueueCollection"/>.</returns>
+        public IEnumerator GetEnumerator() => InnerQueue.GetEnumerator();
+    }
+
+    [Serializable]
+    public class ReadOnlyQueueCollection<T> : IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection
+    {
+        protected Queue<T> InnerQueue { get; }
+
+        /// <summary>
+        /// Gets the number of elements contained in the <see cref="QueueCollection{T}"/>.
+        /// </summary>
+        /// <value>The number of elements contained in the <see cref="QueueCollection{T}"/>.</value>
+        public int Count => InnerQueue.Count;
+
+        public bool IsReadOnly => true;
+
+        bool ICollection.IsSynchronized => ((ICollection)InnerQueue).IsSynchronized;
+
+        object ICollection.SyncRoot => ((ICollection)InnerQueue).SyncRoot;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="QueueCollection{T}"/> class with a custom <see cref="Queue{T}"/>.
+        /// </summary>
+        /// <param name="queue">The inner <see cref="Queue{T}"/> for this <see cref="QueueCollection{T}"/>.</param>
+        public ReadOnlyQueueCollection(in Queue<T> queue) => InnerQueue = queue;
+
+        public ReadOnlyQueueCollection(in QueueCollection<T> queueCollection) : this(queueCollection.InnerQueue) { }
+
+        /// <summary>
+        /// Determines whether an element is in the <see cref="QueueCollection{T}"/>.
+        /// </summary>
+        /// <param name="item">The object to locate in the <see cref="QueueCollection{T}"/>. The value can be <see langword="null"/> for reference types.</param>
+        /// <returns><see langword="true"/> if <paramref name="item"/> is found in the <see cref="System.Collections.Generic.Queue{T}"/>; otherwise, <see langword="false"/>.</returns>
+        public bool Contains(T item) => InnerQueue.Contains(item);
+
+        void ICollection.CopyTo(Array array, int index) => ((ICollection)InnerQueue).CopyTo(array, index);
+
+        /// <summary>
+        /// Copies the <see cref="QueueCollection{T}"/> elements to an existing one-dimensional <see cref="System.Array"/>, starting at the specified array index.
+        /// </summary>
+        /// <param name="array">The one-dimensional <see cref="System.Array"/> that is the destination of the elements copied from <see cref="QueueCollection{T}"/>. The <see cref="System.Array"/> must have zero-based indexing.</param>
+        /// <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="array"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="arrayIndex"/> is less than zero.</exception>
+        /// <exception cref="ArgumentException">The number of elements in the source <see cref="QueueCollection{T}"/> is greater than the available space from <paramref name="arrayIndex"/> to the end of the destination array.</exception>
+        public void CopyTo(in T[] array, in int arrayIndex) => InnerQueue.CopyTo(array, arrayIndex);
+
+        /// <summary>
+        /// Returns the object at the beginning of the <see cref="QueueCollection{T}"/> without removing it.
+        /// </summary>
+        /// <returns>The object at the beginning of the <see cref="QueueCollection{T}"/>.</returns>
+        /// <exception cref="InvalidOperationException">The <see cref="QueueCollection{T}"/> is empty.</exception>
+        /// <seealso cref="TryPeek(out T)"/>
+        public T Peek() => InnerQueue.Peek();
+
+#if NETCORE
+
+        /// <summary>
+        /// Tries to peek the object at the beginning of the <see cref="QueueCollection{T}"/> without removing it.
+        /// </summary>
+        /// <param name="result">The object at the beginning of the <see cref="QueueCollection{T}"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
+        /// <returns>A <see cref="bool"/> value that indicates whether a value has actually been retrieved.</returns>
+        /// <seealso cref="Peek"/>
+        public bool TryPeek([MaybeNullWhen(false)] out T result) => InnerQueue.TryPeek(out result);
+
+#endif
+
+        /// <summary>
+        /// Returns an enumerator that iterates through the <see cref="QueueCollection{T}"/>.
+        /// </summary>
+        /// <returns>An <see cref="IEnumerator{T}"/> for the <see cref="QueueCollection{T}"/>.</returns>
+        public IEnumerator<T> GetEnumerator() => InnerQueue.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerQueue).GetEnumerator();
+    }
+
+    [Serializable]
+    public class ReadOnlyStackCollection : IEnumerable, ICollection, ICloneable
+    {
+        protected Stack InnerStack { get; }
+
+        public int Count => InnerStack.Count;
+
+        public bool IsReadOnly => true;
+
+        public bool IsSynchronized => InnerStack.IsSynchronized;
+
+        public object SyncRoot => InnerStack.SyncRoot;
+
+        public ReadOnlyStackCollection(in Stack stack) => InnerStack = stack;
+
+        public ReadOnlyStackCollection(in StackCollection stackCollection) : this(stackCollection.InnerStack) { }
+
+        public object Clone() => InnerStack.Clone();
+
+        public void Contains(object item) => InnerStack.Contains(item);
+
+        public object Peek() => InnerStack.Peek();
+
+        public object[] ToArray() => InnerStack.ToArray();
+
+        public void CopyTo(Array array, int index) => InnerStack.CopyTo(array, index);
+
+        public IEnumerator GetEnumerator() => InnerStack.GetEnumerator();
+    }
+
+    [Serializable]
+    public class ReadOnlyStackCollection<T> : IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection
+    {
+        protected Stack<T> InnerStack { get; }
+
+        public int Count => InnerStack.Count;
+
+        public bool IsReadOnly => true;
+
+        bool ICollection.IsSynchronized => ((ICollection)InnerStack).IsSynchronized;
+
+        object ICollection.SyncRoot => ((ICollection)InnerStack).SyncRoot;
+
+        public ReadOnlyStackCollection(in Stack<T> stack) => InnerStack = stack;
+
+        public ReadOnlyStackCollection(in StackCollection<T> stackCollection) : this(stackCollection.InnerStack) { }
+
+        public void Contains(T item) => InnerStack.Contains(item);
+
+        public T Peek() => InnerStack.Peek();
+
+        public T[] ToArray() => InnerStack.ToArray();
+
+#if NETCORE
+
+        public bool TryPeek(out T result) => InnerStack.TryPeek(out result);
+
+#endif
+
+        void ICollection.CopyTo(Array array, int index) => ((ICollection)InnerStack).CopyTo(array, index);
+
+        public void CopyTo(in T[] array, in int arrayIndex) => InnerStack.CopyTo(array, arrayIndex);
+
+        public IEnumerator<T> GetEnumerator() => InnerStack.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerStack).GetEnumerator();
+    }
+
+    [Serializable]
+    public class ReadOnlyLinkedCollection<T> : ICollection<T>, IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection, IDeserializationCallback, ISerializable
+    {
+        protected System.Collections.Generic.LinkedList<T> InnerList { get; }
+
+        public LinkedListNode<T> Last => InnerList.Last;
+
+        public LinkedListNode<T> First => InnerList.First;
+
+        public int Count => InnerList.Count;
+
+        public bool IsReadOnly => true;
+
+        bool ICollection.IsSynchronized => ((ICollection)InnerList).IsSynchronized;
+
+        object ICollection.SyncRoot => ((ICollection)InnerList).SyncRoot;
+
+        bool ICollection<T>.IsReadOnly => true;
+
+        public ReadOnlyLinkedCollection(in System.Collections.Generic.LinkedList<T> list) => InnerList = list;
+
+        public ReadOnlyLinkedCollection(in LinkedCollection<T> listCollection) : this(listCollection.InnerList) { }
+
+        public LinkedListNode<T> Find(T value) => InnerList.Find(value);
+
+        public LinkedListNode<T> FindLast(T value) => InnerList.FindLast(value);
+
+        public bool Contains(T item) => InnerList.Contains(item);
+
+        public void CopyTo(Array array, int index) => ((ICollection)InnerList).CopyTo(array, index);
+
+        public void CopyTo(T[] array, int arrayIndex) => InnerList.CopyTo(array, arrayIndex);
+
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerList).GetEnumerator();
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context) => InnerList.GetObjectData(info, context);
+
+        public void OnDeserialization(object sender) => InnerList.OnDeserialization(sender);
+
+        public IEnumerator<T> GetEnumerator() => InnerList.GetEnumerator();
+
+        void ICollection<T>.Add(T item) => throw new InvalidOperationException("The collection is read-only.");
+
+        void ICollection<T>.Clear() => throw new InvalidOperationException("The collection is read-only.");
+
+        bool ICollection<T>.Remove(T item) => throw new InvalidOperationException("The collection is read-only.");
+    }
+
+    [Serializable]
+    public class ReadOnlyObservableQueueCollection<T> : IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection, INotifyPropertyChanged, INotifySimpleLinkedCollectionChanged<T>
+    {
+        protected ObservableQueueCollection<T> InnerQueueCollection { get; }
+
+        public int Count => InnerQueueCollection.Count;
+
+        public bool IsReadOnly => true;
+
+        bool ICollection.IsSynchronized => ((ICollection)InnerQueueCollection).IsSynchronized;
+
+        object ICollection.SyncRoot => ((ICollection)InnerQueueCollection).SyncRoot;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public event SimpleLinkedCollectionChangedEventHandler<T> CollectionChanged;
+
+        public ReadOnlyObservableQueueCollection(in ObservableQueueCollection<T> queueCollection)
+        {
+            InnerQueueCollection = queueCollection ?? throw GetArgumentNullException(nameof(queueCollection));
+
+            InnerQueueCollection.CollectionChanged += (object sender, SimpleLinkedCollectionChangedEventArgs<T> e) => OnCollectionChanged(e);
+
+            InnerQueueCollection.PropertyChanged += (object sender, PropertyChangedEventArgs e) => OnPropertyChanged(e);
+        }
+
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
+
+        protected void RaisePropertyChangedEvent(in string propertyName) => OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+
+        protected virtual void OnCollectionChanged(SimpleLinkedCollectionChangedEventArgs<T> e) => CollectionChanged?.Invoke(this, e);
+
+        protected void RaiseCollectionChangedEvent(NotifyCollectionChangedAction action, T item) => OnCollectionChanged(new SimpleLinkedCollectionChangedEventArgs<T>(action, item));
+
+        public IEnumerator<T> GetEnumerator() => InnerQueueCollection.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerQueueCollection).GetEnumerator();
+
+        public void CopyTo(T[] array, int arrayIndex) => InnerQueueCollection.CopyTo(array, arrayIndex);
+
+        void ICollection.CopyTo(Array array, int index) => ((ICollection)InnerQueueCollection).CopyTo(array, index);
+    }
+
+    [Serializable]
+    public class ReadOnlyObservableStackCollection<T> : IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection, INotifyPropertyChanged, INotifySimpleLinkedCollectionChanged<T>
+    {
+        protected ObservableStackCollection<T> InnerStackCollection { get; }
+
+        public int Count => InnerStackCollection.Count;
+
+        public bool IsReadOnly => true;
+
+        bool ICollection.IsSynchronized => ((ICollection)InnerStackCollection).IsSynchronized;
+
+        object ICollection.SyncRoot => ((ICollection)InnerStackCollection).SyncRoot;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public event SimpleLinkedCollectionChangedEventHandler<T> CollectionChanged;
+
+        public ReadOnlyObservableStackCollection(in ObservableStackCollection<T> stackCollection)
+        {
+            InnerStackCollection = stackCollection ?? throw GetArgumentNullException(nameof(stackCollection));
+
+            InnerStackCollection.CollectionChanged += (object sender, SimpleLinkedCollectionChangedEventArgs<T> e) => OnCollectionChanged(e);
+
+            InnerStackCollection.PropertyChanged += (object sender, PropertyChangedEventArgs e) => OnPropertyChanged(e);
+        }
+
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
+
+        protected void RaisePropertyChangedEvent(in string propertyName) => OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+
+        protected void RaiseCountPropertyChangedEvent() => OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
+
+        protected virtual void OnCollectionChanged(SimpleLinkedCollectionChangedEventArgs<T> e) => CollectionChanged?.Invoke(this, e);
+
+        protected void RaiseCollectionChangedEvent(NotifyCollectionChangedAction action, T item) => OnCollectionChanged(new SimpleLinkedCollectionChangedEventArgs<T>(action, item));
+
+        public IEnumerator<T> GetEnumerator() => InnerStackCollection.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerStackCollection).GetEnumerator();
+
+        public void CopyTo(T[] array, int arrayIndex) => InnerStackCollection.CopyTo(array, arrayIndex);
+
+        void ICollection.CopyTo(Array array, int index) => ((ICollection)InnerStackCollection).CopyTo(array, index);
+    }
+
+    [Serializable]
+    public class ReadOnlyObservableLinkedCollection<T> : ICollection<T>, IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection, INotifyPropertyChanged, INotifyLinkedCollectionChanged<T>
+    {
+        protected ObservableLinkedCollection<T> InnerLinkedCollection { get; }
+
+        public int Count => InnerLinkedCollection.Count;
+
+        public bool IsReadOnly => true;
+
+        bool ICollection.IsSynchronized => ((ICollection)InnerLinkedCollection).IsSynchronized;
+
+        object ICollection.SyncRoot => ((ICollection)InnerLinkedCollection).SyncRoot;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public event LinkedCollectionChangedEventHandler<T> CollectionChanged;
+
+        public ReadOnlyObservableLinkedCollection(in ObservableLinkedCollection<T> linkedCollection)
+        {
+            InnerLinkedCollection = linkedCollection ?? throw GetArgumentNullException(nameof(linkedCollection));
+
+            InnerLinkedCollection.CollectionChanged += (object sender, LinkedCollectionChangedEventArgs<T> e) => OnCollectionChanged(e);
+
+            InnerLinkedCollection.PropertyChanged += (object sender, PropertyChangedEventArgs e) => OnPropertyChanged(e);
+        }
+
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
+
+        protected void RaisePropertyChangedEvent(in string propertyName) => OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+
+        protected void RaiseCountPropertyChangedEvent() => OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
+
+        protected virtual void OnCollectionChanged(LinkedCollectionChangedEventArgs<T> e) => CollectionChanged?.Invoke(this, e);
+
+        protected void RaiseCollectionChangedEvent(in LinkedCollectionChangedAction action, in LinkedListNode<T> addedBefore, in LinkedListNode<T> addedAfter, in LinkedListNode<T> node) => OnCollectionChanged(new LinkedCollectionChangedEventArgs<T>(action, addedBefore, addedAfter, node));
+
+        public IEnumerator<T> GetEnumerator() => InnerLinkedCollection.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerLinkedCollection).GetEnumerator();
+
+        public void CopyTo(T[] array, int arrayIndex) => InnerLinkedCollection.CopyTo(array, arrayIndex);
+
+        void ICollection.CopyTo(Array array, int index) => ((ICollection)InnerLinkedCollection).CopyTo(array, index);
+
+        void ICollection<T>.Add(T item) => ((ICollection<T>)InnerLinkedCollection).Add(item);
+
+        void ICollection<T>.Clear() => InnerLinkedCollection.Clear();
+
+        public bool Contains(T item) => InnerLinkedCollection.Contains(item);
+
+        bool ICollection<T>. Remove(T item) => InnerLinkedCollection.Remove(item);
     }
 }

@@ -72,114 +72,114 @@
         </member>
         <member name="T:WinCopies.Util.Desktop.Resources.Commands.WPF.DialogCommands">
             <summary>
-              Une classe de ressource fortement typée destinée, entre autres, à la consultation des chaînes localisées.
+              A strongly-typed resource class, for looking up localized strings, etc.
             </summary>
         </member>
         <member name="P:WinCopies.Util.Desktop.Resources.Commands.WPF.DialogCommands.ResourceManager">
             <summary>
-              Retourne l'instance ResourceManager mise en cache utilisée par cette classe.
+              Returns the cached ResourceManager instance used by this class.
             </summary>
         </member>
         <member name="P:WinCopies.Util.Desktop.Resources.Commands.WPF.DialogCommands.Culture">
             <summary>
-              Remplace la propriété CurrentUICulture du thread actuel pour toutes
-              les recherches de ressources à l'aide de cette classe de ressource fortement typée.
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
             </summary>
         </member>
         <member name="P:WinCopies.Util.Desktop.Resources.Commands.WPF.DialogCommands.Abort">
             <summary>
-              Recherche une chaîne localisée semblable à A_bort.
+              Looks up a localized string similar to A_bort.
             </summary>
         </member>
         <member name="P:WinCopies.Util.Desktop.Resources.Commands.WPF.DialogCommands.Apply">
             <summary>
-              Recherche une chaîne localisée semblable à _Apply.
+              Looks up a localized string similar to _Apply.
             </summary>
         </member>
         <member name="P:WinCopies.Util.Desktop.Resources.Commands.WPF.DialogCommands.Cancel">
             <summary>
-              Recherche une chaîne localisée semblable à _Cancel.
+              Looks up a localized string similar to _Cancel.
             </summary>
         </member>
         <member name="P:WinCopies.Util.Desktop.Resources.Commands.WPF.DialogCommands.Continue">
             <summary>
-              Recherche une chaîne localisée semblable à C_ontinue.
+              Looks up a localized string similar to C_ontinue.
             </summary>
         </member>
         <member name="P:WinCopies.Util.Desktop.Resources.Commands.WPF.DialogCommands.Ignore">
             <summary>
-              Recherche une chaîne localisée semblable à _Ignore.
+              Looks up a localized string similar to _Ignore.
             </summary>
         </member>
         <member name="P:WinCopies.Util.Desktop.Resources.Commands.WPF.DialogCommands.No">
             <summary>
-              Recherche une chaîne localisée semblable à _No.
+              Looks up a localized string similar to _No.
             </summary>
         </member>
         <member name="P:WinCopies.Util.Desktop.Resources.Commands.WPF.DialogCommands.NoToAll">
             <summary>
-              Recherche une chaîne localisée semblable à No to a_ll.
+              Looks up a localized string similar to No to a_ll.
             </summary>
         </member>
         <member name="P:WinCopies.Util.Desktop.Resources.Commands.WPF.DialogCommands.Ok">
             <summary>
-              Recherche une chaîne localisée semblable à _Ok.
+              Looks up a localized string similar to _Ok.
             </summary>
         </member>
         <member name="P:WinCopies.Util.Desktop.Resources.Commands.WPF.DialogCommands.Retry">
             <summary>
-              Recherche une chaîne localisée semblable à _Retry.
+              Looks up a localized string similar to _Retry.
             </summary>
         </member>
         <member name="P:WinCopies.Util.Desktop.Resources.Commands.WPF.DialogCommands.Yes">
             <summary>
-              Recherche une chaîne localisée semblable à _Yes.
+              Looks up a localized string similar to _Yes.
             </summary>
         </member>
         <member name="P:WinCopies.Util.Desktop.Resources.Commands.WPF.DialogCommands.YesToAll">
             <summary>
-              Recherche une chaîne localisée semblable à Yes _to all.
+              Looks up a localized string similar to Yes _to all.
             </summary>
         </member>
         <member name="T:WinCopies.Util.Desktop.Resources.Commands.WPF.FileSystemCommands">
             <summary>
-              Une classe de ressource fortement typée destinée, entre autres, à la consultation des chaînes localisées.
+              A strongly-typed resource class, for looking up localized strings, etc.
             </summary>
         </member>
         <member name="P:WinCopies.Util.Desktop.Resources.Commands.WPF.FileSystemCommands.ResourceManager">
             <summary>
-              Retourne l'instance ResourceManager mise en cache utilisée par cette classe.
+              Returns the cached ResourceManager instance used by this class.
             </summary>
         </member>
         <member name="P:WinCopies.Util.Desktop.Resources.Commands.WPF.FileSystemCommands.Culture">
             <summary>
-              Remplace la propriété CurrentUICulture du thread actuel pour toutes
-              les recherches de ressources à l'aide de cette classe de ressource fortement typée.
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
             </summary>
         </member>
         <member name="P:WinCopies.Util.Desktop.Resources.Commands.WPF.FileSystemCommands.DeletePermanently">
             <summary>
-              Recherche une chaîne localisée semblable à _Delete permanently.
+              Looks up a localized string similar to _Delete permanently.
             </summary>
         </member>
         <member name="P:WinCopies.Util.Desktop.Resources.Commands.WPF.FileSystemCommands.NewArchive">
             <summary>
-              Recherche une chaîne localisée semblable à _New archive.
+              Looks up a localized string similar to _New archive.
             </summary>
         </member>
         <member name="P:WinCopies.Util.Desktop.Resources.Commands.WPF.FileSystemCommands.NewFolder">
             <summary>
-              Recherche une chaîne localisée semblable à New _folder.
+              Looks up a localized string similar to New _folder.
             </summary>
         </member>
         <member name="P:WinCopies.Util.Desktop.Resources.Commands.WPF.FileSystemCommands.Rename">
             <summary>
-              Recherche une chaîne localisée semblable à _Rename.
+              Looks up a localized string similar to _Rename.
             </summary>
         </member>
         <member name="P:WinCopies.Util.Desktop.Resources.Commands.WPF.FileSystemCommands.ShowFileProperties">
             <summary>
-              Recherche une chaîne localisée semblable à File _propoerties.
+              Looks up a localized string similar to File _propoerties.
             </summary>
         </member>
         <member name="T:WinCopies.Util.Desktop.Resources.ExceptionMessages">
@@ -1408,7 +1408,7 @@
         </member>
         <member name="M:WinCopies.Util.Data.ValueObject.Dispose(System.Boolean)">
             <summary>
-            Removes the unmanaged resources and the managed resources if needed. If you override this method, you should call this implementation of this method in your override implementation to avoid unexpected results when using this object laater.
+            Removes the unmanaged resources and the managed resources if needed. If you override this method, you should call this implementation of this method in your override implementation to avoid unexpected results when using this object later.
             </summary>
             <param name="disposing"><see langword="true"/> to dispose managed resources, otherwise <see langword="false"/>.</param>
         </member>
@@ -1963,6 +1963,21 @@
             </summary>
             <remarks><para>The base class calls this method when the list is being cleared. This implementation raises the <see cref="E:WinCopies.Collections.INotifyCollectionChanging.CollectionChanging"/> and the <see cref="E:System.Collections.Specialized.INotifyCollectionChanged.CollectionChanged"/> events.</para>
             <para>For more information, see the <see cref="M:System.Collections.ObjectModel.Collection`1.ClearItems"/> method of the <see cref="T:System.Collections.ObjectModel.Collection`1"/> base class.</para></remarks>
+        </member>
+        <member name="T:WinCopies.Collections.ObservableCollection`1">
+            <summary>
+            Represents a dynamic data collection that provides notifications when items get added, removed, or when the whole list is refreshed.
+            </summary>
+            <typeparam name="T">The type of elements in the collection.</typeparam>
+            <remarks>
+            <para>In many cases the data that you work with is a collection of objects. For example, a common scenario in data binding is to use an <see cref="!:ItemsControl"/> such as a <see cref="!:ListBox"/>, <see cref="!:ListView"/>, or <see cref="!:TreeView"/> to display a collection of records.</para>
+            <para>You can enumerate over any collection that implements the <see cref="T:System.Collections.IEnumerable"/> interface. However, to set up dynamic bindings so that insertions or deletions in the collection update the UI automatically, the collection must implement the <see cref="T:System.Collections.Specialized.INotifyCollectionChanged"/> interface. This interface exposes the <see cref="E:System.Collections.Specialized.INotifyCollectionChanged.CollectionChanged"/> event, an event that should be raised whenever the underlying collection changes.</para>
+            <para>WPF provides the <see cref="T:System.Collections.ObjectModel.ObservableCollection`1"/> class, which is a built-in implementation of a data collection that implements the <see cref="T:System.Collections.Specialized.INotifyCollectionChanged"/> interface.</para>
+            <para>Before implementing your own collection, consider using <see cref="T:System.Collections.ObjectModel.ObservableCollection`1"/> or one of the existing collection classes, such as <see cref="T:System.Collections.Generic.List`1"/>, <see cref="T:System.Collections.ObjectModel.Collection`1"/>, and <see cref="T:System.ComponentModel.BindingList`1"/>, among many others. If you have an advanced scenario and want to implement your own collection, consider using <see cref="T:System.Collections.IList"/>, which provides a non-generic collection of objects that can be individually accessed by index. Implementing <see cref="T:System.Collections.IList"/> provides the best performance with the data binding engine.</para>
+            <para>Notes: To fully support transferring data values from binding source objects to binding targets, each object in your collection that supports bindable properties must implement an appropriate property changed notification mechanism such as the <see cref="T:System.ComponentModel.INotifyPropertyChanged"/> interface.</para>
+            <para>For more information, see "Binding to Collections" in the Data Binding Overview article at: https://docs.microsoft.com/en-us/dotnet/framework/wpf/data/data-binding-overview?view=netframework-4.8</para>
+            <para>For notes on XAML usage, see the following article: https://docs.microsoft.com/en-us/dotnet/api/system.collections.objectmodel.observablecollection-1?view=netframework-4.8</para>
+            </remarks>
         </member>
         <member name="M:WinCopies.Collections.ObservableCollection`1.#ctor">
             <summary>

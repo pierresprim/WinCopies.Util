@@ -15,6 +15,8 @@ Updates
 WinCopies.Util (2.5-preview7)
 -----------------------------
 
+- Changes:
+	- Some breaking changes in (ReadOnly)(Observable)Stack/Queue/LinkedCollections and relative code.
 - Additions:
 	- Split extension methods.
 	- Constructors:
@@ -22,6 +24,8 @@ WinCopies.Util (2.5-preview7)
 			- LinkedList()
 			- LinkedList(IEnumerable\<T> collection)
 			- LinkedList(SerializationInfo info, StreamingContext context)
+- Removals:
+	- Unnecessary types in WinCopies.Collections.DotNetFix.Extensions.
 
 06/02/2020 2.4-preview6.1
 =========================
