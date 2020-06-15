@@ -21,16 +21,201 @@ using System.Collections.Generic;
 using System.Diagnostics;
 #if WinCopies2
 using IDisposable = WinCopies.Util.DotNetFix.IDisposable;
+using WinCopies.Util;
 using static WinCopies.Util.Util;
 #else
 using IDisposable = WinCopies.DotNetFix.IDisposable;
+using WinCopies;
 using static WinCopies.UtilHelpers;
 #endif
 
-#if WinCopies2
-
 namespace WinCopies.Collections
 {
+    public sealed class Enumerable<T> : IEnumerable<T>
+    {
+        private readonly Func<IEnumerator<T>> _enumeratorFunc;
+
+        public Enumerable(Func<IEnumerator<T>> enumeratorFunc) => _enumeratorFunc = enumeratorFunc;
+
+        public IEnumerator<T> GetEnumerator() => _enumeratorFunc();
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    }
+
+    public abstract class Enumerator<TSource, TDestination> : IEnumerator<TDestination>, WinCopies.
+#if WinCopies2
+        Util.
+#endif
+        DotNetFix.IDisposable
+    {
+        public bool IsDisposed { get; private set; }
+
+        private IEnumerator<TSource> _innerEnumerator;
+
+        protected IEnumerator<TSource> InnerEnumerator => IsDisposed ? throw GetExceptionForDispose(false) : _innerEnumerator;
+
+        private TDestination _current;
+
+        public TDestination Current { get => IsDisposed ? throw GetExceptionForDispose(false) : _current; protected set => _current = IsDisposed ? throw GetExceptionForDispose(false) : value; }
+
+        object IEnumerator.Current => Current;
+
+        public Enumerator(IEnumerable<TSource> enumerable) => _innerEnumerator = (enumerable ?? throw GetArgumentNullException(nameof(enumerable))).GetEnumerator();
+
+        public bool MoveNext() => IsDisposed ? throw GetExceptionForDispose(false) : MoveNextOverride();
+
+        protected abstract bool MoveNextOverride();
+
+        public void Reset()
+        {
+            if (IsDisposed)
+
+                throw GetExceptionForDispose(false);
+
+            ResetOverride();
+        }
+
+        protected virtual void ResetOverride()
+        {
+            _current = default;
+
+            InnerEnumerator.Reset();
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!IsDisposed)
+            {
+                if (disposing)
+
+                    _innerEnumerator = null;
+
+                IsDisposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+
+            GC.SuppressFinalize(this);
+        }
+    }
+
+    public interface IEnumerableEnumerator
+    {
+        object Current { get; }
+
+        bool MoveNext();
+    }
+
+    public interface IEnumerableEnumerator<T> : IEnumerableEnumerator, System.IDisposable
+    {
+        T Current { get; }
+    }
+
+    public sealed class JoinEnumerator<T> : Enumerator<IEnumerable<T>, T>
+    {
+        private IEnumerator<T> _subEnumerator;
+        private IEnumerable<T> _joinEnumerable;
+        private bool _completed = false;
+        private Action _updateEnumerator;
+        private Func<bool> _moveNext;
+
+        public JoinEnumerator(IEnumerable<IEnumerable<T>> enumerable, params T[] join) : base(enumerable)
+        {
+            _joinEnumerable = ((IEnumerable<T>)join);
+
+            _updateEnumerator = () =>
+            {
+                _subEnumerator = InnerEnumerator.Current.GetEnumerator();
+
+                _updateEnumerator = () => _subEnumerator = _joinEnumerable.AppendValues(InnerEnumerator.Current).GetEnumerator();
+            };
+
+            _moveNext = () =>
+              {
+
+                  if (_subEnumerator == null)
+                  {
+                      _MoveNext();
+
+                      if (_completed)
+
+                          return false;
+                  }
+
+                  _moveNext = () => __MoveNext();
+
+                  return __MoveNext();
+              };
+        }
+
+        private bool __MoveNext()
+        {
+            bool moveNext()
+            {
+                if (_subEnumerator.MoveNext())
+                {
+                    Current = _subEnumerator.Current;
+
+                    return true;
+                }
+
+                return false;
+            }
+
+            while (!_completed)
+            {
+                if (moveNext())
+
+                    return true;
+
+                _MoveNext();
+            }
+
+            return false;
+        }
+
+        private void _MoveNext()
+        {
+            if (InnerEnumerator.MoveNext())
+
+                _updateEnumerator();
+
+            _completed = true;
+
+            _subEnumerator = null;
+        }
+
+        protected override bool MoveNextOverride() => _completed ? false : _moveNext();
+
+        protected override void ResetOverride()
+        {
+            base.ResetOverride();
+
+            _subEnumerator = null;
+
+            _completed = false;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            Current = default;
+
+            _joinEnumerable = null;
+
+            _updateEnumerator = null;
+
+            _moveNext = null;
+
+            _subEnumerator = null;
+        }
+    }
+
+#if WinCopies2
     [Obsolete("This type has been replaced by the types in the WinCopies.Collections.DotNetFix namespace and will be removed in later versions.")]
     public interface IUIntIndexedCollection
     {
@@ -147,9 +332,10 @@ namespace WinCopies.Collections
 
         public UIntIndexedCollectionEnumerator(IUIntIndexedCollection<T> uintIndexedCollection) : base(uintIndexedCollection) { }
     }
-}
 
 #endif
+
+}
 
 //public interface IList : System.Collections. IList, ICollection, IEnumerable
 

@@ -1586,10 +1586,10 @@ namespace WinCopies
         /// <param name="argumentName">The argument name for the <see cref="ArgumentNullException"/> that is thrown.</param>
         public static void ThrowIfNull(in object obj, in string argumentName)
         {
-                    if (obj is null)
+            if (obj is null)
 
                 throw GetArgumentNullException(argumentName);
-                        }
+        }
 
 #endif
 

@@ -9,6 +9,29 @@ CHANGELOG
 Updates
 -------
 
+??/??/???? 2.5-preview8
+=======================
+
+WinCopies.Util (2.5-preview8)
+-----------------------------
+
+- Additions:
+	- Delegates:
+		- LoopIteration delegate (generic and non-generic version).
+	- Extension methods:
+		- ForEach generic and non-generic version.
+		- Join methods for enumerables strings.
+	- Types:
+		- WinCopies.Collections:
+			- Classes:
+				- Enumerable\<T>
+				- Enumerator\<TSource, TDestination>
+				- JoinEnumerator\<T>
+			- Interfaces:
+				- IEnumerableEnumerator generic and non-generic versions.
+- Changes:
+	- Update SplitFactories
+
 06/14/2020 2.5-preview7
 =======================
 

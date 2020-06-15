@@ -39,8 +39,15 @@ namespace WinCopies.Util.DotNetFix
 namespace WinCopies.DotNetFix
 #endif
 {
+    /// <summary>
+    /// Provides a mechanism for releasing unmanaged resources.
+    /// </summary>
+    /// <seealso cref="System.IDisposable"/>
     public interface IDisposable : System.IDisposable
     {
+        /// <summary>
+        /// Gets a value that indicates whether the current object is disposed.
+        /// </summary>
         bool IsDisposed { get; }
     }
 }

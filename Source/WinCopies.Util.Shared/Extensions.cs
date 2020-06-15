@@ -41,28 +41,47 @@ using IfCT = WinCopies.ComparisonType;
 namespace WinCopies
 #endif
 {
-    public interface ISplitFactory<T, U, V, TContainer>
+    /// <summary>
+    /// This delegate represents the action that is performed for each iteration of a loop.
+    /// </summary>
+    /// <param name="obj">The object or value retrieved by the current iteration.</param>
+    /// <returns><see langword="true"/> to break the loop; otherwise <see langword="false"/>.</returns>
+    public delegate bool LoopIteration(object obj);
+
+    /// <summary>
+    /// This delegate represents the action that is performed for each iteration of a loop.
+    /// </summary>
+    /// <typeparam name="T">The type of the object or value that is retrieved.</typeparam>
+    /// <param name="obj">The object or value retrieved by the current iteration.</param>
+    /// <returns><see langword="true"/> to break the loop; otherwise <see langword="false"/>.</returns>
+    public delegate bool LoopIteration<T>(T obj);
+
+    public interface ISplitFactory<T, U, TContainer>
     {
         TContainer Container { get; }
 
         int SubCount { get; }
 
+        void SubClear();
+    }
+
+    public interface IValueSplitFactory<T, U, TContainer> : ISplitFactory<T, U, TContainer>
+    {
+        void Add(U enumerable);
+
+        U GetEnumerable();
+
+        void SubAdd(T value);
+    }
+
+    public interface IRefSplitFactory<T, U, V, TContainer> : ISplitFactory<T, U, TContainer> where T : class
+    {
         void Add(V enumerable);
 
         V GetEnumerable();
 
-        void SubClear();
-
         void SubAdd(U value);
-    }
 
-    public interface IValueSplitFactory<T, U, V, TContainer> : ISplitFactory<T, U, V, TContainer> where T : struct
-    {
-        U GetValueContainer(T? value);
-    }
-
-    public interface IRefSplitFactory<T, U, V, TContainer> : ISplitFactory<T, U, V, TContainer> where T : class
-    {
         U GetValueContainer(T value);
     }
 
@@ -113,7 +132,7 @@ namespace WinCopies
                 }
 
             return removedValues.ToArray();
-                    }
+        }
 #endif
 
         #region Enumerables extension methods
@@ -1466,7 +1485,7 @@ namespace WinCopies
         }
 
 #if WinCopies2
-/// <summary>
+        /// <summary>
         /// Checks whether an array contains <i>exactly</i> one value of a given array using a custom comparer.
         /// </summary>
         /// <param name="array">The array to browse</param>
@@ -2982,7 +3001,7 @@ namespace WinCopies
 
 #if WinCopies2
 
-/// <summary>
+        /// <summary>
         /// Gets the numeric value for an enum.
         /// </summary>
         /// <param name="enum">The enum for which get the corresponding numeric value.</param>
@@ -3459,7 +3478,32 @@ namespace WinCopies
         /// <returns><see langword="true"/> if <paramref name="d"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         public static bool Between(this decimal d, decimal x, decimal y) => d >= x && d <= y;
 
-        public static void SplitValues<T, U, V, TContainer>(this IEnumerable<T> enumerable, in bool skipEmptyValues, IValueSplitFactory<T, U, V, TContainer> splitFactory, params T[] separators) where T : struct where U : INullableValueEntry<T> where V : IEnumerable<U>
+        public static void ForEach(this IEnumerableEnumerator enumerator, LoopIteration func)
+        {
+            while (enumerator.MoveNext())
+
+                if (func(enumerator.Current))
+
+                    break;
+        }
+
+        public static void ForEach<T>(this IEnumerableEnumerator<T> enumerator, LoopIteration<T> func)
+        {
+            try
+            {
+                while (enumerator.MoveNext())
+
+                    if (func(enumerator.Current))
+
+                        break;
+            }
+            finally
+            {
+                enumerator.Dispose();
+            }
+        }
+
+        public static void SplitValues<T, U, TContainer>(this IEnumerable<T> enumerable, in bool skipEmptyEnumerables, IValueSplitFactory<T, U, TContainer> splitFactory, params T[] separators) where T : struct where U : IEnumerable<T>
         {
             ThrowIfNull(enumerable, nameof(enumerable));
             ThrowIfNull(splitFactory, nameof(splitFactory));
@@ -3484,14 +3528,14 @@ namespace WinCopies
 
             enumerable = null;
 
-            void subAddAndAdd(in T? value)
+            void subAddAndAdd(in T value)
             {
-                splitFactory.SubAdd(splitFactory.GetValueContainer(value));
+                splitFactory.SubAdd(value);
 
                 splitFactory.Add(splitFactory.GetEnumerable());
             }
 
-            if (skipEmptyValues)
+            if (skipEmptyEnumerables)
             {
                 if (enumerator.MoveNext())
                 {
@@ -3512,7 +3556,7 @@ namespace WinCopies
 
                             else
 
-                                splitFactory.SubAdd(splitFactory.GetValueContainer(enumerator.Current));
+                                splitFactory.SubAdd(enumerator.Current);
                         }
 
                         tryAdd();
@@ -3551,24 +3595,16 @@ namespace WinCopies
                     {
                         if (predicate(enumerator.Current))
                         {
-                            if (splitFactory.SubCount == 0)
-                            {
-                                splitFactory.SubAdd(splitFactory.GetValueContainer(null));
+                            splitFactory.Add(splitFactory.GetEnumerable());
 
-                                splitFactory.Add(splitFactory.GetEnumerable());
-                            }
-
-                            else
-                            {
-                                splitFactory.Add(splitFactory.GetEnumerable());
+                            if (splitFactory.SubCount > 0)
 
                                 splitFactory.SubClear();
-                            }
                         }
 
                         else
 
-                            splitFactory.SubAdd(splitFactory.GetValueContainer(enumerator.Current));
+                            splitFactory.SubAdd(enumerator.Current);
                     }
 
                     tryAdd();
@@ -3581,11 +3617,8 @@ namespace WinCopies
                 else // There is one value.
                 {
                     if (predicate(value.Value))
-                    {
-                        subAddAndAdd(null);
 
-                        subAddAndAdd(null);
-                    }
+                        splitFactory.Add(splitFactory.GetEnumerable());
 
                     else
 
@@ -3594,14 +3627,11 @@ namespace WinCopies
             }
 
             else // There is no value.
-            {
-                splitFactory.SubAdd(splitFactory.GetValueContainer(null));
 
                 splitFactory.Add(splitFactory.GetEnumerable());
-            }
         }
 
-        public static void SplitReferences<T, U, V, TContainer>(this IEnumerable<T> enumerable, in bool skipEmptyValues, IRefSplitFactory<T, U, V, TContainer> splitFactory, params T[] separators) where T : class where U : INullableRefEntry<T> where V : IEnumerable<U>
+        public static void SplitReferences<T, U, V, TContainer>(this IEnumerable<T> enumerable, in bool skipEmptyEnumerables, IRefSplitFactory<T, U, V, TContainer> splitFactory, params T[] separators) where T : class where U : INullableRefEntry<T> where V : IEnumerable<U>
         {
             ThrowIfNull(enumerable, nameof(enumerable));
             ThrowIfNull(splitFactory, nameof(splitFactory));
@@ -3616,7 +3646,7 @@ namespace WinCopies
 
             if (separators.Length == 1)
 
-                predicate = value => value == null ? separators[0]==null: value.Equals(separators[0]);
+                predicate = value => value == null ? separators[0] == null : value.Equals(separators[0]);
 
             else
 
@@ -3633,7 +3663,7 @@ namespace WinCopies
                 splitFactory.Add(splitFactory.GetEnumerable());
             }
 
-            if (skipEmptyValues)
+            if (skipEmptyEnumerables)
             {
                 if (enumerator.MoveNext())
                 {
@@ -3742,6 +3772,8 @@ namespace WinCopies
                 splitFactory.Add(splitFactory.GetEnumerable());
             }
         }
+
+        public static IEnumerable<T> Join<T>(this IEnumerable<IEnumerable<T>> enumerable, params T[] join) => new Enumerable<T>(() => new JoinEnumerator<T>(enumerable, join));
 
         #region String extension methods
 
@@ -3916,11 +3948,50 @@ namespace WinCopies
 
         #endregion
 
+        public static string Join(this IEnumerable<string> enumerable, params char[] join) => Join(enumerable, new string(join));
+
+        public static string Join(this IEnumerable<string> enumerable, in string join, StringBuilder stringBuilder = null)
+        {
+            IEnumerator<string> enumerator = (enumerable ?? throw GetArgumentNullException(nameof(enumerable))).GetEnumerator();
+
+#if CS7
+            if (stringBuilder == null)
+
+                stringBuilder = new StringBuilder();
+#else
+            stringBuilder ??= new StringBuilder();
+#endif
+
+            try
+            {
+                void append() => _ = stringBuilder.Append(enumerator.Current);
+
+                bool moveNext() => enumerator.MoveNext();
+
+                if (moveNext())
+
+                    append();
+
+                while (moveNext())
+                {
+                    _ = stringBuilder.Append(join);
+
+                    append();
+                }
+            }
+            finally
+            {
+                enumerator.Dispose();
+            }
+
+            return stringBuilder.ToString();
+        }
+
         // todo: add other methods and overloads for StringComparison, IEqualityComparer<char>, Comparer<char>, Comparison<char>, ignore case and CultureInfo parameters
 
 #if WinCopies2
 
-[Obsolete("This method has been replaced by the Contains(this string, string, IEqualityComparer<char>) method.")]
+        [Obsolete("This method has been replaced by the Contains(this string, string, IEqualityComparer<char>) method.")]
         public static bool Contains(this string s, IEqualityComparer<char> comparer, string value) => s.Contains(value, comparer);
 
 #endif
@@ -4008,7 +4079,7 @@ namespace WinCopies
 
 #if WinCopies2
 
-[Obsolete("This method has been replaced by arrays-common methods.")]
+        [Obsolete("This method has been replaced by arrays-common methods.")]
         public static bool Contains(this string s, char value, IEqualityComparer<char> comparer, out int index)
         {
             for (int i = 0; i < s.Length; i++)
@@ -4085,7 +4156,7 @@ namespace WinCopies
 
         internal static void ThrowIfDisposedInternal(this
 #if WinCopies2
-            WinCopies.Util.DotNetFix.IDisposable 
+            WinCopies.Util.DotNetFix.IDisposable
 #else
             WinCopies.DotNetFix.IDisposable
 #endif
@@ -4098,7 +4169,7 @@ namespace WinCopies
 
         public static void ThrowIfDisposed(this
 #if WinCopies2
-            WinCopies.Util.DotNetFix.IDisposable 
+            WinCopies.Util.DotNetFix.IDisposable
 #else
             WinCopies.DotNetFix.IDisposable
 #endif
