@@ -3773,7 +3773,7 @@ namespace WinCopies
             }
         }
 
-        public static IEnumerable<T> Join<T>(this IEnumerable<IEnumerable<T>> enumerable, params T[] join) => new Enumerable<T>(() => new JoinEnumerator<T>(enumerable, join));
+        public static IEnumerable<T> Join<T>(this IEnumerable<IEnumerable<T>> enumerable, bool keepEmptyEnumerables, params T[] join) => new Enumerable<T>(() => new JoinEnumerator<T>(enumerable, keepEmptyEnumerables, join));
 
         #region String extension methods
 

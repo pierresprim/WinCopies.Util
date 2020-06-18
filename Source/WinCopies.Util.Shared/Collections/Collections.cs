@@ -114,6 +114,116 @@ namespace WinCopies.Collections
         T Current { get; }
     }
 
+    public sealed class JoinSubEnumerator<T> : Enumerator<T, T>
+    {
+        private IEnumerator<T> _joinEnumerator;
+        private T _firstValue;
+        private bool _completed = false;
+        private Func<bool> _moveNext;
+
+        public JoinSubEnumerator(IEnumerable<T> subEnumerable, IEnumerable<T> joinEnumerable) : base(subEnumerable)
+        {
+#if DEBUG
+            Debug.Assert(subEnumerable != null && joinEnumerable != null);
+#endif
+
+            _joinEnumerator =
+#if !DEBUG
+                (
+#endif
+                joinEnumerable
+#if !DEBUG
+                ?? throw GetArgumentNullException())
+#endif
+                .GetEnumerator();
+
+            InitDelegate();
+        }
+
+        private void InitDelegate() => _moveNext = () =>
+                                       {
+                                           if (InnerEnumerator.MoveNext())
+                                           {
+                                               _firstValue = InnerEnumerator.Current;
+
+                                               _moveNext = () => _MoveNext();
+
+                                               return _MoveNext();
+                                           }
+
+                                           else
+
+                                               return false;
+                                       };
+
+        private bool _MoveNext()
+        {
+            if (_joinEnumerator.MoveNext())
+            {
+                Current = _joinEnumerator.Current;
+
+                return true;
+            }
+
+            Current = _firstValue;
+
+            _firstValue = default;
+
+            _moveNext = () =>
+            {
+                if (InnerEnumerator.MoveNext())
+                {
+                    Current = InnerEnumerator.Current;
+
+                    return true;
+                }
+
+                return false;
+            };
+
+            return true;
+        }
+
+        protected override bool MoveNextOverride()
+        {
+            if (_completed) return false;
+
+            if (_moveNext()) return true;
+
+            Current = default;
+
+            _moveNext = null;
+
+            _completed = true;
+
+            return false;
+        }
+
+        protected override void ResetOverride()
+        {
+            base.ResetOverride();
+
+            _joinEnumerator.Reset();
+
+            _firstValue = default;
+
+            _completed = false;
+
+            InitDelegate();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            _joinEnumerator = null;
+
+            _firstValue = default;
+
+            _moveNext = null;
+        }
+    }
+
     public sealed class JoinEnumerator<T> : Enumerator<IEnumerable<T>, T>
     {
         private IEnumerator<T> _subEnumerator;
@@ -121,34 +231,48 @@ namespace WinCopies.Collections
         private bool _completed = false;
         private Action _updateEnumerator;
         private Func<bool> _moveNext;
+        private readonly bool _keepEmptyEnumerables;
 
-        public JoinEnumerator(IEnumerable<IEnumerable<T>> enumerable, params T[] join) : base(enumerable)
+        public JoinEnumerator(IEnumerable<IEnumerable<T>> enumerable, bool keepEmptyEnumerables, params T[] join) : base(enumerable)
         {
-            _joinEnumerable = ((IEnumerable<T>)join);
+            _joinEnumerable = join;
 
+            _keepEmptyEnumerables = keepEmptyEnumerables;
+
+            InitDelegates();
+        }
+
+        private void InitDelegates()
+        {
             _updateEnumerator = () =>
             {
                 _subEnumerator = InnerEnumerator.Current.GetEnumerator();
 
-                _updateEnumerator = () => _subEnumerator = _joinEnumerable.AppendValues(InnerEnumerator.Current).GetEnumerator();
+                if (_keepEmptyEnumerables)
+
+                    _updateEnumerator = () => _subEnumerator = _joinEnumerable.AppendValues(InnerEnumerator.Current).GetEnumerator();
+
+                else
+
+                    _updateEnumerator = () => _subEnumerator = new JoinSubEnumerator<T>(InnerEnumerator.Current, _joinEnumerable);
             };
 
             _moveNext = () =>
-              {
+            {
 
-                  if (_subEnumerator == null)
-                  {
-                      _MoveNext();
+                if (_subEnumerator == null)
+                {
+                    _MoveNext();
 
-                      if (_completed)
+                    if (_completed)
 
-                          return false;
-                  }
+                        return false;
+                }
 
-                  _moveNext = () => __MoveNext();
+                _moveNext = () => __MoveNext();
 
-                  return __MoveNext();
-              };
+                return __MoveNext();
+            };
         }
 
         private bool __MoveNext()
@@ -195,6 +319,8 @@ namespace WinCopies.Collections
             base.ResetOverride();
 
             _subEnumerator = null;
+
+            InitDelegates();
 
             _completed = false;
         }
