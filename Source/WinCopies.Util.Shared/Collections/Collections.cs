@@ -62,7 +62,14 @@ namespace WinCopies.Collections
 
         public Enumerator(IEnumerable<TSource> enumerable) => _innerEnumerator = (enumerable ?? throw GetArgumentNullException(nameof(enumerable))).GetEnumerator();
 
-        public bool MoveNext() => IsDisposed ? throw GetExceptionForDispose(false) : MoveNextOverride();
+        public bool MoveNext()
+        {
+            if (IsDisposed ? throw GetExceptionForDispose(false) : MoveNextOverride()) return true;
+
+            _current = default;
+
+            return false;
+        }
 
         protected abstract bool MoveNextOverride();
 
@@ -84,21 +91,21 @@ namespace WinCopies.Collections
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!IsDisposed)
-            {
-                if (disposing)
+            if (disposing)
 
-                    _innerEnumerator = null;
+                _innerEnumerator = null;
 
-                IsDisposed = true;
-            }
+            IsDisposed = true;
         }
 
         public void Dispose()
         {
-            Dispose(disposing: true);
+            if (!IsDisposed)
+            {
+                Dispose(disposing: true);
 
-            GC.SuppressFinalize(this);
+                GC.SuppressFinalize(this);
+            }
         }
     }
 

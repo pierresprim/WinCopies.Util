@@ -412,4 +412,34 @@ namespace WinCopies
             IsDisposed = true;
         }
     }
+
+    namespace DotNetFix
+    {
+        public class PausableBackgroundWorker : System.ComponentModel.BackgroundWorker
+        {
+            public bool PausePending { get; private set; }
+
+            private bool _workerSupportsPausing = false;
+
+            public bool WorkerSupportsPausing { get => _workerSupportsPausing; set => _workerSupportsPausing = IsBusy ? throw new InvalidOperationException("The BackgroundWorker is running.") : value; }
+
+            public void PauseAsync()
+            {
+                if (!_workerSupportsPausing)
+
+                    throw new InvalidOperationException("The BackgroundWorker does not support pausing.");
+
+                if (IsBusy)
+
+                    PausePending = true;
+            }
+
+            protected override void OnRunWorkerCompleted(RunWorkerCompletedEventArgs e)
+            {
+                base.OnRunWorkerCompleted(e);
+
+                PausePending = false;
+            }
+        }
+    }
 }

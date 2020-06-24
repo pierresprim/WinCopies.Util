@@ -29,8 +29,14 @@ WinCopies.Util (2.5-preview8)
 				- JoinEnumerator\<T>
 			- Interfaces:
 				- IEnumerableEnumerator generic and non-generic versions.
+	- WinCopies.Util.DotNetFix.PausableBackgroundWorker
 - Changes:
+	- WinCopies.Collections.Enumerator<TSource, TDestination>:
+		- MoveNext resets Current to default when MoveNextOverride returns false.
+		- Dispose methods: the !IsDisposed check is not performed in the Dispose() method anymore, because it has moved to the Dispose(bool) method.
 	- Update SplitFactories
+- Bug fixes:
+	- String 'Split' methods do not return any value when there is value but no separator in the given string.
 
 06/14/2020 2.5-preview7
 =======================

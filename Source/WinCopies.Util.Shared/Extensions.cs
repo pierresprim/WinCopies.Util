@@ -3838,6 +3838,10 @@ namespace WinCopies
                         else
 
                             _ = stringBuilder.Append(_c);
+
+                    if (stringBuilder.Length > 0)
+
+                        action(stringBuilder.ToString());
                 }
 
             else if (s.Length == 0)
@@ -3879,6 +3883,10 @@ namespace WinCopies
                     else
 
                         _ = stringBuilder.Append(_c);
+
+                if (stringBuilder.Length > 0)
+
+                    action(stringBuilder.ToString());
             }
         }
 
@@ -3948,9 +3956,9 @@ namespace WinCopies
 
         #endregion
 
-        public static string Join(this IEnumerable<string> enumerable, params char[] join) => Join(enumerable, new string(join));
+        public static string Join(this IEnumerable<string> enumerable, in bool keepEmptyValues, params char[] join) => Join(enumerable, keepEmptyValues, new string(join));
 
-        public static string Join(this IEnumerable<string> enumerable, in string join, StringBuilder stringBuilder = null)
+        public static string Join(this IEnumerable<string> enumerable, in bool keepEmptyValues, in string join, StringBuilder stringBuilder = null)
         {
             IEnumerator<string> enumerator = (enumerable ?? throw GetArgumentNullException(nameof(enumerable))).GetEnumerator();
 
@@ -3972,7 +3980,7 @@ namespace WinCopies
 
                     append();
 
-                while (moveNext())
+                while (moveNext()&&(keepEmptyValues || enumerator.Current.Length > 0))
                 {
                     _ = stringBuilder.Append(join);
 
