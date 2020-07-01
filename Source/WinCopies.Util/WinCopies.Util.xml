@@ -20,6 +20,16 @@
               resource lookups using this strongly typed resource class.
             </summary>
         </member>
+        <member name="P:WinCopies.Util.Resources.ExceptionMessages.ArrayHasNonZeroLowerBound">
+            <summary>
+              Looks up a localized string similar to The given array has a non-zero lower bound..
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.Resources.ExceptionMessages.ArrayHasNotEnoughSpace">
+            <summary>
+              Looks up a localized string similar to The given array has not enough space..
+            </summary>
+        </member>
         <member name="P:WinCopies.Util.Resources.ExceptionMessages.ArrayWithMoreThanOneDimension">
             <summary>
               Looks up a localized string similar to Arrays must have only one dimension..
@@ -42,7 +52,17 @@
         </member>
         <member name="P:WinCopies.Util.Resources.ExceptionMessages.InvalidEnumValue">
             <summary>
-              Looks up a localized string similar to The enum value is not in the enum values range. The enum value is {0}..
+              Looks up a localized string similar to The enum value is not in the enum values range..
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.Resources.ExceptionMessages.MoreThanOneOccurencesWereFound">
+            <summary>
+              Looks up a localized string similar to More than one occurences were found..
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.Resources.ExceptionMessages.MultidimensionalArraysNotSupported">
+            <summary>
+              Looks up a localized string similar to Multidimensional arrays are not supported..
             </summary>
         </member>
         <member name="P:WinCopies.Util.Resources.ExceptionMessages.NonFlagsEnumException">
@@ -60,6 +80,11 @@
               Looks up a localized string similar to &apos;{0}&apos; must be one of the {1} enum values..
             </summary>
         </member>
+        <member name="P:WinCopies.Util.Resources.ExceptionMessages.OneOrMoreKeyIsNull">
+            <summary>
+              Looks up a localized string similar to One or more key is null..
+            </summary>
+        </member>
         <member name="P:WinCopies.Util.Resources.ExceptionMessages.OneOrMoreSameKey">
             <summary>
               Looks up a localized string similar to &apos;{0}&apos; has one or more same key..
@@ -75,9 +100,14 @@
               Looks up a localized string similar to This collection is read-only..
             </summary>
         </member>
-        <member name="P:WinCopies.Util.Resources.ExceptionMessages.StringParameterEmptyOrWhiteSpaces">
+        <member name="P:WinCopies.Util.Resources.ExceptionMessages.StringIsNullEmptyOrWhiteSpace">
             <summary>
-              Looks up a localized string similar to &apos;{0}&apos; is empty or white spaces..
+              Looks up a localized string similar to The given value is null, empty or white space. The given value is: &apos;{0}&apos;..
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.Resources.ExceptionMessages.StringParameterEmptyOrWhiteSpace">
+            <summary>
+              Looks up a localized string similar to &apos;{0}&apos; is empty or white space..
             </summary>
         </member>
         <member name="M:WinCopies.Util.TypeArgumentException.#ctor">
@@ -130,6 +160,21 @@
             </summary>
             <param name="info">The object that holds the serialized object data.</param>
             <param name="context">The contextual information about the source or destination.</param>
+        </member>
+        <member name="T:WinCopies.Util.LoopIteration">
+            <summary>
+            This delegate represents the action that is performed for each iteration of a loop.
+            </summary>
+            <param name="obj">The object or value retrieved by the current iteration.</param>
+            <returns><see langword="true"/> to break the loop; otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="T:WinCopies.Util.LoopIteration`1">
+            <summary>
+            This delegate represents the action that is performed for each iteration of a loop.
+            </summary>
+            <typeparam name="T">The type of the object or value that is retrieved.</typeparam>
+            <param name="obj">The object or value retrieved by the current iteration.</param>
+            <returns><see langword="true"/> to break the loop; otherwise <see langword="false"/>.</returns>
         </member>
         <member name="T:WinCopies.Util.Extensions">
             <summary>
@@ -1016,6 +1061,19 @@
             <seealso cref="M:WinCopies.Util.Extensions.ThrowIfNotValidEnumValue(System.Enum,System.String@)"/>
             <seealso cref="M:WinCopies.Util.Extensions.ThrowIfNotDefinedEnumValue(System.Enum,System.String@)"/>
         </member>
+        <member name="M:WinCopies.Util.Extensions.IsValidFlagsEnumValue(System.Enum,System.Boolean@,System.Boolean@)">
+            <summary>
+            Determines whether the current enum value is within the enum values range.
+            </summary>
+            <param name="enum">The enum value to check.</param>
+            <param name="throwIfNotFlagsEnum">Whether to throw if the given enum does not have the <see cref="T:System.FlagsAttribute"/> attribute.</param>
+            <param name="throwIfZero">Whether to throw if the given enum is zero.</param>
+            <returns><see langword="true"/> if the given value is in the enum values range, otherwise <see langword="false"/>.</returns>
+            <exception cref="T:System.ArgumentException"><paramref name="enum"/> does not have the <see cref="T:System.FlagsAttribute"/> and <paramref name="throwIfNotFlagsEnum"/> is set to <see langword="true"/>.</exception>
+            <exception cref="T:WinCopies.Util.InvalidEnumArgumentException"><paramref name="enum"/> is equal to zero and the <paramref name="throwIfZero"/> parameter is set to true or <paramref name="enum"/> is lesser than zero.</exception>
+            <seealso cref="M:WinCopies.Util.Extensions.ThrowIfNotValidFlagsEnumValue(System.Enum,System.Boolean@,System.Boolean@)"/>
+            <seealso cref="M:WinCopies.Util.Extensions.ThrowIfNotValidFlagsEnumValue(System.Enum,System.String@,System.Boolean@,System.Boolean@)"/>
+        </member>
         <member name="M:WinCopies.Util.Extensions.ThrowIfNotValidEnumValue(System.Enum)">
             <summary>
             Throws an <see cref="T:System.InvalidOperationException"/> if the enum value is not in the required enum value range. See the Remarks section.
@@ -1052,19 +1110,6 @@
             <remarks>This method doesn't read all the enum fields, but only takes care of the first and last numeric enum fields, so if the value is 1, and the enum has only defined fields for 0 and 2, this method still doesn't throw. For a method that actually reads all the enum fields, see the <see cref="M:WinCopies.Util.Extensions.ThrowIfNotDefinedEnumValue(System.Enum)"/> method.</remarks>
             <seealso cref="M:WinCopies.Util.Extensions.IsValidEnumValue(System.Enum)"/>
             <seealso cref="M:WinCopies.Util.Extensions.ThrowIfNotDefinedEnumValue(System.Enum)"/>
-        </member>
-        <member name="M:WinCopies.Util.Extensions.IsValidFlagsEnumValue(System.Enum,System.Boolean@,System.Boolean@)">
-            <summary>
-            Determines whether the current enum value is within the enum values range.
-            </summary>
-            <param name="enum">The enum value to check.</param>
-            <param name="throwIfNotFlagsEnum">Whether to throw if the given enum does not have the <see cref="T:System.FlagsAttribute"/> attribute.</param>
-            <param name="throwIfZero">Whether to throw if the given enum is zero.</param>
-            <returns><see langword="true"/> if the given value is in the enum values range, otherwise <see langword="false"/>.</returns>
-            <exception cref="T:System.ArgumentException"><paramref name="enum"/> does not have the <see cref="T:System.FlagsAttribute"/> and <paramref name="throwIfNotFlagsEnum"/> is set to <see langword="true"/>.</exception>
-            <exception cref="T:WinCopies.Util.InvalidEnumArgumentException"><paramref name="enum"/> is equal to zero and the <paramref name="throwIfZero"/> parameter is set to true or <paramref name="enum"/> is lesser than zero.</exception>
-            <seealso cref="M:WinCopies.Util.Extensions.ThrowIfNotValidFlagsEnumValue(System.Enum,System.Boolean@,System.Boolean@)"/>
-            <seealso cref="M:WinCopies.Util.Extensions.ThrowIfNotValidFlagsEnumValue(System.Enum,System.String@,System.Boolean@,System.Boolean@)"/>
         </member>
         <member name="M:WinCopies.Util.Extensions.ThrowIfNotValidFlagsEnumValue(System.Enum,System.Boolean@,System.Boolean@)">
             <summary>
@@ -1347,6 +1392,17 @@
             <param name="preserveIds">Whether to preserve IDs, if any.</param>
             <returns>A deep clone of the current object or value.</returns>
         </member>
+        <member name="T:WinCopies.Util.DotNetFix.IDisposable">
+            <summary>
+            Provides a mechanism for releasing unmanaged resources.
+            </summary>
+            <seealso cref="T:System.IDisposable"/>
+        </member>
+        <member name="P:WinCopies.Util.DotNetFix.IDisposable.IsDisposed">
+            <summary>
+            Gets a value that indicates whether the current object is disposed.
+            </summary>
+        </member>
         <member name="M:WinCopies.Util.InvalidEnumArgumentException.#ctor">
             <summary>
             Initializes a new instance of the <see cref="T:WinCopies.Util.InvalidEnumArgumentException"/> class.
@@ -1496,6 +1552,12 @@
             </summary>
             <param name="value">The value to test</param>
             <returns><see langword="true"/> if the predicate success, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="T:WinCopies.Util.Func">
+            <summary>
+            Represents a delegate that returns an object.
+            </summary>
+            <returns>Any object.</returns>
         </member>
         <member name="T:WinCopies.Util.Util">
             <summary>

@@ -7,7 +7,7 @@ using WinCopies.Util;
 #if WinCopies2
 using static WinCopies.Util.Util;
 #else
-using static WinCopies.UtilHelpers;
+using static WinCopies.ThrowHelper;
 #endif
 
 namespace WinCopies.Linq

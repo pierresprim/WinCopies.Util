@@ -15,9 +15,9 @@ namespace WinCopies
     {
         private readonly ulong? _value;
 
-        public bool IsNaN => _value.HasValue;
+        public bool IsNaN => !_value.HasValue;
 
-        public ulong Value => _value.HasValue ? throw new InvalidOperationException("The current value is not a number.") : _value.Value;
+        public ulong Value => _value.HasValue ? _value.Value : throw new InvalidOperationException("The current value is not a number.");
 
         public ulong MaxValue { get; }
 
@@ -69,49 +69,49 @@ namespace WinCopies
         public int CompareTo(
 #if CS8
             [AllowNull]
-        #endif
+#endif
         long other) => other < 0 ? 1 : this < other ? -1 : this == other ? 0 : 1;
 
         public int CompareTo(
 #if CS8
             [AllowNull]
-        #endif
+#endif
         int other) => other < 0 ? 1 : this < other ? -1 : this == other ? 0 : 1;
 
         public int CompareTo(
 #if CS8
             [AllowNull]
-        #endif
+#endif
         short other) => other < 0 ? 1 : this < other ? -1 : this == other ? 0 : 1;
 
         public int CompareTo(
 #if CS8
             [AllowNull]
-        #endif
+#endif
         sbyte other) => other < 0 ? 1 : this < other ? -1 : this == other ? 0 : 1;
 
         public int CompareTo(
 #if CS8
             [AllowNull]
-        #endif
+#endif
         ulong other) => this < other ? -1 : this == other ? 0 : 1;
 
         public int CompareTo(
 #if CS8
             [AllowNull]
-        #endif
+#endif
         uint other) => this < other ? -1 : this == other ? 0 : 1;
 
         public int CompareTo(
 #if CS8
             [AllowNull]
-        #endif
+#endif
         ushort other) => this < other ? -1 : this == other ? 0 : 1;
 
         public int CompareTo(
 #if CS8
             [AllowNull]
-        #endif
+#endif
         byte other) => this < other ? -1 : this == other ? 0 : 1;
 
 

@@ -27,7 +27,7 @@ using WinCopies.Util;
 #if WinCopies2
 using static WinCopies.Util.Util;
 #else
-using static WinCopies.UtilHelpers;
+using static WinCopies.ThrowHelper;
 #endif
 // using WinCopies.Util.Data;
 
@@ -120,7 +120,7 @@ namespace WinCopies.Collections
 
         public override string ToString() => Value?.ToString() ?? base.ToString();
 
-#region IDisposable Support
+        #region IDisposable Support
         private bool disposedValue = false;
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace WinCopies.Collections
             GC.SuppressFinalize(this);
 
         }
-#endregion
+        #endregion
 
         /// <summary>
         /// Returns the default comparer for <see cref="TreeNode{T}"/> objects.

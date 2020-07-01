@@ -26,7 +26,7 @@ using static WinCopies.Util.Util;
 #else
 using IDisposable = WinCopies.DotNetFix.IDisposable;
 using WinCopies;
-using static WinCopies.UtilHelpers;
+using static WinCopies.ThrowHelper;
 #endif
 
 namespace WinCopies.Collections
@@ -42,19 +42,85 @@ namespace WinCopies.Collections
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 
+    public abstract class Enumerator<T> : IEnumerator<T>, WinCopies.
+#if WinCopies2
+        Util.
+#endif
+        DotNetFix.IDisposable
+    {
+        private T _current;
+        private bool _enumerationStarted = false;
+
+        public bool IsDisposed { get; private set; }
+
+        public T Current { get => IsDisposed ? throw GetExceptionForDispose(false) : _enumerationStarted ? _current : throw new InvalidOperationException("The enumeration has not been started or has completed."); protected set => _current = IsDisposed ? throw GetExceptionForDispose(false) : value; }
+
+        object IEnumerator.Current => Current;
+
+        public bool MoveNext()
+        {
+            if (IsDisposed ? throw GetExceptionForDispose(false) : MoveNextOverride())
+            {
+                _enumerationStarted = true;
+
+                return true;
+            }
+
+            _current = default;
+
+            _enumerationStarted = false;
+
+            return false;
+        }
+
+        protected abstract bool MoveNextOverride();
+
+        public void Reset()
+        {
+            if (IsDisposed)
+
+                throw GetExceptionForDispose(false);
+
+            ResetOverride();
+        }
+
+        protected virtual void ResetOverride()
+        {
+            _current = default;
+
+            _enumerationStarted = false;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+
+                IsDisposed = true;
+        }
+
+        public void Dispose()
+        {
+            if (!IsDisposed)
+            {
+                Dispose(disposing: true);
+
+                GC.SuppressFinalize(this);
+            }
+        }
+    }
+
     public abstract class Enumerator<TSource, TDestination> : IEnumerator<TDestination>, WinCopies.
 #if WinCopies2
         Util.
 #endif
         DotNetFix.IDisposable
     {
+        private IEnumerator<TSource> _innerEnumerator;
+        private TDestination _current;
+
         public bool IsDisposed { get; private set; }
 
-        private IEnumerator<TSource> _innerEnumerator;
-
         protected IEnumerator<TSource> InnerEnumerator => IsDisposed ? throw GetExceptionForDispose(false) : _innerEnumerator;
-
-        private TDestination _current;
 
         public TDestination Current { get => IsDisposed ? throw GetExceptionForDispose(false) : _current; protected set => _current = IsDisposed ? throw GetExceptionForDispose(false) : value; }
 
@@ -377,7 +443,7 @@ namespace WinCopies.Collections
             MoveNextMethod = () => UIntIndexedCollectionEnumerator.MoveNextMethod(this);
         }
 
-        #region IDisposable Support
+    #region IDisposable Support
         public bool IsDisposed { get; private set; } = false;
 
         protected virtual void Dispose(bool disposing)
@@ -405,7 +471,7 @@ namespace WinCopies.Collections
 
             MoveNextMethod = () => UIntIndexedCollectionEnumerator.MoveNextMethod(this);
         }
-        #endregion
+    #endregion
     }
 
     [Obsolete("This type has been replaced by the types in the WinCopies.Collections.DotNetFix namespace and will be removed in later versions.")]

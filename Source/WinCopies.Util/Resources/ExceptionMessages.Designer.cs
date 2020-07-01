@@ -61,6 +61,24 @@ namespace WinCopies.Util.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The given array has a non-zero lower bound..
+        /// </summary>
+        public static string ArrayHasNonZeroLowerBound {
+            get {
+                return ResourceManager.GetString("ArrayHasNonZeroLowerBound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The given array has not enough space..
+        /// </summary>
+        public static string ArrayHasNotEnoughSpace {
+            get {
+                return ResourceManager.GetString("ArrayHasNotEnoughSpace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Arrays must have only one dimension..
         /// </summary>
         public static string ArrayWithMoreThanOneDimension {
@@ -97,11 +115,29 @@ namespace WinCopies.Util.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The enum value is not in the enum values range. The enum value is {0}..
+        ///   Looks up a localized string similar to The enum value is not in the enum values range..
         /// </summary>
         public static string InvalidEnumValue {
             get {
                 return ResourceManager.GetString("InvalidEnumValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to More than one occurences were found..
+        /// </summary>
+        public static string MoreThanOneOccurencesWereFound {
+            get {
+                return ResourceManager.GetString("MoreThanOneOccurencesWereFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Multidimensional arrays are not supported..
+        /// </summary>
+        public static string MultidimensionalArraysNotSupported {
+            get {
+                return ResourceManager.GetString("MultidimensionalArraysNotSupported", resourceCulture);
             }
         }
         
@@ -133,6 +169,15 @@ namespace WinCopies.Util.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to One or more key is null..
+        /// </summary>
+        public static string OneOrMoreKeyIsNull {
+            get {
+                return ResourceManager.GetString("OneOrMoreKeyIsNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &apos;{0}&apos; has one or more same key..
         /// </summary>
         public static string OneOrMoreSameKey {
@@ -160,11 +205,20 @@ namespace WinCopies.Util.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;{0}&apos; is empty or white spaces..
+        ///   Looks up a localized string similar to The given value is null, empty or white space. The given value is: &apos;{0}&apos;..
         /// </summary>
-        public static string StringParameterEmptyOrWhiteSpaces {
+        public static string StringIsNullEmptyOrWhiteSpace {
             get {
-                return ResourceManager.GetString("StringParameterEmptyOrWhiteSpaces", resourceCulture);
+                return ResourceManager.GetString("StringIsNullEmptyOrWhiteSpace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; is empty or white space..
+        /// </summary>
+        public static string StringParameterEmptyOrWhiteSpace {
+            get {
+                return ResourceManager.GetString("StringParameterEmptyOrWhiteSpace", resourceCulture);
             }
         }
     }

@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ArrayHasNonZeroLowerBound" xml:space="preserve">
+    <value>The given array has a non-zero lower bound.</value>
+  </data>
+  <data name="ArrayHasNotEnoughSpace" xml:space="preserve">
+    <value>The given array has not enough space.</value>
+  </data>
   <data name="ArrayWithMoreThanOneDimension" xml:space="preserve">
     <value>Arrays must have only one dimension.</value>
   </data>
@@ -130,7 +136,13 @@
     <value>'{0}' couldn't be found in '{1}'.</value>
   </data>
   <data name="InvalidEnumValue" xml:space="preserve">
-    <value>The enum value is not in the enum values range. The enum value is {0}.</value>
+    <value>The enum value is not in the enum values range.</value>
+  </data>
+  <data name="MoreThanOneOccurencesWereFound" xml:space="preserve">
+    <value>More than one occurences were found.</value>
+  </data>
+  <data name="MultidimensionalArraysNotSupported" xml:space="preserve">
+    <value>Multidimensional arrays are not supported.</value>
   </data>
   <data name="NonFlagsEnumException" xml:space="preserve">
     <value>The given enum does not have the FlagsAttribute attribute.</value>
@@ -141,6 +153,9 @@
   <data name="NoValidEnumValue" xml:space="preserve">
     <value>'{0}' must be one of the {1} enum values.</value>
   </data>
+  <data name="OneOrMoreKeyIsNull" xml:space="preserve">
+    <value>One or more key is null.</value>
+  </data>
   <data name="OneOrMoreSameKey" xml:space="preserve">
     <value>'{0}' has one or more same key.</value>
   </data>
@@ -150,7 +165,10 @@
   <data name="ReadOnlyCollection" xml:space="preserve">
     <value>This collection is read-only.</value>
   </data>
-  <data name="StringParameterEmptyOrWhiteSpaces" xml:space="preserve">
-    <value>'{0}' is empty or white spaces.</value>
+  <data name="StringIsNullEmptyOrWhiteSpace" xml:space="preserve">
+    <value>The given value is null, empty or white space. The given value is: '{0}'.</value>
+  </data>
+  <data name="StringParameterEmptyOrWhiteSpace" xml:space="preserve">
+    <value>'{0}' is empty or white space.</value>
   </data>
 </root>

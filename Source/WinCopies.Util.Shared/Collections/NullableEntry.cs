@@ -2,12 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace
-#if WinCopies2
-WinCopies.Util
-#else
-WinCopies
-#endif
+namespace WinCopies.Collections
 {
     public interface INullableValueEntry<T> where T : struct
     {
@@ -246,11 +241,11 @@ WinCopies
 
         public static bool operator >=(EquatableComparableNullableValueEntry<T> left, T? right) => !(left < right);
 
-        public static bool operator <(EquatableComparableNullableValueEntry<T> left, INullableValueEntry<T> right) =>right==null?false: left.Value.HasValue && right.Value.HasValue && left.Value.Value.CompareTo(right.Value.Value) < 0;
+        public static bool operator <(EquatableComparableNullableValueEntry<T> left, INullableValueEntry<T> right) => right == null ? false : left.Value.HasValue && right.Value.HasValue && left.Value.Value.CompareTo(right.Value.Value) < 0;
 
         public static bool operator <=(EquatableComparableNullableValueEntry<T> left, INullableValueEntry<T> right) => !(left > right);
 
-        public static bool operator >(EquatableComparableNullableValueEntry<T> left, INullableValueEntry<T> right) =>right==null?false: left.Value.HasValue && right.Value.HasValue && left.Value.Value.CompareTo(right.Value.Value) > 0;
+        public static bool operator >(EquatableComparableNullableValueEntry<T> left, INullableValueEntry<T> right) => right == null ? false : left.Value.HasValue && right.Value.HasValue && left.Value.Value.CompareTo(right.Value.Value) > 0;
 
         public static bool operator >=(EquatableComparableNullableValueEntry<T> left, INullableValueEntry<T> right) => !(left < right);
 
@@ -330,7 +325,7 @@ WinCopies
 
     }
 
-    public struct ComparableNullableRefEntry<T> : INullableRefEntry<T>, IComparable<T>,  IComparable<INullableRefEntry<T>> where T : class, IComparable<T>
+    public struct ComparableNullableRefEntry<T> : INullableRefEntry<T>, IComparable<T>, IComparable<INullableRefEntry<T>> where T : class, IComparable<T>
     {
         public T Value { get; }
 
@@ -371,7 +366,7 @@ WinCopies
         public static bool operator >=(ComparableNullableRefEntry<T> left, INullableRefEntry<T> right) => !(left < right);
     }
 
-    public struct EquatableComparableNullableRefEntry<T> : INullableRefEntry<T>, IEquatable<T>,  IEquatable<INullableRefEntry<T>>, IComparable<T>,  IComparable<INullableRefEntry<T>> where T : class, IEquatable<T>, IComparable<T>
+    public struct EquatableComparableNullableRefEntry<T> : INullableRefEntry<T>, IEquatable<T>, IEquatable<INullableRefEntry<T>>, IComparable<T>, IComparable<INullableRefEntry<T>> where T : class, IEquatable<T>, IComparable<T>
     {
         public T Value { get; }
 

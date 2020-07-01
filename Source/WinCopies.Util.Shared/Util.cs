@@ -18,15 +18,19 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
+
 using WinCopies.Collections;
-using IComparer = System.Collections.IComparer;
 using WinCopies.Util.Resources;
-using System.Diagnostics;
-using System.ComponentModel;
+
+using IComparer = System.Collections.IComparer;
 
 #if WinCopies2
+using static WinCopies.Util.ThrowHelper;
+
 using IfCT = WinCopies.Util.Util.ComparisonType;
 using IfCM = WinCopies.Util.Util.ComparisonMode;
 using IfComp = WinCopies.Util.Util.Comparison;
@@ -34,94 +38,15 @@ using IfComp = WinCopies.Util.Util.Comparison;
 namespace WinCopies.Util
 {
 #else
-using IfCT = WinCopies.ComparisonType;
-using IfCM = WinCopies.ComparisonMode;
-using IfComp = WinCopies.Comparison;
+using static WinCopies.Diagnostics.IfHelpers;
+using static WinCopies.ThrowHelper;
+
+using IfCT = WinCopies.Diagnostics.ComparisonType;
+using IfCM = WinCopies.Diagnostics.ComparisonMode;
+using IfComp = WinCopies.Diagnostics.Comparison;
 
 namespace WinCopies
 {
-    #region Enums
-
-    /// <summary>
-    /// Comparison types for the If functions.
-    /// </summary>
-    public enum ComparisonType
-    {
-        /// <summary>
-        /// Check if all conditions are checked.
-        /// </summary>
-        And = 0,
-
-        /// <summary>
-        /// Check if at least one condition is checked.
-        /// </summary>
-        Or = 1,
-
-        /// <summary>
-        /// Check if exactly one condition is checked.
-        /// </summary>
-        Xor = 2
-    }
-
-    /// <summary>
-    /// Comparison modes for the If functions.
-    /// </summary>
-    public enum ComparisonMode
-    {
-        /// <summary>
-        /// Use a binary comparison
-        /// </summary>
-        Binary = 0,
-
-        /// <summary>
-        /// Use a logical comparison
-        /// </summary>
-        Logical = 1
-    }
-
-    /// <summary>
-    /// Comparison to perform.
-    /// </summary>
-    public enum Comparison
-    {
-        /// <summary>
-        /// Check for values equality
-        /// </summary>
-        Equal = 0,
-
-        /// <summary>
-        /// Check for values non-equality
-        /// </summary>
-        NotEqual = 1,
-
-        /// <summary>
-        /// Check if a value is lesser than a given value. This field only works for methods that use lesser/greater/equal comparers.
-        /// </summary>
-        Lesser = 2,
-
-        /// <summary>
-        /// Check if a value is lesser than or equal to a given value. This field only works for methods that use lesser/greater/equal comparers.
-        /// </summary>
-        LesserOrEqual = 3,
-
-        /// <summary>
-        /// Check if a value is greater than a given value. This field only works for methods that use lesser/greater/equal comparers.
-        /// </summary>
-        Greater = 4,
-
-        /// <summary>
-        /// Check if a value is greater than or equal to a given value. This field only works for methods that use lesser/greater/equal comparers.
-        /// </summary>
-        GreaterOrEqual = 5,
-
-        /// <summary>
-        /// Check if an object reference is equal to a given object reference. This field only works for methods that use equality comparers (not lesser/greater ones).
-        /// </summary>
-        ReferenceEqual = 6
-    }
-
-    #endregion
-
 #endif
 
     /// <summary>
@@ -135,6 +60,10 @@ namespace WinCopies
 
     public delegate void ActionParams<in T>(params T[] args);
 
+    /// <summary>
+    /// Represents a delegate that returns an object.
+    /// </summary>
+    /// <returns>Any object.</returns>
     public delegate object Func();
 
     public delegate object FuncParams(params object[] args);
@@ -175,7 +104,7 @@ namespace WinCopies
         /// <returns>Returns the <see langword="true"/> value.</returns>
         public static Predicate<T> GetCommonPredicate<T>() => (T value) => true;
 
-        // todo: key-value pairs to raise an argument exception
+#if WinCopies2
 
         [Obsolete("This method has been replaced by the WinCopies.Util.Extensions.ThrowIfInvalidEnumValue(params Enum[] values) method.")]
         public static void ThrowOnNotValidEnumValue(params Enum[] values) => ThrowIfInvalidEnumValue(values);
@@ -212,17 +141,19 @@ namespace WinCopies
                 throw GetExceptionForNonFlagsEnum(typeArgumentName);
         }
 
+#endif
+
         public static bool IsFlagsEnum<T>() where T : Enum => typeof(T).GetCustomAttribute<FlagsAttribute>() is object;
 
         // public static KeyValuePair<TKey, Func<bool>>[] GetIfKeyValuePairPredicateArray<TKey>(params KeyValuePair<TKey, Func<bool>>[] keyValuePairs) => keyValuePairs;
+
+#if WinCopies2
 
         #region 'If' methods
 
         public static KeyValuePair<TKey, TValue> GetKeyValuePair<TKey, TValue>(in TKey key, in TValue value) => new KeyValuePair<TKey, TValue>(key, value);
 
         public static KeyValuePair<TKey, Func<bool>> GetIfKeyValuePairPredicate<TKey>(in TKey key, in Func<bool> predicate) => new KeyValuePair<TKey, Func<bool>>(key, predicate);
-
-#if WinCopies2
 
         #region Enums
 
@@ -305,8 +236,6 @@ namespace WinCopies
         }
 
         #endregion
-
-#endif
 
         #region 'Throw' methods
 
@@ -1398,8 +1327,11 @@ namespace WinCopies
 
         #endregion
 
+#endif
+
         public static bool IsNullEmptyOrWhiteSpace(in string value) => string.IsNullOrEmpty(value) || string.IsNullOrWhiteSpace(value);
 
+#if WinCopies2
         public static void ThrowIfNullEmptyOrWhiteSpace(in string value)
         {
             if (IsNullEmptyOrWhiteSpace(value))
@@ -1413,6 +1345,7 @@ namespace WinCopies
 
                 throw new ArgumentException($"The given value is null, empty or white space. The given value is: '{value ?? ""}'", argumentName);
         }
+#endif
 
         /// <summary>
         /// Concatenates multiple arrays from a same item type. Arrays must have only one dimension.
@@ -1431,9 +1364,9 @@ namespace WinCopies
 
             foreach (T[] array in arrays)
             {
-                // todo : in a newer version, instead, get the maximum rank of arrays in params Array[] arrays and add a gesture of this in the process (also for the ConcatenateLong method) ; and not forgetting to change the comments of the xmldoc about this.
+                // todo : instead, get the maximum rank of arrays in params Array[] arrays and add a gesture of this in the process (also for the ConcatenateLong method) ; and not forgetting to change the comments of the xmldoc about this.
 
-                if (array.Rank != 1) throw new ArgumentException(ExceptionMessages.ArrayWithMoreThanOneDimension);
+                if (array.Rank != 1) ThrowArrayWithMoreThanOneDimensionException(nameof(array));
 
                 totalArraysLength += array.Length;
             }
@@ -1570,14 +1503,14 @@ namespace WinCopies
 #pragma warning restore CA1062 // Validate arguments of public methods
         }
 
+#if WinCopies2
+
         /// <summary>
         /// Returns an <see cref="ArgumentNullException"/> for a given argument name.
         /// </summary>
         /// <param name="argumentName">The name of the <see langword="null"/> argument.</param>
         /// <returns>An <see cref="ArgumentNullException"/> with the given argument name.</returns>
         public static ArgumentNullException GetArgumentNullException(in string argumentName) => new ArgumentNullException(argumentName);
-
-#if WinCopies2
 
         /// <summary>
         /// Throws an <see cref="ArgumentNullException"/> if a given object is null.
@@ -1590,8 +1523,6 @@ namespace WinCopies
 
                 throw GetArgumentNullException(argumentName);
         }
-
-#endif
 
         /// <summary>
         /// Throws an <see cref="ArgumentNullException"/> if a given object is null.
@@ -1695,6 +1626,68 @@ namespace WinCopies
 
         public static InvalidOperationException GetExceptionForDispose(in bool forDisposing) => new InvalidOperationException($"The current object or value is {(forDisposing ? "disposing" : "disposed")}.");
 
+        public static void ThrowOnInvalidCopyToArrayOperation(in Array array, in int arrayIndex, in int count, in string arrayArgumentName, in string arrayIndexArgumentName)
+        {
+            if (array is null)
+
+                throw new ArgumentNullException(arrayArgumentName);
+
+            if (array.Rank != 1)
+
+                throw new ArgumentException("Multidimensional arrays are not supported.", arrayArgumentName);
+
+            if (array.GetLowerBound(0) != 0)
+
+                throw new ArgumentException("The given array has a non-zero lower bound.", arrayArgumentName);
+
+            if (arrayIndex < 0)
+
+                throw new ArgumentOutOfRangeException(arrayIndexArgumentName);
+
+            if (array.Length - arrayIndex < count)
+
+                throw new ArgumentException("The given array has not enough space.", arrayArgumentName);
+        }
+
+        internal static void ThrowIfDisposedInternal(WinCopies.Util.DotNetFix.IDisposable obj)
+        {
+            if (obj.IsDisposed)
+
+                throw GetExceptionForDispose(false);
+        }
+
+        public static void ThrowIfDisposed(WinCopies.Util.DotNetFix.IDisposable obj)
+        {
+            ThrowIfNull(obj, nameof(obj));
+
+            ThrowIfDisposedInternal(obj);
+        }
+
+        internal static void ThrowIfDisposingInternal(IDisposable obj)
+        {
+            if (obj.IsDisposing)
+
+                throw GetExceptionForDispose(true);
+        }
+
+        public static void ThrowIfDisposing(IDisposable obj)
+        {
+            ThrowIfNull(obj, nameof(obj));
+
+            ThrowIfDisposingInternal(obj);
+        }
+
+        public static void ThrowIfDisposingOrDisposed(IDisposable obj)
+        {
+            ThrowIfNull(obj, nameof(obj));
+
+            ThrowIfDisposedInternal(obj);
+
+            ThrowIfDisposingInternal(obj);
+        }
+
+#endif
+
         /// <summary>
         /// Returns a value obtained by a <see cref="Func"/>, depending on the result of a comparison.
         /// </summary>
@@ -1761,74 +1754,6 @@ namespace WinCopies
             int result = comparison(x, y);
 
             return result < 0 ? lower() : result > 0 ? greater() : equals();
-        }
-
-        public static void ThrowOnInvalidCopyToArrayOperation(in Array array, in int arrayIndex, in int count, in string arrayArgumentName, in string arrayIndexArgumentName)
-        {
-            if (array is null)
-
-                throw new ArgumentNullException(arrayArgumentName);
-
-            if (array.Rank != 1)
-
-                throw new ArgumentException("Multidimensional arrays are not supported.", arrayArgumentName);
-
-            if (array.GetLowerBound(0) != 0)
-
-                throw new ArgumentException("The given array has a non-zero lower bound.", arrayArgumentName);
-
-            if (arrayIndex < 0)
-
-                throw new ArgumentOutOfRangeException(arrayIndexArgumentName);
-
-            if (array.Length - arrayIndex < count)
-
-                throw new ArgumentException("The given array has not enough space.", arrayArgumentName);
-        }
-
-        internal static void ThrowIfDisposedInternal(WinCopies
-#if WinCopies2
-            .Util
-#endif
-            .DotNetFix.IDisposable obj)
-        {
-            if (obj.IsDisposed)
-
-                throw GetExceptionForDispose(false);
-        }
-
-        public static void ThrowIfDisposed(WinCopies
-#if WinCopies2
-            .Util
-#endif
-            .DotNetFix.IDisposable obj)
-        {
-            ThrowIfNull(obj, nameof(obj));
-
-            ThrowIfDisposedInternal(obj);
-        }
-
-        internal static void ThrowIfDisposingInternal(IDisposable obj)
-        {
-            if (obj.IsDisposing)
-
-                throw GetExceptionForDispose(true);
-        }
-
-        public static void ThrowIfDisposing(IDisposable obj)
-        {
-            ThrowIfNull(obj, nameof(obj));
-
-            ThrowIfDisposingInternal(obj);
-        }
-
-        public static void ThrowIfDisposingOrDisposed(IDisposable obj)
-        {
-            ThrowIfNull(obj, nameof(obj));
-
-            ThrowIfDisposedInternal(obj);
-
-            ThrowIfDisposingInternal(obj);
         }
 
 #if NETCORE || NETSTANDARD

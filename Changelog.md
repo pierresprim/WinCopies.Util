@@ -22,9 +22,11 @@ WinCopies.Util (2.5-preview8)
 		- ForEach generic and non-generic version.
 		- Join methods for enumerables strings.
 	- Types:
+		- WinCopies.Util.ThrowHelper class.
 		- WinCopies.Collections:
 			- Classes:
 				- Enumerable\<T>
+				- Enumerator\<T>
 				- Enumerator\<TSource, TDestination>
 				- JoinEnumerator\<T>
 			- Interfaces:
@@ -35,6 +37,7 @@ WinCopies.Util (2.5-preview8)
 		- MoveNext resets Current to default when MoveNextOverride returns false.
 		- Dispose methods: the !IsDisposed check is not performed in the Dispose() method anymore, because it has moved to the Dispose(bool) method.
 	- Update SplitFactories
+	- WinCopies.NullableEntries are now in the WinCopies.Collections namespace.
 - Bug fixes:
 	- String 'Split' methods do not return any value when there is value but no separator in the given string.
 

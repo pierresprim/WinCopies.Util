@@ -27,7 +27,7 @@ using static WinCopies.
     Util.Util;
 using WinCopies.Util;
 #else
-    UtilHelpers;
+    ThrowHelper;
 using WinCopies;
 #endif
 
@@ -1810,6 +1810,6 @@ namespace WinCopies.Collections.DotNetFix
 
         public bool Contains(T item) => InnerLinkedCollection.Contains(item);
 
-        bool ICollection<T>. Remove(T item) => InnerLinkedCollection.Remove(item);
+        bool ICollection<T>.Remove(T item) => InnerLinkedCollection.Remove(item);
     }
 }
