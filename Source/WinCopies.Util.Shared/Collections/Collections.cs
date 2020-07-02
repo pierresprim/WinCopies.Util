@@ -109,18 +109,19 @@ namespace WinCopies.Collections
         }
     }
 
-    public abstract class Enumerator<TSource, TDestination> : IEnumerator<TDestination>, WinCopies.
+    public abstract class Enumerator<TSource, TDestination> : IEnumerator<TDestination>, WinCopies
 #if WinCopies2
-        Util.
+.Util
 #endif
-        DotNetFix.IDisposable
+        .DotNetFix.IDisposable
     {
-        private IEnumerator<TSource> _innerEnumerator;
-        private TDestination _current;
-
         public bool IsDisposed { get; private set; }
 
+        private IEnumerator<TSource> _innerEnumerator;
+
         protected IEnumerator<TSource> InnerEnumerator => IsDisposed ? throw GetExceptionForDispose(false) : _innerEnumerator;
+
+        private TDestination _current;
 
         public TDestination Current { get => IsDisposed ? throw GetExceptionForDispose(false) : _current; protected set => _current = IsDisposed ? throw GetExceptionForDispose(false) : value; }
 
@@ -173,6 +174,168 @@ namespace WinCopies.Collections
                 GC.SuppressFinalize(this);
             }
         }
+    }
+
+    public sealed class EmptyCheckEnumerator<T> : IEnumerator<T>, WinCopies
+#if WinCopies2
+.Util
+#endif
+        .DotNetFix.IDisposable
+    {
+#region Fields
+        private IEnumerator<T> _enumerator;
+        private Func<bool> _moveNext;
+        private bool? _hasItems = null;
+        private Func<T> _current;
+#endregion
+
+#region Properties
+        public bool IsDisposed { get; private set; }
+
+        public bool HasItems
+        {
+            get
+            {
+                ThrowIfDisposed();
+
+                if (!_hasItems.HasValue)
+
+                    _hasItems = _enumerator.MoveNext();
+
+                return _hasItems.Value;
+            }
+        }
+
+        public T Current
+        {
+            get
+            {
+                ThrowIfDisposed();
+
+                return _current();
+            }
+        }
+#endregion
+
+        public EmptyCheckEnumerator(IEnumerator<T> enumerator)
+        {
+            _enumerator = enumerator;
+
+            ResetMoveNext();
+        }
+
+#region Methods
+        private void ResetCurrent() => _current = () => throw new InvalidOperationException("The enumeration has not been started or has completed.");
+
+        private void ResetMoveNext()
+        {
+            ResetCurrent();
+
+            void resetMoveNext()
+            {
+                _moveNext = () => false;
+
+                ResetCurrent();
+            }
+
+            bool enumerate()
+            {
+                if (_enumerator.MoveNext())
+
+                    return true;
+
+                resetMoveNext();
+
+                return false;
+            }
+
+            _moveNext = () =>
+            {
+                if (_hasItems.HasValue)
+                {
+                    if (_hasItems.Value)
+                    {
+                        _current = () => _enumerator.Current;
+
+                        _moveNext = enumerate;
+
+                        return true;
+                    }
+
+                    else
+                    {
+                        resetMoveNext();
+
+                        return false;
+                    }
+                }
+
+                else
+                {
+                    _moveNext = enumerate;
+
+                    return enumerate();
+                }
+            };
+        }
+
+        private void ThrowIfDisposed()
+        {
+            if (IsDisposed)
+
+                throw GetExceptionForDispose(false);
+        }
+#endregion
+
+#region Interface implementations
+#region IEnumerator implementation
+        object IEnumerator.Current => Current;
+
+        public bool MoveNext()
+        {
+            ThrowIfDisposed();
+
+            return _moveNext();
+        }
+
+        public void Reset()
+        {
+            ThrowIfDisposed();
+
+            _enumerator.Reset();
+
+            _hasItems = null;
+
+            ResetMoveNext();
+        }
+#endregion
+
+#region IDisposable implementation
+        public void Dispose()
+        {
+            if (IsDisposed) return;
+
+            _enumerator.Dispose();
+
+            ResetMoveNext();
+        }
+#endregion
+#endregion
+    }
+
+    public sealed class EmptyEnumerator<T> : IEnumerator<T>
+    {
+        private readonly T _current = default;
+
+        T IEnumerator<T>.Current => _current;
+
+        object IEnumerator.Current => _current;
+
+        bool IEnumerator.MoveNext() => false;
+
+        void IEnumerator.Reset() { }
+
+        void System.IDisposable.Dispose() { }
     }
 
     public interface IEnumerableEnumerator
@@ -443,7 +606,7 @@ namespace WinCopies.Collections
             MoveNextMethod = () => UIntIndexedCollectionEnumerator.MoveNextMethod(this);
         }
 
-    #region IDisposable Support
+#region IDisposable Support
         public bool IsDisposed { get; private set; } = false;
 
         protected virtual void Dispose(bool disposing)
@@ -471,7 +634,7 @@ namespace WinCopies.Collections
 
             MoveNextMethod = () => UIntIndexedCollectionEnumerator.MoveNextMethod(this);
         }
-    #endregion
+#endregion
     }
 
     [Obsolete("This type has been replaced by the types in the WinCopies.Collections.DotNetFix namespace and will be removed in later versions.")]

@@ -62,57 +62,113 @@ namespace WinCopies
 #endif
         CheckedUInt64 other) =>
 #if CS8
-            other == null ||
+            other == null ? _value.HasValue ? 1 : 0 :
 #endif
-            this < other ? -1 : this == other ? 0 : 1;
+            WinCopies.Collections.NullableValueEntryHelper.Compare(_value, other._value);
 
         public int CompareTo(
 #if CS8
             [AllowNull]
 #endif
-        long other) => other < 0 ? 1 : this < other ? -1 : this == other ? 0 : 1;
+        long other)
+        {
+            if (_value.HasValue)
+
+                return other < 0 ? 1 : _value.Value.CompareTo(other);
+
+            return -1;
+        }
 
         public int CompareTo(
 #if CS8
             [AllowNull]
 #endif
-        int other) => other < 0 ? 1 : this < other ? -1 : this == other ? 0 : 1;
+        int other)
+        {
+            if (_value.HasValue)
+
+                return other < 0 ? 1 : _value.Value.CompareTo(other);
+
+            return -1;
+        }
 
         public int CompareTo(
 #if CS8
             [AllowNull]
 #endif
-        short other) => other < 0 ? 1 : this < other ? -1 : this == other ? 0 : 1;
+        short other)
+        {
+            if (_value.HasValue)
+
+                return other < 0 ? 1 : _value.Value.CompareTo(other);
+
+            return -1;
+        }
 
         public int CompareTo(
 #if CS8
             [AllowNull]
 #endif
-        sbyte other) => other < 0 ? 1 : this < other ? -1 : this == other ? 0 : 1;
+        sbyte other)
+        {
+            if (_value.HasValue)
+
+                return other < 0 ? 1 : _value.Value.CompareTo(other);
+
+            return -1;
+        }
 
         public int CompareTo(
 #if CS8
             [AllowNull]
 #endif
-        ulong other) => this < other ? -1 : this == other ? 0 : 1;
+        ulong other)
+        {
+            if (_value.HasValue)
+
+                return other < 0 ? 1 : _value.Value.CompareTo(other);
+
+            return -1;
+        }
 
         public int CompareTo(
 #if CS8
             [AllowNull]
 #endif
-        uint other) => this < other ? -1 : this == other ? 0 : 1;
+        uint other)
+        {
+            if (_value.HasValue)
+
+                return other < 0 ? 1 : _value.Value.CompareTo(other);
+
+            return -1;
+        }
 
         public int CompareTo(
 #if CS8
             [AllowNull]
 #endif
-        ushort other) => this < other ? -1 : this == other ? 0 : 1;
+        ushort other)
+        {
+            if (_value.HasValue)
+
+                return other < 0 ? 1 : _value.Value.CompareTo(other);
+
+            return -1;
+        }
 
         public int CompareTo(
 #if CS8
             [AllowNull]
 #endif
-        byte other) => this < other ? -1 : this == other ? 0 : 1;
+        byte other)
+        {
+            if (_value.HasValue)
+
+                return other < 0 ? 1 : _value.Value.CompareTo(other);
+
+            return -1;
+        }
 
 
 

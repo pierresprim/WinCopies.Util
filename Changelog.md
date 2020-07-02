@@ -35,11 +35,13 @@ WinCopies.Util (2.5-preview8)
 - Changes:
 	- WinCopies.Collections.Enumerator<TSource, TDestination>:
 		- MoveNext resets Current to default when MoveNextOverride returns false.
-		- Dispose methods: the !IsDisposed check is not performed in the Dispose() method anymore, because it has moved to the Dispose(bool) method.
+		- Dispose methods: the '!IsDisposed' check is not performed in the Dispose() method anymore, because it has moved to the Dispose(bool) method.
 	- Update SplitFactories
 	- WinCopies.NullableEntries are now in the WinCopies.Collections namespace.
+	- NullableEntries equality and comparison static methods are now in the new static NullableValue/RefEntryHelper classes.
 - Bug fixes:
 	- String 'Split' methods do not return any value when there is value but no separator in the given string.
+	- Bugs fixes with the CheckedUInt64's IsNaN property and CompareTo(CheckedUInt64) method.
 
 06/14/2020 2.5-preview7
 =======================
