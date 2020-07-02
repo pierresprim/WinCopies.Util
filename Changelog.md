@@ -9,7 +9,7 @@ CHANGELOG
 Updates
 -------
 
-??/??/???? 2.5-preview8
+07/02/2020 2.5-preview8
 =======================
 
 WinCopies.Util (2.5-preview8)

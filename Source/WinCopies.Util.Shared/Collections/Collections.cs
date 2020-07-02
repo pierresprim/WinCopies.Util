@@ -369,7 +369,7 @@ namespace WinCopies.Collections
 #endif
                 joinEnumerable
 #if !DEBUG
-                ?? throw GetArgumentNullException())
+                ?? throw GetArgumentNullException(nameof(joinEnumerable)))
 #endif
                 .GetEnumerator();
 
