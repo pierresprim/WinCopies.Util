@@ -61,6 +61,33 @@ namespace WinCopies.Util.Desktop.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The BackgroundWorker does not support cancellation..
+        /// </summary>
+        public static string BackgroundWorkerDoesNotSupportCancellation {
+            get {
+                return ResourceManager.GetString("BackgroundWorkerDoesNotSupportCancellation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The BackgroundWorker does not support pausing..
+        /// </summary>
+        public static string BackgroundWorkerDoesNotSupportPausing {
+            get {
+                return ResourceManager.GetString("BackgroundWorkerDoesNotSupportPausing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The BackgroundWorker does not support progression notification..
+        /// </summary>
+        public static string BackgroundWorkerDoesNotSupportProgressionNotification {
+            get {
+                return ResourceManager.GetString("BackgroundWorkerDoesNotSupportProgressionNotification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The BackgroundWorker is busy..
         /// </summary>
         public static string BackgroundWorkerIsBusy {

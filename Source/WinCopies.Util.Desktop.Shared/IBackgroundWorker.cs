@@ -69,7 +69,7 @@ namespace WinCopies
         /// <summary>
         /// Cancels the working.
         /// </summary>
-        void Cancel(object stateInfo = null);
+        void Cancel(object stateInfo);
 
         /// <summary>
         /// Cancels the working asynchronously.
@@ -79,26 +79,26 @@ namespace WinCopies
         /// <summary>
         /// Cancels the working asynchronously.
         /// </summary>
-        void CancelAsync(object stateInfo = null);
+        void CancelAsync(object stateInfo);
 
         /// <summary>
         /// Notifies of the progress.
         /// </summary>
-        /// <param name="percentProgress">
+        /// <param name="progressPercentage">
         /// Progress percentage.
         /// </param>
-        void ReportProgress(int percentProgress);
+        void ReportProgress(int progressPercentage);
 
         /// <summary>
         /// Notifies of the progress.
         /// </summary>
-        /// <param name="percentProgress">
+        /// <param name="progressPercentage">
         /// Progress percentage.
         /// </param>
         /// <param name="userState">
         /// User object.
         /// </param>
-        void ReportProgress(int percentProgress, object userState);
+        void ReportProgress(int progressPercentage, object userState);
 
         /// <summary>
         /// Suspends the current thread.
@@ -127,6 +127,21 @@ namespace WinCopies
         /// <para>The event handler is running in the background thread.</para>
         /// </summary>
         event RunWorkerCompletedEventHandler RunWorkerCompleted;
+    }
+
+    public interface IPausableBackgroundWorker : IBackgroundWorker
+    {
+        bool PausePending { get; }
+
+        bool WorkerSupportsPausing { get; set; }
+
+        void PauseAsync();
+
+        void PauseAsync(object stateInfo);
+
+        void Pause();
+
+        void Pause(object stateInfo);
     }
 }
 #endif

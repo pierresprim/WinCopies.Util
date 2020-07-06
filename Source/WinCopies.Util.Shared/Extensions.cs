@@ -4356,7 +4356,7 @@ namespace WinCopies
             for (int i = 0; i < length; i++)
 
                 action();
-
+            
             return sb.ToString();
         }
     }

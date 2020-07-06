@@ -115,6 +115,15 @@ namespace WinCopies.Util.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The argument passed to parameter {0} is not supported..
+        /// </summary>
+        public static string InvalidArgument {
+            get {
+                return ResourceManager.GetString("InvalidArgument", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The enum value is not in the enum values range..
         /// </summary>
         public static string InvalidEnumValue {
@@ -216,9 +225,9 @@ namespace WinCopies.Util.Resources {
         /// <summary>
         ///   Looks up a localized string similar to &apos;{0}&apos; is empty or white space..
         /// </summary>
-        public static string StringParameterEmptyOrWhiteSpace {
+        public static string StringParameterEmptyOrWhiteSpaces {
             get {
-                return ResourceManager.GetString("StringParameterEmptyOrWhiteSpace", resourceCulture);
+                return ResourceManager.GetString("StringParameterEmptyOrWhiteSpaces", resourceCulture);
             }
         }
     }

@@ -9,6 +9,24 @@ CHANGELOG
 Updates
 -------
 
+??/??/???? 2.5
+==============
+
+WinCopies.Util (2.5)
+--------------------
+
+- Additions:
+	- InvalidArgumentException class
+
+WinCopies.Util.Desktop (2.5)
+----------------------------
+
+- Additions:
+	- Classes:
+		- ThrowHelper
+		- MultiStringConverter
+	- (I)BackgroundWorker extension methods.
+
 07/02/2020 2.5-preview8
 =======================
 

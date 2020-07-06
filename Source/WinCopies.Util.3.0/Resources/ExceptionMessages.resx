@@ -135,6 +135,9 @@
   <data name="FieldOrPropertyNotFound" xml:space="preserve">
     <value>'{0}' couldn't be found in '{1}'.</value>
   </data>
+  <data name="InvalidArgument" xml:space="preserve">
+    <value>The argument passed to parameter {0} is not supported.</value>
+  </data>
   <data name="InvalidEnumValue" xml:space="preserve">
     <value>The enum value is not in the enum values range.</value>
   </data>

@@ -18,6 +18,7 @@
 using System;
 using System.ComponentModel;
 using System.Threading;
+using static WinCopies.Util.Desktop.ThrowHelper;
 
 #if WinCopies2
 namespace WinCopies.Util
@@ -81,12 +82,7 @@ namespace WinCopies
         /// <summary>
         /// Gets or sets a value that indicates whether the thread can notify of the progress.
         /// </summary>
-        public bool WorkerReportsProgress
-        {
-            get => workerReportsProgress;
-
-            set => this.SetBackgroundWorkerProperty(nameof(WorkerReportsProgress), nameof(workerReportsProgress), value, typeof(BackgroundWorker), true);
-        }
+        public bool WorkerReportsProgress { get => workerReportsProgress; set => this.SetBackgroundWorkerProperty(nameof(WorkerReportsProgress), nameof(workerReportsProgress), value, typeof(BackgroundWorker), true); }
 
         private readonly bool workerSupportsCancellation = false;
 
@@ -101,9 +97,9 @@ namespace WinCopies
         }
 
         /// <summary>
-        /// Gets the current progress of the working in percent.
+        /// Gets the current progress of the current <see cref="BackgroundWorker"/> in percent.
         /// </summary>
-        public int Progress { get; private set; } = 0;
+        public int Progress { get; private set; }
 
         /// <summary>
         /// Gets the <see cref="System.Threading.ApartmentState"/> of this thread.
@@ -114,15 +110,9 @@ namespace WinCopies
 
             set
             {
-                if (_ApartmentState == value)
+                if (_ApartmentState == value) return;
 
-                    return;
-
-                else if (value == ApartmentState.Unknown)
-
-                    // todo:
-
-                    throw new ArgumentException(string.Format("The {0} value is not valid for the {1} class.", nameof(ApartmentState.Unknown), nameof(BackgroundWorker)));
+                else if (value == ApartmentState.Unknown) throw new InvalidArgumentException(nameof(value));
 
                 _ = this.SetBackgroundWorkerProperty(nameof(ApartmentState), nameof(_ApartmentState), value, typeof(BackgroundWorker), true);
             }
@@ -194,9 +184,7 @@ namespace WinCopies
         {
             if (IsBusy)
 
-                // todo:
-
-                throw new InvalidOperationException(WinCopies.Util.Desktop.Resources.ExceptionMessages.BackgroundWorkerIsBusy);
+                ThrowBackgroundWorkerIsBusyException();
 
             Reset(false);
 
@@ -227,9 +215,7 @@ namespace WinCopies
 
             try
             {
-
                 DoWork?.Invoke(this, e);
-
             }
 
             // _IsRunning = False
@@ -238,13 +224,11 @@ namespace WinCopies
 
             catch (Exception ex)
             {
-
                 error = ex;
 
                 if (ex is ThreadAbortException)
 
                     isCancelled = true;
-
             }
 
             isCancelled = isCancelled || IsCancelled || CancellationPending || e.Cancel;
@@ -252,7 +236,6 @@ namespace WinCopies
             Reset(isCancelled);
 
             _SyncContext.Send(ThreadCompleted, new ValueTuple<object, Exception, bool>(e.Result, error, isCancelled));
-
         }
 
         /// <summary>
@@ -299,9 +282,7 @@ namespace WinCopies
         {
             if (!WorkerSupportsCancellation)
 
-                // todo:
-
-                throw new InvalidOperationException("This BackgroundWorker does not support cancellation.");
+                ThrowBackgroundWorkerDoesNotSupportCancellationException();
 
 
 
@@ -330,6 +311,8 @@ namespace WinCopies
         /// </param>
         private void OnProgressChanged(object args) => ProgressChanged?.Invoke(this, args as ProgressChangedEventArgs);
 
+#if WinCopies2
+
         /// <summary>
         /// Notifies of the progress.
         /// </summary>
@@ -348,14 +331,48 @@ namespace WinCopies
         /// User object.
         /// </param>
         public void ReportProgress(int percentProgress, object userState)
+
+#else
+
+        /// <summary>
+        /// Notifies of the progress.
+        /// </summary>
+        /// <param name="progressPercentage">
+        /// Progress percentage.
+        /// </param>
+        public void ReportProgress(int progressPercentage) => ReportProgress(progressPercentage, null);
+
+        /// <summary>
+        /// Notifies of the progress.
+        /// </summary>
+        /// <param name="progressPercentage">
+        /// Progress percentage.
+        /// </param>
+        /// <param name="userState">
+        /// User object.
+        /// </param>
+        public void ReportProgress(int progressPercentage, object userState)
+
+#endif
+
         {
             if (!WorkerReportsProgress)
 
-                //Ce BackgroundWorker ne permet pas de notifier de la progression.
+                ThrowBackgroundWorkerDoesNotSupportProgressionNotificationException();
 
-                throw new InvalidOperationException("This BackgroundWorker does not support progression notification.");
+            Progress =
 
-            Progress = percentProgress;
+#if WinCopies2
+
+                percentProgress
+
+#else
+
+progressPercentage
+
+#endif
+
+                ;
 
             var e = new ProgressChangedEventArgs(Progress, userState);
 
@@ -382,11 +399,14 @@ namespace WinCopies
         /// </summary>
         public bool IsDisposed { get; private set; }
 
+#if WinCopies2
+
         /// <summary>
         /// Releases resources used by the <see cref="BackgroundWorker"/>.
         /// </summary>
         /// <exception cref="InvalidOperationException">The <see cref="BackgroundWorker"/> is busy and does not support cancellation.</exception>
         public new void Dispose() => base.Dispose();
+#endif
 
         /// <summary>
         /// Releases the unmanaged resources used by the <see cref="BackgroundWorker"/> and optionally releases the managed resources.
@@ -421,13 +441,13 @@ namespace WinCopies
 
             private bool _workerSupportsPausing = false;
 
-            public bool WorkerSupportsPausing { get => _workerSupportsPausing; set => _workerSupportsPausing = IsBusy ? throw new InvalidOperationException("The BackgroundWorker is running.") : value; }
+            public bool WorkerSupportsPausing { get => _workerSupportsPausing; set => _workerSupportsPausing = IsBusy ? throw GetBackgroundWorkerIsBusyException() : value; }
 
             public void PauseAsync()
             {
                 if (!_workerSupportsPausing)
 
-                    throw new InvalidOperationException("The BackgroundWorker does not support pausing.");
+                    throw GetBackgroundWorkerDoesNotSupportPausingException();
 
                 if (IsBusy)
 

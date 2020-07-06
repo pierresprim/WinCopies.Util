@@ -43,6 +43,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\IsNullConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\MenuItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\MultiConverterBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\MultiStringConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\MultiValueConversionAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\NamedObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\ObjectToTypeConverter.cs" />
@@ -60,5 +61,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)MergedStylesMarkupExtension.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Resources.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RoutedEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ThrowHelper.cs" />
   </ItemGroup>
 </Project>

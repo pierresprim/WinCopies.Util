@@ -24,6 +24,7 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using WinCopies.DotNetFix;
 
 #if WinCopies2
 using static WinCopies.Util.Util;
@@ -31,6 +32,7 @@ using static WinCopies.Util.Util;
 namespace WinCopies.Util
 #else
 using static WinCopies.UtilHelpers;
+using static WinCopies.ThrowHelper;
 
 namespace WinCopies
 #endif
@@ -390,5 +392,249 @@ namespace WinCopies
 
             //            return wpfBitmap;
         }
+
+        /// <summary>
+        /// Tries to report progress for a given <see cref="IBackgroundWorker"/>.
+        /// </summary>
+        /// <param name="backgroundWorker">The <see cref="IBackgroundWorker"/> for which to report the progress.</param>
+        /// <param name="progressPercentage">The progress percentage of <paramref name="backgroundWorker"/>.</param>
+        /// <returns><see langword="true"/> if <see cref="IBackgroundWorker.WorkerReportsProgress"/> is <see langword="true"/> for <paramref name="backgroundWorker"/>; otherwise <see langword="false"/>.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="backgroundWorker"/> is <see langword="null"/>.</exception>
+        public static bool TryReportProgress(this IBackgroundWorker backgroundWorker, int progressPercentage)
+        {
+            if ((backgroundWorker ?? throw GetArgumentNullException(nameof(backgroundWorker))).WorkerReportsProgress)
+            {
+                backgroundWorker.ReportProgress(progressPercentage);
+
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Tries to report progress for a given <see cref="IBackgroundWorker"/>.
+        /// </summary>
+        /// <param name="backgroundWorker">The <see cref="IBackgroundWorker"/> for which to report the progress.</param>
+        /// <param name="progressPercentage">The progress percentage of <paramref name="backgroundWorker"/>.</param>
+        /// <param name="userState">An object to pass to the <see cref="IBackgroundWorker.ProgressChanged"/> event handler of <paramref name="backgroundWorker"/>.</param>
+        /// <returns><see langword="true"/> if <see cref="IBackgroundWorker.WorkerReportsProgress"/> is <see langword="true"/> for <paramref name="backgroundWorker"/>; otherwise <see langword="false"/>.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="backgroundWorker"/> is <see langword="null"/>.</exception>
+        public static bool TryReportProgress(this IBackgroundWorker backgroundWorker, int progressPercentage, object userState)
+        {
+            if ((backgroundWorker ?? throw GetArgumentNullException(nameof(backgroundWorker))).WorkerReportsProgress)
+            {
+                backgroundWorker.ReportProgress(progressPercentage, userState);
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool TryCancelAsync(this IBackgroundWorker backgroundWorker)
+        {
+            if ((backgroundWorker ?? throw GetArgumentNullException(nameof(backgroundWorker))).WorkerSupportsCancellation)
+            {
+                backgroundWorker.CancelAsync();
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool TryCancelAsync(this IBackgroundWorker backgroundWorker, object stateInfo )
+        {
+            if ((backgroundWorker ?? throw GetArgumentNullException(nameof(backgroundWorker))).WorkerSupportsCancellation)
+            {
+                backgroundWorker.CancelAsync(stateInfo );
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool TryCancel(this IBackgroundWorker backgroundWorker)
+        {
+            if ((backgroundWorker ?? throw GetArgumentNullException(nameof(backgroundWorker))).WorkerSupportsCancellation)
+            {
+                backgroundWorker.Cancel();
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool TryCancel(this IBackgroundWorker backgroundWorker, object stateInfo )
+        {
+            if ((backgroundWorker ?? throw GetArgumentNullException(nameof(backgroundWorker))).WorkerSupportsCancellation)
+            {
+                backgroundWorker.Cancel(stateInfo );
+
+                return true;
+            }
+
+            return false;
+        }
+
+#if !WinCopies2
+
+        public static bool TryPauseAsync(this IPausableBackgroundWorker backgroundWorker)
+        {
+            if ((backgroundWorker ?? throw GetArgumentNullException(nameof(backgroundWorker))).WorkerSupportsPausing)
+            {
+                backgroundWorker.PauseAsync();
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool TryPauseAsync(this IPausableBackgroundWorker backgroundWorker, object stateInfo )
+        {
+            if ((backgroundWorker ?? throw GetArgumentNullException(nameof(backgroundWorker))).WorkerSupportsPausing)
+            {
+                backgroundWorker.PauseAsync(stateInfo );
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool TryPause(this IPausableBackgroundWorker backgroundWorker)
+        {
+            if ((backgroundWorker ?? throw GetArgumentNullException(nameof(backgroundWorker))).WorkerSupportsPausing)
+            {
+                backgroundWorker.Pause();
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool TryPause(this IPausableBackgroundWorker backgroundWorker, object stateInfo )
+        {
+            if ((backgroundWorker ?? throw GetArgumentNullException(nameof(backgroundWorker))).WorkerSupportsPausing)
+            {
+                backgroundWorker.Pause(stateInfo ); 
+
+                return true;
+            }
+
+            return false;
+        }
+
+#endif
+
+
+
+        /// <summary>
+        /// Tries to report progress for a given <see cref="System.ComponentModel.BackgroundWorker"/>.
+        /// </summary>
+        /// <param name="backgroundWorker">The <see cref="System.ComponentModel.BackgroundWorker"/> for which to report the progress.</param>
+        /// <param name="progressPercentage">The progress percentage of <paramref name="backgroundWorker"/>.</param>
+        /// <returns><see langword="true"/> if <see cref="System.ComponentModel.BackgroundWorker.WorkerReportsProgress"/> is <see langword="true"/> for <paramref name="backgroundWorker"/>; otherwise <see langword="false"/>.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="backgroundWorker"/> is <see langword="null"/>.</exception>
+        public static bool TryReportProgress(this System.ComponentModel.BackgroundWorker backgroundWorker, int progressPercentage)
+        {
+            if ((backgroundWorker ?? throw GetArgumentNullException(nameof(backgroundWorker))).WorkerReportsProgress)
+            {
+                backgroundWorker.ReportProgress(progressPercentage);
+
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Tries to report progress for a given <see cref="System.ComponentModel.BackgroundWorker"/>.
+        /// </summary>
+        /// <param name="backgroundWorker">The <see cref="System.ComponentModel.BackgroundWorker"/> for which to report the progress.</param>
+        /// <param name="progressPercentage">The progress percentage of <paramref name="backgroundWorker"/>.</param>
+        /// <param name="userState">An object to pass to the <see cref="System.ComponentModel.BackgroundWorker.ProgressChanged"/> event handler of <paramref name="backgroundWorker"/>.</param>
+        /// <returns><see langword="true"/> if <see cref="System.ComponentModel.BackgroundWorker.WorkerReportsProgress"/> is <see langword="true"/> for <paramref name="backgroundWorker"/>; otherwise <see langword="false"/>.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="backgroundWorker"/> is <see langword="null"/>.</exception>
+        public static bool TryReportProgress(this System.ComponentModel.BackgroundWorker backgroundWorker, int progressPercentage, object userState)
+        {
+            if ((backgroundWorker ?? throw GetArgumentNullException(nameof(backgroundWorker))).WorkerReportsProgress)
+            {
+                backgroundWorker.ReportProgress(progressPercentage, userState);
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool TryCancelAsync(this BackgroundWorker backgroundWorker)
+        {
+            if ((backgroundWorker ?? throw GetArgumentNullException(nameof(backgroundWorker))).WorkerSupportsCancellation)
+            {
+                backgroundWorker.CancelAsync();
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool TryCancelAsync(this BackgroundWorker backgroundWorker, object stateInfo)
+        {
+            if ((backgroundWorker ?? throw GetArgumentNullException(nameof(backgroundWorker))).WorkerSupportsCancellation)
+            {
+                backgroundWorker.CancelAsync(stateInfo);
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool TryCancel(this BackgroundWorker backgroundWorker)
+        {
+            if ((backgroundWorker ?? throw GetArgumentNullException(nameof(backgroundWorker))).WorkerSupportsCancellation)
+            {
+                backgroundWorker.Cancel();
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool TryCancel(this BackgroundWorker backgroundWorker, object stateInfo)
+        {
+            if ((backgroundWorker ?? throw GetArgumentNullException(nameof(backgroundWorker))).WorkerSupportsCancellation)
+            {
+                backgroundWorker.Cancel(stateInfo);
+
+                return true;
+            }
+
+            return false;
+        }
+
+#if !WinCopies2
+
+        public static bool TryPauseAsync(this PausableBackgroundWorker backgroundWorker)
+        {
+            if ((backgroundWorker ?? throw GetArgumentNullException(nameof(backgroundWorker))).WorkerSupportsPausing)
+            {
+                backgroundWorker.PauseAsync();
+
+                return true;
+            }
+
+            return false;
+        }
+
+#endif
     }
 }

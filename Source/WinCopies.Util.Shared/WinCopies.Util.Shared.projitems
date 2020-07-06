@@ -29,6 +29,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\If\HelperMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\If\If.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\If\ThrowHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Exceptions\InvalidArgumentException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\ThrowHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\TypeArgumentException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions.cs" />
