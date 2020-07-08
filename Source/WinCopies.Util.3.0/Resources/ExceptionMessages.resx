@@ -165,9 +165,6 @@
   <data name="ParameterIsNotAnExpectedValue" xml:space="preserve">
     <value>'{0}' is not an expected value.</value>
   </data>
-  <data name="ReadOnlyCollection" xml:space="preserve">
-    <value>This collection is read-only.</value>
-  </data>
   <data name="StringIsNullEmptyOrWhiteSpace" xml:space="preserve">
     <value>The given value is null, empty or white space. The given value is: '{0}'.</value>
   </data>

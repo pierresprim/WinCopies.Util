@@ -15,6 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
+#if WinCopies2
+
 using System.Globalization;
 
 namespace WinCopies.Collections
@@ -76,6 +78,25 @@ namespace WinCopies.Collections
         }
     }
 
+    public interface IComparer<in T> : System.Collections.Generic.IComparer<T>
+    {
+        SortingType SortingType { get; set; }
+    }
+
+    public abstract class Comparer<T> : System.Collections.Generic.Comparer<T>, IComparer<T>
+    {
+        public SortingType SortingType { get; set; }
+
+        protected abstract int CompareOverride(T x, T y);
+
+        public sealed override int Compare(T x, T y)
+        {
+            int result = CompareOverride(x, y);
+
+            return SortingType == SortingType.Ascending ? result : -result;
+        }
+    }
+
     public sealed class CaseInsensitiveComparer : IComparer
     {
         public static CaseInsensitiveComparer Default => new CaseInsensitiveComparer(System.Threading.Thread.CurrentThread.CurrentCulture);
@@ -95,23 +116,6 @@ namespace WinCopies.Collections
             return SortingType == SortingType.Ascending ? result : -result;
         }
     }
-
-    public interface IComparer<in T> : System.Collections.Generic.IComparer<T>
-    {
-        SortingType SortingType { get; set; }
-    }
-
-    public abstract class Comparer<T> : System.Collections.Generic.Comparer<T>, IComparer<T>
-    {
-        public SortingType SortingType { get; set; }
-
-        protected abstract int CompareOverride(T x, T y);
-
-        public sealed override int Compare(T x, T y)
-        {
-            int result = CompareOverride(x, y);
-
-            return SortingType == SortingType.Ascending ? result : -result;
-        }
-    }
 }
+
+#endif

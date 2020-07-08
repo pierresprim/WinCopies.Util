@@ -17,44 +17,32 @@
 
 #if WinCopies2
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 namespace WinCopies.Collections
 {
-    // todo: to linked list?
-
-    public class EnumeratorCollection : Collection<IEnumerator>
+    public sealed class Enumerable : IEnumerable
     {
-        public int EnumerableVersion { get; private set; }
+        private readonly Func<IEnumerator> _enumeratorFunc;
 
-        public EnumeratorCollection() : base() { }
+        public Enumerable(Func<IEnumerator> enumeratorFunc) => _enumeratorFunc = enumeratorFunc;
 
-        public EnumeratorCollection(IList<IEnumerator> list) : base(list) { }
+        public IEnumerator GetEnumerator() => _enumeratorFunc();
 
-        protected override void ClearItems()
-        {
-            base.ClearItems();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    }
 
-            EnumerableVersion = 0;
-        }
+    public sealed class Enumerable<T> : IEnumerable<T>
+    {
+        private readonly Func<IEnumerator<T>> _enumeratorFunc;
 
-        protected override void RemoveItem(int index)
-        {
-            RemoveItem(index);
+        public Enumerable(Func<IEnumerator<T>> enumeratorFunc) => _enumeratorFunc = enumeratorFunc;
 
-            if (Count == 0)
+        public IEnumerator<T> GetEnumerator() => _enumeratorFunc();
 
-                EnumerableVersion = 0;
-        }
-
-        public void OnCollectionUpdated()
-        {
-            if (Count > 0)
-
-                EnumerableVersion++;
-        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }
 

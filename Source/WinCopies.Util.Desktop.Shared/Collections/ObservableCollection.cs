@@ -15,6 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
+#if WinCopies2
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,12 +24,6 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-
-#if WinCopies2
-using static WinCopies.Util.Util;
-#else
-using static WinCopies.UtilHelpers;
-#endif
 
 namespace WinCopies.Collections
 {
@@ -177,8 +173,6 @@ namespace WinCopies.Collections
         }
     }
 
-#if WinCopies2
-
     [Obsolete("This class has been moved to the WinCopies.Collections.DotNetFix namespace. This implementation is still here temporarily only.")]
     public class NotifyCollectionChangedEventArgs : System.Collections.Specialized.NotifyCollectionChangedEventArgs
     {
@@ -322,8 +316,6 @@ namespace WinCopies.Collections
                     CollectionChanging(this, e);
         }
     }
-
-#endif
 
     public delegate void NotifyCollectionChangingEventHandler(object sender, DotNetFix.NotifyCollectionChangedEventArgs e);
 
@@ -624,3 +616,5 @@ namespace WinCopies.Collections
 
     //}
 }
+
+#endif

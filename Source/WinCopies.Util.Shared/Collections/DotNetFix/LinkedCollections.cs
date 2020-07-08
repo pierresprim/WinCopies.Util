@@ -15,6 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
+#if WinCopies2
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,14 +24,8 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
-using static WinCopies.
-#if WinCopies2
-    Util.Util;
+using static WinCopies.Util.Util;
 using WinCopies.Util;
-#else
-    ThrowHelper;
-using WinCopies;
-#endif
 
 namespace WinCopies.Collections.DotNetFix
 {
@@ -1813,3 +1809,5 @@ namespace WinCopies.Collections.DotNetFix
         bool ICollection<T>.Remove(T item) => InnerLinkedCollection.Remove(item);
     }
 }
+
+#endif

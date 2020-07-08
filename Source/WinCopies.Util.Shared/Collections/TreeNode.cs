@@ -15,20 +15,14 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
+#if WinCopies2
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WinCopies.Util;
-#if WinCopies2
 using static WinCopies.Util.Util;
-#else
-using static WinCopies.ThrowHelper;
-#endif
 // using WinCopies.Util.Data;
 
 namespace WinCopies.Collections
@@ -648,3 +642,5 @@ namespace WinCopies.Collections
     //    IEnumerator IEnumerable.GetEnumerator() => throw new NotImplementedException();
     //}
 }
+
+#endif

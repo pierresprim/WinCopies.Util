@@ -205,15 +205,6 @@ namespace WinCopies.Util.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This collection is read-only..
-        /// </summary>
-        public static string ReadOnlyCollection {
-            get {
-                return ResourceManager.GetString("ReadOnlyCollection", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The given value is null, empty or white space. The given value is: &apos;{0}&apos;..
         /// </summary>
         public static string StringIsNullEmptyOrWhiteSpace {

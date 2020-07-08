@@ -9,14 +9,15 @@ CHANGELOG
 Updates
 -------
 
-??/??/???? 2.5
-==============
+??/??/???? 2.5.9
+================
 
-WinCopies.Util (2.5)
---------------------
+WinCopies.Util (2.5.9)
+----------------------
 
 - Additions:
 	- InvalidArgumentException class
+- Bug fixes
 
 WinCopies.Util.Desktop (2.5)
 ----------------------------
@@ -47,6 +48,8 @@ WinCopies.Util (2.5-preview8)
 				- Enumerator\<T>
 				- Enumerator\<TSource, TDestination>
 				- JoinEnumerator\<T>
+				- EmptyCheckEnumerator\<T>
+				- EmptyEnumerator\<T>
 			- Interfaces:
 				- IEnumerableEnumerator generic and non-generic versions.
 	- WinCopies.Util.DotNetFix.PausableBackgroundWorker
