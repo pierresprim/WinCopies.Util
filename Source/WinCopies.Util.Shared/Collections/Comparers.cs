@@ -17,6 +17,7 @@
 
 #if WinCopies2
 
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
 namespace WinCopies.Collections
@@ -115,6 +116,20 @@ namespace WinCopies.Collections
 
             return SortingType == SortingType.Ascending ? result : -result;
         }
+    }
+
+    public interface IEqualityComparer<in T> : System.Collections.Generic.IEqualityComparer<T>
+    {
+        bool Equals([AllowNull] T x, [AllowNull] object y);
+    }
+
+    public abstract class EqualityComparer<T> : System.Collections.Generic.EqualityComparer<T>
+    {
+        public bool Equals([AllowNull] in T x, [AllowNull] in object y) => y is T _y && EqualsOverride(x, _y);
+
+        public sealed override bool Equals([AllowNull] T x, [AllowNull] T y) => EqualsOverride(x, y);
+
+        protected abstract bool EqualsOverride([AllowNull] T x, [AllowNull] T y);
     }
 }
 

@@ -62,5 +62,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Resources.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RoutedEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ThrowHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Clipboard.cs" />
   </ItemGroup>
 </Project>

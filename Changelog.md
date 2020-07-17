@@ -16,16 +16,21 @@ WinCopies.Util (2.5.9)
 ----------------------
 
 - Additions:
-	- InvalidArgumentException class
+	- Classes & Interfaces:
+		- (I)EqualityComparer
+		- InvalidArgumentException class
+	- ForEach methods for EmptyCheckEnumerator class (generic and non-generic version)
 - Bug fixes
 
-WinCopies.Util.Desktop (2.5)
-----------------------------
+WinCopies.Util.Desktop (2.5.9)
+------------------------------
 
+- Package supports .Net Framework v4.8.
 - Additions:
 	- Classes:
 		- ThrowHelper
 		- MultiStringConverter
+		- Clipboard static class
 	- (I)BackgroundWorker extension methods.
 
 07/02/2020 2.5-preview8

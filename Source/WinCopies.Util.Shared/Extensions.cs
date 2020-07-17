@@ -3514,6 +3514,45 @@ namespace WinCopies
             }
         }
 
+        public static bool ForEach(this EmptyCheckEnumerator enumerator, LoopIteration func)
+        {
+            if (enumerator.HasItems)
+            {
+                while (enumerator.MoveNext())
+
+                    if (func(enumerator.Current))
+
+                        break;
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool ForEach<T>(this EmptyCheckEnumerator<T> enumerator, LoopIteration<T> func)
+        {
+            try
+            {
+                if (enumerator.HasItems)
+                {
+                    while (enumerator.MoveNext())
+
+                        if (func(enumerator.Current))
+
+                            break;
+
+                    return true;
+                }
+
+                return false;
+            }
+            finally
+            {
+                enumerator.Dispose();
+            }
+        }
+
         public static void SplitValues<T, U, TContainer>(this IEnumerable<T> enumerable, in bool skipEmptyEnumerables, IValueSplitFactory<T, U, TContainer> splitFactory, params T[] separators) where T : struct where U : IEnumerable<T>
         {
             ThrowIfNull(enumerable, nameof(enumerable));
@@ -4356,7 +4395,7 @@ namespace WinCopies
             for (int i = 0; i < length; i++)
 
                 action();
-            
+
             return sb.ToString();
         }
     }

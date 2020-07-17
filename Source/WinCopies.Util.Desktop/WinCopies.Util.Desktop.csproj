@@ -4,7 +4,7 @@
     <PackageId>WinCopies.Util.Desktop</PackageId>
     <AssemblyName>WinCopies.Util.Desktop</AssemblyName>
     <Title>WinCopies.Util.Desktop</Title>
-    <TargetFrameworks>netcoreapp3.0;netcoreapp3.1;net472</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.0;netcoreapp3.1;net472;net48</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <Description>WinCopies framework desktop utilities</Description>
     <Copyright>Copyright © 2020 Pierre Sprimont</Copyright>

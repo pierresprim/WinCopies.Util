@@ -44,6 +44,26 @@ namespace WinCopies.Collections
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
+
+    //public sealed class EmptyCheckEnumerable : IEnumerable
+    //{
+    //    private Func<EmptyCheckEnumerator> _func;
+
+    //    public EmptyCheckEnumerable(Func<EmptyCheckEnumerator> func) => _func = func;
+
+    //    public IEnumerator GetEnumerator() => _func();
+    //}
+
+    //public sealed class EmptyCheckEnumerable<T> : IEnumerable<T>
+    //{
+    //    private readonly Func<EmptyCheckEnumerator<T>> _func;
+
+    //    public EmptyCheckEnumerable(Func<EmptyCheckEnumerator<T>> func) => _func = func;
+
+    //    public IEnumerator<T> GetEnumerator() => _func();
+
+    //    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    //}
 }
 
 #endif
