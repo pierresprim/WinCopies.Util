@@ -289,7 +289,7 @@ namespace WinCopies.Collections
 
                 return false;
 
-            EqualityComparer<T> comp = EqualityComparer<T>.Default;
+            System.Collections.Generic.EqualityComparer<T> comp = System.Collections.Generic.EqualityComparer<T>.Default;
 
             foreach (TreeNode<T> _item in this)
 
@@ -339,7 +339,7 @@ namespace WinCopies.Collections
 
                 return -1;
 
-            EqualityComparer<T> comp = EqualityComparer<T>.Default;
+            System.Collections.Generic.EqualityComparer<T> comp = System.Collections.Generic.EqualityComparer<T>.Default;
 
             for (int i = 0; i < Count; i++)
 
@@ -393,7 +393,7 @@ namespace WinCopies.Collections
 
                 return false;
 
-            EqualityComparer<T> comp = EqualityComparer<T>.Default;
+            System.Collections.Generic.EqualityComparer<T> comp = System.Collections.Generic.EqualityComparer<T>.Default;
 
             for (int i = 0; i < Count; i++)
 

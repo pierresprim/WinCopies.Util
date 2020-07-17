@@ -50,6 +50,11 @@
               Looks up a localized string similar to &apos;{0}&apos; couldn&apos;t be found in &apos;{1}&apos;..
             </summary>
         </member>
+        <member name="P:WinCopies.Util.Resources.ExceptionMessages.InvalidArgument">
+            <summary>
+              Looks up a localized string similar to The argument passed to parameter {0} is not supported..
+            </summary>
+        </member>
         <member name="P:WinCopies.Util.Resources.ExceptionMessages.InvalidEnumValue">
             <summary>
               Looks up a localized string similar to The enum value is not in the enum values range..
@@ -105,10 +110,35 @@
               Looks up a localized string similar to The given value is null, empty or white space. The given value is: &apos;{0}&apos;..
             </summary>
         </member>
-        <member name="P:WinCopies.Util.Resources.ExceptionMessages.StringParameterEmptyOrWhiteSpace">
+        <member name="P:WinCopies.Util.Resources.ExceptionMessages.StringParameterEmptyOrWhiteSpaces">
             <summary>
               Looks up a localized string similar to &apos;{0}&apos; is empty or white space..
             </summary>
+        </member>
+        <member name="M:WinCopies.Util.InvalidArgumentException.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Util.InvalidArgumentException"/> class.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.InvalidArgumentException.#ctor(System.String@)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Util.InvalidArgumentException"/> class with the name of the parameter that causes this exception.
+            </summary>
+            <param name="paramName">The name of the parameter that caused the current exception.</param>
+        </member>
+        <member name="M:WinCopies.Util.InvalidArgumentException.#ctor(System.String@,System.Exception@)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Util.InvalidArgumentException"/> class with the name of the parameter that causes this exception.
+            </summary>
+            <param name="paramName">The name of the parameter that caused the current exception.</param>
+            <param name="innerException">The exception that is the cause of the current exception. If the innerException parameter is not a null reference, the current exception is raised in a catch block that handles the inner exception.</param>
+        </member>
+        <member name="M:WinCopies.Util.InvalidArgumentException.#ctor(System.Runtime.Serialization.SerializationInfo@,System.Runtime.Serialization.StreamingContext@)">
+            <summary>
+            Initializes a new instance of the System.ArgumentException class with serialized data.
+            </summary>
+            <param name="info">The object that holds the serialized object data.</param>
+            <param name="context">The contextual information about the source or destination.</param>
         </member>
         <member name="M:WinCopies.Util.TypeArgumentException.#ctor">
             <summary>
@@ -2741,7 +2771,7 @@
             </summary>
             <returns>The object that is removed from the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="!:TryDequeue(out T)"/>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryDequeue(`0@)"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.EnqueueItem(`0)">
             <summary>
@@ -2761,7 +2791,7 @@
             </summary>
             <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="!:TryPeek(out T)"/>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryPeek(`0@)"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.ToArray">
             <summary>
@@ -2773,6 +2803,29 @@
             <summary>
             Sets the capacity to the actual number of elements in the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>, if that number is less than 90 percent of current capacity.
             </summary>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryDequeueItem(`0@)">
+            <summary>
+            Tries to remove and return the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. Override this method to provide a custom implementation.
+            </summary>
+            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been removed and retrieved.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryDequeue(`0@)">
+            <summary>
+            Tries to remove and return the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryDequeueItem(`0@)"/> method to provide a custom implementation.
+            </summary>
+            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been removed and retrieved.</returns>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.QueueCollection`1.Dequeue"/>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryPeek(`0@)">
+            <summary>
+            Tries to peek the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> without removing it.
+            </summary>
+            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been retrieved.</returns>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.QueueCollection`1.Peek"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.GetEnumerator">
             <summary>
@@ -2946,7 +2999,15 @@
             </summary>
             <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="!:TryPeek(out T)"/>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.TryPeek(`0@)"/>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.TryPeek(`0@)">
+            <summary>
+            Tries to peek the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> without removing it.
+            </summary>
+            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been retrieved.</returns>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.Peek"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.GetEnumerator">
             <summary>

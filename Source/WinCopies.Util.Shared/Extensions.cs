@@ -1840,11 +1840,11 @@ namespace WinCopies
         /// Checks whether an array contains <i>exactly</i> one value of a given array using a custom comparer.
         /// </summary>
         /// <param name="array">The array to browse</param>
-        /// <param name="equalityComparer">The <see cref="IEqualityComparer{T}"/> used to compare the values</param>
+        /// <param name="equalityComparer">The <see cref="System.Collections.Generic.IEqualityComparer{T}"/> used to compare the values</param>
         /// <param name="containsMoreThanOneValue"><see langword="true"/> if more than one value has been found, otherwise <see langword="false"/></param>
         /// <param name="values">The values to compare</param>
         /// <returns><see langword="true"/> if <i>exactly</i> one value has been found, otherwise <see langword="false"/>.</returns>
-        public static bool ContainsOneValue<T>(this IEnumerable<T> array, IEqualityComparer<T> equalityComparer, out bool containsMoreThanOneValue, params T[] values)
+        public static bool ContainsOneValue<T>(this IEnumerable<T> array, System.Collections.Generic. IEqualityComparer<T> equalityComparer, out bool containsMoreThanOneValue, params T[] values)
         {
             ThrowIfNull(equalityComparer, nameof(equalityComparer));
 
@@ -1924,11 +1924,11 @@ namespace WinCopies
         /// Checks whether an array contains at least one value of a given array using a custom comparer.
         /// </summary>
         /// <param name="array">The array to browse</param>
-        /// <param name="equalityComparer">The <see cref="IEqualityComparer{T}"/> used to compare the values</param>
+        /// <param name="equalityComparer">The <see cref="System.Collections.Generic.IEqualityComparer{T}"/> used to compare the values</param>
         /// <param name="containsMoreThanOneValue"><see langword="true"/> if more than one value has been found, otherwise <see langword="false"/></param>
         /// <param name="values">The values to compare</param>
         /// <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
-        public static bool ContainsOneOrMoreValues<T>(this IEnumerable<T> array, IEqualityComparer<T> equalityComparer, out bool containsMoreThanOneValue, params T[] values)
+        public static bool ContainsOneOrMoreValues<T>(this IEnumerable<T> array, System.Collections.Generic.IEqualityComparer<T> equalityComparer, out bool containsMoreThanOneValue, params T[] values)
         {
             ThrowIfNull(equalityComparer, nameof(equalityComparer));
 
@@ -1993,10 +1993,10 @@ namespace WinCopies
         /// Checks whether an array contains at least one value of a given array using a custom comparer.
         /// </summary>
         /// <param name="array">The array to browse</param>
-        /// <param name="equalityComparer">The <see cref="IEqualityComparer{T}"/> used to compare the values</param>
+        /// <param name="equalityComparer">The <see cref="System.Collections.Generic.IEqualityComparer{T}"/> used to compare the values</param>
         /// <param name="values">The values to compare</param>
         /// <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
-        public static bool ContainsOneOrMoreValues<T>(this IEnumerable<T> array, IEqualityComparer<T> equalityComparer, params T[] values)
+        public static bool ContainsOneOrMoreValues<T>(this IEnumerable<T> array, System.Collections.Generic.IEqualityComparer<T> equalityComparer, params T[] values)
         {
             ThrowIfNull(equalityComparer, nameof(equalityComparer));
 
@@ -2073,10 +2073,10 @@ namespace WinCopies
         /// Checks whether an array contains all values of a given array using a custom comparer.
         /// </summary>
         /// <param name="array">The array to browse</param>
-        /// <param name="equalityComparer">The <see cref="IEqualityComparer{T}"/> used to compare the values</param>
+        /// <param name="equalityComparer">The <see cref="System.Collections.Generic.IEqualityComparer{T}"/> used to compare the values</param>
         /// <param name="values">The values to compare</param>
         /// <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
-        public static bool Contains<T>(this IEnumerable<T> array, IEqualityComparer<T> equalityComparer, params T[] values)
+        public static bool Contains<T>(this IEnumerable<T> array, System.Collections.Generic.IEqualityComparer<T> equalityComparer, params T[] values)
         {
             ThrowIfNull(equalityComparer, nameof(equalityComparer));
 
@@ -4050,11 +4050,11 @@ namespace WinCopies
 #if WinCopies2
 
         [Obsolete("This method has been replaced by the Contains(this string, string, IEqualityComparer<char>) method.")]
-        public static bool Contains(this string s, IEqualityComparer<char> comparer, string value) => s.Contains(value, comparer);
+        public static bool Contains(this string s, System.Collections.Generic.IEqualityComparer<char> comparer, string value) => s.Contains(value, comparer);
 
 #endif
 
-        public static bool Contains(this string s, string value, IEqualityComparer<char> comparer)
+        public static bool Contains(this string s, string value, System.Collections.Generic.IEqualityComparer<char> comparer)
         {
             bool contains(ref int i)
             {
@@ -4138,7 +4138,7 @@ namespace WinCopies
 #if WinCopies2
 
         [Obsolete("This method has been replaced by arrays-common methods.")]
-        public static bool Contains(this string s, char value, IEqualityComparer<char> comparer, out int index)
+        public static bool Contains(this string s, char value, System.Collections.Generic.IEqualityComparer<char> comparer, out int index)
         {
             for (int i = 0; i < s.Length; i++)
 
@@ -4157,7 +4157,7 @@ namespace WinCopies
 
 #endif
 
-        public static bool Contains(this string s, string value, IEqualityComparer<char> comparer, out int index)
+        public static bool Contains(this string s, string value, System.Collections.Generic.IEqualityComparer<char> comparer, out int index)
         {
             bool contains(ref int i)
             {

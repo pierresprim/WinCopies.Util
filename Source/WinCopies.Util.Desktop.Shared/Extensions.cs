@@ -24,7 +24,9 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+#if !WinCopies2
 using WinCopies.DotNetFix;
+#endif
 
 #if WinCopies2
 using static WinCopies.Util.Util;

@@ -198,9 +198,73 @@
               resource lookups using this strongly typed resource class.
             </summary>
         </member>
+        <member name="P:WinCopies.Util.Desktop.Resources.ExceptionMessages.BackgroundWorkerDoesNotSupportCancellation">
+            <summary>
+              Looks up a localized string similar to The BackgroundWorker does not support cancellation..
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.Desktop.Resources.ExceptionMessages.BackgroundWorkerDoesNotSupportPausing">
+            <summary>
+              Looks up a localized string similar to The BackgroundWorker does not support pausing..
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.Desktop.Resources.ExceptionMessages.BackgroundWorkerDoesNotSupportProgressionNotification">
+            <summary>
+              Looks up a localized string similar to The BackgroundWorker does not support progression notification..
+            </summary>
+        </member>
         <member name="P:WinCopies.Util.Desktop.Resources.ExceptionMessages.BackgroundWorkerIsBusy">
             <summary>
               Looks up a localized string similar to The BackgroundWorker is busy..
+            </summary>
+        </member>
+        <member name="T:WinCopies.Util.Desktop.ThrowHelper">
+            <summary>
+            A static class with methods to get and throw exceptions.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.Desktop.ThrowHelper.GetBackgroundWorkerIsBusyException">
+            <summary>
+            Returns a new <see cref="T:System.InvalidOperationException"/> with <see cref="P:WinCopies.Util.Desktop.Resources.ExceptionMessages.BackgroundWorkerIsBusy"/> as error message.
+            </summary>
+            <returns>A new <see cref="T:System.InvalidOperationException"/> with <see cref="P:WinCopies.Util.Desktop.Resources.ExceptionMessages.BackgroundWorkerIsBusy"/> as error message.</returns>
+        </member>
+        <member name="M:WinCopies.Util.Desktop.ThrowHelper.ThrowBackgroundWorkerIsBusyException">
+            <summary>
+            Throws the exception returned by the <see cref="M:WinCopies.Util.Desktop.ThrowHelper.GetBackgroundWorkerIsBusyException"/> method.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.Desktop.ThrowHelper.GetBackgroundWorkerDoesNotSupportCancellationException">
+            <summary>
+            Returns a new <see cref="T:System.InvalidOperationException"/> with <see cref="P:WinCopies.Util.Desktop.Resources.ExceptionMessages.BackgroundWorkerDoesNotSupportCancellation"/> as error message.
+            </summary>
+            <returns>A new <see cref="T:System.InvalidOperationException"/> with <see cref="P:WinCopies.Util.Desktop.Resources.ExceptionMessages.BackgroundWorkerDoesNotSupportCancellation"/> as error message.</returns>
+        </member>
+        <member name="M:WinCopies.Util.Desktop.ThrowHelper.ThrowBackgroundWorkerDoesNotSupportCancellationException">
+            <summary>
+            Throws the exception returned by the <see cref="M:WinCopies.Util.Desktop.ThrowHelper.GetBackgroundWorkerDoesNotSupportCancellationException"/> method.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.Desktop.ThrowHelper.GetBackgroundWorkerDoesNotSupportProgressionNotificationException">
+            <summary>
+            Returns a new <see cref="T:System.InvalidOperationException"/> with <see cref="P:WinCopies.Util.Desktop.Resources.ExceptionMessages.BackgroundWorkerDoesNotSupportProgressionNotification"/> as error message.
+            </summary>
+            <returns>A new <see cref="T:System.InvalidOperationException"/> with <see cref="P:WinCopies.Util.Desktop.Resources.ExceptionMessages.BackgroundWorkerDoesNotSupportProgressionNotification"/> as error message.</returns>
+        </member>
+        <member name="M:WinCopies.Util.Desktop.ThrowHelper.ThrowBackgroundWorkerDoesNotSupportProgressionNotificationException">
+            <summary>
+            Throws the exception returned by the <see cref="M:WinCopies.Util.Desktop.ThrowHelper.GetBackgroundWorkerDoesNotSupportProgressionNotificationException"/> method.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.Desktop.ThrowHelper.GetBackgroundWorkerDoesNotSupportPausingException">
+            <summary>
+            Returns a new <see cref="T:System.InvalidOperationException"/> with <see cref="P:WinCopies.Util.Desktop.Resources.ExceptionMessages.BackgroundWorkerDoesNotSupportPausing"/> as error message.
+            </summary>
+            <returns>A new <see cref="T:System.InvalidOperationException"/> with <see cref="P:WinCopies.Util.Desktop.Resources.ExceptionMessages.BackgroundWorkerDoesNotSupportPausing"/> as error message.</returns>
+        </member>
+        <member name="M:WinCopies.Util.Desktop.ThrowHelper.ThrowBackgroundWorkerDoesNotSupportPausingException">
+            <summary>
+            Throws the exception returned by the <see cref="M:WinCopies.Util.Desktop.ThrowHelper.GetBackgroundWorkerDoesNotSupportPausingException"/> method.
             </summary>
         </member>
         <member name="T:WinCopies.Util.BackgroundWorker">
@@ -253,7 +317,7 @@
         </member>
         <member name="P:WinCopies.Util.BackgroundWorker.Progress">
             <summary>
-            Gets the current progress of the working in percent.
+            Gets the current progress of the current <see cref="T:WinCopies.Util.BackgroundWorker"/> in percent.
             </summary>
         </member>
         <member name="P:WinCopies.Util.BackgroundWorker.ApartmentState">
@@ -1836,6 +1900,44 @@
             </summary>
             <param name="bitmap">The <see cref="T:System.Drawing.Bitmap"/> to convert.</param>
             <returns>The <see cref="T:System.Windows.Media.ImageSource"/> obtained from the given <see cref="T:System.Drawing.Bitmap"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Util.Extensions.TryReportProgress(WinCopies.Util.IBackgroundWorker,System.Int32)">
+            <summary>
+            Tries to report progress for a given <see cref="T:WinCopies.Util.IBackgroundWorker"/>.
+            </summary>
+            <param name="backgroundWorker">The <see cref="T:WinCopies.Util.IBackgroundWorker"/> for which to report the progress.</param>
+            <param name="progressPercentage">The progress percentage of <paramref name="backgroundWorker"/>.</param>
+            <returns><see langword="true"/> if <see cref="P:WinCopies.Util.IBackgroundWorker.WorkerReportsProgress"/> is <see langword="true"/> for <paramref name="backgroundWorker"/>; otherwise <see langword="false"/>.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="backgroundWorker"/> is <see langword="null"/>.</exception>
+        </member>
+        <member name="M:WinCopies.Util.Extensions.TryReportProgress(WinCopies.Util.IBackgroundWorker,System.Int32,System.Object)">
+            <summary>
+            Tries to report progress for a given <see cref="T:WinCopies.Util.IBackgroundWorker"/>.
+            </summary>
+            <param name="backgroundWorker">The <see cref="T:WinCopies.Util.IBackgroundWorker"/> for which to report the progress.</param>
+            <param name="progressPercentage">The progress percentage of <paramref name="backgroundWorker"/>.</param>
+            <param name="userState">An object to pass to the <see cref="E:WinCopies.Util.IBackgroundWorker.ProgressChanged"/> event handler of <paramref name="backgroundWorker"/>.</param>
+            <returns><see langword="true"/> if <see cref="P:WinCopies.Util.IBackgroundWorker.WorkerReportsProgress"/> is <see langword="true"/> for <paramref name="backgroundWorker"/>; otherwise <see langword="false"/>.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="backgroundWorker"/> is <see langword="null"/>.</exception>
+        </member>
+        <member name="M:WinCopies.Util.Extensions.TryReportProgress(System.ComponentModel.BackgroundWorker,System.Int32)">
+            <summary>
+            Tries to report progress for a given <see cref="T:System.ComponentModel.BackgroundWorker"/>.
+            </summary>
+            <param name="backgroundWorker">The <see cref="T:System.ComponentModel.BackgroundWorker"/> for which to report the progress.</param>
+            <param name="progressPercentage">The progress percentage of <paramref name="backgroundWorker"/>.</param>
+            <returns><see langword="true"/> if <see cref="P:System.ComponentModel.BackgroundWorker.WorkerReportsProgress"/> is <see langword="true"/> for <paramref name="backgroundWorker"/>; otherwise <see langword="false"/>.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="backgroundWorker"/> is <see langword="null"/>.</exception>
+        </member>
+        <member name="M:WinCopies.Util.Extensions.TryReportProgress(System.ComponentModel.BackgroundWorker,System.Int32,System.Object)">
+            <summary>
+            Tries to report progress for a given <see cref="T:System.ComponentModel.BackgroundWorker"/>.
+            </summary>
+            <param name="backgroundWorker">The <see cref="T:System.ComponentModel.BackgroundWorker"/> for which to report the progress.</param>
+            <param name="progressPercentage">The progress percentage of <paramref name="backgroundWorker"/>.</param>
+            <param name="userState">An object to pass to the <see cref="E:System.ComponentModel.BackgroundWorker.ProgressChanged"/> event handler of <paramref name="backgroundWorker"/>.</param>
+            <returns><see langword="true"/> if <see cref="P:System.ComponentModel.BackgroundWorker.WorkerReportsProgress"/> is <see langword="true"/> for <paramref name="backgroundWorker"/>; otherwise <see langword="false"/>.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="backgroundWorker"/> is <see langword="null"/>.</exception>
         </member>
         <member name="M:WinCopies.Util.MergedStylesExtension.OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs)">
             <summary>

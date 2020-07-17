@@ -968,7 +968,7 @@ namespace WinCopies
         /// <param name="value">The value to compare the values of the table with.</param>
         /// <param name="values">The values to compare.</param>
         /// <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
-        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, in object value, params object[] values) => If(comparisonType, comparisonMode, comparison, EqualityComparer<object>.Default, GetCommonPredicate(), value, values);
+        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, in object value, params object[] values) => If(comparisonType, comparisonMode, comparison, System.Collections.Generic.EqualityComparer<object>.Default, GetCommonPredicate(), value, values);
 
         /// <summary>
         /// Performs a comparison by testing a value compared to an array of values using a custom <see cref="IComparer{T}"/> and <see cref="Predicate{T}"/>.
@@ -1115,7 +1115,7 @@ namespace WinCopies
         /// <param name="value">The value to compare the values of the table with.</param>
         /// <param name="values">The values to compare.</param>
         /// <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
-        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, out object key, in object value, params KeyValuePair<object, object>[] values) => If(comparisonType, comparisonMode, comparison, out key, EqualityComparer<object>.Default, GetCommonPredicate(), value, values);
+        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, out object key, in object value, params KeyValuePair<object, object>[] values) => If(comparisonType, comparisonMode, comparison, out key, System.Collections.Generic.EqualityComparer<object>.Default, GetCommonPredicate(), value, values);
 
         /// <summary>
         /// Performs a comparison by testing a value compared to an array of objects or values using a custom <see cref="IComparer{Object}"/> and <see cref="Predicate{Object}"/>.
@@ -1206,7 +1206,7 @@ namespace WinCopies
         /// <param name="value">The value to compare the values of the table with.</param>
         /// <param name="values">The values to compare.</param>
         /// <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
-        public static bool If<T>(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, in T value, params T[] values) => If(comparisonType, comparisonMode, comparison, EqualityComparer<T>.Default, GetCommonPredicate<T>(), value, values);
+        public static bool If<T>(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, in T value, params T[] values) => If(comparisonType, comparisonMode, comparison, System.Collections.Generic.EqualityComparer<T>.Default, GetCommonPredicate<T>(), value, values);
 
         /// <summary>
         /// Performs a comparison by testing a value compared to an array of objects or values using a custom <see cref="IComparer{Object}"/> and <see cref="Predicate{Object}"/>.
@@ -1230,7 +1230,7 @@ namespace WinCopies
             return IfInternal(comparisonType, comparisonMode, (in T _value, in Func<bool> _predicate) => CheckIfComparison(comparison, _predicate, comparisonDelegate(value, _value)), new IfValuesEnumerable<T>(values, predicate));
         }
 
-        public static bool If<T>(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, IEqualityComparer<T> equalityComparer, in Predicate<T> predicate, in T value, params T[] values) => equalityComparer == null ? If(comparisonType, comparisonMode, comparison, (EqualityComparison<T>)null, predicate, value, values) : If(comparisonType, comparisonMode, comparison, (T x, T y) => equalityComparer.Equals(x, y), predicate, value, values);
+        public static bool If<T>(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, System.Collections.Generic.IEqualityComparer<T> equalityComparer, in Predicate<T> predicate, in T value, params T[] values) => equalityComparer == null ? If(comparisonType, comparisonMode, comparison, (EqualityComparison<T>)null, predicate, value, values) : If(comparisonType, comparisonMode, comparison, (T x, T y) => equalityComparer.Equals(x, y), predicate, value, values);
 
         public static bool If<T>(in IfCT comparisonType, in IfCM comparisonMode, IfComp comparison, EqualityComparison<T> comparisonDelegate, in Predicate<T> predicate, T value, params T[] values)
         {
@@ -1250,7 +1250,7 @@ namespace WinCopies
             return IfInternal(comparisonType, comparisonMode, (in T _value, in Func<bool> _predicate) => CheckIfComparison(comparison, _predicate, comparisonDelegate(value, _value)), new IfKeyValuePairEnumerable<T>(values));
         }
 
-        public static bool If<T>(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, IEqualityComparer<T> equalityComparer, in T value, params KeyValuePair<T, Func<bool>>[] values) => equalityComparer == null ? If(comparisonType, comparisonMode, comparison, (EqualityComparison<T>)null, value, values) : If(comparisonType, comparisonMode, comparison, (T x, T y) => equalityComparer.Equals(x, y), value, values);
+        public static bool If<T>(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, System.Collections.Generic.IEqualityComparer<T> equalityComparer, in T value, params KeyValuePair<T, Func<bool>>[] values) => equalityComparer == null ? If(comparisonType, comparisonMode, comparison, (EqualityComparison<T>)null, value, values) : If(comparisonType, comparisonMode, comparison, (T x, T y) => equalityComparer.Equals(x, y), value, values);
 
         public static bool If<T>(in IfCT comparisonType, in IfCM comparisonMode, IfComp comparison, EqualityComparison<T> comparisonDelegate, T value, params KeyValuePair<T, Func<bool>>[] values)
         {
@@ -1271,7 +1271,7 @@ namespace WinCopies
         /// <param name="value">The value to compare the values of the table with.</param>
         /// <param name="values">The values to compare.</param>
         /// <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
-        public static bool If<TKey, TValue>(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, out TKey key, in TValue value, params KeyValuePair<TKey, TValue>[] values) => If(comparisonType, comparisonMode, comparison, out key, EqualityComparer<TValue>.Default, GetCommonPredicate<TValue>(), value, values);
+        public static bool If<TKey, TValue>(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, out TKey key, in TValue value, params KeyValuePair<TKey, TValue>[] values) => If(comparisonType, comparisonMode, comparison, out key, System.Collections.Generic.EqualityComparer<TValue>.Default, GetCommonPredicate<TValue>(), value, values);
 
         /// <summary>
         /// Performs a comparison by testing a value compared to an array of objects or values using a custom <see cref="IComparer{Object}"/> and <see cref="Predicate{Object}"/>.
@@ -1294,7 +1294,7 @@ namespace WinCopies
             return IfInternal(comparisonType, comparisonMode, (in TValue _value, in Func<bool> _predicate) => CheckIfComparison(comparison, _predicate, comparisonDelegate(value, _value)), out key, new IfKeyValuesEnumerable<TKey, TValue>(values, predicate));
         }
 
-        public static bool If<TKey, TValue>(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, out TKey key, IEqualityComparer<TValue> equalityComparer, in Predicate<TValue> predicate, in TValue value, params KeyValuePair<TKey, TValue>[] values) => equalityComparer == null ? If(comparisonType, comparisonMode, comparison, out key, (EqualityComparison<TValue>)null, predicate, value, values) : If(comparisonType, comparisonMode, comparison, out key, (TValue x, TValue y) => equalityComparer.Equals(x, y), predicate, value, values);
+        public static bool If<TKey, TValue>(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, out TKey key, System.Collections.Generic.IEqualityComparer<TValue> equalityComparer, in Predicate<TValue> predicate, in TValue value, params KeyValuePair<TKey, TValue>[] values) => equalityComparer == null ? If(comparisonType, comparisonMode, comparison, out key, (EqualityComparison<TValue>)null, predicate, value, values) : If(comparisonType, comparisonMode, comparison, out key, (TValue x, TValue y) => equalityComparer.Equals(x, y), predicate, value, values);
 
         public static bool If<TKey, TValue>(in IfCT comparisonType, in IfCM comparisonMode, IfComp comparison, out TKey key, EqualityComparison<TValue> comparisonDelegate, in Predicate<TValue> predicate, TValue value, params KeyValuePair<TKey, TValue>[] values)
         {
@@ -1312,7 +1312,7 @@ namespace WinCopies
             return IfInternal(comparisonType, comparisonMode, (in TValue _value, in Func<bool> _predicate) => CheckIfComparison(comparison, _predicate, comparisonDelegate(value, _value)), out key, new IfKeyKeyValuePairEnumerable<TKey, TValue>(values));
         }
 
-        public static bool If<TKey, TValue>(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, out TKey key, IEqualityComparer<TValue> equalityComparer, in TValue value, params KeyValuePair<TKey, KeyValuePair<TValue, Func<bool>>>[] values) => equalityComparer == null ? If(comparisonType, comparisonMode, comparison, out key, (EqualityComparison<TValue>)null, value, values) : If(comparisonType, comparisonMode, comparison, out key, (TValue x, TValue y) => equalityComparer.Equals(x, y), value, values);
+        public static bool If<TKey, TValue>(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, out TKey key, System.Collections.Generic.IEqualityComparer<TValue> equalityComparer, in TValue value, params KeyValuePair<TKey, KeyValuePair<TValue, Func<bool>>>[] values) => equalityComparer == null ? If(comparisonType, comparisonMode, comparison, out key, (EqualityComparison<TValue>)null, value, values) : If(comparisonType, comparisonMode, comparison, out key, (TValue x, TValue y) => equalityComparer.Equals(x, y), value, values);
 
         public static bool If<TKey, TValue>(in IfCT comparisonType, in IfCM comparisonMode, IfComp comparison, out TKey key, EqualityComparison<TValue> comparisonDelegate, TValue value, params KeyValuePair<TKey, KeyValuePair<TValue, Func<bool>>>[] values)
         {

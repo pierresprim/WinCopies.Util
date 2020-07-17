@@ -120,16 +120,48 @@ namespace WinCopies.Collections
 
     public interface IEqualityComparer<in T> : System.Collections.Generic.IEqualityComparer<T>
     {
-        bool Equals([AllowNull] T x, [AllowNull] object y);
+        bool Equals(
+#if !CS7
+            [AllowNull]
+#endif
+        T x,
+#if !CS7
+            [AllowNull]
+#endif
+        object y);
     }
 
     public abstract class EqualityComparer<T> : System.Collections.Generic.EqualityComparer<T>
     {
-        public bool Equals([AllowNull] in T x, [AllowNull] in object y) => y is T _y && EqualsOverride(x, _y);
+        public bool Equals(
+#if !CS7
+            [AllowNull]
+#endif
+        in T x,
+#if !CS7
+            [AllowNull]
+#endif
+        in object y) => y is T _y && EqualsOverride(x, _y);
 
-        public sealed override bool Equals([AllowNull] T x, [AllowNull] T y) => EqualsOverride(x, y);
+        public sealed override bool Equals(
+#if !CS7
+            [AllowNull]
+#endif
+        T x,
+#if !CS7
+            [AllowNull]
+#endif
+        T y) => EqualsOverride(x, y);
 
-        protected abstract bool EqualsOverride([AllowNull] T x, [AllowNull] T y);
+        protected abstract bool EqualsOverride(
+#if !CS7
+            [AllowNull]
+#endif
+        T x,
+#if !CS7
+            [AllowNull]
+#endif
+        T y);
     }
 }
 
