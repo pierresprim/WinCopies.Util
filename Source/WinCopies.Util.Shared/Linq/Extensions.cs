@@ -17,6 +17,7 @@ namespace WinCopies.Linq
         public static IEnumerable<T> WherePredicate<T>(this IEnumerable<T> enumerable, Predicate<T> func)
         {
             ThrowIfNull(enumerable, nameof(enumerable));
+            ThrowIfNull(func, nameof(func));
 
             foreach (T value in enumerable)
 
@@ -28,6 +29,7 @@ namespace WinCopies.Linq
         public static IEnumerable WherePredicate(this IEnumerable enumerable, Predicate func)
         {
             ThrowIfNull(enumerable, nameof(enumerable));
+            ThrowIfNull(func, nameof(func));
 
             foreach (object value in enumerable)
 

@@ -8,6 +8,8 @@ The WinCopies® software framework
 README
 ======
 
+WinCopies.Util is now desynchronized with the WinCopies Framework.
+
 Updates
 -------
 

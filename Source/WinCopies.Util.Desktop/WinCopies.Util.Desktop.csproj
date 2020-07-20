@@ -12,10 +12,10 @@
     <AssemblyOriginatorKeyFile>WinCopies.Util.Desktop.snk</AssemblyOriginatorKeyFile>
     <DocumentationFile>WinCopies.Util.Desktop.xml</DocumentationFile>
     <PackageTags>WinCopies</PackageTags>
-    <VersionPrefix>2.5.9</VersionPrefix>
+    <VersionPrefix>2.6</VersionPrefix>
     <VersionSuffix>preview</VersionSuffix>
-    <AssemblyVersion>2.5.9.0</AssemblyVersion>
-    <FileVersion>2.5.9.0</FileVersion>
+    <AssemblyVersion>2.6.0.0</AssemblyVersion>
+    <FileVersion>2.6.0.0</FileVersion>
   </PropertyGroup>
 
   <Import Project="..\WinCopies.Util.Desktop.Shared\WinCopies.Util.Desktop.Shared.projitems" Label="Shared" />
@@ -28,7 +28,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.19" />
     <PackageReference Include="System.Reactive.Linq" Version="4.0.0" />
-    <PackageReference Include="WinCopies.WindowsAPICodePack.Win32Native" Version="2.0.0-preview6" />
+    <PackageReference Include="WinCopies.WindowsAPICodePack.Win32Native" Version="2.0.1" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)'!='netcoreapp3.1'">

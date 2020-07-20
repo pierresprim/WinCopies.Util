@@ -6,6 +6,8 @@ The WinCopies® software framework
 README
 ======
 
+WinCopies.Util.Desktop is now desynchronized with the WinCopies Framework.
+
 Updates
 -------
 
