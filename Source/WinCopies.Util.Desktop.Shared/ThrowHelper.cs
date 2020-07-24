@@ -16,7 +16,7 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using System;
-
+using WinCopies.Util.DotNetFix;
 using static WinCopies.Util.Desktop.Resources.ExceptionMessages;
 
 namespace WinCopies.Util.Desktop
@@ -35,7 +35,25 @@ namespace WinCopies.Util.Desktop
         /// <summary>
         /// Throws the exception returned by the <see cref="GetBackgroundWorkerIsBusyException"/> method.
         /// </summary>
+        [Obsolete("Use the ThrowIfBackgroundWorkerIsBusy method overloads instead.")]
         public static void ThrowBackgroundWorkerIsBusyException() => throw GetBackgroundWorkerIsBusyException();
+
+        ///// <summary>
+        ///// Throws the exception returned by the <see cref="GetBackgroundWorkerIsBusyException"/> method.
+        ///// </summary>
+        public static void ThrowIfBackgroundWorkerIsBusy(in System.ComponentModel.BackgroundWorker backgroundWorker)
+        {
+            if (backgroundWorker.IsBusy)
+
+                throw GetBackgroundWorkerIsBusyException();
+        }
+
+        public static void ThrowIfBackgroundWorkerIsBusy(in IBackgroundWorker backgroundWorker)
+        {
+            if (backgroundWorker.IsBusy)
+
+                throw GetBackgroundWorkerIsBusyException();
+        }
 
         /// <summary>
         /// Returns a new <see cref="InvalidOperationException"/> with <see cref="BackgroundWorkerDoesNotSupportCancellation"/> as error message.
@@ -46,7 +64,25 @@ namespace WinCopies.Util.Desktop
         /// <summary>
         /// Throws the exception returned by the <see cref="GetBackgroundWorkerDoesNotSupportCancellationException"/> method.
         /// </summary>
+        [Obsolete("Use the ThrowIfBackgroundWorkerDoesNotSupportCancellation method overloads instead.")]
         public static void ThrowBackgroundWorkerDoesNotSupportCancellationException() => throw GetBackgroundWorkerDoesNotSupportCancellationException();
+
+        ///// <summary>
+        ///// Throws the exception returned by the <see cref="GetBackgroundWorkerDoesNotSupportCancellationException"/> method.
+        ///// </summary>
+        public static void ThrowIfBackgroundWorkerDoesNotSupportCancellation(in System.ComponentModel.BackgroundWorker backgroundWorker)
+        {
+            if (!backgroundWorker.WorkerSupportsCancellation)
+
+                throw GetBackgroundWorkerDoesNotSupportCancellationException();
+        }
+
+        public static void ThrowIfBackgroundWorkerDoesNotSupportCancellation(in IBackgroundWorker backgroundWorker)
+        {
+            if (!backgroundWorker.WorkerSupportsCancellation)
+
+                throw GetBackgroundWorkerDoesNotSupportCancellationException();
+        }
 
         /// <summary>
         /// Returns a new <see cref="InvalidOperationException"/> with <see cref="BackgroundWorkerDoesNotSupportProgressionNotification"/> as error message.
@@ -57,7 +93,25 @@ namespace WinCopies.Util.Desktop
         /// <summary>
         /// Throws the exception returned by the <see cref="GetBackgroundWorkerDoesNotSupportProgressionNotificationException"/> method.
         /// </summary>
+        [Obsolete("Use the ThrowIfBackgroundWorkerDoesNotSupportProgressionNotification method overloads instead.")]
         public static void ThrowBackgroundWorkerDoesNotSupportProgressionNotificationException() => throw GetBackgroundWorkerDoesNotSupportProgressionNotificationException();
+
+        ///// <summary>
+        ///// Throws the exception returned by the <see cref="GetBackgroundWorkerDoesNotSupportProgressionNotificationException"/> method.
+        ///// </summary>
+        public static void ThrowIfBackgroundWorkerDoesNotSupportProgressionNotification(in System.ComponentModel.BackgroundWorker backgroundWorker)
+        {
+            if (!backgroundWorker.WorkerReportsProgress)
+
+                throw GetBackgroundWorkerDoesNotSupportProgressionNotificationException();
+        }
+
+        public static void ThrowIfBackgroundWorkerDoesNotSupportProgressionNotification(in IBackgroundWorker backgroundWorker)
+        {
+            if (!backgroundWorker.WorkerReportsProgress)
+
+                throw GetBackgroundWorkerDoesNotSupportProgressionNotificationException();
+        }
 
         /// <summary>
         /// Returns a new <see cref="InvalidOperationException"/> with <see cref="BackgroundWorkerDoesNotSupportPausing"/> as error message.
@@ -68,6 +122,17 @@ namespace WinCopies.Util.Desktop
         /// <summary>
         /// Throws the exception returned by the <see cref="GetBackgroundWorkerDoesNotSupportPausingException"/> method.
         /// </summary>
+        [Obsolete("Use the ThrowIfBackgroundWorkerDoesNotSupportPausing method instead.")]
         public static void ThrowBackgroundWorkerDoesNotSupportPausingException() => throw GetBackgroundWorkerDoesNotSupportPausingException();
+
+        /// <summary>
+        /// Throws the exception returned by the <see cref="GetBackgroundWorkerDoesNotSupportPausingException"/> method.
+        /// </summary>
+        public static void ThrowIfBackgroundWorkerDoesNotSupportPausing(in PausableBackgroundWorker backgroundWorker)
+        {
+            if (!backgroundWorker.WorkerSupportsPausing)
+
+                throw GetBackgroundWorkerDoesNotSupportPausingException();
+        }
     }
 }

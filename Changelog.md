@@ -9,7 +9,12 @@ CHANGELOG
 Updates
 -------
 
-??/??/???? 2.5.9
+??/??/???? 2.5.10
+=================
+
+- New static throwing methods.
+
+07/17/2020 2.5.9
 ================
 
 WinCopies.Util (2.5.9)

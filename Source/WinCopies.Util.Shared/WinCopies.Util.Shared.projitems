@@ -26,11 +26,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Collections\ReadOnlyTreeNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\TreeNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Date.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\If\Enumerables.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\If\Enums.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\If\HelperMethods.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\If\If.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\If\ThrowHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\InvalidArgumentException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\ThrowHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\TypeArgumentException.cs" />
