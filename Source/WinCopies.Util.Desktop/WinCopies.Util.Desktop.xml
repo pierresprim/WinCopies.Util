@@ -267,6 +267,11 @@
             Throws the exception returned by the <see cref="M:WinCopies.Util.Desktop.ThrowHelper.GetBackgroundWorkerDoesNotSupportPausingException"/> method.
             </summary>
         </member>
+        <member name="M:WinCopies.Util.Desktop.ThrowHelper.ThrowIfBackgroundWorkerDoesNotSupportPausing(WinCopies.Util.DotNetFix.PausableBackgroundWorker@)">
+            <summary>
+            Throws the exception returned by the <see cref="M:WinCopies.Util.Desktop.ThrowHelper.GetBackgroundWorkerDoesNotSupportPausingException"/> method.
+            </summary>
+        </member>
         <member name="T:WinCopies.Util.BackgroundWorker">
             <summary>
             Represents a BackgroundWorker that runs in a MTA thread by default and automatically stops on background when reports progress.
@@ -442,6 +447,82 @@
             </summary>
             <param name="disposing"><see langword="true"/> to release both managed and unmanaged resources; <see langword="false"/> to release only unmanaged resources.</param>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Util.BackgroundWorker"/> is busy and does not support cancellation.</exception>
+        </member>
+        <member name="T:WinCopies.Util.DotNetFix.IBackgroundWorker">
+            <summary>
+            Executes an operation on a separate thread.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.DotNetFix.IBackgroundWorker.WorkerSupportsCancellation">
+            <summary>
+            Gets or sets a value indicating whether the background worker supports asynchronous cancellation.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">When setting: The background worker is busy.</exception>
+        </member>
+        <member name="P:WinCopies.Util.DotNetFix.IBackgroundWorker.WorkerReportsProgress">
+            <summary>
+            Gets or sets a value indicating whether the background worker can report progress updates.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">When setting: The background worker is busy.</exception>
+        </member>
+        <member name="P:WinCopies.Util.DotNetFix.IBackgroundWorker.IsBusy">
+            <summary>
+            Gets a value indicating whether the background worker is running an asynchronous operation.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.DotNetFix.IBackgroundWorker.CancellationPending">
+            <summary>
+            Gets a value indicating whether the application has requested cancellation of a background operation.
+            </summary>
+        </member>
+        <member name="E:WinCopies.Util.DotNetFix.IBackgroundWorker.DoWork">
+            <summary>
+            Occurs when <see cref="M:WinCopies.Util.DotNetFix.IBackgroundWorker.RunWorkerAsync"/> is called.
+            </summary>
+        </member>
+        <member name="E:WinCopies.Util.DotNetFix.IBackgroundWorker.ProgressChanged">
+            <summary>
+            Occurs when <see cref="M:WinCopies.Util.DotNetFix.IBackgroundWorker.ReportProgress(System.Int32)"/> is called.
+            </summary>
+        </member>
+        <member name="E:WinCopies.Util.DotNetFix.IBackgroundWorker.RunWorkerCompleted">
+            <summary>
+            Occurs when the background operation has completed, has been canceled, or has raised an exception.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.DotNetFix.IBackgroundWorker.CancelAsync">
+            <summary>
+            Requests cancellation of a pending background operation.
+            </summary>
+            <exception cref="T:System.InvalidOperationException"><see cref="P:WinCopies.Util.DotNetFix.IBackgroundWorker.WorkerSupportsCancellation"/> is <see langword="false"/>.</exception>
+        </member>
+        <member name="M:WinCopies.Util.DotNetFix.IBackgroundWorker.ReportProgress(System.Int32)">
+            <summary>
+            Raises the <see cref="E:WinCopies.Util.DotNetFix.IBackgroundWorker.ProgressChanged"/> event.
+            </summary>
+            <param name="percentProgress">The percentage, from 0 to 100, of the background operation that is complete.</param>
+            <exception cref="T:System.InvalidOperationException">The <see cref="P:WinCopies.Util.DotNetFix.IBackgroundWorker.WorkerReportsProgress"/> property is set to <see langword="false"/>.</exception>
+        </member>
+        <member name="M:WinCopies.Util.DotNetFix.IBackgroundWorker.ReportProgress(System.Int32,System.Object)">
+            <summary>
+            Raises the <see cref="E:WinCopies.Util.DotNetFix.IBackgroundWorker.ProgressChanged"/> event.
+            </summary>
+            <param name="percentProgress">The percentage, from 0 to 100, of the background operation that is complete.</param>
+            <param name="userState">The state object passed to <see cref="M:WinCopies.Util.DotNetFix.IBackgroundWorker.RunWorkerAsync(System.Object)"/>.</param>
+            <exception cref="T:System.InvalidOperationException">The <see cref="P:WinCopies.Util.DotNetFix.IBackgroundWorker.WorkerReportsProgress"/> property is set to <see langword="false"/>.</exception>
+        </member>
+        <member name="M:WinCopies.Util.DotNetFix.IBackgroundWorker.RunWorkerAsync(System.Object)">
+            <summary>
+            Starts execution of a background operation.
+            </summary>
+            <param name="argument">A parameter for use by the background operation to be executed in the <see cref="E:WinCopies.Util.DotNetFix.IBackgroundWorker.DoWork"/> event handler.</param>
+            <exception cref="T:System.InvalidOperationException"><see cref="P:WinCopies.Util.DotNetFix.IBackgroundWorker.IsBusy"/> is <see langword="true"/>.</exception>
+        </member>
+        <member name="M:WinCopies.Util.DotNetFix.IBackgroundWorker.RunWorkerAsync">
+            <summary>
+            Starts execution of a background operation.
+            </summary>
+            <exception cref="T:System.InvalidOperationException"><see cref="P:WinCopies.Util.DotNetFix.IBackgroundWorker.IsBusy"/> is <see langword="true"/>.</exception>
         </member>
         <member name="T:WinCopies.Util.Commands.ApplicationCommands">
             <summary>
@@ -1911,6 +1992,25 @@
             <exception cref="T:System.ArgumentNullException"><paramref name="backgroundWorker"/> is <see langword="null"/>.</exception>
         </member>
         <member name="M:WinCopies.Util.Extensions.TryReportProgress(WinCopies.Util.IBackgroundWorker,System.Int32,System.Object)">
+            <summary>
+            Tries to report progress for a given <see cref="T:WinCopies.Util.IBackgroundWorker"/>.
+            </summary>
+            <param name="backgroundWorker">The <see cref="T:WinCopies.Util.IBackgroundWorker"/> for which to report the progress.</param>
+            <param name="progressPercentage">The progress percentage of <paramref name="backgroundWorker"/>.</param>
+            <param name="userState">An object to pass to the <see cref="E:WinCopies.Util.IBackgroundWorker.ProgressChanged"/> event handler of <paramref name="backgroundWorker"/>.</param>
+            <returns><see langword="true"/> if <see cref="P:WinCopies.Util.IBackgroundWorker.WorkerReportsProgress"/> is <see langword="true"/> for <paramref name="backgroundWorker"/>; otherwise <see langword="false"/>.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="backgroundWorker"/> is <see langword="null"/>.</exception>
+        </member>
+        <member name="M:WinCopies.Util.Extensions.TryReportProgress(WinCopies.Util.DotNetFix.IBackgroundWorker,System.Int32)">
+            <summary>
+            Tries to report progress for a given <see cref="T:WinCopies.Util.IBackgroundWorker"/>.
+            </summary>
+            <param name="backgroundWorker">The <see cref="T:WinCopies.Util.IBackgroundWorker"/> for which to report the progress.</param>
+            <param name="progressPercentage">The progress percentage of <paramref name="backgroundWorker"/>.</param>
+            <returns><see langword="true"/> if <see cref="P:WinCopies.Util.IBackgroundWorker.WorkerReportsProgress"/> is <see langword="true"/> for <paramref name="backgroundWorker"/>; otherwise <see langword="false"/>.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="backgroundWorker"/> is <see langword="null"/>.</exception>
+        </member>
+        <member name="M:WinCopies.Util.Extensions.TryReportProgress(WinCopies.Util.DotNetFix.IBackgroundWorker,System.Int32,System.Object)">
             <summary>
             Tries to report progress for a given <see cref="T:WinCopies.Util.IBackgroundWorker"/>.
             </summary>

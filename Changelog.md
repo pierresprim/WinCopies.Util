@@ -14,6 +14,12 @@ Updates
 
 - New static throwing methods.
 
+WinCopies.Util.Desktop (2.5.10)
+-------------------------------
+
+- Additions:
+	- WinCopies.Util.DotNetFix.I(Pausable)BackgroundWorker interfaces and extension methods related to these interfaces.
+
 07/17/2020 2.5.9
 ================
 
