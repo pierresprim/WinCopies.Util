@@ -58,6 +58,10 @@ namespace WinCopies.Collections.DotNetFix
 
         public bool MoveNext()
         {
+            if (IsDisposed)
+
+                throw GetExceptionForDispose(false);
+                
             if (IsCompleted)
 
                 return false;
@@ -78,6 +82,10 @@ namespace WinCopies.Collections.DotNetFix
 
         public void Reset()
         {
+            if (IsDisposed)
+
+                throw GetExceptionForDispose(false);
+                
             _currentIndex = -1;
 
             _current = default;
@@ -89,6 +97,10 @@ namespace WinCopies.Collections.DotNetFix
 
         protected virtual void Dispose(bool disposing)
         {
+            if (IsDisposed)
+            
+                return;
+                
             if (disposing)
             {
                 Reset();
