@@ -22,6 +22,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.Serialization;
+
 using WinCopies.Collections.DotNetFix;
 using WinCopies.Util.Resources;
 

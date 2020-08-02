@@ -20,10 +20,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using IDisposable = WinCopies.Util.DotNetFix.IDisposable;
-using WinCopies.Util;
-using static WinCopies.Util.Util;
 using System.Diagnostics;
+
+using WinCopies.Util;
+
+using static WinCopies.Util.Util;
+
+using IDisposable = WinCopies.Util.DotNetFix.IDisposable;
 
 namespace WinCopies.Collections
 {
