@@ -21,11 +21,30 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+
 using IDisposable = WinCopies.Util.DotNetFix.IDisposable;
-using WinCopies.Util;
 
 namespace WinCopies.Collections
 {
+    public interface ICountable
+    {
+        int Count { get; }
+    }
+
+    public interface IEnumeratorInfo : IEnumerator
+    {
+        bool? IsResetSupported { get; }
+
+        bool IsStarted { get; }
+
+        bool IsCompleted { get; }
+    }
+
+    public interface IDisposableEnumeratorInfo : IEnumeratorInfo, WinCopies.Util.DotNetFix.IDisposable
+    {
+        // Left empty.
+    }
+
     [Obsolete("This type has been replaced by the types in the WinCopies.Collections.DotNetFix namespace and will be removed in later versions.")]
     public interface IUIntIndexedCollection
     {

@@ -132,6 +132,9 @@
   <data name="DeclaringTypesNotCorrespond" xml:space="preserve">
     <value>The declaring types of '{0}' and '{1}' do not correspond. The declaring types of '{0}' and '{1}' must correspond for read-only properties when an integrity check is performed.</value>
   </data>
+  <data name="EnumeratorIsNotStartedOrDisposed" xml:space="preserve">
+    <value>The enumeration is not started or the enumerator is disposed.</value>
+  </data>
   <data name="FieldOrPropertyNotFound" xml:space="preserve">
     <value>'{0}' couldn't be found in '{1}'.</value>
   </data>

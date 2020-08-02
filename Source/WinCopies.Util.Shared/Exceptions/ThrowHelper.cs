@@ -74,5 +74,16 @@ namespace WinCopies
 
         [Obsolete("Throw the result of GetOneOrMoreKeyIsNullException instead of calling this method.")]
         public static void ThrowOneOrMoreKeyIsNull() => throw GetOneOrMoreKeyIsNullException();
+
+#if WinCopies2
+        public static InvalidOperationException GetEnumeratorNotStartedOrDisposedException() => new InvalidOperationException(EnumeratorIsNotStartedOrDisposed);
+
+        public static void ThrowIfEnumeratorNotStartedOrDisposed(in WinCopies.Collections.IDisposableEnumeratorInfo enumerator)
+        {
+            if (Extensions.IsEnumeratorNotStartedOrDisposed(enumerator))
+
+                throw GetEnumeratorNotStartedOrDisposedException();
+        }
+#endif
     }
 }

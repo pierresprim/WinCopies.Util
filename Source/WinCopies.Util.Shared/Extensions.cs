@@ -104,6 +104,7 @@ namespace WinCopies
     public static class Extensions
     {
 #if WinCopies2
+        public static bool IsEnumeratorNotStartedOrDisposed(this WinCopies.Collections.IDisposableEnumeratorInfo enumerator) => (enumerator ?? throw GetArgumentNullException(nameof(enumerator))).IsDisposed || !enumerator.IsStarted;
 
         /// <summary>
         /// Tries to add multiple values to an <see cref="System.Collections.ICollection"/> if it does not contain them already.

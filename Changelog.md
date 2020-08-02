@@ -12,13 +12,29 @@ Updates
 ??/??/???? 2.5.10
 =================
 
-- New static throwing methods.
+- New extension and static throwing methods.
+
+WinCopies.Util (2.5.10)
+-----------------------
+
+- Additions:
+	- WinCopies.Collections:
+		- ICountable
+		- I(Disposable)EnumeratorInfo
+	- WinCopies.Collections.DotNetFix.Generic:
+		- Interfaces:
+			- ICountable(Disposable)Enumerator
+		- ArrayEnumerator
+	- WinCopies.Collections.Generic:
+		- Interfaces:
+			- ITreeEnumerable(ProviderEnumerable)
+			- I(Countable)(Disposable)EnumeratorInfo
+		- TreeEnumerator
 
 WinCopies.Util.Desktop (2.5.10)
 -------------------------------
 
-- Additions:
-	- WinCopies.Util.DotNetFix.I(Pausable)BackgroundWorker interfaces and extension methods related to these interfaces.
+Add WinCopies.Util.DotNetFix.I(Pausable)BackgroundWorker interfaces and extension methods related to these interfaces.
 
 07/17/2020 2.5.9
 ================

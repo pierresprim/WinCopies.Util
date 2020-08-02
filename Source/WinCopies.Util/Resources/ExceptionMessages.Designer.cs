@@ -106,6 +106,15 @@ namespace WinCopies.Util.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The enumeration is not started or the enumerator is disposed..
+        /// </summary>
+        public static string EnumeratorIsNotStartedOrDisposed {
+            get {
+                return ResourceManager.GetString("EnumeratorIsNotStartedOrDisposed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &apos;{0}&apos; couldn&apos;t be found in &apos;{1}&apos;..
         /// </summary>
         public static string FieldOrPropertyNotFound {
