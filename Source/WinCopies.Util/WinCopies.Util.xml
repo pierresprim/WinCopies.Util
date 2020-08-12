@@ -45,6 +45,11 @@
               Looks up a localized string similar to The declaring types of &apos;{0}&apos; and &apos;{1}&apos; do not correspond. The declaring types of &apos;{0}&apos; and &apos;{1}&apos; must correspond for read-only properties when an integrity check is performed..
             </summary>
         </member>
+        <member name="P:WinCopies.Util.Resources.ExceptionMessages.EnumeratorIsNotStartedOrDisposed">
+            <summary>
+              Looks up a localized string similar to The enumeration is not started or the enumerator is disposed..
+            </summary>
+        </member>
         <member name="P:WinCopies.Util.Resources.ExceptionMessages.FieldOrPropertyNotFound">
             <summary>
               Looks up a localized string similar to &apos;{0}&apos; couldn&apos;t be found in &apos;{1}&apos;..
@@ -1576,6 +1581,36 @@
             <param name="info">The System.Runtime.Serialization.SerializationInfo that holds the serialized object data about the exception being thrown.</param>
             <param name="context">The System.Runtime.Serialization.StreamingContext that contains contextual information about the source or destination.</param>
         </member>
+        <member name="T:WinCopies.Util.Result">
+            <summary>
+            This enum is designed as an extension of the <see cref="T:System.Boolean"/> type.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Util.Result.Error">
+            <summary>
+            An error as occurred.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Util.Result.Canceled">
+            <summary>
+            The operation has been canceled.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Util.Result.None">
+            <summary>
+            The operation did not return any particular value. This value is the same as returning a <see langword="null"/> <see cref="T:System.Nullable`1"/>.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Util.Result.False">
+            <summary>
+            The operation returned False. This value is the same number as <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Util.Result.True">
+            <summary>
+            The operation returned True. This value is the same number as <see langword="true"/>.
+            </summary>
+        </member>
         <member name="T:WinCopies.Util.Predicate">
             <summary>
             Delegate for a non-generic predicate.
@@ -1879,7 +1914,7 @@
             <summary>
             Checks if a object is numeric.
             </summary>
-            <remarks>This function makes a check at the object type. For a string-parsing-checking for numerical value, look at the <see cref="!:IsNumeric(string, out decimal)"/> function.</remarks>
+            <remarks>This function makes a check at the object type. For a string-parsing-checking for numerical value, look at the <see cref="M:WinCopies.Util.Util.IsNumeric(System.String@,System.Decimal@)"/> function.</remarks>
             <param name="value">The object to check</param>
             <returns>A <see cref="T:System.Boolean"/> value that indicates whether the object given is a numerical type.</returns>
         </member>
@@ -2633,7 +2668,7 @@
             <summary>
             Initializes a new instance of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection"/> class with a custom <see cref="T:System.Collections.Queue"/>.
             </summary>
-            <param name="queue">The inner <see cref="T:System.Collections.Queue"/> for this <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection"/>.</param>
+            <param name="System.Collections.Queue.Collections.Queue">The inner <see cref="T:System.Collections.Queue"/> for this <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection"/>.</param>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.QueueCollection.Clone">
             <summary>
@@ -2656,7 +2691,7 @@
             Determines whether an element is in the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection"/>.
             </summary>
             <param name="item">The object to locate in the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection"/>. The value can be <see langword="null"/> for reference types.</param>
-            <returns><see langword="true"/> if <paramref name="item"/> is found in the <see cref="T:System.Collections.Queue"/>; otherwise, <see langword="false"/>.</returns>
+            <returns><see langword="true"/> if <paramref name="item"/> is found in the <see cref="!:System.Collections.System.Collections.Queue"/>; otherwise, <see langword="false"/>.</returns>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.QueueCollection.CopyTo(System.Array,System.Int32)">
             <summary>
@@ -2771,7 +2806,7 @@
             </summary>
             <returns>The object that is removed from the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="!:TryDequeue(out T)"/>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryDequeue(`0@)"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.EnqueueItem(`0)">
             <summary>
@@ -2791,7 +2826,7 @@
             </summary>
             <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="!:TryPeek(out T)"/>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryPeek(`0@)"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.ToArray">
             <summary>
@@ -2803,6 +2838,29 @@
             <summary>
             Sets the capacity to the actual number of elements in the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>, if that number is less than 90 percent of current capacity.
             </summary>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryDequeueItem(`0@)">
+            <summary>
+            Tries to remove and return the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. Override this method to provide a custom implementation.
+            </summary>
+            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been removed and retrieved.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryDequeue(`0@)">
+            <summary>
+            Tries to remove and return the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryDequeueItem(`0@)"/> method to provide a custom implementation.
+            </summary>
+            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been removed and retrieved.</returns>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.QueueCollection`1.Dequeue"/>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryPeek(`0@)">
+            <summary>
+            Tries to peek the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> without removing it.
+            </summary>
+            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been retrieved.</returns>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.QueueCollection`1.Peek"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.GetEnumerator">
             <summary>
@@ -2909,7 +2967,7 @@
             Determines whether an element is in the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection"/>.
             </summary>
             <param name="item">The object to locate in the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection"/>. The value can be <see langword="null"/> for reference types.</param>
-            <returns><see langword="true"/> if <paramref name="item"/> is found in the <see cref="T:System.Collections.Queue"/>; otherwise, <see langword="false"/>.</returns>
+            <returns><see langword="true"/> if <paramref name="item"/> is found in the <see cref="!:System.Collections.System.Collections.Queue"/>; otherwise, <see langword="false"/>.</returns>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection.CopyTo(System.Array,System.Int32)">
             <summary>
@@ -2976,7 +3034,15 @@
             </summary>
             <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="!:TryPeek(out T)"/>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.TryPeek(`0@)"/>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.TryPeek(`0@)">
+            <summary>
+            Tries to peek the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> without removing it.
+            </summary>
+            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been retrieved.</returns>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.Peek"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.GetEnumerator">
             <summary>

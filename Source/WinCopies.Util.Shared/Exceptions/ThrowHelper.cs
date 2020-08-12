@@ -76,9 +76,9 @@ namespace WinCopies
         public static void ThrowOneOrMoreKeyIsNull() => throw GetOneOrMoreKeyIsNullException();
 
 #if WinCopies2
-        public static InvalidOperationException GetEnumeratorNotStartedOrDisposedException() => new InvalidOperationException(EnumeratorIsNotStartedOrDisposed);
+        public static InvalidOperationException GetEnumeratorNotStartedOrDisposedException() => new InvalidOperationException("The enumeration is not started or the enumerator is disposed.");
 
-        public static void ThrowIfEnumeratorNotStartedOrDisposed(in WinCopies.Collections.IDisposableEnumeratorInfo enumerator)
+        public static void ThrowIfEnumeratorNotStartedOrDisposedException(in WinCopies.Collections.IDisposableEnumeratorInfo enumerator)
         {
             if (Extensions.IsEnumeratorNotStartedOrDisposed(enumerator))
 

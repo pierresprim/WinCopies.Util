@@ -24,8 +24,814 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
-using static WinCopies.Util.Util;
+
+using WinCopies.Collections.DotNetFix;
+using WinCopies.Collections.DotNetFix.Generic;
 using WinCopies.Util;
+
+using static WinCopies.Util.Util;
+
+namespace WinCopies.Collections
+{
+    namespace DotNetFix
+    {
+        public interface ISimpleLinkedListNode
+        {
+            object Value { get; }
+
+            ISimpleLinkedListNode NextNode { get; }
+        }
+
+        public interface ISimpleLinkedList : IUIntCountable
+        {
+            object Peek();
+        }
+
+        public interface IStack : ISimpleLinkedList
+        {
+            void Push(object item);
+
+            object Pop();
+        }
+
+        public interface IQueue : ISimpleLinkedList
+        {
+            void Enqueue(object item);
+
+            object Dequeue();
+        }
+
+        public sealed class SimpleLinkedListNode : ISimpleLinkedListNode
+        {
+            public object Value { get; }
+
+            public SimpleLinkedListNode NextNode { get; internal set; }
+
+            ISimpleLinkedListNode ISimpleLinkedListNode.NextNode => NextNode;
+
+            internal SimpleLinkedListNode(object value) => Value = value;
+        }
+
+        public class Stack : IStack
+        {
+            internal SimpleLinkedListNode _firstItem;
+
+            public uint Count { get; private set; }
+
+            public void Push(object item)
+            {
+                _firstItem = new SimpleLinkedListNode(item) { NextNode = _firstItem };
+
+                Count++;
+            }
+
+            public object Peek() => _firstItem.Value;
+
+            public object Pop()
+            {
+                object result = _firstItem.Value;
+
+                _firstItem = _firstItem.NextNode;
+
+                Count--;
+
+                return result;
+            }
+        }
+
+        public class Queue : IQueue
+        {
+            internal SimpleLinkedListNode _firstItem;
+            private SimpleLinkedListNode _lastItem;
+
+            public uint Count { get; private set; }
+
+            public void Enqueue(object item)
+            {
+                if (_firstItem == null)
+                {
+                    _firstItem = new SimpleLinkedListNode(item);
+
+                    _lastItem = _firstItem;
+                }
+
+                else
+                {
+                    var newNode = new SimpleLinkedListNode(item);
+
+                    _lastItem.NextNode = newNode;
+
+                    _lastItem = newNode;
+                }
+
+                Count++;
+            }
+
+            public object Peek() => _firstItem.Value;
+
+            public object Dequeue()
+            {
+                object result = _firstItem.Value;
+
+                _firstItem = _firstItem.NextNode;
+
+                Count--;
+
+                return result;
+            }
+        }
+
+        public interface IEnumerableSimpleLinkedList : ISimpleLinkedList, IUIntCountableEnumerable
+        {
+            // Left empty.
+        }
+
+        public interface IEnumerableStack : IStack, IEnumerableSimpleLinkedList
+        {
+            // Left empty.
+        }
+
+        [Serializable]
+        public class EnumerableStack : IEnumerableStack
+        {
+            private readonly Stack _stack;
+            private uint _enumeratorsCount = 0;
+            private uint _enumerableVersion = 0;
+
+            private void UpdateEnumerableVersion()
+            {
+                if (_enumeratorsCount != 0)
+
+                    _enumerableVersion++;
+            }
+
+            private void DecrementEnumeratorCount()
+            {
+                if (--_enumeratorsCount == 0)
+
+                    _enumerableVersion = 0;
+            }
+
+            public uint Count => _stack.Count;
+
+            public void Push(object item)
+            {
+                _stack.Push(item);
+
+                UpdateEnumerableVersion();
+            }
+
+            public object Peek() => _stack.Peek();
+
+            public object Pop()
+            {
+                object result = _stack.Pop();
+
+                UpdateEnumerableVersion();
+
+                return result;
+            }
+
+            public IEnumerator GetEnumerator()
+            {
+                var enumerator = new Enumerator(this);
+
+                _enumeratorsCount++;
+
+                return enumerator;
+            }
+
+            public sealed class Enumerator : IEnumerator, Util.DotNetFix.IDisposable
+            {
+                private EnumerableStack _stack;
+                private ISimpleLinkedListNode _currentNode;
+                private readonly uint _version;
+                private object _current;
+
+                public object Current => IsDisposed ? throw GetExceptionForDispose(false) : _current;
+
+                public bool IsDisposed { get; private set; }
+
+                public Enumerator(in EnumerableStack stack)
+                {
+                    _stack = stack;
+
+                    _version = stack._enumerableVersion;
+
+                    Reset();
+                }
+
+                public void Reset()
+                {
+                    if (IsDisposed)
+
+                        throw GetExceptionForDispose(false);
+
+                    _currentNode = _stack._stack._firstItem;
+                }
+
+                public bool MoveNext()
+                {
+                    if (IsDisposed)
+
+                        throw GetExceptionForDispose(false);
+
+                    if (_stack._enumerableVersion != _version)
+
+                        throw new InvalidOperationException("The collection has changed during enumeration.");
+
+                    if (_currentNode == null)
+
+                        return false;
+
+                    _current = _currentNode.Value;
+
+                    _currentNode = _currentNode.NextNode;
+
+                    return true;
+                }
+
+                private void Dispose(bool disposing)
+                {
+                    if (IsDisposed)
+
+                        return;
+
+                    _stack.DecrementEnumeratorCount();
+
+                    if (disposing)
+                    {
+                        _current = null;
+
+                        _stack = null;
+
+                        _currentNode = null;
+                    }
+
+                    IsDisposed = true;
+                }
+
+                public void Dispose() => Dispose(true);
+
+                ~Enumerator() => Dispose(false);
+            }
+        }
+
+        public interface IEnumerableQueue : IQueue, IEnumerableSimpleLinkedList
+        {
+            // Left empty.
+        }
+
+        [Serializable]
+        public class EnumerableQueue : IEnumerableQueue
+        {
+            private readonly Queue _queue;
+            private uint _enumeratorsCount = 0;
+            private uint _enumerableVersion = 0;
+
+            private void UpdateEnumerableVersion()
+            {
+                if (_enumeratorsCount != 0)
+
+                    _enumerableVersion++;
+            }
+
+            private void DecrementEnumeratorCount()
+            {
+                if (--_enumeratorsCount == 0)
+
+                    _enumerableVersion = 0;
+            }
+
+            public uint Count => _queue.Count;
+
+            public void Enqueue(object item)
+            {
+                _queue.Enqueue(item);
+
+                UpdateEnumerableVersion();
+            }
+
+            public object Peek() => _queue.Peek();
+
+            public object Dequeue()
+            {
+                object result = _queue.Dequeue();
+
+                UpdateEnumerableVersion();
+
+                return result;
+            }
+
+            public IEnumerator GetEnumerator()
+            {
+                var enumerator = new Enumerator(this);
+
+                _enumeratorsCount++;
+
+                return enumerator;
+            }
+
+            public sealed class Enumerator : IEnumerator, Util.DotNetFix.IDisposable
+            {
+                private EnumerableQueue _queue;
+                private ISimpleLinkedListNode _currentNode;
+                private readonly uint _version;
+                private object _current;
+
+                public object Current => IsDisposed ? throw GetExceptionForDispose(false) : _current;
+
+                public bool IsDisposed { get; private set; }
+
+                public Enumerator(in EnumerableQueue queue)
+                {
+                    _queue = queue;
+
+                    _version = queue._enumerableVersion;
+
+                    Reset();
+                }
+
+                public void Reset()
+                {
+                    if (IsDisposed)
+
+                        throw GetExceptionForDispose(false);
+
+                    _currentNode = _queue._queue._firstItem;
+                }
+
+                public bool MoveNext()
+                {
+                    if (IsDisposed)
+
+                        throw GetExceptionForDispose(false);
+
+                    if (_queue._enumerableVersion != _version)
+
+                        throw new InvalidOperationException("The collection has changed during enumeration.");
+
+                    if (_currentNode == null)
+
+                        return false;
+
+                    _current = _currentNode.Value;
+
+                    _currentNode = _currentNode.NextNode;
+
+                    return true;
+                }
+
+                private void Dispose(bool disposing)
+                {
+                    if (IsDisposed)
+
+                        return;
+
+                    _queue.DecrementEnumeratorCount();
+
+                    if (disposing)
+                    {
+                        _current = null;
+
+                        _queue = null;
+
+                        _currentNode = null;
+                    }
+
+                    IsDisposed = true;
+                }
+
+                public void Dispose() => Dispose(true);
+
+                ~Enumerator() => Dispose(false);
+            }
+        }
+
+        namespace Generic
+        {
+            public interface ISimpleLinkedListNode<T>
+            {
+                T Value { get; }
+
+                ISimpleLinkedListNode<T> NextNode { get; }
+            }
+
+            public interface ISimpleLinkedList<T> : IUIntCountable
+            {
+                T Peek();
+            }
+
+            public interface IStack<T> : ISimpleLinkedList<T>
+            {
+                void Push(T item);
+
+                T Pop();
+            }
+
+            public interface IQueue<T> : ISimpleLinkedList<T>
+            {
+                void Enqueue(T item);
+
+                T Dequeue();
+            }
+
+            public sealed class SimpleLinkedListNode<T> : ISimpleLinkedListNode<T>
+            {
+                public T Value { get; }
+
+                public SimpleLinkedListNode<T> NextNode { get; internal set; }
+
+                ISimpleLinkedListNode<T> ISimpleLinkedListNode<T>.NextNode => NextNode;
+
+                internal SimpleLinkedListNode(T value) => Value = value;
+            }
+
+            public class Stack<T> : IStack<T>
+            {
+                internal SimpleLinkedListNode<T> _firstItem;
+
+                public uint Count { get; private set; }
+
+                public void Push(T item)
+                {
+                    _firstItem = new SimpleLinkedListNode<T>(item) { NextNode = _firstItem };
+
+                    Count++;
+                }
+
+                public T Peek() => _firstItem.Value;
+
+                public T Pop()
+                {
+                    T result = _firstItem.Value;
+
+                    _firstItem = _firstItem.NextNode;
+
+                    Count--;
+
+                    return result;
+                }
+            }
+
+            public class Queue<T> : IQueue<T>
+            {
+                internal SimpleLinkedListNode<T> _firstItem;
+                private SimpleLinkedListNode<T> _lastItem;
+
+                public uint Count { get; private set; }
+
+                public void Enqueue(T item)
+                {
+                    if (_firstItem == null)
+                    {
+                        _firstItem = new SimpleLinkedListNode<T>(item);
+
+                        _lastItem = _firstItem;
+                    }
+
+                    else
+                    {
+                        var newNode = new SimpleLinkedListNode<T>(item);
+
+                        _lastItem.NextNode = newNode;
+
+                        _lastItem = newNode;
+                    }
+
+                    Count++;
+                }
+
+                public T Peek() => _firstItem.Value;
+
+                public T Dequeue()
+                {
+                    T result = _firstItem.Value;
+
+                    _firstItem = _firstItem.NextNode;
+
+                    Count--;
+
+                    return result;
+                }
+            }
+
+            public interface IEnumerableSimpleLinkedList<T> : ISimpleLinkedList<T>, IUIntCountableEnumerable<T>
+            {
+                // Left empty.
+            }
+
+            public interface IEnumerableStack<T> : IStack<T>, IEnumerableSimpleLinkedList<T>
+            {
+                // Left empty.
+            }
+
+            [Serializable]
+            public class EnumerableStack<T> : IEnumerableStack<T>
+            {
+                private readonly Stack<T> _stack;
+                private uint _enumeratorsCount = 0;
+                private uint _enumerableVersion = 0;
+
+                private void UpdateEnumerableVersion()
+                {
+                    if (_enumeratorsCount != 0)
+
+                        _enumerableVersion++;
+                }
+
+                private void DecrementEnumeratorCount()
+                {
+                    if (--_enumeratorsCount == 0)
+
+                        _enumerableVersion = 0;
+                }
+
+                public uint Count => _stack.Count;
+
+                public void Push(T item)
+                {
+                    _stack.Push(item);
+
+                    UpdateEnumerableVersion();
+                }
+
+                public T Peek() => _stack.Peek();
+
+                public T Pop()
+                {
+                    T result = _stack.Pop();
+
+                    UpdateEnumerableVersion();
+
+                    return result;
+                }
+
+                public IEnumerator<T> GetEnumerator()
+                {
+                    var enumerator = new Enumerator(this);
+
+                    _enumeratorsCount++;
+
+                    return enumerator;
+                }
+
+                IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+                public sealed class Enumerator : IEnumerator<T>, Util.DotNetFix.IDisposable
+                {
+                    private EnumerableStack<T> _stack;
+                    private ISimpleLinkedListNode<T> _currentNode;
+                    private readonly uint _version;
+                    private T _current;
+
+                    public T Current => IsDisposed ? throw GetExceptionForDispose(false) : _current;
+
+                    object IEnumerator.Current => Current;
+
+                    public bool IsDisposed { get; private set; }
+
+                    public Enumerator(in EnumerableStack<T> stack)
+                    {
+                        _stack = stack;
+
+                        _version = stack._enumerableVersion;
+
+                        Reset();
+                    }
+
+                    public void Reset()
+                    {
+                        if (IsDisposed)
+
+                            throw GetExceptionForDispose(false);
+
+                        _currentNode = _stack._stack._firstItem;
+                    }
+
+                    public bool MoveNext()
+                    {
+                        if (IsDisposed)
+
+                            throw GetExceptionForDispose(false);
+
+                        if (_stack._enumerableVersion != _version)
+
+                            throw new InvalidOperationException("The collection has changed during enumeration.");
+
+                        if (_currentNode == null)
+
+                            return false;
+
+                        _current = _currentNode.Value;
+
+                        _currentNode = _currentNode.NextNode;
+
+                        return true;
+                    }
+
+                    private void Dispose(bool disposing)
+                    {
+                        if (IsDisposed)
+
+                            return;
+
+                        _stack.DecrementEnumeratorCount();
+
+                        if (disposing)
+                        {
+                            _current = default;
+
+                            _stack = null;
+
+                            _currentNode = null;
+                        }
+
+                        IsDisposed = true;
+                    }
+
+                    public void Dispose() => Dispose(true);
+
+                    ~Enumerator() => Dispose(false);
+                }
+            }
+
+            public interface IEnumerableQueue<T> : IQueue<T>, IEnumerableSimpleLinkedList<T>
+            {
+                // Left empty.
+            }
+
+            [Serializable]
+            public class EnumerableQueue<T> : IEnumerableQueue<T>
+            {
+                private readonly Queue<T> _queue;
+                private uint _enumeratorsCount = 0;
+                private uint _enumerableVersion = 0;
+
+                private void UpdateEnumerableVersion()
+                {
+                    if (_enumeratorsCount != 0)
+
+                        _enumerableVersion++;
+                }
+
+                private void DecrementEnumeratorCount()
+                {
+                    if (--_enumeratorsCount == 0)
+
+                        _enumerableVersion = 0;
+                }
+
+                public uint Count => _queue.Count;
+
+                public void Enqueue(T item)
+                {
+                    _queue.Enqueue(item);
+
+                    UpdateEnumerableVersion();
+                }
+
+                public T Peek() => _queue.Peek();
+
+                public T Dequeue()
+                {
+                    T result = _queue.Dequeue();
+
+                    UpdateEnumerableVersion();
+
+                    return result;
+                }
+
+                public IEnumerator<T> GetEnumerator()
+                {
+                    var enumerator = new Enumerator(this);
+
+                    _enumeratorsCount++;
+
+                    return enumerator;
+                }
+
+                IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+                public sealed class Enumerator : IEnumerator<T>, Util.DotNetFix.IDisposable
+                {
+                    private EnumerableQueue<T> _queue;
+                    private ISimpleLinkedListNode<T> _currentNode;
+                    private readonly uint _version;
+                    private T _current;
+
+                    public T Current => IsDisposed ? throw GetExceptionForDispose(false) : _current;
+
+                    object IEnumerator.Current => Current;
+
+                    public bool IsDisposed { get; private set; }
+
+                    public Enumerator(in EnumerableQueue<T> queue)
+                    {
+                        _queue = queue;
+
+                        _version = queue._enumerableVersion;
+
+                        Reset();
+                    }
+
+                    public void Reset()
+                    {
+                        if (IsDisposed)
+
+                            throw GetExceptionForDispose(false);
+
+                        _currentNode = _queue._queue._firstItem;
+                    }
+
+                    public bool MoveNext()
+                    {
+                        if (IsDisposed)
+
+                            throw GetExceptionForDispose(false);
+
+                        if (_queue._enumerableVersion != _version)
+
+                            throw new InvalidOperationException("The collection has changed during enumeration.");
+
+                        if (_currentNode == null)
+
+                            return false;
+
+                        _current = _currentNode.Value;
+
+                        _currentNode = _currentNode.NextNode;
+
+                        return true;
+                    }
+
+                    private void Dispose(bool disposing)
+                    {
+                        if (IsDisposed)
+
+                            return;
+
+                        _queue.DecrementEnumeratorCount();
+
+                        if (disposing)
+                        {
+                            _current = default;
+
+                            _queue = null;
+
+                            _currentNode = null;
+                        }
+
+                        IsDisposed = true;
+                    }
+
+                    public void Dispose() => Dispose(true);
+
+                    ~Enumerator() => Dispose(false);
+                }
+            }
+        }
+    }
+
+    public class Stack : System.Collections.Stack, IEnumerableStack
+    {
+#if WinCopies2
+        uint IUIntCountableEnumerable.Count => (uint)Count;
+#endif
+
+        uint IUIntCountable.Count => (uint)Count;
+    }
+
+    public class Queue : System.Collections.Queue, IEnumerableQueue
+    {
+#if WinCopies2
+        uint IUIntCountableEnumerable.Count => (uint)Count;
+#endif
+
+        uint IUIntCountable.Count => (uint)Count;
+    }
+
+    namespace Generic
+    {
+        public class Stack<T> : System.Collections.Generic.Stack<T>, IEnumerableStack<T>
+        {
+#if WinCopies2
+            uint IUIntCountableEnumerable.Count => (uint)Count;
+#endif
+
+            uint IUIntCountable.Count => (uint)Count;
+        }
+
+        public class Queue<T> : System.Collections.Generic.Queue<T>, IEnumerableQueue<T>
+        {
+#if WinCopies2
+            uint IUIntCountableEnumerable.Count => (uint)Count;
+#endif
+
+            uint IUIntCountable.Count => (uint)Count;
+        }
+    }
+}
 
 namespace WinCopies.Collections.DotNetFix
 {
@@ -519,7 +1325,7 @@ namespace WinCopies.Collections.DotNetFix
     [Serializable]
     public class QueueCollection : IEnumerable, ICollection, ICloneable
     {
-        protected internal Queue InnerQueue { get; }
+        protected internal System.Collections.Queue InnerQueue { get; }
 
         /// <summary>
         /// Gets the number of elements contained in the <see cref="QueueCollection"/>.
@@ -536,13 +1342,13 @@ namespace WinCopies.Collections.DotNetFix
         /// <summary>
         /// Initializes a new instance of the <see cref="QueueCollection"/> class.
         /// </summary>
-        public QueueCollection() : this(new Queue()) { }
+        public QueueCollection() : this(new System.Collections.Queue()) { }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="QueueCollection"/> class with a custom <see cref="Queue"/>.
+        /// Initializes a new instance of the <see cref="QueueCollection"/> class with a custom <see cref="System.Collections.Queue"/>.
         /// </summary>
-        /// <param name="queue">The inner <see cref="Queue"/> for this <see cref="QueueCollection"/>.</param>
-        public QueueCollection(in Queue queue) => InnerQueue = queue;
+        /// <param name="System.Collections.Queue">The inner <see cref="System.Collections.Queue"/> for this <see cref="QueueCollection"/>.</param>
+        public QueueCollection(in System.Collections.Queue queue) => InnerQueue = queue;
 
         /// <summary>
         /// Creates a shallow copy of the <see cref="QueueCollection"/>.
@@ -564,7 +1370,7 @@ namespace WinCopies.Collections.DotNetFix
         /// Determines whether an element is in the <see cref="QueueCollection"/>.
         /// </summary>
         /// <param name="item">The object to locate in the <see cref="QueueCollection"/>. The value can be <see langword="null"/> for reference types.</param>
-        /// <returns><see langword="true"/> if <paramref name="item"/> is found in the <see cref="System.Collections.Queue"/>; otherwise, <see langword="false"/>.</returns>
+        /// <returns><see langword="true"/> if <paramref name="item"/> is found in the <see cref="System.Collections.System.Collections.Queue"/>; otherwise, <see langword="false"/>.</returns>
         public bool Contains(object item) => InnerQueue.Contains(item);
 
         /// <summary>
@@ -627,7 +1433,7 @@ namespace WinCopies.Collections.DotNetFix
     [Serializable]
     public class QueueCollection<T> : IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection
     {
-        protected internal Queue<T> InnerQueue { get; }
+        protected internal System.Collections.Generic.Queue<T> InnerQueue { get; }
 
         /// <summary>
         /// Gets the number of elements contained in the <see cref="QueueCollection{T}"/>.
@@ -644,13 +1450,13 @@ namespace WinCopies.Collections.DotNetFix
         /// <summary>
         /// Initializes a new instance of the <see cref="QueueCollection{T}"/> class.
         /// </summary>
-        public QueueCollection() : this(new Queue<T>()) { }
+        public QueueCollection() : this(new System.Collections.Generic.Queue<T>()) { }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="QueueCollection{T}"/> class with a custom <see cref="Queue{T}"/>.
+        /// Initializes a new instance of the <see cref="QueueCollection{T}"/> class with a custom <see cref="System.Collections.Generic.Queue{T}"/>.
         /// </summary>
-        /// <param name="queue">The inner <see cref="Queue{T}"/> for this <see cref="QueueCollection{T}"/>.</param>
-        public QueueCollection(in Queue<T> queue) => InnerQueue = queue;
+        /// <param name="queue">The inner <see cref="System.Collections.Generic.Queue{T}"/> for this <see cref="QueueCollection{T}"/>.</param>
+        public QueueCollection(in System.Collections.Generic.Queue<T> queue) => InnerQueue = queue;
 
         /// <summary>
         /// Removes all objects from the <see cref="QueueCollection{T}"/>. Override this method to provide a custom implementation.
@@ -766,7 +1572,7 @@ namespace WinCopies.Collections.DotNetFix
     [Serializable]
     public class StackCollection : IEnumerable, ICollection, ICloneable
     {
-        protected internal Stack InnerStack { get; }
+        protected internal System.Collections.Stack InnerStack { get; }
 
         public int Count => InnerStack.Count;
 
@@ -776,9 +1582,9 @@ namespace WinCopies.Collections.DotNetFix
 
         public object SyncRoot => InnerStack.SyncRoot;
 
-        public StackCollection() : this(new Stack()) { }
+        public StackCollection() : this(new System.Collections.Stack()) { }
 
-        public StackCollection(in Stack stack) => InnerStack = stack;
+        public StackCollection(in System.Collections.Stack stack) => InnerStack = stack;
 
         public object Clone() => InnerStack.Clone();
 
@@ -808,7 +1614,7 @@ namespace WinCopies.Collections.DotNetFix
     [Serializable]
     public class StackCollection<T> : IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection
     {
-        protected internal Stack<T> InnerStack { get; }
+        protected internal System.Collections.Generic.Stack<T> InnerStack { get; }
 
         public int Count => InnerStack.Count;
 
@@ -818,9 +1624,9 @@ namespace WinCopies.Collections.DotNetFix
 
         object ICollection.SyncRoot => ((ICollection)InnerStack).SyncRoot;
 
-        public StackCollection() : this(new Stack<T>()) { }
+        public StackCollection() : this(new System.Collections.Generic.Stack<T>()) { }
 
-        public StackCollection(in Stack<T> stack) => InnerStack = stack;
+        public StackCollection(in System.Collections.Generic.Stack<T> stack) => InnerStack = stack;
 
         protected virtual void ClearItems() => InnerStack.Clear();
 
@@ -1107,7 +1913,7 @@ namespace WinCopies.Collections.DotNetFix
 
         public ObservableQueueCollection() : base() { }
 
-        public ObservableQueueCollection(in Queue<T> queue) : base(queue) { }
+        public ObservableQueueCollection(in System.Collections.Generic.Queue<T> queue) : base(queue) { }
 
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
 
@@ -1177,7 +1983,7 @@ namespace WinCopies.Collections.DotNetFix
 
         public ObservableStackCollection() : base() { }
 
-        public ObservableStackCollection(in Stack<T> stack) : base(stack) { }
+        public ObservableStackCollection(in System.Collections.Generic.Stack<T> stack) : base(stack) { }
 
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
 
@@ -1413,7 +2219,7 @@ namespace WinCopies.Collections.DotNetFix
     [Serializable]
     public class ReadOnlyQueueCollection : IEnumerable, ICollection, ICloneable
     {
-        protected Queue InnerQueue { get; }
+        protected System.Collections.Queue InnerQueue { get; }
 
         /// <summary>
         /// Gets the number of elements contained in the <see cref="QueueCollection"/>.
@@ -1428,10 +2234,10 @@ namespace WinCopies.Collections.DotNetFix
         object ICollection.SyncRoot => ((ICollection)InnerQueue).SyncRoot;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="QueueCollection"/> class with a custom <see cref="Queue"/>.
+        /// Initializes a new instance of the <see cref="QueueCollection"/> class with a custom <see cref="System.Collections.Queue"/>.
         /// </summary>
-        /// <param name="queue">The inner <see cref="Queue"/> for this <see cref="QueueCollection"/>.</param>
-        public ReadOnlyQueueCollection(in Queue queue) => InnerQueue = queue;
+        /// <param name="queue">The inner <see cref="System.Collections.Queue"/> for this <see cref="QueueCollection"/>.</param>
+        public ReadOnlyQueueCollection(in System.Collections.Queue queue) => InnerQueue = queue;
 
         public ReadOnlyQueueCollection(in QueueCollection queueCollection) : this(queueCollection.InnerQueue) { }
 
@@ -1445,7 +2251,7 @@ namespace WinCopies.Collections.DotNetFix
         /// Determines whether an element is in the <see cref="QueueCollection"/>.
         /// </summary>
         /// <param name="item">The object to locate in the <see cref="QueueCollection"/>. The value can be <see langword="null"/> for reference types.</param>
-        /// <returns><see langword="true"/> if <paramref name="item"/> is found in the <see cref="System.Collections.Queue"/>; otherwise, <see langword="false"/>.</returns>
+        /// <returns><see langword="true"/> if <paramref name="item"/> is found in the <see cref="System.Collections.System.Collections.Queue"/>; otherwise, <see langword="false"/>.</returns>
         public bool Contains(object item) => InnerQueue.Contains(item);
 
         /// <summary>
@@ -1482,7 +2288,7 @@ namespace WinCopies.Collections.DotNetFix
     [Serializable]
     public class ReadOnlyQueueCollection<T> : IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection
     {
-        protected Queue<T> InnerQueue { get; }
+        protected System.Collections.Generic.Queue<T> InnerQueue { get; }
 
         /// <summary>
         /// Gets the number of elements contained in the <see cref="QueueCollection{T}"/>.
@@ -1497,10 +2303,10 @@ namespace WinCopies.Collections.DotNetFix
         object ICollection.SyncRoot => ((ICollection)InnerQueue).SyncRoot;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="QueueCollection{T}"/> class with a custom <see cref="Queue{T}"/>.
+        /// Initializes a new instance of the <see cref="QueueCollection{T}"/> class with a custom <see cref="System.Collections.Generic.Queue{T}"/>.
         /// </summary>
-        /// <param name="queue">The inner <see cref="Queue{T}"/> for this <see cref="QueueCollection{T}"/>.</param>
-        public ReadOnlyQueueCollection(in Queue<T> queue) => InnerQueue = queue;
+        /// <param name="queue">The inner <see cref="System.Collections.Generic.Queue{T}"/> for this <see cref="QueueCollection{T}"/>.</param>
+        public ReadOnlyQueueCollection(in System.Collections.Generic.Queue<T> queue) => InnerQueue = queue;
 
         public ReadOnlyQueueCollection(in QueueCollection<T> queueCollection) : this(queueCollection.InnerQueue) { }
 
@@ -1555,7 +2361,7 @@ namespace WinCopies.Collections.DotNetFix
     [Serializable]
     public class ReadOnlyStackCollection : IEnumerable, ICollection, ICloneable
     {
-        protected Stack InnerStack { get; }
+        protected System.Collections.Stack InnerStack { get; }
 
         public int Count => InnerStack.Count;
 
@@ -1565,7 +2371,7 @@ namespace WinCopies.Collections.DotNetFix
 
         public object SyncRoot => InnerStack.SyncRoot;
 
-        public ReadOnlyStackCollection(in Stack stack) => InnerStack = stack;
+        public ReadOnlyStackCollection(in System.Collections.Stack stack) => InnerStack = stack;
 
         public ReadOnlyStackCollection(in StackCollection stackCollection) : this(stackCollection.InnerStack) { }
 
@@ -1585,7 +2391,7 @@ namespace WinCopies.Collections.DotNetFix
     [Serializable]
     public class ReadOnlyStackCollection<T> : IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection
     {
-        protected Stack<T> InnerStack { get; }
+        protected System.Collections.Generic.Stack<T> InnerStack { get; }
 
         public int Count => InnerStack.Count;
 
@@ -1595,7 +2401,7 @@ namespace WinCopies.Collections.DotNetFix
 
         object ICollection.SyncRoot => ((ICollection)InnerStack).SyncRoot;
 
-        public ReadOnlyStackCollection(in Stack<T> stack) => InnerStack = stack;
+        public ReadOnlyStackCollection(in System.Collections.Generic.Stack<T> stack) => InnerStack = stack;
 
         public ReadOnlyStackCollection(in StackCollection<T> stackCollection) : this(stackCollection.InnerStack) { }
 

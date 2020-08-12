@@ -104,7 +104,7 @@ namespace WinCopies
     public static class Extensions
     {
 #if WinCopies2
-        public static bool IsEnumeratorNotStartedOrDisposed(this WinCopies.Collections.IDisposableEnumeratorInfo enumerator) => (enumerator ?? throw GetArgumentNullException(nameof(enumerator))).IsDisposed || !enumerator.IsStarted;
+        public static bool IsEnumeratorNotStartedOrDisposed(this IDisposableEnumeratorInfo enumerator) => (enumerator ?? throw GetArgumentNullException(nameof(enumerator))).IsDisposed || !enumerator.IsStarted;
 
         /// <summary>
         /// Tries to add multiple values to an <see cref="System.Collections.ICollection"/> if it does not contain them already.
@@ -140,6 +140,103 @@ namespace WinCopies
             return removedValues.ToArray();
         }
 #endif
+
+        public static Result ToResultEnum(this bool? value) => value.HasValue ? value.Value.ToResultEnum() : Result.None;
+
+        public static Result ToResultEnum(this bool value) => value ? Result.True : Result.False;
+
+        public static bool ToBool(this bool? value) => value.HasValue && value.Value;
+
+        public static bool ToBoolIgnoreNull(this bool? value) => value.HasValue ? value.Value : true;
+
+
+
+        public static bool AndAlso(this bool? value, bool other) => ToBool(value) && other;
+
+        public static bool AndAlso(this bool? value, bool? other) => ToBool(value) && ToBool(other);
+
+        public static bool AndAlsoIgnoreNull(this bool? value, bool other) => value.HasValue ? value.Value && other : other;
+
+        public static bool AndAlsoIgnoreNull(this bool? value, bool? other)
+        {
+            if (value.HasValue)
+
+                return other.HasValue ? value.Value && other.Value : value.Value;
+
+            return ToBool(other);
+        }
+
+
+
+        public static bool OrElse(this bool? value, bool other) => value.HasValue && (value.Value || other);
+
+        public static bool OrElse(this bool? value, bool? other) => value.HasValue && other.HasValue && (value.Value || other.Value);
+
+        public static bool OrElseIgnoreNull(this bool? value, bool other) => value.HasValue ? value.Value || other : other;
+
+        public static bool OrElseIgnoreValue(this bool? value, bool? other)
+        {
+            if (value.HasValue)
+
+                return other.HasValue ? value.Value || other.Value : value.Value;
+
+            return ToBool(other);
+        }
+
+
+
+        public static bool XOr(this bool? value, bool other) => value.HasValue && (value.Value ^ other);
+
+        public static bool XOr(this bool? value, bool? other) => value.HasValue && other.HasValue && (value.Value ^ other.Value);
+
+        public static bool XOrIgnoreNull(this bool? value, bool other) => value.HasValue ? value.Value ^ other : other;
+
+        public static bool XOrIgnoreValue(this bool? value, bool? other)
+        {
+            if (value.HasValue)
+
+                return other.HasValue ? value.Value ^ other.Value : value.Value;
+
+            return ToBool(other);
+        }
+
+
+
+        public static XOrResult GetXOrResult(this bool? value, bool other)
+        {
+            if (ToBool(value))
+
+                return other ? XOrResult.MoreThanOneTrueResult : XOrResult.OneTrueResult;
+
+            return other ? XOrResult.OneTrueResult : XOrResult.NoTrueResult;
+        }
+
+        public static XOrResult GetXOrResult(this bool? value, bool? other)
+        {
+            if (ToBool(value))
+
+                return ToBool(other) ? XOrResult.MoreThanOneTrueResult : XOrResult.OneTrueResult;
+
+            return ToBool(other) ? XOrResult.OneTrueResult : XOrResult.NoTrueResult;
+        }
+
+        public static XOrResult GetXOrResultIgnoreNull(this bool? value, bool other)
+        {
+            if (ToBool(value))
+
+                return other ? XOrResult.MoreThanOneTrueResult : XOrResult.OneTrueResult;
+
+            return other ? XOrResult.OneTrueResult : XOrResult.NoTrueResult;
+        }
+
+        public static XOrResult GetXOrResultIgnoreValue(this bool? value, bool? other)
+        {
+            if (ToBool(value))
+
+                return ToBool(other) ? XOrResult.MoreThanOneTrueResult : XOrResult.OneTrueResult;
+
+            return ToBool(other) ? XOrResult.OneTrueResult : XOrResult.NoTrueResult;
+        }
 
         #region Enumerables extension methods
 
@@ -3941,32 +4038,32 @@ namespace WinCopies
             }
         }
 
-        public static Queue<string> SplitToQueue(this string s, in bool skipEmptyValues, params char[] separators)
+        public static System.Collections.Generic.Queue<string> SplitToQueue(this string s, in bool skipEmptyValues, params char[] separators)
         {
-            var queue = new Queue<string>();
+            var queue = new System.Collections.Generic.Queue<string>();
 
             SplitToQueue(s, skipEmptyValues, new StringBuilder(), queue, separators);
 
             return queue;
         }
 
-        public static void SplitToQueue(this string s, in bool skipEmptyValues, in StringBuilder stringBuilder, Queue<string> queue, params char[] separators)
+        public static void SplitToQueue(this string s, in bool skipEmptyValues, in StringBuilder stringBuilder, System.Collections.Generic.Queue<string> queue, params char[] separators)
         {
             ThrowIfNull(queue, nameof(queue));
 
             Split(s, skipEmptyValues, stringBuilder, _s => queue.Enqueue(_s), separators);
         }
 
-        public static Stack<string> SplitToStack(this string s, in bool splitEmptyValues, params char[] separators)
+        public static System.Collections.Generic.Stack<string> SplitToStack(this string s, in bool splitEmptyValues, params char[] separators)
         {
-            var stack = new Stack<string>();
+            var stack = new System.Collections.Generic.Stack<string>();
 
             SplitToStack(s, splitEmptyValues, new StringBuilder(), stack, separators);
 
             return stack;
         }
 
-        public static void SplitToStack(this string s, in bool splitEmptyValues, in StringBuilder stringBuilder, Stack<string> stack, params char[] separators)
+        public static void SplitToStack(this string s, in bool splitEmptyValues, in StringBuilder stringBuilder, System.Collections.Generic.Stack<string> stack, params char[] separators)
         {
             ThrowIfNull(stack, nameof(stack));
 

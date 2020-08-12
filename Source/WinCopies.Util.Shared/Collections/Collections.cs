@@ -31,6 +31,10 @@ namespace WinCopies.Collections
         int Count { get; }
     }
 
+    public interface IUIntCountable
+    {
+        uint Count { get; }
+    }
     public interface IEnumeratorInfo : IEnumerator
     {
         bool? IsResetSupported { get; }

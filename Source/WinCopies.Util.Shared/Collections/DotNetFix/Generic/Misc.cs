@@ -33,7 +33,6 @@ namespace WinCopies.Collections.DotNetFix.Generic
     {
         // Left empty.
     }
-
     public class ArrayEnumerator<T> : ICountableDisposableEnumerator<T>
     {
         private T[] _array;
@@ -48,7 +47,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
         public bool IsCompleted { get; private set; }
 
-        public T Current => IsStarted && !IsDisposed ? _current : throw GetEnumeratorNotStartedOrDisposedException()    ;
+        public T Current => IsStarted && !IsDisposed ? _current : throw GetEnumeratorNotStartedOrDisposedException();
 
         object System.Collections.IEnumerator.Current => Current;
 

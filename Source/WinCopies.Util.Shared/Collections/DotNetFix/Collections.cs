@@ -21,16 +21,36 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+
 using static WinCopies.Util.Util;
 
 namespace WinCopies.Collections.DotNetFix
 {
     public interface ICountableEnumerable : IEnumerable
+#if !WinCopies2
+, ICountable
+#endif
     {
+#if WinCopies2
         int Count { get; }
+#endif
     }
 
-    public interface ICountableEnumerable<out T> : IEnumerable<T>, ICountableEnumerable { }
+    public interface ICountableEnumerable<out T> : IEnumerable<T>, ICountableEnumerable
+    { }
+
+    public interface IUIntCountableEnumerable : IEnumerable
+#if !WinCopies2
+, IUIntCountable
+#endif
+    {
+#if WinCopies2
+        uint Count { get; }
+#endif
+    }
+
+    public interface IUIntCountableEnumerable<out T> : IEnumerable<T>, IUIntCountableEnumerable
+    { }
 
     public interface IUIntIndexedCollection : IEnumerable
     {
