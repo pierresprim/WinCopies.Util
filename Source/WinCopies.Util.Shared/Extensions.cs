@@ -104,6 +104,7 @@ namespace WinCopies
     public static class Extensions
     {
 #if WinCopies2
+        public static bool IsEnumeratorNotStartedOrDisposed(this IDisposableEnumeratorInfo enumerator) => (enumerator ?? throw GetArgumentNullException(nameof(enumerator))).IsDisposed || !enumerator.IsStarted;
 
         /// <summary>
         /// Tries to add multiple values to an <see cref="System.Collections.ICollection"/> if it does not contain them already.
@@ -139,6 +140,103 @@ namespace WinCopies
             return removedValues.ToArray();
         }
 #endif
+
+        public static Result ToResultEnum(this bool? value) => value.HasValue ? value.Value.ToResultEnum() : Result.None;
+
+        public static Result ToResultEnum(this bool value) => value ? Result.True : Result.False;
+
+        public static bool ToBool(this bool? value) => value.HasValue && value.Value;
+
+        public static bool ToBoolIgnoreNull(this bool? value) => value.HasValue ? value.Value : true;
+
+
+
+        public static bool AndAlso(this bool? value, bool other) => ToBool(value) && other;
+
+        public static bool AndAlso(this bool? value, bool? other) => ToBool(value) && ToBool(other);
+
+        public static bool AndAlsoIgnoreNull(this bool? value, bool other) => value.HasValue ? value.Value && other : other;
+
+        public static bool AndAlsoIgnoreNull(this bool? value, bool? other)
+        {
+            if (value.HasValue)
+
+                return other.HasValue ? value.Value && other.Value : value.Value;
+
+            return ToBool(other);
+        }
+
+
+
+        public static bool OrElse(this bool? value, bool other) => value.HasValue && (value.Value || other);
+
+        public static bool OrElse(this bool? value, bool? other) => value.HasValue && other.HasValue && (value.Value || other.Value);
+
+        public static bool OrElseIgnoreNull(this bool? value, bool other) => value.HasValue ? value.Value || other : other;
+
+        public static bool OrElseIgnoreValue(this bool? value, bool? other)
+        {
+            if (value.HasValue)
+
+                return other.HasValue ? value.Value || other.Value : value.Value;
+
+            return ToBool(other);
+        }
+
+
+
+        public static bool XOr(this bool? value, bool other) => value.HasValue && (value.Value ^ other);
+
+        public static bool XOr(this bool? value, bool? other) => value.HasValue && other.HasValue && (value.Value ^ other.Value);
+
+        public static bool XOrIgnoreNull(this bool? value, bool other) => value.HasValue ? value.Value ^ other : other;
+
+        public static bool XOrIgnoreValue(this bool? value, bool? other)
+        {
+            if (value.HasValue)
+
+                return other.HasValue ? value.Value ^ other.Value : value.Value;
+
+            return ToBool(other);
+        }
+
+
+
+        public static XOrResult GetXOrResult(this bool? value, bool other)
+        {
+            if (ToBool(value))
+
+                return other ? XOrResult.MoreThanOneTrueResult : XOrResult.OneTrueResult;
+
+            return other ? XOrResult.OneTrueResult : XOrResult.NoTrueResult;
+        }
+
+        public static XOrResult GetXOrResult(this bool? value, bool? other)
+        {
+            if (ToBool(value))
+
+                return ToBool(other) ? XOrResult.MoreThanOneTrueResult : XOrResult.OneTrueResult;
+
+            return ToBool(other) ? XOrResult.OneTrueResult : XOrResult.NoTrueResult;
+        }
+
+        public static XOrResult GetXOrResultIgnoreNull(this bool? value, bool other)
+        {
+            if (ToBool(value))
+
+                return other ? XOrResult.MoreThanOneTrueResult : XOrResult.OneTrueResult;
+
+            return other ? XOrResult.OneTrueResult : XOrResult.NoTrueResult;
+        }
+
+        public static XOrResult GetXOrResultIgnoreValue(this bool? value, bool? other)
+        {
+            if (ToBool(value))
+
+                return ToBool(other) ? XOrResult.MoreThanOneTrueResult : XOrResult.OneTrueResult;
+
+            return ToBool(other) ? XOrResult.OneTrueResult : XOrResult.NoTrueResult;
+        }
 
         #region Enumerables extension methods
 
@@ -609,8 +707,8 @@ namespace WinCopies
         /// </summary>
         /// <param name="collection">The <see cref="System.Collections.Generic.LinkedList{T}"/> into which add the values.</param>
         /// <param name="values">The values to add to this <see cref="System.Collections.Generic.LinkedList{T}"/></param>
-        /// <returns>The added <see cref="LinkedListNode{T}"/>'s.</returns>
-        public static LinkedListNode<T>[] AddRangeFirst<T>(this System.Collections.Generic.LinkedList<T> collection, params T[] values)
+        /// <returns>The added <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s.</returns>
+        public static System.Collections.Generic.LinkedListNode<T>[] AddRangeFirst<T>(this System.Collections.Generic.LinkedList<T> collection, params T[] values)
         {
             ThrowIfNull(collection, nameof(collection));
 
@@ -622,8 +720,8 @@ namespace WinCopies
         /// </summary>
         /// <param name="collection">The <see cref="System.Collections.Generic.LinkedList{T}"/> into which add the values.</param>
         /// <param name="array">The values to add to this <see cref="System.Collections.Generic.LinkedList{T}"/></param>
-        /// <returns>The added <see cref="LinkedListNode{T}"/>'s.</returns>
-        public static LinkedListNode<T>[] AddRangeFirst<T>(this System.Collections.Generic.LinkedList<T> collection, in IEnumerable<T> array)
+        /// <returns>The added <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s.</returns>
+        public static System.Collections.Generic.LinkedListNode<T>[] AddRangeFirst<T>(this System.Collections.Generic.LinkedList<T> collection, in IEnumerable<T> array)
         {
             ThrowIfNull(collection, nameof(collection));
 
@@ -631,11 +729,11 @@ namespace WinCopies
         }
 
         /// <summary>
-        /// Add multiple <see cref="LinkedListNode{T}"/>'s at the top of a <see cref="System.Collections.Generic.LinkedList{T}"/>.
+        /// Add multiple <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s at the top of a <see cref="System.Collections.Generic.LinkedList{T}"/>.
         /// </summary>
         /// <param name="collection">The <see cref="System.Collections.Generic.LinkedList{T}"/> into which add the values.</param>
-        /// <param name="nodes">The <see cref="LinkedListNode{T}"/>'s to add to a <see cref="System.Collections.Generic.LinkedList{T}"/></param>
-        public static void AddRangeFirst<T>(this System.Collections.Generic.LinkedList<T> collection, params LinkedListNode<T>[] nodes)
+        /// <param name="nodes">The <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s to add to a <see cref="System.Collections.Generic.LinkedList{T}"/></param>
+        public static void AddRangeFirst<T>(this System.Collections.Generic.LinkedList<T> collection, params System.Collections.Generic.LinkedListNode<T>[] nodes)
         {
             ThrowIfNull(collection, nameof(collection));
 
@@ -649,11 +747,11 @@ namespace WinCopies
         }
 
         /// <summary>
-        /// Add multiple <see cref="LinkedListNode{T}"/>'s at the top of a <see cref="System.Collections.Generic.LinkedList{T}"/>. For better performance, use the <see cref="ArrayBuilder{T}"/> class.
+        /// Add multiple <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s at the top of a <see cref="System.Collections.Generic.LinkedList{T}"/>. For better performance, use the <see cref="ArrayBuilder{T}"/> class.
         /// </summary>
         /// <param name="collection">The <see cref="System.Collections.Generic.LinkedList{T}"/> into which add the values.</param>
-        /// <param name="array">The <see cref="LinkedListNode{T}"/>'s to add to a <see cref="System.Collections.Generic.LinkedList{T}"/></param>
-        public static void AddRangeFirst<T>(this System.Collections.Generic.LinkedList<T> collection, in IEnumerable<LinkedListNode<T>> array)
+        /// <param name="array">The <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s to add to a <see cref="System.Collections.Generic.LinkedList{T}"/></param>
+        public static void AddRangeFirst<T>(this System.Collections.Generic.LinkedList<T> collection, in IEnumerable<System.Collections.Generic.LinkedListNode<T>> array)
         {
             ThrowIfNull(collection, nameof(collection));
 
@@ -671,48 +769,48 @@ namespace WinCopies
         /// </summary>
         /// <param name="collection">The <see cref="System.Collections.Generic.LinkedList{T}"/> into which add the values.</param>
         /// <param name="values">The values to add to a <see cref="System.Collections.Generic.LinkedList{T}"/></param>
-        /// <returns>The added <see cref="LinkedListNode{T}"/>'s.</returns>
-        public static LinkedListNode<T>[] AddRangeLast<T>(this System.Collections.Generic.LinkedList<T> collection, params T[] values) => collection.AddRangeLast((IEnumerable<T>)values);
+        /// <returns>The added <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s.</returns>
+        public static System.Collections.Generic.LinkedListNode<T>[] AddRangeLast<T>(this System.Collections.Generic.LinkedList<T> collection, params T[] values) => collection.AddRangeLast((IEnumerable<T>)values);
 
         /// <summary>
         /// Add multiple values at the end of a <see cref="System.Collections.Generic.LinkedList{T}"/>. For better performance, use the <see cref="ArrayBuilder{T}"/> class.
         /// </summary>
         /// <param name="collection">The <see cref="System.Collections.Generic.LinkedList{T}"/> into which add the values.</param>
         /// <param name="array">The values to add to a <see cref="System.Collections.Generic.LinkedList{T}"/></param>
-        /// <returns>The added <see cref="LinkedListNode{T}"/>'s.</returns>
-        public static LinkedListNode<T>[] AddRangeLast<T>(this System.Collections.Generic.LinkedList<T> collection, in IEnumerable<T> array)
+        /// <returns>The added <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s.</returns>
+        public static System.Collections.Generic.LinkedListNode<T>[] AddRangeLast<T>(this System.Collections.Generic.LinkedList<T> collection, in IEnumerable<T> array)
         {
             ThrowIfNull(collection, nameof(collection));
             ThrowIfNull(array, nameof(array));
 
-            var result = new System.Collections.Generic.LinkedList<LinkedListNode<T>>();
+            var result = new System.Collections.Generic.LinkedList<System.Collections.Generic.LinkedListNode<T>>();
 
             foreach (T item in array)
 
                 _ = result.AddLast(collection.AddLast(item));
 
-            return result.ToArray<LinkedListNode<T>>();
+            return result.ToArray<System.Collections.Generic.LinkedListNode<T>>();
         }
 
         /// <summary>
-        /// Add multiple <see cref="LinkedListNode{T}"/>'s at the end of a <see cref="System.Collections.Generic.LinkedList{T}"/>.
+        /// Add multiple <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s at the end of a <see cref="System.Collections.Generic.LinkedList{T}"/>.
         /// </summary>
         /// <param name="collection">The <see cref="System.Collections.Generic.LinkedList{T}"/> into which add the values.</param>
-        /// <param name="nodes">The <see cref="LinkedListNode{T}"/>'s to add to a <see cref="System.Collections.Generic.LinkedList{T}"/></param>
-        /// <returns>The added <see cref="LinkedListNode{T}"/>'s.</returns>
-        public static void AddRangeLast<T>(this System.Collections.Generic.LinkedList<T> collection, params LinkedListNode<T>[] nodes) => collection.AddRangeLast((IEnumerable<LinkedListNode<T>>)nodes);
+        /// <param name="nodes">The <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s to add to a <see cref="System.Collections.Generic.LinkedList{T}"/></param>
+        /// <returns>The added <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s.</returns>
+        public static void AddRangeLast<T>(this System.Collections.Generic.LinkedList<T> collection, params System.Collections.Generic.LinkedListNode<T>[] nodes) => collection.AddRangeLast((IEnumerable<System.Collections.Generic.LinkedListNode<T>>)nodes);
 
         /// <summary>
-        /// Add multiple <see cref="LinkedListNode{T}"/>'s at the end of a <see cref="System.Collections.Generic.LinkedList{T}"/>.
+        /// Add multiple <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s at the end of a <see cref="System.Collections.Generic.LinkedList{T}"/>.
         /// </summary>
         /// <param name="collection">The <see cref="System.Collections.Generic.LinkedList{T}"/> into which add the values.</param>
-        /// <param name="array">The <see cref="LinkedListNode{T}"/>'s to add to a <see cref="System.Collections.Generic.LinkedList{T}"/></param>
-        public static void AddRangeLast<T>(this System.Collections.Generic.LinkedList<T> collection, in IEnumerable<LinkedListNode<T>> array)
+        /// <param name="array">The <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s to add to a <see cref="System.Collections.Generic.LinkedList{T}"/></param>
+        public static void AddRangeLast<T>(this System.Collections.Generic.LinkedList<T> collection, in IEnumerable<System.Collections.Generic.LinkedListNode<T>> array)
         {
             ThrowIfNull(collection, nameof(collection));
             ThrowIfNull(array, nameof(array));
 
-            foreach (LinkedListNode<T> item in array)
+            foreach (System.Collections.Generic.LinkedListNode<T> item in array)
 
                 collection.AddLast(item);
         }
@@ -723,8 +821,8 @@ namespace WinCopies
         /// <param name="collection">The <see cref="System.Collections.Generic.LinkedList{T}"/> into which add the values.</param>
         /// <param name="node">The node before which to add the values</param>
         /// <param name="values">The values to add to a <see cref="System.Collections.Generic.LinkedList{T}"/></param>
-        /// <returns>The added <see cref="LinkedListNode{T}"/>'s.</returns>
-        public static LinkedListNode<T>[] AddRangeBefore<T>(this System.Collections.Generic.LinkedList<T> collection, in LinkedListNode<T> node, params T[] values) => collection.AddRangeBefore(node, (IEnumerable<T>)values);
+        /// <returns>The added <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s.</returns>
+        public static System.Collections.Generic.LinkedListNode<T>[] AddRangeBefore<T>(this System.Collections.Generic.LinkedList<T> collection, in System.Collections.Generic.LinkedListNode<T> node, params T[] values) => collection.AddRangeBefore(node, (IEnumerable<T>)values);
 
         /// <summary>
         /// Add multiple values before a specified node in a <see cref="System.Collections.Generic.LinkedList{T}"/>. For better performance, use the <see cref="ArrayBuilder{T}"/> class.
@@ -732,19 +830,19 @@ namespace WinCopies
         /// <param name="collection">The <see cref="System.Collections.Generic.LinkedList{T}"/> into which add the values.</param>
         /// <param name="node">The node before which to add the values</param>
         /// <param name="array">The values to add to a <see cref="System.Collections.Generic.LinkedList{T}"/></param>
-        /// <returns>The added <see cref="LinkedListNode{T}"/>'s.</returns>
-        public static LinkedListNode<T>[] AddRangeBefore<T>(this System.Collections.Generic.LinkedList<T> collection, in LinkedListNode<T> node, in IEnumerable<T> array)
+        /// <returns>The added <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s.</returns>
+        public static System.Collections.Generic.LinkedListNode<T>[] AddRangeBefore<T>(this System.Collections.Generic.LinkedList<T> collection, in System.Collections.Generic.LinkedListNode<T> node, in IEnumerable<T> array)
         {
             ThrowIfNull(collection, nameof(collection));
             ThrowIfNull(array, nameof(array));
 
-            var result = new System.Collections.Generic.LinkedList<LinkedListNode<T>>();
+            var result = new System.Collections.Generic.LinkedList<System.Collections.Generic.LinkedListNode<T>>();
 
             foreach (T item in array)
 
                 _ = result.AddLast(collection.AddBefore(node, item));
 
-            return result.ToArray<LinkedListNode<T>>();
+            return result.ToArray<System.Collections.Generic.LinkedListNode<T>>();
         }
 
         /// <summary>
@@ -752,8 +850,8 @@ namespace WinCopies
         /// </summary>
         /// <param name="collection">The <see cref="System.Collections.Generic.LinkedList{T}"/> into which add the values.</param>
         /// <param name="node">The node before which to add the values</param>
-        /// <param name="nodes">The <see cref="LinkedListNode{T}"/>'s to add to a <see cref="System.Collections.Generic.LinkedList{T}"/></param>
-        public static void AddRangeBefore<T>(this System.Collections.Generic.LinkedList<T> collection, in LinkedListNode<T> node, params LinkedListNode<T>[] nodes) => collection.AddRangeBefore(node, (IEnumerable<LinkedListNode<T>>)nodes);
+        /// <param name="nodes">The <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s to add to a <see cref="System.Collections.Generic.LinkedList{T}"/></param>
+        public static void AddRangeBefore<T>(this System.Collections.Generic.LinkedList<T> collection, in System.Collections.Generic.LinkedListNode<T> node, params System.Collections.Generic.LinkedListNode<T>[] nodes) => collection.AddRangeBefore(node, (IEnumerable<System.Collections.Generic.LinkedListNode<T>>)nodes);
 
         /// <summary>
         /// Add multiple values before a specified node in a <see cref="System.Collections.Generic.LinkedList{T}"/>.
@@ -761,12 +859,12 @@ namespace WinCopies
         /// <param name="collection">The <see cref="System.Collections.Generic.LinkedList{T}"/> into which add the values.</param>
         /// <param name="node">The node before which to add the values</param>
         /// <param name="array">The values to add to a <see cref="System.Collections.Generic.LinkedList{T}"/></param>
-        public static void AddRangeBefore<T>(this System.Collections.Generic.LinkedList<T> collection, in LinkedListNode<T> node, in IEnumerable<LinkedListNode<T>> array)
+        public static void AddRangeBefore<T>(this System.Collections.Generic.LinkedList<T> collection, in System.Collections.Generic.LinkedListNode<T> node, in IEnumerable<System.Collections.Generic.LinkedListNode<T>> array)
         {
             ThrowIfNull(collection, nameof(collection));
             ThrowIfNull(array, nameof(array));
 
-            foreach (LinkedListNode<T> item in array)
+            foreach (System.Collections.Generic.LinkedListNode<T> item in array)
 
                 collection.AddBefore(node, item);
         }
@@ -777,8 +875,8 @@ namespace WinCopies
         /// <param name="collection">The <see cref="System.Collections.Generic.LinkedList{T}"/> into which add the values.</param>
         /// <param name="node">The node after which to add the values</param>
         /// <param name="values">The values to add to a <see cref="System.Collections.Generic.LinkedList{T}"/></param>
-        /// <returns>The added <see cref="LinkedListNode{T}"/>'s.</returns>
-        public static LinkedListNode<T>[] AddRangeAfter<T>(this System.Collections.Generic.LinkedList<T> collection, in LinkedListNode<T> node, params T[] values)
+        /// <returns>The added <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s.</returns>
+        public static System.Collections.Generic.LinkedListNode<T>[] AddRangeAfter<T>(this System.Collections.Generic.LinkedList<T> collection, in System.Collections.Generic.LinkedListNode<T> node, params T[] values)
         {
             ThrowIfNull(node, nameof(node));
 
@@ -791,8 +889,8 @@ namespace WinCopies
         /// <param name="collection">The <see cref="System.Collections.Generic.LinkedList{T}"/> into which add the values.</param>
         /// <param name="node">The node after which to add the values</param>
         /// <param name="array">The values to add to a <see cref="System.Collections.Generic.LinkedList{T}"/></param>
-        /// <returns>The added <see cref="LinkedListNode{T}"/>'s.</returns>
-        public static LinkedListNode<T>[] AddRangeAfter<T>(this System.Collections.Generic.LinkedList<T> collection, in LinkedListNode<T> node, in IEnumerable<T> array)
+        /// <returns>The added <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s.</returns>
+        public static System.Collections.Generic.LinkedListNode<T>[] AddRangeAfter<T>(this System.Collections.Generic.LinkedList<T> collection, in System.Collections.Generic.LinkedListNode<T> node, in IEnumerable<T> array)
         {
             ThrowIfNull(node, nameof(node));
 
@@ -805,7 +903,7 @@ namespace WinCopies
         /// <param name="collection">The <see cref="System.Collections.Generic.LinkedList{T}"/> into which add the values.</param>
         /// <param name="node">The node after which to add the values</param>
         /// <param name="nodes">The values to add to a <see cref="System.Collections.Generic.LinkedList{T}"/></param>
-        public static void AddRangeAfter<T>(this System.Collections.Generic.LinkedList<T> collection, in LinkedListNode<T> node, params LinkedListNode<T>[] nodes)
+        public static void AddRangeAfter<T>(this System.Collections.Generic.LinkedList<T> collection, in System.Collections.Generic.LinkedListNode<T> node, params System.Collections.Generic.LinkedListNode<T>[] nodes)
         {
             ThrowIfNull(node, nameof(node));
 
@@ -824,7 +922,7 @@ namespace WinCopies
         /// <param name="collection">The <see cref="System.Collections.Generic.LinkedList{T}"/> into which add the values.</param>
         /// <param name="node">The node after which to add the values</param>
         /// <param name="array">The values to add to a <see cref="System.Collections.Generic.LinkedList{T}"/></param>
-        public static void AddRangeAfter<T>(this System.Collections.Generic.LinkedList<T> collection, in LinkedListNode<T> node, in IEnumerable<LinkedListNode<T>> array)
+        public static void AddRangeAfter<T>(this System.Collections.Generic.LinkedList<T> collection, in System.Collections.Generic.LinkedListNode<T> node, in IEnumerable<System.Collections.Generic.LinkedListNode<T>> array)
         {
             ThrowIfNull(node, nameof(node));
 
@@ -842,8 +940,8 @@ namespace WinCopies
         /// </summary>
         /// <param name="collection">The <see cref="ILinkedList{T}"/> into which add the values.</param>
         /// <param name="values">The values to add to this <see cref="ILinkedList{T}"/></param>
-        /// <returns>The added <see cref="LinkedListNode{T}"/>'s.</returns>
-        public static LinkedListNode<T>[] AddRangeFirst<T>(this ILinkedList<T> collection, params T[] values)
+        /// <returns>The added <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s.</returns>
+        public static System.Collections.Generic.LinkedListNode<T>[] AddRangeFirst<T>(this ILinkedList<T> collection, params T[] values)
         {
             ThrowIfNull(collection, nameof(collection));
 
@@ -855,8 +953,8 @@ namespace WinCopies
         /// </summary>
         /// <param name="collection">The <see cref="ILinkedList{T}"/> into which add the values.</param>
         /// <param name="array">The values to add to this <see cref="ILinkedList{T}"/></param>
-        /// <returns>The added <see cref="LinkedListNode{T}"/>'s.</returns>
-        public static LinkedListNode<T>[] AddRangeFirst<T>(this ILinkedList<T> collection, in IEnumerable<T> array)
+        /// <returns>The added <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s.</returns>
+        public static System.Collections.Generic.LinkedListNode<T>[] AddRangeFirst<T>(this ILinkedList<T> collection, in IEnumerable<T> array)
         {
             ThrowIfNull(collection, nameof(collection));
 
@@ -864,11 +962,11 @@ namespace WinCopies
         }
 
         /// <summary>
-        /// Add multiple <see cref="LinkedListNode{T}"/>'s at the top of a <see cref="ILinkedList{T}"/>.
+        /// Add multiple <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s at the top of a <see cref="ILinkedList{T}"/>.
         /// </summary>
         /// <param name="collection">The <see cref="ILinkedList{T}"/> into which add the values.</param>
-        /// <param name="nodes">The <see cref="LinkedListNode{T}"/>'s to add to a <see cref="ILinkedList{T}"/></param>
-        public static void AddRangeFirst<T>(this ILinkedList<T> collection, params LinkedListNode<T>[] nodes)
+        /// <param name="nodes">The <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s to add to a <see cref="ILinkedList{T}"/></param>
+        public static void AddRangeFirst<T>(this ILinkedList<T> collection, params System.Collections.Generic.LinkedListNode<T>[] nodes)
         {
             ThrowIfNull(collection, nameof(collection));
 
@@ -882,11 +980,11 @@ namespace WinCopies
         }
 
         /// <summary>
-        /// Add multiple <see cref="LinkedListNode{T}"/>'s at the top of a <see cref="ILinkedList{T}"/>. For better performance, use the <see cref="ArrayBuilder{T}"/> class.
+        /// Add multiple <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s at the top of a <see cref="ILinkedList{T}"/>. For better performance, use the <see cref="ArrayBuilder{T}"/> class.
         /// </summary>
         /// <param name="collection">The <see cref="ILinkedList{T}"/> into which add the values.</param>
-        /// <param name="array">The <see cref="LinkedListNode{T}"/>'s to add to a <see cref="ILinkedList{T}"/></param>
-        public static void AddRangeFirst<T>(this ILinkedList<T> collection, in IEnumerable<LinkedListNode<T>> array)
+        /// <param name="array">The <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s to add to a <see cref="ILinkedList{T}"/></param>
+        public static void AddRangeFirst<T>(this ILinkedList<T> collection, in IEnumerable<System.Collections.Generic.LinkedListNode<T>> array)
         {
             ThrowIfNull(collection, nameof(collection));
 
@@ -904,48 +1002,48 @@ namespace WinCopies
         /// </summary>
         /// <param name="collection">The <see cref="ILinkedList{T}"/> into which add the values.</param>
         /// <param name="values">The values to add to a <see cref="ILinkedList{T}"/></param>
-        /// <returns>The added <see cref="LinkedListNode{T}"/>'s.</returns>
-        public static LinkedListNode<T>[] AddRangeLast<T>(this ILinkedList<T> collection, params T[] values) => collection.AddRangeLast((IEnumerable<T>)values);
+        /// <returns>The added <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s.</returns>
+        public static System.Collections.Generic.LinkedListNode<T>[] AddRangeLast<T>(this ILinkedList<T> collection, params T[] values) => collection.AddRangeLast((IEnumerable<T>)values);
 
         /// <summary>
         /// Add multiple values at the end of a <see cref="ILinkedList{T}"/>. For better performance, use the <see cref="ArrayBuilder{T}"/> class.
         /// </summary>
         /// <param name="collection">The <see cref="ILinkedList{T}"/> into which add the values.</param>
         /// <param name="array">The values to add to a <see cref="ILinkedList{T}"/></param>
-        /// <returns>The added <see cref="LinkedListNode{T}"/>'s.</returns>
-        public static LinkedListNode<T>[] AddRangeLast<T>(this ILinkedList<T> collection, in IEnumerable<T> array)
+        /// <returns>The added <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s.</returns>
+        public static System.Collections.Generic.LinkedListNode<T>[] AddRangeLast<T>(this ILinkedList<T> collection, in IEnumerable<T> array)
         {
             ThrowIfNull(collection, nameof(collection));
             ThrowIfNull(array, nameof(array));
 
-            var result = new System.Collections.Generic.LinkedList<LinkedListNode<T>>();
+            var result = new System.Collections.Generic.LinkedList<System.Collections.Generic.LinkedListNode<T>>();
 
             foreach (T item in array)
 
                 _ = result.AddLast(collection.AddLast(item));
 
-            return result.ToArray<LinkedListNode<T>>();
+            return result.ToArray<System.Collections.Generic.LinkedListNode<T>>();
         }
 
         /// <summary>
-        /// Add multiple <see cref="LinkedListNode{T}"/>'s at the end of a <see cref="ILinkedList{T}"/>.
+        /// Add multiple <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s at the end of a <see cref="ILinkedList{T}"/>.
         /// </summary>
         /// <param name="collection">The <see cref="ILinkedList{T}"/> into which add the values.</param>
-        /// <param name="nodes">The <see cref="LinkedListNode{T}"/>'s to add to a <see cref="ILinkedList{T}"/></param>
-        /// <returns>The added <see cref="LinkedListNode{T}"/>'s.</returns>
-        public static void AddRangeLast<T>(this ILinkedList<T> collection, params LinkedListNode<T>[] nodes) => collection.AddRangeLast((IEnumerable<LinkedListNode<T>>)nodes);
+        /// <param name="nodes">The <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s to add to a <see cref="ILinkedList{T}"/></param>
+        /// <returns>The added <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s.</returns>
+        public static void AddRangeLast<T>(this ILinkedList<T> collection, params System.Collections.Generic.LinkedListNode<T>[] nodes) => collection.AddRangeLast((IEnumerable<System.Collections.Generic.LinkedListNode<T>>)nodes);
 
         /// <summary>
-        /// Add multiple <see cref="LinkedListNode{T}"/>'s at the end of a <see cref="ILinkedList{T}"/>.
+        /// Add multiple <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s at the end of a <see cref="ILinkedList{T}"/>.
         /// </summary>
         /// <param name="collection">The <see cref="ILinkedList{T}"/> into which add the values.</param>
-        /// <param name="array">The <see cref="LinkedListNode{T}"/>'s to add to a <see cref="ILinkedList{T}"/></param>
-        public static void AddRangeLast<T>(this ILinkedList<T> collection, in IEnumerable<LinkedListNode<T>> array)
+        /// <param name="array">The <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s to add to a <see cref="ILinkedList{T}"/></param>
+        public static void AddRangeLast<T>(this ILinkedList<T> collection, in IEnumerable<System.Collections.Generic.LinkedListNode<T>> array)
         {
             ThrowIfNull(collection, nameof(collection));
             ThrowIfNull(array, nameof(array));
 
-            foreach (LinkedListNode<T> item in array)
+            foreach (System.Collections.Generic.LinkedListNode<T> item in array)
 
                 collection.AddLast(item);
         }
@@ -956,8 +1054,8 @@ namespace WinCopies
         /// <param name="collection">The <see cref="ILinkedList{T}"/> into which add the values.</param>
         /// <param name="node">The node before which to add the values</param>
         /// <param name="values">The values to add to a <see cref="ILinkedList{T}"/></param>
-        /// <returns>The added <see cref="LinkedListNode{T}"/>'s.</returns>
-        public static LinkedListNode<T>[] AddRangeBefore<T>(this ILinkedList<T> collection, in LinkedListNode<T> node, params T[] values) => collection.AddRangeBefore(node, (IEnumerable<T>)values);
+        /// <returns>The added <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s.</returns>
+        public static System.Collections.Generic.LinkedListNode<T>[] AddRangeBefore<T>(this ILinkedList<T> collection, in System.Collections.Generic.LinkedListNode<T> node, params T[] values) => collection.AddRangeBefore(node, (IEnumerable<T>)values);
 
         /// <summary>
         /// Add multiple values before a specified node in a <see cref="ILinkedList{T}"/>. For better performance, use the <see cref="ArrayBuilder{T}"/> class.
@@ -965,19 +1063,19 @@ namespace WinCopies
         /// <param name="collection">The <see cref="ILinkedList{T}"/> into which add the values.</param>
         /// <param name="node">The node before which to add the values</param>
         /// <param name="array">The values to add to a <see cref="ILinkedList{T}"/></param>
-        /// <returns>The added <see cref="LinkedListNode{T}"/>'s.</returns>
-        public static LinkedListNode<T>[] AddRangeBefore<T>(this ILinkedList<T> collection, in LinkedListNode<T> node, in IEnumerable<T> array)
+        /// <returns>The added <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s.</returns>
+        public static System.Collections.Generic.LinkedListNode<T>[] AddRangeBefore<T>(this ILinkedList<T> collection, in System.Collections.Generic.LinkedListNode<T> node, in IEnumerable<T> array)
         {
             ThrowIfNull(collection, nameof(collection));
             ThrowIfNull(array, nameof(array));
 
-            var result = new System.Collections.Generic.LinkedList<LinkedListNode<T>>();
+            var result = new System.Collections.Generic.LinkedList<System.Collections.Generic.LinkedListNode<T>>();
 
             foreach (T item in array)
 
                 _ = result.AddLast(collection.AddBefore(node, item));
 
-            return result.ToArray<LinkedListNode<T>>();
+            return result.ToArray<System.Collections.Generic.LinkedListNode<T>>();
         }
 
         /// <summary>
@@ -985,8 +1083,8 @@ namespace WinCopies
         /// </summary>
         /// <param name="collection">The <see cref="ILinkedList{T}"/> into which add the values.</param>
         /// <param name="node">The node before which to add the values</param>
-        /// <param name="nodes">The <see cref="LinkedListNode{T}"/>'s to add to a <see cref="ILinkedList{T}"/></param>
-        public static void AddRangeBefore<T>(this ILinkedList<T> collection, in LinkedListNode<T> node, params LinkedListNode<T>[] nodes) => collection.AddRangeBefore(node, (IEnumerable<LinkedListNode<T>>)nodes);
+        /// <param name="nodes">The <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s to add to a <see cref="ILinkedList{T}"/></param>
+        public static void AddRangeBefore<T>(this ILinkedList<T> collection, in System.Collections.Generic.LinkedListNode<T> node, params System.Collections.Generic.LinkedListNode<T>[] nodes) => collection.AddRangeBefore(node, (IEnumerable<System.Collections.Generic.LinkedListNode<T>>)nodes);
 
         /// <summary>
         /// Add multiple values before a specified node in a <see cref="ILinkedList{T}"/>.
@@ -994,12 +1092,12 @@ namespace WinCopies
         /// <param name="collection">The <see cref="ILinkedList{T}"/> into which add the values.</param>
         /// <param name="node">The node before which to add the values</param>
         /// <param name="array">The values to add to a <see cref="ILinkedList{T}"/></param>
-        public static void AddRangeBefore<T>(this ILinkedList<T> collection, in LinkedListNode<T> node, in IEnumerable<LinkedListNode<T>> array)
+        public static void AddRangeBefore<T>(this ILinkedList<T> collection, in System.Collections.Generic.LinkedListNode<T> node, in IEnumerable<System.Collections.Generic.LinkedListNode<T>> array)
         {
             ThrowIfNull(collection, nameof(collection));
             ThrowIfNull(array, nameof(array));
 
-            foreach (LinkedListNode<T> item in array)
+            foreach (System.Collections.Generic.LinkedListNode<T> item in array)
 
                 collection.AddBefore(node, item);
         }
@@ -1010,8 +1108,8 @@ namespace WinCopies
         /// <param name="collection">The <see cref="ILinkedList{T}"/> into which add the values.</param>
         /// <param name="node">The node after which to add the values</param>
         /// <param name="values">The values to add to a <see cref="ILinkedList{T}"/></param>
-        /// <returns>The added <see cref="LinkedListNode{T}"/>'s.</returns>
-        public static LinkedListNode<T>[] AddRangeAfter<T>(this ILinkedList<T> collection, in LinkedListNode<T> node, params T[] values)
+        /// <returns>The added <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s.</returns>
+        public static System.Collections.Generic.LinkedListNode<T>[] AddRangeAfter<T>(this ILinkedList<T> collection, in System.Collections.Generic.LinkedListNode<T> node, params T[] values)
         {
             ThrowIfNull(node, nameof(node));
 
@@ -1024,8 +1122,8 @@ namespace WinCopies
         /// <param name="collection">The <see cref="ILinkedList{T}"/> into which add the values.</param>
         /// <param name="node">The node after which to add the values</param>
         /// <param name="array">The values to add to a <see cref="ILinkedList{T}"/></param>
-        /// <returns>The added <see cref="LinkedListNode{T}"/>'s.</returns>
-        public static LinkedListNode<T>[] AddRangeAfter<T>(this ILinkedList<T> collection, in LinkedListNode<T> node, in IEnumerable<T> array)
+        /// <returns>The added <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s.</returns>
+        public static System.Collections.Generic.LinkedListNode<T>[] AddRangeAfter<T>(this ILinkedList<T> collection, in System.Collections.Generic.LinkedListNode<T> node, in IEnumerable<T> array)
         {
             ThrowIfNull(node, nameof(node));
 
@@ -1038,7 +1136,7 @@ namespace WinCopies
         /// <param name="collection">The <see cref="ILinkedList{T}"/> into which add the values.</param>
         /// <param name="node">The node after which to add the values</param>
         /// <param name="nodes">The values to add to a <see cref="ILinkedList{T}"/></param>
-        public static void AddRangeAfter<T>(this ILinkedList<T> collection, in LinkedListNode<T> node, params LinkedListNode<T>[] nodes)
+        public static void AddRangeAfter<T>(this ILinkedList<T> collection, in System.Collections.Generic.LinkedListNode<T> node, params System.Collections.Generic.LinkedListNode<T>[] nodes)
         {
             ThrowIfNull(node, nameof(node));
 
@@ -1057,7 +1155,7 @@ namespace WinCopies
         /// <param name="collection">The <see cref="ILinkedList{T}"/> into which add the values.</param>
         /// <param name="node">The node after which to add the values</param>
         /// <param name="array">The values to add to a <see cref="ILinkedList{T}"/></param>
-        public static void AddRangeAfter<T>(this ILinkedList<T> collection, in LinkedListNode<T> node, in IEnumerable<LinkedListNode<T>> array)
+        public static void AddRangeAfter<T>(this ILinkedList<T> collection, in System.Collections.Generic.LinkedListNode<T> node, in IEnumerable<System.Collections.Generic.LinkedListNode<T>> array)
         {
             ThrowIfNull(node, nameof(node));
 
@@ -2325,36 +2423,36 @@ namespace WinCopies
                     yield return _obj;
         }
 
-        public static LinkedListNode<T> RemoveAndGetFirstValue<T>(this System.Collections.Generic.LinkedList<T> items)
+        public static System.Collections.Generic.LinkedListNode<T> RemoveAndGetFirstValue<T>(this System.Collections.Generic.LinkedList<T> items)
         {
-            LinkedListNode<T> value = (items ?? throw GetArgumentNullException(nameof(items))).First;
+            System.Collections.Generic.LinkedListNode<T> value = (items ?? throw GetArgumentNullException(nameof(items))).First;
 
             items.RemoveFirst();
 
             return value;
         }
 
-        public static LinkedListNode<T> RemoveAndGetFirstValue<T>(this ILinkedList<T> items)
+        public static System.Collections.Generic.LinkedListNode<T> RemoveAndGetFirstValue<T>(this ILinkedList<T> items)
         {
-            LinkedListNode<T> value = (items ?? throw GetArgumentNullException(nameof(items))).First;
+            System.Collections.Generic.LinkedListNode<T> value = (items ?? throw GetArgumentNullException(nameof(items))).First;
 
             items.RemoveFirst();
 
             return value;
         }
 
-        public static LinkedListNode<T> RemoveAndGetLastValue<T>(this System.Collections.Generic.LinkedList<T> items)
+        public static System.Collections.Generic.LinkedListNode<T> RemoveAndGetLastValue<T>(this System.Collections.Generic.LinkedList<T> items)
         {
-            LinkedListNode<T> value = (items ?? throw GetArgumentNullException(nameof(items))).Last;
+            System.Collections.Generic.LinkedListNode<T> value = (items ?? throw GetArgumentNullException(nameof(items))).Last;
 
             items.RemoveLast();
 
             return value;
         }
 
-        public static LinkedListNode<T> RemoveAndGetLastValue<T>(this ILinkedList<T> items)
+        public static System.Collections.Generic.LinkedListNode<T> RemoveAndGetLastValue<T>(this ILinkedList<T> items)
         {
-            LinkedListNode<T> value = (items ?? throw GetArgumentNullException(nameof(items))).Last;
+            System.Collections.Generic.LinkedListNode<T> value = (items ?? throw GetArgumentNullException(nameof(items))).Last;
 
             items.RemoveLast();
 
@@ -3940,32 +4038,32 @@ namespace WinCopies
             }
         }
 
-        public static Queue<string> SplitToQueue(this string s, in bool skipEmptyValues, params char[] separators)
+        public static System.Collections.Generic.Queue<string> SplitToQueue(this string s, in bool skipEmptyValues, params char[] separators)
         {
-            var queue = new Queue<string>();
+            var queue = new System.Collections.Generic.Queue<string>();
 
             SplitToQueue(s, skipEmptyValues, new StringBuilder(), queue, separators);
 
             return queue;
         }
 
-        public static void SplitToQueue(this string s, in bool skipEmptyValues, in StringBuilder stringBuilder, Queue<string> queue, params char[] separators)
+        public static void SplitToQueue(this string s, in bool skipEmptyValues, in StringBuilder stringBuilder, System.Collections.Generic.Queue<string> queue, params char[] separators)
         {
             ThrowIfNull(queue, nameof(queue));
 
             Split(s, skipEmptyValues, stringBuilder, _s => queue.Enqueue(_s), separators);
         }
 
-        public static Stack<string> SplitToStack(this string s, in bool splitEmptyValues, params char[] separators)
+        public static System.Collections.Generic.Stack<string> SplitToStack(this string s, in bool splitEmptyValues, params char[] separators)
         {
-            var stack = new Stack<string>();
+            var stack = new System.Collections.Generic.Stack<string>();
 
             SplitToStack(s, splitEmptyValues, new StringBuilder(), stack, separators);
 
             return stack;
         }
 
-        public static void SplitToStack(this string s, in bool splitEmptyValues, in StringBuilder stringBuilder, Stack<string> stack, params char[] separators)
+        public static void SplitToStack(this string s, in bool splitEmptyValues, in StringBuilder stringBuilder, System.Collections.Generic.Stack<string> stack, params char[] separators)
         {
             ThrowIfNull(stack, nameof(stack));
 

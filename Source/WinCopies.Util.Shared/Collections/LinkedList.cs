@@ -22,6 +22,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.Serialization;
+
 using WinCopies.Collections.DotNetFix;
 using WinCopies.Util.Resources;
 
@@ -47,9 +48,9 @@ namespace WinCopies.Collections
 
         public LinkedList(System.Collections.Generic.LinkedList<T> list) => InnerList = list;
 
-        public LinkedListNode<T> Last => InnerList.Last;
+        public System.Collections.Generic.LinkedListNode<T> Last => InnerList.Last;
 
-        public LinkedListNode<T> First => InnerList.First;
+        public System.Collections.Generic.LinkedListNode<T> First => InnerList.First;
 
         public int Count => InnerList.Count;
 
@@ -61,21 +62,21 @@ namespace WinCopies.Collections
 
         void ICollection<T>.Add(T item) => ((ICollection<T>)InnerList).Add(item);
 
-        public LinkedListNode<T> AddAfter(LinkedListNode<T> node, T value) => InnerList.AddAfter(node, value);
+        public System.Collections.Generic.LinkedListNode<T> AddAfter(System.Collections.Generic.LinkedListNode<T> node, T value) => InnerList.AddAfter(node, value);
 
-        public void AddAfter(LinkedListNode<T> node, LinkedListNode<T> newNode) => InnerList.AddAfter(node, newNode);
+        public void AddAfter(System.Collections.Generic.LinkedListNode<T> node, System.Collections.Generic.LinkedListNode<T> newNode) => InnerList.AddAfter(node, newNode);
 
-        public LinkedListNode<T> AddBefore(LinkedListNode<T> node, T value) => InnerList.AddBefore(node, value);
+        public System.Collections.Generic.LinkedListNode<T> AddBefore(System.Collections.Generic.LinkedListNode<T> node, T value) => InnerList.AddBefore(node, value);
 
-        public void AddBefore(LinkedListNode<T> node, LinkedListNode<T> newNode) => InnerList.AddBefore(node, newNode);
+        public void AddBefore(System.Collections.Generic.LinkedListNode<T> node, System.Collections.Generic.LinkedListNode<T> newNode) => InnerList.AddBefore(node, newNode);
 
-        public LinkedListNode<T> AddFirst(T value) => InnerList.AddFirst(value);
+        public System.Collections.Generic.LinkedListNode<T> AddFirst(T value) => InnerList.AddFirst(value);
 
-        public void AddFirst(LinkedListNode<T> node) => InnerList.AddFirst(node);
+        public void AddFirst(System.Collections.Generic.LinkedListNode<T> node) => InnerList.AddFirst(node);
 
-        public LinkedListNode<T> AddLast(T value) => InnerList.AddLast(value);
+        public System.Collections.Generic.LinkedListNode<T> AddLast(T value) => InnerList.AddLast(value);
 
-        public void AddLast(LinkedListNode<T> node) => InnerList.AddLast(node);
+        public void AddLast(System.Collections.Generic.LinkedListNode<T> node) => InnerList.AddLast(node);
 
         public void Clear() => InnerList.Clear();
 
@@ -83,9 +84,9 @@ namespace WinCopies.Collections
 
         public void CopyTo(T[] array, int index) => InnerList.CopyTo(array, index);
 
-        public LinkedListNode<T> Find(T value) => InnerList.Find(value);
+        public System.Collections.Generic.LinkedListNode<T> Find(T value) => InnerList.Find(value);
 
-        public LinkedListNode<T> FindLast(T value) => InnerList.FindLast(value);
+        public System.Collections.Generic.LinkedListNode<T> FindLast(T value) => InnerList.FindLast(value);
 
         public System.Collections.Generic.LinkedList<T>.Enumerator GetEnumerator() => InnerList.GetEnumerator();
 
@@ -99,7 +100,7 @@ namespace WinCopies.Collections
 
         public bool Remove(T value) => InnerList.Remove(value);
 
-        public void Remove(LinkedListNode<T> node) => InnerList.Remove(node);
+        public void Remove(System.Collections.Generic.LinkedListNode<T> node) => InnerList.Remove(node);
 
         public void RemoveFirst() => InnerList.RemoveFirst();
 
@@ -114,9 +115,9 @@ namespace WinCopies.Collections
     {
         protected ILinkedList<T> InnerList { get; }
 
-        public LinkedListNode<T> Last => InnerList.Last;
+        public System.Collections.Generic.LinkedListNode<T> Last => InnerList.Last;
 
-        public LinkedListNode<T> First => InnerList.First;
+        public System.Collections.Generic.LinkedListNode<T> First => InnerList.First;
 
         public int Count => InnerList.Count;
 
@@ -130,9 +131,9 @@ namespace WinCopies.Collections
 
         public void CopyTo(T[] array, int index) => InnerList.CopyTo(array, index);
 
-        public LinkedListNode<T> Find(T value) => InnerList.Find(value);
+        public System.Collections.Generic.LinkedListNode<T> Find(T value) => InnerList.Find(value);
 
-        public LinkedListNode<T> FindLast(T value) => InnerList.FindLast(value);
+        public System.Collections.Generic.LinkedListNode<T> FindLast(T value) => InnerList.FindLast(value);
 
         public System.Collections.Generic.LinkedList<T>.Enumerator GetEnumerator() => InnerList.GetEnumerator();
 
@@ -156,23 +157,23 @@ namespace WinCopies.Collections
 
         void ICollection.CopyTo(Array array, int index) => ((ICollection)InnerList).CopyTo(array, index);
 
-        public LinkedListNode<T> AddAfter(LinkedListNode<T> node, T value) => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
+        public System.Collections.Generic.LinkedListNode<T> AddAfter(System.Collections.Generic.LinkedListNode<T> node, T value) => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
 
-        public void AddAfter(LinkedListNode<T> node, LinkedListNode<T> newNode) => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
+        public void AddAfter(System.Collections.Generic.LinkedListNode<T> node, System.Collections.Generic.LinkedListNode<T> newNode) => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
 
-        public LinkedListNode<T> AddBefore(LinkedListNode<T> node, T value) => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
+        public System.Collections.Generic.LinkedListNode<T> AddBefore(System.Collections.Generic.LinkedListNode<T> node, T value) => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
 
-        public void AddBefore(LinkedListNode<T> node, LinkedListNode<T> newNode) => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
+        public void AddBefore(System.Collections.Generic.LinkedListNode<T> node, System.Collections.Generic.LinkedListNode<T> newNode) => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
 
-        public LinkedListNode<T> AddFirst(T value) => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
+        public System.Collections.Generic.LinkedListNode<T> AddFirst(T value) => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
 
-        public void AddFirst(LinkedListNode<T> node) => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
+        public void AddFirst(System.Collections.Generic.LinkedListNode<T> node) => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
 
-        public LinkedListNode<T> AddLast(T value) => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
+        public System.Collections.Generic.LinkedListNode<T> AddLast(T value) => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
 
-        public void AddLast(LinkedListNode<T> node) => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
+        public void AddLast(System.Collections.Generic.LinkedListNode<T> node) => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
 
-        public void Remove(LinkedListNode<T> node) => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
+        public void Remove(System.Collections.Generic.LinkedListNode<T> node) => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
 
         public void RemoveFirst() => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
 

@@ -48,6 +48,45 @@ using IfComp = WinCopies.Diagnostics.Comparison;
 namespace WinCopies
 {
 #endif
+    /// <summary>
+    /// This enum is designed as an extension of the <see cref="bool"/> type.
+    /// </summary>
+    public enum Result : sbyte
+    {
+        /// <summary>
+        /// An error as occurred.
+        /// </summary>
+        Error = -3,
+
+        /// <summary>
+        /// The operation has been canceled.
+        /// </summary>
+        Canceled = -2,
+
+        /// <summary>
+        /// The operation did not return any particular value. This value is the same as returning a <see langword="null"/> <see cref="Nullable{Boolean}"/>.
+        /// </summary>
+        None = -1,
+
+        /// <summary>
+        /// The operation returned False. This value is the same number as <see langword="false"/>.
+        /// </summary>
+        False = 0,
+
+        /// <summary>
+        /// The operation returned True. This value is the same number as <see langword="true"/>.
+        /// </summary>
+        True = 1
+    }
+
+    public enum XOrResult : sbyte
+    {
+        MoreThanOneTrueResult = -1,
+
+        NoTrueResult = 0,
+
+        OneTrueResult = 1
+    }
 
     /// <summary>
     /// Delegate for a non-generic predicate.
@@ -1366,7 +1405,9 @@ namespace WinCopies
             {
                 // todo : instead, get the maximum rank of arrays in params Array[] arrays and add a gesture of this in the process (also for the ConcatenateLong method) ; and not forgetting to change the comments of the xmldoc about this.
 
-                if (array.Rank != 1) ThrowArrayWithMoreThanOneDimensionException(nameof(array));
+                if (array.Rank != 1)   
+                    
+                    ThrowArrayWithMoreThanOneDimensionException(nameof(array));
 
                 totalArraysLength += array.Length;
             }
@@ -1438,7 +1479,7 @@ namespace WinCopies
         /// <summary>
         /// Checks if a object is numeric.
         /// </summary>
-        /// <remarks>This function makes a check at the object type. For a string-parsing-checking for numerical value, look at the <see cref="IsNumeric(string, out decimal)"/> function.</remarks>
+        /// <remarks>This function makes a check at the object type. For a string-parsing-checking for numerical value, look at the <see cref="IsNumeric(in string, out decimal)"/> function.</remarks>
         /// <param name="value">The object to check</param>
         /// <returns>A <see cref="bool"/> value that indicates whether the object given is a numerical type.</returns>
         public static bool IsNumber(in object value) => value is sbyte
@@ -1649,14 +1690,14 @@ namespace WinCopies
                 throw new ArgumentException("The given array has not enough space.", arrayArgumentName);
         }
 
-        internal static void ThrowIfDisposedInternal(WinCopies.Util.DotNetFix.IDisposable obj)
+        internal static void ThrowIfDisposedInternal(DotNetFix.IDisposable obj)
         {
             if (obj.IsDisposed)
 
                 throw GetExceptionForDispose(false);
         }
 
-        public static void ThrowIfDisposed(WinCopies.Util.DotNetFix.IDisposable obj)
+        public static void ThrowIfDisposed(DotNetFix.IDisposable obj)
         {
             ThrowIfNull(obj, nameof(obj));
 

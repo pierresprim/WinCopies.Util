@@ -9,7 +9,42 @@ CHANGELOG
 Updates
 -------
 
-??/??/???? 2.5.9
+??/??/???? 2.6
+=================
+
+- New extension and static throwing methods.
+
+WinCopies.Util (2.6)
+--------------------
+
+- Additions:
+	- WinCopies.Collections:
+		- I(UInt)Countable
+		- I(Disposable)EnumeratorInfo
+	- WinCopies.Collections(.Generic):
+		- Stack
+		- Queue
+	- WinCopies.Collections.DotNetFix:
+		- IUIntCountableEnumerable (generic and non-generic).
+	- WinCopies.Collections.DotNetFix(.Generic):
+		- (I)(ReadOnly)(Enumerable)SimpleLinkedList(Node)
+		- (I)(ReadOnly)(Enumerable)Stack
+		- (I)(ReadOnly)(Enumerable)Queue
+	- WinCopies.Collections.DotNetFix.Generic:
+		- ICountable(Disposable)Enumerator
+		- ArrayEnumerator
+	- WinCopies.Collections.Generic:
+		- Interfaces:
+			- IRecursive(EnumerableProvider)Enumerable
+			- I(Countable)(Disposable)EnumeratorInfo
+		- RecursiveEnumerator
+
+WinCopies.Util.Desktop (2.6)
+-------------------------------
+
+Add WinCopies.Util.DotNetFix.I(Pausable)BackgroundWorker interfaces and extension methods related to these interfaces.
+
+07/17/2020 2.5.9
 ================
 
 WinCopies.Util (2.5.9)

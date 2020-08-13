@@ -435,7 +435,101 @@ progressPercentage
 
     namespace DotNetFix
     {
-        public class PausableBackgroundWorker : System.ComponentModel.BackgroundWorker
+        /// <summary>
+        /// Executes an operation on a separate thread.
+        /// </summary>
+        public interface IBackgroundWorker
+        {
+            #region Properties
+            /// <summary>
+            /// Gets or sets a value indicating whether the background worker supports asynchronous cancellation.
+            /// </summary>
+            /// <exception cref="InvalidOperationException">When setting: The background worker is busy.</exception>
+            [DefaultValue(false)]
+            bool WorkerSupportsCancellation { get; set; }
+
+            /// <summary>
+            /// Gets or sets a value indicating whether the background worker can report progress updates.
+            /// </summary>
+            /// <exception cref="InvalidOperationException">When setting: The background worker is busy.</exception>
+            [DefaultValue(false)]
+            bool WorkerReportsProgress { get; set; }
+
+            /// <summary>
+            /// Gets a value indicating whether the background worker is running an asynchronous operation.
+            /// </summary>
+            bool IsBusy { get; }
+
+            /// <summary>
+            /// Gets a value indicating whether the application has requested cancellation of a background operation.
+            /// </summary>
+            bool CancellationPending { get; }
+            #endregion
+
+            #region Events
+            /// <summary>
+            /// Occurs when <see cref="RunWorkerAsync()"/> is called.
+            /// </summary>
+            event DoWorkEventHandler DoWork;
+
+            /// <summary>
+            /// Occurs when <see cref="ReportProgress(int)"/> is called.
+            /// </summary>
+            event ProgressChangedEventHandler ProgressChanged;
+
+            /// <summary>
+            /// Occurs when the background operation has completed, has been canceled, or has raised an exception.
+            /// </summary>
+            event RunWorkerCompletedEventHandler RunWorkerCompleted;
+            #endregion
+
+            #region Methods
+            /// <summary>
+            /// Requests cancellation of a pending background operation.
+            /// </summary>
+            /// <exception cref="InvalidOperationException"><see cref="WorkerSupportsCancellation"/> is <see langword="false"/>.</exception>
+            void CancelAsync();
+
+            /// <summary>
+            /// Raises the <see cref="ProgressChanged"/> event.
+            /// </summary>
+            /// <param name="percentProgress">The percentage, from 0 to 100, of the background operation that is complete.</param>
+            /// <exception cref="InvalidOperationException">The <see cref="WorkerReportsProgress"/> property is set to <see langword="false"/>.</exception>
+            void ReportProgress(int percentProgress);
+
+            /// <summary>
+            /// Raises the <see cref="ProgressChanged"/> event.
+            /// </summary>
+            /// <param name="percentProgress">The percentage, from 0 to 100, of the background operation that is complete.</param>
+            /// <param name="userState">The state object passed to <see cref="RunWorkerAsync(object)"/>.</param>
+            /// <exception cref="InvalidOperationException">The <see cref="WorkerReportsProgress"/> property is set to <see langword="false"/>.</exception>
+            void ReportProgress(int percentProgress, object userState);
+
+            /// <summary>
+            /// Starts execution of a background operation.
+            /// </summary>
+            /// <param name="argument">A parameter for use by the background operation to be executed in the <see cref="DoWork"/> event handler.</param>
+            /// <exception cref="InvalidOperationException"><see cref="IsBusy"/> is <see langword="true"/>.</exception>
+            void RunWorkerAsync(object argument);
+
+            /// <summary>
+            /// Starts execution of a background operation.
+            /// </summary>
+            /// <exception cref="InvalidOperationException"><see cref="IsBusy"/> is <see langword="true"/>.</exception>
+            void RunWorkerAsync();
+            #endregion
+        }
+
+        public interface IPausableBackgroundWorker : IBackgroundWorker
+        {
+            bool PausePending { get; }
+
+            bool WorkerSupportsPausing { get; set; }
+
+            void PauseAsync();
+        }
+
+        public class PausableBackgroundWorker : System.ComponentModel.BackgroundWorker, IPausableBackgroundWorker
         {
             public bool PausePending { get; private set; }
 
