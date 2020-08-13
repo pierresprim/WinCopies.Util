@@ -44,6 +44,8 @@ namespace WinCopies.Collections
 
         public interface ISimpleLinkedList : IUIntCountable
         {
+            bool IsReadOnly { get; }
+
             object Peek();
         }
 
@@ -61,7 +63,7 @@ namespace WinCopies.Collections
             object Dequeue();
         }
 
-        public sealed class SimpleLinkedListNode : ISimpleLinkedListNode
+        internal sealed class SimpleLinkedListNode : ISimpleLinkedListNode
         {
             public object Value { get; }
 
@@ -75,6 +77,8 @@ namespace WinCopies.Collections
         public class Stack : IStack
         {
             internal SimpleLinkedListNode _firstItem;
+
+            public bool IsReadOnly => false;
 
             public uint Count { get; private set; }
 
@@ -103,6 +107,8 @@ namespace WinCopies.Collections
         {
             internal SimpleLinkedListNode _firstItem;
             private SimpleLinkedListNode _lastItem;
+
+            public bool IsReadOnly => false;
 
             public uint Count { get; private set; }
 
@@ -141,6 +147,45 @@ namespace WinCopies.Collections
             }
         }
 
+        public abstract class ReadOnlySimpleLinkedList : ISimpleLinkedList
+        {
+            public bool IsReadOnly => true;
+
+            public abstract uint Count { get; }
+
+            public abstract object Peek();
+        }
+
+        public class ReadOnlyStack : ReadOnlySimpleLinkedList, IStack
+        {
+            private readonly IStack _stack;
+
+            public sealed override uint Count => _stack.Count;
+
+            public ReadOnlyStack(IStack stack) => _stack = stack;
+
+            public sealed override object Peek() => _stack.Peek();
+
+            void IStack.Push(object item) => throw new NotSupportedException("The current stack is read-only.");
+
+            object IStack.Pop() => throw new NotSupportedException("The current stack is read-only.");
+        }
+
+        public class ReadOnlyQueue : ReadOnlySimpleLinkedList, IQueue
+        {
+            private readonly IStack _stack;
+
+            public sealed override uint Count => _stack.Count;
+
+            public ReadOnlyQueue(IStack stack) => _stack = stack;
+
+            public sealed override object Peek() => _stack.Peek();
+
+            void IQueue.Enqueue(object item) => throw new NotSupportedException("The current stack is read-only.");
+
+            object IQueue.Dequeue() => throw new NotSupportedException("The current stack is read-only.");
+        }
+
         public interface IEnumerableSimpleLinkedList : ISimpleLinkedList, IUIntCountableEnumerable
         {
             // Left empty.
@@ -154,8 +199,11 @@ namespace WinCopies.Collections
         [Serializable]
         public class EnumerableStack : IEnumerableStack
         {
+            [NonSerialized]
             private readonly Stack _stack;
+            [NonSerialized]
             private uint _enumeratorsCount = 0;
+            [NonSerialized]
             private uint _enumerableVersion = 0;
 
             private void UpdateEnumerableVersion()
@@ -172,7 +220,11 @@ namespace WinCopies.Collections
                     _enumerableVersion = 0;
             }
 
+            public bool IsReadOnly => false;
+
             public uint Count => _stack.Count;
+
+            public EnumerableStack() => _stack = new Stack();
 
             public void Push(object item)
             {
@@ -201,6 +253,7 @@ namespace WinCopies.Collections
                 return enumerator;
             }
 
+            [Serializable]
             public sealed class Enumerator : IEnumerator, Util.DotNetFix.IDisposable
             {
                 private EnumerableStack _stack;
@@ -277,6 +330,32 @@ namespace WinCopies.Collections
             }
         }
 
+        [Serializable]
+        public class ReadOnlyEnumerableStack : ReadOnlySimpleLinkedList, IEnumerableStack
+        {
+            private readonly IEnumerableStack _stack;
+
+            public sealed override uint Count =>
+#if WinCopies2
+                ((IUIntCountable)
+#endif
+                _stack
+#if WinCopies2
+                )
+#endif
+                .Count;
+
+            public ReadOnlyEnumerableStack(IEnumerableStack stack) => _stack = stack;
+
+            public sealed override object Peek() => _stack.Peek();
+
+            void IStack.Push(object item) => throw new NotSupportedException("The current stack is read-only.");
+
+            object IStack.Pop() => throw new NotSupportedException("The current stack is read-only.");
+
+            public IEnumerator GetEnumerator() => _stack.GetEnumerator();
+        }
+
         public interface IEnumerableQueue : IQueue, IEnumerableSimpleLinkedList
         {
             // Left empty.
@@ -285,8 +364,11 @@ namespace WinCopies.Collections
         [Serializable]
         public class EnumerableQueue : IEnumerableQueue
         {
+            [NonSerialized]
             private readonly Queue _queue;
+            [NonSerialized]
             private uint _enumeratorsCount = 0;
+            [NonSerialized]
             private uint _enumerableVersion = 0;
 
             private void UpdateEnumerableVersion()
@@ -303,7 +385,11 @@ namespace WinCopies.Collections
                     _enumerableVersion = 0;
             }
 
+            public bool IsReadOnly => false;
+
             public uint Count => _queue.Count;
+
+            public EnumerableQueue() => _queue = new Queue();
 
             public void Enqueue(object item)
             {
@@ -332,6 +418,7 @@ namespace WinCopies.Collections
                 return enumerator;
             }
 
+            [Serializable]
             public sealed class Enumerator : IEnumerator, Util.DotNetFix.IDisposable
             {
                 private EnumerableQueue _queue;
@@ -408,6 +495,32 @@ namespace WinCopies.Collections
             }
         }
 
+        [Serializable]
+        public class ReadOnlyEnumerableQueue : ReadOnlySimpleLinkedList, IEnumerableStack
+        {
+            private readonly IEnumerableQueue _queue;
+
+            public sealed override uint Count =>
+#if WinCopies2
+                ((IUIntCountable)
+#endif
+                _queue
+#if WinCopies2
+                )
+#endif
+                .Count;
+
+            public ReadOnlyEnumerableQueue(IEnumerableQueue queue) => _queue = queue;
+
+            public sealed override object Peek() => _queue.Peek();
+
+            void IStack.Push(object item) => throw new NotSupportedException("The current stack is read-only.");
+
+            object IStack.Pop() => throw new NotSupportedException("The current stack is read-only.");
+
+            public IEnumerator GetEnumerator() => _queue.GetEnumerator();
+        }
+
         namespace Generic
         {
             public interface ISimpleLinkedListNode<T>
@@ -436,7 +549,61 @@ namespace WinCopies.Collections
                 T Dequeue();
             }
 
-            public sealed class SimpleLinkedListNode<T> : ISimpleLinkedListNode<T>
+            //public interface ILinkedListNode<T>
+            //{
+            //    ILinkedList<T> List { get; }
+
+            //    ILinkedListNode<T> Next { get; }
+
+            //    ILinkedListNode<T> Previous { get; }
+
+            //    T Value { get; set; }
+            //}
+
+            //public interface ILinkedList<T> : ICollection<T>, IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection, IDeserializationCallback, ISerializable
+            //{
+            //    ILinkedListNode<T> Last { get; }
+
+            //    ILinkedListNode<T> First { get; }
+
+            //    int Count { get; }
+
+            //    void AddAfter(ILinkedListNode<T> node, ILinkedListNode<T> newNode);
+
+            //    ILinkedListNode<T> AddAfter(ILinkedListNode<T> node, T value);
+
+            //    void AddBefore(ILinkedListNode<T> node, ILinkedListNode<T> newNode);
+
+            //    ILinkedListNode<T> AddBefore(ILinkedListNode<T> node, T value);
+
+            //    void AddFirst(ILinkedListNode<T> node);
+
+            //    ILinkedListNode<T> AddFirst(T value);
+
+            //    void AddLast(ILinkedListNode<T> node);
+
+            //    ILinkedListNode<T> AddLast(T value);
+
+            //    void Clear();
+
+            //    bool Contains(T value);
+
+            //    void CopyTo(T[] array, int index);
+
+            //    ILinkedListNode<T> Find(T value);
+
+            //    ILinkedListNode<T> FindLast(T value);
+
+            //    void Remove(ILinkedListNode<T> node);
+
+            //    bool Remove(T value);
+
+            //    void RemoveFirst();
+
+            //    void RemoveLast();
+            //}
+
+            internal sealed class SimpleLinkedListNode<T> : ISimpleLinkedListNode<T>
             {
                 public T Value { get; }
 
@@ -549,6 +716,8 @@ namespace WinCopies.Collections
 
                 public uint Count => _stack.Count;
 
+                public EnumerableStack() => _stack = new Stack<T>();
+
                 public void Push(T item)
                 {
                     _stack.Push(item);
@@ -578,6 +747,7 @@ namespace WinCopies.Collections
 
                 IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
+                [Serializable]
                 public sealed class Enumerator : IEnumerator<T>, Util.DotNetFix.IDisposable
                 {
                     private EnumerableStack<T> _stack;
@@ -664,6 +834,7 @@ namespace WinCopies.Collections
             [Serializable]
             public class EnumerableQueue<T> : IEnumerableQueue<T>
             {
+                [NonSerialized]
                 private readonly Queue<T> _queue;
                 private uint _enumeratorsCount = 0;
                 private uint _enumerableVersion = 0;
@@ -683,6 +854,8 @@ namespace WinCopies.Collections
                 }
 
                 public uint Count => _queue.Count;
+
+                public EnumerableQueue() => _queue = new Queue<T>();
 
                 public void Enqueue(T item)
                 {
@@ -713,6 +886,7 @@ namespace WinCopies.Collections
 
                 IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
+                [Serializable]
                 public sealed class Enumerator : IEnumerator<T>, Util.DotNetFix.IDisposable
                 {
                     private EnumerableQueue<T> _queue;
@@ -795,6 +969,8 @@ namespace WinCopies.Collections
 
     public class Stack : System.Collections.Stack, IEnumerableStack
     {
+        public bool IsReadOnly => false;
+
 #if WinCopies2
         uint IUIntCountableEnumerable.Count => (uint)Count;
 #endif
@@ -804,6 +980,8 @@ namespace WinCopies.Collections
 
     public class Queue : System.Collections.Queue, IEnumerableQueue
     {
+        public bool IsReadOnly => false;
+
 #if WinCopies2
         uint IUIntCountableEnumerable.Count => (uint)Count;
 #endif
@@ -838,11 +1016,11 @@ namespace WinCopies.Collections.DotNetFix
     namespace Extensions
     {
         [Serializable]
-        internal sealed class LinkedListNodeEnumerator<T> : IEnumerator<LinkedListNode<T>>, IEnumerable<LinkedListNode<T>>
+        internal sealed class LinkedListNodeEnumerator<T> : IEnumerator<System.Collections.Generic.LinkedListNode<T>>, IEnumerable<System.Collections.Generic.LinkedListNode<T>>
         {
             private ILinkedList<T> _list;
 
-            public LinkedListNode<T> Current { get; private set; }
+            public System.Collections.Generic.LinkedListNode<T> Current { get; private set; }
 
             object IEnumerator.Current => Current;
 
@@ -886,7 +1064,7 @@ namespace WinCopies.Collections.DotNetFix
 
             public void Reset() { }
 
-            public IEnumerator<LinkedListNode<T>> GetEnumerator() => this;
+            public IEnumerator<System.Collections.Generic.LinkedListNode<T>> GetEnumerator() => this;
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
@@ -896,9 +1074,9 @@ namespace WinCopies.Collections.DotNetFix
         {
             protected ILinkedList<T> InnerList { get; }
 
-            public LinkedListNode<T> Last => InnerList.Last;
+            public System.Collections.Generic.LinkedListNode<T> Last => InnerList.Last;
 
-            public LinkedListNode<T> First => InnerList.First;
+            public System.Collections.Generic.LinkedListNode<T> First => InnerList.First;
 
             public int Count => InnerList.Count;
 
@@ -916,101 +1094,101 @@ namespace WinCopies.Collections.DotNetFix
 
             void ICollection<T>.Add(T item) => AddItem(item);
 
-            protected virtual void AddItemAfter(LinkedListNode<T> node, LinkedListNode<T> newNode) => InnerList.AddAfter(node, newNode);
+            protected virtual void AddItemAfter(System.Collections.Generic.LinkedListNode<T> node, System.Collections.Generic.LinkedListNode<T> newNode) => InnerList.AddAfter(node, newNode);
 
             /// <summary>
-            /// Adds the specified new node after the specified existing node in the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddItemAfter(LinkedListNode{T}, LinkedListNode{T})"/> method to provide a custom implementation.
+            /// Adds the specified new node after the specified existing node in the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddItemAfter(System.Collections.Generic.LinkedListNode{T}, System.Collections.Generic.LinkedListNode{T})"/> method to provide a custom implementation.
             /// </summary>
-            /// <param name="node">The <see cref="System.Collections.Generic.LinkedListNode{T}"/> after which to insert <paramref name="newNode"/>.</param>
-            /// <param name="newNode">The new <see cref="System.Collections.Generic.LinkedListNode{T}"/> to add to the <see cref="LinkedCollection{T}"/>.</param>
+            /// <param name="node">The <see cref="System.Collections.Generic.System.Collections.Generic.LinkedListNode{T}"/> after which to insert <paramref name="newNode"/>.</param>
+            /// <param name="newNode">The new <see cref="System.Collections.Generic.System.Collections.Generic.LinkedListNode{T}"/> to add to the <see cref="LinkedCollection{T}"/>.</param>
             /// <exception cref="ArgumentNullException"><paramref name="node"/> is <see langword="null"/>. -or- <paramref name="newNode"/> is <see langword="null"/>.</exception>
             /// <exception cref="InvalidOperationException"><paramref name="node"/> is not in the current <see cref="LinkedCollection{T}"/>. -or- <paramref name="newNode"/> belongs to another <see cref="System.Collections.Generic.LinkedList{T}"/>.</exception>
-            /// <seealso cref="AddAfter(LinkedListNode{T}, T)"/>
-            public void AddAfter(in LinkedListNode<T> node, in LinkedListNode<T> newNode) => AddItemAfter(node, newNode);
+            /// <seealso cref="AddAfter(System.Collections.Generic.LinkedListNode{T}, T)"/>
+            public void AddAfter(in System.Collections.Generic.LinkedListNode<T> node, in System.Collections.Generic.LinkedListNode<T> newNode) => AddItemAfter(node, newNode);
 
-            protected virtual LinkedListNode<T> AddItemAfter(LinkedListNode<T> node, T value) => InnerList.AddAfter(node, value);
+            protected virtual System.Collections.Generic.LinkedListNode<T> AddItemAfter(System.Collections.Generic.LinkedListNode<T> node, T value) => InnerList.AddAfter(node, value);
 
             /// <summary>
-            /// Adds a new node containing the specified value after the specified existing node in the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddItemAfter(LinkedListNode{T}, T)"/> method to provide a custom implementation.
+            /// Adds a new node containing the specified value after the specified existing node in the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddItemAfter(System.Collections.Generic.LinkedListNode{T}, T)"/> method to provide a custom implementation.
             /// </summary>
-            /// <param name="node">The <see cref="System.Collections.Generic.LinkedListNode{T}"/> after which to insert a new <see cref="System.Collections.Generic.LinkedListNode{T}"/> containing value.</param>
+            /// <param name="node">The <see cref="System.Collections.Generic.System.Collections.Generic.LinkedListNode{T}"/> after which to insert a new <see cref="System.Collections.Generic.System.Collections.Generic.LinkedListNode{T}"/> containing value.</param>
             /// <param name="value">The value to add to the <see cref="LinkedCollection{T}"/>.</param>
-            /// <returns>The new <see cref="System.Collections.Generic.LinkedListNode{T}"/> containing value.</returns>
+            /// <returns>The new <see cref="System.Collections.Generic.System.Collections.Generic.LinkedListNode{T}"/> containing value.</returns>
             /// <exception cref="ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
             /// <exception cref="InvalidOperationException"><paramref name="node"/> is not in the current <see cref="LinkedCollection{T}"/>.</exception>
-            /// <seealso cref="AddAfter(in LinkedListNode{T}, in LinkedListNode{T})"/>
-            public LinkedListNode<T> AddAfter(LinkedListNode<T> node, T value) => AddItemAfter(node, value);
+            /// <seealso cref="AddAfter(in System.Collections.Generic.LinkedListNode{T}, in System.Collections.Generic.LinkedListNode{T})"/>
+            public System.Collections.Generic.LinkedListNode<T> AddAfter(System.Collections.Generic.LinkedListNode<T> node, T value) => AddItemAfter(node, value);
 
-            protected virtual void AddItemBefore(LinkedListNode<T> node, LinkedListNode<T> newNode) => InnerList.AddBefore(node, newNode);
+            protected virtual void AddItemBefore(System.Collections.Generic.LinkedListNode<T> node, System.Collections.Generic.LinkedListNode<T> newNode) => InnerList.AddBefore(node, newNode);
 
             /// <summary>
-            /// Adds the specified new node before the specified existing node in the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddItemBefore(LinkedListNode{T}, LinkedListNode{T})"/> method to provide a custom implementation.
+            /// Adds the specified new node before the specified existing node in the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddItemBefore(System.Collections.Generic.LinkedListNode{T}, System.Collections.Generic.LinkedListNode{T})"/> method to provide a custom implementation.
             /// </summary>
-            /// <param name="node">The <see cref="System.Collections.Generic.LinkedListNode{T}"/> before which to insert <paramref name="newNode"/>.</param>
-            /// <param name="newNode">The new <see cref="System.Collections.Generic.LinkedListNode{T}"/> to add to the <see cref="LinkedCollection{T}"/>.</param>
+            /// <param name="node">The <see cref="System.Collections.Generic.System.Collections.Generic.LinkedListNode{T}"/> before which to insert <paramref name="newNode"/>.</param>
+            /// <param name="newNode">The new <see cref="System.Collections.Generic.System.Collections.Generic.LinkedListNode{T}"/> to add to the <see cref="LinkedCollection{T}"/>.</param>
             /// <exception cref="ArgumentNullException"><paramref name="node"/> is <see langword="null"/>. -or- <paramref name="newNode"/> is <see langword="null"/>.</exception>
             /// <exception cref="InvalidOperationException"><paramref name="node"/> is not in the current <see cref="LinkedCollection{T}"/>. -or- <paramref name="newNode"/> belongs to another <see cref="System.Collections.Generic.LinkedList{T}"/>.</exception>
-            /// <seealso cref="AddBefore(in LinkedListNode{T}, in T)"/>
-            public void AddBefore(in LinkedListNode<T> node, in LinkedListNode<T> newNode) => AddItemBefore(node, newNode);
+            /// <seealso cref="AddBefore(in System.Collections.Generic.LinkedListNode{T}, in T)"/>
+            public void AddBefore(in System.Collections.Generic.LinkedListNode<T> node, in System.Collections.Generic.LinkedListNode<T> newNode) => AddItemBefore(node, newNode);
 
-            protected virtual LinkedListNode<T> AddItemBefore(LinkedListNode<T> node, T value) => InnerList.AddBefore(node, value);
+            protected virtual System.Collections.Generic.LinkedListNode<T> AddItemBefore(System.Collections.Generic.LinkedListNode<T> node, T value) => InnerList.AddBefore(node, value);
 
             /// <summary>
-            /// Adds a new node containing the specified value before the specified existing node in the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddItemBefore(LinkedListNode{T}, T)"/> method to provide a custom implementation.
+            /// Adds a new node containing the specified value before the specified existing node in the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddItemBefore(System.Collections.Generic.LinkedListNode{T}, T)"/> method to provide a custom implementation.
             /// </summary>
-            /// <param name="node">The <see cref="System.Collections.Generic.LinkedListNode{T}"/> before which to insert a new <see cref="System.Collections.Generic.LinkedListNode{T}"/> containing value.</param>
+            /// <param name="node">The <see cref="System.Collections.Generic.System.Collections.Generic.LinkedListNode{T}"/> before which to insert a new <see cref="System.Collections.Generic.System.Collections.Generic.LinkedListNode{T}"/> containing value.</param>
             /// <param name="value">The value to add to the <see cref="LinkedCollection{T}"/>.</param>
-            /// <returns>The new <see cref="System.Collections.Generic.LinkedListNode{T}"/> containing value.</returns>
+            /// <returns>The new <see cref="System.Collections.Generic.System.Collections.Generic.LinkedListNode{T}"/> containing value.</returns>
             /// <exception cref="ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
             /// <exception cref="InvalidOperationException"><paramref name="node"/> is not in the current <see cref="LinkedCollection{T}"/>.</exception>
-            /// <seealso cref="AddBefore(in LinkedListNode{T}, in LinkedListNode{T})"/>
-            public LinkedListNode<T> AddBefore(in LinkedListNode<T> node, in T value) => AddItemBefore(node, value);
+            /// <seealso cref="AddBefore(in System.Collections.Generic.LinkedListNode{T}, in System.Collections.Generic.LinkedListNode{T})"/>
+            public System.Collections.Generic.LinkedListNode<T> AddBefore(in System.Collections.Generic.LinkedListNode<T> node, in T value) => AddItemBefore(node, value);
 
-            protected virtual void AddFirstItem(LinkedListNode<T> node) => InnerList.AddFirst(node);
+            protected virtual void AddFirstItem(System.Collections.Generic.LinkedListNode<T> node) => InnerList.AddFirst(node);
 
             /// <summary>
-            /// Adds the specified new node at the start of the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddFirstItem(LinkedListNode{T})"/> method to provide a custom implementation.
+            /// Adds the specified new node at the start of the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddFirstItem(System.Collections.Generic.LinkedListNode{T})"/> method to provide a custom implementation.
             /// </summary>
-            /// <param name="node">The new <see cref="System.Collections.Generic.LinkedListNode{T}"/> to add at the start of the <see cref="LinkedCollection{T}"/>.</param>
+            /// <param name="node">The new <see cref="System.Collections.Generic.System.Collections.Generic.LinkedListNode{T}"/> to add at the start of the <see cref="LinkedCollection{T}"/>.</param>
             /// <exception cref="ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
             /// <exception cref="InvalidOperationException"><paramref name="node"/> belongs to another <see cref="System.Collections.Generic.LinkedList{T}"/>.</exception>
             /// <seealso cref="AddFirst(in T)"/>
-            public void AddFirst(in LinkedListNode<T> node) => AddFirstItem(node);
+            public void AddFirst(in System.Collections.Generic.LinkedListNode<T> node) => AddFirstItem(node);
 
-            protected virtual LinkedListNode<T> AddFirstItem(T value) => InnerList.AddFirst(value);
+            protected virtual System.Collections.Generic.LinkedListNode<T> AddFirstItem(T value) => InnerList.AddFirst(value);
 
             /// <summary>
             /// Adds a new node containing the specified value at the start of the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddFirstItem(T)"/> method to provide a custom implementation.
             /// </summary>
             /// <param name="value">The value to add at the start of the <see cref="LinkedCollection{T}"/>.</param>
-            /// <returns>The new <see cref="System.Collections.Generic.LinkedListNode{T}"/> containing value.</returns>
+            /// <returns>The new <see cref="System.Collections.Generic.System.Collections.Generic.LinkedListNode{T}"/> containing value.</returns>
             /// <seealso cref="AddFirst(in T)"/>
-            public LinkedListNode<T> AddFirst(in T value) => AddFirstItem(value);
+            public System.Collections.Generic.LinkedListNode<T> AddFirst(in T value) => AddFirstItem(value);
 
-            protected virtual void AddLastItem(LinkedListNode<T> node) => InnerList.AddLast(node);
+            protected virtual void AddLastItem(System.Collections.Generic.LinkedListNode<T> node) => InnerList.AddLast(node);
 
             /// <summary>
-            /// Adds the specified new node at the end of the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddLastItem(LinkedListNode{T})"/> method to provide a custom implementation.
+            /// Adds the specified new node at the end of the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddLastItem(System.Collections.Generic.LinkedListNode{T})"/> method to provide a custom implementation.
             /// </summary>
-            /// <param name="node">The new <see cref="System.Collections.Generic.LinkedListNode{T}"/> to add at the end of the <see cref="LinkedCollection{T}"/>.</param>
+            /// <param name="node">The new <see cref="System.Collections.Generic.System.Collections.Generic.LinkedListNode{T}"/> to add at the end of the <see cref="LinkedCollection{T}"/>.</param>
             /// <exception cref="ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
             /// <exception cref="InvalidOperationException"><paramref name="node"/> belongs to another <see cref="System.Collections.Generic.LinkedList{T}"/>.</exception>
             /// <seealso cref="AddLast(in T)"/>
-            public void AddLast(in LinkedListNode<T> node) => AddLastItem(node);
+            public void AddLast(in System.Collections.Generic.LinkedListNode<T> node) => AddLastItem(node);
 
-            protected virtual LinkedListNode<T> AddLastItem(T value) => InnerList.AddLast(value);
+            protected virtual System.Collections.Generic.LinkedListNode<T> AddLastItem(T value) => InnerList.AddLast(value);
 
             /// <summary>
             /// Adds a new node containing the specified value at the end of the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddLastItem(T)"/> method to provide a custom implementation.
             /// </summary>
             /// <param name="value">The value to add at the end of the <see cref="LinkedCollection{T}"/>.</param>
-            /// <returns>The new <see cref="System.Collections.Generic.LinkedListNode{T}"/> containing value.</returns>
-            /// <seealso cref="AddLast(in LinkedListNode{T})"/>
-            public LinkedListNode<T> AddLast(in T value) => AddLastItem(value);
+            /// <returns>The new <see cref="System.Collections.Generic.System.Collections.Generic.LinkedListNode{T}"/> containing value.</returns>
+            /// <seealso cref="AddLast(in System.Collections.Generic.LinkedListNode{T})"/>
+            public System.Collections.Generic.LinkedListNode<T> AddLast(in T value) => AddLastItem(value);
 
-            public LinkedListNode<T> Find(T value) => InnerList.Find(value);
+            public System.Collections.Generic.LinkedListNode<T> Find(T value) => InnerList.Find(value);
 
-            public LinkedListNode<T> FindLast(T value) => InnerList.FindLast(value);
+            public System.Collections.Generic.LinkedListNode<T> FindLast(T value) => InnerList.FindLast(value);
 
             protected virtual void ClearItems() => InnerList.Clear();
 
@@ -1032,9 +1210,9 @@ namespace WinCopies.Collections.DotNetFix
 
             public bool Remove(T item) => RemoveItem(item);
 
-            protected virtual void RemoveItem(LinkedListNode<T> node) => InnerList.Remove(node);
+            protected virtual void RemoveItem(System.Collections.Generic.LinkedListNode<T> node) => InnerList.Remove(node);
 
-            public void Remove(LinkedListNode<T> node) => RemoveItem(node);
+            public void Remove(System.Collections.Generic.LinkedListNode<T> node) => RemoveItem(node);
 
             protected virtual void RemoveFirstItem() => InnerList.RemoveFirst();
 
@@ -1071,11 +1249,11 @@ namespace WinCopies.Collections.DotNetFix
         //{
         //    public LinkedCollectionChangeAction Action { get; }
 
-        //    public LinkedListNode<T> AddedBeforeOrAfter { get; }
+        //    public System.Collections.Generic.LinkedListNode<T> AddedBeforeOrAfter { get; }
 
-        //    public LinkedListNode<T> Node { get; }
+        //    public System.Collections.Generic.LinkedListNode<T> Node { get; }
 
-        //    public LinkedCollectionChangedEventArgs(LinkedCollectionChangeAction action, LinkedListNode<T> addedBeforeOrAfter, LinkedListNode<T> node)
+        //    public LinkedCollectionChangedEventArgs(LinkedCollectionChangeAction action, System.Collections.Generic.LinkedListNode<T> addedBeforeOrAfter, System.Collections.Generic.LinkedListNode<T> node)
         //    {
         //        if (((action == LinkedCollectionChangeAction.AddedBefore || action == LinkedCollectionChangeAction.AddedAfter) && addedBeforeOrAfter == null) || ((action != LinkedCollectionChangeAction.AddedBefore && action != LinkedCollectionChangeAction.AddedAfter) && addedBeforeOrAfter != null) || (action == LinkedCollectionChangeAction.Removed && (node == null || addedBeforeOrAfter != null)) || (action == LinkedCollectionChangeAction.Cleared && (node != null || addedBeforeOrAfter != null)))
 
@@ -1115,9 +1293,9 @@ namespace WinCopies.Collections.DotNetFix
 
             protected virtual void OnCollectionChanged(LinkedCollectionChangedEventArgs<T> e) => CollectionChanged?.Invoke(this, e);
 
-            protected void RaiseCollectionChangedEvent(in LinkedCollectionChangedAction action, in LinkedListNode<T> addedBefore, in LinkedListNode<T> addedAfter, in LinkedListNode<T> node) => OnCollectionChanged(new LinkedCollectionChangedEventArgs<T>(action, addedBefore, addedAfter, node));
+            protected void RaiseCollectionChangedEvent(in LinkedCollectionChangedAction action, in System.Collections.Generic.LinkedListNode<T> addedBefore, in System.Collections.Generic.LinkedListNode<T> addedAfter, in System.Collections.Generic.LinkedListNode<T> node) => OnCollectionChanged(new LinkedCollectionChangedEventArgs<T>(action, addedBefore, addedAfter, node));
 
-            protected override void AddFirstItem(LinkedListNode<T> node)
+            protected override void AddFirstItem(System.Collections.Generic.LinkedListNode<T> node)
             {
                 base.AddFirstItem(node);
 
@@ -1126,9 +1304,9 @@ namespace WinCopies.Collections.DotNetFix
                 RaiseCollectionChangedEvent(LinkedCollectionChangedAction.AddFirst, null, null, node);
             }
 
-            protected override LinkedListNode<T> AddFirstItem(T value)
+            protected override System.Collections.Generic.LinkedListNode<T> AddFirstItem(T value)
             {
-                LinkedListNode<T> result = base.AddFirstItem(value);
+                System.Collections.Generic.LinkedListNode<T> result = base.AddFirstItem(value);
 
                 RaiseCountPropertyChangedEvent();
 
@@ -1148,7 +1326,7 @@ namespace WinCopies.Collections.DotNetFix
                 RaiseCollectionChangedEvent(LinkedCollectionChangedAction.AddLast, null, null, InnerList.Last);
             }
 
-            protected override void AddItemAfter(LinkedListNode<T> node, LinkedListNode<T> newNode)
+            protected override void AddItemAfter(System.Collections.Generic.LinkedListNode<T> node, System.Collections.Generic.LinkedListNode<T> newNode)
             {
                 base.AddItemAfter(node, newNode);
 
@@ -1157,9 +1335,9 @@ namespace WinCopies.Collections.DotNetFix
                 RaiseCollectionChangedEvent(LinkedCollectionChangedAction.AddAfter, null, node, newNode);
             }
 
-            protected override LinkedListNode<T> AddItemAfter(LinkedListNode<T> node, T value)
+            protected override System.Collections.Generic.LinkedListNode<T> AddItemAfter(System.Collections.Generic.LinkedListNode<T> node, T value)
             {
-                LinkedListNode<T> result = base.AddItemAfter(node, value);
+                System.Collections.Generic.LinkedListNode<T> result = base.AddItemAfter(node, value);
 
                 RaiseCountPropertyChangedEvent();
 
@@ -1168,7 +1346,7 @@ namespace WinCopies.Collections.DotNetFix
                 return result;
             }
 
-            protected override void AddItemBefore(LinkedListNode<T> node, LinkedListNode<T> newNode)
+            protected override void AddItemBefore(System.Collections.Generic.LinkedListNode<T> node, System.Collections.Generic.LinkedListNode<T> newNode)
             {
                 base.AddItemBefore(node, newNode);
 
@@ -1177,9 +1355,9 @@ namespace WinCopies.Collections.DotNetFix
                 RaiseCollectionChangedEvent(LinkedCollectionChangedAction.AddBefore, node, null, newNode);
             }
 
-            protected override LinkedListNode<T> AddItemBefore(LinkedListNode<T> node, T value)
+            protected override System.Collections.Generic.LinkedListNode<T> AddItemBefore(System.Collections.Generic.LinkedListNode<T> node, T value)
             {
-                LinkedListNode<T> result = base.AddItemBefore(node, value);
+                System.Collections.Generic.LinkedListNode<T> result = base.AddItemBefore(node, value);
 
                 RaiseCountPropertyChangedEvent();
 
@@ -1188,7 +1366,7 @@ namespace WinCopies.Collections.DotNetFix
                 return result;
             }
 
-            protected override void AddLastItem(LinkedListNode<T> node)
+            protected override void AddLastItem(System.Collections.Generic.LinkedListNode<T> node)
             {
                 base.AddLastItem(node);
 
@@ -1197,9 +1375,9 @@ namespace WinCopies.Collections.DotNetFix
                 RaiseCollectionChangedEvent(LinkedCollectionChangedAction.AddLast, null, null, node);
             }
 
-            protected override LinkedListNode<T> AddLastItem(T value)
+            protected override System.Collections.Generic.LinkedListNode<T> AddLastItem(T value)
             {
-                LinkedListNode<T> result = base.AddLastItem(value);
+                System.Collections.Generic.LinkedListNode<T> result = base.AddLastItem(value);
 
                 RaiseCountPropertyChangedEvent();
 
@@ -1219,7 +1397,7 @@ namespace WinCopies.Collections.DotNetFix
 
             protected override void RemoveFirstItem()
             {
-                LinkedListNode<T> node = InnerList.First;
+                System.Collections.Generic.LinkedListNode<T> node = InnerList.First;
 
                 base.RemoveFirstItem();
 
@@ -1228,7 +1406,7 @@ namespace WinCopies.Collections.DotNetFix
                 RaiseCollectionChangedEvent(LinkedCollectionChangedAction.Remove, null, null, node);
             }
 
-            protected override void RemoveItem(LinkedListNode<T> node)
+            protected override void RemoveItem(System.Collections.Generic.LinkedListNode<T> node)
             {
                 base.RemoveItem(node);
 
@@ -1239,7 +1417,7 @@ namespace WinCopies.Collections.DotNetFix
 
             protected override bool RemoveItem(T item)
             {
-                foreach (LinkedListNode<T> node in new LinkedListNodeEnumerator<T>(InnerList))
+                foreach (System.Collections.Generic.LinkedListNode<T> node in new LinkedListNodeEnumerator<T>(InnerList))
 
                     if (node.Value.Equals(item))
                     {
@@ -1257,7 +1435,7 @@ namespace WinCopies.Collections.DotNetFix
 
             protected override void RemoveLastItem()
             {
-                LinkedListNode<T> node = InnerList.Last;
+                System.Collections.Generic.LinkedListNode<T> node = InnerList.Last;
 
                 base.RemoveLastItem();
 
@@ -1269,15 +1447,15 @@ namespace WinCopies.Collections.DotNetFix
     }
 
     [Serializable]
-    internal sealed class LinkedListNodeEnumerator<T> : IEnumerator<LinkedListNode<T>>, IEnumerable<LinkedListNode<T>>
+    internal sealed class LinkedListNodeEnumerator<T> : IEnumerator<System.Collections.Generic.LinkedListNode<T>>, IEnumerable<System.Collections.Generic.LinkedListNode<T>>
     {
         private System.Collections.Generic.LinkedList<T> _list;
 
-        public LinkedListNode<T> Current { get; private set; }
+        public System.Collections.Generic.LinkedListNode<T> Current { get; private set; }
 
         object IEnumerator.Current => Current;
 
-        public LinkedListNodeEnumerator(System.Collections.Generic.LinkedList<T> list) => _list = list;
+        public LinkedListNodeEnumerator(System.Collections.Generic.LinkedList<T> list) => _list = list; // todo: make inner list version check
 
         public void Dispose()
         {
@@ -1317,15 +1495,25 @@ namespace WinCopies.Collections.DotNetFix
 
         public void Reset() { }
 
-        public IEnumerator<LinkedListNode<T>> GetEnumerator() => this;
+        public IEnumerator<System.Collections.Generic.LinkedListNode<T>> GetEnumerator() => this;
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 
     [Serializable]
-    public class QueueCollection : IEnumerable, ICollection, ICloneable
+    public class QueueCollection : IEnumerable, ICollection
+#if WinCopies2
+        , ICloneable
+#endif
     {
-        protected internal System.Collections.Queue InnerQueue { get; }
+        protected internal
+#if WinCopies2
+            System.Collections.Queue
+#else
+IQueue
+#endif
+            InnerQueue
+        { get; }
 
         /// <summary>
         /// Gets the number of elements contained in the <see cref="QueueCollection"/>.
@@ -1342,19 +1530,36 @@ namespace WinCopies.Collections.DotNetFix
         /// <summary>
         /// Initializes a new instance of the <see cref="QueueCollection"/> class.
         /// </summary>
-        public QueueCollection() : this(new System.Collections.Queue()) { }
+        public QueueCollection() : this(new
+#if WinCopies2
+            System.Collections.Queue
+#else
+            EnumerableQueue
+#endif
+            ())
+        { }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="QueueCollection"/> class with a custom <see cref="System.Collections.Queue"/>.
+        /// Initializes a new instance of the <see cref="QueueCollection"/> class with a custom queue.
         /// </summary>
-        /// <param name="System.Collections.Queue">The inner <see cref="System.Collections.Queue"/> for this <see cref="QueueCollection"/>.</param>
-        public QueueCollection(in System.Collections.Queue queue) => InnerQueue = queue;
+        /// <param name="queue">The inner queue for this <see cref="QueueCollection"/>.</param>
+        public QueueCollection(in
+#if WinCopies2
+            System.Collections.Queue
+#else
+            IQueue
+#endif
+            queue) => InnerQueue = queue;
+
+#if WinCopies2
 
         /// <summary>
         /// Creates a shallow copy of the <see cref="QueueCollection"/>.
         /// </summary>
         /// <returns>A shallow copy of the <see cref="QueueCollection"/>.</returns>
         public object Clone() => InnerQueue.Clone();
+
+#endif
 
         /// <summary>
         /// Removes all objects from the <see cref="QueueCollection"/>. Override this method to provide a custom implementation.
@@ -1370,7 +1575,7 @@ namespace WinCopies.Collections.DotNetFix
         /// Determines whether an element is in the <see cref="QueueCollection"/>.
         /// </summary>
         /// <param name="item">The object to locate in the <see cref="QueueCollection"/>. The value can be <see langword="null"/> for reference types.</param>
-        /// <returns><see langword="true"/> if <paramref name="item"/> is found in the <see cref="System.Collections.System.Collections.Queue"/>; otherwise, <see langword="false"/>.</returns>
+        /// <returns><see langword="true"/> if <paramref name="item"/> is found in <see cref="InnerQueue"/>; otherwise, <see langword="false"/>.</returns>
         public bool Contains(object item) => InnerQueue.Contains(item);
 
         /// <summary>
@@ -1405,7 +1610,7 @@ namespace WinCopies.Collections.DotNetFix
         protected virtual void EnqueueItem(in object item) => InnerQueue.Enqueue(item);
 
         /// <summary>
-        /// Adds an object to the end of the <see cref="QueueCollection"/>. Override the <see cref="EnqueueItem(object)"/> method to provide a custom implementation.
+        /// Adds an object to the end of the <see cref="QueueCollection"/>. Override the <see cref="EnqueueItem(in object)"/> method to provide a custom implementation.
         /// </summary>
         /// <param name="item">The object to add to the <see cref="QueueCollection"/>. The value can be <see langword="null"/> for reference types.</param>
         public void Enqueue(in object item) => EnqueueItem(item);
@@ -1433,7 +1638,14 @@ namespace WinCopies.Collections.DotNetFix
     [Serializable]
     public class QueueCollection<T> : IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection
     {
-        protected internal System.Collections.Generic.Queue<T> InnerQueue { get; }
+        protected internal
+#if WinCopies2
+            System.Collections.Generic.Queue<T>
+#else
+IEnumerableQueue<T>
+#endif
+            InnerQueue
+        { get; }
 
         /// <summary>
         /// Gets the number of elements contained in the <see cref="QueueCollection{T}"/>.
@@ -1450,13 +1662,26 @@ namespace WinCopies.Collections.DotNetFix
         /// <summary>
         /// Initializes a new instance of the <see cref="QueueCollection{T}"/> class.
         /// </summary>
-        public QueueCollection() : this(new System.Collections.Generic.Queue<T>()) { }
+        public QueueCollection() : this(new
+#if WinCopies2
+            System.Collections.Generic.Queue
+#else
+            EnumerableQueue
+#endif
+            <T>())
+        { }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="QueueCollection{T}"/> class with a custom <see cref="System.Collections.Generic.Queue{T}"/>.
+        /// Initializes a new instance of the <see cref="QueueCollection{T}"/> class with a custom queue.
         /// </summary>
-        /// <param name="queue">The inner <see cref="System.Collections.Generic.Queue{T}"/> for this <see cref="QueueCollection{T}"/>.</param>
-        public QueueCollection(in System.Collections.Generic.Queue<T> queue) => InnerQueue = queue;
+        /// <param name="queue">The inner queue for this <see cref="QueueCollection{T}"/>.</param>
+        public QueueCollection(in
+#if WinCopies2
+            System.Collections.Generic.Queue<T>
+#else
+            IEnumerableQueue<T>
+#endif
+             queue) => InnerQueue = queue;
 
         /// <summary>
         /// Removes all objects from the <see cref="QueueCollection{T}"/>. Override this method to provide a custom implementation.
@@ -1570,9 +1795,19 @@ namespace WinCopies.Collections.DotNetFix
     }
 
     [Serializable]
-    public class StackCollection : IEnumerable, ICollection, ICloneable
+    public class StackCollection : IEnumerable, ICollection
+#if WinCopies2
+        , ICloneable
+#endif
     {
-        protected internal System.Collections.Stack InnerStack { get; }
+        protected internal
+#if WinCopies2
+            System.Collections.Stack
+#else
+IStack
+#endif
+            InnerStack
+        { get; }
 
         public int Count => InnerStack.Count;
 
@@ -1582,11 +1817,28 @@ namespace WinCopies.Collections.DotNetFix
 
         public object SyncRoot => InnerStack.SyncRoot;
 
-        public StackCollection() : this(new System.Collections.Stack()) { }
+        public StackCollection() : this(new
+#if WinCopies2
+            System.Collections.Stack
+#else
+            EnumerableStack
+#endif
+            ())
+        { }
 
-        public StackCollection(in System.Collections.Stack stack) => InnerStack = stack;
+        public StackCollection(in
+#if WinCopies2
+            System.Collections.Stack
+#else
+            IEnumerableStack
+#endif
+            stack) => InnerStack = stack;
+
+#if WinCopies2
 
         public object Clone() => InnerStack.Clone();
+
+#endif
 
         protected virtual void ClearItems() => InnerStack.Clear();
 
@@ -1614,7 +1866,14 @@ namespace WinCopies.Collections.DotNetFix
     [Serializable]
     public class StackCollection<T> : IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection
     {
-        protected internal System.Collections.Generic.Stack<T> InnerStack { get; }
+        protected internal
+#if WinCopies2
+            System.Collections.Generic.Stack
+#else
+IEnumerableStack
+#endif
+            <T> InnerStack
+        { get; }
 
         public int Count => InnerStack.Count;
 
@@ -1624,9 +1883,22 @@ namespace WinCopies.Collections.DotNetFix
 
         object ICollection.SyncRoot => ((ICollection)InnerStack).SyncRoot;
 
-        public StackCollection() : this(new System.Collections.Generic.Stack<T>()) { }
+        public StackCollection() : this(new
+#if WinCopies2
+            System.Collections.Generic.Stack
+#else
+            IEnumerableStack
+#endif
+            <T>())
+        { }
 
-        public StackCollection(in System.Collections.Generic.Stack<T> stack) => InnerStack = stack;
+        public StackCollection(in
+#if WinCopies2
+            System.Collections.Generic.Stack
+#else
+            IEnumerableStack
+#endif
+            <T> stack) => InnerStack = stack;
 
         protected virtual void ClearItems() => InnerStack.Clear();
 
@@ -1672,9 +1944,9 @@ namespace WinCopies.Collections.DotNetFix
     {
         protected internal System.Collections.Generic.LinkedList<T> InnerList { get; }
 
-        public LinkedListNode<T> Last => InnerList.Last;
+        public System.Collections.Generic.LinkedListNode<T> Last => InnerList.Last;
 
-        public LinkedListNode<T> First => InnerList.First;
+        public System.Collections.Generic.LinkedListNode<T> First => InnerList.First;
 
         public int Count => InnerList.Count;
 
@@ -1692,101 +1964,101 @@ namespace WinCopies.Collections.DotNetFix
 
         void ICollection<T>.Add(T item) => AddItem(item);
 
-        protected virtual void AddItemAfter(LinkedListNode<T> node, LinkedListNode<T> newNode) => InnerList.AddAfter(node, newNode);
+        protected virtual void AddItemAfter(System.Collections.Generic.LinkedListNode<T> node, System.Collections.Generic.LinkedListNode<T> newNode) => InnerList.AddAfter(node, newNode);
 
         /// <summary>
-        /// Adds the specified new node after the specified existing node in the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddItemAfter(LinkedListNode{T}, LinkedListNode{T})"/> method to provide a custom implementation.
+        /// Adds the specified new node after the specified existing node in the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddItemAfter(System.Collections.Generic.LinkedListNode{T}, System.Collections.Generic.LinkedListNode{T})"/> method to provide a custom implementation.
         /// </summary>
-        /// <param name="node">The <see cref="System.Collections.Generic.LinkedListNode{T}"/> after which to insert <paramref name="newNode"/>.</param>
-        /// <param name="newNode">The new <see cref="System.Collections.Generic.LinkedListNode{T}"/> to add to the <see cref="LinkedCollection{T}"/>.</param>
+        /// <param name="node">The <see cref="System.Collections.Generic.System.Collections.Generic.LinkedListNode{T}"/> after which to insert <paramref name="newNode"/>.</param>
+        /// <param name="newNode">The new <see cref="System.Collections.Generic.System.Collections.Generic.LinkedListNode{T}"/> to add to the <see cref="LinkedCollection{T}"/>.</param>
         /// <exception cref="ArgumentNullException"><paramref name="node"/> is <see langword="null"/>. -or- <paramref name="newNode"/> is <see langword="null"/>.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="node"/> is not in the current <see cref="LinkedCollection{T}"/>. -or- <paramref name="newNode"/> belongs to another <see cref="System.Collections.Generic.LinkedList{T}"/>.</exception>
-        /// <seealso cref="AddAfter(LinkedListNode{T}, T)"/>
-        public void AddAfter(in LinkedListNode<T> node, in LinkedListNode<T> newNode) => AddItemAfter(node, newNode);
+        /// <seealso cref="AddAfter(System.Collections.Generic.LinkedListNode{T}, T)"/>
+        public void AddAfter(in System.Collections.Generic.LinkedListNode<T> node, in System.Collections.Generic.LinkedListNode<T> newNode) => AddItemAfter(node, newNode);
 
-        protected virtual LinkedListNode<T> AddItemAfter(LinkedListNode<T> node, T value) => InnerList.AddAfter(node, value);
+        protected virtual System.Collections.Generic.LinkedListNode<T> AddItemAfter(System.Collections.Generic.LinkedListNode<T> node, T value) => InnerList.AddAfter(node, value);
 
         /// <summary>
-        /// Adds a new node containing the specified value after the specified existing node in the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddItemAfter(LinkedListNode{T}, T)"/> method to provide a custom implementation.
+        /// Adds a new node containing the specified value after the specified existing node in the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddItemAfter(System.Collections.Generic.LinkedListNode{T}, T)"/> method to provide a custom implementation.
         /// </summary>
-        /// <param name="node">The <see cref="System.Collections.Generic.LinkedListNode{T}"/> after which to insert a new <see cref="System.Collections.Generic.LinkedListNode{T}"/> containing value.</param>
+        /// <param name="node">The <see cref="System.Collections.Generic.System.Collections.Generic.LinkedListNode{T}"/> after which to insert a new <see cref="System.Collections.Generic.System.Collections.Generic.LinkedListNode{T}"/> containing value.</param>
         /// <param name="value">The value to add to the <see cref="LinkedCollection{T}"/>.</param>
-        /// <returns>The new <see cref="System.Collections.Generic.LinkedListNode{T}"/> containing value.</returns>
+        /// <returns>The new <see cref="System.Collections.Generic.System.Collections.Generic.LinkedListNode{T}"/> containing value.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="node"/> is not in the current <see cref="LinkedCollection{T}"/>.</exception>
-        /// <seealso cref="AddAfter(in LinkedListNode{T}, in LinkedListNode{T})"/>
-        public LinkedListNode<T> AddAfter(LinkedListNode<T> node, T value) => AddItemAfter(node, value);
+        /// <seealso cref="AddAfter(in System.Collections.Generic.LinkedListNode{T}, in System.Collections.Generic.LinkedListNode{T})"/>
+        public System.Collections.Generic.LinkedListNode<T> AddAfter(System.Collections.Generic.LinkedListNode<T> node, T value) => AddItemAfter(node, value);
 
-        protected virtual void AddItemBefore(LinkedListNode<T> node, LinkedListNode<T> newNode) => InnerList.AddBefore(node, newNode);
+        protected virtual void AddItemBefore(System.Collections.Generic.LinkedListNode<T> node, System.Collections.Generic.LinkedListNode<T> newNode) => InnerList.AddBefore(node, newNode);
 
         /// <summary>
-        /// Adds the specified new node before the specified existing node in the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddItemBefore(LinkedListNode{T}, LinkedListNode{T})"/> method to provide a custom implementation.
+        /// Adds the specified new node before the specified existing node in the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddItemBefore(System.Collections.Generic.LinkedListNode{T}, System.Collections.Generic.LinkedListNode{T})"/> method to provide a custom implementation.
         /// </summary>
-        /// <param name="node">The <see cref="System.Collections.Generic.LinkedListNode{T}"/> before which to insert <paramref name="newNode"/>.</param>
-        /// <param name="newNode">The new <see cref="System.Collections.Generic.LinkedListNode{T}"/> to add to the <see cref="LinkedCollection{T}"/>.</param>
+        /// <param name="node">The <see cref="System.Collections.Generic.System.Collections.Generic.LinkedListNode{T}"/> before which to insert <paramref name="newNode"/>.</param>
+        /// <param name="newNode">The new <see cref="System.Collections.Generic.System.Collections.Generic.LinkedListNode{T}"/> to add to the <see cref="LinkedCollection{T}"/>.</param>
         /// <exception cref="ArgumentNullException"><paramref name="node"/> is <see langword="null"/>. -or- <paramref name="newNode"/> is <see langword="null"/>.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="node"/> is not in the current <see cref="LinkedCollection{T}"/>. -or- <paramref name="newNode"/> belongs to another <see cref="System.Collections.Generic.LinkedList{T}"/>.</exception>
-        /// <seealso cref="AddBefore(in LinkedListNode{T}, in T)"/>
-        public void AddBefore(in LinkedListNode<T> node, in LinkedListNode<T> newNode) => AddItemBefore(node, newNode);
+        /// <seealso cref="AddBefore(in System.Collections.Generic.LinkedListNode{T}, in T)"/>
+        public void AddBefore(in System.Collections.Generic.LinkedListNode<T> node, in System.Collections.Generic.LinkedListNode<T> newNode) => AddItemBefore(node, newNode);
 
-        protected virtual LinkedListNode<T> AddItemBefore(LinkedListNode<T> node, T value) => InnerList.AddBefore(node, value);
+        protected virtual System.Collections.Generic.LinkedListNode<T> AddItemBefore(System.Collections.Generic.LinkedListNode<T> node, T value) => InnerList.AddBefore(node, value);
 
         /// <summary>
-        /// Adds a new node containing the specified value before the specified existing node in the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddItemBefore(LinkedListNode{T}, T)"/> method to provide a custom implementation.
+        /// Adds a new node containing the specified value before the specified existing node in the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddItemBefore(System.Collections.Generic.LinkedListNode{T}, T)"/> method to provide a custom implementation.
         /// </summary>
-        /// <param name="node">The <see cref="System.Collections.Generic.LinkedListNode{T}"/> before which to insert a new <see cref="System.Collections.Generic.LinkedListNode{T}"/> containing value.</param>
+        /// <param name="node">The <see cref="System.Collections.Generic.System.Collections.Generic.LinkedListNode{T}"/> before which to insert a new <see cref="System.Collections.Generic.System.Collections.Generic.LinkedListNode{T}"/> containing value.</param>
         /// <param name="value">The value to add to the <see cref="LinkedCollection{T}"/>.</param>
-        /// <returns>The new <see cref="System.Collections.Generic.LinkedListNode{T}"/> containing value.</returns>
+        /// <returns>The new <see cref="System.Collections.Generic.System.Collections.Generic.LinkedListNode{T}"/> containing value.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="node"/> is not in the current <see cref="LinkedCollection{T}"/>.</exception>
-        /// <seealso cref="AddBefore(in LinkedListNode{T}, in LinkedListNode{T})"/>
-        public LinkedListNode<T> AddBefore(in LinkedListNode<T> node, in T value) => AddItemBefore(node, value);
+        /// <seealso cref="AddBefore(in System.Collections.Generic.LinkedListNode{T}, in System.Collections.Generic.LinkedListNode{T})"/>
+        public System.Collections.Generic.LinkedListNode<T> AddBefore(in System.Collections.Generic.LinkedListNode<T> node, in T value) => AddItemBefore(node, value);
 
-        protected virtual void AddFirstItem(LinkedListNode<T> node) => InnerList.AddFirst(node);
+        protected virtual void AddFirstItem(System.Collections.Generic.LinkedListNode<T> node) => InnerList.AddFirst(node);
 
         /// <summary>
-        /// Adds the specified new node at the start of the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddFirstItem(LinkedListNode{T})"/> method to provide a custom implementation.
+        /// Adds the specified new node at the start of the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddFirstItem(System.Collections.Generic.LinkedListNode{T})"/> method to provide a custom implementation.
         /// </summary>
-        /// <param name="node">The new <see cref="System.Collections.Generic.LinkedListNode{T}"/> to add at the start of the <see cref="LinkedCollection{T}"/>.</param>
+        /// <param name="node">The new <see cref="System.Collections.Generic.System.Collections.Generic.LinkedListNode{T}"/> to add at the start of the <see cref="LinkedCollection{T}"/>.</param>
         /// <exception cref="ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="node"/> belongs to another <see cref="System.Collections.Generic.LinkedList{T}"/>.</exception>
         /// <seealso cref="AddFirst(in T)"/>
-        public void AddFirst(in LinkedListNode<T> node) => AddFirstItem(node);
+        public void AddFirst(in System.Collections.Generic.LinkedListNode<T> node) => AddFirstItem(node);
 
-        protected virtual LinkedListNode<T> AddFirstItem(T value) => InnerList.AddFirst(value);
+        protected virtual System.Collections.Generic.LinkedListNode<T> AddFirstItem(T value) => InnerList.AddFirst(value);
 
         /// <summary>
         /// Adds a new node containing the specified value at the start of the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddFirstItem(T)"/> method to provide a custom implementation.
         /// </summary>
         /// <param name="value">The value to add at the start of the <see cref="LinkedCollection{T}"/>.</param>
-        /// <returns>The new <see cref="System.Collections.Generic.LinkedListNode{T}"/> containing value.</returns>
+        /// <returns>The new <see cref="System.Collections.Generic.System.Collections.Generic.LinkedListNode{T}"/> containing value.</returns>
         /// <seealso cref="AddFirst(in T)"/>
-        public LinkedListNode<T> AddFirst(in T value) => AddFirstItem(value);
+        public System.Collections.Generic.LinkedListNode<T> AddFirst(in T value) => AddFirstItem(value);
 
-        protected virtual void AddLastItem(LinkedListNode<T> node) => InnerList.AddLast(node);
+        protected virtual void AddLastItem(System.Collections.Generic.LinkedListNode<T> node) => InnerList.AddLast(node);
 
         /// <summary>
-        /// Adds the specified new node at the end of the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddLastItem(LinkedListNode{T})"/> method to provide a custom implementation.
+        /// Adds the specified new node at the end of the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddLastItem(System.Collections.Generic.LinkedListNode{T})"/> method to provide a custom implementation.
         /// </summary>
-        /// <param name="node">The new <see cref="System.Collections.Generic.LinkedListNode{T}"/> to add at the end of the <see cref="LinkedCollection{T}"/>.</param>
+        /// <param name="node">The new <see cref="System.Collections.Generic.System.Collections.Generic.LinkedListNode{T}"/> to add at the end of the <see cref="LinkedCollection{T}"/>.</param>
         /// <exception cref="ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="node"/> belongs to another <see cref="System.Collections.Generic.LinkedList{T}"/>.</exception>
         /// <seealso cref="AddLast(in T)"/>
-        public void AddLast(in LinkedListNode<T> node) => AddLastItem(node);
+        public void AddLast(in System.Collections.Generic.LinkedListNode<T> node) => AddLastItem(node);
 
-        protected virtual LinkedListNode<T> AddLastItem(T value) => InnerList.AddLast(value);
+        protected virtual System.Collections.Generic.LinkedListNode<T> AddLastItem(T value) => InnerList.AddLast(value);
 
         /// <summary>
         /// Adds a new node containing the specified value at the end of the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddLastItem(T)"/> method to provide a custom implementation.
         /// </summary>
         /// <param name="value">The value to add at the end of the <see cref="LinkedCollection{T}"/>.</param>
-        /// <returns>The new <see cref="System.Collections.Generic.LinkedListNode{T}"/> containing value.</returns>
-        /// <seealso cref="AddLast(in LinkedListNode{T})"/>
-        public LinkedListNode<T> AddLast(in T value) => AddLastItem(value);
+        /// <returns>The new <see cref="System.Collections.Generic.System.Collections.Generic.LinkedListNode{T}"/> containing value.</returns>
+        /// <seealso cref="AddLast(in System.Collections.Generic.LinkedListNode{T})"/>
+        public System.Collections.Generic.LinkedListNode<T> AddLast(in T value) => AddLastItem(value);
 
-        public LinkedListNode<T> Find(T value) => InnerList.Find(value);
+        public System.Collections.Generic.LinkedListNode<T> Find(T value) => InnerList.Find(value);
 
-        public LinkedListNode<T> FindLast(T value) => InnerList.FindLast(value);
+        public System.Collections.Generic.LinkedListNode<T> FindLast(T value) => InnerList.FindLast(value);
 
         protected virtual void ClearItems() => InnerList.Clear();
 
@@ -1808,9 +2080,9 @@ namespace WinCopies.Collections.DotNetFix
 
         public bool Remove(T item) => RemoveItem(item);
 
-        protected virtual void RemoveItem(LinkedListNode<T> node) => InnerList.Remove(node);
+        protected virtual void RemoveItem(System.Collections.Generic.LinkedListNode<T> node) => InnerList.Remove(node);
 
-        public void Remove(LinkedListNode<T> node) => RemoveItem(node);
+        public void Remove(System.Collections.Generic.LinkedListNode<T> node) => RemoveItem(node);
 
         protected virtual void RemoveFirstItem() => InnerList.RemoveFirst();
 
@@ -1867,15 +2139,15 @@ namespace WinCopies.Collections.DotNetFix
     {
         public LinkedCollectionChangedAction Action { get; }
 
-        public LinkedListNode<T> AddedBefore { get; }
+        public System.Collections.Generic.LinkedListNode<T> AddedBefore { get; }
 
-        public LinkedListNode<T> AddedAfter { get; }
+        public System.Collections.Generic.LinkedListNode<T> AddedAfter { get; }
 
-        public LinkedListNode<T> Node { get; }
+        public System.Collections.Generic.LinkedListNode<T> Node { get; }
 
-        public LinkedCollectionChangedEventArgs(LinkedCollectionChangedAction action, LinkedListNode<T> addedBefore, LinkedListNode<T> addedAfter, LinkedListNode<T> node)
+        public LinkedCollectionChangedEventArgs(LinkedCollectionChangedAction action, System.Collections.Generic.LinkedListNode<T> addedBefore, System.Collections.Generic.LinkedListNode<T> addedAfter, System.Collections.Generic.LinkedListNode<T> node)
         {
-            bool check(LinkedCollectionChangedAction _action, LinkedListNode<T> parameter) => (_action == action && parameter == null) || !(_action == action || parameter == null);
+            bool check(LinkedCollectionChangedAction _action, System.Collections.Generic.LinkedListNode<T> parameter) => (_action == action && parameter == null) || !(_action == action || parameter == null);
 
             if ((action == LinkedCollectionChangedAction.Reset && (node != null || addedBefore != null || addedAfter != null))
                 || (action != LinkedCollectionChangedAction.Reset && node == null)
@@ -1913,7 +2185,13 @@ namespace WinCopies.Collections.DotNetFix
 
         public ObservableQueueCollection() : base() { }
 
-        public ObservableQueueCollection(in System.Collections.Generic.Queue<T> queue) : base(queue) { }
+        public ObservableQueueCollection(in
+#if WinCopies2
+            System.Collections.Generic.Queue
+#else
+            IEnumerableQueue
+#endif
+            <T> queue) : base(queue) { }
 
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
 
@@ -1971,7 +2249,6 @@ namespace WinCopies.Collections.DotNetFix
         }
 
 #endif
-
     }
 
     [Serializable]
@@ -1983,7 +2260,13 @@ namespace WinCopies.Collections.DotNetFix
 
         public ObservableStackCollection() : base() { }
 
-        public ObservableStackCollection(in System.Collections.Generic.Stack<T> stack) : base(stack) { }
+        public ObservableStackCollection(in
+#if WinCopies2
+            System.Collections.Generic.Stack
+#else
+            IEnumerableStack
+#endif
+            <T> stack) : base(stack) { }
 
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
 
@@ -2062,9 +2345,9 @@ namespace WinCopies.Collections.DotNetFix
 
         protected virtual void OnCollectionChanged(LinkedCollectionChangedEventArgs<T> e) => CollectionChanged?.Invoke(this, e);
 
-        protected void RaiseCollectionChangedEvent(in LinkedCollectionChangedAction action, in LinkedListNode<T> addedBefore, in LinkedListNode<T> addedAfter, in LinkedListNode<T> node) => OnCollectionChanged(new LinkedCollectionChangedEventArgs<T>(action, addedBefore, addedAfter, node));
+        protected void RaiseCollectionChangedEvent(in LinkedCollectionChangedAction action, in System.Collections.Generic.LinkedListNode<T> addedBefore, in System.Collections.Generic.LinkedListNode<T> addedAfter, in System.Collections.Generic.LinkedListNode<T> node) => OnCollectionChanged(new LinkedCollectionChangedEventArgs<T>(action, addedBefore, addedAfter, node));
 
-        protected override void AddFirstItem(LinkedListNode<T> node)
+        protected override void AddFirstItem(System.Collections.Generic.LinkedListNode<T> node)
         {
             base.AddFirstItem(node);
 
@@ -2073,9 +2356,9 @@ namespace WinCopies.Collections.DotNetFix
             RaiseCollectionChangedEvent(LinkedCollectionChangedAction.AddFirst, null, null, node);
         }
 
-        protected override LinkedListNode<T> AddFirstItem(T value)
+        protected override System.Collections.Generic.LinkedListNode<T> AddFirstItem(T value)
         {
-            LinkedListNode<T> result = base.AddFirstItem(value);
+            System.Collections.Generic.LinkedListNode<T> result = base.AddFirstItem(value);
 
             RaiseCountPropertyChangedEvent();
 
@@ -2095,7 +2378,7 @@ namespace WinCopies.Collections.DotNetFix
             RaiseCollectionChangedEvent(LinkedCollectionChangedAction.AddLast, null, null, InnerList.Last);
         }
 
-        protected override void AddItemAfter(LinkedListNode<T> node, LinkedListNode<T> newNode)
+        protected override void AddItemAfter(System.Collections.Generic.LinkedListNode<T> node, System.Collections.Generic.LinkedListNode<T> newNode)
         {
             base.AddItemAfter(node, newNode);
 
@@ -2104,9 +2387,9 @@ namespace WinCopies.Collections.DotNetFix
             RaiseCollectionChangedEvent(LinkedCollectionChangedAction.AddAfter, null, node, newNode);
         }
 
-        protected override LinkedListNode<T> AddItemAfter(LinkedListNode<T> node, T value)
+        protected override System.Collections.Generic.LinkedListNode<T> AddItemAfter(System.Collections.Generic.LinkedListNode<T> node, T value)
         {
-            LinkedListNode<T> result = base.AddItemAfter(node, value);
+            System.Collections.Generic.LinkedListNode<T> result = base.AddItemAfter(node, value);
 
             RaiseCountPropertyChangedEvent();
 
@@ -2115,7 +2398,7 @@ namespace WinCopies.Collections.DotNetFix
             return result;
         }
 
-        protected override void AddItemBefore(LinkedListNode<T> node, LinkedListNode<T> newNode)
+        protected override void AddItemBefore(System.Collections.Generic.LinkedListNode<T> node, System.Collections.Generic.LinkedListNode<T> newNode)
         {
             base.AddItemBefore(node, newNode);
 
@@ -2124,9 +2407,9 @@ namespace WinCopies.Collections.DotNetFix
             RaiseCollectionChangedEvent(LinkedCollectionChangedAction.AddBefore, node, null, newNode);
         }
 
-        protected override LinkedListNode<T> AddItemBefore(LinkedListNode<T> node, T value)
+        protected override System.Collections.Generic.LinkedListNode<T> AddItemBefore(System.Collections.Generic.LinkedListNode<T> node, T value)
         {
-            LinkedListNode<T> result = base.AddItemBefore(node, value);
+            System.Collections.Generic.LinkedListNode<T> result = base.AddItemBefore(node, value);
 
             RaiseCountPropertyChangedEvent();
 
@@ -2135,7 +2418,7 @@ namespace WinCopies.Collections.DotNetFix
             return result;
         }
 
-        protected override void AddLastItem(LinkedListNode<T> node)
+        protected override void AddLastItem(System.Collections.Generic.LinkedListNode<T> node)
         {
             base.AddLastItem(node);
 
@@ -2144,9 +2427,9 @@ namespace WinCopies.Collections.DotNetFix
             RaiseCollectionChangedEvent(LinkedCollectionChangedAction.AddLast, null, null, node);
         }
 
-        protected override LinkedListNode<T> AddLastItem(T value)
+        protected override System.Collections.Generic.LinkedListNode<T> AddLastItem(T value)
         {
-            LinkedListNode<T> result = base.AddLastItem(value);
+            System.Collections.Generic.LinkedListNode<T> result = base.AddLastItem(value);
 
             RaiseCountPropertyChangedEvent();
 
@@ -2166,7 +2449,7 @@ namespace WinCopies.Collections.DotNetFix
 
         protected override void RemoveFirstItem()
         {
-            LinkedListNode<T> node = InnerList.First;
+            System.Collections.Generic.LinkedListNode<T> node = InnerList.First;
 
             base.RemoveFirstItem();
 
@@ -2175,7 +2458,7 @@ namespace WinCopies.Collections.DotNetFix
             RaiseCollectionChangedEvent(LinkedCollectionChangedAction.Remove, null, null, node);
         }
 
-        protected override void RemoveItem(LinkedListNode<T> node)
+        protected override void RemoveItem(System.Collections.Generic.LinkedListNode<T> node)
         {
             base.RemoveItem(node);
 
@@ -2186,7 +2469,7 @@ namespace WinCopies.Collections.DotNetFix
 
         protected override bool RemoveItem(T item)
         {
-            foreach (LinkedListNode<T> node in new LinkedListNodeEnumerator<T>(InnerList))
+            foreach (System.Collections.Generic.LinkedListNode<T> node in new LinkedListNodeEnumerator<T>(InnerList))
 
                 if (node.Value.Equals(item))
                 {
@@ -2204,7 +2487,7 @@ namespace WinCopies.Collections.DotNetFix
 
         protected override void RemoveLastItem()
         {
-            LinkedListNode<T> node = InnerList.Last;
+            System.Collections.Generic.LinkedListNode<T> node = InnerList.Last;
 
             base.RemoveLastItem();
 
@@ -2217,9 +2500,19 @@ namespace WinCopies.Collections.DotNetFix
 
 
     [Serializable]
-    public class ReadOnlyQueueCollection : IEnumerable, ICollection, ICloneable
+    public class ReadOnlyQueueCollection : IEnumerable, ICollection
+#if WinCopies2
+        , ICloneable
+#endif
     {
-        protected System.Collections.Queue InnerQueue { get; }
+        protected
+#if WinCopies2
+            System.Collections.Queue
+#else
+IQueue
+#endif
+            InnerQueue
+        { get; }
 
         /// <summary>
         /// Gets the number of elements contained in the <see cref="QueueCollection"/>.
@@ -2234,10 +2527,16 @@ namespace WinCopies.Collections.DotNetFix
         object ICollection.SyncRoot => ((ICollection)InnerQueue).SyncRoot;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="QueueCollection"/> class with a custom <see cref="System.Collections.Queue"/>.
+        /// Initializes a new instance of the <see cref="QueueCollection"/> class with a custom queue.
         /// </summary>
-        /// <param name="queue">The inner <see cref="System.Collections.Queue"/> for this <see cref="QueueCollection"/>.</param>
-        public ReadOnlyQueueCollection(in System.Collections.Queue queue) => InnerQueue = queue;
+        /// <param name="queue">The inner queue for this <see cref="QueueCollection"/>.</param>
+        public ReadOnlyQueueCollection(in
+#if WinCopies2
+            System.Collections.Queue
+#else
+            IQueue
+#endif
+            queue) => InnerQueue = queue;
 
         public ReadOnlyQueueCollection(in QueueCollection queueCollection) : this(queueCollection.InnerQueue) { }
 
@@ -2251,7 +2550,7 @@ namespace WinCopies.Collections.DotNetFix
         /// Determines whether an element is in the <see cref="QueueCollection"/>.
         /// </summary>
         /// <param name="item">The object to locate in the <see cref="QueueCollection"/>. The value can be <see langword="null"/> for reference types.</param>
-        /// <returns><see langword="true"/> if <paramref name="item"/> is found in the <see cref="System.Collections.System.Collections.Queue"/>; otherwise, <see langword="false"/>.</returns>
+        /// <returns><see langword="true"/> if <paramref name="item"/> is found in the <see cref="System.Collections.Queue"/>; otherwise, <see langword="false"/>.</returns>
         public bool Contains(object item) => InnerQueue.Contains(item);
 
         /// <summary>
@@ -2288,7 +2587,14 @@ namespace WinCopies.Collections.DotNetFix
     [Serializable]
     public class ReadOnlyQueueCollection<T> : IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection
     {
-        protected System.Collections.Generic.Queue<T> InnerQueue { get; }
+        protected
+#if WinCopies2
+            System.Collections.Generic.Queue
+#else
+IEnumerableQueue
+#endif
+            <T> InnerQueue
+        { get; }
 
         /// <summary>
         /// Gets the number of elements contained in the <see cref="QueueCollection{T}"/>.
@@ -2359,9 +2665,19 @@ namespace WinCopies.Collections.DotNetFix
     }
 
     [Serializable]
-    public class ReadOnlyStackCollection : IEnumerable, ICollection, ICloneable
+    public class ReadOnlyStackCollection : IEnumerable, ICollection
+#if WinCopies2
+        , ICloneable
+#endif
     {
-        protected System.Collections.Stack InnerStack { get; }
+        protected
+#if WinCopies2
+            System.Collections.Stack
+#else
+IStack
+#endif
+            InnerStack
+        { get; }
 
         public int Count => InnerStack.Count;
 
@@ -2371,7 +2687,13 @@ namespace WinCopies.Collections.DotNetFix
 
         public object SyncRoot => InnerStack.SyncRoot;
 
-        public ReadOnlyStackCollection(in System.Collections.Stack stack) => InnerStack = stack;
+        public ReadOnlyStackCollection(in
+#if WinCopies2
+            System.Collections.Stack
+#else
+            IEnumerableStack
+#endif
+            stack) => InnerStack = stack;
 
         public ReadOnlyStackCollection(in StackCollection stackCollection) : this(stackCollection.InnerStack) { }
 
@@ -2391,7 +2713,14 @@ namespace WinCopies.Collections.DotNetFix
     [Serializable]
     public class ReadOnlyStackCollection<T> : IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection
     {
-        protected System.Collections.Generic.Stack<T> InnerStack { get; }
+        protected
+#if WinCopies2
+            System.Collections.Generic.Stack
+#else
+IEnumerableStack
+#endif
+            <T> InnerStack
+        { get; }
 
         public int Count => InnerStack.Count;
 
@@ -2401,7 +2730,13 @@ namespace WinCopies.Collections.DotNetFix
 
         object ICollection.SyncRoot => ((ICollection)InnerStack).SyncRoot;
 
-        public ReadOnlyStackCollection(in System.Collections.Generic.Stack<T> stack) => InnerStack = stack;
+        public ReadOnlyStackCollection(in
+#if WinCopies2
+            System.Collections.Generic.Stack
+#else
+            IEnumerableStack
+#endif
+            <T> stack) => InnerStack = stack;
 
         public ReadOnlyStackCollection(in StackCollection<T> stackCollection) : this(stackCollection.InnerStack) { }
 
@@ -2431,9 +2766,9 @@ namespace WinCopies.Collections.DotNetFix
     {
         protected System.Collections.Generic.LinkedList<T> InnerList { get; }
 
-        public LinkedListNode<T> Last => InnerList.Last;
+        public System.Collections.Generic.LinkedListNode<T> Last => InnerList.Last;
 
-        public LinkedListNode<T> First => InnerList.First;
+        public System.Collections.Generic.LinkedListNode<T> First => InnerList.First;
 
         public int Count => InnerList.Count;
 
@@ -2449,9 +2784,9 @@ namespace WinCopies.Collections.DotNetFix
 
         public ReadOnlyLinkedCollection(in LinkedCollection<T> listCollection) : this(listCollection.InnerList) { }
 
-        public LinkedListNode<T> Find(T value) => InnerList.Find(value);
+        public System.Collections.Generic.LinkedListNode<T> Find(T value) => InnerList.Find(value);
 
-        public LinkedListNode<T> FindLast(T value) => InnerList.FindLast(value);
+        public System.Collections.Generic.LinkedListNode<T> FindLast(T value) => InnerList.FindLast(value);
 
         public bool Contains(T item) => InnerList.Contains(item);
 
@@ -2596,7 +2931,7 @@ namespace WinCopies.Collections.DotNetFix
 
         protected virtual void OnCollectionChanged(LinkedCollectionChangedEventArgs<T> e) => CollectionChanged?.Invoke(this, e);
 
-        protected void RaiseCollectionChangedEvent(in LinkedCollectionChangedAction action, in LinkedListNode<T> addedBefore, in LinkedListNode<T> addedAfter, in LinkedListNode<T> node) => OnCollectionChanged(new LinkedCollectionChangedEventArgs<T>(action, addedBefore, addedAfter, node));
+        protected void RaiseCollectionChangedEvent(in LinkedCollectionChangedAction action, in System.Collections.Generic.LinkedListNode<T> addedBefore, in System.Collections.Generic.LinkedListNode<T> addedAfter, in System.Collections.Generic.LinkedListNode<T> node) => OnCollectionChanged(new LinkedCollectionChangedEventArgs<T>(action, addedBefore, addedAfter, node));
 
         public IEnumerator<T> GetEnumerator() => InnerLinkedCollection.GetEnumerator();
 

@@ -27,12 +27,9 @@ WinCopies.Util (2.6)
 	- WinCopies.Collections.DotNetFix:
 		- IUIntCountableEnumerable (generic and non-generic).
 	- WinCopies.Collections.DotNetFix(.Generic):
-		- (I)SimpleLinkedList(Node)
-		- (I)Stack
-		- (I)Queue
-		- IEnumerableSimpleLinkedList
-		- (I)EnumerableStack
-		- (I)EnumerableQueue
+		- (I)(ReadOnly)(Enumerable)SimpleLinkedList(Node)
+		- (I)(ReadOnly)(Enumerable)Stack
+		- (I)(ReadOnly)(Enumerable)Queue
 	- WinCopies.Collections.DotNetFix.Generic:
 		- ICountable(Disposable)Enumerator
 		- ArrayEnumerator
