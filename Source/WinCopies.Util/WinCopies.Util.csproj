@@ -12,7 +12,7 @@
     <Copyright>Copyright © 2020 Pierre Sprimont</Copyright>
     <PackageTags>WinCopies</PackageTags>
     <VersionPrefix>2.6</VersionPrefix>
-    <VersionSuffix>preview</VersionSuffix>
+    <!--<VersionSuffix>preview</VersionSuffix>-->
     <AssemblyVersion>2.6.0.0</AssemblyVersion>
     <FileVersion>2.6.0.0</FileVersion>
   </PropertyGroup>
