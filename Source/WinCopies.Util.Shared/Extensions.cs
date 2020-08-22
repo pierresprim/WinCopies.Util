@@ -1942,7 +1942,7 @@ namespace WinCopies
         /// <param name="containsMoreThanOneValue"><see langword="true"/> if more than one value has been found, otherwise <see langword="false"/></param>
         /// <param name="values">The values to compare</param>
         /// <returns><see langword="true"/> if <i>exactly</i> one value has been found, otherwise <see langword="false"/>.</returns>
-        public static bool ContainsOneValue<T>(this IEnumerable<T> array, System.Collections.Generic. IEqualityComparer<T> equalityComparer, out bool containsMoreThanOneValue, params T[] values)
+        public static bool ContainsOneValue<T>(this IEnumerable<T> array, System.Collections.Generic.IEqualityComparer<T> equalityComparer, out bool containsMoreThanOneValue, params T[] values)
         {
             ThrowIfNull(equalityComparer, nameof(equalityComparer));
 
@@ -2645,6 +2645,52 @@ namespace WinCopies
 
         #endregion
 
+        public static void CopyTo(this BitArray source, in BitArray array, in int startIndex)
+        {
+            ThrowIfNull(source, nameof(source));
+            ThrowIfNull(array, nameof(array));
+
+            if (array.Length > source.Length)
+
+                throw new ArgumentOutOfRangeException(nameof(array));
+
+            if (startIndex < 0 || startIndex + array.Length > source.Length)
+
+                throw new IndexOutOfRangeException($"{nameof(startIndex)} is out of range.");
+
+            for (int i = 0; i < source.Length; i++)
+
+                array[startIndex + i] = source[i];
+        }
+
+        public static void SetMultipleBits(this BitArray array, in byte[] bytes, in int startIndex)
+        {
+            long length = bytes.Length * 8;
+
+            if (length > array.Length)
+
+                throw new ArgumentOutOfRangeException(nameof(bytes));
+
+            if (startIndex < 0 || startIndex + length > array.Length)
+
+                throw new IndexOutOfRangeException($"{nameof(startIndex)} is out of range.");
+
+            new BitArray(bytes).CopyTo(array, startIndex);
+        }
+
+        public static void SetMultipleBits(this BitArray array, in BitArray bits, in int startIndex)
+        {
+            if (bits.Length > array.Length)
+
+                throw new ArgumentOutOfRangeException(nameof(bits));
+
+            if (startIndex < 0 || startIndex + bits.Length > array.Length)
+
+                throw new IndexOutOfRangeException($"{nameof(startIndex)} is out of range.");
+
+            new BitArray(bits).CopyTo(array, startIndex);
+        }
+
         /// <summary>
         /// Checks if the current object is assignable from at least one type of a given <see cref="Type"/> array.
         /// </summary>
@@ -2661,6 +2707,17 @@ namespace WinCopies
             foreach (Type type in types)
 
                 if (typeEquality ? objType == type : type.IsAssignableFrom(objType))
+
+                    return true;
+
+            return false;
+        }
+
+        public static bool IsType(this Type t, params Type[] types)
+        {
+            foreach (Type type in types)
+
+                if (t == type)
 
                     return true;
 

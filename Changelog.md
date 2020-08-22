@@ -9,8 +9,16 @@ CHANGELOG
 Updates
 -------
 
-??/??/???? 2.6
-=================
+??/??/???? 2.6.1
+================
+
+WinCopies.Util (2.6.1)
+----------------------
+
+Add new (Bit)Array static and extension methods.
+
+08/14/2020 2.6
+==============
 
 - New extension and static throwing methods.
 
