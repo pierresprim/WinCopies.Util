@@ -17,11 +17,14 @@
 
 using System;
 using System.Runtime.Serialization;
-using WinCopies.Util.Resources;
 
 #if WinCopies2
+using WinCopies.Util.Resources;
+
 namespace WinCopies.Util
 #else
+
+using WinCopies.Resources;
 namespace WinCopies
 #endif
 {

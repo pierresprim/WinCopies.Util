@@ -20,6 +20,10 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
+#if !WinCopies2
+using WinCopies.Collections;
+#endif
+
 #if WinCopies2
 namespace WinCopies.Util
 #else
@@ -36,7 +40,7 @@ namespace WinCopies
 
             Type itemType = item.GetType();
 
-            return Enumerable.Repeat(itemType, 1).Concat(itemType.GetInterfaces())
+            return System.Linq.Enumerable.Repeat(itemType, 1).Concat(itemType.GetInterfaces())
                     .FirstOrDefault<DataTemplate>(t => containerElement.TryFindResource(new DataTemplateKey(t))) ?? base.SelectTemplate(item, container);
         }
     }

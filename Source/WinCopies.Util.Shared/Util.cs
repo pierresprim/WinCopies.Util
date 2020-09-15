@@ -17,19 +17,20 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-using WinCopies.Collections;
-using WinCopies.Util.Resources;
-
 using IComparer = System.Collections.IComparer;
 
 #if WinCopies2
+using System.Collections.Generic;
+using System.ComponentModel;
+
+using WinCopies.Collections;
+using WinCopies.Util.Resources;
+
 using IfCT = WinCopies.Util.Util.ComparisonType;
 using IfCM = WinCopies.Util.Util.ComparisonMode;
 using IfComp = WinCopies.Util.Util.Comparison;
@@ -37,12 +38,7 @@ using IfComp = WinCopies.Util.Util.Comparison;
 namespace WinCopies.Util
 {
 #else
-using static WinCopies.Diagnostics.IfHelpers;
 using static WinCopies.ThrowHelper;
-
-using IfCT = WinCopies.Diagnostics.ComparisonType;
-using IfCM = WinCopies.Diagnostics.ComparisonMode;
-using IfComp = WinCopies.Diagnostics.Comparison;
 
 namespace WinCopies
 {
@@ -1737,6 +1733,29 @@ Type enumType = typeof(T);
                 throw new ArgumentException("The given array has not enough space.", arrayArgumentName);
         }
 
+        public static void ThrowOnInvalidCopyToArrayOperation(in Array array, in int arrayIndex, in uint count, in string arrayArgumentName, in string arrayIndexArgumentName)
+        {
+            if (array is null)
+
+                throw new ArgumentNullException(arrayArgumentName);
+
+            if (array.Rank != 1)
+
+                throw new ArgumentException("Multidimensional arrays are not supported.", arrayArgumentName);
+
+            if (array.GetLowerBound(0) != 0)
+
+                throw new ArgumentException("The given array has a non-zero lower bound.", arrayArgumentName);
+
+            if (arrayIndex < 0)
+
+                throw new ArgumentOutOfRangeException(arrayIndexArgumentName);
+
+            if (array.Length - arrayIndex < count)
+
+                throw new ArgumentException("The given array has not enough space.", arrayArgumentName);
+        }
+
         internal static void ThrowIfDisposedInternal(DotNetFix.IDisposable obj)
         {
             if (obj.IsDisposed)
@@ -1774,7 +1793,6 @@ Type enumType = typeof(T);
             ThrowIfDisposingInternal(obj);
         }
 
-#endif
 
         /// <summary>
         /// Returns a value obtained by a <see cref="Func"/>, depending on the result of a comparison.
@@ -1843,6 +1861,7 @@ Type enumType = typeof(T);
 
             return result < 0 ? lower() : result > 0 ? greater() : equals();
         }
+#endif
 
 #if NETCORE || NETSTANDARD
         // https://brockallen.com/2016/09/24/process-start-for-urls-on-net-core/

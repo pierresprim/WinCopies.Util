@@ -10,23 +10,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)CheckedUInt64.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Collections\ArrayBuilder.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Collections\Collections.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Collections\Comparers.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Collections\DotNetFix\Collections.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Collections\DotNetFix\Generic\Misc.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Collections\DotNetFix\LinkedList.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Collections\DotNetFix\LinkedCollections.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Collections\EnumComparer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Collections\Enumerables.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Collections\EnumeratorCollection.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Collections\Enumerators.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Collections\Generic\Misc.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Collections\ITreeNode.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Collections\LinkedList.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Collections\ReadOnlyArrayList.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Collections\ReadOnlyTreeNode.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Collections\TreeNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Date.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\InvalidArgumentException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\ThrowHelper.cs" />
@@ -36,11 +19,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)IBackgroundWorker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IDeepCloneable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IDisposable.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Exceptions\InvalidEnumArgumentException.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Linq\Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Math.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\ObjectDisposingException.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Collections\NullableEntry.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SelectionChangedEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SingleInstance.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StringComparer.cs" />

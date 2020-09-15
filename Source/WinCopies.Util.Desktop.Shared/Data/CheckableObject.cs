@@ -194,7 +194,7 @@ namespace WinCopies.Util.Data
 
         object
 #if WinCopies2
-WinCopies.Util.IValueObject
+            WinCopies.Util.IValueObject
 #else
             WinCopies.IValueObject
 #endif

@@ -491,7 +491,7 @@ namespace WinCopies.Collections
 
     //        protected virtual void CopyTo(Array array, int index) => ((IList)items).CopyTo(array, index);
 
-    //        public virtual IEnumerator<T> GetEnumerator() => items.GetEnumerator();
+    //        public virtual System.Collections.Generic.IEnumerator<T> GetEnumerator() => items.GetEnumerator();
 
     //        public int IndexOf(T item) => IndexOfItem(item);
 
@@ -557,7 +557,7 @@ namespace WinCopies.Collections
 
     //        void System.Collections.Generic.IList<T>.RemoveAt(int index) => RemoveItem(index);
 
-    //        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    //        System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     //        protected virtual bool ClearItems()
     //        {

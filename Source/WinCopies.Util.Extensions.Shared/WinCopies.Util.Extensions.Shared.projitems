@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>d27f795e-c5ae-4031-9499-d9b6182f9512</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>WinCopies.Util.Extensions.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)CheckedUInt64.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\If\Enumerables.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\If\Enums.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\If\HelperMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\If\If.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\If\ThrowHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ThrowHelper.cs" />
+  </ItemGroup>
+</Project>

@@ -15,45 +15,47 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-using System;
+#if WinCopies2 // Removed in WinCopies 3.
+
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
-using WinCopies.Util;
-
-using static
-#if WinCopies2
-WinCopies.Util.Util;
-#else
-WinCopies.ThrowHelper;
-#endif
-
-namespace WinCopies.Linq
+namespace WinCopies.Collections
 {
-    public static class Extensions
+    // todo: to linked list?
+
+    public class EnumeratorCollection : Collection<IEnumerator>
     {
-        public static IEnumerable<T> WherePredicate<T>(this IEnumerable<T> enumerable, Predicate<T> func)
+        public int EnumerableVersion { get; private set; }
+
+        public EnumeratorCollection() : base() { }
+
+        public EnumeratorCollection(IList<IEnumerator> list) : base(list) { }
+
+        protected override void ClearItems()
         {
-            ThrowIfNull(enumerable, nameof(enumerable));
-            ThrowIfNull(func, nameof(func));
+            base.ClearItems();
 
-            foreach (T value in enumerable)
-
-                if (func(value))
-
-                    yield return value;
+            EnumerableVersion = 0;
         }
 
-        public static IEnumerable WherePredicate(this IEnumerable enumerable, Predicate func)
+        protected override void RemoveItem(int index)
         {
-            ThrowIfNull(enumerable, nameof(enumerable));
-            ThrowIfNull(func, nameof(func));
+            RemoveItem(index);
 
-            foreach (object value in enumerable)
+            if (Count == 0)
 
-                if (func(value))
+                EnumerableVersion = 0;
+        }
 
-                    yield return value;
+        public void OnCollectionUpdated()
+        {
+            if (Count > 0)
+
+                EnumerableVersion++;
         }
     }
 }
+
+#endif

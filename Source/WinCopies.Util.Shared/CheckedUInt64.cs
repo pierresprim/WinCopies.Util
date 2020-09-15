@@ -15,14 +15,12 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
+#if WinCopies2
+
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-#if WinCopies2
 namespace WinCopies.Util
-#else
-namespace WinCopies
-#endif
 {
     public struct CheckedUInt64 : IComparable<CheckedUInt64>/*, IComparable<CheckedUInt32>, IComparable<CheckedUInt16>, IComparable<CheckedByte>*/
     {
@@ -996,3 +994,5 @@ namespace WinCopies
         #endregion
     }
 }
+
+#endif

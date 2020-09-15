@@ -55,9 +55,9 @@ namespace WinCopies.Util.Data
         /// <param name="obj">Object to compare to the current object.</param>
         /// <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
         public bool Equals(WinCopies.
-            #if WinCopies2
+#if WinCopies2
             Util.
-            #endif
+#endif
             IValueObject obj) => new ValueObjectEqualityComparer().Equals(this, obj);
 
         /// <summary>
@@ -148,7 +148,11 @@ namespace WinCopies.Util.Data
         /// </summary>
         /// <param name="obj">Object to compare to the current object.</param>
         /// <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
-        public bool Equals(WinCopies.Util.IValueObject obj) => new ValueObjectEqualityComparer().Equals(this, obj);
+        public bool Equals(WinCopies.
+            #if WinCopies2
+            Util.
+#endif
+            IValueObject obj) => new ValueObjectEqualityComparer().Equals(this, obj);
 
         /// <summary>
         /// Determines whether this object is equal to a given object.
@@ -177,7 +181,11 @@ namespace WinCopies.Util.Data
         /// </summary>
         /// <param name="obj">Object to compare to the current object.</param>
         /// <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
-        public bool Equals(WinCopies.Util.IReadOnlyValueObject<T> obj) => new ValueObjectEqualityComparer().Equals(this, obj);
+        public bool Equals(WinCopies.
+#if WinCopies2
+            Util.
+#endif
+            IReadOnlyValueObject<T> obj) => new ValueObjectEqualityComparer().Equals(this, obj);
 
         private readonly T _value;
 
@@ -188,19 +196,12 @@ namespace WinCopies.Util.Data
 
         object IReadOnlyValueObject.Value => _value;
 
-        object WinCopies.Util.IValueObject.Value
-        {
-            get => _value; set
-            {
-                if (value is T _value)
-
-                    Value = _value;
-
-                else
-
-                    throw new ArgumentException("Invalid type.", nameof(value));
-            }
-        }
+        object WinCopies.
+#if WinCopies2
+            Util.
+#endif
+            IValueObject.Value
+        { get => _value; set => Value = value is T _value ? _value : throw new ArgumentException("Invalid type.", nameof(value)); }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NamedObject{T}"/> class.
@@ -219,7 +220,7 @@ namespace WinCopies.Util.Data
             _name = name;
         }
 
-        #region IDisposable Support
+#region IDisposable Support
         private bool disposedValue = false;
 
         /// <summary>
@@ -247,7 +248,7 @@ namespace WinCopies.Util.Data
 
             GC.SuppressFinalize(this);
         }
-        #endregion
+#endregion
     }
 
 }

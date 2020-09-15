@@ -1,0 +1,55 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageId>WinCopies.Util.Extensions</PackageId>
+    <AssemblyName>WinCopies.Util.Extensions</AssemblyName>
+    <Title>WinCopies.Util.Extensions</Title>
+    <TargetFrameworks>netcoreapp3.0;netcoreapp3.1;net472;net48;netstandard2.0;netstandard2.1</TargetFrameworks>
+    <DocumentationFile>WinCopies.Util.Extensions.xml</DocumentationFile>
+    <SignAssembly>true</SignAssembly>
+    <Description>WinCopies framework utilities</Description>
+    <Copyright>Copyright © 2020 Pierre Sprimont</Copyright>
+    <PackageTags>WinCopies</PackageTags>
+    <VersionPrefix>3.0</VersionPrefix>
+    <!--<VersionSuffix>preview</VersionSuffix>-->
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <FileVersion>3.0.0.0</FileVersion>
+    <RootNamespace>WinCopies</RootNamespace>
+    <AssemblyOriginatorKeyFile>WinCopies.Util.Extensions.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework.TrimEnd(`0123456789.`))' == 'netstandard'">
+    <DefineConstants>NETSTANDARD;$(DefineConstants)</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework.TrimEnd(`0123456789.`))' == 'netcoreapp'">
+    <DefineConstants>NETCORE;$(DefineConstants)</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WinCopies.Collections\WinCopies.Collections.csproj" />
+    <ProjectReference Include="..\WinCopies.Util\WinCopies.Util.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources\ExceptionMessages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ExceptionMessages.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\ExceptionMessages.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <Import Project="..\WinCopies.Util.Extensions.Shared\WinCopies.Util.Extensions.Shared.projitems" Label="Shared" />
+
+</Project>

@@ -15,6 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
+#if WinCopies2
+
 using System;
 using System.ComponentModel;
 
@@ -23,20 +25,16 @@ namespace WinCopies.Util.Data
     /// <summary>
     /// Provides an object that defines a value and notifies of the value change.
     /// </summary>
-    [Obsolete("This interface has been replaced by the WinCopies.Util.IValueObject interface and will be removed in later versions.")]
-    public interface IValueObject :
-#if WinCopies2
-        WinCopies.Util.IValueObject
-#else
-        WinCopies.IValueObject
-#endif
-        , INotifyPropertyChanged
-    { }
+    [Obsolete("This interface has been replaced by the WinCopies.Util.IValueObject (WinCopies.IValueObject in WinCopies 3) interface and will be removed in later versions.")]
+    public interface IValueObject : WinCopies.Util.IValueObject, INotifyPropertyChanged
+    {
+        // Left empty.
+    }
 
     /// <summary>
     /// Provides an object that defines a value and notifies of the value change.
     /// </summary>
-    [Obsolete("This interface has been replaced by the WinCopies.Util.IValueObject interface and will be removed in later versions.")]
+    [Obsolete("This interface has been replaced by the WinCopies.Util.IValueObject (WinCopies.IValueObject in WinCopies 3) interface and will be removed in later versions.")]
     public interface IValueObject<T> :
 #if WinCopies2
         WinCopies.Util.IValueObject<T>
@@ -44,7 +42,9 @@ namespace WinCopies.Util.Data
         WinCopies.IValueObject<T>
 #endif
         , IValueObject
-    { }
+    {
+        // Left empty.
+    }
 
     /// <summary>
     /// Provides an object that defines a value and notifies of the value change.
@@ -75,7 +75,7 @@ WinCopies.Util.IValueObject
 #else
             WinCopies.IValueObject
 #endif
-            obj) => new ValueObjectEqualityComparer().Equals(this, obj);
+        obj) => new ValueObjectEqualityComparer().Equals(this, obj);
 
         bool IEquatable<IReadOnlyValueObject>.Equals(IReadOnlyValueObject obj) => new ValueObjectEqualityComparer().Equals(this, obj);
 
@@ -288,3 +288,5 @@ WinCopies.Util.IValueObject<T>
         #endregion
     }
 }
+
+#endif
