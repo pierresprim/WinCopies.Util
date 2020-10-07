@@ -20,11 +20,27 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "WinCopies.Util.Shared", "Wi
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "WinCopies.Util.Desktop.Shared", "WinCopies.Util.Desktop.Shared\WinCopies.Util.Desktop.Shared.shproj", "{02122768-DC6A-467C-A5F5-AE5BF2669308}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinCopies.Util.2.x", "WinCopies.Util.2.x\WinCopies.Util.2.x.csproj", "{002579A1-5F08-462D-9863-7F2A767FE04E}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "WinCopies.Collections.Shared", "WinCopies.Collections.Shared\WinCopies.Collections.Shared.shproj", "{7DA3A3B3-F01D-42C6-95A1-22DCFD180188}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinCopies.Collections", "WinCopies.Collections\WinCopies.Collections.csproj", "{286F53AC-6FDF-4FD9-83AF-7BA230DE1211}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinCopies.Util.Extensions", "WinCopies.Util.Extensions\WinCopies.Util.Extensions.csproj", "{3B73A800-9780-49F3-A382-9ACB627CFB52}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "WinCopies.Util.Extensions.Shared", "WinCopies.Util.Extensions.Shared\WinCopies.Util.Extensions.Shared.shproj", "{D27F795E-C5AE-4031-9499-D9B6182F9512}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		WinCopies.Collections.Shared\WinCopies.Collections.Shared.projitems*{002579a1-5f08-462d-9863-7f2a767fe04e}*SharedItemsImports = 5
+		WinCopies.Util.Shared\WinCopies.Util.Shared.projitems*{002579a1-5f08-462d-9863-7f2a767fe04e}*SharedItemsImports = 5
 		WinCopies.Util.Desktop.Shared\WinCopies.Util.Desktop.Shared.projitems*{02122768-dc6a-467c-a5f5-ae5bf2669308}*SharedItemsImports = 13
 		WinCopies.Util.Desktop.Shared\WinCopies.Util.Desktop.Shared.projitems*{10a0855f-fbc1-4499-aa2e-2b19d8b29e95}*SharedItemsImports = 5
+		WinCopies.Collections.Shared\WinCopies.Collections.Shared.projitems*{286f53ac-6fdf-4fd9-83af-7ba230de1211}*SharedItemsImports = 5
 		WinCopies.Util.Shared\WinCopies.Util.Shared.projitems*{386a44d6-d6d7-4868-9e96-d1b7b4ce068a}*SharedItemsImports = 5
+		WinCopies.Util.Extensions.Shared\WinCopies.Util.Extensions.Shared.projitems*{3b73a800-9780-49f3-a382-9acb627cfb52}*SharedItemsImports = 5
+		WinCopies.Collections.Shared\WinCopies.Collections.Shared.projitems*{7da3a3b3-f01d-42c6-95a1-22dcfd180188}*SharedItemsImports = 13
+		WinCopies.Util.Extensions.Shared\WinCopies.Util.Extensions.Shared.projitems*{d27f795e-c5ae-4031-9499-d9b6182f9512}*SharedItemsImports = 13
 		WinCopies.Util.Shared\WinCopies.Util.Shared.projitems*{e2160f13-964f-409c-9a4f-1fdbbda1b76c}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,6 +56,18 @@ Global
 		{10A0855F-FBC1-4499-AA2E-2B19D8B29E95}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{10A0855F-FBC1-4499-AA2E-2B19D8B29E95}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{10A0855F-FBC1-4499-AA2E-2B19D8B29E95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{002579A1-5F08-462D-9863-7F2A767FE04E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{002579A1-5F08-462D-9863-7F2A767FE04E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{002579A1-5F08-462D-9863-7F2A767FE04E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{002579A1-5F08-462D-9863-7F2A767FE04E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{286F53AC-6FDF-4FD9-83AF-7BA230DE1211}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{286F53AC-6FDF-4FD9-83AF-7BA230DE1211}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{286F53AC-6FDF-4FD9-83AF-7BA230DE1211}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{286F53AC-6FDF-4FD9-83AF-7BA230DE1211}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B73A800-9780-49F3-A382-9ACB627CFB52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B73A800-9780-49F3-A382-9ACB627CFB52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B73A800-9780-49F3-A382-9ACB627CFB52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B73A800-9780-49F3-A382-9ACB627CFB52}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

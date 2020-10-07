@@ -18,7 +18,11 @@
 using System;
 using System.Globalization;
 using System.Runtime.Serialization;
-using WinCopies.Util.Resources;
+using WinCopies
+#if WinCopies2
+    .Util
+#endif
+    .Resources;
 
 namespace WinCopies
 #if WinCopies2
@@ -36,7 +40,7 @@ namespace WinCopies
         /// Initializes a new instance of the <see cref="InvalidArgumentException"/> class with the name of the parameter that causes this exception.
         /// </summary>
         /// <param name="paramName">The name of the parameter that caused the current exception.</param>
-        public InvalidArgumentException(in string paramName) : base(GetErrorMessage(paramName)) { } 
+        public InvalidArgumentException(in string paramName) : base(GetErrorMessage(paramName)) { }
 
         private static string GetErrorMessage(in string paramName) => string.Format(CultureInfo.CurrentCulture, ExceptionMessages.InvalidArgument, paramName);
 
@@ -52,6 +56,6 @@ namespace WinCopies
         /// </summary>
         /// <param name="info">The object that holds the serialized object data.</param>
         /// <param name="context">The contextual information about the source or destination.</param>
-        protected InvalidArgumentException(in SerializationInfo info, in StreamingContext context) : base(info, context) { } 
+        protected InvalidArgumentException(in SerializationInfo info, in StreamingContext context) : base(info, context) { }
     }
 }

@@ -24,13 +24,13 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-using WinCopies.Collections;
-using WinCopies.Collections.DotNetFix;
-using WinCopies.Util.Resources;
-
 using IList = System.Collections.IList;
 
 #if WinCopies2
+using WinCopies.Collections;
+using WinCopies.Collections.DotNetFix;
+
+using WinCopies.Util.Resources;
 using static WinCopies.Util.Util;
 using static WinCopies.Util.ThrowHelper;
 
@@ -40,8 +40,6 @@ namespace WinCopies.Util
 #else
 using static WinCopies.UtilHelpers;
 using static WinCopies.ThrowHelper;
-
-using IfCT = WinCopies.Diagnostics.ComparisonType;
 
 namespace WinCopies
 #endif
@@ -104,6 +102,60 @@ namespace WinCopies
     public static class Extensions
     {
 #if WinCopies2
+        private static void ThrowOnInvalidCopyToArrayParameters(in IEnumerable enumerable, in Array array)
+        {
+            ThrowIfNull(enumerable, nameof(enumerable));
+            ThrowIfNull(array, nameof(array));
+        }
+
+        public static void CopyTo(this IEnumerable enumerable, in Array array, in int arrayIndex, in int count)
+        {
+            ThrowOnInvalidCopyToArrayParameters(enumerable, array);
+            ThrowOnInvalidCopyToArrayOperation(array, arrayIndex, count, nameof(array), nameof(arrayIndex));
+
+            int i = -1;
+
+            foreach (object value in enumerable)
+
+                array.SetValue(value, ++i);
+        }
+
+        public static void CopyTo(this IEnumerable enumerable, in Array array, in int arrayIndex, in uint count)
+        {
+            ThrowOnInvalidCopyToArrayParameters(enumerable, array);
+            ThrowOnInvalidCopyToArrayOperation(array, arrayIndex, count, nameof(array), nameof(arrayIndex));
+
+            int i = -1;
+
+            foreach (object value in enumerable)
+
+                array.SetValue(value, ++i);
+        }
+
+        public static void CopyTo<T>(this IEnumerable<T> enumerable, in T[] array, in int arrayIndex, in int count)
+        {
+            ThrowOnInvalidCopyToArrayParameters(enumerable, array);
+            ThrowOnInvalidCopyToArrayOperation(array, arrayIndex, count, nameof(array), nameof(arrayIndex));
+
+            int i = -1;
+
+            foreach (object value in enumerable)
+
+                array.SetValue(value, ++i);
+        }
+
+        public static void CopyTo<T>(this IEnumerable<T> enumerable, in T[] array, in int arrayIndex, in uint count)
+        {
+            ThrowOnInvalidCopyToArrayParameters(enumerable, array);
+            ThrowOnInvalidCopyToArrayOperation(array, arrayIndex, count, nameof(array), nameof(arrayIndex));
+
+            int i = -1;
+
+            foreach (object value in enumerable)
+
+                array.SetValue(value, ++i);
+        }
+
         public static bool IsEnumeratorNotStartedOrDisposed(this IDisposableEnumeratorInfo enumerator) => (enumerator ?? throw GetArgumentNullException(nameof(enumerator))).IsDisposed || !enumerator.IsStarted;
 
         /// <summary>
@@ -238,6 +290,7 @@ namespace WinCopies
             return ToBool(other) ? XOrResult.OneTrueResult : XOrResult.NoTrueResult;
         }
 
+#if WinCopies2
         #region Enumerables extension methods
 
         // todo:
@@ -1301,7 +1354,7 @@ namespace WinCopies
         {
             ThrowIfNull(array, nameof(array));
 
-            var _array = new System.Collections.Generic.LinkedList<object>();
+            var _array = new ArrayBuilder<object>();
 
             foreach (object value in array)
 
@@ -1942,7 +1995,7 @@ namespace WinCopies
         /// <param name="containsMoreThanOneValue"><see langword="true"/> if more than one value has been found, otherwise <see langword="false"/></param>
         /// <param name="values">The values to compare</param>
         /// <returns><see langword="true"/> if <i>exactly</i> one value has been found, otherwise <see langword="false"/>.</returns>
-        public static bool ContainsOneValue<T>(this IEnumerable<T> array, System.Collections.Generic. IEqualityComparer<T> equalityComparer, out bool containsMoreThanOneValue, params T[] values)
+        public static bool ContainsOneValue<T>(this IEnumerable<T> array, System.Collections.Generic.IEqualityComparer<T> equalityComparer, out bool containsMoreThanOneValue, params T[] values)
         {
             ThrowIfNull(equalityComparer, nameof(equalityComparer));
 
@@ -2644,6 +2697,53 @@ namespace WinCopies
         }
 
         #endregion
+#endif
+
+        public static void CopyTo(this BitArray source, in BitArray array, in int startIndex)
+        {
+            ThrowIfNull(source, nameof(source));
+            ThrowIfNull(array, nameof(array));
+
+            if (array.Length > source.Length)
+
+                throw new ArgumentOutOfRangeException(nameof(array));
+
+            if (startIndex < 0 || startIndex + array.Length > source.Length)
+
+                throw new IndexOutOfRangeException($"{nameof(startIndex)} is out of range.");
+
+            for (int i = 0; i < source.Length; i++)
+
+                array[startIndex + i] = source[i];
+        }
+
+        public static void SetMultipleBits(this BitArray array, in byte[] bytes, in int startIndex)
+        {
+            long length = bytes.Length * 8;
+
+            if (length > array.Length)
+
+                throw new ArgumentOutOfRangeException(nameof(bytes));
+
+            if (startIndex < 0 || startIndex + length > array.Length)
+
+                throw new IndexOutOfRangeException($"{nameof(startIndex)} is out of range.");
+
+            new BitArray(bytes).CopyTo(array, startIndex);
+        }
+
+        public static void SetMultipleBits(this BitArray array, in BitArray bits, in int startIndex)
+        {
+            if (bits.Length > array.Length)
+
+                throw new ArgumentOutOfRangeException(nameof(bits));
+
+            if (startIndex < 0 || startIndex + bits.Length > array.Length)
+
+                throw new IndexOutOfRangeException($"{nameof(startIndex)} is out of range.");
+
+            new BitArray(bits).CopyTo(array, startIndex);
+        }
 
         /// <summary>
         /// Checks if the current object is assignable from at least one type of a given <see cref="Type"/> array.
@@ -2661,6 +2761,17 @@ namespace WinCopies
             foreach (Type type in types)
 
                 if (typeEquality ? objType == type : type.IsAssignableFrom(objType))
+
+                    return true;
+
+            return false;
+        }
+
+        public static bool IsType(this Type t, params Type[] types)
+        {
+            foreach (Type type in types)
+
+                if (t == type)
 
                     return true;
 
@@ -2715,7 +2826,7 @@ namespace WinCopies
             {
                 if (key == null)
 
-                    ThrowOneOrMoreKeyIsNull();
+                    throw GetOneOrMoreKeyIsNullException();
 
                 foreach (TKey _key in _keys)
                 {
@@ -2889,7 +3000,7 @@ namespace WinCopies
 
             if (!CheckPropertySetIntegrity(declaringType, propertyName, out string methodName, 3, bindingFlags))
 
-                ThrowDeclaringTypesNotCorrespondException(propertyName, methodName);
+                throw GetDeclaringTypesNotCorrespondException(propertyName, methodName);
 
             PropertyInfo property = GetProperty(propertyName, declaringType, bindingFlags);
 
@@ -3025,7 +3136,7 @@ namespace WinCopies
 
             if (!CheckPropertySetIntegrity(declaringType, propertyName, out string methodName, 3, bindingFlags))
 
-                ThrowDeclaringTypesNotCorrespondException(propertyName, methodName);
+                throw GetDeclaringTypesNotCorrespondException(propertyName, methodName);
 
             PropertyInfo property = GetProperty(propertyName, declaringType, bindingFlags);
 
@@ -3179,16 +3290,16 @@ namespace WinCopies
             return false;
         }
 
-        /// <summary>
-        /// Determines whether the current enum value is within the enum values range delimited by the first and the last fields; see the Remarks section for more information.
-        /// </summary>
-        /// <param name="enum">The enum value to check.</param>
-        /// <returns><see langword="true"/> if the given value is in the enum values range, otherwise <see langword="false"/>.</returns>
-        /// <remarks>This method doesn't read all the enum fields, but only takes care of the first and last numeric enum fields, so if the value is 1, and the enum has only defined fields for 0 and 2, this method still returns <see langword="true"/>. For a method that actually reads all the enum fields, see the <see cref="Type.IsEnumDefined(object)"/> method.</remarks>
-        /// <seealso cref="ThrowIfNotValidEnumValue(Enum)"/>
-        /// <seealso cref="ThrowIfNotDefinedEnumValue(Enum)"/>
-        /// <seealso cref="ThrowIfNotValidEnumValue(Enum, in string)"/>
-        /// <seealso cref="ThrowIfNotDefinedEnumValue(Enum,in string)"/>
+        ///// <summary>
+        ///// Determines whether the current enum value is within the enum values range delimited by the first and the last fields; see the Remarks section for more information.
+        ///// </summary>
+        ///// <param name="enum">The enum value to check.</param>
+        ///// <returns><see langword="true"/> if the given value is in the enum values range, otherwise <see langword="false"/>.</returns>
+        ///// <remarks>This method doesn't read all the enum fields, but only takes care of the first and last numeric enum fields, so if the value is 1, and the enum has only defined fields for 0 and 2, this method still returns <see langword="true"/>. For a method that actually reads all the enum fields, see the <see cref="Type.IsEnumDefined(object)"/> method.</remarks>
+        ///// <seealso cref="ThrowIfNotValidEnumValue(Enum)"/>
+        ///// <seealso cref="ThrowIfNotDefinedEnumValue(Enum)"/>
+        ///// <seealso cref="ThrowIfNotValidEnumValue(Enum, in string)"/>
+        ///// <seealso cref="ThrowIfNotDefinedEnumValue(Enum,in string)"/>
         public static bool IsValidEnumValue(this Enum @enum)
 
         {
@@ -3202,6 +3313,8 @@ namespace WinCopies
         }
 
         public static bool IsFlagsEnum(this Enum @enum) => (@enum ?? throw GetArgumentNullException(nameof(@enum))).GetType().GetCustomAttribute<FlagsAttribute>() is object;
+
+#if WinCopies2
 
         /// <summary>
         /// Determines whether the current enum value is within the enum values range.
@@ -3269,8 +3382,6 @@ namespace WinCopies
 
             return true;
         }
-
-#if WinCopies2
         /// <summary>
         /// Throws an <see cref="InvalidOperationException"/> if the enum value is not in the required enum value range. See the Remarks section.
         /// </summary>
@@ -3401,7 +3512,6 @@ namespace WinCopies
 
                 throw GetInvalidEnumArgumentException(value, argumentName);
         }
-#endif
 
         public static bool IsValidFlagsEnumValue<T>(this T value, in IfCT comparisonType, in string argumentName, params T[] values) where T : Enum
 
@@ -3463,6 +3573,7 @@ namespace WinCopies
                     return false;
             }
         }
+#endif
 
         public static bool IsValidEnumValue<T>(this T value, in bool valuesAreExpected, params T[] values) where T : Enum
         {
@@ -3587,6 +3698,7 @@ namespace WinCopies
         /// <returns><see langword="true"/> if <paramref name="d"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         public static bool Between(this decimal d, decimal x, decimal y) => d >= x && d <= y;
 
+#if WinCopies2
         public static void ForEach(this IEnumerableEnumerator enumerator, LoopIteration func)
         {
             while (enumerator.MoveNext())
@@ -3650,6 +3762,7 @@ namespace WinCopies
                 enumerator.Dispose();
             }
         }
+#endif
 
         public static void SplitValues<T, U, TContainer>(this IEnumerable<T> enumerable, in bool skipEmptyEnumerables, IValueSplitFactory<T, U, TContainer> splitFactory, params T[] separators) where T : struct where U : IEnumerable<T>
         {
@@ -3921,12 +4034,11 @@ namespace WinCopies
             }
         }
 
+#if WinCopies2
         public static IEnumerable<T> Join<T>(this IEnumerable<IEnumerable<T>> enumerable, bool keepEmptyEnumerables, params T[] join) => new Enumerable<T>(() => new JoinEnumerator<T>(enumerable, keepEmptyEnumerables, join));
 
         #region String extension methods
-
         #region Split
-
         private static void Split(this string s, in bool skipEmptyValues, in StringBuilder stringBuilder, in Action<string> action, params char[] separators)
         {
             ThrowIfNull(s, nameof(s));
@@ -4145,12 +4257,8 @@ namespace WinCopies
 
         // todo: add other methods and overloads for StringComparison, IEqualityComparer<char>, Comparer<char>, Comparison<char>, ignore case and CultureInfo parameters
 
-#if WinCopies2
-
         [Obsolete("This method has been replaced by the Contains(this string, string, IEqualityComparer<char>) method.")]
         public static bool Contains(this string s, System.Collections.Generic.IEqualityComparer<char> comparer, string value) => s.Contains(value, comparer);
-
-#endif
 
         public static bool Contains(this string s, string value, System.Collections.Generic.IEqualityComparer<char> comparer)
         {
@@ -4233,8 +4341,6 @@ namespace WinCopies
             return false;
         }
 
-#if WinCopies2
-
         [Obsolete("This method has been replaced by arrays-common methods.")]
         public static bool Contains(this string s, char value, System.Collections.Generic.IEqualityComparer<char> comparer, out int index)
         {
@@ -4252,8 +4358,6 @@ namespace WinCopies
 
             return false;
         }
-
-#endif
 
         public static bool Contains(this string s, string value, System.Collections.Generic.IEqualityComparer<char> comparer, out int index)
         {
@@ -4310,26 +4414,14 @@ namespace WinCopies
 
         #endregion
 
-        internal static void ThrowIfDisposedInternal(this
-#if WinCopies2
-            WinCopies.Util.DotNetFix.IDisposable
-#else
-            WinCopies.DotNetFix.IDisposable
-#endif
-            obj, in string objectName)
+        internal static void ThrowIfDisposedInternal(this WinCopies.Util.DotNetFix.IDisposable obj, in string objectName)
         {
             if (obj.IsDisposed)
 
                 throw GetExceptionForDispose(objectName, false);
         }
 
-        public static void ThrowIfDisposed(this
-#if WinCopies2
-            WinCopies.Util.DotNetFix.IDisposable
-#else
-            WinCopies.DotNetFix.IDisposable
-#endif
-            obj, in string objectName)
+        public static void ThrowIfDisposed(this WinCopies.Util.DotNetFix.IDisposable obj, in string objectName)
         {
             ThrowIfNull(obj, nameof(obj));
 
@@ -4410,6 +4502,7 @@ namespace WinCopies
 
             return items;
         }
+#endif
 
         public static string Repeat(this char c, in int length) => c.Repeat(null, null, length);
 

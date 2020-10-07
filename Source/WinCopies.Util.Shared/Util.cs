@@ -17,19 +17,19 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.Reflection;
 using System.Runtime.InteropServices;
-
-using WinCopies.Collections;
-using WinCopies.Util.Resources;
 
 using IComparer = System.Collections.IComparer;
 
 #if WinCopies2
-using static WinCopies.Util.ThrowHelper;
+using System.Collections.Generic;
+using System.ComponentModel;
+
+using WinCopies.Collections;
+using WinCopies.Util.Resources;
 
 using IfCT = WinCopies.Util.Util.ComparisonType;
 using IfCM = WinCopies.Util.Util.ComparisonMode;
@@ -38,12 +38,7 @@ using IfComp = WinCopies.Util.Util.Comparison;
 namespace WinCopies.Util
 {
 #else
-using static WinCopies.Diagnostics.IfHelpers;
 using static WinCopies.ThrowHelper;
-
-using IfCT = WinCopies.Diagnostics.ComparisonType;
-using IfCM = WinCopies.Diagnostics.ComparisonMode;
-using IfComp = WinCopies.Diagnostics.Comparison;
 
 namespace WinCopies
 {
@@ -1386,41 +1381,45 @@ namespace WinCopies
         }
 #endif
 
+        public static BitArray GetBitArray(long[] values)
+        {
+            var array = new BitArray(values.Length * 64);
+
+            for (int i = 0; i < values.Length; i++)
+
+                new BitArray(BitConverter.GetBytes(values[i])).CopyTo(array, i * 64);
+
+            return array;
+        }
+
         /// <summary>
         /// Concatenates multiple arrays from a same item type. Arrays must have only one dimension.
         /// </summary>
-        /// <param name="arrays">The different tables to concatenate.</param>
-        /// <returns></returns>
+        /// <param name="arrays">The different arrays to concatenate.</param>
+        /// <returns>An array with a copy of all values of the given arrays.</returns>
         public static T[] Concatenate<T>(params T[][] arrays)
         {
             // /// <param name="elementType">The type of the items inside the tables.</param>
-
-            T[] newArray;
 
             int totalArraysLength = 0;
 
             int totalArraysIndex = 0;
 
             foreach (T[] array in arrays)
-            {
-                // todo : instead, get the maximum rank of arrays in params Array[] arrays and add a gesture of this in the process (also for the ConcatenateLong method) ; and not forgetting to change the comments of the xmldoc about this.
-
-                if (array.Rank != 1)   
-                    
-                    ThrowArrayWithMoreThanOneDimensionException(nameof(array));
 
                 totalArraysLength += array.Length;
-            }
 
-            newArray = new T[totalArraysLength];
+            var newArray = new T[totalArraysLength];
+
+            T[] _array;
 
             for (int i = 0; i < arrays.Length - 1; i++)
             {
-                T[] array = arrays[i];
+                _array = arrays[i];
 
-                array.CopyTo(newArray, totalArraysIndex);
+                _array.CopyTo(newArray, totalArraysIndex);
 
-                totalArraysIndex += array.Length;
+                totalArraysIndex += _array.Length;
             }
 
 #if CS7
@@ -1436,11 +1435,14 @@ namespace WinCopies
             return newArray;
         }
 
+#if WinCopies2
+
         /// <summary>
         /// Concatenates multiple arrays from a same item type using the <see cref="Array.LongLength"/> length property. Arrays must have only one dimension.
         /// </summary>
         /// <param name="arrays">The different tables to concatenate.</param>
         /// <returns></returns>
+        [Obsolete("Use the Concatenate method instead.")]
         public static T[] ConcatenateLong<T>(params T[][] arrays)
         {
             // /// <param name="elementType">The type of the items inside the tables.</param>
@@ -1476,23 +1478,35 @@ namespace WinCopies
             return newArray;
         }
 
+#endif
+
         /// <summary>
-        /// Checks if a object is numeric.
+        /// Checks if a object is a numeric value (an instance of a numeric value type).
         /// </summary>
-        /// <remarks>This function makes a check at the object type. For a string-parsing-checking for numerical value, look at the <see cref="IsNumeric(in string, out decimal)"/> function.</remarks>
+        /// <remarks>This function makes a check for the object type. For a string-parsing-checking for numerical value, look at the <see cref="IsNumeric(in string, out decimal)"/> function.</remarks>
         /// <param name="value">The object to check</param>
-        /// <returns>A <see cref="bool"/> value that indicates whether the object given is a numerical type.</returns>
-        public static bool IsNumber(in object value) => value is sbyte
-                    || value is byte
-                    || value is short
-                    || value is ushort
-                    || value is int
-                    || value is uint
-                    || value is long
-                    || value is ulong
-                    || value is float
-                    || value is double
-                    || value is decimal;
+        /// <returns>A <see cref="bool"/> value that indicates whether the object given is from a numerical type.</returns>
+        public static bool IsNumber(in object value)
+        {
+            switch (value)
+            {
+                case byte _:
+                case sbyte _:
+                case short _:
+                case ushort _:
+                case int _:
+                case uint _:
+                case long _:
+                case ulong _:
+                case float _:
+                case double _:
+                case decimal _:
+
+                    return true;
+            }
+
+            return false;
+        }
 
         /// <summary>
         /// Checks if a <see cref="string"/> is a numerical value.
@@ -1518,13 +1532,33 @@ namespace WinCopies
 
             Array array = Enum.GetValues(enumType);
 
+            return enumType.GetEnumUnderlyingType().IsType(typeof(sbyte), typeof(short), typeof(int), typeof(long)) ? (T)Enum.ToObject(enumType, NumericArrayToLongValue(array)) : (T)Enum.ToObject(enumType, NumericArrayToULongValue(array));
+        }
+
+        public static long NumericArrayToLongValue(Array array)
+        {
+            ThrowIfNull(array, nameof(array));
+
             long values = 0;
 
             foreach (object value in array)
 
-                values |= (long)Convert.ChangeType(value, TypeCode.Int64);
+                values |= (long)Convert.ChangeType(value, TypeCode.Int64, CultureInfo.CurrentCulture);
 
-            return (T)Enum.ToObject(enumType, values);
+            return values;
+        }
+
+        public static ulong NumericArrayToULongValue(Array array)
+        {
+            ThrowIfNull(array, nameof(array));
+
+            ulong values = 0;
+
+            foreach (object value in array)
+
+                values |= (ulong)Convert.ChangeType(value, TypeCode.UInt64, CultureInfo.CurrentCulture);
+
+            return values;
         }
 
         /// <summary>
@@ -1533,15 +1567,24 @@ namespace WinCopies
         /// <param name="enumType">The enum type in which to look for the specified enum field value.</param>
         /// <param name="fieldName">The enum field to look for.</param>
         /// <returns>The numeric value corresponding to this enum, in the given enum type underlying type.</returns>
-        public static object GetNumValue(in Type enumType, in string fieldName)
+        public static object GetNumValue
+#if WinCopies2
+            (in Type enumType,
+#else
+            <T>(
+#endif
+            in string fieldName)
+#if !WinCopies2
+where T : Enum
+#endif
         {
+#if WinCopies2
             ThrowIfNull(enumType, nameof(enumType));
-
-#pragma warning disable CA1062 // Validate arguments of public methods
+#else
+Type enumType = typeof(T);
+#endif
 
             return enumType.IsEnum ? Convert.ChangeType(enumType.GetField(fieldName).GetValue(null), Enum.GetUnderlyingType(enumType)) : throw new ArgumentException("'enumType' is not an enum type.");
-
-#pragma warning restore CA1062 // Validate arguments of public methods
         }
 
 #if WinCopies2
@@ -1690,6 +1733,29 @@ namespace WinCopies
                 throw new ArgumentException("The given array has not enough space.", arrayArgumentName);
         }
 
+        public static void ThrowOnInvalidCopyToArrayOperation(in Array array, in int arrayIndex, in uint count, in string arrayArgumentName, in string arrayIndexArgumentName)
+        {
+            if (array is null)
+
+                throw new ArgumentNullException(arrayArgumentName);
+
+            if (array.Rank != 1)
+
+                throw new ArgumentException("Multidimensional arrays are not supported.", arrayArgumentName);
+
+            if (array.GetLowerBound(0) != 0)
+
+                throw new ArgumentException("The given array has a non-zero lower bound.", arrayArgumentName);
+
+            if (arrayIndex < 0)
+
+                throw new ArgumentOutOfRangeException(arrayIndexArgumentName);
+
+            if (array.Length - arrayIndex < count)
+
+                throw new ArgumentException("The given array has not enough space.", arrayArgumentName);
+        }
+
         internal static void ThrowIfDisposedInternal(DotNetFix.IDisposable obj)
         {
             if (obj.IsDisposed)
@@ -1727,7 +1793,6 @@ namespace WinCopies
             ThrowIfDisposingInternal(obj);
         }
 
-#endif
 
         /// <summary>
         /// Returns a value obtained by a <see cref="Func"/>, depending on the result of a comparison.
@@ -1796,6 +1861,7 @@ namespace WinCopies
 
             return result < 0 ? lower() : result > 0 ? greater() : equals();
         }
+#endif
 
 #if NETCORE || NETSTANDARD
         // https://brockallen.com/2016/09/24/process-start-for-urls-on-net-core/
