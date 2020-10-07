@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using WinCopies.Collections.DotNetFix;
+using WinCopies.Collections.DotNetFix.Generic;
 using static WinCopies.
 #if WinCopies2
     Util.Util;
@@ -132,7 +133,7 @@ namespace WinCopies.Collections
 #if WinCopies2
 System.Collections.IEnumerator, WinCopies.Util.DotNetFix.IDisposable
 #else
-        EnumeratorInfoBase, IEnumeratorInfo
+        EnumeratorInfoBase, IDisposableEnumerator, IDisposableEnumeratorInfo
 #endif
     {
         public object Current
@@ -270,7 +271,12 @@ System.Collections.IEnumerator, WinCopies.Util.DotNetFix.IDisposable
         /// <summary>
         /// Calls the <see cref="System.Collections.IEnumerator.Reset"/> method on <see cref="Enumerator"/>.
         /// </summary>
-        protected override void ResetOverride() => _innerEnumerator.Reset();
+        protected override void ResetOverride()
+        {
+            base.ResetOverride();
+
+            _innerEnumerator.Reset();
+        }
 
         protected override void DisposeManaged()
         {
@@ -289,7 +295,7 @@ System.Collections.IEnumerator, WinCopies.Util.DotNetFix.IDisposable
 #if WinCopies2
 System.Collections.Generic.IEnumerator<T>, WinCopies.Util.DotNetFix.IDisposable
 #else
-           EnumeratorInfoBase, WinCopies.Collections.Generic.IEnumeratorInfo<T>
+           EnumeratorInfoBase, IDisposableEnumerator<T>, IDisposableEnumeratorInfo
 #endif
         {
 #if WinCopies2
@@ -390,7 +396,12 @@ _enumerationStarted
 
             protected override bool MoveNextOverride() => InnerEnumerator.MoveNext();
 
-            protected override void ResetOverride() => _innerEnumerator.Reset();
+            protected override void ResetOverride()
+            {
+                base.ResetOverride();
+
+                _innerEnumerator.Reset();
+            }
 
             protected override void DisposeManaged()
             {

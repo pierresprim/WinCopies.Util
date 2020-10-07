@@ -859,6 +859,8 @@ WinCopies.Collections.Enumerator
 #else
             protected override void ResetOverride()
             {
+                base.ResetOverride();
+
                 ThrowIfVersionHasChanged(_stack.EnumerableVersion, _version);
 #endif
 
@@ -1123,6 +1125,8 @@ WinCopies.Collections.Enumerator
 #else
             protected override void ResetOverride()
             {
+                base.ResetOverride();
+
                 ThrowIfVersionHasChanged(_queue.EnumerableVersion, _version);
 
                 _first = true;

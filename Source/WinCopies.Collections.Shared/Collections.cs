@@ -24,6 +24,8 @@ using System.Diagnostics;
 using IDisposable = WinCopies.Util.DotNetFix.IDisposable;
 #endif
 
+using System.Collections;
+
 namespace WinCopies.Collections
 {
 #if !WinCopies2
@@ -54,6 +56,11 @@ namespace WinCopies.Collections
             bool IsCompleted { get; }
         }
 
+        public interface IDisposableEnumerator : System.Collections.IEnumerator, WinCopies.DotNetFix.IDisposable
+        {
+            // Left empty.
+        }
+
         public interface IDisposableEnumeratorInfo : IEnumeratorInfo, WinCopies.DotNetFix.IDisposable
         {
             // Left empty.
@@ -66,7 +73,12 @@ namespace WinCopies.Collections
 
         namespace Generic
         {
-            public interface IEnumerator<   out T> : System.Collections.Generic.IEnumerator<T>, IEnumeratorBase
+            public interface IEnumerator<out T> : System.Collections.Generic.IEnumerator<T>, IEnumeratorBase
+            {
+                // Left empty.
+            }
+
+            public interface IDisposableEnumerator<out T> : System.Collections.Generic.IEnumerator<T>, WinCopies.DotNetFix.IDisposable
             {
                 // Left empty.
             }

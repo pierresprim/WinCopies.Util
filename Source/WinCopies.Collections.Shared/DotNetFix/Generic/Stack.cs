@@ -201,6 +201,8 @@ WinCopies.Collections.Generic.Enumerator<T>
 #else
             protected override void ResetOverride()
             {
+                base.ResetOverride();
+
 #endif
                 ThrowIfVersionHasChanged(_stack.EnumerableVersion, _version);
 

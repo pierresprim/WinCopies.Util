@@ -236,6 +236,8 @@ WinCopies.Collections.Generic.Enumerator<T>
 #else
             protected override void ResetOverride()
             {
+                base.ResetOverride();
+
                 ThrowIfVersionHasChanged(_queue.EnumerableVersion, _version);
 
                 _first = true;

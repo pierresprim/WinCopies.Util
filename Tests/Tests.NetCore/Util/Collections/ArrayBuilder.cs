@@ -3,14 +3,18 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using WinCopies.Util;
+using WinCopies
+    #if WinCopies2
+    .Util
+#endif
+    ;
 
 namespace WinCopies.Tests.Collections
 {
     [TestClass]
     public class ArrayBuilder
     {
-        private readonly WinCopies.Collections.ArrayBuilder<int> _arrayBuilder = new WinCopies.Collections.ArrayBuilder<int>();
+        private readonly WinCopies.Collections.Generic.ArrayBuilder<int> _arrayBuilder = new WinCopies.Collections.Generic.ArrayBuilder<int>();
 
         private const int Count = 4;
 

@@ -106,10 +106,7 @@ System.Collections.Generic.LinkedListNode
                 <T> FindLast(T value);
 
 #if WinCopies2
-
-        // todo: to remove
-
-        new System.Collections.Generic.LinkedList<T>.Enumerator GetEnumerator();
+			new System.Collections.Generic.LinkedList<T>.Enumerator GetEnumerator();
 #endif
         }
 
@@ -393,6 +390,8 @@ System.Collections.Generic.LinkedListNode
 
                 protected override void ResetOverride()
                 {
+                    base.ResetOverride();
+
                     ThrowIfVersionHasChanged(_list.EnumerableVersion, _version);
 
                     _first = true;

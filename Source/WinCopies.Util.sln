@@ -30,7 +30,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinCopies.Util.Extensions",
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "WinCopies.Util.Extensions.Shared", "WinCopies.Util.Extensions.Shared\WinCopies.Util.Extensions.Shared.shproj", "{D27F795E-C5AE-4031-9499-D9B6182F9512}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinCopies.Util.Desktop.2.x", "WinCopies.Util.Desktop.2.x\WinCopies.Util.Desktop.2.x.csproj", "{6DD60261-6C3A-4FC2-B99F-DE6D449AF5CD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinCopies.Util.Desktop.2.x", "WinCopies.Util.Desktop.2.x\WinCopies.Util.Desktop.2.x.csproj", "{6DD60261-6C3A-4FC2-B99F-DE6D449AF5CD}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution

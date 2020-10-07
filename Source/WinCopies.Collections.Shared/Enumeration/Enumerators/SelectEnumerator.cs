@@ -67,7 +67,12 @@ Current
             return false;
         }
 
-        protected override void ResetOverride() => InnerEnumerator.Reset();
+        protected override void ResetOverride()
+        {
+            base.ResetOverride();
+
+            InnerEnumerator.Reset();
+        }
 
         protected
 #if WinCopies2
