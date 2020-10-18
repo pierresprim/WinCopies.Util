@@ -342,7 +342,7 @@ WinCopies.Collections.Generic.Enumerator<T>
 #endif
 
             [Serializable]
-            public class QueueCollection<T> : IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection
+            public class QueueCollection<T> : System.Collections.Generic.IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection
             {
                 protected internal
 #if WinCopies2
@@ -590,7 +590,7 @@ int
             }
 
             [Serializable]
-            public class ReadOnlyQueueCollection<T> : IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection
+            public class ReadOnlyQueueCollection<T> : System.Collections.Generic.IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection
             {
                 protected
 #if WinCopies2
@@ -687,7 +687,7 @@ int
             }
 
             [Serializable]
-            public class ReadOnlyObservableQueueCollection<T> : IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection, INotifyPropertyChanged, INotifySimpleLinkedCollectionChanged<T>
+            public class ReadOnlyObservableQueueCollection<T> : System.Collections.Generic.IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection, INotifyPropertyChanged, INotifySimpleLinkedCollectionChanged<T>
             {
                 protected ObservableQueueCollection<T> InnerQueueCollection { get; }
 

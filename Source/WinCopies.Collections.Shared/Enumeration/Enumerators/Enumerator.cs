@@ -469,7 +469,7 @@ _enumerationStarted
             /// When overridden in a derived class, initializes a new instance of the <see cref="Enumerator{TSource, TDestination}"/> class.
             /// </summary>
             /// <param name="enumerable">An enumerable from which to get an enumerator to enumerate.</param>
-            public Enumerator(IEnumerable<TSource> enumerable) => _innerEnumerator = (enumerable ?? throw GetArgumentNullException(nameof(enumerable))).GetEnumerator();
+            public Enumerator(System.Collections.Generic.IEnumerable<TSource> enumerable) => _innerEnumerator = (enumerable ?? throw GetArgumentNullException(nameof(enumerable))).GetEnumerator();
 
             /// <summary>
             /// When overridden in a derived class, initializes a new instance of the <see cref="Enumerator{TSource, TDestination}"/> class.

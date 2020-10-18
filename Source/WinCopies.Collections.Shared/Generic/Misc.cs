@@ -27,7 +27,7 @@ using static WinCopies.ThrowHelper;
 
 namespace WinCopies.Collections.Generic
 {
-    public interface IRecursiveEnumerableProviderEnumerable<out T> : IEnumerable<T>
+    public interface IRecursiveEnumerableProviderEnumerable<out T> : System.Collections.Generic.IEnumerable<T>
     {
         System.Collections.Generic.IEnumerator<IRecursiveEnumerable<T>> GetRecursiveEnumerator();
     }

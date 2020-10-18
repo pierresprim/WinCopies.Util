@@ -77,7 +77,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
     //    T Value { get; set; }
     //}
 
-    //public interface ILinkedList<T> : ICollection<T>, IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection, IDeserializationCallback, ISerializable
+    //public interface ILinkedList<T> : ICollection<T>, System.Collections.Generic.IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection, IDeserializationCallback, ISerializable
     //{
     //    ILinkedListNode<T> Last { get; }
 
@@ -284,7 +284,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
 #if WinCopies2
         IUIntCountableEnumerable<T>
 #else
-        IEnumerableSimpleLinkedListBase, IEnumerable<T>
+        IEnumerableSimpleLinkedListBase, System.Collections.Generic.IEnumerable<T>
 #endif
     {
 #if !WinCopies2
@@ -397,7 +397,7 @@ namespace WinCopies.Collections.DotNetFix
 
         [Obsolete("This type has been replaced by WinCopies.Collections.DotNetFix.Generic.LinkedCollection<T>.")]
         [Serializable]
-        public class LinkedCollection<T> : ICollection<T>, IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection, IDeserializationCallback, ISerializable
+        public class LinkedCollection<T> : ICollection<T>, System.Collections.Generic.IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection, IDeserializationCallback, ISerializable
         {
             protected ILinkedList<T> InnerList { get; }
 
@@ -867,7 +867,7 @@ namespace WinCopies.Collections.DotNetFix
         }
 
         [Serializable]
-        public class LinkedCollection<T> : ICollection<T>, IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection
+        public class LinkedCollection<T> : ICollection<T>, System.Collections.Generic.IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection
 #if WinCopies2
             , IDeserializationCallback, ISerializable
 #endif
@@ -1543,7 +1543,7 @@ int
         }
 
         [Serializable]
-        public class ReadOnlyLinkedCollection<T> : ICollection<T>, IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection
+        public class ReadOnlyLinkedCollection<T> : ICollection<T>, System.Collections.Generic.IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection
 #if WinCopies2
 , IDeserializationCallback, ISerializable
 #endif
@@ -1647,7 +1647,7 @@ int
         }
 
         [Serializable]
-        public class ReadOnlyObservableLinkedCollection<T> : ICollection<T>, IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection, INotifyPropertyChanged, INotifyLinkedCollectionChanged<T>
+        public class ReadOnlyObservableLinkedCollection<T> : ICollection<T>, System.Collections.Generic.IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection, INotifyPropertyChanged, INotifyLinkedCollectionChanged<T>
         {
             protected ObservableLinkedCollection<T> InnerLinkedCollection { get; }
 

@@ -51,7 +51,7 @@ namespace WinCopies.Collections
         public override bool? IsResetSupported => null;
 #endif
 
-        public JoinSubEnumerator(IEnumerable<T> subEnumerable, IEnumerable<T> joinEnumerable) : base(subEnumerable)
+        public JoinSubEnumerator(System.Collections.Generic.IEnumerable<T> subEnumerable, System.Collections.Generic.IEnumerable<T> joinEnumerable) : base(subEnumerable)
         {
             Debug.Assert(subEnumerable != null && joinEnumerable != null);
 
@@ -186,10 +186,10 @@ Current
 #if !WinCopies2
         WinCopies.Collections.Generic.
 #endif
-        Enumerator<IEnumerable<T>, T>
+        Enumerator<System.Collections.Generic.IEnumerable<T>, T>
     {
         private System.Collections.Generic.IEnumerator<T> _subEnumerator;
-        private IEnumerable<T> _joinEnumerable;
+        private System.Collections.Generic.IEnumerable<T> _joinEnumerable;
         private Action _updateEnumerator;
         private Func<bool> _moveNext;
         private readonly bool _keepEmptyEnumerables;
@@ -204,7 +204,7 @@ Current
         public override bool? IsResetSupported => null;
 #endif
 
-        public JoinEnumerator(IEnumerable<IEnumerable<T>> enumerable, bool keepEmptyEnumerables, params T[] join) : base(enumerable)
+        public JoinEnumerator(IEnumerable<System.Collections.Generic.IEnumerable<T>> enumerable, bool keepEmptyEnumerables, params T[] join) : base(enumerable)
         {
             _joinEnumerable = join;
 

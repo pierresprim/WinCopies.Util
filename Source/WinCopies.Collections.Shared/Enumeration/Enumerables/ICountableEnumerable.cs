@@ -32,7 +32,7 @@ namespace WinCopies.Collections.DotNetFix
 #endif
     }
 
-    public interface ICountableEnumerable<out T> : IEnumerable<T>, ICountableEnumerable
+    public interface ICountableEnumerable<out T> : System.Collections.Generic.IEnumerable<T>, ICountableEnumerable
     {
         // Left empty.
     }
@@ -49,7 +49,7 @@ namespace WinCopies.Collections.DotNetFix
 #endif
     }
 
-    public interface IUIntCountableEnumerable<out T> : IEnumerable<T>, IUIntCountableEnumerable
+    public interface IUIntCountableEnumerable<out T> : System.Collections.Generic.IEnumerable<T>, IUIntCountableEnumerable
     {
         // Left empty.
     }
