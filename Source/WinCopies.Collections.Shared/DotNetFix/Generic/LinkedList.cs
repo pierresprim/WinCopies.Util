@@ -465,7 +465,7 @@ System.Collections.Generic.LinkedListNode
 
             private void ThrowIfNodeAlreadyHasList(in LinkedListNode node, in string argumentName)
             {
-                if ((node??throw GetArgumentNullException(argumentName)).List != null)
+                if ((node ?? throw GetArgumentNullException(argumentName)).List != null)
 
                     throw new ArgumentException("The given node is already contained in another list.");
             }
@@ -735,9 +735,20 @@ System.Collections.Generic.LinkedListNode
             {
                 ThrowIfNotContainedNode(node, nameof(node));
 
-                Weld(node.Previous, node.Next);
+                if (node == First)
 
-                OnItemRemoved(node);
+                    RemoveFirst();
+
+                else if (node == Last)
+
+                    RemoveLast();
+
+                else
+                {
+                    Weld(node.Previous, node.Next);
+
+                    OnItemRemoved(node);
+                }
             }
 
             void ILinkedList<T>.Remove(ILinkedListNode<T> node) => Remove(node as LinkedListNode ?? throw new ArgumentException($"{nameof(node)} must be an instance of {nameof(LinkedListNode)}."));
