@@ -19,20 +19,22 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
+using WinCopies.Collections.Generic;
+
+#if WinCopies2
+using WinCopies.Collections;
 using WinCopies.Util;
 
-using static
-#if WinCopies2
-WinCopies.Util.Util;
+using static WinCopies.Util.Util;
 #else
-WinCopies.ThrowHelper;
+using static WinCopies.ThrowHelper;
 #endif
 
 namespace WinCopies.Linq
 {
     public static class Extensions
     {
-        public static IEnumerable<T> WherePredicate<T>(this IEnumerable<T> enumerable, Predicate<T> func)
+        public static System.Collections.Generic.IEnumerable<T> WherePredicate<T>(this System.Collections.Generic.IEnumerable<T> enumerable, Predicate<T> func)
         {
             ThrowIfNull(enumerable, nameof(enumerable));
             ThrowIfNull(func, nameof(func));
@@ -55,5 +57,7 @@ namespace WinCopies.Linq
 
                     yield return value;
         }
+
+        public static System.Collections.Generic.IEnumerator<TDestination> Select<TSource, TDestination>(this System.Collections.Generic.IEnumerator<TSource> enumerator, Func<TSource, TDestination> func) => new SelectEnumerator<TSource, TDestination>(enumerator, func);
     }
 }

@@ -216,16 +216,16 @@
 //        public bool IsFixedSize => Items is IList _items ? _items.IsFixedSize : false /*Items.IsReadOnly*/;
 
 //        /// <summary>
-//        /// Returns an <see cref="IEnumerator{T}"/> for this <see cref="ReadOnlyTreeNode{TValue, TItems}"/>.
+//        /// Returns an <see cref="System.Collections.IEnumerator{T}"/> for this <see cref="ReadOnlyTreeNode{TValue, TItems}"/>.
 //        /// </summary>
-//        /// <returns><see cref="IEnumerator{T}"/> for this <see cref="ReadOnlyTreeNode{TValue, TItems}"/>.</returns>
-//        public IEnumerator<ReadOnlyTreeNode<TItems>> GetEnumerator() => Items.GetEnumerator();
+//        /// <returns><see cref="System.Collections.IEnumerator{T}"/> for this <see cref="ReadOnlyTreeNode{TValue, TItems}"/>.</returns>
+//        public System.Collections.Generic.IEnumerator<ReadOnlyTreeNode<TItems>> GetEnumerator() => Items.GetEnumerator();
 
-//        IEnumerator<TItems> IEnumerable<TItems>.GetEnumerator() => new ValueObjectEnumerator<TItems>(GetEnumerator());
+//        System.Collections.Generic.IEnumerator<TItems> IEnumerable<TItems>.GetEnumerator() => new ValueObjectEnumerator<TItems>(GetEnumerator());
 
-//        IEnumerator<ITreeNode<TItems>> IEnumerable<ITreeNode<TItems>>.GetEnumerator() => GetEnumerator();
+//        System.Collections.Generic.IEnumerator<ITreeNode<TItems>> IEnumerable<ITreeNode<TItems>>.GetEnumerator() => GetEnumerator();
 
-//        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+//        System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
 //        void ICollection<ReadOnlyTreeNode<TItems>>.Add(ReadOnlyTreeNode<TItems> item) => throw new NotSupportedException("The current node is read-only.");
 

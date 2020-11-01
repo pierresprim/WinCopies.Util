@@ -9,6 +9,7 @@
     <Import_RootNamespace>WinCopies.Util.Extensions.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)CheckedUInt64.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\If\Enumerables.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\If\Enums.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\If\HelperMethods.cs" />

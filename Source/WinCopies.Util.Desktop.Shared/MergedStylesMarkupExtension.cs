@@ -24,6 +24,8 @@ using System.Windows.Markup;
 #if WinCopies2
 namespace WinCopies.Util
 #else
+using WinCopies.Collections;
+
 namespace WinCopies
 #endif
 {
@@ -51,7 +53,7 @@ namespace WinCopies
         {
             if (_mergedStyle == null)
             {
-                IEnumerator<Style> enumerator = _styles.GetEnumerator();
+                System.Collections.Generic.IEnumerator<Style> enumerator = _styles.GetEnumerator();
 
                 if (enumerator.MoveNext())
                 {

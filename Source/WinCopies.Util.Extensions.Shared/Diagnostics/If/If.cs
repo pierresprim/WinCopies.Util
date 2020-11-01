@@ -400,10 +400,10 @@ namespace WinCopies.Diagnostics
         /// <param name="value">The value to compare the values of the table with.</param>
         /// <param name="values">The values to compare.</param>
         /// <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
-        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, in object value, params object[] values) => If(comparisonType, comparisonMode, comparison, EqualityComparer<object>.Default, GetCommonPredicate(), value, values);
+        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, in object value, params object[] values) => If(comparisonType, comparisonMode, comparison, System.Collections.Generic.EqualityComparer<object>.Default, GetCommonPredicate(), value, values);
 
         ///// <summary>
-        ///// Performs a comparison by testing a value compared to an array of values using a custom <see cref="IComparer{T}"/> and <see cref="Predicate{T}"/>.
+        ///// Performs a comparison by testing a value compared to an array of values using a custom <see cref="System.Collections.Generic.IComparer{T}"/> and <see cref="Predicate{T}"/>.
         ///// </summary>
         ///// <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
         ///// <param name="comparisonMode">Whether to perform a binary or a logical comparison.</param>
@@ -547,10 +547,10 @@ namespace WinCopies.Diagnostics
         /// <param name="value">The value to compare the values of the table with.</param>
         /// <param name="values">The values to compare.</param>
         /// <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
-        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, out object key, in object value, params KeyValuePair<object, object>[] values) => If(comparisonType, comparisonMode, comparison, out key, EqualityComparer<object>.Default, GetCommonPredicate(), value, values);
+        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, out object key, in object value, params KeyValuePair<object, object>[] values) => If(comparisonType, comparisonMode, comparison, out key, System.Collections.Generic.EqualityComparer<object>.Default, GetCommonPredicate(), value, values);
 
         ///// <summary>
-        ///// Performs a comparison by testing a value compared to an array of objects or values using a custom <see cref="IComparer{Object}"/> and <see cref="Predicate{Object}"/>.
+        ///// Performs a comparison by testing a value compared to an array of objects or values using a custom <see cref="System.Collections.Generic.IComparer{Object}"/> and <see cref="Predicate{Object}"/>.
         ///// </summary>
         ///// <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
         ///// <param name="comparison">The comparison type</param>
@@ -563,7 +563,7 @@ namespace WinCopies.Diagnostics
         //public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, out object key, IComparer comparer, in Predicate<object> predicate, in object value, params KeyValuePair<object, object>[] values) => If(comparisonType, comparisonMode, comparison, out key, (object x, object y) => comparer.Compare(x, y), predicate, value, values);
 
         /// <summary>
-        /// Performs a comparison by testing a value compared to an array of objects or values using a custom <see cref="IComparer{Object}"/> and <see cref="Predicate{Object}"/>.
+        /// Performs a comparison by testing a value compared to an array of objects or values using a custom <see cref="System.Collections.Generic.IComparer{Object}"/> and <see cref="Predicate{Object}"/>.
         /// </summary>
         /// <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
         /// <param name="comparison">The comparison type</param>
@@ -638,10 +638,10 @@ namespace WinCopies.Diagnostics
         /// <param name="value">The value to compare the values of the table with.</param>
         /// <param name="values">The values to compare.</param>
         /// <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
-        public static bool If<T>(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, in T value, params T[] values) => If(comparisonType, comparisonMode, comparison, EqualityComparer<T>.Default, GetCommonPredicate<T>(), value, values);
+        public static bool If<T>(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, in T value, params T[] values) => If(comparisonType, comparisonMode, comparison, System.Collections.Generic.EqualityComparer<T>.Default, GetCommonPredicate<T>(), value, values);
 
         /// <summary>
-        /// Performs a comparison by testing a value compared to an array of objects or values using a custom <see cref="IComparer{Object}"/> and <see cref="Predicate{Object}"/>.
+        /// Performs a comparison by testing a value compared to an array of objects or values using a custom <see cref="System.Collections.Generic.IComparer{Object}"/> and <see cref="Predicate{Object}"/>.
         /// </summary>
         /// <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
         /// <param name="comparison">The comparison type</param>
@@ -703,10 +703,10 @@ namespace WinCopies.Diagnostics
         /// <param name="value">The value to compare the values of the table with.</param>
         /// <param name="values">The values to compare.</param>
         /// <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
-        public static bool If<TKey, TValue>(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, out TKey key, in TValue value, params KeyValuePair<TKey, TValue>[] values) => If(comparisonType, comparisonMode, comparison, out key, EqualityComparer<TValue>.Default, GetCommonPredicate<TValue>(), value, values);
+        public static bool If<TKey, TValue>(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, out TKey key, in TValue value, params KeyValuePair<TKey, TValue>[] values) => If(comparisonType, comparisonMode, comparison, out key, System.Collections.Generic.EqualityComparer<TValue>.Default, GetCommonPredicate<TValue>(), value, values);
 
         /// <summary>
-        /// Performs a comparison by testing a value compared to an array of objects or values using a custom <see cref="IComparer{Object}"/> and <see cref="Predicate{Object}"/>.
+        /// Performs a comparison by testing a value compared to an array of objects or values using a custom <see cref="System.Collections.Generic.System.Collections.Generic.IComparer{Object}"/> and <see cref="Predicate{Object}"/>.
         /// </summary>
         /// <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
         /// <param name="comparison">The comparison type</param>

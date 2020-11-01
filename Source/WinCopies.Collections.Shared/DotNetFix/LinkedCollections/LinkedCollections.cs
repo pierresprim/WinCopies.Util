@@ -25,6 +25,7 @@ using static WinCopies.Collections.ThrowHelper;
 using WinCopies.Util;
 
 using static WinCopies.Util.Util;
+using static WinCopies.Util.ThrowHelper;
 #else
 using static WinCopies.ThrowHelper;
 #endif
@@ -36,24 +37,24 @@ namespace WinCopies.Collections.DotNetFix
         object Value { get; }
 
 #if WinCopies2
-            ISimpleLinkedListNode NextNode { get; }
+        ISimpleLinkedListNode NextNode { get; }
 #else
         ISimpleLinkedListNode Next { get; }
 #endif
     }
 
-#if !WinCopies2
     public interface ISimpleLinkedListBase : IUIntCountable
     {
-        bool IsReadOnly { get; }
-
         object SyncRoot { get; }
 
         bool IsSynchronized { get; }
 
+#if !WinCopies2
+        bool IsReadOnly { get; }
+
         void Clear();
-    }
 #endif
+    }
 
     public interface ISimpleLinkedList :
 #if WinCopies2
@@ -63,7 +64,7 @@ namespace WinCopies.Collections.DotNetFix
 #endif
     {
 #if WinCopies2
-            bool IsReadOnly { get; }
+        bool IsReadOnly { get; }
 #else
         bool TryPeek(out object result);
 #endif
@@ -148,10 +149,7 @@ namespace WinCopies.Collections.DotNetFix
         }
     }
 
-    public abstract class SimpleLinkedListBase
-#if !WinCopies2
-            : ISimpleLinkedListBase
-#endif
+    public abstract class SimpleLinkedListBase : ISimpleLinkedListBase
     {
         private object _syncRoot;
 
@@ -162,7 +160,7 @@ namespace WinCopies.Collections.DotNetFix
 
         public abstract uint Count { get; }
 
-        public object SyncRoot
+        object ISimpleLinkedListBase.SyncRoot
         {
             get
             {
@@ -174,7 +172,7 @@ namespace WinCopies.Collections.DotNetFix
             }
         }
 
-        public bool IsSynchronized => false;
+        bool ISimpleLinkedListBase.IsSynchronized => false;
 
         public void Clear()
         {
@@ -250,7 +248,12 @@ namespace WinCopies.Collections.DotNetFix
 
                 throw GetReadOnlyListOrCollectionException();
 
-            ThrowIfEmpty(this);
+#if WinCopies2
+            ThrowIfEmpty
+#else
+            ThrowIfEmptyListOrCollection
+#endif
+                (this);
 
             return OnRemove();
         }
@@ -315,11 +318,11 @@ namespace WinCopies.Collections.DotNetFix
     public class Stack : SimpleLinkedList, IStack
     {
 #if WinCopies2
-            public new bool IsReadOnly => base.IsReadOnly;
+        public new bool IsReadOnly => base.IsReadOnly;
 
-            public new uint Count => base.Count;
+        public new uint Count => base.Count;
 
-            public new object Peek() => base.Peek();
+        public new object Peek() => base.Peek();
 #endif
 
         public void Push(object item) => Add(item);
@@ -343,6 +346,7 @@ namespace WinCopies.Collections.DotNetFix
         protected sealed override SimpleLinkedListNode RemoveItem() => FirstItem.Next;
     }
 
+#if !WinCopies2
     public class SynchronizedStack : IStack
     {
         private readonly IStack _stack;
@@ -412,17 +416,18 @@ namespace WinCopies.Collections.DotNetFix
                 return _stack.TryPop(out result);
         }
     }
+#endif
 
     public class Queue : SimpleLinkedList, IQueue
     {
         private SimpleLinkedListNode _lastItem;
 
 #if WinCopies2
-            public new bool IsReadOnly => base.IsReadOnly;
+        public new bool IsReadOnly => base.IsReadOnly;
 
-            public new uint Count => base.Count;
+        public new uint Count => base.Count;
 
-            public new object Peek() => base.Peek();
+        public new object Peek() => base.Peek();
 #endif
 
         public void Enqueue(object item) => Add(item);
@@ -461,6 +466,7 @@ namespace WinCopies.Collections.DotNetFix
         protected sealed override SimpleLinkedListNode RemoveItem() => FirstItem.Next;
     }
 
+#if !WinCopies2
     public class SynchronizedQueue : IQueue
     {
         private readonly IQueue _queue;
@@ -530,6 +536,7 @@ namespace WinCopies.Collections.DotNetFix
                 return _queue.TryDequeue(out result);
         }
     }
+#endif
 
     public abstract class ReadOnlySimpleLinkedListBase
 #if !WinCopies2
@@ -605,10 +612,10 @@ namespace WinCopies.Collections.DotNetFix
         public ReadOnlyQueue(IQueue queue) => _queue = queue;
 
 #if WinCopies2
-            public ReadOnlyQueue(IStack stack)
-            {
-                // Left empty.
-            }
+        public ReadOnlyQueue(IStack stack)
+        {
+            // Left empty.
+        }
 #endif
 
         public sealed override object Peek() => _queue.Peek();
@@ -629,10 +636,12 @@ namespace WinCopies.Collections.DotNetFix
 #endif
     }
 
+#if !WinCopies2
     public interface IEnumerableSimpleLinkedListBase : ISimpleLinkedListBase
     {
         // Left empty.
     }
+#endif
 
     public interface IEnumerableSimpleLinkedList : ISimpleLinkedList,
 #if WinCopies2
@@ -648,7 +657,10 @@ namespace WinCopies.Collections.DotNetFix
 #endif
     }
 
-    public abstract class EnumerableSimpleLinkedListBase : IEnumerableSimpleLinkedListBase
+    public abstract class EnumerableSimpleLinkedListBase
+#if !WinCopies2
+: IEnumerableSimpleLinkedListBase
+#endif
     {
         [NonSerialized]
         private uint _enumeratorsCount = 0;
@@ -671,7 +683,7 @@ namespace WinCopies.Collections.DotNetFix
 
         public bool IsSynchronized => false;
 
-        protected uint EnumerableVersion => _enumerableVersion;
+        private protected uint EnumerableVersion => _enumerableVersion;
 
         public abstract uint Count { get; }
 
@@ -702,7 +714,7 @@ namespace WinCopies.Collections.DotNetFix
 
         public abstract bool TryPeek(out object result);
 
-        public abstract IEnumerator GetEnumerator();
+        public abstract System.Collections.IEnumerator GetEnumerator();
 
         public void CopyTo(Array array, int arrayIndex) =>
 #if WinCopies2
@@ -740,7 +752,7 @@ namespace WinCopies.Collections.DotNetFix
         private readonly Stack _stack;
 
 #if WinCopies2
-            public new bool IsReadOnly => base.IsReadOnly;
+        public new bool IsReadOnly => base.IsReadOnly;
 #endif
 
         public sealed override uint Count => _stack.Count;
@@ -786,7 +798,7 @@ namespace WinCopies.Collections.DotNetFix
             return false;
         }
 
-        public sealed override IEnumerator GetEnumerator()
+        public sealed override System.Collections.IEnumerator GetEnumerator()
         {
             var enumerator = new Enumerator(this);
 
@@ -796,68 +808,112 @@ namespace WinCopies.Collections.DotNetFix
         }
 
 #if WinCopies2
-            [Serializable]
+        [Serializable]
 #endif
-        public sealed class Enumerator : IEnumerator, WinCopies.
+        public sealed class Enumerator :
 #if WinCopies2
-                    Util.
+IEnumerator, Util.DotNetFix.IDisposable
+#else
+WinCopies.Collections.Enumerator
 #endif
-                    DotNetFix.IDisposable
         {
             private EnumerableStack _stack;
             private ISimpleLinkedListNode _currentNode;
             private readonly uint _version;
-            private object _current;
+            private bool _first = true;
 
-            public object Current => IsDisposed ? throw GetExceptionForDispose(false) : _current;
+#if WinCopies2
+            public object Current => IsDisposed ? throw GetExceptionForDispose(false) : _currentNode.Value;
 
             public bool IsDisposed { get; private set; }
+#else
 
+            protected override object CurrentOverride => _currentNode.Value;
+
+            public override bool? IsResetSupported => true;
+#endif
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Enumerator"/> class.
+            /// </summary>
+            /// <param name="stack">The <see cref="EnumerableStack"/> to enumerate.</param>
             public Enumerator(in EnumerableStack stack)
             {
                 _stack = stack;
 
                 _version = stack.EnumerableVersion;
 
+#if WinCopies2
                 Reset();
+#else
+                ResetOverride();
+#endif
             }
 
+#if WinCopies2
             public void Reset()
             {
                 if (IsDisposed)
 
                     throw GetExceptionForDispose(false);
+#else
+            protected override void ResetOverride()
+            {
+                base.ResetOverride();
+
+                ThrowIfVersionHasChanged(_stack.EnumerableVersion, _version);
+#endif
+
+                _first = true;
 
                 _currentNode = _stack._stack.FirstItem;
             }
 
+#if WinCopies2
             public bool MoveNext()
             {
                 if (IsDisposed)
 
                     throw GetExceptionForDispose(false);
 
-                if (_stack.EnumerableVersion != _version)
+#else
+            protected override bool MoveNextOverride()
+            {
+#endif
+                ThrowIfVersionHasChanged(_stack.EnumerableVersion, _version);
 
-                    throw new InvalidOperationException("The collection has changed during enumeration.");
+                if (_first)
+                {
+                    _first = false;
 
-                if (_currentNode == null)
+                    return _currentNode != null;
+                }
+
+                if (_currentNode.
+#if WinCopies2
+                    NextNode
+#else
+                    Next
+#endif
+                    == null)
+                {
+                    _currentNode = null;
 
                     return false;
-
-                _current = _currentNode.Value;
+                }
 
                 _currentNode = _currentNode.
 #if WinCopies2
-                        NextNode
+                    NextNode
 #else
-                        Next
+                    Next
 #endif
-                        ;
+                    ;
 
                 return true;
             }
 
+#if WinCopies2
             private void Dispose(bool disposing)
             {
                 if (IsDisposed)
@@ -868,8 +924,6 @@ namespace WinCopies.Collections.DotNetFix
 
                 if (disposing)
                 {
-                    _current = null;
-
                     _stack = null;
 
                     _currentNode = null;
@@ -879,6 +933,23 @@ namespace WinCopies.Collections.DotNetFix
             }
 
             public void Dispose() => Dispose(true);
+#else
+            protected override void DisposeManaged()
+            {
+                base.DisposeManaged();
+
+                _stack = null;
+
+                _currentNode = null;
+            }
+
+            protected override void Dispose(bool disposing)
+            {
+                base.Dispose(disposing);
+
+                _stack.DecrementEnumeratorCount();
+            }
+#endif
 
             ~Enumerator() => Dispose(false);
         }
@@ -926,7 +997,7 @@ namespace WinCopies.Collections.DotNetFix
         }
 #endif
 
-        public IEnumerator GetEnumerator() => _stack.GetEnumerator();
+        public System.Collections.IEnumerator GetEnumerator() => _stack.GetEnumerator();
     }
 
     public interface IEnumerableQueue : IQueue, IEnumerableSimpleLinkedList
@@ -941,7 +1012,7 @@ namespace WinCopies.Collections.DotNetFix
         private readonly Queue _queue;
 
 #if WinCopies2
-            public new bool IsReadOnly => base.IsReadOnly;
+        public new bool IsReadOnly => base.IsReadOnly;
 #endif
 
         public sealed override uint Count => _queue.Count;
@@ -980,7 +1051,11 @@ namespace WinCopies.Collections.DotNetFix
             return result;
         }
 
-        public sealed override IEnumerator GetEnumerator()
+        /// <summary>
+        /// Returns an <see cref="System.Collections.IEnumerator"/> for this <see cref="EnumerableQueue"/>.
+        /// </summary>
+        /// <returns>An <see cref="System.Collections.IEnumerator"/> for this <see cref="EnumerableQueue"/>.</returns>
+        public sealed override System.Collections.IEnumerator GetEnumerator()
         {
             var enumerator = new Enumerator(this);
 
@@ -997,41 +1072,70 @@ namespace WinCopies.Collections.DotNetFix
         }
 
 #if WinCopies2
-            [Serializable]
+        [Serializable]
 #endif
-        public sealed class Enumerator : IEnumerator, WinCopies.
+        public sealed class Enumerator :
 #if WinCopies2
-                Util.
+            IEnumerator, Util.DotNetFix.IDisposable
+#else
+            WinCopies.Collections.Enumerator
 #endif
-                DotNetFix.IDisposable
         {
             private EnumerableQueue _queue;
             private ISimpleLinkedListNode _currentNode;
             private readonly uint _version;
+
+#if WinCopies2
             private object _current;
 
-            public object Current => IsDisposed ? throw GetExceptionForDispose(false) : _current;
+            public object Current => IsDisposed ? throw GetExceptionForDispose(false) : _currentNode.Value;
 
             public bool IsDisposed { get; private set; }
+#else
+            private bool _first = true;
 
+            protected override object CurrentOverride => _currentNode.Value;
+
+            public override bool? IsResetSupported => true;
+#endif
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Enumerator"/> class.
+            /// </summary>
+            /// <param name="queue">The <see cref="EnumerableQueue"/> to enumerate.</param>
             public Enumerator(in EnumerableQueue queue)
             {
                 _queue = queue;
 
                 _version = queue.EnumerableVersion;
 
+#if WinCopies2
                 Reset();
+#else
+                ResetOverride();
+#endif
             }
 
+#if WinCopies2
             public void Reset()
             {
                 if (IsDisposed)
 
                     throw GetExceptionForDispose(false);
+#else
+            protected override void ResetOverride()
+            {
+                base.ResetOverride();
+
+                ThrowIfVersionHasChanged(_queue.EnumerableVersion, _version);
+
+                _first = true;
+#endif
 
                 _currentNode = _queue._queue.FirstItem;
             }
 
+#if WinCopies2
             public bool MoveNext()
             {
                 if (IsDisposed)
@@ -1039,26 +1143,42 @@ namespace WinCopies.Collections.DotNetFix
                     throw GetExceptionForDispose(false);
 
                 if (_queue.EnumerableVersion != _version)
+#else
+            protected override bool MoveNextOverride()
+            {
+#endif
+                    ThrowIfVersionHasChanged(_queue.EnumerableVersion, _version);
 
-                    throw new InvalidOperationException("The collection has changed during enumeration.");
-
+#if WinCopies2
                 if (_currentNode == null)
 
                     return false;
 
-                _current = _currentNode.Value;
-
-                _currentNode = _currentNode.
-#if WinCopies2
-                        NextNode
-#else
-                        Next
-#endif
-                        ;
+                _currentNode = _currentNode.NextNode;
 
                 return true;
+#else
+                if (_first)
+                {
+                    _first = false;
+
+                    return _currentNode != null;
+                }
+
+                if (_currentNode.Next == null)
+                {
+                    _currentNode = null;
+
+                    return false;
+                }
+
+                _currentNode = _currentNode.Next;
+
+                return true;
+#endif
             }
 
+#if WinCopies2
             private void Dispose(bool disposing)
             {
                 if (IsDisposed)
@@ -1080,6 +1200,23 @@ namespace WinCopies.Collections.DotNetFix
             }
 
             public void Dispose() => Dispose(true);
+#else
+            protected override void DisposeManaged()
+            {
+                base.DisposeManaged();
+
+                _queue = null;
+
+                _currentNode = null;
+            }
+
+            protected override void Dispose(bool disposing)
+            {
+                base.Dispose(disposing);
+
+                _queue.DecrementEnumeratorCount();
+            }
+#endif
 
             ~Enumerator() => Dispose(false);
         }
@@ -1117,9 +1254,9 @@ namespace WinCopies.Collections.DotNetFix
         public object[] ToArray() => _queue.ToArray();
 
 #if WinCopies2
-            void IStack.Push(object item) => throw GetReadOnlyListOrCollectionException();
+        void IStack.Push(object item) => throw GetReadOnlyListOrCollectionException();
 
-            object IStack.Pop() => throw GetReadOnlyListOrCollectionException();
+        object IStack.Pop() => throw GetReadOnlyListOrCollectionException();
 #endif
 
         void IQueue.Enqueue(object item) => throw GetReadOnlyListOrCollectionException();
@@ -1137,7 +1274,7 @@ namespace WinCopies.Collections.DotNetFix
         }
 #endif
 
-        public IEnumerator GetEnumerator() => _queue.GetEnumerator();
+        public System.Collections.IEnumerator GetEnumerator() => _queue.GetEnumerator();
     }
 }
 
@@ -1286,8 +1423,8 @@ int
         /// <summary>
         /// Returns an enumerator that iterates through the <see cref="QueueCollection"/>.
         /// </summary>
-        /// <returns>An <see cref="IEnumerator"/> for the <see cref="QueueCollection"/>.</returns>
-        public IEnumerator GetEnumerator() => InnerQueue.GetEnumerator();
+        /// <returns>An <see cref="System.Collections.IEnumerator"/> for the <see cref="QueueCollection"/>.</returns>
+        public System.Collections.IEnumerator GetEnumerator() => InnerQueue.GetEnumerator();
     }
 
     [Serializable]
@@ -1344,12 +1481,6 @@ int
 #endif
             stack) => InnerStack = stack;
 
-#if WinCopies2
-
-        public object Clone() => InnerStack.Clone();
-
-#endif
-
         protected virtual void ClearItems() => InnerStack.Clear();
 
         public void Clear() => ClearItems();
@@ -1370,11 +1501,15 @@ int
 
         public void CopyTo(Array array, int index) => InnerStack.CopyTo(array, index);
 
-        public IEnumerator GetEnumerator() => InnerStack.GetEnumerator();
+        public System.Collections.IEnumerator GetEnumerator() => InnerStack.GetEnumerator();
 
+#if WinCopies2
+        public object Clone() => InnerStack.Clone();
+#else
         public bool TryPeek(out object result) => InnerStack.TryPeek(out result);
 
         public bool TryPop(out object result) => InnerStack.TryPop(out result);
+#endif
     }
 
     [Serializable]
@@ -1471,8 +1606,8 @@ int
         /// <summary>
         /// Returns an enumerator that iterates through the <see cref="QueueCollection"/>.
         /// </summary>
-        /// <returns>An <see cref="IEnumerator"/> for the <see cref="QueueCollection"/>.</returns>
-        public IEnumerator GetEnumerator() => InnerQueue.GetEnumerator();
+        /// <returns>An <see cref="System.Collections.IEnumerator"/> for the <see cref="QueueCollection"/>.</returns>
+        public System.Collections.IEnumerator GetEnumerator() => InnerQueue.GetEnumerator();
     }
 
     [Serializable]
@@ -1531,19 +1666,19 @@ IEnumerableStack
 
         public object Peek() => InnerStack.Peek();
 
-        bool ISimpleLinkedList.TryPeek(out object result) => InnerStack.TryPeek(out result);
-
         public object[] ToArray() => InnerStack.ToArray();
 
         public void CopyTo(Array array, int index) => InnerStack.CopyTo(array, index);
 
-        public IEnumerator GetEnumerator() => InnerStack.GetEnumerator();
+        public System.Collections.IEnumerator GetEnumerator() => InnerStack.GetEnumerator();
 
         void IStack.Push(object item) => throw GetReadOnlyListOrCollectionException();
 
         object IStack.Pop() => throw GetReadOnlyListOrCollectionException();
 
 #if !WinCopies2
+        bool ISimpleLinkedList.TryPeek(out object result) => InnerStack.TryPeek(out result);
+
         bool IStack.TryPop(out object result)
         {
             result = null;

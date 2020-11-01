@@ -39,7 +39,7 @@ namespace WinCopies.Collections.Resources {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("WinCopies.Collections.Resources.ExceptionMessages", typeof(ExceptionMessages).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("WinCopies.Util.Resources.ExceptionMessages", typeof(ExceptionMessages).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -70,11 +70,11 @@ namespace WinCopies.Collections.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This collection is read-only..
+        ///   Looks up a localized string similar to This list or collection is read-only..
         /// </summary>
-        public static string ReadOnlyCollection {
+        public static string ReadOnlyListOrCollection {
             get {
-                return ResourceManager.GetString("ReadOnlyCollection", resourceCulture);
+                return ResourceManager.GetString("ReadOnlyListOrCollection", resourceCulture);
             }
         }
     }

@@ -13,21 +13,31 @@
     <Compile Include="$(MSBuildThisFileDirectory)Collections.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Comparers.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\Misc.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\ICountableEnumerable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\Queue.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\Stack.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\DotNetFix\Misc.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerables\ICountableEnumerable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\IUIntIndexation\Enumerators.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\IUIntIndexation\ListsAndCollections.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\LinkedCollections\LinkedCollectionChangedAction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\LinkedCollections\LinkedCollections.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EnumComparer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Enumerables.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)EnumeratorCollection.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Enumerators.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerables\Enumerable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\DotNetFix\ArrayEnumerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\EmptyCheckEnumerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\EmptyEnumerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\Enumerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\IEnumerableEnumerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\IEnumerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\JoinEnumerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enumeration\EnumeratorCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\SelectEnumerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\Misc.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ITreeNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LinkedCollections.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LinkedList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Linq\Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NullableEntry.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ReadOnlyArrayList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ReadOnlyTreeNode.cs" />
@@ -38,6 +48,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Misc\Util.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Enumeration\Enumerables\" />
     <Folder Include="$(MSBuildThisFileDirectory)Misc\" />
   </ItemGroup>
 </Project>

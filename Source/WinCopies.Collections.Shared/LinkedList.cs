@@ -31,26 +31,19 @@ using WinCopies.Resources;
 
 namespace WinCopies.Collections
 {
-#if !WinCopies2
-    namespace Generic
-    {
-#endif
-        public interface ILinkedListNode<T>
-        {
-            ILinkedList<T> List { get; }
-
-            ILinkedListNode<T> Next { get; }
-
-            ILinkedListNode<T> Previous { get; }
-
-            T Value { get; }
-        }
-#if !WinCopies2
-    }
-#endif
-
 #if WinCopies2
-    [Obsolete("Please use the WinCopies.Collections.DotNetFix.LinkedList<T> instead.")]
+    [Obsolete("Use the WinCopies.Collections.DotNetFix.ILinkedListNode<T> (WinCopies.Collections.DotNetFix.Generic.ILinkedListNode<T> in WinCopies 3) interface instead.")]
+    public interface ILinkedListNode<T>
+    {
+        ILinkedList<T> List { get; }
+
+        ILinkedListNode<T> Next { get; }
+
+        ILinkedListNode<T> Previous { get; }
+
+        T Value { get; }
+    }
+
     [DebuggerDisplay("Count = {Count}")]
     public class LinkedList<T> : ILinkedList<T>
     {
@@ -100,9 +93,9 @@ namespace WinCopies.Collections
 
         public System.Collections.Generic.LinkedList<T>.Enumerator GetEnumerator() => InnerList.GetEnumerator();
 
-        IEnumerator<T> IEnumerable<T>.GetEnumerator() => ((IEnumerable<T>)InnerList).GetEnumerator();
+        System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => ((System.Collections.Generic.IEnumerable<T>)InnerList).GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerList).GetEnumerator();
+        System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerList).GetEnumerator();
 
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context) => InnerList.GetObjectData(info, context);
 
@@ -118,7 +111,9 @@ namespace WinCopies.Collections
 
         public void CopyTo(Array array, int index) => ((ICollection)InnerList).CopyTo(array, index);
     }
+#endif
 
+#if WinCopies2
     [Obsolete("Please use the WinCopies.Collections.DotNetFix.ReadOnlyLinkedList<T> instead.")]
     [DebuggerDisplay("Count = {Count}")]
     public class ReadOnlyLinkedList<T> : ILinkedList<T>
@@ -161,9 +156,9 @@ namespace WinCopies.Collections
 
         bool ICollection<T>.Remove(T item) => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
 
-        IEnumerator<T> IEnumerable<T>.GetEnumerator() => InnerList.GetEnumerator();
+        System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => InnerList.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator() => InnerList.GetEnumerator();
+        System.Collections.IEnumerator IEnumerable.GetEnumerator() => InnerList.GetEnumerator();
 
         void ICollection.CopyTo(Array array, int index) => ((ICollection)InnerList).CopyTo(array, index);
 

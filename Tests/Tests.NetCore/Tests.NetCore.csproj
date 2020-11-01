@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Source\WinCopies.Collections\WinCopies.Collections.csproj" />
     <ProjectReference Include="..\..\Source\WinCopies.Util\WinCopies.Util.csproj" />
   </ItemGroup>
 

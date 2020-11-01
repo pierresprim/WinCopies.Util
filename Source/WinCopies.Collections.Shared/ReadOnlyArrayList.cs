@@ -15,6 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
+#if WinCopies2 // Removed in WinCopies 3
+
 using System;
 using System.Collections;
 
@@ -56,7 +58,7 @@ namespace WinCopies.Collections
 
         public void CopyTo(Array array, int index) => innerList.CopyTo(array, index);
 
-        public IEnumerator GetEnumerator() => innerList.GetEnumerator();
+        public System.Collections.IEnumerator GetEnumerator() => innerList.GetEnumerator();
 
         public int IndexOf(object value) => innerList.IndexOf(value);
 
@@ -67,3 +69,5 @@ namespace WinCopies.Collections
         void IList.RemoveAt(int index) => throw new NotImplementedException();
     }
 }
+
+#endif

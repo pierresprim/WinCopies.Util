@@ -17,12 +17,13 @@
 
 using System;
 
-#if !WinCopies2
-
+#if WinCopies2
+using static WinCopies.Util.Resources.ExceptionMessages;
+#else
 using static WinCopies.UtilHelpers;
 using static WinCopies.ThrowHelper;
 using static WinCopies.Resources.ExceptionMessages;
-
+using static WinCopies.Collections.Resources.ExceptionMessages;
 #endif
 
 namespace WinCopies.Collections
@@ -33,7 +34,13 @@ namespace WinCopies.Collections
         /// Returns an exception indicating that a list or collection is read-only.
         /// </summary>
         /// <returns>An exception indicating that a list or collection is read-only.</returns>
-        public static InvalidOperationException GetReadOnlyListOrCollectionException() => new InvalidOperationException("The list or collection is read-only.");
+        public static InvalidOperationException GetReadOnlyListOrCollectionException() => new InvalidOperationException(
+#if WinCopies2
+            ReadOnlyCollection
+#else
+            ReadOnlyListOrCollection
+#endif
+            );
 
         /// <summary>
         /// Returns an exception indicating that a list or collection is empty.
@@ -45,7 +52,13 @@ namespace WinCopies.Collections
         /// Throws the exception given by <see cref="GetEmptyListOrCollectionException"/> if the <see cref="ICountable.Count"/> property of a given <see cref="ICountable"/> object is equal to 0.
         /// </summary>
         /// <param name="obj">The <see cref="ICountable"/> object for which to check the <see cref="ICountable.Count"/> property.</param>
-        public static void ThrowIfEmpty(in ICountable obj)
+        public static void
+#if WinCopies2
+            ThrowIfEmpty
+#else
+ThrowIfEmptyListOrCollection
+#endif
+            (in ICountable obj)
         {
             if (obj.Count == 0)
 
@@ -56,7 +69,13 @@ namespace WinCopies.Collections
         /// Throws the exception given by <see cref="GetEmptyListOrCollectionException"/> if the <see cref="IUIntCountable.Count"/> property of a given <see cref="IUIntCountable"/> object is equal to 0.
         /// </summary>
         /// <param name="obj">The <see cref="IUIntCountable"/> object for which to check the <see cref="IUIntCountable.Count"/> property.</param>
-        public static void ThrowIfEmpty(in IUIntCountable obj)
+        public static void
+#if WinCopies2
+            ThrowIfEmpty
+#else
+ThrowIfEmptyListOrCollection
+#endif
+            (in IUIntCountable obj)
         {
             if (obj.Count == 0)
 
@@ -71,7 +90,7 @@ namespace WinCopies.Collections
                 throw GetEnumeratorNotStartedOrDisposedException();
         }
 
-        #region Enum Throws
+#region Enum Throws
         ///// <summary>
         ///// Throws an <see cref="InvalidEnumArgumentException"/> if the enum value is not in the required enum value range. See the Remarks section.
         ///// </summary>

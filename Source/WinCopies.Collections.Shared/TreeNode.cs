@@ -235,20 +235,20 @@ namespace WinCopies.Collections
         public bool IsFixedSize => Items is IList _items ? _items.IsFixedSize : false /*Items.IsReadOnly*/;
 
         /// <summary>
-        /// Returns an <see cref="IEnumerator{T}"/> for this <see cref="TreeNode{T}"/>.
+        /// Returns an <see cref="System.Collections.IEnumerator{T}"/> for this <see cref="TreeNode{T}"/>.
         /// </summary>
-        /// <returns><see cref="IEnumerator{T}"/> for this <see cref="TreeNode{T}"/>.</returns>
-        public IEnumerator<TreeNode<T>> GetEnumerator() => Items.GetEnumerator();
+        /// <returns><see cref="System.Collections.IEnumerator{T}"/> for this <see cref="TreeNode{T}"/>.</returns>
+        public System.Collections.Generic.IEnumerator<TreeNode<T>> GetEnumerator() => Items.GetEnumerator();
 
-        IEnumerator<ITreeNode<T>> IEnumerable<ITreeNode<T>>.GetEnumerator() => GetEnumerator();
+        System.Collections.Generic.IEnumerator<ITreeNode<T>> IEnumerable<ITreeNode<T>>.GetEnumerator() => GetEnumerator();
 
-        IEnumerator<IReadOnlyTreeNode<T>> IEnumerable<IReadOnlyTreeNode<T>>.GetEnumerator() => GetEnumerator();
+        System.Collections.Generic.IEnumerator<IReadOnlyTreeNode<T>> IEnumerable<IReadOnlyTreeNode<T>>.GetEnumerator() => GetEnumerator();
 
-        IEnumerator<T> IEnumerable<T>.GetEnumerator() => new ValueObjectEnumerator<T>(GetEnumerator());
+        System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => new ValueObjectEnumerator<T>(GetEnumerator());
 
-        // IEnumerator<ITreeNode<T>> IEnumerable<ITreeNode<T>>.GetEnumerator() => GetEnumerator();
+        // System.Collections.Generic.IEnumerator<ITreeNode<T>> IEnumerable<ITreeNode<T>>.GetEnumerator() => GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator() => new ValueObjectEnumerator<T>(GetEnumerator());
+        System.Collections.IEnumerator IEnumerable.GetEnumerator() => new ValueObjectEnumerator<T>(GetEnumerator());
 
         /// <summary>
         /// Adds a new item to the end of this <see cref="TreeNode{T}"/>.
@@ -641,8 +641,8 @@ namespace WinCopies.Collections
     //    public void Dispose() => throw new NotImplementedException();
     //    public bool Equals(IValueObject other) => throw new NotImplementedException();
     //    public bool Equals(IValueObject<T> other) => throw new NotImplementedException();
-    //    public IEnumerator<ITreeNode<T>> GetEnumerator() => throw new NotImplementedException();
+    //    public System.Collections.Generic.IEnumerator<ITreeNode<T>> GetEnumerator() => throw new NotImplementedException();
     //    public bool Remove(ITreeNode<T> item) => throw new NotImplementedException();
-    //    IEnumerator IEnumerable.GetEnumerator() => throw new NotImplementedException();
+    //    System.Collections.IEnumerator IEnumerable.GetEnumerator() => throw new NotImplementedException();
     //}
 }

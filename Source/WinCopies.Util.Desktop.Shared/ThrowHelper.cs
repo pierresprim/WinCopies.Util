@@ -16,8 +16,13 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using System;
+#if WinCopies2
 using WinCopies.Util.DotNetFix;
 using static WinCopies.Util.Desktop.Resources.ExceptionMessages;
+#else
+using WinCopies.DotNetFix;
+using static WinCopies.Desktop.Resources.ExceptionMessages;
+#endif
 
 namespace WinCopies.Util.Desktop
 {

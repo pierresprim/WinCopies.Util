@@ -21,6 +21,10 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 
+#if !WinCopies2
+using WinCopies.Collections;
+#endif
+
 namespace WinCopies.Util.Data
 {
     public class MenuItem : ViewModelBase

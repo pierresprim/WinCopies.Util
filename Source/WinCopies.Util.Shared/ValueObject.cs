@@ -105,15 +105,15 @@ namespace WinCopies
     }
 
     [Serializable]
-    public struct ValueObjectEnumerator<T> : IEnumerator<T>, IEnumerator
+    public struct ValueObjectEnumerator<T> : System.Collections.Generic.IEnumerator<T>, System.Collections.IEnumerator
     {
-        private IEnumerator<IReadOnlyValueObject<T>> _enumerator;
+        private System.Collections.Generic.IEnumerator<IReadOnlyValueObject<T>> _enumerator;
 
         public T Current { get; private set; }
 
-        object IEnumerator.Current => Current;
+        object System.Collections.IEnumerator.Current => Current;
 
-        public ValueObjectEnumerator(IEnumerator<IReadOnlyValueObject<T>> enumerator)
+        public ValueObjectEnumerator(System.Collections.Generic.IEnumerator<IReadOnlyValueObject<T>> enumerator)
         {
             _enumerator = enumerator;
 

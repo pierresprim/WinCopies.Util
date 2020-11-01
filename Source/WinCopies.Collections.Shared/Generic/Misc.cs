@@ -19,13 +19,17 @@ using System.Collections.Generic;
 
 using WinCopies.Collections.DotNetFix.Generic;
 
+#if WinCopies2
 using static WinCopies.Util.Util;
+#else
+using static WinCopies.ThrowHelper;
+#endif
 
 namespace WinCopies.Collections.Generic
 {
-    public interface IRecursiveEnumerableProviderEnumerable<out T> : IEnumerable<T>
+    public interface IRecursiveEnumerableProviderEnumerable<out T> : System.Collections.Generic.IEnumerable<T>
     {
-        IEnumerator<IRecursiveEnumerable<T>> GetRecursiveEnumerator();
+        System.Collections.Generic.IEnumerator<IRecursiveEnumerable<T>> GetRecursiveEnumerator();
     }
 
     public interface IRecursiveEnumerable<out T> : IRecursiveEnumerableProviderEnumerable<T>
@@ -35,35 +39,60 @@ namespace WinCopies.Collections.Generic
 
     public class RecursiveEnumerator<T> : Enumerator<IRecursiveEnumerable<T>, T>
     {
-        protected IStack<IEnumerator<IRecursiveEnumerable<T>>> InnerStack { get; private set; }
+        protected IStack<System.Collections.Generic.IEnumerator<IRecursiveEnumerable<T>>> InnerStack { get; private set; }
 
-        private bool _completed = false;
+        private
+#if WinCopies2
+bool _completed = false;
+#else
+            T _current;
 
-        public RecursiveEnumerator(in IEnumerable<IRecursiveEnumerable<T>> enumerable, in IStack<IEnumerator<IRecursiveEnumerable<T>>> stack) : base(enumerable ?? throw GetArgumentNullException(nameof(enumerable))) => InnerStack = stack;
+        protected override T CurrentOverride => _current;
 
-        public RecursiveEnumerator(IEnumerable<IRecursiveEnumerable<T>> enumerable) : this(enumerable, new WinCopies.Collections.Generic.Stack<IEnumerator<IRecursiveEnumerable<T>>>())
+        public override bool? IsResetSupported => null;
+
+        protected override void ResetOverride()
+        {
+            base.ResetOverride();
+
+            InnerStack.Clear();
+        }
+
+        protected override void ResetCurrent() => _current = default;
+#endif
+
+        public RecursiveEnumerator(in IEnumerable<IRecursiveEnumerable<T>> enumerable, in IStack<System.Collections.Generic.IEnumerator<IRecursiveEnumerable<T>>> stack) : base(enumerable ?? throw GetArgumentNullException(nameof(enumerable))) => InnerStack = stack;
+
+        public RecursiveEnumerator(IEnumerable<IRecursiveEnumerable<T>> enumerable) : this(enumerable, new WinCopies.Collections.Generic.Stack<System.Collections.Generic.IEnumerator<IRecursiveEnumerable<T>>>())
         {
             // Left empty.
         }
 
-        public RecursiveEnumerator(IRecursiveEnumerableProviderEnumerable<T> enumerable, in IStack<IEnumerator<IRecursiveEnumerable<T>>> stack) : base(new Enumerable<IRecursiveEnumerable<T>>(() => (enumerable ?? throw GetArgumentNullException(nameof(enumerable))).GetRecursiveEnumerator())) => InnerStack = stack;
+        public RecursiveEnumerator(IRecursiveEnumerableProviderEnumerable<T> enumerable, in IStack<System.Collections.Generic.IEnumerator<IRecursiveEnumerable<T>>> stack) : base(new Enumerable<IRecursiveEnumerable<T>>(() => (enumerable ?? throw GetArgumentNullException(nameof(enumerable))).GetRecursiveEnumerator())) => InnerStack = stack;
 
-        public RecursiveEnumerator(in IRecursiveEnumerableProviderEnumerable<T> enumerable) : this(enumerable, new WinCopies.Collections.Generic.Stack<IEnumerator<IRecursiveEnumerable<T>>>())
+        public RecursiveEnumerator(in IRecursiveEnumerableProviderEnumerable<T> enumerable) : this(enumerable, new WinCopies.Collections.Generic.Stack<System.Collections.Generic.IEnumerator<IRecursiveEnumerable<T>>>())
         {
             // Left empty.
         }
 
         protected override bool MoveNextOverride()
         {
+#if WinCopies2
             if (_completed) return false;
+#endif
 
-            IEnumerator<IRecursiveEnumerable<T>> enumerator;
+            System.Collections.Generic.IEnumerator<IRecursiveEnumerable<T>> enumerator;
 
             void push(in IRecursiveEnumerable<T> enumerable)
             {
                 enumerator = enumerable.GetRecursiveEnumerator();
 
-                Current = enumerable.Value;
+#if WinCopies2
+                Current
+#else
+                _current
+#endif
+                    = enumerable.Value;
 
                 InnerStack.Push(enumerator);
             }
@@ -79,7 +108,9 @@ namespace WinCopies.Collections.Generic
                         return true;
                     }
 
+#if WinCopies2
                     _completed = true;
+#endif
 
                     return false;
                 }
@@ -99,11 +130,18 @@ namespace WinCopies.Collections.Generic
             }
         }
 
-        protected override void Dispose(bool disposing)
+        protected override void
+#if WinCopies2
+            Dispose(bool disposing)
         {
             base.Dispose(disposing);
 
             if (disposing)
+#else
+DisposeManaged()
+{
+base.DisposeManaged();
+#endif
                 // {
                 InnerStack = null;
 
@@ -111,22 +149,33 @@ namespace WinCopies.Collections.Generic
             // }
         }
     }
-    public interface IEnumeratorInfo<out T> : IEnumerator<T>, IEnumeratorInfo
+
+    public interface IEnumeratorInfo<out T> : System.Collections.Generic.IEnumerator<T>, IEnumeratorInfo
+#if !WinCopies2
+        , WinCopies.DotNetFix.IDisposable
+#endif
     {
         // Left empty.
     }
 
+#if WinCopies2
     public interface IDisposableEnumeratorInfo<out T> : IEnumeratorInfo<T>, IDisposableEnumeratorInfo
     {
         // Left empty.
     }
+#endif
 
     public interface ICountableEnumeratorInfo<out T> : IEnumeratorInfo<T>, ICountableEnumerator<T>
     {
         // Left empty.
     }
 
-    public interface ICountableDisposableEnumeratorInfo<out T> : ICountableDisposableEnumerator<T>, IDisposableEnumeratorInfo<T>, ICountableEnumeratorInfo<T>
+    public interface ICountableDisposableEnumeratorInfo<out T> : ICountableDisposableEnumerator<T>, ICountableEnumeratorInfo<T>
+#if WinCopies2
+, IDisposableEnumeratorInfo<T>
+#else
+        , IEnumeratorInfo<T>
+#endif
     {
         // Left empty.
     }

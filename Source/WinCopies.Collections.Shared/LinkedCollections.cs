@@ -15,6 +15,10 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
+#if !WinCopies2
+using System.Collections;
+#endif
+
 using WinCopies.Collections.DotNetFix;
 using WinCopies.Collections.DotNetFix.Generic;
 
@@ -107,6 +111,10 @@ namespace WinCopies.Collections
             uint IUIntCountableEnumerable.Count => (uint)Count;
 #else
             public bool IsReadOnly => false;
+
+            bool ISimpleLinkedListBase.IsSynchronized => ((ICollection)this).IsSynchronized;
+
+            object ISimpleLinkedListBase.SyncRoot => ((ICollection)this).SyncRoot;
 #endif
 
             uint IUIntCountable.Count => (uint)Count;
@@ -125,6 +133,20 @@ namespace WinCopies.Collections
 
                 return false;
             }
+
+            public bool TryPop(out T result)
+            {
+                if (Count > 0)
+                {
+                    result = Pop();
+
+                    return true;
+                }
+
+                result = default;
+
+                return false;
+            }
 #endif
         }
 
@@ -134,6 +156,10 @@ namespace WinCopies.Collections
             uint IUIntCountableEnumerable.Count => (uint)Count;
 #else
             public bool IsReadOnly => false;
+
+            bool ISimpleLinkedListBase.IsSynchronized => ((ICollection)this).IsSynchronized;
+
+            object ISimpleLinkedListBase.SyncRoot => ((ICollection)this).SyncRoot;
 #endif
 
             uint IUIntCountable.Count => (uint)Count;
@@ -144,6 +170,20 @@ namespace WinCopies.Collections
                 if (Count > 0)
                 {
                     result = Peek();
+
+                    return true;
+                }
+
+                result = default;
+
+                return false;
+            }
+
+            public bool TryDequeue(out T result)
+            {
+                if (Count > 0)
+                {
+                    result = Dequeue();
 
                     return true;
                 }

@@ -80,7 +80,7 @@ namespace WinCopies.Collections.DotNetFix
         #endregion
     }
 
-    public sealed class UIntIndexedListEnumerator : UIntIndexedListEnumeratorBase, IEnumerator
+    public sealed class UIntIndexedListEnumerator : UIntIndexedListEnumeratorBase, System.Collections.IEnumerator
     {
         private IReadOnlyUIntIndexedList innerList;
 
@@ -156,7 +156,7 @@ namespace WinCopies.Collections.DotNetFix
         }
     }
 
-    public sealed class UIntIndexedListEnumerator<T> : UIntIndexedListEnumeratorBase, IEnumerator<T>
+    public sealed class UIntIndexedListEnumerator<T> : UIntIndexedListEnumeratorBase, System.Collections.Generic.IEnumerator<T>
     {
         private IReadOnlyUIntIndexedList<T> innerList;
 
@@ -198,7 +198,7 @@ namespace WinCopies.Collections.DotNetFix
             }
         }
 
-        object IEnumerator.Current => Current;
+        object System.Collections.IEnumerator.Current => Current;
 
         public UIntIndexedListEnumerator(IUIntIndexedList<T> uintIndexedList)
         {

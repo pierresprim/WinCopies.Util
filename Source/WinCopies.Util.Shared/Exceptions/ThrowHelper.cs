@@ -19,8 +19,6 @@ using System;
 using System.Globalization;
 
 #if WinCopies2
-using WinCopies.Util.Resources;
-using static WinCopies.Util.Util;
 using static WinCopies.Util.Resources.ExceptionMessages;
 #else
 using static WinCopies.UtilHelpers;
@@ -60,6 +58,36 @@ namespace WinCopies
         public static ArgumentException GetOneOrMoreKeyIsNullException() => new ArgumentException(OneOrMoreKeyIsNull);
 
         public static InvalidOperationException GetEnumeratorNotStartedOrDisposedException() => new InvalidOperationException("The enumeration is not started or the enumerator is disposed.");
+
+        public static InvalidOperationException GetVersionHasChangedException()=> new InvalidOperationException("The collection has changed during enumeration.");
+
+        public static void ThrowIfVersionHasChanged(int currentVersion, int initialVersion)
+        {
+            if (currentVersion != initialVersion)
+
+                throw GetVersionHasChangedException();
+        }
+
+        public static void ThrowIfVersionHasChanged(uint currentVersion, uint initialVersion)
+        {
+            if (currentVersion != initialVersion)
+
+                throw GetVersionHasChangedException();
+        }
+
+        public static void ThrowIfVersionHasChanged(long currentVersion, long initialVersion)
+        {
+            if (currentVersion != initialVersion)
+
+                throw GetVersionHasChangedException();
+        }
+
+        public static void ThrowIfVersionHasChanged(ulong currentVersion, ulong initialVersion)
+        {
+            if (currentVersion != initialVersion)
+
+                throw GetVersionHasChangedException();
+        }
 
 #if WinCopies2
         public static void ThrowIfEnumeratorNotStartedOrDisposedException(in WinCopies.Collections.IDisposableEnumeratorInfo enumerator)

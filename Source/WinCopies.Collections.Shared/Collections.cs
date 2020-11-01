@@ -15,19 +15,77 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
+#if WinCopies2
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-using IDisposable = WinCopies
-    #if WinCopies2
-    .Util
+using IDisposable = WinCopies.Util.DotNetFix.IDisposable;
 #endif
-    .DotNetFix.IDisposable;
+
+using System.Collections;
 
 namespace WinCopies.Collections
 {
+#if !WinCopies2
+    namespace DotNetFix
+    {
+        public interface IEnumeratorBase
+        {
+            /// <summary>
+            /// Advances the enumerator to the next element of the collection.
+            /// </summary>
+            /// <returns><see langword="true"/> if the enumerator was successfully advanced to the next element; <see langword="false"/> if the enumerator has passed the end of the collection.</returns>
+            /// <exception cref="System.InvalidOperationException">The collection was modified after the enumerator was created.</exception>
+            bool MoveNext();
+
+            /// <summary>
+            /// Sets the enumerator to its initial position, which is before the first element in the collection.
+            /// </summary>
+            /// <exception cref="System.InvalidOperationException">The collection was modified after the enumerator was created.</exception>
+            void Reset();
+        }
+
+        public interface IEnumeratorInfo
+        {
+            bool? IsResetSupported { get; }
+
+            bool IsStarted { get; }
+
+            bool IsCompleted { get; }
+        }
+
+        public interface IDisposableEnumerator : System.Collections.IEnumerator, WinCopies.DotNetFix.IDisposable
+        {
+            // Left empty.
+        }
+
+        public interface IDisposableEnumeratorInfo : IEnumeratorInfo, WinCopies.DotNetFix.IDisposable
+        {
+            // Left empty.
+        }
+
+        public interface IEnumerator : System.Collections.IEnumerator, IEnumeratorBase
+        {
+            // Left empty.
+        }
+
+        namespace Generic
+        {
+            public interface IEnumerator<out T> : System.Collections.Generic.IEnumerator<T>, IEnumeratorBase
+            {
+                // Left empty.
+            }
+
+            public interface IDisposableEnumerator<out T> : System.Collections.Generic.IEnumerator<T>, WinCopies.DotNetFix.IDisposable
+            {
+                // Left empty.
+            }
+        }
+    }
+#endif
+
     public interface ICountable
     {
         int Count { get; }
@@ -37,7 +95,10 @@ namespace WinCopies.Collections
     {
         uint Count { get; }
     }
-    public interface IEnumeratorInfo : IEnumerator
+
+    public interface IEnumeratorInfo :
+#if WinCopies2
+System.Collections.IEnumerator
     {
         bool? IsResetSupported { get; }
 
@@ -45,16 +106,24 @@ namespace WinCopies.Collections
 
         bool IsCompleted { get; }
     }
-
-    public interface IDisposableEnumeratorInfo : IEnumeratorInfo, WinCopies
-#if WinCopies2
-.Util
-#endif
-        .DotNetFix.IDisposable
+    
+    public interface IDisposableEnumeratorInfo : IEnumeratorInfo, WinCopies.Util.DotNetFix.IDisposable
+    {
+        // Left empty.
+    }
+#else
+        WinCopies.Collections.DotNetFix.IEnumerator, WinCopies.Collections.DotNetFix.IEnumeratorInfo
     {
         // Left empty.
     }
 
+    public interface IDisposableEnumeratorInfo : WinCopies.Collections.DotNetFix.IDisposableEnumeratorInfo, IEnumeratorInfo
+    {
+        // Left empty.
+    }
+#endif
+
+#if WinCopies2
     [Obsolete("This type has been replaced by the types in the WinCopies.Collections.DotNetFix namespace and will be removed in later versions.")]
     public interface IUIntIndexedCollection
     {
@@ -70,11 +139,7 @@ namespace WinCopies.Collections
     }
 
     [Obsolete("This type has been replaced by the types in the WinCopies.Collections.DotNetFix namespace and will be removed in later versions.")]
-    public abstract class UIntIndexedCollectionEnumeratorBase : WinCopies
-#if WinCopies2
-.Util
-#endif
-        .DotNetFix. IDisposable
+    public abstract class UIntIndexedCollectionEnumeratorBase : WinCopies.Util.DotNetFix.IDisposable
     {
         protected internal IUIntIndexedCollection UIntIndexedCollection { get; private set; }
         protected internal uint? Index { get; set; } = null;
@@ -87,7 +152,7 @@ namespace WinCopies.Collections
             MoveNextMethod = () => UIntIndexedCollectionEnumerator.MoveNextMethod(this);
         }
 
-#region IDisposable Support
+    #region IDisposable Support
         public bool IsDisposed { get; private set; } = false;
 
         protected virtual void Dispose(bool disposing)
@@ -106,7 +171,7 @@ namespace WinCopies.Collections
         }
 
         public void Dispose() => Dispose(true);
-#endregion
+    #endregion
 
         public virtual bool MoveNext() => MoveNextMethod();
 
@@ -119,7 +184,7 @@ namespace WinCopies.Collections
     }
 
     [Obsolete("This type has been replaced by the types in the WinCopies.Collections.DotNetFix namespace and will be removed in later versions.")]
-    public sealed class UIntIndexedCollectionEnumerator : UIntIndexedCollectionEnumeratorBase, IEnumerator
+    public sealed class UIntIndexedCollectionEnumerator : UIntIndexedCollectionEnumeratorBase, System.Collections.IEnumerator
     {
         public static Func<UIntIndexedCollectionEnumeratorBase, bool> MoveNextMethod => (UIntIndexedCollectionEnumeratorBase e) =>
         {
@@ -159,7 +224,7 @@ namespace WinCopies.Collections
     }
 
     [Obsolete("This type has been replaced by the types in the WinCopies.Collections.DotNetFix namespace and will be removed in later versions.")]
-    public sealed class UIntIndexedCollectionEnumerator<T> : UIntIndexedCollectionEnumeratorBase, IEnumerator<T>
+    public sealed class UIntIndexedCollectionEnumerator<T> : UIntIndexedCollectionEnumeratorBase, System.Collections.Generic.IEnumerator<T>
     {
         public T Current
         {
@@ -171,11 +236,12 @@ namespace WinCopies.Collections
             }
         }
 
-        object IEnumerator.Current => Current;
+        object System.Collections.IEnumerator.Current => Current;
 
         public UIntIndexedCollectionEnumerator(IUIntIndexedCollection<T> uintIndexedCollection) : base(uintIndexedCollection) { }
     }
-    }
+#endif
+}
 
 //public interface IList : System.Collections. IList, ICollection, IEnumerable
 
@@ -193,7 +259,7 @@ namespace WinCopies.Collections
 
 //    new int Count { get; }
 
-//    //new IEnumerator<T> GetEnumerator();
+//    //new System.Collections.Generic.IEnumerator<T> GetEnumerator();
 
 //    //new bool IsReadOnly { get; }
 
@@ -211,7 +277,7 @@ namespace WinCopies.Collections
 
 //    new int Count { get; }
 
-//    //new IEnumerator<T> GetEnumerator();
+//    //new System.Collections.Generic.IEnumerator<T> GetEnumerator();
 
 //    //new bool IsReadOnly { get; }
 
@@ -235,7 +301,7 @@ namespace WinCopies.Collections
 
 //    //void IReadOnlyList<T>.Clear() => throw new NotSupportedException("This collection is read-only.") ; 
 
-//    // IEnumerator<T> IReadOnlyCollection<T>.GetEnumerator() => throw new NotImplementedException();
+//    // System.Collections.Generic.IEnumerator<T> IReadOnlyCollection<T>.GetEnumerator() => throw new NotImplementedException();
 
 //    //void IReadOnlyList<T>.RemoveAt(int index) => throw new NotSupportedException("This collection is read-only.") ;
 

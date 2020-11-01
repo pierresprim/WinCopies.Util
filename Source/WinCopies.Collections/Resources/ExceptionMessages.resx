@@ -120,7 +120,7 @@
   <data name="EnumeratorIsNotStartedOrDisposed" xml:space="preserve">
     <value>The enumeration is not started or the enumerator is disposed.</value>
   </data>
-  <data name="ReadOnlyCollection" xml:space="preserve">
-    <value>This collection is read-only.</value>
+  <data name="ReadOnlyListOrCollection" xml:space="preserve">
+    <value>This list or collection is read-only.</value>
   </data>
 </root>
