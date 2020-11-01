@@ -244,7 +244,7 @@ namespace WinCopies.Collections
 
         System.Collections.Generic.IEnumerator<IReadOnlyTreeNode<T>> IEnumerable<IReadOnlyTreeNode<T>>.GetEnumerator() => GetEnumerator();
 
-        System.Collections.Generic.IEnumerator<T> IEnumerable<T>.GetEnumerator() => new ValueObjectEnumerator<T>(GetEnumerator());
+        System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => new ValueObjectEnumerator<T>(GetEnumerator());
 
         // System.Collections.Generic.IEnumerator<ITreeNode<T>> IEnumerable<ITreeNode<T>>.GetEnumerator() => GetEnumerator();
 

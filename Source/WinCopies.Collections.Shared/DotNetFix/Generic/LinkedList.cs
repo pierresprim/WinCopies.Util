@@ -36,6 +36,7 @@ using System.Runtime.Serialization;
 
 using static WinCopies.Util.Util;
 #else
+using WinCopies.Collections.Generic;
 using static WinCopies.ThrowHelper;
 #endif
 
@@ -54,14 +55,9 @@ namespace WinCopies.Collections.DotNetFix
 #endif
         public interface IReadOnlyLinkedList<T> : ICollection<T>, ICollection, IReadOnlyCollection<T>,
 #if WinCopies2
-            ICountableEnumerable
+            ICountableEnumerable<T>, ISerializable, IDeserializationCallback
 #else
-            IUIntCountableEnumerable
-#endif
-            <T>
-#if WinCopies2
-, ISerializable, IDeserializationCallback
-#endif
+            IUIntCountableEnumerable<T>, Collections.Generic.IEnumerable<T>
         {
 #if WinCopies2
 System.Collections.Generic.LinkedListNode
@@ -107,6 +103,8 @@ System.Collections.Generic.LinkedListNode
 
 #if WinCopies2
 			new System.Collections.Generic.LinkedList<T>.Enumerator GetEnumerator();
+#else
+            System.Collections.Generic.IEnumerator<ILinkedListNode<T>> GetNodeEnumerator(LinkedListEnumerationDirection enumerationDirection);
 #endif
         }
 
@@ -126,9 +124,9 @@ System.Collections.Generic.LinkedListNode
         public interface ILinkedList<T> :
             // TODO:
 #if WinCopies2
-            ISerializable, IDeserializationCallback, IEnumerable<T>, 
+            ISerializable, IDeserializationCallback, System.Collections.Generic.IEnumerable<T>, 
 #else
-            IUIntCountableEnumerable<T>,
+            IUIntCountableEnumerable<T>, Collections.Generic.IEnumerable<T>,
 #endif
             ICollection<T>, ICollection, IReadOnlyCollection<T>
         {
@@ -242,8 +240,6 @@ System.Collections.Generic.LinkedList<T>.Enumerator
                 GetEnumerator();
 
 #if !WinCopies2
-            System.Collections.Generic.IEnumerator<T> GetEnumerator(LinkedListEnumerationDirection enumerationDirection);
-
             System.Collections.Generic.IEnumerator<ILinkedListNode<T>> GetNodeEnumerator(LinkedListEnumerationDirection enumerationDirection);
 #endif
 
@@ -274,6 +270,8 @@ System.Collections.Generic.LinkedListNode
         {
             public bool IsReadOnly => false;
 
+            public bool SupportsReversedEnumeration => true;
+
             /// <summary>
             /// Initializes a new instance of the <see cref="System.Collections.Generic.LinkedList{T}"/> class that is empty.
             /// </summary>
@@ -290,7 +288,7 @@ System.Collections.Generic.LinkedListNode
             /// </summary>
             /// <param name="collection">The <see cref="IEnumerable"/> whose elements are copied to the new <see cref="System.Collections.Generic.LinkedList{T}"/>.</param>
             /// <exception cref="System.ArgumentNullException"><paramref name="collection"/> is <see langword="null"/>.</exception>
-            public LinkedList(IEnumerable<T> collection)
+            public LinkedList(System.Collections.Generic.IEnumerable<T> collection)
 #if WinCopies2
 : base(collection)
 #endif
@@ -465,14 +463,16 @@ System.Collections.Generic.LinkedListNode
                     EnumerableVersion = 0;
             }
 
-            private void ThrowIfNodeAlreadyHasList(in LinkedListNode node)
+            private void ThrowIfNodeAlreadyHasList(in LinkedListNode node, in string argumentName)
             {
-                if (node.List != null)
+                if ((node ?? throw GetArgumentNullException(argumentName)).List != null)
 
                     throw new ArgumentException("The given node is already contained in another list.");
             }
 
-            private void ThrowIfNotContainedNode(in ILinkedListNode<T> node)
+            private void ThrowIfNotContainedNode(in LinkedListNode node, in string argumentName) => _ThrowIfNotContainedNode(node ?? throw GetArgumentNullException(argumentName));
+
+            private void _ThrowIfNotContainedNode(in LinkedListNode node)
             {
                 if (node.List != this)
 
@@ -536,13 +536,19 @@ System.Collections.Generic.LinkedListNode
 
             private void Weld(in LinkedListNode previous, in LinkedListNode newNode, in LinkedListNode next)
             {
-                previous.Next = newNode;
+                if (previous != null)
+                {
+                    previous.Next = newNode;
 
-                newNode.Previous = previous;
+                    newNode.Previous = previous;
+                }
 
-                newNode.Next = next;
+                if (next != null)
+                {
+                    newNode.Next = next;
 
-                newNode.Previous = newNode;
+                    next.Previous = newNode;
+                }
 
                 OnNewItemAdded(newNode);
             }
@@ -554,10 +560,28 @@ System.Collections.Generic.LinkedListNode
                 next.Previous = previous;
             }
 
-            ILinkedListNode<T> ILinkedList<T>.AddAfter(ILinkedListNode<T> node, T value) => AddAfter(node is LinkedListNode _node ? _node : throw new ArgumentException($"{nameof(node)} must be an instance of {nameof(LinkedListNode)}."), value);
+            ILinkedListNode<T> ILinkedList<T>.AddAfter(ILinkedListNode<T> node, T value)
+            {
+                if (node is LinkedListNode _node)
+                {
+                    _ThrowIfNotContainedNode(_node);
+
+                    var newNode = new LinkedListNode(value);
+
+                    _AddAfter(_node, newNode);
+
+                    return newNode;
+                }
+
+                else
+
+                    throw new ArgumentException($"{nameof(node)} must be an instance of {nameof(LinkedListNode)}.");
+            }
 
             public LinkedListNode AddAfter(LinkedListNode node, T value)
             {
+                ThrowIfNotContainedNode(node, nameof(node));
+
                 var newNode = new LinkedListNode(value);
 
                 _AddAfter(node, newNode);
@@ -567,15 +591,31 @@ System.Collections.Generic.LinkedListNode
 
             public void AddAfter(LinkedListNode addAfter, LinkedListNode node)
             {
-                ThrowIfNotContainedNode(addAfter);
-                ThrowIfNodeAlreadyHasList(node);
+                ThrowIfNotContainedNode(addAfter, nameof(addAfter));
+                ThrowIfNodeAlreadyHasList(node, nameof(node));
 
                 _AddAfter(addAfter, node);
             }
 
             private void _AddAfter(LinkedListNode addAfter, LinkedListNode node) => Weld(addAfter, node, node.Next);
 
-            ILinkedListNode<T> ILinkedList<T>.AddBefore(ILinkedListNode<T> node, T value) => AddBefore(node is LinkedListNode _node ? _node : throw new ArgumentException($"{nameof(node)} must be an instance of {nameof(LinkedListNode)}."), value);
+            ILinkedListNode<T> ILinkedList<T>.AddBefore(ILinkedListNode<T> node, T value)
+            {
+                if (node is LinkedListNode _node)
+                {
+                    _ThrowIfNotContainedNode(_node);
+
+                    var newNode = new LinkedListNode(value);
+
+                    _AddBefore(_node, newNode);
+
+                    return newNode;
+                }
+
+                else
+
+                    throw new ArgumentException($"{nameof(node)} must be an instance of {nameof(LinkedListNode)}.");
+            }
 
             public LinkedListNode AddBefore(LinkedListNode node, T value)
             {
@@ -588,8 +628,8 @@ System.Collections.Generic.LinkedListNode
 
             public void AddBefore(LinkedListNode addBefore, LinkedListNode node)
             {
-                ThrowIfNotContainedNode(addBefore);
-                ThrowIfNodeAlreadyHasList(node);
+                ThrowIfNotContainedNode(addBefore, nameof(addBefore));
+                ThrowIfNodeAlreadyHasList(node, nameof(node));
 
                 _AddBefore(addBefore, node);
             }
@@ -607,7 +647,7 @@ System.Collections.Generic.LinkedListNode
 
             public void AddFirst(LinkedListNode node)
             {
-                ThrowIfNodeAlreadyHasList(node);
+                ThrowIfNodeAlreadyHasList(node, nameof(node));
 
                 _AddFirst(node);
             }
@@ -642,7 +682,7 @@ System.Collections.Generic.LinkedListNode
 
             public void AddLast(LinkedListNode node)
             {
-                ThrowIfNodeAlreadyHasList(node);
+                ThrowIfNodeAlreadyHasList(node, nameof(node));
 
                 _AddLast(node);
             }
@@ -683,6 +723,8 @@ System.Collections.Generic.LinkedListNode
 
             public System.Collections.Generic.IEnumerator<T> GetEnumerator() => GetEnumerator(LinkedListEnumerationDirection.FIFO);
 
+            public System.Collections.Generic.IEnumerator<T> GetReversedEnumerator() => GetEnumerator(LinkedListEnumerationDirection.LIFO);
+
             public System.Collections.Generic.IEnumerator<T> GetEnumerator(LinkedListEnumerationDirection enumerationDirection) => GetNodeEnumerator(enumerationDirection).Select(node => node.Value);
 
             public System.Collections.Generic.IEnumerator<LinkedListNode> GetNodeEnumerator(in LinkedListEnumerationDirection enumerationDirection) => new Enumerator(this, enumerationDirection);
@@ -691,11 +733,22 @@ System.Collections.Generic.LinkedListNode
 
             public void Remove(LinkedListNode node)
             {
-                ThrowIfNotContainedNode(node);
+                ThrowIfNotContainedNode(node, nameof(node));
 
-                Weld(node.Previous, node.Next);
+                if (node == First)
 
-                OnItemRemoved(node);
+                    RemoveFirst();
+
+                else if (node == Last)
+
+                    RemoveLast();
+
+                else
+                {
+                    Weld(node.Previous, node.Next);
+
+                    OnItemRemoved(node);
+                }
             }
 
             void ILinkedList<T>.Remove(ILinkedListNode<T> node) => Remove(node as LinkedListNode ?? throw new ArgumentException($"{nameof(node)} must be an instance of {nameof(LinkedListNode)}."));
@@ -831,6 +884,10 @@ System.Collections.Generic.LinkedListNode
 
             bool ICollection.IsSynchronized => InnerList.IsSynchronized;
 
+            public bool SupportsReversedEnumeration => true;
+
+
+
             public bool Contains(T value) => InnerList.Contains(value);
 
             public void CopyTo(T[] array, int index) => InnerList.CopyTo(array, index);
@@ -859,7 +916,7 @@ System.Collections.Generic.LinkedListNode
 
             System.Collections.Generic.IEnumerator<T>
 #if WinCopies2
-IEnumerable<T>.
+System.Collections.Generic.IEnumerable<T>.
 #endif
                 GetEnumerator() => InnerList.GetEnumerator();
 
@@ -876,7 +933,7 @@ InnerList
 
             public virtual void OnDeserialization(object sender) => InnerList.OnDeserialization(sender);
 #else
-            public System.Collections.Generic.IEnumerator<T> GetEnumerator(LinkedListEnumerationDirection enumerationDirection) => InnerList.GetEnumerator(enumerationDirection);
+            public System.Collections.Generic.IEnumerator<T> GetReversedEnumerator() => InnerList.GetReversedEnumerator();
 
             public System.Collections.Generic.IEnumerator<ILinkedListNode<T>> GetNodeEnumerator(LinkedListEnumerationDirection enumerationDirection) => InnerList.GetNodeEnumerator(enumerationDirection);
 #endif

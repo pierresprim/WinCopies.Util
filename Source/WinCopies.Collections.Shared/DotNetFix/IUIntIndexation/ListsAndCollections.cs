@@ -110,7 +110,7 @@ namespace WinCopies.Collections.DotNetFix
         uint? IndexOf(in object value);
     }
 
-    public interface IUIntIndexedCollection<T> : IReadOnlyUIntIndexedCollection<T>, IEnumerable<T>, IEnumerable
+    public interface IUIntIndexedCollection<T> : IReadOnlyUIntIndexedCollection<T>, System.Collections.Generic.IEnumerable<T>, IEnumerable
     {
         void Add(in T item);
 
@@ -123,12 +123,12 @@ namespace WinCopies.Collections.DotNetFix
         bool Remove(in T item);
     }
 
-    public interface IReadOnlyUIntIndexedCollection<out T> : IEnumerable<T>, IEnumerable
+    public interface IReadOnlyUIntIndexedCollection<out T> : System.Collections.Generic.IEnumerable<T>, IEnumerable
     {
         uint Count { get; }
     }
 
-    public interface IUIntIndexedList<T> : IUIntIndexedCollection<T>, IReadOnlyUIntIndexedList<T>, IEnumerable<T>, IEnumerable
+    public interface IUIntIndexedList<T> : IUIntIndexedCollection<T>, IReadOnlyUIntIndexedList<T>, System.Collections.Generic.IEnumerable<T>, IEnumerable
     {
         new T this[uint index] { get; set; }
 
@@ -139,7 +139,7 @@ namespace WinCopies.Collections.DotNetFix
         void RemoveAt(in uint index);
     }
 
-    public interface IReadOnlyUIntIndexedList<out T> : IReadOnlyUIntIndexedCollection<T>, IEnumerable<T>, IEnumerable
+    public interface IReadOnlyUIntIndexedList<out T> : IReadOnlyUIntIndexedCollection<T>, System.Collections.Generic.IEnumerable<T>, IEnumerable
     {
         T this[uint index] { get; }
     }

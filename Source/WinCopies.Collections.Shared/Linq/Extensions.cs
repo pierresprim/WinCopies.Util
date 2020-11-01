@@ -34,7 +34,7 @@ namespace WinCopies.Linq
 {
     public static class Extensions
     {
-        public static IEnumerable<T> WherePredicate<T>(this IEnumerable<T> enumerable, Predicate<T> func)
+        public static System.Collections.Generic.IEnumerable<T> WherePredicate<T>(this System.Collections.Generic.IEnumerable<T> enumerable, Predicate<T> func)
         {
             ThrowIfNull(enumerable, nameof(enumerable));
             ThrowIfNull(func, nameof(func));

@@ -59,6 +59,8 @@ WinCopies.Util 3.0.0-preview
 		- WinCopies.UtilHelpers.GetNumValue is now generic and the 'enumType' parameter has been removed.
 	- Misc:
 		- StringParameterEmptyOrWhiteSpaces resource to StringParameterEmptyOrWhiteSpace
+- Additions:
+	- WinCopies.Collections.Generic.IEnumerable\<T> interface.
 
 WinCopies.Util.Desktop 3.0.0-preview
 ------------------------------------
@@ -238,7 +240,7 @@ WinCopies.Util (2.3.0-preview5)
 - Existing items behavior updates:
 	- The WinCopies.UtiL.Util.AddRangeIfNotContains(this System.Collections.ICollection collection, params object[] values) now has the following signature: AddRangeIfNotContains(this System.Collections.IList collection, params object[] values). The old method is still supported.
 	- The WinCopies.Util.Util.RemoveRangeIfContains<T>(this ICollection<T> collection, params T[] values) now has the following signature: WinCopies.Util.Util.RemoveRangeIfContains<T>(this IList<T> collection, params T[] values). The old method is still supported.
-	- The WinCopies.Util.Util.RemoveRangeIfContains<T>(this ICollection<T> collection, in IEnumerable<T> values) now has the following signature: RemoveRangeIfContains<T>(this IList<T> collection, in IEnumerable<T> values). The old method is still supported.
+	- The WinCopies.Util.Util.RemoveRangeIfContains<T>(this ICollection<T> collection, in System.Collections.Generic.IEnumerable<T> values) now has the following signature: RemoveRangeIfContains<T>(this IList<T> collection, in System.Collections.Generic.IEnumerable<T> values). The old method is still supported.
 	- The WinCopies.Collections.DotNetFix.IReadOnlyLinkedList interface implements WinCopies.Collections.DotNetFix.ICountableEnumerable.
 
 WinCopies.Util.Desktop (2.3.0-preview5)

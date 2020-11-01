@@ -93,7 +93,7 @@ namespace WinCopies.Collections
 
         public System.Collections.Generic.LinkedList<T>.Enumerator GetEnumerator() => InnerList.GetEnumerator();
 
-        System.Collections.Generic.IEnumerator<T> IEnumerable<T>.GetEnumerator() => ((IEnumerable<T>)InnerList).GetEnumerator();
+        System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => ((System.Collections.Generic.IEnumerable<T>)InnerList).GetEnumerator();
 
         System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerList).GetEnumerator();
 
@@ -156,7 +156,7 @@ namespace WinCopies.Collections
 
         bool ICollection<T>.Remove(T item) => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
 
-        System.Collections.Generic.IEnumerator<T> IEnumerable<T>.GetEnumerator() => InnerList.GetEnumerator();
+        System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => InnerList.GetEnumerator();
 
         System.Collections.IEnumerator IEnumerable.GetEnumerator() => InnerList.GetEnumerator();
 

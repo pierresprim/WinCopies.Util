@@ -101,7 +101,7 @@ namespace WinCopies.Collections
             /// <param name="collection">The collection from which the elements are copied.</param>
             /// <remarks>The elements are copied onto the <see cref="ObservableCollection{T}"/> in the same order they are read by the enumerator of the collection.</remarks>
             /// <exception cref="ArgumentNullException">The <paramref name="collection"/> parameter cannot be <see langword="null"/>.</exception>
-            public ObservableCollection(IEnumerable<T> collection) : base(collection) { }
+            public ObservableCollection(System.Collections.Generic.IEnumerable<T> collection) : base(collection) { }
 
             /// <summary>
             /// Inserts an item into the collection at the specified index.
@@ -246,7 +246,7 @@ namespace WinCopies.Collections
         /// <param name="collection">The collection from which the elements are copied.</param>
         /// <remarks>The elements are copied onto the <see cref="ObservableCollection{T}"/> in the same order they are read by the enumerator of the collection.</remarks>
         /// <exception cref="ArgumentNullException">The <paramref name="collection"/> parameter cannot be <see langword="null"/>.</exception>
-        public ObservableCollection(IEnumerable<T> collection) : base(collection) { }
+        public ObservableCollection(System.Collections.Generic.IEnumerable<T> collection) : base(collection) { }
 
         /// <summary>
         /// Inserts an item into the collection at the specified index.
@@ -319,7 +319,7 @@ namespace WinCopies.Collections
 
     public delegate void NotifyCollectionChangingEventHandler(object sender, DotNetFix.NotifyCollectionChangedEventArgs e);
 
-    public interface IObservableCollection<T> : System.Collections.Generic.IList<T>, IEnumerable<T>, IEnumerable, IList, ICollection, System.Collections.Generic.IReadOnlyList<T>, INotifyCollectionChanged, INotifyPropertyChanged
+    public interface IObservableCollection<T> : System.Collections.Generic.IList<T>, System.Collections.Generic.IEnumerable<T>, IEnumerable, IList, ICollection, System.Collections.Generic.IReadOnlyList<T>, INotifyCollectionChanged, INotifyPropertyChanged
     {
         void Move(int oldIndex, int newIndex);
     }
@@ -336,7 +336,7 @@ namespace WinCopies.Collections
 
     //    //    public ObservableCollectionInternal(List<T> list) : base(list) { }
 
-    //    //    public ObservableCollectionInternal(IEnumerable<T> collection) : base(collection) { }
+    //    //    public ObservableCollectionInternal(System.Collections.Generic.IEnumerable<T> collection) : base(collection) { }
 
     //    //    internal new IList<T> Items => base.Items;
 
@@ -379,9 +379,9 @@ namespace WinCopies.Collections
 
     //        //}
 
-    //        //public ObservableCollection(List<T> list, Func<T, TModifier> getModifier) : this((IEnumerable<T>)list, getModifier) { }
+    //        //public ObservableCollection(List<T> list, Func<T, TModifier> getModifier) : this((System.Collections.Generic.IEnumerable<T>)list, getModifier) { }
 
-    //        //public ObservableCollection(IEnumerable<T> collection, Func<T, TModifier> getModifier)
+    //        //public ObservableCollection(System.Collections.Generic.IEnumerable<T> collection, Func<T, TModifier> getModifier)
 
     //        //{
 
@@ -403,7 +403,7 @@ namespace WinCopies.Collections
 
     //        public ObservableCollection(List<T> list) => SetItems(new ObservableCollectionInternal<T>(list));
 
-    //        public ObservableCollection(IEnumerable<T> collection) => SetItems(new ObservableCollectionInternal<T>(collection));
+    //        public ObservableCollection(System.Collections.Generic.IEnumerable<T> collection) => SetItems(new ObservableCollectionInternal<T>(collection));
 
     //        T System.Collections.Generic.IList<T>.this[int index] { get => GetItem(index); set => Update(index, value); }
 

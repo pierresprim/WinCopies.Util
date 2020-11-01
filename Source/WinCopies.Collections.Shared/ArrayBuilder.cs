@@ -217,7 +217,7 @@ namespace WinCopies.Collections
             /// </summary>
             /// <param name="array">The values to add to this <see cref="ArrayBuilder{T}"/></param>
             /// <returns>The added <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s.</returns>
-            public System.Collections.Generic.LinkedListNode<T>[] AddRangeFirst(in IEnumerable<T> array) => InnerList.First == null ? AddRangeLast(array) : AddRangeBefore(InnerList.First, array);
+            public System.Collections.Generic.LinkedListNode<T>[] AddRangeFirst(in System.Collections.Generic.IEnumerable<T> array) => InnerList.First == null ? AddRangeLast(array) : AddRangeBefore(InnerList.First, array);
 
             /// <summary>
             /// Add multiple <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s at the top of this <see cref="ArrayBuilder{T}"/>.
@@ -270,7 +270,7 @@ namespace WinCopies.Collections
             /// </summary>
             /// <param name="array">The values to add to this <see cref="ArrayBuilder{T}"/></param>
             /// <returns>The added <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s.</returns>
-            public System.Collections.Generic.LinkedListNode<T>[] AddRangeLast(in IEnumerable<T> array)
+            public System.Collections.Generic.LinkedListNode<T>[] AddRangeLast(in System.Collections.Generic.IEnumerable<T> array)
             {
                 if (array is T[] _array) return AddRangeLast(_array);
 
@@ -345,7 +345,7 @@ namespace WinCopies.Collections
             /// <param name="node">The node before which to add the values</param>
             /// <param name="array">The values to add to this <see cref="ArrayBuilder{T}"/></param>
             /// <returns>The added <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s.</returns>
-            public System.Collections.Generic.LinkedListNode<T>[] AddRangeBefore(in System.Collections.Generic.LinkedListNode<T> node, in IEnumerable<T> array)
+            public System.Collections.Generic.LinkedListNode<T>[] AddRangeBefore(in System.Collections.Generic.LinkedListNode<T> node, in System.Collections.Generic.IEnumerable<T> array)
             {
                 var values = new System.Collections.Generic.LinkedList<System.Collections.Generic.LinkedListNode<T>>();
 
@@ -397,7 +397,7 @@ namespace WinCopies.Collections
             /// <param name="node">The node after which to add the values</param>
             /// <param name="array">The values to add to this <see cref="ArrayBuilder{T}"/></param>
             /// <returns>The added <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s.</returns>
-            public System.Collections.Generic.LinkedListNode<T>[] AddRangeAfter(in System.Collections.Generic.LinkedListNode<T> node, in IEnumerable<T> array) => node.Next == null ? AddRangeLast(array) : AddRangeBefore(node.Next, array);
+            public System.Collections.Generic.LinkedListNode<T>[] AddRangeAfter(in System.Collections.Generic.LinkedListNode<T> node, in System.Collections.Generic.IEnumerable<T> array) => node.Next == null ? AddRangeLast(array) : AddRangeBefore(node.Next, array);
 
             /// <summary>
             /// Add multiple values after a specified node in this <see cref="ArrayBuilder{T}"/>.
@@ -537,7 +537,7 @@ namespace WinCopies.Collections
 
             System.Collections.Generic.LinkedList<T>.Enumerator ILinkedList<T>.GetEnumerator() => InnerList.GetEnumerator();
 
-            System.Collections.Generic.IEnumerator<T> IEnumerable<T>.GetEnumerator() => ((IEnumerable<T>)InnerList).GetEnumerator();
+            System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => ((System.Collections.Generic.IEnumerable<T>)InnerList).GetEnumerator();
 
             System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerList).GetEnumerator();
 
@@ -561,7 +561,7 @@ namespace WinCopies.Collections
             /// Initializes a new instance of the <see cref="ArrayBuilder{T}"/> class with a given <see cref="IEnumerable{T}"/>.
             /// </summary>
             /// <param name="enumerable">An enumerable from which to add values.</param>
-            public ArrayBuilder(in IEnumerable<T> enumerable) :
+            public ArrayBuilder(in System.Collections.Generic.IEnumerable<T> enumerable) :
 #if WinCopies2
                 this(new System.Collections.Generic.LinkedList<T>(enumerable)) 
 #else

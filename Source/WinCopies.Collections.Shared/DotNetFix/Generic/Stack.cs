@@ -309,7 +309,7 @@ namespace WinCopies.Collections.DotNetFix
 #endif
 
     [Serializable]
-    public class StackCollection<T> : IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection
+    public class StackCollection<T> : System.Collections.Generic.IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection
     {
         protected internal
 #if WinCopies2
@@ -472,7 +472,7 @@ int
     }
 
     [Serializable]
-    public class ReadOnlyStackCollection<T> : IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection
+    public class ReadOnlyStackCollection<T> : System.Collections.Generic.IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection
     {
         protected
 #if WinCopies2
@@ -535,7 +535,7 @@ uint
     }
 
     [Serializable]
-    public class ReadOnlyObservableStackCollection<T> : IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection, INotifyPropertyChanged, INotifySimpleLinkedCollectionChanged<T>
+    public class ReadOnlyObservableStackCollection<T> : System.Collections.Generic.IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection, INotifyPropertyChanged, INotifySimpleLinkedCollectionChanged<T>
     {
         protected ObservableStackCollection<T> InnerStackCollection { get; }
 
