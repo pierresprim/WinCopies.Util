@@ -357,7 +357,7 @@ System.Collections.Generic.LinkedListNode
 
                 protected override LinkedListNode CurrentOverride => _currentNode;
 
-                public Enumerator(LinkedList<T> list, LinkedListEnumerationDirection enumerationDirection)
+                public Enumerator(LinkedList<T> list, in LinkedListEnumerationDirection enumerationDirection)
                 {
                     list._enumeratorsCount++;
 
@@ -406,7 +406,13 @@ System.Collections.Generic.LinkedListNode
                     {
                         _first = false;
 
-                        return _currentNode != null;
+                        if (_list.First == null)
+
+                            return false;
+
+                        _reset();
+
+                        return true;
                     }
 
                     _action();
@@ -429,8 +435,6 @@ System.Collections.Generic.LinkedListNode
                 {
                     base.DisposeManaged();
 
-                    _list = null;
-
                     _action = null;
 
                     ResetCurrent();
@@ -440,9 +444,11 @@ System.Collections.Generic.LinkedListNode
 
                 protected override void Dispose(bool disposing)
                 {
-                    base.Dispose(disposing);
-
                     _list.DecrementEnumeratorsCount();
+
+                    _list = null;
+
+                    base.Dispose(disposing);
                 }
 
                 ~Enumerator() => Dispose(false);

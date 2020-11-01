@@ -24,8 +24,6 @@ using System.Diagnostics;
 using IDisposable = WinCopies.Util.DotNetFix.IDisposable;
 #endif
 
-using System.Collections;
-
 namespace WinCopies.Collections
 {
 #if !WinCopies2

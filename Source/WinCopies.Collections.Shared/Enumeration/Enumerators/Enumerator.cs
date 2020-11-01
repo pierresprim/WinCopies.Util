@@ -106,6 +106,8 @@ namespace WinCopies.Collections
                 ResetOverride();
         }
 
+        protected virtual void DisposeManaged() => OnResetOrDisposed();
+
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
@@ -114,8 +116,6 @@ namespace WinCopies.Collections
 
             IsDisposed = true;
         }
-
-        protected virtual void DisposeManaged() => OnResetOrDisposed();
 
         public void Dispose()
         {

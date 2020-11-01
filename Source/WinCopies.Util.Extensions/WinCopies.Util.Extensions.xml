@@ -232,5 +232,33 @@
             <exception cref="T:WinCopies.InvalidEnumArgumentException"><paramref name="enum"/> is equal to zero and the <paramref name="throwIfZero"/> parameter is set to true or <paramref name="enum"/> is lesser than zero.</exception>
             <seealso cref="M:WinCopies.Extensions.IsValidEnumValue(System.Enum)"/>
         </member>
+        <member name="M:WinCopies.Util.Extensions.UtilHelpers.GetIf(System.Object@,System.Object@,WinCopies.Collections.Comparison@,WinCopies.Func@,WinCopies.Func@,WinCopies.Func@)">
+            <summary>
+            Returns a value obtained by a <see cref="T:WinCopies.Func"/>, depending on the result of a comparison.
+            </summary>
+            <param name="x">The value to compare to <paramref name="y"/>.</param>
+            <param name="y">The value to compare to <paramref name="x"/>.</param>
+            <param name="comparison">The comparison delegate.</param>
+            <param name="lower">The <see cref="T:WinCopies.Func"/> that provides the value for <paramref name="x"/> is lower than <paramref name="y"/>.</param>
+            <param name="equals">The <see cref="T:WinCopies.Func"/> that provides the value for <paramref name="x"/> is equal to <paramref name="y"/>.</param>
+            <param name="greater">The <see cref="T:WinCopies.Func"/> that provides the value for <paramref name="x"/> is greater than <paramref name="y"/>.</param>
+            <returns>A value obtained by a <see cref="T:WinCopies.Func"/>, depending on the result of a comparison.</returns>
+            <exception cref="T:System.ArgumentNullException">One or more of the given <see cref="T:WinCopies.Func"/>s are <see langword="null"/>.</exception>
+            <remarks>See <see cref="M:WinCopies.Util.Extensions.UtilHelpers.GetIf``2(``0@,``0@,System.Comparison{``0}@,System.Func{``1}@,System.Func{``1}@,System.Func{``1}@)"/> for the generic version.</remarks>
+        </member>
+        <member name="M:WinCopies.Util.Extensions.UtilHelpers.GetIf``2(``0@,``0@,System.Comparison{``0}@,System.Func{``1}@,System.Func{``1}@,System.Func{``1}@)">
+            <summary>
+            Returns a value obtained by a <see cref="T:WinCopies.Func"/>, depending on the result of a comparison.
+            </summary>
+            <param name="x">The value to compare to <paramref name="y"/>.</param>
+            <param name="y">The value to compare to <paramref name="x"/>.</param>
+            <param name="comparison">The comparison delegate.</param>
+            <param name="lower">The <see cref="T:WinCopies.Func"/> that provides the value for <paramref name="x"/> is lower than <paramref name="y"/>.</param>
+            <param name="equals">The <see cref="T:WinCopies.Func"/> that provides the value for <paramref name="x"/> is equal to <paramref name="y"/>.</param>
+            <param name="greater">The <see cref="T:WinCopies.Func"/> that provides the value for <paramref name="x"/> is greater than <paramref name="y"/>.</param>
+            <returns>A value obtained by a <see cref="T:WinCopies.Func"/>, depending on the result of a comparison.</returns>
+            <exception cref="T:System.ArgumentNullException">One or more of the given <see cref="T:WinCopies.Func"/>s are <see langword="null"/>.</exception>
+            <remarks>See <see cref="M:WinCopies.Util.Extensions.UtilHelpers.GetIf(System.Object@,System.Object@,WinCopies.Collections.Comparison@,WinCopies.Func@,WinCopies.Func@,WinCopies.Func@)"/> for the non-generic version.</remarks>
+        </member>
     </members>
 </doc>

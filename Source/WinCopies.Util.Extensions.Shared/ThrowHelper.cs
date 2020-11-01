@@ -23,7 +23,7 @@ using static WinCopies.Collections.ThrowHelper;
 
 using IfCT = WinCopies.Diagnostics.ComparisonType;
 
-namespace WinCopies.Util.Extensions
+namespace WinCopies.Util.Extensions // To avoid name conflicts.
 {
     public static class ThrowHelper
     {

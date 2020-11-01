@@ -20,11 +20,9 @@ using System.Collections;
 #endif
 
 using WinCopies.Collections.DotNetFix;
-using WinCopies.Collections.DotNetFix.Generic;
 
 namespace WinCopies.Collections
 {
-
     public class Stack : System.Collections.Stack, IEnumerableStack
     {
         public bool IsReadOnly => false;
@@ -100,99 +98,6 @@ namespace WinCopies.Collections
             result = null;
 
             return false;
-        }
-    }
-
-    namespace Generic
-    {
-        public class Stack<T> : System.Collections.Generic.Stack<T>, IEnumerableStack<T>
-        {
-#if WinCopies2
-            uint IUIntCountableEnumerable.Count => (uint)Count;
-#else
-            public bool IsReadOnly => false;
-
-            bool ISimpleLinkedListBase.IsSynchronized => ((ICollection)this).IsSynchronized;
-
-            object ISimpleLinkedListBase.SyncRoot => ((ICollection)this).SyncRoot;
-#endif
-
-            uint IUIntCountable.Count => (uint)Count;
-
-#if !(NETCORE || NETSTANDARD2_1)
-            public bool TryPeek(out T result)
-            {
-                if (Count > 0)
-                {
-                    result = Peek();
-
-                    return true;
-                }
-
-                result = default;
-
-                return false;
-            }
-
-            public bool TryPop(out T result)
-            {
-                if (Count > 0)
-                {
-                    result = Pop();
-
-                    return true;
-                }
-
-                result = default;
-
-                return false;
-            }
-#endif
-        }
-
-        public class Queue<T> : System.Collections.Generic.Queue<T>, IEnumerableQueue<T>
-        {
-#if WinCopies2
-            uint IUIntCountableEnumerable.Count => (uint)Count;
-#else
-            public bool IsReadOnly => false;
-
-            bool ISimpleLinkedListBase.IsSynchronized => ((ICollection)this).IsSynchronized;
-
-            object ISimpleLinkedListBase.SyncRoot => ((ICollection)this).SyncRoot;
-#endif
-
-            uint IUIntCountable.Count => (uint)Count;
-
-#if !(NETCORE || NETSTANDARD2_1)
-            public bool TryPeek(out T result)
-            {
-                if (Count > 0)
-                {
-                    result = Peek();
-
-                    return true;
-                }
-
-                result = default;
-
-                return false;
-            }
-
-            public bool TryDequeue(out T result)
-            {
-                if (Count > 0)
-                {
-                    result = Dequeue();
-
-                    return true;
-                }
-
-                result = default;
-
-                return false;
-            }
-#endif
         }
     }
 }

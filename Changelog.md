@@ -9,7 +9,13 @@ CHANGELOG
 Updates
 -------
 
-??/??/???? 3.0.0-preview
+??/??/???? 3.0.0.1-preview
+==========================
+
+- Bug fixed in LinkedList enumerator.
+- Add GetIf methods in WinCopies.Util.Extensions
+
+11/01/2020 3.0.0-preview
 ========================
 
 - Changes:
