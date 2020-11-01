@@ -8,9 +8,7 @@ The WinCopies® software framework
 README
 ======
 
-WinCopies.Util is now desynchronized with the rest of the WinCopies Framework.
-
-Be careful! This is the 3.x branch of WinCopies.Util and almost all of the array/(linked)list/collection-based items are now in the new WinCopies.Collections package.
+WinCopies.Util is now desynchronized with the WinCopies Framework.
 
 Updates
 -------
@@ -20,10 +18,13 @@ See the Change log.
 Description
 -----------
 
-Some utilities to extend the .NET Framework capabilities, such as:
+Some utilities to extend the .NET framework capabilities, such as:
 
+- An array and list builder;
+- (ReadOnly)Collections;
+- (ReadOnly)(Observable)Stack/Queue/LinkedCollections;
 - Some extension methods, mainly for arrays, enumerables, collections and enums;
-- Some utility static methods;
+- Some utility static methods, such as advanced 'if' functions;
 - 'ToString' extension method for the 'IEnumerable' type to display the content of a given IEnumerable
 
 Project link

@@ -43,7 +43,7 @@
         </member>
         <member name="M:WinCopies.Collections.Generic.ArrayBuilder`1.#ctor(System.Collections.Generic.IEnumerable{`0}@)">
             <summary>
-            Initializes a new instance of the <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> class with a given <see cref="T:System.Collections.Generic.IEnumerable`1"/>.
+            Initializes a new instance of the <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> class with a given <see cref="T:WinCopies.Collections.Generic.IEnumerable`1"/>.
             </summary>
             <param name="enumerable">An enumerable from which to add values.</param>
         </member>
@@ -67,6 +67,26 @@
             </summary>
             <param name="remove">Indicates whether items have to be removed from the current <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> after they has been added to the new list.</param>
             <returns>A <see cref="T:System.Collections.Generic.List`1"/> with the items of this <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/>.</returns>
+        </member>
+        <member name="T:WinCopies.Collections.Generic.IEnumerable`1">
+            <summary>
+            A collection that can be enumerated.
+            </summary>
+            <typeparam name="T">The item type of the collection.</typeparam>
+        </member>
+        <member name="P:WinCopies.Collections.Generic.IEnumerable`1.SupportsReversedEnumeration">
+            <summary>
+            Gets a value indicating whether this collection can be enumerated in the two directions (FIFO and LIFO).
+            </summary>
+        </member>
+        <member name="M:WinCopies.Collections.Generic.IEnumerable`1.GetReversedEnumerator">
+            <summary>
+            Returns a reversed enumerator for the current collection. See the Remarks section.
+            </summary>
+            <returns>A reversed enumerator for the current collection.</returns>
+            <remarks>
+            This method returns an enumerator which enumerate in the reversed direction that the enumerator returned by the <see cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/> method. So, for a queue, the <see cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/> method will return an enumerator that will enumerate through the queue using the FIFO direction and the <see cref="M:WinCopies.Collections.Generic.IEnumerable`1.GetReversedEnumerator"/> will throw an exception, because any reversed enumerator can be returned while a queue only supports the FIFO direction. However, a stack, which only supports the LIFO direction, will return a LIFO-enumerator as its main enumerator and throw an exception if we ask it to return a reversed enumerator. A linked list that supports the two directions, but which stores items using the FIFO direction by default, will return a FIFO-enumerator as its main enumerator and a LIFO-enumerator as its reversed enumerator.
+            </remarks>
         </member>
         <member name="M:WinCopies.Collections.Generic.Enumerator`2.#ctor(System.Collections.Generic.IEnumerable{`0})">
             <summary>
@@ -1405,10 +1425,10 @@
         </member>
         <member name="M:WinCopies.Collections.Extensions.AsObjectEnumerable(System.Collections.IEnumerable)">
             <summary>
-            Yield returns each object of an <see cref="T:System.Collections.IEnumerable"/>, so the given <see cref="T:System.Collections.IEnumerable"/> will be considered as an <see cref="T:System.Collections.Generic.IEnumerable`1"/>.
+            Yield returns each object of an <see cref="T:System.Collections.IEnumerable"/>, so the given <see cref="T:System.Collections.IEnumerable"/> will be considered as an <see cref="T:WinCopies.Collections.Generic.IEnumerable`1"/>.
             </summary>
-            <param name="enumerable">An <see cref="T:System.Collections.IEnumerable"/> to consider as a <see cref="T:System.Collections.Generic.IEnumerable`1"/>.</param>
-            <returns>Yield returns the same enumerable as the given <paramref name="enumerable"/>, as an <see cref="T:System.Collections.Generic.IEnumerable`1"/>.</returns>
+            <param name="enumerable">An <see cref="T:System.Collections.IEnumerable"/> to consider as a <see cref="T:WinCopies.Collections.Generic.IEnumerable`1"/>.</param>
+            <returns>Yield returns the same enumerable as the given <paramref name="enumerable"/>, as an <see cref="T:WinCopies.Collections.Generic.IEnumerable`1"/>.</returns>
         </member>
         <member name="M:WinCopies.Collections.Extensions.FirstOrDefault``1(System.Collections.IEnumerable)">
             <summary>

@@ -80,7 +80,7 @@ namespace WinCopies.Collections.Tests
 
             void updateEnumerator() => emptyCheckEnumerator = new EmptyCheckEnumerator<int>(new ArrayEnumerator<int>(ints));
 
-            IEnumerable<int> getEnumerable() => new Enumerable<int>(() => emptyCheckEnumerator);
+            System.Collections.Generic.IEnumerable<int> getEnumerable() => new Enumerable<int>(() => emptyCheckEnumerator);
 
             updateEnumerator();
 

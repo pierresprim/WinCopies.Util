@@ -58,6 +58,7 @@ namespace WinCopies.Collections.DotNetFix
             ICountableEnumerable<T>, ISerializable, IDeserializationCallback
 #else
             IUIntCountableEnumerable<T>, Collections.Generic.IEnumerable<T>
+#endif
         {
 #if WinCopies2
 System.Collections.Generic.LinkedListNode
