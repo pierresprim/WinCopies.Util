@@ -141,39 +141,18 @@ namespace WinCopies.Collections
 #if WinCopies2
 System.Collections.IEnumerator, WinCopies.Util.DotNetFix.IDisposable
 #else
-        WinCopies.Collections.Enumerator, IEnumeratorProvider
+        WinCopies.Collections.EnumeratorInfo, IEnumeratorProvider
 #endif
     {
-        protected System.Collections.IEnumerator InnerEnumerator { get; private set; }
-
 #if WinCopies2
         #region Fields
+        private IEnumerator _enumerator;
         private Func<bool> _moveNext;
-        private bool? _hasItems;
+        private bool? _hasItems = null;
+        private Func _current;
         #endregion
 
         #region Properties
-        public bool HasItems
-        {
-            get
-            {
-                ThrowIfDisposed();
-
-                if (!_hasItems.HasValue)
-
-                    _hasItems = _enumerator.MoveNext();
-
-                return _hasItems.Value;
-            }
-        }
-
-        public void ThrowIfDisposed()
-        {
-            if (_enumerator.IsDisposed)
-
-                throw GetExceptionForDispose(false);
-        }
-
         public bool IsDisposed { get; private set; }
 
         public object Current
@@ -182,7 +161,7 @@ System.Collections.IEnumerator, WinCopies.Util.DotNetFix.IDisposable
             {
                 ThrowIfDisposed();
 
-                return InnerEnumerator.Current;
+                return _enumerator.Current;
             }
         }
         #endregion
@@ -208,7 +187,7 @@ System.Collections.IEnumerator, WinCopies.Util.DotNetFix.IDisposable
 
             bool enumerate()
             {
-                if (InnerEnumerator.MoveNext())
+                if (_enumerator.MoveNext())
 
                     return true;
 
@@ -248,39 +227,60 @@ System.Collections.IEnumerator, WinCopies.Util.DotNetFix.IDisposable
 #else
         private EmptyCheckEnumeratorHelper _emptyCheckEnumeratorHelper;
 
-        System.Collections.IEnumerator IEnumeratorProvider.Enumerator => InnerEnumerator;
+        #region Properties
 
         protected override object CurrentOverride => InnerEnumerator.Current;
 
         public override bool? IsResetSupported => null;
+
+        System.Collections.IEnumerator IEnumeratorProvider.Enumerator => InnerEnumerator;
+
+        #endregion
 #endif
 
-        public EmptyCheckEnumerator(System.Collections.IEnumerator enumerator)
+        public bool HasItems
         {
-            InnerEnumerator = enumerator;
-
-            _emptyCheckEnumeratorHelper = new EmptyCheckEnumeratorHelper(this);
+            get
+            {
+                ThrowIfDisposed();
 
 #if WinCopies2
-            ResetMoveNext();
+                if (!_hasItems.HasValue)
+
+                    _hasItems = _enumerator.MoveNext();
+
+                return _hasItems.Value;
+#else
+                return _emptyCheckEnumeratorHelper.HasItems;
 #endif
+            }
         }
 
-        #region Interface implementations
-        #region System.Collections.IEnumerator implementation
+        public EmptyCheckEnumerator(System.Collections.IEnumerator enumerator)
+#if WinCopies2
+        {
+            _enumerator = enumerator;
+
+            ResetMoveNext();
+        }
+#else
+            :base(enumerator) => _emptyCheckEnumeratorHelper = new EmptyCheckEnumeratorHelper(this);
+#endif
+
+#region Interface implementations
+#region System.Collections.IEnumerator implementation
 #if WinCopies2
         public bool MoveNext()
         {
             ThrowIfDisposed();
 
-            return
-#else
-        protected override bool MoveNextOverride() =>
-#endif
-           _emptyCheckEnumeratorHelper.MoveNext();
-#if WinCopies2
+            return _moveNext();
         }
+#else
+        protected override bool MoveNextOverride() => _emptyCheckEnumeratorHelper.MoveNext();
+#endif
 
+#if WinCopies2
         public void Reset()
         {
             ThrowIfDisposed();
@@ -296,9 +296,9 @@ System.Collections.IEnumerator, WinCopies.Util.DotNetFix.IDisposable
             _emptyCheckEnumeratorHelper.Reset();
 #endif
         }
-        #endregion
+#endregion
 
-        #region IDisposable implementation
+#region IDisposable implementation
 #if WinCopies2
         public void Dispose()
         {
@@ -309,19 +309,22 @@ System.Collections.IEnumerator, WinCopies.Util.DotNetFix.IDisposable
         protected override void DisposeManaged()
         {
             base.DisposeManaged();
-#endif
+
             _emptyCheckEnumeratorHelper.DisposeManaged();
 
             _emptyCheckEnumeratorHelper = null;
-
-            InnerEnumerator = null;
+#endif
 
 #if WinCopies2
+            ResetMoveNext();
+
+            _enumerator = null;
+
             IsDisposed = true;
 #endif
         }
-        #endregion
-        #endregion
+#endregion
+#endregion
     }
 
 #if !WinCopies2
@@ -332,31 +335,19 @@ System.Collections.IEnumerator, WinCopies.Util.DotNetFix.IDisposable
 #if WinCopies2
             System.Collections.Generic.IEnumerator<T>, WinCopies.Util.DotNetFix.IDisposable
 #else
-            Enumerator<T>, IEnumeratorProvider
+            EnumeratorInfo<T>, IEnumeratorProvider
 #endif
         {
 #if WinCopies2
-            #region Fields
-            private Func<bool> _moveNext;
-            private bool? _hasItems = null;
-            #endregion
+#region Fields
+        private IEnumerator<T> _enumerator;
+        private Func<bool> _moveNext;
+        private bool? _hasItems = null;
+        private Func<T> _current;
+#endregion
 
-            #region Properties
-            public bool IsDisposed { get; private set; }
-
-            public bool HasItems
-            {
-                get
-                {
-                    ThrowIfDisposed();
-
-                    if (!_hasItems.HasValue)
-
-                        _hasItems = _enumerator.MoveNext();
-
-                    return _hasItems.Value;
-                }
-            }
+#region Properties
+        public bool IsDisposed { get; private set; }
 
             public T Current
             {
@@ -367,7 +358,9 @@ System.Collections.IEnumerator, WinCopies.Util.DotNetFix.IDisposable
                     return _current();
                 }
             }
-            #endregion
+
+            protected System.Collections.Generic.IEnumerator<T> InnerEnumerator { get; private set; }
+#endregion
 #else
             private EmptyCheckEnumeratorHelper _emptyCheckEnumeratorHelper;
 
@@ -378,29 +371,109 @@ System.Collections.IEnumerator, WinCopies.Util.DotNetFix.IDisposable
             public override bool? IsResetSupported => null;
 #endif
 
-            protected System.Collections.Generic.IEnumerator<T> InnerEnumerator { get; private set; }
+            public bool HasItems
+            {
+                get
+                {
+                    ThrowIfDisposed();
+
+#if WinCopies2
+                    if (!_hasItems.HasValue)
+
+                        _hasItems = _enumerator.MoveNext();
+
+                    return _hasItems.Value;
+#else
+                    return _emptyCheckEnumeratorHelper.HasItems;
+#endif
+                }
+            }
 
             public EmptyCheckEnumerator(System.Collections.Generic.IEnumerator<T> enumerator)
+#if WinCopies2
             {
                 InnerEnumerator = enumerator;
 
-                _emptyCheckEnumeratorHelper = new EmptyCheckEnumeratorHelper(this);
+                ResetMoveNext();
+            }
+#else
+                : base(enumerator) => _emptyCheckEnumeratorHelper = new EmptyCheckEnumeratorHelper(this);
+#endif
 
 #if WinCopies2
-                ResetMoveNext();
-#endif
+        private void ResetCurrent() => _current = () => throw new InvalidOperationException("The enumeration has not been started or has completed.");
+
+        private void ResetMoveNext()
+        {
+            ResetCurrent();
+
+            void resetMoveNext()
+            {
+                _moveNext = () => false;
+
+                ResetCurrent();
             }
 
-            #region Interface implementations
-            #region System.Collections.IEnumerator implementation
-#if WinCopies2
-            object System.Collections.IEnumerator.Current => Current;
-
-            public bool MoveNext()
+            bool enumerate()
             {
-                ThrowIfDisposed();
+                if (_enumerator.MoveNext())
 
-                return
+                    return true;
+
+                resetMoveNext();
+
+                return false;
+            }
+
+            _moveNext = () =>
+            {
+                if (_hasItems.HasValue)
+                {
+                    if (_hasItems.Value)
+                    {
+                        _current = () => _enumerator.Current;
+
+                        _moveNext = enumerate;
+
+                        return true;
+                    }
+
+                    else
+                    {
+                        resetMoveNext();
+
+                        return false;
+                    }
+                }
+
+                else
+                {
+                    _moveNext = enumerate;
+
+                    return enumerate();
+                }
+            };
+        }
+
+        private void ThrowIfDisposed()
+        {
+            if (IsDisposed)
+
+                throw GetExceptionForDispose(false);
+        }
+#endif
+
+#region Interface implementations
+#region System.Collections.IEnumerator implementation
+#if WinCopies2
+        object System.Collections.IEnumerator.Current => Current;
+
+        public bool MoveNext()
+        {
+            ThrowIfDisposed();
+
+            return _moveNext();
+        }
 #else
             protected override bool MoveNextOverride() => _emptyCheckEnumeratorHelper.MoveNext();
 #endif
@@ -423,9 +496,9 @@ System.Collections.IEnumerator, WinCopies.Util.DotNetFix.IDisposable
                 _emptyCheckEnumeratorHelper.Reset();
 #endif
             }
-            #endregion
+#endregion
 
-            #region IDisposable implementation
+#region IDisposable implementation
 #if WinCopies2
             public void Dispose()
             {
@@ -436,6 +509,8 @@ System.Collections.IEnumerator, WinCopies.Util.DotNetFix.IDisposable
                 ResetMoveNext();
 
                 IsDisposed = true;
+
+                InnerEnumerator = null;
 #else
             protected override void DisposeManaged()
             {
@@ -444,14 +519,10 @@ System.Collections.IEnumerator, WinCopies.Util.DotNetFix.IDisposable
                 _emptyCheckEnumeratorHelper.DisposeManaged();
 
                 _emptyCheckEnumeratorHelper = null;
-
-                InnerEnumerator.Dispose();
-
-                InnerEnumerator = null;
 #endif
             }
-            #endregion
-            #endregion
+#endregion
+#endregion
         }
 #if !WinCopies2
     }

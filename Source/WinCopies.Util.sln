@@ -32,6 +32,10 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "WinCopies.Util.Extensions.S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinCopies.Util.Desktop.2.x", "WinCopies.Util.Desktop.2.x\WinCopies.Util.Desktop.2.x.csproj", "{6DD60261-6C3A-4FC2-B99F-DE6D449AF5CD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{56C3C1DB-0654-4FAF-84B7-9E3DD335B51D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinCopies.Collections.Tests", "..\Tests\WinCopies.Collections.Tests\WinCopies.Collections.Tests.csproj", "{A462CEB6-6BDD-4793-9572-32C7E232EB45}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		WinCopies.Collections.Shared\WinCopies.Collections.Shared.projitems*{002579a1-5f08-462d-9863-7f2a767fe04e}*SharedItemsImports = 5
@@ -75,9 +79,16 @@ Global
 		{6DD60261-6C3A-4FC2-B99F-DE6D449AF5CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6DD60261-6C3A-4FC2-B99F-DE6D449AF5CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6DD60261-6C3A-4FC2-B99F-DE6D449AF5CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A462CEB6-6BDD-4793-9572-32C7E232EB45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A462CEB6-6BDD-4793-9572-32C7E232EB45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A462CEB6-6BDD-4793-9572-32C7E232EB45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A462CEB6-6BDD-4793-9572-32C7E232EB45}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A462CEB6-6BDD-4793-9572-32C7E232EB45} = {56C3C1DB-0654-4FAF-84B7-9E3DD335B51D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AC8E2D74-F33E-4845-A513-58D1E7556181}

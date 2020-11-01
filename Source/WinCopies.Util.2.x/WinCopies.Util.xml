@@ -2679,7 +2679,7 @@
             </summary>
             <returns>The object that is removed from the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryDequeue(`0@)"/>
+            <seealso cref="!:TryDequeue(out T)"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.EnqueueItem(`0)">
             <summary>
@@ -2699,7 +2699,7 @@
             </summary>
             <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryPeek(`0@)"/>
+            <seealso cref="!:TryPeek(out T)"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.ToArray">
             <summary>
@@ -2711,29 +2711,6 @@
             <summary>
             Sets the capacity to the actual number of elements in the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>, if that number is less than 90 percent of current capacity.
             </summary>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryDequeueItem(`0@)">
-            <summary>
-            Tries to remove and return the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. Override this method to provide a custom implementation.
-            </summary>
-            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
-            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been removed and retrieved.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryDequeue(`0@)">
-            <summary>
-            Tries to remove and return the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryDequeueItem(`0@)"/> method to provide a custom implementation.
-            </summary>
-            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
-            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been removed and retrieved.</returns>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.QueueCollection`1.Dequeue"/>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryPeek(`0@)">
-            <summary>
-            Tries to peek the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> without removing it.
-            </summary>
-            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
-            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been retrieved.</returns>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.QueueCollection`1.Peek"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.GetEnumerator">
             <summary>
@@ -2776,15 +2753,7 @@
             </summary>
             <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.TryPeek(`0@)"/>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.TryPeek(`0@)">
-            <summary>
-            Tries to peek the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> without removing it.
-            </summary>
-            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
-            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been retrieved.</returns>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.Peek"/>
+            <seealso cref="!:TryPeek(out T)"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.GetEnumerator">
             <summary>
@@ -3285,6 +3254,50 @@
         <member name="M:WinCopies.Collections.TreeNode`1.Insert(System.Int32,WinCopies.Collections.TreeNode{`0})">
             <summary>
             Inserts a given item at a specified index in this <see cref="T:WinCopies.Collections.TreeNode`1"/>.
+            </summary>
+            <param name="index">The index of the new item.</param>
+            <param name="item">The item to insert in this <see cref="T:WinCopies.Collections.TreeNode`1"/>.</param>
+        </member>
+        <member name="M:WinCopies.Collections.TreeNode`1.CopyTo(WinCopies.Collections.TreeNode{`0}[],System.Int32)">
+            <summary>
+            Performs a shallow copy of the items that the current <see cref="T:WinCopies.Collections.TreeNode`1"/> directly contains starting at a given index of a given array of <see cref="T:WinCopies.Collections.TreeNode`1"/>.
+            </summary>
+            <param name="array">The array in which to store the shallow copies of the items that <see cref="T:WinCopies.Collections.TreeNode`1"/> directly contains.</param>
+            <param name="arrayIndex">The index from which to store the items in <paramref name="array"/>.</param>
+        </member>
+        <member name="M:WinCopies.Collections.TreeNode`1.Clear">
+            <summary>
+            Removes all items of this <see cref="T:WinCopies.Collections.TreeNode`1"/>.
+            </summary>
+            <seealso cref="M:WinCopies.Collections.TreeNode`1.ClearItems"/>
+        </member>
+        <member name="M:WinCopies.Collections.ThrowHelper.GetReadOnlyListOrCollectionException">
+            <summary>
+            Returns an exception indicating that a list or collection is read-only.
+            </summary>
+            <returns>An exception indicating that a list or collection is read-only.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.ThrowHelper.GetEmptyListOrCollectionException">
+            <summary>
+            Returns an exception indicating that a list or collection is empty.
+            </summary>
+            <returns>An exception indicating that a list or collection is empty.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.ThrowHelper.ThrowIfEmpty(WinCopies.Collections.ICountable@)">
+            <summary>
+            Throws the exception given by <see cref="M:WinCopies.Collections.ThrowHelper.GetEmptyListOrCollectionException"/> if the <see cref="P:WinCopies.Collections.ICountable.Count"/> property of a given <see cref="T:WinCopies.Collections.ICountable"/> object is equal to 0.
+            </summary>
+            <param name="obj">The <see cref="T:WinCopies.Collections.ICountable"/> object for which to check the <see cref="P:WinCopies.Collections.ICountable.Count"/> property.</param>
+        </member>
+        <member name="M:WinCopies.Collections.ThrowHelper.ThrowIfEmpty(WinCopies.Collections.IUIntCountable@)">
+            <summary>
+            Throws the exception given by <see cref="M:WinCopies.Collections.ThrowHelper.GetEmptyListOrCollectionException"/> if the <see cref="P:WinCopies.Collections.IUIntCountable.Count"/> property of a given <see cref="T:WinCopies.Collections.IUIntCountable"/> object is equal to 0.
+            </summary>
+            <param name="obj">The <see cref="T:WinCopies.Collections.IUIntCountable"/> object for which to check the <see cref="P:WinCopies.Collections.IUIntCountable.Count"/> property.</param>
+        </member>
+    </members>
+</doc>
+ Inserts a given item at a specified index in this <see cref="T:WinCopies.Collections.TreeNode`1"/>.
             </summary>
             <param name="index">The index of the new item.</param>
             <param name="item">The item to insert in this <see cref="T:WinCopies.Collections.TreeNode`1"/>.</param>
