@@ -20,7 +20,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace WinCopies.Collections.Tests
+namespace WinCopies.Collections.Generic.Tests
 {
     [TestClass]
     public class ArrayBuilder

@@ -808,11 +808,17 @@ System.Collections.Generic.LinkedListNode
 
             public void Clear()
             {
-                Count = 0;
-
                 if (_enumeratorsCount > 0)
 
                     EnumerableVersion++;
+
+                while (Count != 0)
+
+                    RemoveFirst();
+
+                First = null;
+
+                Last = null;
             }
 
             public bool Contains(T item)

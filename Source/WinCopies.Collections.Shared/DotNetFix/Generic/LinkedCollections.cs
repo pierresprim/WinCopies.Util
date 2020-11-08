@@ -190,11 +190,13 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
         private T OnRemove()
         {
-            T result = FirstItem.Value;
+            SimpleLinkedListNode<T> firstItem = FirstItem;
 
-            FirstItem.Clear();
+            T result = firstItem.Value;
 
             FirstItem = RemoveItem();
+
+            firstItem.Clear();
 
             _count--;
 

@@ -12,8 +12,11 @@ Updates
 ??/??/???? 3.0.0.1-preview
 ==========================
 
-- Bug fixed in LinkedList enumerator.
-- Add GetIf methods in WinCopies.Util.Extensions
+- Bug fixes:
+	- Bug fixed in SimpleLinkedLists, LinkedList and LinkedList enumerator.
+- Additions:
+	- Add GetIf methods in WinCopies.Util.Extensions.
+	- Add ArrayMerger class.
 
 11/01/2020 3.0.0-preview
 ========================

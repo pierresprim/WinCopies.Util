@@ -33,6 +33,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\JoinEnumerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\EnumeratorCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\SelectEnumerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generic\ArrayMerger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generic\CountableEnumerableArray.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\LinkedCollections.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\Misc.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\ITreeNode.cs" />

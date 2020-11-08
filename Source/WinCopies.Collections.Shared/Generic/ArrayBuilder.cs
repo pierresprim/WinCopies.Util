@@ -28,8 +28,8 @@ using WinCopies.Util;
 
 using static WinCopies.Util.Util;
 #else
-using WinCopies.Collections.DotNetFix.Generic;
 using WinCopies;
+using WinCopies.Collections.DotNetFix.Generic;
 
 using static WinCopies.ThrowHelper;
 #endif
