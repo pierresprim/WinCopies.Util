@@ -11,8 +11,10 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)BackgroundWorker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\INotifyCollectionChanging.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Collections\NotifyCollectionChangedEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\ObservableCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\ObservableTreeNode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Collections\Old.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\ReadOnlyObservableCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\ReadOnlyObservableTreeNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Commands\ApplicationCommands.cs" />

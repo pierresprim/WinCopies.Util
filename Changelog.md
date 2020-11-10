@@ -89,6 +89,11 @@ WinCopies.Util (2.6.1)
 
 Add new (Bit)Array static and extension methods.
 
+WinCopies.Util.Desktop (2.6.1)
+------------------------------
+
+Add CollectionViewModel\<T> as a INotifyCollectionChanged Collection\<T> wrapper.
+
 08/14/2020 2.6
 ==============
 

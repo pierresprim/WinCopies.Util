@@ -15,8 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if WinCopies2
-
 namespace WinCopies.Collections
 {
     public interface INotifyCollectionChanging
@@ -24,5 +22,3 @@ namespace WinCopies.Collections
         event NotifyCollectionChangingEventHandler CollectionChanging;
     }
 }
-
-#endif

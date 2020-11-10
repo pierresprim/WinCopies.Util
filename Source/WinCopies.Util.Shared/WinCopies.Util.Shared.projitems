@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)CheckedUInt64.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Monitors.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Date.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\InvalidArgumentException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\ThrowHelper.cs" />
