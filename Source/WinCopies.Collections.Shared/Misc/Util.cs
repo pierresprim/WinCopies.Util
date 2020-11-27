@@ -23,6 +23,9 @@ using static WinCopies.ThrowHelper;
 
 namespace WinCopies.Collections
 {
+    /// <summary>
+    /// Collection-oriented helper methods.
+    /// </summary>
     public static class Util
     {
         /// <summary>

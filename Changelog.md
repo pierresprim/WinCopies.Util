@@ -13,7 +13,7 @@ Updates
 ==========================
 
 - Bug fixes:
-	- Bug fixed in SimpleLinkedLists, LinkedList and LinkedList enumerator.
+	- Bug fixed in linked lists.
 - Additions:
 	- Add GetIf methods in WinCopies.Util.Extensions.
 	- Add ArrayMerger class.

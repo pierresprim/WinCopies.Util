@@ -16,6 +16,10 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using WinCopies.Collections.Generic;
 
 namespace WinCopies.Collections.DotNetFix.Generic.Tests
 {
@@ -25,39 +29,50 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
         public WinCopies.Collections.DotNetFix.Generic.LinkedList<int> LinkedList { get; } = new LinkedList<int>();
         public WinCopies.Collections.DotNetFix.Generic.Queue<ILinkedListNode<int>> NodeQueue { get; } = new Queue<ILinkedListNode<int>>();
 
+        void AssertCleared()
+        {
+            Assert.AreEqual(0u, LinkedList.Count, "LinkedList should be empty.");
+
+            Assert.IsNull(LinkedList.First, $"{nameof(LinkedList)}.{nameof(LinkedList.First)} should be null.");
+
+            Assert.IsNull(LinkedList.Last, $"{nameof(LinkedList)}.{nameof(LinkedList.Last)} should be null.");
+
+            ILinkedListNode<int> node;
+            uint i = 0;
+
+            while (NodeQueue.Count != 0)
+            {
+                i++;
+
+                node = NodeQueue.Dequeue();
+
+                Assert.IsNull(node.Previous);
+
+                Assert.IsNull(node.Next);
+
+                Assert.IsNull(node.List);
+            }
+
+            Assert.AreEqual(10u, i);
+        }
+
+        void AddNode(Func<ILinkedListNode<int>> action, int expected)
+        {
+            ILinkedListNode<int> node = action();
+
+            Assert.AreEqual(expected, node.Value);
+
+            NodeQueue.Enqueue(node);
+        }
+
         [TestMethod]
         public void TestAddFirstAndLast()
         {
-            WinCopies.Collections.DotNetFix.Generic.ILinkedListNode<int> node = null;
-
-            void assertCleared()
-            {
-                uint i = 0;
-
-                while (NodeQueue.Count != 0)
-                {
-                    i++;
-
-                    node = NodeQueue.Dequeue();
-
-                    Assert.IsNull(node.Previous);
-
-                    Assert.IsNull(node.Next);
-
-                    Assert.IsNull(node.List);
-                }
-
-                Assert.AreEqual(10u, i);
-            }
+            WinCopies.Collections.DotNetFix.Generic.ILinkedListNode<int> node;
 
             for (int i = 1; i < 11; i++)
-            {
-                node = LinkedList.AddFirst(i);
 
-                Assert.AreEqual(i, node.Value);
-
-                NodeQueue.Enqueue(node);
-            }
+                AddNode(() => LinkedList.AddFirst(i), i);
 
             Assert.AreEqual(10u, LinkedList.Count, "AddFirst assertion fialed: Count should be 10.");
 
@@ -75,30 +90,17 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
 
             LinkedList.Clear();
 
-            Assert.AreEqual(0u, LinkedList.Count, "LinkedList should be empty.");
-
-            Assert.IsNull(LinkedList.First);
-
-            Assert.IsNull(LinkedList.Last);
-
             node = null;
 
-            assertCleared();
+            AssertCleared();
 
 
-
-            node = null;
 
             for (int i = 1; i < 11; i++)
-            {
-                node = LinkedList.AddLast(i);
 
-                Assert.AreEqual(i, node.Value);
+                AddNode(() => LinkedList.AddLast(i), i);
 
-                NodeQueue.Enqueue(node);
-            }
-
-            Assert.AreEqual(10u, LinkedList.Count, "AddLast assertion fialed: Count should be 10.");
+            Assert.AreEqual(10u, LinkedList.Count, "AddLast assertion failed: Count should be 10.");
 
             Assert.AreEqual(1, LinkedList.First.Value);
 
@@ -114,15 +116,122 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
 
             LinkedList.Clear();
 
-            Assert.AreEqual(0u, LinkedList.Count, "LinkedList should be empty.");
-
-            Assert.IsNull(LinkedList.First);
-
-            Assert.IsNull(LinkedList.Last);
-
             node = null;
 
-            assertCleared();
+            AssertCleared();
+        }
+
+        [TestMethod]
+        public void TestEnumeration()
+        {
+            static void assertValues(System.Collections.Generic.IEnumerable<int> enumerable, int init, Func<int, int> newValue)
+            {
+                int i = init;
+
+                foreach (int value in enumerable)
+
+                    Assert.AreEqual((i = newValue(i)), value);
+            }
+
+            for (int i = 1; i < 11; i++)
+
+                AddNode(() => LinkedList.AddLast(i), i);
+
+            assertValues(LinkedList, 0, i => i + 1);
+
+            assertValues(new Enumerable<int>(() => LinkedList.GetEnumerator()), 0, i => i + 1);
+
+            assertValues(new Enumerable<int>(() => LinkedList.GetEnumerator(EnumerationDirection.FIFO)), 0, i => i + 1);
+
+            assertValues(new Enumerable<int>(() => LinkedList.GetReversedEnumerator()), 11, i => i - 1);
+
+            assertValues(new Enumerable<int>(() => LinkedList.GetEnumerator(EnumerationDirection.LIFO)), 11, i => i - 1);
+
+            assertValues(new Enumerable<ILinkedListNode<int>>(() => LinkedList.GetNodeEnumerator(EnumerationDirection.FIFO)).Select(node => node.Value), 0, i => i + 1);
+
+            assertValues(new Enumerable<ILinkedListNode<int>>(() => LinkedList.GetNodeEnumerator(EnumerationDirection.LIFO)).Select(node => node.Value), 11, i => i - 1);
+
+            LinkedList.Clear();
+
+            AssertCleared();
+        }
+
+        [TestMethod]
+        public void TestRemoveFirst()
+        {
+            for (int i = 1; i < 11; i++)
+
+                AddNode(() => LinkedList.AddLast(i), i);
+
+            ILinkedListNode<int> node = LinkedList.First;
+
+            void removeAndAssert()
+            {
+                node = node.Next;
+
+                LinkedList.RemoveFirst();
+
+                Assert.AreEqual(node, LinkedList.First);
+            }
+
+            while (LinkedList.Count != 2)
+
+                removeAndAssert();
+
+            Assert.AreEqual(LinkedList.First.Next, LinkedList.Last);
+            Assert.AreEqual(LinkedList.Last.Previous, LinkedList.First);
+
+            removeAndAssert();
+
+            Assert.AreEqual(LinkedList.First, LinkedList.Last);
+
+            removeAndAssert();
+
+            Assert.AreEqual(null, LinkedList.First);
+            Assert.AreEqual(null, LinkedList.Last);
+
+            Assert.AreEqual(null, node);
+
+            AssertCleared();
+        }
+
+        [TestMethod]
+        public void TestRemoveLast()
+        {
+            for (int i = 1; i < 11; i++)
+
+                AddNode(() => LinkedList.AddLast(i), i);
+
+            ILinkedListNode<int> node = LinkedList.Last;
+
+            void removeAndAssert()
+            {
+                node = node.Previous;
+
+                LinkedList.RemoveLast();
+
+                Assert.AreEqual(node, LinkedList.Last);
+            }
+
+            while (LinkedList.Count != 2)
+
+                removeAndAssert();
+
+            Assert.AreEqual(LinkedList.First.Next, LinkedList.Last);
+            Assert.AreEqual(LinkedList.Last.Previous, LinkedList.First);
+
+            removeAndAssert();
+
+            Assert.AreEqual(LinkedList.First, LinkedList.Last);
+
+            removeAndAssert();
+
+            Assert.AreEqual(null, LinkedList.First);
+            Assert.AreEqual(null, LinkedList.Last);
+
+            Assert.AreEqual(null, node);
+
+            AssertCleared();
         }
     }
 }

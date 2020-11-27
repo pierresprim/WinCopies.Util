@@ -43,7 +43,7 @@ using static WinCopies.ThrowHelper;
 namespace WinCopies.Collections.DotNetFix
 {
 #if !WinCopies2
-    public enum LinkedListEnumerationDirection
+    public enum EnumerationDirection
     {
         FIFO = 1,
 
@@ -105,7 +105,7 @@ System.Collections.Generic.LinkedListNode
 #if WinCopies2
 			new System.Collections.Generic.LinkedList<T>.Enumerator GetEnumerator();
 #else
-            System.Collections.Generic.IEnumerator<ILinkedListNode<T>> GetNodeEnumerator(LinkedListEnumerationDirection enumerationDirection);
+            System.Collections.Generic.IEnumerator<ILinkedListNode<T>> GetNodeEnumerator(EnumerationDirection enumerationDirection);
 #endif
         }
 
@@ -241,7 +241,7 @@ System.Collections.Generic.LinkedList<T>.Enumerator
                 GetEnumerator();
 
 #if !WinCopies2
-            System.Collections.Generic.IEnumerator<ILinkedListNode<T>> GetNodeEnumerator(LinkedListEnumerationDirection enumerationDirection);
+            System.Collections.Generic.IEnumerator<ILinkedListNode<T>> GetNodeEnumerator(EnumerationDirection enumerationDirection);
 #endif
 
             void Remove(
@@ -351,13 +351,13 @@ System.Collections.Generic.LinkedListNode
                 private bool _first = true;
                 private readonly uint _version;
 
-                public LinkedListEnumerationDirection EnumerationDirection { get; }
+                public EnumerationDirection EnumerationDirection { get; }
 
                 public override bool? IsResetSupported => true;
 
                 protected override LinkedListNode CurrentOverride => _currentNode;
 
-                public Enumerator(LinkedList<T> list, in LinkedListEnumerationDirection enumerationDirection)
+                public Enumerator(LinkedList<T> list, in EnumerationDirection enumerationDirection)
                 {
                     list._enumeratorsCount++;
 
@@ -369,7 +369,7 @@ System.Collections.Generic.LinkedListNode
 
                     switch (enumerationDirection)
                     {
-                        case LinkedListEnumerationDirection.FIFO:
+                        case EnumerationDirection.FIFO:
 
                             _action = () => _currentNode = _currentNode.Next;
 
@@ -377,7 +377,7 @@ System.Collections.Generic.LinkedListNode
 
                             break;
 
-                        case LinkedListEnumerationDirection.LIFO:
+                        case EnumerationDirection.LIFO:
 
                             _action = () => _currentNode = _currentNode.Previous;
 
@@ -532,6 +532,13 @@ System.Collections.Generic.LinkedListNode
                 OnWeld();
             }
 
+            private void ReInitNodes()
+            {
+                First = null;
+
+                Last = null;
+            }
+
             private void OnItemRemoved(in LinkedListNode node)
             {
                 node.OnRemove();
@@ -539,6 +546,10 @@ System.Collections.Generic.LinkedListNode
                 Count--;
 
                 OnWeld();
+
+                if (Count == 0)
+
+                    ReInitNodes();
             }
 
             private void Weld(in LinkedListNode previous, in LinkedListNode newNode, in LinkedListNode next)
@@ -720,23 +731,23 @@ System.Collections.Generic.LinkedListNode
 
 
 
-            public ILinkedListNode<T> Find(T value) => Find(value, LinkedListEnumerationDirection.FIFO);
+            public ILinkedListNode<T> Find(T value) => Find(value, EnumerationDirection.FIFO);
 
-            public ILinkedListNode<T> FindLast(T value) => Find(value, LinkedListEnumerationDirection.LIFO);
+            public ILinkedListNode<T> FindLast(T value) => Find(value, EnumerationDirection.LIFO);
 
-            private ILinkedListNode<T> Find(T value, LinkedListEnumerationDirection enumerationDirection) => new Enumerable<LinkedListNode>(() => GetNodeEnumerator(enumerationDirection)).FirstOrDefault(node => (node.Value == null && value == null) || node.Value.Equals(value));
+            private ILinkedListNode<T> Find(T value, EnumerationDirection enumerationDirection) => new Enumerable<LinkedListNode>(() => GetNodeEnumerator(enumerationDirection)).FirstOrDefault(node => (node.Value == null && value == null) || node.Value.Equals(value));
 
 
 
-            public System.Collections.Generic.IEnumerator<T> GetEnumerator() => GetEnumerator(LinkedListEnumerationDirection.FIFO);
+            public System.Collections.Generic.IEnumerator<T> GetEnumerator() => GetEnumerator(EnumerationDirection.FIFO);
 
-            public System.Collections.Generic.IEnumerator<T> GetReversedEnumerator() => GetEnumerator(LinkedListEnumerationDirection.LIFO);
+            public System.Collections.Generic.IEnumerator<T> GetReversedEnumerator() => GetEnumerator(EnumerationDirection.LIFO);
 
-            public System.Collections.Generic.IEnumerator<T> GetEnumerator(LinkedListEnumerationDirection enumerationDirection) => GetNodeEnumerator(enumerationDirection).Select(node => node.Value);
+            public System.Collections.Generic.IEnumerator<T> GetEnumerator(EnumerationDirection enumerationDirection) => GetNodeEnumerator(enumerationDirection).Select(node => node.Value);
 
-            public System.Collections.Generic.IEnumerator<LinkedListNode> GetNodeEnumerator(in LinkedListEnumerationDirection enumerationDirection) => new Enumerator(this, enumerationDirection);
+            public System.Collections.Generic.IEnumerator<LinkedListNode> GetNodeEnumerator(in EnumerationDirection enumerationDirection) => new Enumerator(this, enumerationDirection);
 
-            System.Collections.Generic.IEnumerator<ILinkedListNode<T>> ILinkedList<T>.GetNodeEnumerator(LinkedListEnumerationDirection enumerationDirection) => GetNodeEnumerator(enumerationDirection);
+            System.Collections.Generic.IEnumerator<ILinkedListNode<T>> ILinkedList<T>.GetNodeEnumerator(EnumerationDirection enumerationDirection) => GetNodeEnumerator(enumerationDirection);
 
             public void Remove(LinkedListNode node)
             {
@@ -816,9 +827,7 @@ System.Collections.Generic.LinkedListNode
 
                     RemoveFirst();
 
-                First = null;
-
-                Last = null;
+                ReInitNodes();
             }
 
             public bool Contains(T item)
@@ -948,7 +957,7 @@ InnerList
 #else
             public System.Collections.Generic.IEnumerator<T> GetReversedEnumerator() => InnerList.GetReversedEnumerator();
 
-            public System.Collections.Generic.IEnumerator<ILinkedListNode<T>> GetNodeEnumerator(LinkedListEnumerationDirection enumerationDirection) => InnerList.GetNodeEnumerator(enumerationDirection);
+            public System.Collections.Generic.IEnumerator<ILinkedListNode<T>> GetNodeEnumerator(EnumerationDirection enumerationDirection) => InnerList.GetNodeEnumerator(enumerationDirection);
 #endif
 
             void ICollection<T>.Add(T item) => throw GetReadOnlyListOrCollectionException();

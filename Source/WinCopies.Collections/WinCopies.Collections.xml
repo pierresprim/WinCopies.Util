@@ -30,127 +30,6 @@
               Looks up a localized string similar to This list or collection is read-only..
             </summary>
         </member>
-        <member name="T:WinCopies.Collections.Generic.ArrayBuilder`1">
-            <summary>
-            Builds arrays and lists by sizing them only when required. This class can be used to initialize your array or list before adding or removing values to it.
-            </summary>
-            <typeparam name="T">The type of the items.</typeparam>
-        </member>
-        <member name="M:WinCopies.Collections.Generic.ArrayBuilder`1.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> class.
-            </summary>
-        </member>
-        <member name="M:WinCopies.Collections.Generic.ArrayBuilder`1.#ctor(System.Collections.Generic.IEnumerable{`0}@)">
-            <summary>
-            Initializes a new instance of the <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> class with a given <see cref="T:WinCopies.Collections.Generic.IEnumerable`1"/>.
-            </summary>
-            <param name="enumerable">An enumerable from which to add values.</param>
-        </member>
-        <member name="M:WinCopies.Collections.Generic.ArrayBuilder`1.ToArray(System.Boolean@)">
-            <summary>
-            Returns an array with the items of this <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/>.
-            </summary>
-            <param name="remove">Indicates whether items have to be removed from the current <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> after they has been added to the new list.</param>
-            <returns>An array with the items of this <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.Generic.ArrayBuilder`1.ToArrayList(System.Boolean@)">
-            <summary>
-            Returns an <see cref="T:System.Collections.ArrayList"/> with the items of this <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/>.
-            </summary>
-            <param name="remove">Indicates whether items have to be removed from the current <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> after they has been added to the new list.</param>
-            <returns>An <see cref="T:System.Collections.ArrayList"/> with the items of this <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.Generic.ArrayBuilder`1.ToList(System.Boolean@)">
-            <summary>
-            Returns a <see cref="T:System.Collections.Generic.List`1"/> with the items of this <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/>.
-            </summary>
-            <param name="remove">Indicates whether items have to be removed from the current <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> after they has been added to the new list.</param>
-            <returns>A <see cref="T:System.Collections.Generic.List`1"/> with the items of this <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/>.</returns>
-        </member>
-        <member name="T:WinCopies.Collections.Generic.IEnumerable`1">
-            <summary>
-            A collection that can be enumerated.
-            </summary>
-            <typeparam name="T">The item type of the collection.</typeparam>
-        </member>
-        <member name="P:WinCopies.Collections.Generic.IEnumerable`1.SupportsReversedEnumeration">
-            <summary>
-            Gets a value indicating whether this collection can be enumerated in the two directions (FIFO and LIFO).
-            </summary>
-        </member>
-        <member name="M:WinCopies.Collections.Generic.IEnumerable`1.GetReversedEnumerator">
-            <summary>
-            Returns a reversed enumerator for the current collection. See the Remarks section.
-            </summary>
-            <returns>A reversed enumerator for the current collection.</returns>
-            <remarks>
-            This method returns an enumerator which enumerate in the reversed direction that the enumerator returned by the <see cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/> method. So, for a queue, the <see cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/> method will return an enumerator that will enumerate through the queue using the FIFO direction and the <see cref="M:WinCopies.Collections.Generic.IEnumerable`1.GetReversedEnumerator"/> will throw an exception, because any reversed enumerator can be returned while a queue only supports the FIFO direction. However, a stack, which only supports the LIFO direction, will return a LIFO-enumerator as its main enumerator and throw an exception if we ask it to return a reversed enumerator. A linked list that supports the two directions, but which stores items using the FIFO direction by default, will return a FIFO-enumerator as its main enumerator and a LIFO-enumerator as its reversed enumerator.
-            </remarks>
-        </member>
-        <member name="M:WinCopies.Collections.Generic.Enumerator`2.#ctor(System.Collections.Generic.IEnumerable{`0})">
-            <summary>
-            When overridden in a derived class, initializes a new instance of the <see cref="T:WinCopies.Collections.Generic.Enumerator`2"/> class.
-            </summary>
-            <param name="enumerable">An enumerable from which to get an enumerator to enumerate.</param>
-        </member>
-        <member name="M:WinCopies.Collections.Generic.Enumerator`2.#ctor(System.Collections.Generic.IEnumerator{`0})">
-            <summary>
-            When overridden in a derived class, initializes a new instance of the <see cref="T:WinCopies.Collections.Generic.Enumerator`2"/> class.
-            </summary>
-            <param name="enumerator">The enumerator to enumerate.</param>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.IEnumeratorBase.MoveNext">
-            <summary>
-            Advances the enumerator to the next element of the collection.
-            </summary>
-            <returns><see langword="true"/> if the enumerator was successfully advanced to the next element; <see langword="false"/> if the enumerator has passed the end of the collection.</returns>
-            <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created.</exception>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.IEnumeratorBase.Reset">
-            <summary>
-            Sets the enumerator to its initial position, which is before the first element in the collection.
-            </summary>
-            <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created.</exception>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1.AddAfter(WinCopies.Collections.DotNetFix.Generic.ILinkedListNode{`0},`0)">
-            <summary>
-            Adds a new node containing the specified value after the specified existing node in the <see cref="T:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1"/>. Override the <see cref="!:AddItemAfter(System.Collections.Generic.LinkedListNode&lt;T&gt;, T)"/> method to provide a custom implementation.
-            </summary>
-            <param name="node">The <see cref="T:System.Collections.Generic.LinkedListNode`1"/> after which to insert a new <see cref="T:System.Collections.Generic.LinkedListNode`1"/> containing value.</param>
-            <param name="value">The value to add to the <see cref="T:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1"/>.</param>
-            <returns>The new <see cref="T:System.Collections.Generic.LinkedListNode`1"/> containing value.</returns>
-            <exception cref="T:System.ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
-            <exception cref="T:System.InvalidOperationException"><paramref name="node"/> is not in the current <see cref="T:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1"/>.</exception>
-            <seealso cref="!:AddAfter(in System.Collections.Generic.LinkedListNode&lt;T&gt;, in System.Collections.Generic.LinkedListNode&lt;T&gt;)"/>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1.AddBefore(WinCopies.Collections.DotNetFix.Generic.ILinkedListNode{`0}@,`0@)">
-            <summary>
-            Adds a new node containing the specified value before the specified existing node in the <see cref="T:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1"/>. Override the <see cref="!:AddItemBefore(System.Collections.Generic.LinkedListNode&lt;T&gt;, T)"/> method to provide a custom implementation.
-            </summary>
-            <param name="node">The <see cref="T:System.Collections.Generic.LinkedListNode`1"/> before which to insert a new <see cref="T:System.Collections.Generic.LinkedListNode`1"/> containing value.</param>
-            <param name="value">The value to add to the <see cref="T:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1"/>.</param>
-            <returns>The new <see cref="T:System.Collections.Generic.LinkedListNode`1"/> containing value.</returns>
-            <exception cref="T:System.ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
-            <exception cref="T:System.InvalidOperationException"><paramref name="node"/> is not in the current <see cref="T:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1"/>.</exception>
-            <seealso cref="!:AddBefore(in System.Collections.Generic.LinkedListNode&lt;T&gt;, in System.Collections.Generic.LinkedListNode&lt;T&gt;)"/>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1.AddFirst(`0@)">
-            <summary>
-            Adds a new node containing the specified value at the start of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1.AddFirstItem(`0)"/> method to provide a custom implementation.
-            </summary>
-            <param name="value">The value to add at the start of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1"/>.</param>
-            <returns>The new <see cref="T:System.Collections.Generic.LinkedListNode`1"/> containing value.</returns>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1.AddFirst(`0@)"/>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1.AddLast(`0@)">
-            <summary>
-            Adds a new node containing the specified value at the end of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1.AddLastItem(`0)"/> method to provide a custom implementation.
-            </summary>
-            <param name="value">The value to add at the end of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1"/>.</param>
-            <returns>The new <see cref="T:System.Collections.Generic.LinkedListNode`1"/> containing value.</returns>
-            <seealso cref="!:AddLast(in System.Collections.Generic.LinkedListNode&lt;T&gt;)"/>
-        </member>
         <member name="P:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.Count">
             <summary>
             Gets the number of elements contained in the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.
@@ -208,7 +87,7 @@
             </summary>
             <returns>The object that is removed from the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="!:TryDequeue(out T)"/>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.TryDequeue(`0@)"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.EnqueueItem(`0)">
             <summary>
@@ -228,7 +107,7 @@
             </summary>
             <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="!:TryPeek(out T)"/>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.TryPeek(`0@)"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.ToArray">
             <summary>
@@ -236,11 +115,34 @@
             </summary>
             <returns>A new array containing elements copied from the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</returns>
         </member>
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.TryDequeueItem(`0@)">
+            <summary>
+            Tries to remove and return the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. Override this method to provide a custom implementation.
+            </summary>
+            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been removed and retrieved.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.TryDequeue(`0@)">
+            <summary>
+            Tries to remove and return the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.TryDequeueItem(`0@)"/> method to provide a custom implementation.
+            </summary>
+            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been removed and retrieved.</returns>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.Dequeue"/>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.TryPeek(`0@)">
+            <summary>
+            Tries to peek the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> without removing it.
+            </summary>
+            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been retrieved.</returns>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.Peek"/>
+        </member>
         <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.GetEnumerator">
             <summary>
             Returns an enumerator that iterates through the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.
             </summary>
-            <returns>An <see cref="!:System.Collections.IEnumerator&lt;T&gt;"/> for the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</returns>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerator`1"/> for the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</returns>
         </member>
         <member name="P:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`1.Count">
             <summary>
@@ -277,13 +179,59 @@
             </summary>
             <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="!:TryPeek(out T)"/>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`1.TryPeek(`0@)"/>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`1.TryPeek(`0@)">
+            <summary>
+            Tries to peek the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> without removing it.
+            </summary>
+            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been retrieved.</returns>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`1.Peek"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`1.GetEnumerator">
             <summary>
             Returns an enumerator that iterates through the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.
             </summary>
-            <returns>An <see cref="!:System.Collections.IEnumerator&lt;T&gt;"/> for the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</returns>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerator`1"/> for the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1.AddAfter(WinCopies.Collections.DotNetFix.Generic.ILinkedListNode{`0},`0)">
+            <summary>
+            Adds a new node containing the specified value after the specified existing node in the <see cref="T:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1"/>. Override the <see cref="!:AddItemAfter(System.Collections.Generic.LinkedListNode&lt;T&gt;, T)"/> method to provide a custom implementation.
+            </summary>
+            <param name="node">The <see cref="T:System.Collections.Generic.LinkedListNode`1"/> after which to insert a new <see cref="T:System.Collections.Generic.LinkedListNode`1"/> containing value.</param>
+            <param name="value">The value to add to the <see cref="T:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1"/>.</param>
+            <returns>The new <see cref="T:System.Collections.Generic.LinkedListNode`1"/> containing value.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
+            <exception cref="T:System.InvalidOperationException"><paramref name="node"/> is not in the current <see cref="T:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1"/>.</exception>
+            <seealso cref="!:AddAfter(in System.Collections.Generic.LinkedListNode&lt;T&gt;, in System.Collections.Generic.LinkedListNode&lt;T&gt;)"/>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1.AddBefore(WinCopies.Collections.DotNetFix.Generic.ILinkedListNode{`0}@,`0@)">
+            <summary>
+            Adds a new node containing the specified value before the specified existing node in the <see cref="T:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1"/>. Override the <see cref="!:AddItemBefore(System.Collections.Generic.LinkedListNode&lt;T&gt;, T)"/> method to provide a custom implementation.
+            </summary>
+            <param name="node">The <see cref="T:System.Collections.Generic.LinkedListNode`1"/> before which to insert a new <see cref="T:System.Collections.Generic.LinkedListNode`1"/> containing value.</param>
+            <param name="value">The value to add to the <see cref="T:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1"/>.</param>
+            <returns>The new <see cref="T:System.Collections.Generic.LinkedListNode`1"/> containing value.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
+            <exception cref="T:System.InvalidOperationException"><paramref name="node"/> is not in the current <see cref="T:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1"/>.</exception>
+            <seealso cref="!:AddBefore(in System.Collections.Generic.LinkedListNode&lt;T&gt;, in System.Collections.Generic.LinkedListNode&lt;T&gt;)"/>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1.AddFirst(`0@)">
+            <summary>
+            Adds a new node containing the specified value at the start of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1.AddFirstItem(`0)"/> method to provide a custom implementation.
+            </summary>
+            <param name="value">The value to add at the start of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1"/>.</param>
+            <returns>The new <see cref="T:System.Collections.Generic.LinkedListNode`1"/> containing value.</returns>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1.AddFirst(`0@)"/>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1.AddLast(`0@)">
+            <summary>
+            Adds a new node containing the specified value at the end of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1.AddLastItem(`0)"/> method to provide a custom implementation.
+            </summary>
+            <param name="value">The value to add at the end of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1"/>.</param>
+            <returns>The new <see cref="T:System.Collections.Generic.LinkedListNode`1"/> containing value.</returns>
+            <seealso cref="!:AddLast(in System.Collections.Generic.LinkedListNode&lt;T&gt;)"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.Generic.LinkedList`1.#ctor">
             <summary>
@@ -296,6 +244,19 @@
             </summary>
             <param name="collection">The <see cref="T:System.Collections.IEnumerable"/> whose elements are copied to the new <see cref="T:System.Collections.Generic.LinkedList`1"/>.</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="collection"/> is <see langword="null"/>.</exception>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.IEnumeratorBase.MoveNext">
+            <summary>
+            Advances the enumerator to the next element of the collection.
+            </summary>
+            <returns><see langword="true"/> if the enumerator was successfully advanced to the next element; <see langword="false"/> if the enumerator has passed the end of the collection.</returns>
+            <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created.</exception>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.IEnumeratorBase.Reset">
+            <summary>
+            Sets the enumerator to its initial position, which is before the first element in the collection.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created.</exception>
         </member>
         <member name="P:WinCopies.Collections.DotNetFix.IUIntIndexedCollection.Count">
             <summary>
@@ -561,6 +522,114 @@
             Returns an enumerator that iterates through the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection"/>.
             </summary>
             <returns>An <see cref="T:System.Collections.IEnumerator"/> for the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection"/>.</returns>
+        </member>
+        <member name="T:WinCopies.Collections.Generic.ArrayBuilder`1">
+            <summary>
+            Builds arrays and lists by sizing them only when required. This class can be used to initialize your array or list before adding or removing values to it.
+            </summary>
+            <typeparam name="T">The type of the items.</typeparam>
+        </member>
+        <member name="M:WinCopies.Collections.Generic.ArrayBuilder`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> class.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Collections.Generic.ArrayBuilder`1.#ctor(System.Collections.Generic.IEnumerable{`0}@)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> class with a given <see cref="T:WinCopies.Collections.Generic.IEnumerable`1"/>.
+            </summary>
+            <param name="enumerable">An enumerable from which to add values.</param>
+        </member>
+        <member name="M:WinCopies.Collections.Generic.ArrayBuilder`1.ToArray(System.Boolean@)">
+            <summary>
+            Returns an array with the items of this <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/>.
+            </summary>
+            <param name="remove">Indicates whether items have to be removed from the current <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> after they has been added to the new list.</param>
+            <returns>An array with the items of this <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.Generic.ArrayBuilder`1.ToArrayList(System.Boolean@)">
+            <summary>
+            Returns an <see cref="T:System.Collections.ArrayList"/> with the items of this <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/>.
+            </summary>
+            <param name="remove">Indicates whether items have to be removed from the current <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> after they has been added to the new list.</param>
+            <returns>An <see cref="T:System.Collections.ArrayList"/> with the items of this <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.Generic.ArrayBuilder`1.ToList(System.Boolean@)">
+            <summary>
+            Returns a <see cref="T:System.Collections.Generic.List`1"/> with the items of this <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/>.
+            </summary>
+            <param name="remove">Indicates whether items have to be removed from the current <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> after they has been added to the new list.</param>
+            <returns>A <see cref="T:System.Collections.Generic.List`1"/> with the items of this <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/>.</returns>
+        </member>
+        <member name="T:WinCopies.Collections.Generic.IEnumerable`1">
+            <summary>
+            A collection that can be enumerated.
+            </summary>
+            <typeparam name="T">The item type of the collection.</typeparam>
+        </member>
+        <member name="P:WinCopies.Collections.Generic.IEnumerable`1.SupportsReversedEnumeration">
+            <summary>
+            Gets a value indicating whether this collection can be enumerated in the two directions (FIFO and LIFO).
+            </summary>
+        </member>
+        <member name="M:WinCopies.Collections.Generic.IEnumerable`1.GetReversedEnumerator">
+            <summary>
+            Returns a reversed enumerator for the current collection. See the Remarks section.
+            </summary>
+            <returns>A reversed enumerator for the current collection.</returns>
+            <remarks>
+            This method returns an enumerator which enumerate in the reversed direction that the enumerator returned by the <see cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/> method. So, for a queue, the <see cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/> method will return an enumerator that will enumerate through the queue using the FIFO direction and the <see cref="M:WinCopies.Collections.Generic.IEnumerable`1.GetReversedEnumerator"/> will throw an exception, because any reversed enumerator can be returned while a queue only supports the FIFO direction. However, a stack, which only supports the LIFO direction, will return a LIFO-enumerator as its main enumerator and throw an exception if we ask it to return a reversed enumerator. A linked list that supports the two directions, but which stores items using the FIFO direction by default, will return a FIFO-enumerator as its main enumerator and a LIFO-enumerator as its reversed enumerator.
+            </remarks>
+        </member>
+        <member name="M:WinCopies.Collections.Generic.Enumerator`2.#ctor(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            When overridden in a derived class, initializes a new instance of the <see cref="T:WinCopies.Collections.Generic.Enumerator`2"/> class.
+            </summary>
+            <param name="enumerable">An enumerable from which to get an enumerator to enumerate.</param>
+        </member>
+        <member name="M:WinCopies.Collections.Generic.Enumerator`2.#ctor(System.Collections.Generic.IEnumerator{`0})">
+            <summary>
+            When overridden in a derived class, initializes a new instance of the <see cref="T:WinCopies.Collections.Generic.Enumerator`2"/> class.
+            </summary>
+            <param name="enumerator">The enumerator to enumerate.</param>
+        </member>
+        <member name="T:WinCopies.Collections.Generic.ArrayMerger`1">
+            <summary>
+            Builds arrays and lists by sizing them only when required. This class can be used to initialize your array or list before adding or removing values to it.
+            </summary>
+            <typeparam name="T">The type of the items.</typeparam>
+        </member>
+        <member name="M:WinCopies.Collections.Generic.ArrayMerger`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Collections.Generic.ArrayMerger`1"/> class.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Collections.Generic.ArrayMerger`1.#ctor(System.Collections.Generic.IEnumerable{WinCopies.Collections.DotNetFix.ICountableEnumerable{`0}}@)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Collections.Generic.ArrayMerger`1"/> class with a given <see cref="T:WinCopies.Collections.Generic.IEnumerable`1"/>.
+            </summary>
+            <param name="enumerable">An enumerable from which to add values.</param>
+        </member>
+        <member name="M:WinCopies.Collections.Generic.ArrayMerger`1.ToArray(System.Boolean@)">
+            <summary>
+            Returns an array with the items of this <see cref="T:WinCopies.Collections.Generic.ArrayMerger`1"/>.
+            </summary>
+            <param name="remove">Indicates whether items have to be removed from the current <see cref="T:WinCopies.Collections.Generic.ArrayMerger`1"/> after they has been added to the new list.</param>
+            <returns>An array with the items of this <see cref="T:WinCopies.Collections.Generic.ArrayMerger`1"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.Generic.ArrayMerger`1.ToArrayList(System.Boolean@)">
+            <summary>
+            Returns an <see cref="T:System.Collections.ArrayList"/> with the items of this <see cref="T:WinCopies.Collections.Generic.ArrayMerger`1"/>.
+            </summary>
+            <param name="remove">Indicates whether items have to be removed from the current <see cref="T:WinCopies.Collections.Generic.ArrayMerger`1"/> after they has been added to the new list.</param>
+            <returns>An <see cref="T:System.Collections.ArrayList"/> with the items of this <see cref="T:WinCopies.Collections.Generic.ArrayMerger`1"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.Generic.ArrayMerger`1.ToList(System.Boolean@)">
+            <summary>
+            Returns a <see cref="T:System.Collections.Generic.List`1"/> with the items of this <see cref="T:WinCopies.Collections.Generic.ArrayMerger`1"/>.
+            </summary>
+            <param name="remove">Indicates whether items have to be removed from the current <see cref="T:WinCopies.Collections.Generic.ArrayMerger`1"/> after they has been added to the new list.</param>
+            <returns>A <see cref="T:System.Collections.Generic.List`1"/> with the items of this <see cref="T:WinCopies.Collections.Generic.ArrayMerger`1"/>.</returns>
         </member>
         <member name="T:WinCopies.Collections.Comparison">
             <summary>
@@ -1499,6 +1568,11 @@
             Throws the exception given by <see cref="M:WinCopies.Collections.ThrowHelper.GetEmptyListOrCollectionException"/> if the <see cref="P:WinCopies.Collections.IUIntCountable.Count"/> property of a given <see cref="T:WinCopies.Collections.IUIntCountable"/> object is equal to 0.
             </summary>
             <param name="obj">The <see cref="T:WinCopies.Collections.IUIntCountable"/> object for which to check the <see cref="P:WinCopies.Collections.IUIntCountable.Count"/> property.</param>
+        </member>
+        <member name="T:WinCopies.Collections.Util">
+            <summary>
+            Collection-oriented helper methods.
+            </summary>
         </member>
         <member name="M:WinCopies.Collections.Util.GetIf(System.Object@,System.Object@,WinCopies.Collections.Comparison@,WinCopies.Func@,WinCopies.Func@,WinCopies.Func@)">
             <summary>
