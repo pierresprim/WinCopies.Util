@@ -29,15 +29,16 @@ namespace WinCopies
 #endif
     {
         bool IsDisposing { get; }
-
     }
 }
 
+
+
+namespace WinCopies
 #if WinCopies2
-namespace WinCopies.Util.DotNetFix
-#else
-namespace WinCopies.DotNetFix
+    .Util
 #endif
+    .DotNetFix
 {
     /// <summary>
     /// Provides a mechanism for releasing unmanaged resources.
