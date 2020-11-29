@@ -20,7 +20,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 
 using static WinCopies
 #if WinCopies2
@@ -29,7 +28,6 @@ using static WinCopies
 using System.Runtime.Serialization;
 
 using WinCopies.Util;
-using static WinCopies.Util.ThrowHelper;
 #else
     .ThrowHelper;
 #endif
@@ -159,120 +157,6 @@ namespace WinCopies.Collections.DotNetFix.Generic
 #endif
     }
 
-    public abstract class SimpleLinkedList<T> : SimpleLinkedListBase, ISimpleLinkedList<T>
-    {
-        private uint _count = 0;
-
-        public sealed override bool IsReadOnly => false;
-
-        protected internal SimpleLinkedListNode<T> FirstItem { get; private set; }
-
-        public sealed override uint Count => _count;
-
-        protected void Add(in T item)
-        {
-            if (IsReadOnly)
-
-                throw GetReadOnlyListOrCollectionException();
-
-            FirstItem = AddItem(item, out bool actionAfter);
-
-            _count++;
-
-            if (actionAfter)
-
-                OnItemAdded();
-        }
-
-        protected abstract SimpleLinkedListNode<T> AddItem(T item, out bool actionAfter);
-
-        protected abstract void OnItemAdded();
-
-        private T OnRemove()
-        {
-            SimpleLinkedListNode<T> firstItem = FirstItem;
-
-            T result = firstItem.Value;
-
-            FirstItem = RemoveItem();
-
-            firstItem.Clear();
-
-            _count--;
-
-            return result;
-        }
-
-        protected T Remove()
-        {
-            if (IsReadOnly)
-
-                throw GetReadOnlyListOrCollectionException();
-
-#if WinCopies2
-            ThrowIfEmpty
-#else
-            ThrowIfEmptyListOrCollection
-#endif
-            (this);
-
-            return OnRemove();
-        }
-
-        protected bool TryRemove(out T result)
-        {
-            if (IsReadOnly || Count == 0)
-            {
-                result = default;
-
-                return false;
-            }
-
-            result = OnRemove();
-
-            return true;
-        }
-
-        protected abstract SimpleLinkedListNode<T> RemoveItem();
-
-        public sealed override void ClearItems()
-        {
-            SimpleLinkedListNode<T> node, temp;
-            node = FirstItem;
-
-            while (node != null)
-            {
-                temp = node.Next;
-
-                node.Clear();
-
-                node = temp;
-            }
-
-            FirstItem = null;
-
-            _count = 0;
-        }
-
-        protected T _Peek() => FirstItem.Value;
-
-        public T Peek() => _count > 0 ? _Peek() : throw GetEmptyListOrCollectionException();
-
-        public bool TryPeek(out T result)
-        {
-            if (_count > 0)
-            {
-                result = _Peek();
-
-                return true;
-            }
-
-            result = default;
-
-            return false;
-        }
-    }
-
     public abstract class ReadOnlySimpleLinkedList<T> : ReadOnlySimpleLinkedListBase, ISimpleLinkedList<T>
     {
         public abstract T Peek();
@@ -294,42 +178,6 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
         T[] ToArray();
 #endif
-    }
-
-    public abstract class EnumerableSimpleLinkedList<T> : EnumerableSimpleLinkedListBase, IEnumerableSimpleLinkedList<T>
-    {
-        public abstract T Peek();
-
-        public abstract bool TryPeek(out T result);
-
-        public void CopyTo(T[] array, int arrayIndex) => WinCopies.
-#if WinCopies2
-                Util.
-#else
-                Collections.
-#endif
-                Extensions.CopyTo(this, array, arrayIndex, Count);
-
-        System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-        public abstract System.Collections.Generic.IEnumerator<T> GetEnumerator();
-
-        public T[] ToArray()
-        {
-            if (Count > int.MaxValue)
-
-                throw new ArgumentOutOfRangeException("Too many items in list or collection.");
-
-            T[] result = new T[Count];
-
-            int i = -1;
-
-            foreach (T value in this)
-
-                result[++i] = value;
-
-            return result;
-        }
     }
 }
 

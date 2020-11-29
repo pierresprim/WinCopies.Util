@@ -16,9 +16,13 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using System;
+#if WinCopies2
 using System.Collections.Generic;
+#endif
 using System.Linq;
+
 using WinCopies.Collections.Generic;
 
 namespace WinCopies.Collections.DotNetFix.Generic.Tests
@@ -26,18 +30,48 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
     [TestClass]
     public class LinkedListTests
     {
-        public WinCopies.Collections.DotNetFix.Generic.LinkedList<int> LinkedList { get; } = new LinkedList<int>();
-        public WinCopies.Collections.DotNetFix.Generic.Queue<ILinkedListNode<int>> NodeQueue { get; } = new Queue<ILinkedListNode<int>>();
+        public WinCopies.Collections.DotNetFix.
+#if !WinCopies2
+            Generic.
+#endif
+            LinkedList<int> LinkedList
+        { get; } = new LinkedList<int>();
+
+        public WinCopies.Collections.DotNetFix.Generic.Queue<
+#if WinCopies2
+            LinkedListNode
+#else
+            ILinkedListNode
+#endif
+          <int>> NodeQueue
+        { get; } = new Queue<
+#if WinCopies2
+            LinkedListNode
+#else
+            ILinkedListNode
+#endif
+          <int>>();
 
         void AssertCleared()
         {
-            Assert.AreEqual(0u, LinkedList.Count, "LinkedList should be empty.");
+            Assert.AreEqual(
+#if WinCopies2
+0
+#else
+                0u
+#endif
+                , LinkedList.Count, "LinkedList should be empty.");
 
             Assert.IsNull(LinkedList.First, $"{nameof(LinkedList)}.{nameof(LinkedList.First)} should be null.");
 
             Assert.IsNull(LinkedList.Last, $"{nameof(LinkedList)}.{nameof(LinkedList.Last)} should be null.");
 
-            ILinkedListNode<int> node;
+#if WinCopies2
+            LinkedListNode
+#else
+            ILinkedListNode
+#endif
+          <int> node;
             uint i = 0;
 
             while (NodeQueue.Count != 0)
@@ -56,9 +90,20 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
             Assert.AreEqual(10u, i);
         }
 
-        void AddNode(Func<ILinkedListNode<int>> action, int expected)
+        void AddNode(Func<
+#if WinCopies2
+            LinkedListNode
+#else
+            ILinkedListNode
+#endif
+            <int>> action, int expected)
         {
-            ILinkedListNode<int> node = action();
+#if WinCopies2
+            LinkedListNode
+#else
+            ILinkedListNode
+#endif
+            <int> node = action();
 
             Assert.AreEqual(expected, node.Value);
 
@@ -68,13 +113,24 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
         [TestMethod]
         public void TestAddFirstAndLast()
         {
-            WinCopies.Collections.DotNetFix.Generic.ILinkedListNode<int> node;
+#if WinCopies2
+            LinkedListNode
+#else
+            WinCopies.Collections.DotNetFix.Generic.ILinkedListNode
+#endif
+                <int> node;
 
             for (int i = 1; i < 11; i++)
 
                 AddNode(() => LinkedList.AddFirst(i), i);
 
-            Assert.AreEqual(10u, LinkedList.Count, "AddFirst assertion fialed: Count should be 10.");
+            Assert.AreEqual(
+#if WinCopies2
+10
+#else
+                10u
+#endif
+                , LinkedList.Count, "AddFirst assertion fialed: Count should be 10.");
 
             Assert.AreEqual(10, LinkedList.First.Value);
 
@@ -100,7 +156,13 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
 
                 AddNode(() => LinkedList.AddLast(i), i);
 
-            Assert.AreEqual(10u, LinkedList.Count, "AddLast assertion failed: Count should be 10.");
+            Assert.AreEqual(
+#if WinCopies2
+10
+#else
+                10u
+#endif
+                , LinkedList.Count, "AddLast assertion failed: Count should be 10.");
 
             Assert.AreEqual(1, LinkedList.First.Value);
 
@@ -124,7 +186,10 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
         [TestMethod]
         public void TestEnumeration()
         {
-            static void assertValues(System.Collections.Generic.IEnumerable<int> enumerable, int init, Func<int, int> newValue)
+#if CS8
+            static
+#endif
+                void assertValues(System.Collections.Generic.IEnumerable<int> enumerable, int init, Func<int, int> newValue)
             {
                 int i = init;
 
@@ -141,6 +206,8 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
 
             assertValues(new Enumerable<int>(() => LinkedList.GetEnumerator()), 0, i => i + 1);
 
+#if !WinCopies2
+
             assertValues(new Enumerable<int>(() => LinkedList.GetEnumerator(EnumerationDirection.FIFO)), 0, i => i + 1);
 
             assertValues(new Enumerable<int>(() => LinkedList.GetReversedEnumerator()), 11, i => i - 1);
@@ -150,6 +217,8 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
             assertValues(new Enumerable<ILinkedListNode<int>>(() => LinkedList.GetNodeEnumerator(EnumerationDirection.FIFO)).Select(node => node.Value), 0, i => i + 1);
 
             assertValues(new Enumerable<ILinkedListNode<int>>(() => LinkedList.GetNodeEnumerator(EnumerationDirection.LIFO)).Select(node => node.Value), 11, i => i - 1);
+
+#endif
 
             LinkedList.Clear();
 
@@ -163,7 +232,12 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
 
                 AddNode(() => LinkedList.AddLast(i), i);
 
-            ILinkedListNode<int> node = LinkedList.First;
+#if WinCopies2
+            LinkedListNode
+#else
+            ILinkedListNode
+#endif
+                <int> node = LinkedList.First;
 
             void removeAndAssert()
             {
@@ -202,7 +276,12 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
 
                 AddNode(() => LinkedList.AddLast(i), i);
 
-            ILinkedListNode<int> node = LinkedList.Last;
+#if WinCopies2
+            LinkedListNode
+#else
+            ILinkedListNode
+#endif
+                <int> node = LinkedList.Last;
 
             void removeAndAssert()
             {

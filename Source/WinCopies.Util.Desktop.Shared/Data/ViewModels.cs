@@ -28,11 +28,10 @@ using WinCopies.Collections;
 
 using static WinCopies.
 #if WinCopies2
-    Util
+    Util.Util;
 #else
-    ThrowHelper
+    ThrowHelper;
 #endif
-    ;
 
 namespace WinCopies.Util.Data
 {
@@ -330,7 +329,7 @@ override object Model => ModelGeneric;
 
         protected void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
 
-        protected void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+        protected void OnCollectionChanged(System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             if (CollectionChanged == null)
 
@@ -341,11 +340,13 @@ override object Model => ModelGeneric;
                 CollectionChanged?.Invoke(this, e);
         }
 
-        protected void OnCollectionChanged(NotifyCollectionChangedAction action, object item, int index) => OnCollectionChanged(new NotifyCollectionChangedEventArgs(action, item, index));
-        protected void OnCollectionChanged(NotifyCollectionChangedAction action, object oldItem, object newItem, int index) => OnCollectionChanged(new NotifyCollectionChangedEventArgs(action, oldItem, newItem, index));
-        protected void OnCollectionChanged(NotifyCollectionChangedAction action, object item, int newIndex, int oldIndex) => OnCollectionChanged(new NotifyCollectionChangedEventArgs(action, item, newIndex, oldIndex));
+        protected void OnCollectionChanged(NotifyCollectionChangedAction action, object item, int index) => OnCollectionChanged(new System.Collections.Specialized.NotifyCollectionChangedEventArgs(action, item, index));
 
-        protected void OnCollectionReset() => OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+        protected void OnCollectionChanged(NotifyCollectionChangedAction action, object oldItem, object newItem, int index) => OnCollectionChanged(new System.Collections.Specialized.NotifyCollectionChangedEventArgs(action, oldItem, newItem, index));
+
+        protected void OnCollectionChanged(NotifyCollectionChangedAction action, object item, int newIndex, int oldIndex) => OnCollectionChanged(new System.Collections.Specialized.NotifyCollectionChangedEventArgs(action, item, newIndex, oldIndex));
+
+        protected void OnCollectionReset() => OnCollectionChanged(new System.Collections.Specialized.NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
 
         #endregion
 
@@ -528,7 +529,31 @@ override object Model => ModelGeneric;
         /// <exception cref="System.ArgumentException">The number of elements in the source <see cref="CollectionViewModel{T}"/> is greater than the available space from <paramref name="index"/> to the end of the destination array.</exception>
         public void CopyTo(T[] array, int index) => Collection.CopyTo(array, index);
 
-        void ICollection.CopyTo(Array array, int index) => WinCopies.Collections.Extensions.CopyTo(this, array, index, Count);
+#if WinCopies2
+        private static void ThrowOnInvalidCopyToArrayParameters(in IEnumerable enumerable, in Array array)
+        {
+            ThrowIfNull(enumerable, nameof(enumerable));
+            ThrowIfNull(array, nameof(array));
+        }
+
+        private static void CopyTo( IEnumerable enumerable, in Array array, in int arrayIndex, in int count)
+        {
+            ThrowOnInvalidCopyToArrayParameters(enumerable, array);
+            ThrowOnInvalidCopyToArrayOperation(array, arrayIndex, count, nameof(array), nameof(arrayIndex));
+
+            int i = -1;
+
+            foreach (object value in enumerable)
+
+                array.SetValue(value, ++i);
+        }
+#endif
+
+        void ICollection.CopyTo(Array array, int index) =>
+#if !WinCopies2
+            WinCopies.Collections.Extensions.
+#endif
+            CopyTo(this, array, index, Count);
 
         /// <summary>
         /// Adds an object to the end of the <see cref="CollectionViewModel{T}"/>.

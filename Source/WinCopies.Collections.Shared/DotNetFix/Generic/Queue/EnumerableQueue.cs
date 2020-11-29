@@ -22,7 +22,6 @@ using static WinCopies
 #if WinCopies2
     .Util.Util;
 
-using WinCopies.Util;
 using static WinCopies.Util.ThrowHelper;
 #else
     .ThrowHelper;

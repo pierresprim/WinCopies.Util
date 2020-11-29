@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WinCopies.Util.Extensions\WinCopies.Util.Extensions.csproj" />
+    <ProjectReference Include="..\..\Source\WinCopies.Util.Extensions\WinCopies.Util.Extensions.csproj" />
   </ItemGroup>
 
 </Project>

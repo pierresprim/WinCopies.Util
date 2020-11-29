@@ -4,11 +4,10 @@ using System.Text;
 
 using static WinCopies.
 #if WinCopies2
-    Util
+Util.Util;
 #else
-    ThrowHelper
+ThrowHelper;
 #endif
-    ;
 
 namespace WinCopies
 #if WinCopies2

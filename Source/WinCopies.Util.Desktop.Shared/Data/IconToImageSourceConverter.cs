@@ -19,6 +19,10 @@ using System;
 using System.Drawing;
 using System.Globalization;
 
+#if !WinCopies2
+using WinCopies.Desktop;
+#endif
+
 namespace WinCopies.Util.Data
 {
     public class IconToImageSourceConverter : ConverterBase

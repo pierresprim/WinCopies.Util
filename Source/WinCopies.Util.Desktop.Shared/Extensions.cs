@@ -36,7 +36,7 @@ namespace WinCopies.Util
 using static WinCopies.UtilHelpers;
 using static WinCopies.ThrowHelper;
 
-namespace WinCopies
+namespace WinCopies.Desktop
 #endif
 {
     public static class Extensions

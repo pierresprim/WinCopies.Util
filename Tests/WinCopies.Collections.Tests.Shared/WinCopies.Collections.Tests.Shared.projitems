@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>6db5c78e-c82a-472b-977c-adc2c91fb922</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>WinCopies.Collections.Tests.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedList.Tests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\Queue.Tests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\Stack.Tests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enumeration\EmptyCheckEnumerator.Tests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generic\ArrayBuilder.Tests.cs" />
+  </ItemGroup>
+</Project>

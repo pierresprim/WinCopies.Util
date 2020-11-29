@@ -2384,38 +2384,6 @@
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.IUIntIndexedCollection.CopyTo(System.Array@,System.Int32)">
             <summary>
-            Copies the items of this collection to a given array sta<see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddItemBefore(System.Collections.Generic.LinkedListNode{`0},`0)"/> method to provide a custom implementation.
-            </summary>
-            <param name="node">The <see cref="T:System.Collections.Generic.LinkedListNode`1"/> before which to insert a new <see cref="T:System.Collections.Generic.LinkedListNode`1"/> containing value.</param>
-            <param name="value">The value to add to the <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>.</param>
-            <returns>The new <see cref="T:System.Collections.Generic.LinkedListNode`1"/> containing value.</returns>
-            <exception cref="T:System.ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
-            <exception cref="T:System.InvalidOperationException"><paramref name="node"/> is not in the current <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>.</exception>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddBefore(System.Collections.Generic.LinkedListNode{`0}@,System.Collections.Generic.LinkedListNode{`0}@)"/>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddFirst(`0@)">
-            <summary>
-            Adds a new node containing the specified value at the start of the <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddFirstItem(`0)"/> method to provide a custom implementation.
-            </summary>
-            <param name="value">The value to add at the start of the <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>.</param>
-            <returns>The new <see cref="T:System.Collections.Generic.LinkedListNode`1"/> containing value.</returns>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddFirst(`0@)"/>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddLast(`0@)">
-            <summary>
-            Adds a new node containing the specified value at the end of the <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddLastItem(`0)"/> method to provide a custom implementation.
-            </summary>
-            <param name="value">The value to add at the end of the <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>.</param>
-            <returns>The new <see cref="T:System.Collections.Generic.LinkedListNode`1"/> containing value.</returns>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddLast(System.Collections.Generic.LinkedListNode{`0}@)"/>
-        </member>
-        <member name="P:WinCopies.Collections.DotNetFix.IUIntIndexedCollection.Count">
-            <summary>
-            Gets the number of items in the collection.
-            </summary>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.IUIntIndexedCollection.CopyTo(System.Array@,System.Int32)">
-            <summary>
             Copies the items of this collection to a given array starting at a given index.
             </summary>
             <param name="array">The array to copy the items.</param>
@@ -2430,7 +2398,74 @@
         </member>
         <member name="P:WinCopies.Collections.DotNetFix.IUIntIndexedList.IsFixedSize">
             <summary>
-            Gets a value that indicates whether the current lis given item to the current list.
+            Gets a value that indicates whether the current list is fixed size.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.IUIntIndexedList.Add(System.Object@)">
+            <summary>
+            Adds a value to the list.
+            </summary>
+            <param name="value">The value to add.</param>
+            <returns>The index of the new value in the list.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.IUIntIndexedList.Clear">
+            <summary>
+            Removes all items from the list.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.IUIntIndexedList.Insert(System.UInt32@,System.Object@)">
+            <summary>
+            Inserts a value to the list.
+            </summary>
+            <param name="index">The index at which to add the value.</param>
+            <param name="value">The value to add.</param>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.IUIntIndexedList.Remove(System.Object@)">
+            <summary>
+            Removes a given value from the list.
+            </summary>
+            <param name="value">The value to remove.</param>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.IUIntIndexedList.RemoveAt(System.UInt32@)">
+            <summary>
+            Removes a value from the list at a given index.
+            </summary>
+            <param name="index">The index of the value to remove.</param>
+        </member>
+        <member name="P:WinCopies.Collections.DotNetFix.IReadOnlyUIntIndexedList.Item(System.UInt32)">
+            <summary>
+            Gets or sets an item at a given index in the list.
+            </summary>
+            <param name="index">The index of the item.</param>
+            <returns>The item at <paramref name="index"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.IReadOnlyUIntIndexedList.Contains(System.Object@)">
+            <summary>
+            Checks if the list contains a given value.
+            </summary>
+            <param name="value">The value to check.</param>
+            <returns><see langword="true"/> if the list contains <paramref name="value"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.IReadOnlyUIntIndexedList.IndexOf(System.Object@)">
+            <summary>
+            Returns the index of a given value in the list.
+            </summary>
+            <param name="value">The value for which return the index.</param>
+            <returns>The index of <paramref name="value"/> if it was found, or <see langword="null"/> otherwise.</returns>
+        </member>
+        <member name="P:WinCopies.Collections.DotNetFix.SimpleLinkedListBase.IsReadOnly">
+            <summary>
+            Gets a value indicating whether the current list is read-only.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Collections.DotNetFix.SimpleLinkedList.Count">
+            <summary>
+            Gets the number of items in the current list.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.SimpleLinkedList.Add(System.Object@)">
+            <summary>
+            Adds a given item to the current list.
             </summary>
             <param name="value">The item to add.</param>
         </member>

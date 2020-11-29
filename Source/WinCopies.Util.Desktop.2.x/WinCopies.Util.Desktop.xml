@@ -1751,6 +1751,156 @@
             </summary>
             <param name="model">The model to use for this instance of view model.</param>
         </member>
+        <member name="T:WinCopies.Util.Data.CollectionViewModel`1">
+            <summary>
+            Provides a base class for view models.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.Data.CollectionViewModel`1.Count">
+            <summary>
+            Gets the number of elements actually contained in the <see cref="T:WinCopies.Util.Data.CollectionViewModel`1"/>.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.Data.CollectionViewModel`1.Item(System.Int32)">
+            <summary>
+            Gets or sets the element at the specified index.
+            </summary>
+            <param name="index">The zero-based index of the element to get or set.</param>
+            <returns>The element at the specified index.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="index"/> is less than zero. -or- <paramref name="index"/> is equal to or greater than <see cref="P:WinCopies.Util.Data.CollectionViewModel`1.Count"/>.</exception>
+        </member>
+        <member name="E:WinCopies.Util.Data.CollectionViewModel`1.PropertyChanged">
+            <summary>
+            Occurs when a property value changes.
+            </summary>
+        </member>
+        <member name="E:WinCopies.Util.Data.CollectionViewModel`1.CollectionChanged">
+            <summary>
+            Occurs when an item is added, removed, changed, moved, or the entire list is refreshed.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.Data.CollectionViewModel`1.#ctor(System.Collections.ObjectModel.Collection{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Util.Data.CollectionViewModel`1"/> class.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.Data.CollectionViewModel`1.CheckReentrancy">
+            <summary>
+            Checks for reentrant attempts to change this collection.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">If there was a call to <see cref="M:WinCopies.Util.Data.CollectionViewModel`1.BlockReentrancy"/> of which the <see cref="T:System.IDisposable"/> return value has not yet been disposed of. Typically, this means when there are additional attempts to change this collection during a <see cref="E:WinCopies.Util.Data.CollectionViewModel`1.CollectionChanged"/> event. However, it depends on when derived classes choose to call <see cref="M:WinCopies.Util.Data.CollectionViewModel`1.BlockReentrancy"/>.</exception>
+        </member>
+        <member name="M:WinCopies.Util.Data.CollectionViewModel`1.BlockReentrancy">
+            <summary>
+            Disallows reentrant attempts to change this collection.
+            </summary>
+            <returns>An <see cref="T:System.IDisposable"/> object that can be used to dispose of the object.</returns>
+        </member>
+        <member name="M:WinCopies.Util.Data.CollectionViewModel`1.InsertItem(System.Int32,`0)">
+            <summary>
+            Inserts an element into the <see cref="T:WinCopies.Util.Data.CollectionViewModel`1"/> at the specified index.
+            </summary>
+            <param name="index">The zero-based index at which <paramref name="item"/> should be inserted.</param>
+            <param name="item">The object to insert. The value can be null for reference types.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="index"/> is less than zero. -or- <paramref name="index"/> is greater than <see cref="P:WinCopies.Util.Data.CollectionViewModel`1.Count"/>.</exception>
+        </member>
+        <member name="M:WinCopies.Util.Data.CollectionViewModel`1.SetItem(System.Int32,`0)">
+            <summary>
+            Replaces the element at the specified index.
+            </summary>
+            <param name="index">The zero-based index of the element to replace.</param>
+            <param name="item">The new value for the element at the specified index. The value can be null for reference types.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="index"/> is less than zero. -or- <paramref name="index"/> is greater than <see cref="P:WinCopies.Util.Data.CollectionViewModel`1.Count"/>.</exception>
+        </member>
+        <member name="M:WinCopies.Util.Data.CollectionViewModel`1.MoveItem(System.Int32,System.Int32)">
+            <summary>
+            Moves the item at the specified index to a new location in the collection.
+            </summary>
+            <param name="oldIndex">The zero-based index specifying the location of the item to be moved.</param>
+            <param name="newIndex">The zero-based index specifying the new location of the item.</param>
+        </member>
+        <member name="M:WinCopies.Util.Data.CollectionViewModel`1.RemoveItem(System.Int32)">
+            <summary>
+            Removes the element at the specified index of the <see cref="T:WinCopies.Util.Data.CollectionViewModel`1"/>.
+            </summary>
+            <param name="index">The zero-based index of the element to remove.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="index"/> is less than zero. -or- <paramref name="index"/> is equal to or greater than <see cref="P:WinCopies.Util.Data.CollectionViewModel`1.Count"/>.</exception>
+        </member>
+        <member name="M:WinCopies.Util.Data.CollectionViewModel`1.ClearItems">
+            <summary>
+            Removes all elements from the <see cref="T:WinCopies.Util.Data.CollectionViewModel`1"/>.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.Data.CollectionViewModel`1.IndexOf(`0)">
+            <summary>
+            Searches for the specified object and returns the zero-based index of the first occurrence within the entire <see cref="T:WinCopies.Util.Data.CollectionViewModel`1"/>.
+            </summary>
+            <param name="item">The object to locate in the <see cref="T:WinCopies.Util.Data.CollectionViewModel`1"/>. The value can be null for reference types.</param>
+            <returns>The zero-based index of the first occurrence of <paramref name="item"/> within the entire <see cref="T:WinCopies.Util.Data.CollectionViewModel`1"/>, if found; otherwise, -1.</returns>
+        </member>
+        <member name="M:WinCopies.Util.Data.CollectionViewModel`1.Contains(`0)">
+            <summary>
+            Determines whether an element is in the <see cref="T:WinCopies.Util.Data.CollectionViewModel`1"/>.
+            </summary>
+            <param name="item">The object to locate in the <see cref="T:WinCopies.Util.Data.CollectionViewModel`1"/>. The value can be null for reference types.</param>
+            <returns><see langword="true"/> if <paramref name="item"/> is found in the <see cref="T:WinCopies.Util.Data.CollectionViewModel`1"/>; otherwise, <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Util.Data.CollectionViewModel`1.GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through the System.Collections.ObjectModel.Collection`1.
+            </summary>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerator`1"/> for the <see cref="T:WinCopies.Util.Data.CollectionViewModel`1"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Util.Data.CollectionViewModel`1.CopyTo(`0[],System.Int32)">
+            <summary>
+            Copies the entire <see cref="T:WinCopies.Util.Data.CollectionViewModel`1"/> to a compatible one-dimensional <see cref="T:System.Array"/>, starting at the specified index of the target array.
+            </summary>
+            <param name="array">The one-dimensional <see cref="T:System.Array"/> that is the destination of the elements copied from <see cref="T:WinCopies.Util.Data.CollectionViewModel`1"/>. The <see cref="T:System.Array"/> must have zero-based indexing.</param>
+            <param name="index">The zero-based index in array at which copying begins.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="array"/> is <see langword="null"/>.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="index"/> is less than zero.</exception>
+            <exception cref="T:System.ArgumentException">The number of elements in the source <see cref="T:WinCopies.Util.Data.CollectionViewModel`1"/> is greater than the available space from <paramref name="index"/> to the end of the destination array.</exception>
+        </member>
+        <member name="M:WinCopies.Util.Data.CollectionViewModel`1.Add(`0)">
+            <summary>
+            Adds an object to the end of the <see cref="T:WinCopies.Util.Data.CollectionViewModel`1"/>.
+            </summary>
+            <param name="item">The object to be added to the end of the <see cref="T:WinCopies.Util.Data.CollectionViewModel`1"/>. The value can be null for reference types.</param>
+        </member>
+        <member name="M:WinCopies.Util.Data.CollectionViewModel`1.Insert(System.Int32,`0)">
+            <summary>
+            Inserts an element into the <see cref="T:WinCopies.Util.Data.CollectionViewModel`1"/> at the specified index.
+            </summary>
+            <param name="index">The zero-based index at which <paramref name="item"/> should be inserted.</param>
+            <param name="item">The object to insert. The value can be null for reference types.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="index"/> is less than zero. -or- <paramref name="index"/> is greater than <see cref="P:WinCopies.Util.Data.CollectionViewModel`1.Count"/>.</exception>
+        </member>
+        <member name="M:WinCopies.Util.Data.CollectionViewModel`1.Move(System.Int32,System.Int32)">
+            <summary>
+            Moves the item at the specified index to a new location in the collection.
+            </summary>
+            <param name="oldIndex">The zero-based index specifying the location of the item to be moved.</param>
+            <param name="newIndex">The zero-based index specifying the new location of the item.</param>
+        </member>
+        <member name="M:WinCopies.Util.Data.CollectionViewModel`1.RemoveAt(System.Int32)">
+            <summary>
+            Removes the element at the specified index of the <see cref="T:WinCopies.Util.Data.CollectionViewModel`1"/>.
+            </summary>
+            <param name="index">The zero-based index of the element to remove.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="index"/> is less than zero. -or- <paramref name="index"/> is equal to or greater than <see cref="P:WinCopies.Util.Data.CollectionViewModel`1.Count"/>.</exception>
+        </member>
+        <member name="M:WinCopies.Util.Data.CollectionViewModel`1.Remove(`0)">
+            <summary>
+            Removes the first occurrence of a specific object from the <see cref="T:WinCopies.Util.Data.CollectionViewModel`1"/>.
+            </summary>
+            <param name="item">The object to remove from the <see cref="T:WinCopies.Util.Data.CollectionViewModel`1"/>. The value can be null for reference types.</param>
+            <returns><see langword="true"/> if item is successfully removed; otherwise, <see langword="false"/>. This method also returns <see langword="false"/> if <paramref name="item"/> was not found in the <see cref="T:WinCopies.Util.Data.CollectionViewModel`1"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Util.Data.CollectionViewModel`1.Clear">
+            <summary>
+            Removes all elements from the <see cref="T:WinCopies.Util.Data.CollectionViewModel`1"/>.
+            </summary>
+        </member>
         <member name="T:WinCopies.Util.Data.VisibilityToBooleanConverter">
             <summary>
             Provides a converter for conversion from a <see langword="bool"/> value to a <see cref="T:System.Windows.Visibility"/> value.
@@ -2120,7 +2270,7 @@
             </summary>
             <typeparam name="T">The type of elements in the collection.</typeparam>
             <remarks>
-            <para>In many cases the data that you work with is a collection of objects. For example, a common scenario in data binding is to use an <see cref="!:ItemsControl"/> such as a <see cref="!:ListBox"/>, <see cref="!:ListView"/>, or <see cref="!:TreeView"/> to display a collection of records.</para>
+            <para>In many cases the data that you work with is a collection of objects. For example, a common scenario in data binding is to use an <see cref="T:System.Windows.Controls.ItemsControl"/> such as a <see cref="T:System.Windows.Controls.ListBox"/>, <see cref="T:System.Windows.Controls.ListView"/>, or <see cref="T:System.Windows.Controls.TreeView"/> to display a collection of records.</para>
             <para>You can enumerate over any collection that implements the <see cref="T:System.Collections.IEnumerable"/> interface. However, to set up dynamic bindings so that insertions or deletions in the collection update the UI automatically, the collection must implement the <see cref="T:System.Collections.Specialized.INotifyCollectionChanged"/> interface. This interface exposes the <see cref="E:System.Collections.Specialized.INotifyCollectionChanged.CollectionChanged"/> event, an event that should be raised whenever the underlying collection changes.</para>
             <para>WPF provides the <see cref="T:System.Collections.ObjectModel.ObservableCollection`1"/> class, which is a built-in implementation of a data collection that implements the <see cref="T:System.Collections.Specialized.INotifyCollectionChanged"/> interface.</para>
             <para>Before implementing your own collection, consider using <see cref="T:System.Collections.ObjectModel.ObservableCollection`1"/> or one of the existing collection classes, such as <see cref="T:System.Collections.Generic.List`1"/>, <see cref="T:System.Collections.ObjectModel.Collection`1"/>, and <see cref="T:System.ComponentModel.BindingList`1"/>, among many others. If you have an advanced scenario and want to implement your own collection, consider using <see cref="T:System.Collections.IList"/>, which provides a non-generic collection of objects that can be individually accessed by index. Implementing <see cref="T:System.Collections.IList"/> provides the best performance with the data binding engine.</para>
@@ -2172,11 +2322,11 @@
             </summary>
             <typeparam name="T">The type of elements in the collection.</typeparam>
             <remarks>
-            <para>In many cases the data that you work with is a collection of objects. For example, a common scenario in data binding is to use an <see cref="!:ItemsControl"/> such as a <see cref="!:ListBox"/>, <see cref="!:ListView"/>, or <see cref="!:TreeView"/> to display a collection of records.</para>
+            <para>In many cases the data that you work with is a collection of objects. For example, a common scenario in data binding is to use an <see cref="T:System.Windows.Controls.ItemsControl"/> such as a <see cref="T:System.Windows.Controls.ListBox"/>, <see cref="T:System.Windows.Controls.ListView"/>, or <see cref="T:System.Windows.Controls.TreeView"/> to display a collection of records.</para>
             <para>You can enumerate over any collection that implements the <see cref="T:System.Collections.IEnumerable"/> interface. However, to set up dynamic bindings so that insertions or deletions in the collection update the UI automatically, the collection must implement the <see cref="T:System.Collections.Specialized.INotifyCollectionChanged"/> interface. This interface exposes the <see cref="E:System.Collections.Specialized.INotifyCollectionChanged.CollectionChanged"/> event, an event that should be raised whenever the underlying collection changes.</para>
             <para>WPF provides the <see cref="T:System.Collections.ObjectModel.ObservableCollection`1"/> class, which is a built-in implementation of a data collection that implements the <see cref="T:System.Collections.Specialized.INotifyCollectionChanged"/> interface.</para>
-            <para>Before implementing your own collection, consider using <see cref="T:System.Collections.ObjectModel.ObservableCollection`1"/> or one of the existing collection classes, such as <see cref="T:System.Collections.Generic.List`1"/>, <see cref="T:System.Collections.ObjectModel.Collection`1"/>, and <see cref="T:System.ComponentModel.BindingList`1"/>, among many others. If you have an advanced scenario and want to implement your own collection, consider using <see cref="T:System.Collections.IList"/>, which provides a non-generic collection of objects that can be individually accessed by index. Implementing <see cref="T:System.Collections.IList"/> provides the best performance with the data binding engine.</para>
-            <para>Notes: To fully support transferring data values from binding source objects to binding targets, each object in your collection that supports bindable properties must implement an appropriate property changed notification mechanism such as the <see cref="T:System.ComponentModel.INotifyPropertyChanged"/> interface.</para>
+            <para>Before implementing your own collection, consider using <see cref="T:System.Collections.ObjectModel.ObservableCollection`1"/> or one of the existing collection classes, such as <see cref="T:System.Collections.Generic.List`1"/>, <see cref="T:System.Collections.ObjectModel.Collection`1"/>, and <see cref="!:BindingList&lt;T&gt;"/>, among many others. If you have an advanced scenario and want to implement your own collection, consider using <see cref="T:System.Collections.IList"/>, which provides a non-generic collection of objects that can be individually accessed by index. Implementing <see cref="T:System.Collections.IList"/> provides the best performance with the data binding engine.</para>
+            <para>Notes: To fully support transferring data values from binding source objects to binding targets, each object in your collection that supports bindable properties must implement an appropriate property changed notification mechanism such as the <see cref="!:INotifyPropertyChanged"/> interface.</para>
             <para>For more information, see "Binding to Collections" in the Data Binding Overview article at: https://docs.microsoft.com/en-us/dotnet/framework/wpf/data/data-binding-overview?view=netframework-4.8</para>
             <para>For notes on XAML usage, see the following article: https://docs.microsoft.com/en-us/dotnet/api/system.collections.objectmodel.observablecollection-1?view=netframework-4.8</para>
             </remarks>

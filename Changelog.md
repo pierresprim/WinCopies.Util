@@ -87,7 +87,8 @@ WinCopies.Util.Desktop 3.0.0-preview
 WinCopies.Util (2.6.1)
 ----------------------
 
-Add new (Bit)Array static and extension methods.
+- Add new (Bit)Array static and extension methods.
+- Some bug fixes.
 
 WinCopies.Util.Desktop (2.6.1)
 ------------------------------

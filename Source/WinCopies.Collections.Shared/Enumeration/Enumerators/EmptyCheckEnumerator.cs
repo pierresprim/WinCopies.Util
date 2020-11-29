@@ -340,7 +340,6 @@ System.Collections.IEnumerator, WinCopies.Util.DotNetFix.IDisposable
         {
 #if WinCopies2
 #region Fields
-        private IEnumerator<T> _enumerator;
         private Func<bool> _moveNext;
         private bool? _hasItems = null;
         private Func<T> _current;
@@ -380,7 +379,7 @@ System.Collections.IEnumerator, WinCopies.Util.DotNetFix.IDisposable
 #if WinCopies2
                     if (!_hasItems.HasValue)
 
-                        _hasItems = _enumerator.MoveNext();
+                        _hasItems = InnerEnumerator.MoveNext();
 
                     return _hasItems.Value;
 #else
@@ -416,7 +415,7 @@ System.Collections.IEnumerator, WinCopies.Util.DotNetFix.IDisposable
 
             bool enumerate()
             {
-                if (_enumerator.MoveNext())
+                if (InnerEnumerator.MoveNext())
 
                     return true;
 
@@ -431,7 +430,7 @@ System.Collections.IEnumerator, WinCopies.Util.DotNetFix.IDisposable
                 {
                     if (_hasItems.Value)
                     {
-                        _current = () => _enumerator.Current;
+                        _current = () => InnerEnumerator.Current;
 
                         _moveNext = enumerate;
 
@@ -483,7 +482,7 @@ System.Collections.IEnumerator, WinCopies.Util.DotNetFix.IDisposable
             {
                 ThrowIfDisposed();
 
-                _enumerator.Reset();
+                InnerEnumerator.Reset();
 
                 _hasItems = null;
 
@@ -504,7 +503,7 @@ System.Collections.IEnumerator, WinCopies.Util.DotNetFix.IDisposable
             {
                 if (IsDisposed) return;
 
-                _enumerator.Dispose();
+                InnerEnumerator.Dispose();
 
                 ResetMoveNext();
 

@@ -9,6 +9,11 @@
     <Import_RootNamespace>WinCopies.Collections.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\EnumerableSimpleLinkedList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\SimpleLinkedList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedList\ILinkedList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedList\IReadOnlyLinkedList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedList\ReadOnlyLinkedList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\Queue\EnumerableQueue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\Queue\ObservableQueueCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\Queue\Queue.cs" />
@@ -33,7 +38,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\IUIntIndexation\ListsAndCollections.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\LinkedCollections\LinkedCollectionChangedAction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\LinkedCollections\LinkedCollections.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedList\LinkedList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EnumComparer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerables\Enumerable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\DotNetFix\ArrayEnumerator.cs" />

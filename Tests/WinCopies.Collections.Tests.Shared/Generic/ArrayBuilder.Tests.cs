@@ -25,7 +25,15 @@ namespace WinCopies.Collections.Generic.Tests
     [TestClass]
     public class ArrayBuilder
     {
-        private readonly WinCopies.Collections.Generic.ArrayBuilder<int> _arrayBuilder = new WinCopies.Collections.Generic.ArrayBuilder<int>();
+        private readonly WinCopies.Collections.
+#if !WinCopies2
+            Generic.
+#endif
+            ArrayBuilder<int> _arrayBuilder = new WinCopies.Collections.
+#if !WinCopies2
+            Generic.
+#endif
+            ArrayBuilder<int>();
 
         private const uint Count = 4;
 
@@ -74,7 +82,13 @@ namespace WinCopies.Collections.Generic.Tests
 
             int[] array = _arrayBuilder.ToArray(true);
 
-            Assert.AreEqual(0u, _arrayBuilder.Count);
+            Assert.AreEqual(
+#if WinCopies2
+0
+#else
+                0u
+#endif
+                , _arrayBuilder.Count);
 
             AssertArray(array, 1);
         }
@@ -102,7 +116,13 @@ namespace WinCopies.Collections.Generic.Tests
 
             _arrayBuilder.ToArray(array, true, 4);
 
-            Assert.AreEqual(0u, _arrayBuilder.Count);
+            Assert.AreEqual(
+#if WinCopies2
+0
+#else
+                0u
+#endif
+                , _arrayBuilder.Count);
 
             AssertArray(array, 2);
         }
@@ -145,7 +165,13 @@ namespace WinCopies.Collections.Generic.Tests
 
             var arrayList = _arrayBuilder.ToArrayList(true);
 
-            Assert.AreEqual(0u, _arrayBuilder.Count);
+            Assert.AreEqual(
+#if WinCopies2
+0
+#else
+                0u
+#endif
+                , _arrayBuilder.Count);
 
             AssertArrayList(arrayList, 1);
         }
@@ -177,7 +203,13 @@ namespace WinCopies.Collections.Generic.Tests
 
             _arrayBuilder.ToArrayList(arrayList, true, 4);
 
-            Assert.AreEqual(0u, _arrayBuilder.Count);
+            Assert.AreEqual(
+#if WinCopies2
+0
+#else
+                0u
+#endif
+                , _arrayBuilder.Count);
 
             AssertArrayList(arrayList, 2);
         }
@@ -220,7 +252,13 @@ namespace WinCopies.Collections.Generic.Tests
 
             IList<int> list = _arrayBuilder.ToList(true);
 
-            Assert.AreEqual(0u, _arrayBuilder.Count);
+            Assert.AreEqual(
+#if WinCopies2
+0
+#else
+                0u
+#endif
+                , _arrayBuilder.Count);
 
             AssertList(list, 1);
         }
@@ -252,7 +290,13 @@ namespace WinCopies.Collections.Generic.Tests
 
             _arrayBuilder.ToList(list, true, 4);
 
-            Assert.AreEqual(0u, _arrayBuilder.Count);
+            Assert.AreEqual(
+#if WinCopies2
+0
+#else
+                0u
+#endif
+                , _arrayBuilder.Count);
 
             AssertList(list, 2);
         }

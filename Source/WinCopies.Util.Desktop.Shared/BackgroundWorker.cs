@@ -18,11 +18,14 @@
 using System;
 using System.ComponentModel;
 using System.Threading;
+
 using static WinCopies.Util.Desktop.ThrowHelper;
 
 #if WinCopies2
 namespace WinCopies.Util
 #else
+using WinCopies.Desktop;
+
 namespace WinCopies
 #endif
 {
