@@ -39,7 +39,7 @@ namespace WinCopies.Collections.DotNetFix
 #if WinCopies2
         System.Collections.Generic.LinkedListNode
 #else
-            ILinkedListNode
+        ILinkedListNode
 #endif
                 <T> Last
         { get; }
@@ -47,7 +47,7 @@ namespace WinCopies.Collections.DotNetFix
 #if WinCopies2
         System.Collections.Generic.LinkedListNode
 #else
-            ILinkedListNode
+        ILinkedListNode
 #endif
                 <T> First
         { get; }
@@ -64,7 +64,7 @@ namespace WinCopies.Collections.DotNetFix
 #if WinCopies2
         System.Collections.Generic.LinkedListNode
 #else
-            ILinkedListNode
+        ILinkedListNode
 #endif
                 <T> AddAfter(
 #if WinCopies2
@@ -81,7 +81,7 @@ System.Collections.Generic.LinkedListNode
 #if WinCopies2
         System.Collections.Generic.LinkedListNode
 #else
-            ILinkedListNode
+        ILinkedListNode
 #endif
            <T> AddBefore(
 #if WinCopies2
@@ -99,7 +99,7 @@ System.Collections.Generic.LinkedListNode
 #if WinCopies2
         System.Collections.Generic.LinkedListNode
 #else
-            ILinkedListNode
+        ILinkedListNode
 #endif
                 <T> AddFirst(T value);
 
@@ -111,7 +111,7 @@ System.Collections.Generic.LinkedListNode
 #if WinCopies2
         System.Collections.Generic.LinkedListNode
 #else
-            ILinkedListNode
+        ILinkedListNode
 #endif
                 <T> AddLast(T value);
 
@@ -123,7 +123,7 @@ System.Collections.Generic.LinkedListNode
 #if WinCopies2
         System.Collections.Generic.LinkedListNode
 #else
-            ILinkedListNode
+        ILinkedListNode
 #endif
                 <T> Find(T value);
 
@@ -131,7 +131,7 @@ System.Collections.Generic.LinkedListNode
 #if WinCopies2
         System.Collections.Generic.LinkedListNode
 #else
-            ILinkedListNode
+        ILinkedListNode
 #endif
                 <T> FindLast(T value);
 
@@ -146,7 +146,7 @@ System.Collections.Generic.LinkedList<T>.Enumerator
                 GetEnumerator();
 
 #if !WinCopies2
-            System.Collections.Generic.IEnumerator<ILinkedListNode<T>> GetNodeEnumerator(EnumerationDirection enumerationDirection);
+        System.Collections.Generic.IEnumerator<ILinkedListNode<T>> GetNodeEnumerator(EnumerationDirection enumerationDirection);
 #endif
 
         void Remove(
@@ -165,5 +165,50 @@ System.Collections.Generic.LinkedListNode
     public interface ILinkedList2<T> : ILinkedList<T>
     {
         bool IsReadOnly { get; }
+    }
+
+    public interface ILinkedList3<T> : ILinkedList2<T>
+    {
+        bool MoveAfter(
+#if WinCopies2
+            System.Collections.Generic.LinkedListNode
+#else
+            ILinkedListNode
+#endif
+            <T> node,
+#if WinCopies2
+            System.Collections.Generic.LinkedListNode
+#else
+            ILinkedListNode
+#endif
+            <T> after);
+
+        bool MoveBefore(
+#if WinCopies2
+            System.Collections.Generic.LinkedListNode
+#else
+            ILinkedListNode
+#endif
+            <T> node,
+#if WinCopies2
+            System.Collections.Generic.LinkedListNode
+#else
+            ILinkedListNode
+#endif
+            <T> before);
+
+        void Swap(
+#if WinCopies2
+            System.Collections.Generic.LinkedListNode
+#else
+            ILinkedListNode
+#endif
+            <T> x,
+#if WinCopies2
+            System.Collections.Generic.LinkedListNode
+#else
+            ILinkedListNode
+#endif
+            <T> y);
     }
 }

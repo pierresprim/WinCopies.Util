@@ -10,10 +10,17 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\EnumerableSimpleLinkedList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\EventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\Extensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\LinkedListNodeEnumerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\ObservableLinkedCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\ReadOnlyLinkedCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\ReadOnlyObservableLinkedCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\SimpleLinkedList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedList\ILinkedList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedList\IReadOnlyLinkedList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedList\ReadOnlyLinkedList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedList\SimpleLinkedList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\Queue\EnumerableQueue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\Queue\ObservableQueueCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\Queue\Queue.cs" />
@@ -31,7 +38,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Generic\ArrayBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Comparers.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\LinkedCollections.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\DotNetFix\Misc.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerables\ICountableEnumerable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\IUIntIndexation\Enumerators.cs" />
@@ -55,6 +62,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Generic\LinkedCollections.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\Misc.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\ITreeNode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ISortable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LinkedCollections.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\LinkedList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Linq\Extensions.cs" />

@@ -749,6 +749,63 @@
         </member>
         <member name="M:WinCopies.Collections.TreeNode`1.#ctor(`0,System.Collections.Generic.IList{WinCopies.Collections.TreeNode{`0}})">
             <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Collections.TreeNode`1"/> class using a custom value and inner <see cref="T:System.ngword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.TreeNode`1.System#IEquatable{WinCopies#IReadOnlyValueObject{T}}#Equals(WinCopies.IReadOnlyValueObject{`0})">
+            <summary>
+            Determines whether this object is equal to a given object.
+            </summary>
+            <param name="obj">Object to compare to the current object.</param>
+            <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="P:WinCopies.Collections.TreeNode`1.Parent">
+            <summary>
+            Gets the parent of the current node.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Collections.TreeNode`1.Value">
+            <summary>
+            Gets or sets the value of the object.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Collections.TreeNode`1.Equals(System.Object)">
+            <summary>
+            Determines whether this object is equal to a given object.
+            </summary>
+            <param name="obj">The object to compare.</param>
+            <returns><see langword="true"/> if the current object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.TreeNode`1.GetHashCode">
+            <summary>
+            Returns a hash code for the current object.
+            </summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.TreeNode`1.Dispose(System.Boolean)">
+            <summary>
+            Removes the unmanaged resources and the managed resources if needed. If you override this method, you should call this implementation of this method in your override implementation to avoid unexpected results when using this object laater.
+            </summary>
+            <param name="disposing"><see langword="true"/> to dispose managed resources, otherwise <see langword="false"/>.</param>
+        </member>
+        <member name="M:WinCopies.Collections.TreeNode`1.GetDefaultTreeNodeItemsComparer">
+            <summary>
+            Returns the default comparer for <see cref="T:WinCopies.Collections.TreeNode`1"/> objects.
+            </summary>
+            <returns>The default comparer for <see cref="T:WinCopies.Collections.TreeNode`1"/> objects.</returns>
+        </member>
+        <member name="P:WinCopies.Collections.TreeNode`1.Items">
+            <summary>
+            Gets the inner <see cref="T:System.Collections.Generic.IList`1"/> of this <see cref="T:WinCopies.Collections.TreeNode`1"/>.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Collections.TreeNode`1.#ctor(`0)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Collections.TreeNode`1"/> class using a custom value.
+            </summary>
+            <param name="value">The value of the new <see cref="T:WinCopies.Collections.TreeNode`1"/>.</param>
+        </member>
+        <member name="M:WinCopies.Collections.TreeNode`1.#ctor(`0,System.Collections.Generic.IList{WinCopies.Collections.TreeNode{`0}})">
+            <summary>
             Initializes a new instance of the <see cref="T:WinCopies.Collections.TreeNode`1"/> class using a custom value and inner <see cref="T:System.Collections.Generic.IList`1"/>.
             </summary>
             <param name="value">The value of the new <see cref="T:WinCopies.Collections.TreeNode`1"/>.</param>

@@ -16,6 +16,7 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using System;
+using WinCopies.Collections.DotNetFix.Generic;
 
 #if WinCopies2
 using static WinCopies.Util.Resources.ExceptionMessages;
@@ -82,6 +83,24 @@ ThrowIfEmptyListOrCollection
                 throw GetEmptyListOrCollectionException();
         }
 
+        public static ArgumentException GetNotContainedLinkedListNodeException(in string argumentName) => new ArgumentException("The given node is not contained in the current list.", argumentName);
+
+        public static void ThrowIfNotContainedNode<T>(in ILinkedListNode<T> node, in string argumentName, in ILinkedList<T> list)
+        {
+            if (node.List != list)
+
+                throw GetNotContainedLinkedListNodeException(argumentName);
+        }
+
+        public static ArgumentException GetNodesAreEqualException() => new ArgumentException("The given nodes are equal.");
+
+        public static void ThrowIfNodesAreEqual<T>(in ILinkedListNode<T> x, in ILinkedListNode<T> y)
+        {
+            if (x == y)
+
+                throw GetNodesAreEqualException();
+        }
+
 #if !WinCopies2
         public static void ThrowIfEnumeratorNotStartedOrDisposedException(in WinCopies.Collections.IDisposableEnumeratorInfo enumerator)
         {
@@ -90,7 +109,7 @@ ThrowIfEmptyListOrCollection
                 throw GetEnumeratorNotStartedOrDisposedException();
         }
 
-#region Enum Throws
+        #region Enum Throws
         ///// <summary>
         ///// Throws an <see cref="InvalidEnumArgumentException"/> if the enum value is not in the required enum value range. See the Remarks section.
         ///// </summary>
@@ -198,7 +217,7 @@ ThrowIfEmptyListOrCollection
                 throw GetExceptionForNonFlagsEnum(typeArgumentName);
         }
 
-#endregion
+        #endregion
 #endif
     }
 }

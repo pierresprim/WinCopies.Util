@@ -71,11 +71,15 @@ namespace WinCopies.Collections.DotNetFix
 #if WinCopies2
             System.Collections.Generic.LinkedList<T>,
 #endif
-            ILinkedList2<T>
+            ILinkedList3<T>, ISortable<T>
         {
+            #region Properties
             public bool IsReadOnly => false;
 
             public bool SupportsReversedEnumeration => true;
+            #endregion
+
+            #region Constructors
 
             /// <summary>
             /// Initializes a new instance of the <see cref="System.Collections.Generic.LinkedList{T}"/> class that is empty.
@@ -117,7 +121,10 @@ namespace WinCopies.Collections.DotNetFix
         {
             // Left empty.
         }
-#else
+#endif
+            #endregion
+
+#if !WinCopies2
             public class LinkedListNode : ILinkedListNode<T>
             {
                 public bool IsReadOnly => false;
@@ -258,10 +265,16 @@ namespace WinCopies.Collections.DotNetFix
                 ~Enumerator() => Dispose(false);
             }
 
+            #region Fields
+
             private uint _enumeratorsCount = 0;
             private object _syncRoot;
 
+            #endregion
+
             private uint EnumerableVersion { get; set; } = 0;
+
+            #region Methods
 
             private void IncrementEnumeratorsCount() => _enumeratorsCount++;
 
@@ -281,14 +294,9 @@ namespace WinCopies.Collections.DotNetFix
                     throw new ArgumentException("The given node is already contained in another list.");
             }
 
-            private void ThrowIfNotContainedNode(in LinkedListNode node, in string argumentName) => _ThrowIfNotContainedNode(node ?? throw GetArgumentNullException(argumentName));
+            private void ThrowIfNotContainedNode(in LinkedListNode node, in string argumentName) => _ThrowIfNotContainedNode(node ?? throw GetArgumentNullException(argumentName), argumentName);
 
-            private void _ThrowIfNotContainedNode(in LinkedListNode node)
-            {
-                if (node.List != this)
-
-                    throw new ArgumentException("The given node is not contained in the current list.");
-            }
+            private void _ThrowIfNotContainedNode(in LinkedListNode node, in string argumentName) => ThrowHelper.ThrowIfNotContainedNode(node, argumentName, this);
 
             public LinkedListNode First { get; private set; }
 
@@ -386,7 +394,7 @@ namespace WinCopies.Collections.DotNetFix
             {
                 if (node is LinkedListNode _node)
                 {
-                    _ThrowIfNotContainedNode(_node);
+                    _ThrowIfNotContainedNode(_node, nameof(node));
 
                     var newNode = new LinkedListNode(value);
 
@@ -415,6 +423,7 @@ namespace WinCopies.Collections.DotNetFix
             {
                 ThrowIfNotContainedNode(addAfter, nameof(addAfter));
                 ThrowIfNodeAlreadyHasList(node, nameof(node));
+                ThrowIfNodesAreEqual(node, addAfter);
 
                 _AddAfter(addAfter, node);
             }
@@ -425,7 +434,7 @@ namespace WinCopies.Collections.DotNetFix
             {
                 if (node is LinkedListNode _node)
                 {
-                    _ThrowIfNotContainedNode(_node);
+                    _ThrowIfNotContainedNode(_node, nameof(node));
 
                     var newNode = new LinkedListNode(value);
 
@@ -452,6 +461,7 @@ namespace WinCopies.Collections.DotNetFix
             {
                 ThrowIfNotContainedNode(addBefore, nameof(addBefore));
                 ThrowIfNodeAlreadyHasList(node, nameof(node));
+                ThrowIfNodesAreEqual(node, addBefore);
 
                 _AddBefore(addBefore, node);
             }
@@ -557,6 +567,11 @@ namespace WinCopies.Collections.DotNetFix
             {
                 ThrowIfNotContainedNode(node, nameof(node));
 
+                _Remove(node);
+            }
+
+            public void _Remove(LinkedListNode node)
+            {
                 if (node == First)
 
                     RemoveFirst();
@@ -662,7 +677,179 @@ namespace WinCopies.Collections.DotNetFix
             public void CopyTo(Array array, int index) => Extensions.CopyTo(this, array, index, Count);
 
             System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+            #endregion
 #endif
+
+            protected bool OnNodeCoupleAction(in
+#if WinCopies2
+            System.Collections.Generic.LinkedListNode
+#else
+            ILinkedListNode
+#endif
+            <T> x, in string xArgumentName, in
+#if WinCopies2
+            System.Collections.Generic.LinkedListNode
+#else
+            ILinkedListNode
+#endif
+            <T> y, in string yArgumentName, in Func<LinkedListNode, LinkedListNode, bool> func)
+            {
+                ThrowIfNull(x, xArgumentName);
+                ThrowIfNull(y, yArgumentName);
+
+                if (x is LinkedListNode _x)
+
+                    if (y is LinkedListNode _y)
+
+                        return func(_x, _y);
+
+                    else
+
+                        throw GetNotContainedLinkedListNodeException(nameof(y));
+
+                else
+
+                    throw GetNotContainedLinkedListNodeException(nameof(x));
+            }
+
+            /// <summary>
+            /// Checks if a node can be moved and, if yes, removes it. This method DOES NOT perform null checks and DOES NOT re-add the item. This is only a method for common move actions, the other actions needing to be performed separately.
+            /// </summary>
+            /// <param name="node">The node to move.</param>
+            /// <param name="nodeArgumentName">The argument name of <paramref name="node"/> for exception throws.</param>
+            /// <param name="other">The reference node (the new previous or next node of <paramref name="node"/>) when the move has completed.</param>
+            /// <param name="otherArgumentName">The argument name of <paramref name="other"/> for exception throws.</param>
+            /// <exception cref="ArgumentException"><paramref name="node"/> or <paramref name="other"/> is not in the current list. OR <paramref name="node"/> and <paramref name="other"/> are equal.</exception>
+            protected void OnMove(in LinkedListNode node, in string nodeArgumentName, in LinkedListNode other, in string otherArgumentName)
+            {
+                _ThrowIfNotContainedNode(node, nodeArgumentName);
+                _ThrowIfNotContainedNode(other, otherArgumentName);
+                ThrowIfNodesAreEqual(node, other);
+
+                _Remove(node);
+            }
+
+            bool ILinkedList3<T>.MoveAfter(
+#if WinCopies2
+            System.Collections.Generic.LinkedListNode
+#else
+            ILinkedListNode
+#endif
+            <T> node,
+#if WinCopies2
+            System.Collections.Generic.LinkedListNode
+#else
+            ILinkedListNode
+#endif
+            <T> after) => OnNodeCoupleAction(node, nameof(node), after, nameof(after), _MoveAfter);
+
+            public bool MoveAfter(in LinkedListNode node, in LinkedListNode after) => _MoveAfter(node ?? throw GetArgumentNullException(nameof(node)), after ?? throw GetArgumentNullException(nameof(after)));
+
+            private bool _MoveAfter(LinkedListNode node, LinkedListNode after)
+            {
+                if (after.Next == node)
+
+                    return false;
+
+                OnMove(node, nameof(node), after, nameof(after));
+
+                AddAfter(after, node);
+
+                return true;
+            }
+
+            bool ILinkedList3<T>.MoveBefore(
+#if WinCopies2
+            System.Collections.Generic.LinkedListNode
+#else
+            ILinkedListNode
+#endif
+            <T> node,
+#if WinCopies2
+            System.Collections.Generic.LinkedListNode
+#else
+            ILinkedListNode
+#endif
+            <T> before) => OnNodeCoupleAction(node, nameof(node), before, nameof(before), _MoveBefore);
+
+            public bool MoveBefore(in LinkedListNode node, in LinkedListNode before) => _MoveBefore(node ?? throw GetArgumentNullException(nameof(node)), before ?? throw GetArgumentNullException(nameof(before)));
+
+            private bool _MoveBefore(LinkedListNode node, LinkedListNode before)
+            {
+                if (before.Previous == node)
+
+                    return false;
+
+                OnMove(node, nameof(node), before, nameof(before));
+
+                AddBefore(before, node);
+
+                return true;
+            }
+
+            void ILinkedList3<T>.Swap(ILinkedListNode<T> x, ILinkedListNode<T> y) => OnNodeCoupleAction(x, nameof(x), y, nameof(y), _Swap);
+
+            public void Swap(in LinkedListNode x, in LinkedListNode y) => _Swap(x ?? throw GetArgumentNullException(nameof(x)), y ?? throw GetArgumentNullException(nameof(y)));
+
+            private bool _Swap(LinkedListNode x, LinkedListNode y)
+            {
+                _ThrowIfNotContainedNode(x, nameof(x));
+                ThrowIfNodesAreEqual(x, y);
+                _ThrowIfNotContainedNode(y, nameof(y));
+
+                LinkedListNode tempPrevious = y.Previous;
+                LinkedListNode tempNext = y.Next;
+
+                y.Previous = x.Previous;
+                y.Next = x.Next;
+
+                x.Previous = tempPrevious;
+                x.Next = tempNext;
+
+                return true;
+            }
+
+            #region ISortable implementation
+            public void Sort() => Sort(System.Collections.Generic.Comparer<T>.Default.Compare);
+
+            void ISortable.Sort(Comparison comparison) => Sort((T x, T y) => comparison(x, y));
+
+            public void Sort(Comparison<T> comparison) => Sort((LinkedListNode x, LinkedListNode y) => comparison(x.Value, y.Value));
+
+            public void Sort(Comparison<LinkedListNode> comparison)
+            {
+                LinkedListNode max;
+                LinkedListNode current = Last;
+                LinkedListNode _previous;
+
+                for (uint i = Count - 1; i > 0; i--)
+                {
+                    max = current;
+                    _previous = current;
+
+                    for (uint j = i - 1; j >= 0; j--)
+                    {
+                        _previous = _previous.Previous;
+
+                        if (comparison(_previous, max) > 0)
+
+                            max = _previous;
+                    }
+
+                    if (current == max)
+
+                        current = current.Previous;
+
+                    else
+                    {
+                        Swap(current, max);
+
+                        current = max.Previous;
+                    }
+                }
+            }
+            #endregion
         }
 #if !WinCopies2
     }

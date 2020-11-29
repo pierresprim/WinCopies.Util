@@ -70,7 +70,6 @@ namespace WinCopies.Collections
 
         public int Compare(object x, object y)
         {
-
             int result = _comparer.Compare(x, y);
 
             return SortingType == SortingType.Ascending ? result : -result;
