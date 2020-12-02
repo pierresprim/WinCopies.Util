@@ -3370,6 +3370,108 @@ int
         }
 
         #endregion
+
+        private static void ThrowOnInvalidArrayMoveOperation(in Array array, in string arrayArgumentName, in int x, in string xArgumentName, in int y, in string yArgumentName)
+        {
+            ThrowIfNull(array, arrayArgumentName);
+            ThrowIfMultidimensionalArray(array, arrayArgumentName);
+            ThrowIfNOTBetween(x, 0, array.Length - 1, xArgumentName);
+            ThrowIfNOTBetween(y, 0, array.Length - 1, yArgumentName);
+        }
+
+        public static void Move(this Array array, int move, int at)
+        {
+            ThrowOnInvalidArrayMoveOperation(array, nameof(array), move, nameof(move), at, nameof(at));
+
+            if (array.Length <= 1 || move == at)
+
+                return;
+
+            object value = array.GetValue(move);
+
+            int i;
+
+            if (at > move)
+            {
+                for (i = move + 1; i < at - move; i++)
+
+                    array.SetValue(array.GetValue(i), i - 1);
+
+                array.SetValue(value, i);
+            }
+
+            else
+            {
+                for (i = move - 1; i > move - at; i--)
+
+                    array.SetValue(array.GetValue(i), i + 1);
+
+                array.SetValue(value, i);
+            }
+        }
+
+        public static void Move<T>(this T[] array, int move, int at)
+        {
+            ThrowOnInvalidArrayMoveOperation(array, nameof(array), move, nameof(move), at, nameof(at));
+
+            if (array.Length <= 1 || move == at)
+
+                return;
+
+            T value = array[move];
+
+            int i;
+
+            if (at > move)
+            {
+                for (i = move + 1; i < at - move; i++)
+
+                    array[i - 1] = array[i];
+
+                array[i] = value;
+            }
+
+            else
+            {
+                for (i = move - 1; i > move - at; i--)
+
+                    array[i + 1] = array[i];
+
+                array[i] = value;
+            }
+        }
+
+
+
+        public static void Swap(this Array array, int x, int y)
+        {
+            ThrowOnInvalidArrayMoveOperation(array, nameof(array), x, nameof(x), y, nameof(y));
+
+            if (array.Length <= 1 || x == y)
+
+                return;
+
+            object temp = array.GetValue(x);
+
+            array.SetValue(array.GetValue(y), x);
+
+            array.SetValue(temp, y);
+        }
+
+        public static void Swap<T>(this T[] array, int x, int y)
+        {
+            ThrowOnInvalidArrayMoveOperation(array, nameof(array), x, nameof(x), y, nameof(y));
+
+            if (array.Length <= 1 || x == y)
+
+                return;
+
+            T temp = array[x];
+
+            array[x] = array[y];
+
+            array[y] = temp;
+        }
     }
 }
 #endif

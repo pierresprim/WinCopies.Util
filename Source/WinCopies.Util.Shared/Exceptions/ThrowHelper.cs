@@ -59,7 +59,7 @@ namespace WinCopies
 
         public static InvalidOperationException GetEnumeratorNotStartedOrDisposedException() => new InvalidOperationException("The enumeration is not started or the enumerator is disposed.");
 
-        public static InvalidOperationException GetVersionHasChangedException()=> new InvalidOperationException("The collection has changed during enumeration.");
+        public static InvalidOperationException GetVersionHasChangedException() => new InvalidOperationException("The collection has changed during enumeration.");
 
         public static void ThrowIfVersionHasChanged(int currentVersion, int initialVersion)
         {
@@ -194,6 +194,128 @@ namespace WinCopies
 
             ThrowIfArrayHasNotEnoughSpace(array, arrayIndex, count, arrayArgumentName);
         }
+
+        #region IndexOutOfRange throws
+
+        public static IndexOutOfRangeException GetIndexOutOfRangeException(string argumentName) => new IndexOutOfRangeException($"{argumentName} is out of range.");
+
+
+
+        public static void ThrowIfBetween(in sbyte i, in sbyte x, in sbyte y, in string argumentName)
+        {
+            if (i.Between(x, y))
+
+                throw GetIndexOutOfRangeException(argumentName);
+        }
+
+        public static void ThrowIfBetween(in short i, in short x, in short y, in string argumentName)
+        {
+            if (i.Between(x, y))
+
+                throw GetIndexOutOfRangeException(argumentName);
+        }
+
+        public static void ThrowIfBetween(in int i, in int x, in int y, in string argumentName)
+        {
+            if (i.Between(x, y))
+
+                throw GetIndexOutOfRangeException(argumentName);
+        }
+
+        public static void ThrowIfBetween(in long i, in long x, in long y, in string argumentName)
+        {
+            if (i.Between(x, y))
+
+                throw GetIndexOutOfRangeException(argumentName);
+        }
+
+        public static void ThrowIfBetween(in byte i, in byte x, in byte y, in string argumentName)
+        {
+            if (i.Between(x, y))
+
+                throw GetIndexOutOfRangeException(argumentName);
+        }
+
+        public static void ThrowIfBetween(in ushort i, in ushort x, in ushort y, in string argumentName)
+        {
+            if (i.Between(x, y))
+
+                throw GetIndexOutOfRangeException(argumentName);
+        }
+
+        public static void ThrowIfBetween(in uint i, in uint x, in uint y, in string argumentName)
+        {
+            if (i.Between(x, y))
+
+                throw GetIndexOutOfRangeException(argumentName);
+        }
+
+        public static void ThrowIfBetween(in ulong i, in ulong x, in ulong y, in string argumentName)
+        {
+            if (i.Between(x, y))
+
+                throw GetIndexOutOfRangeException(argumentName);
+        }
+
+
+
+        public static void ThrowIfNOTBetween(in sbyte i, in sbyte x, in sbyte y, in string argumentName)
+        {
+            if (!i.Between(x, y))
+
+                throw GetIndexOutOfRangeException(argumentName);
+        }
+
+        public static void ThrowIfNOTBetween(in short i, in short x, in short y, in string argumentName)
+        {
+            if (!i.Between(x, y))
+
+                throw GetIndexOutOfRangeException(argumentName);
+        }
+
+        public static void ThrowIfNOTBetween(in int i, in int x, in int y, in string argumentName)
+        {
+            if (!i.Between(x, y))
+
+                throw GetIndexOutOfRangeException(argumentName);
+        }
+
+        public static void ThrowIfNOTBetween(in long i, in long x, in long y, in string argumentName)
+        {
+            if (!i.Between(x, y))
+
+                throw GetIndexOutOfRangeException(argumentName);
+        }
+
+        public static void ThrowIfNOTBetween(in byte i, in byte x, in byte y, in string argumentName)
+        {
+            if (!i.Between(x, y))
+
+                throw GetIndexOutOfRangeException(argumentName);
+        }
+
+        public static void ThrowIfNOTBetween(in ushort i, in ushort x, in ushort y, in string argumentName)
+        {
+            if (!i.Between(x, y))
+
+                throw GetIndexOutOfRangeException(argumentName);
+        }
+
+        public static void ThrowIfNOTBetween(in uint i, in uint x, in uint y, in string argumentName)
+        {
+            if (!i.Between(x, y))
+
+                throw GetIndexOutOfRangeException(argumentName);
+        }
+
+        public static void ThrowIfNOTBetween(in ulong i, in ulong x, in ulong y, in string argumentName)
+        {
+            if (!i.Between(x, y))
+
+                throw GetIndexOutOfRangeException(argumentName);
+        }
+
+        #endregion
 
         #region String Throws
 

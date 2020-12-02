@@ -23,8 +23,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-using IList = System.Collections.IList;
-
 #if WinCopies2
 using System.Globalization;
 
@@ -3607,7 +3605,7 @@ namespace WinCopies
         /// <param name="x">The left operand.</param>
         /// <param name="y">The right operand.</param>
         /// <returns><see langword="true"/> if <paramref name="b"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        public static bool Between(this sbyte b, sbyte x, sbyte y) => b >= x && b <= y;
+        public static bool Between(this sbyte b, in sbyte x, in sbyte y) => b >= x && b <= y;
 
         /// <summary>
         /// Checks if a number is between two given numbers.
@@ -3616,7 +3614,7 @@ namespace WinCopies
         /// <param name="x">The left operand.</param>
         /// <param name="y">The right operand.</param>
         /// <returns><see langword="true"/> if <paramref name="b"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        public static bool Between(this byte b, byte x, byte y) => b >= x && b <= y;
+        public static bool Between(this byte b, in byte x, in byte y) => b >= x && b <= y;
 
         /// <summary>
         /// Checks if a number is between two given numbers.
@@ -3625,7 +3623,7 @@ namespace WinCopies
         /// <param name="x">The left operand.</param>
         /// <param name="y">The right operand.</param>
         /// <returns><see langword="true"/> if <paramref name="s"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        public static bool Between(this short s, short x, short y) => s >= x && s <= y;
+        public static bool Between(this short s, in short x, in short y) => s >= x && s <= y;
 
         /// <summary>
         /// Checks if a number is between two given numbers.
@@ -3634,7 +3632,7 @@ namespace WinCopies
         /// <param name="x">The left operand.</param>
         /// <param name="y">The right operand.</param>
         /// <returns><see langword="true"/> if <paramref name="s"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        public static bool Between(this ushort s, ushort x, ushort y) => s >= x && s <= y;
+        public static bool Between(this ushort s, in ushort x, in ushort y) => s >= x && s <= y;
 
         /// <summary>
         /// Checks if a number is between two given numbers.
@@ -3643,7 +3641,7 @@ namespace WinCopies
         /// <param name="x">The left operand.</param>
         /// <param name="y">The right operand.</param>
         /// <returns><see langword="true"/> if <paramref name="i"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        public static bool Between(this int i, int x, int y) => i >= x && i <= y;
+        public static bool Between(this int i, in int x, in int y) => i >= x && i <= y;
 
         /// <summary>
         /// Checks if a number is between two given numbers.
@@ -3652,7 +3650,7 @@ namespace WinCopies
         /// <param name="x">The left operand.</param>
         /// <param name="y">The right operand.</param>
         /// <returns><see langword="true"/> if <paramref name="i"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        public static bool Between(this uint i, uint x, uint y) => i >= x && i <= y;
+        public static bool Between(this uint i, in uint x, in uint y) => i >= x && i <= y;
 
         /// <summary>
         /// Checks if a number is between two given numbers.
@@ -3661,7 +3659,7 @@ namespace WinCopies
         /// <param name="x">The left operand.</param>
         /// <param name="y">The right operand.</param>
         /// <returns><see langword="true"/> if <paramref name="l"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        public static bool Between(this long l, long x, long y) => l >= x && l <= y;
+        public static bool Between(this long l, in long x, in long y) => l >= x && l <= y;
 
         /// <summary>
         /// Checks if a number is between two given numbers.
@@ -3670,7 +3668,7 @@ namespace WinCopies
         /// <param name="x">The left operand.</param>
         /// <param name="y">The right operand.</param>
         /// <returns><see langword="true"/> if <paramref name="l"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        public static bool Between(this ulong l, ulong x, ulong y) => l >= x && l <= y;
+        public static bool Between(this ulong l, in ulong x, in ulong y) => l >= x && l <= y;
 
         /// <summary>
         /// Checks if a number is between two given numbers.
@@ -3679,7 +3677,7 @@ namespace WinCopies
         /// <param name="x">The left operand.</param>
         /// <param name="y">The right operand.</param>
         /// <returns><see langword="true"/> if <paramref name="f"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        public static bool Between(this float f, float x, float y) => f >= x && f <= y;
+        public static bool Between(this float f, in float x, in float y) => f >= x && f <= y;
 
         /// <summary>
         /// Checks if a number is between two given numbers.
@@ -3688,7 +3686,7 @@ namespace WinCopies
         /// <param name="x">The left operand.</param>
         /// <param name="y">The right operand.</param>
         /// <returns><see langword="true"/> if <paramref name="d"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        public static bool Between(this double d, double x, double y) => d >= x && d <= y;
+        public static bool Between(this double d, in double x, in double y) => d >= x && d <= y;
 
         /// <summary>
         /// Checks if a number is between two given numbers.
@@ -3697,7 +3695,7 @@ namespace WinCopies
         /// <param name="x">The left operand.</param>
         /// <param name="y">The right operand.</param>
         /// <returns><see langword="true"/> if <paramref name="d"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        public static bool Between(this decimal d, decimal x, decimal y) => d >= x && d <= y;
+        public static bool Between(this decimal d, in decimal x, in decimal y) => d >= x && d <= y;
 
 #if WinCopies2
         public static void ForEach(this IEnumerableEnumerator enumerator, LoopIteration func)

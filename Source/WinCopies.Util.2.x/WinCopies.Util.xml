@@ -1159,7 +1159,7 @@
             <seealso cref="M:WinCopies.Util.Extensions.IsValidEnumValue(System.Enum)"/>
             <seealso cref="M:WinCopies.Util.Extensions.ThrowIfNotValidEnumValue(System.Enum)"/>
         </member>
-        <member name="M:WinCopies.Util.Extensions.Between(System.SByte,System.SByte,System.SByte)">
+        <member name="M:WinCopies.Util.Extensions.Between(System.SByte,System.SByte@,System.SByte@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -1168,7 +1168,7 @@
             <param name="y">The right operand.</param>
             <returns><see langword="true"/> if <paramref name="b"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Util.Extensions.Between(System.Byte,System.Byte,System.Byte)">
+        <member name="M:WinCopies.Util.Extensions.Between(System.Byte,System.Byte@,System.Byte@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -1177,7 +1177,7 @@
             <param name="y">The right operand.</param>
             <returns><see langword="true"/> if <paramref name="b"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Util.Extensions.Between(System.Int16,System.Int16,System.Int16)">
+        <member name="M:WinCopies.Util.Extensions.Between(System.Int16,System.Int16@,System.Int16@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -1186,7 +1186,7 @@
             <param name="y">The right operand.</param>
             <returns><see langword="true"/> if <paramref name="s"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Util.Extensions.Between(System.UInt16,System.UInt16,System.UInt16)">
+        <member name="M:WinCopies.Util.Extensions.Between(System.UInt16,System.UInt16@,System.UInt16@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -1195,7 +1195,7 @@
             <param name="y">The right operand.</param>
             <returns><see langword="true"/> if <paramref name="s"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Util.Extensions.Between(System.Int32,System.Int32,System.Int32)">
+        <member name="M:WinCopies.Util.Extensions.Between(System.Int32,System.Int32@,System.Int32@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -1204,7 +1204,7 @@
             <param name="y">The right operand.</param>
             <returns><see langword="true"/> if <paramref name="i"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Util.Extensions.Between(System.UInt32,System.UInt32,System.UInt32)">
+        <member name="M:WinCopies.Util.Extensions.Between(System.UInt32,System.UInt32@,System.UInt32@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -1213,7 +1213,7 @@
             <param name="y">The right operand.</param>
             <returns><see langword="true"/> if <paramref name="i"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Util.Extensions.Between(System.Int64,System.Int64,System.Int64)">
+        <member name="M:WinCopies.Util.Extensions.Between(System.Int64,System.Int64@,System.Int64@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -1222,7 +1222,7 @@
             <param name="y">The right operand.</param>
             <returns><see langword="true"/> if <paramref name="l"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Util.Extensions.Between(System.UInt64,System.UInt64,System.UInt64)">
+        <member name="M:WinCopies.Util.Extensions.Between(System.UInt64,System.UInt64@,System.UInt64@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -1231,7 +1231,7 @@
             <param name="y">The right operand.</param>
             <returns><see langword="true"/> if <paramref name="l"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Util.Extensions.Between(System.Single,System.Single,System.Single)">
+        <member name="M:WinCopies.Util.Extensions.Between(System.Single,System.Single@,System.Single@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -1240,7 +1240,7 @@
             <param name="y">The right operand.</param>
             <returns><see langword="true"/> if <paramref name="f"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Util.Extensions.Between(System.Double,System.Double,System.Double)">
+        <member name="M:WinCopies.Util.Extensions.Between(System.Double,System.Double@,System.Double@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -1249,7 +1249,7 @@
             <param name="y">The right operand.</param>
             <returns><see langword="true"/> if <paramref name="d"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Util.Extensions.Between(System.Decimal,System.Decimal,System.Decimal)">
+        <member name="M:WinCopies.Util.Extensions.Between(System.Decimal,System.Decimal@,System.Decimal@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -2086,145 +2086,6 @@
             The value of the argument that failed.
             </summary>
         </member>
-        <member name="P:WinCopies.Collections.DotNetFix.QueueCollection`1.Count">
-            <summary>
-            Gets the number of elements contained in the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.
-            </summary>
-            <value>The number of elements contained in the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</value>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> class.
-            </summary>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.#ctor(System.Collections.Generic.Queue{`0}@)">
-            <summary>
-            Initializes a new instance of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> class with a custom queue.
-            </summary>
-            <param name="queue">The inner queue for this <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</param>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.ClearItems">
-            <summary>
-            Removes all objects from the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. Override this method to provide a custom implementation.
-            </summary>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.Clear">
-            <summary>
-            Removes all objects from the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.QueueCollection`1.ClearItems"/> method to provide a custom implementation.
-            </summary>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.Contains(`0)">
-            <summary>
-            Determines whether an element is in the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.
-            </summary>
-            <param name="item">The object to locate in the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. The value can be <see langword="null"/> for reference types.</param>
-            <returns><see langword="true"/> if <paramref name="item"/> is found in the <see cref="T:System.Collections.Generic.Queue`1"/>; otherwise, <see langword="false"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.CopyTo(`0[]@,System.Int32@)">
-            <summary>
-            Copies the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> elements to an existing one-dimensional <see cref="T:System.Array"/>, starting at the specified array index.
-            </summary>
-            <param name="array">The one-dimensional <see cref="T:System.Array"/> that is the destination of the elements copied from <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. The <see cref="T:System.Array"/> must have zero-based indexing.</param>
-            <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="array"/> is <see langword="null"/>.</exception>
-            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="arrayIndex"/> is less than zero.</exception>
-            <exception cref="T:System.ArgumentException">The number of elements in the source <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> is greater than the available space from <paramref name="arrayIndex"/> to the end of the destination array.</exception>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.DequeueItem">
-            <summary>
-            Removes and returns the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. Override this method to provide a custom implementation.
-            </summary>
-            <returns>The object that is removed from the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</returns>
-            <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> is empty.</exception>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.Dequeue">
-            <summary>
-            Removes and returns the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.QueueCollection`1.DequeueItem"/> to provide a custom implementation.
-            </summary>
-            <returns>The object that is removed from the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</returns>
-            <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="!:TryDequeue(out T)"/>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.EnqueueItem(`0)">
-            <summary>
-            Adds an object to the end of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. Override this method to provide a custom implementation.
-            </summary>
-            <param name="item">The object to add to the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. The value can be <see langword="null"/> for reference types.</param>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.Enqueue(`0@)">
-            <summary>
-            Adds an object to the end of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.QueueCollection`1.EnqueueItem(`0)"/> method to provide a custom implementation.
-            </summary>
-            <param name="item">The object to add to the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. The value can be <see langword="null"/> for reference types.</param>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.Peek">
-            <summary>
-            Returns the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> without removing it.
-            </summary>
-            <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</returns>
-            <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="!:TryPeek(out T)"/>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.ToArray">
-            <summary>
-            Copies the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> elements to a new array.
-            </summary>
-            <returns>A new array containing elements copied from the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TrimExcess">
-            <summary>
-            Sets the capacity to the actual number of elements in the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>, if that number is less than 90 percent of current capacity.
-            </summary>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.GetEnumerator">
-            <summary>
-            Returns an enumerator that iterates through the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.
-            </summary>
-            <returns>An <see cref="T:System.Collections.Generic.IEnumerator`1"/> for the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</returns>
-        </member>
-        <member name="P:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.Count">
-            <summary>
-            Gets the number of elements contained in the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.
-            </summary>
-            <value>The number of elements contained in the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</value>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.#ctor(System.Collections.Generic.Queue{`0}@)">
-            <summary>
-            Initializes a new instance of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> class with a custom <see cref="T:System.Collections.Generic.Queue`1"/>.
-            </summary>
-            <param name="queue">The inner <see cref="T:System.Collections.Generic.Queue`1"/> for this <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</param>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.Contains(`0)">
-            <summary>
-            Determines whether an element is in the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.
-            </summary>
-            <param name="item">The object to locate in the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. The value can be <see langword="null"/> for reference types.</param>
-            <returns><see langword="true"/> if <paramref name="item"/> is found in the <see cref="T:System.Collections.Generic.Queue`1"/>; otherwise, <see langword="false"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.CopyTo(`0[]@,System.Int32@)">
-            <summary>
-            Copies the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> elements to an existing one-dimensional <see cref="T:System.Array"/>, starting at the specified array index.
-            </summary>
-            <param name="array">The one-dimensional <see cref="T:System.Array"/> that is the destination of the elements copied from <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. The <see cref="T:System.Array"/> must have zero-based indexing.</param>
-            <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="array"/> is <see langword="null"/>.</exception>
-            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="arrayIndex"/> is less than zero.</exception>
-            <exception cref="T:System.ArgumentException">The number of elements in the source <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> is greater than the available space from <paramref name="arrayIndex"/> to the end of the destination array.</exception>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.Peek">
-            <summary>
-            Returns the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> without removing it.
-            </summary>
-            <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</returns>
-            <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="!:TryPeek(out T)"/>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.GetEnumerator">
-            <summary>
-            Returns an enumerator that iterates through the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.
-            </summary>
-            <returns>An <see cref="T:System.Collections.Generic.IEnumerator`1"/> for the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</returns>
-        </member>
         <member name="M:WinCopies.Collections.DotNetFix.Extensions.LinkedCollection`1.AddAfter(System.Collections.Generic.LinkedListNode{`0}@,System.Collections.Generic.LinkedListNode{`0}@)">
             <summary>
             Adds the specified new node after the specified existing node in the <see cref="T:WinCopies.Collections.DotNetFix.Extensions.LinkedCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.Extensions.LinkedCollection`1.AddItemAfter(System.Collections.Generic.LinkedListNode{`0},System.Collections.Generic.LinkedListNode{`0})"/> method to provide a custom implementation.
@@ -2300,6 +2161,176 @@
             <param name="value">The value to add at the end of the <see cref="T:WinCopies.Collections.DotNetFix.Extensions.LinkedCollection`1"/>.</param>
             <returns>The new <see cref="T:System.Collections.Generic.LinkedListNode`1"/> containing value.</returns>
             <seealso cref="M:WinCopies.Collections.DotNetFix.Extensions.LinkedCollection`1.AddLast(System.Collections.Generic.LinkedListNode{`0}@)"/>
+        </member>
+        <member name="P:WinCopies.Collections.DotNetFix.QueueCollection`1.Count">
+            <summary>
+            Gets the number of elements contained in the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.
+            </summary>
+            <value>The number of elements contained in the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</value>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> class.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.#ctor(System.Collections.Generic.Queue{`0}@)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> class with a custom queue.
+            </summary>
+            <param name="queue">The inner queue for this <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</param>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.ClearItems">
+            <summary>
+            Removes all objects from the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. Override this method to provide a custom implementation.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.Clear">
+            <summary>
+            Removes all objects from the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.QueueCollection`1.ClearItems"/> method to provide a custom implementation.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.Contains(`0)">
+            <summary>
+            Determines whether an element is in the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.
+            </summary>
+            <param name="item">The object to locate in the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. The value can be <see langword="null"/> for reference types.</param>
+            <returns><see langword="true"/> if <paramref name="item"/> is found in the <see cref="T:System.Collections.Generic.Queue`1"/>; otherwise, <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.CopyTo(`0[]@,System.Int32@)">
+            <summary>
+            Copies the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> elements to an existing one-dimensional <see cref="T:System.Array"/>, starting at the specified array index.
+            </summary>
+            <param name="array">The one-dimensional <see cref="T:System.Array"/> that is the destination of the elements copied from <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. The <see cref="T:System.Array"/> must have zero-based indexing.</param>
+            <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="array"/> is <see langword="null"/>.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="arrayIndex"/> is less than zero.</exception>
+            <exception cref="T:System.ArgumentException">The number of elements in the source <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> is greater than the available space from <paramref name="arrayIndex"/> to the end of the destination array.</exception>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.DequeueItem">
+            <summary>
+            Removes and returns the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. Override this method to provide a custom implementation.
+            </summary>
+            <returns>The object that is removed from the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</returns>
+            <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> is empty.</exception>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.Dequeue">
+            <summary>
+            Removes and returns the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.QueueCollection`1.DequeueItem"/> to provide a custom implementation.
+            </summary>
+            <returns>The object that is removed from the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</returns>
+            <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> is empty.</exception>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryDequeue(`0@)"/>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.EnqueueItem(`0)">
+            <summary>
+            Adds an object to the end of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. Override this method to provide a custom implementation.
+            </summary>
+            <param name="item">The object to add to the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. The value can be <see langword="null"/> for reference types.</param>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.Enqueue(`0@)">
+            <summary>
+            Adds an object to the end of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.QueueCollection`1.EnqueueItem(`0)"/> method to provide a custom implementation.
+            </summary>
+            <param name="item">The object to add to the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. The value can be <see langword="null"/> for reference types.</param>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.Peek">
+            <summary>
+            Returns the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> without removing it.
+            </summary>
+            <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</returns>
+            <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> is empty.</exception>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryPeek(`0@)"/>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.ToArray">
+            <summary>
+            Copies the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> elements to a new array.
+            </summary>
+            <returns>A new array containing elements copied from the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TrimExcess">
+            <summary>
+            Sets the capacity to the actual number of elements in the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>, if that number is less than 90 percent of current capacity.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryDequeueItem(`0@)">
+            <summary>
+            Tries to remove and return the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. Override this method to provide a custom implementation.
+            </summary>
+            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been removed and retrieved.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryDequeue(`0@)">
+            <summary>
+            Tries to remove and return the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryDequeueItem(`0@)"/> method to provide a custom implementation.
+            </summary>
+            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been removed and retrieved.</returns>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.QueueCollection`1.Dequeue"/>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryPeek(`0@)">
+            <summary>
+            Tries to peek the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> without removing it.
+            </summary>
+            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been retrieved.</returns>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.QueueCollection`1.Peek"/>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.
+            </summary>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerator`1"/> for the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</returns>
+        </member>
+        <member name="P:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.Count">
+            <summary>
+            Gets the number of elements contained in the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.
+            </summary>
+            <value>The number of elements contained in the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</value>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.#ctor(System.Collections.Generic.Queue{`0}@)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> class with a custom <see cref="T:System.Collections.Generic.Queue`1"/>.
+            </summary>
+            <param name="queue">The inner <see cref="T:System.Collections.Generic.Queue`1"/> for this <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</param>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.Contains(`0)">
+            <summary>
+            Determines whether an element is in the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.
+            </summary>
+            <param name="item">The object to locate in the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. The value can be <see langword="null"/> for reference types.</param>
+            <returns><see langword="true"/> if <paramref name="item"/> is found in the <see cref="T:System.Collections.Generic.Queue`1"/>; otherwise, <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.CopyTo(`0[]@,System.Int32@)">
+            <summary>
+            Copies the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> elements to an existing one-dimensional <see cref="T:System.Array"/>, starting at the specified array index.
+            </summary>
+            <param name="array">The one-dimensional <see cref="T:System.Array"/> that is the destination of the elements copied from <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. The <see cref="T:System.Array"/> must have zero-based indexing.</param>
+            <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="array"/> is <see langword="null"/>.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="arrayIndex"/> is less than zero.</exception>
+            <exception cref="T:System.ArgumentException">The number of elements in the source <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> is greater than the available space from <paramref name="arrayIndex"/> to the end of the destination array.</exception>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.Peek">
+            <summary>
+            Returns the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> without removing it.
+            </summary>
+            <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</returns>
+            <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> is empty.</exception>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.TryPeek(`0@)"/>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.TryPeek(`0@)">
+            <summary>
+            Tries to peek the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> without removing it.
+            </summary>
+            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been retrieved.</returns>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.Peek"/>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.
+            </summary>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerator`1"/> for the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</returns>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddAfter(System.Collections.Generic.LinkedListNode{`0}@,System.Collections.Generic.LinkedListNode{`0}@)">
             <summary>
@@ -3226,50 +3257,6 @@
         <member name="M:WinCopies.Collections.TreeNode`1.Insert(System.Int32,WinCopies.Collections.TreeNode{`0})">
             <summary>
             Inserts a given item at a specified index in this <see cref="T:WinCopies.Collections.TreeNode`1"/>.
-            </summary>
-            <param name="index">The index of the new item.</param>
-            <param name="item">The item to insert in this <see cref="T:WinCopies.Collections.TreeNode`1"/>.</param>
-        </member>
-        <member name="M:WinCopies.Collections.TreeNode`1.CopyTo(WinCopies.Collections.TreeNode{`0}[],System.Int32)">
-            <summary>
-            Performs a shallow copy of the items that the current <see cref="T:WinCopies.Collections.TreeNode`1"/> directly contains starting at a given index of a given array of <see cref="T:WinCopies.Collections.TreeNode`1"/>.
-            </summary>
-            <param name="array">The array in which to store the shallow copies of the items that <see cref="T:WinCopies.Collections.TreeNode`1"/> directly contains.</param>
-            <param name="arrayIndex">The index from which to store the items in <paramref name="array"/>.</param>
-        </member>
-        <member name="M:WinCopies.Collections.TreeNode`1.Clear">
-            <summary>
-            Removes all items of this <see cref="T:WinCopies.Collections.TreeNode`1"/>.
-            </summary>
-            <seealso cref="M:WinCopies.Collections.TreeNode`1.ClearItems"/>
-        </member>
-        <member name="M:WinCopies.Collections.ThrowHelper.GetReadOnlyListOrCollectionException">
-            <summary>
-            Returns an exception indicating that a list or collection is read-only.
-            </summary>
-            <returns>An exception indicating that a list or collection is read-only.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.ThrowHelper.GetEmptyListOrCollectionException">
-            <summary>
-            Returns an exception indicating that a list or collection is empty.
-            </summary>
-            <returns>An exception indicating that a list or collection is empty.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.ThrowHelper.ThrowIfEmpty(WinCopies.Collections.ICountable@)">
-            <summary>
-            Throws the exception given by <see cref="M:WinCopies.Collections.ThrowHelper.GetEmptyListOrCollectionException"/> if the <see cref="P:WinCopies.Collections.ICountable.Count"/> property of a given <see cref="T:WinCopies.Collections.ICountable"/> object is equal to 0.
-            </summary>
-            <param name="obj">The <see cref="T:WinCopies.Collections.ICountable"/> object for which to check the <see cref="P:WinCopies.Collections.ICountable.Count"/> property.</param>
-        </member>
-        <member name="M:WinCopies.Collections.ThrowHelper.ThrowIfEmpty(WinCopies.Collections.IUIntCountable@)">
-            <summary>
-            Throws the exception given by <see cref="M:WinCopies.Collections.ThrowHelper.GetEmptyListOrCollectionException"/> if the <see cref="P:WinCopies.Collections.IUIntCountable.Count"/> property of a given <see cref="T:WinCopies.Collections.IUIntCountable"/> object is equal to 0.
-            </summary>
-            <param name="obj">The <see cref="T:WinCopies.Collections.IUIntCountable"/> object for which to check the <see cref="P:WinCopies.Collections.IUIntCountable.Count"/> property.</param>
-        </member>
-    </members>
-</doc>
- Inserts a given item at a specified index in this <see cref="T:WinCopies.Collections.TreeNode`1"/>.
             </summary>
             <param name="index">The index of the new item.</param>
             <param name="item">The item to insert in this <see cref="T:WinCopies.Collections.TreeNode`1"/>.</param>

@@ -18,14 +18,6 @@
 using System.Collections;
 using System.Collections.Generic;
 
-#if WinCopies2
-using static WinCopies.Util.Util;
-
-using System.Runtime.Serialization;
-
-using WinCopies.Util;
-#endif
-
 namespace WinCopies.Collections.DotNetFix.Generic
 {
 #if WinCopies2

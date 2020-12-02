@@ -21,18 +21,15 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-using WinCopies
 #if WinCopies2
-    .Util
-#else
-    .Collections
+using WinCopies.Util.Resources;
 #endif
-    .Resources;
+
+using WinCopies.Collections.Generic;
 
 #if WinCopies2
 using System.Runtime.Serialization;
 #else
-using WinCopies.Collections.Generic;
 using WinCopies.Linq;
 
 using static WinCopies.ThrowHelper;
@@ -69,9 +66,10 @@ namespace WinCopies.Collections.DotNetFix
         [DebuggerDisplay("Count = {Count}")]
         public class LinkedList<T> :
 #if WinCopies2
-            System.Collections.Generic.LinkedList<T>,
-#endif
+            System.Collections.Generic.LinkedList<T>, ILinkedList2<T>
+#else
             ILinkedList3<T>, ISortable<T>
+#endif
         {
             #region Properties
             public bool IsReadOnly => false;
@@ -328,20 +326,25 @@ namespace WinCopies.Collections.DotNetFix
                 }
             }
 
-            private void OnWeld()
+            private void IncrementEnumerableVersion()
             {
                 if (_enumeratorsCount > 0)
 
                     EnumerableVersion++;
             }
 
-            private void OnNewItemAdded(in LinkedListNode node)
+            private void OnNodeAdded(in LinkedListNode node)
             {
                 node.List = this;
 
                 Count++;
+            }
 
-                OnWeld();
+            private void OnNewItemAdded(in LinkedListNode node)
+            {
+                OnNodeAdded(node);
+
+                IncrementEnumerableVersion();
             }
 
             private void ReInitNodes()
@@ -357,28 +360,41 @@ namespace WinCopies.Collections.DotNetFix
 
                 Count--;
 
-                OnWeld();
+                IncrementEnumerableVersion();
 
                 if (Count == 0)
 
                     ReInitNodes();
             }
 
-            private void Weld(in LinkedListNode previous, in LinkedListNode newNode, in LinkedListNode next)
+            private void _Weld(in LinkedListNode previous, in LinkedListNode newNode, in LinkedListNode next)
             {
-                if (previous != null)
+                if (previous == null) // If previous is null, next is First. So, we replace First by newNode.
+
+                    First = newNode;
+
+                else
                 {
                     previous.Next = newNode;
 
                     newNode.Previous = previous;
                 }
 
-                if (next != null)
+                if (next == null) // If next is null, previous is Last. So, we replace Last by newNode.
+
+                    Last = newNode;
+
+                else
                 {
                     newNode.Next = next;
 
                     next.Previous = newNode;
                 }
+            }
+
+            private void Weld(in LinkedListNode previous, in LinkedListNode newNode, in LinkedListNode next)
+            {
+                _Weld(previous, newNode, next);
 
                 OnNewItemAdded(newNode);
             }
@@ -428,7 +444,7 @@ namespace WinCopies.Collections.DotNetFix
                 _AddAfter(addAfter, node);
             }
 
-            private void _AddAfter(LinkedListNode addAfter, LinkedListNode node) => Weld(addAfter, node, node.Next);
+            private void _AddAfter(LinkedListNode addAfter, LinkedListNode node) => Weld(addAfter, node, addAfter.Next);
 
             ILinkedListNode<T> ILinkedList<T>.AddBefore(ILinkedListNode<T> node, T value)
             {
@@ -681,19 +697,8 @@ namespace WinCopies.Collections.DotNetFix
             #endregion
 #endif
 
-            protected bool OnNodeCoupleAction(in
-#if WinCopies2
-            System.Collections.Generic.LinkedListNode
-#else
-            ILinkedListNode
-#endif
-            <T> x, in string xArgumentName, in
-#if WinCopies2
-            System.Collections.Generic.LinkedListNode
-#else
-            ILinkedListNode
-#endif
-            <T> y, in string yArgumentName, in Func<LinkedListNode, LinkedListNode, bool> func)
+#if !WinCopies2
+            protected bool OnNodeCoupleAction(in ILinkedListNode<T> x, in string xArgumentName, in ILinkedListNode<T> y, in string yArgumentName, in Func<LinkedListNode, LinkedListNode, bool> func)
             {
                 ThrowIfNull(x, xArgumentName);
                 ThrowIfNull(y, yArgumentName);
@@ -730,19 +735,7 @@ namespace WinCopies.Collections.DotNetFix
                 _Remove(node);
             }
 
-            bool ILinkedList3<T>.MoveAfter(
-#if WinCopies2
-            System.Collections.Generic.LinkedListNode
-#else
-            ILinkedListNode
-#endif
-            <T> node,
-#if WinCopies2
-            System.Collections.Generic.LinkedListNode
-#else
-            ILinkedListNode
-#endif
-            <T> after) => OnNodeCoupleAction(node, nameof(node), after, nameof(after), _MoveAfter);
+            bool ILinkedList3<T>.MoveAfter(ILinkedListNode<T> node, ILinkedListNode<T> after) => OnNodeCoupleAction(node, nameof(node), after, nameof(after), _MoveAfter);
 
             public bool MoveAfter(in LinkedListNode node, in LinkedListNode after) => _MoveAfter(node ?? throw GetArgumentNullException(nameof(node)), after ?? throw GetArgumentNullException(nameof(after)));
 
@@ -754,24 +747,16 @@ namespace WinCopies.Collections.DotNetFix
 
                 OnMove(node, nameof(node), after, nameof(after));
 
-                AddAfter(after, node);
+                // As OnMove calls a method stack that update EnumerableVersion, we just need to call _Weld and OnNodeAdded().
+
+                _Weld(after, node, after.Next);
+
+                OnNodeAdded(node);
 
                 return true;
             }
 
-            bool ILinkedList3<T>.MoveBefore(
-#if WinCopies2
-            System.Collections.Generic.LinkedListNode
-#else
-            ILinkedListNode
-#endif
-            <T> node,
-#if WinCopies2
-            System.Collections.Generic.LinkedListNode
-#else
-            ILinkedListNode
-#endif
-            <T> before) => OnNodeCoupleAction(node, nameof(node), before, nameof(before), _MoveBefore);
+            bool ILinkedList3<T>.MoveBefore(ILinkedListNode<T> node, ILinkedListNode<T> before) => OnNodeCoupleAction(node, nameof(node), before, nameof(before), _MoveBefore);
 
             public bool MoveBefore(in LinkedListNode node, in LinkedListNode before) => _MoveBefore(node ?? throw GetArgumentNullException(nameof(node)), before ?? throw GetArgumentNullException(nameof(before)));
 
@@ -783,7 +768,11 @@ namespace WinCopies.Collections.DotNetFix
 
                 OnMove(node, nameof(node), before, nameof(before));
 
-                AddBefore(before, node);
+                // As OnMove calls a method stack that update EnumerableVersion, we just need to call _Weld and OnNodeAdded().
+
+                _Weld(before.Previous, node, before);
+
+                OnNodeAdded(node);
 
                 return true;
             }
@@ -798,14 +787,85 @@ namespace WinCopies.Collections.DotNetFix
                 ThrowIfNodesAreEqual(x, y);
                 _ThrowIfNotContainedNode(y, nameof(y));
 
-                LinkedListNode tempPrevious = y.Previous;
-                LinkedListNode tempNext = y.Next;
 
-                y.Previous = x.Previous;
-                y.Next = x.Next;
 
-                x.Previous = tempPrevious;
-                x.Next = tempNext;
+                void swap(in LinkedListNode _x, in LinkedListNode _y)
+                {
+                    LinkedListNode[] nodes = { _x.Previous, _y, _x, _y.Next };
+
+                    _y.Previous = null;
+                    _x.Next = null;
+
+                    _Weld(nodes[0], nodes[1], nodes[2]);
+
+                    nodes[2].Next = nodes[3];
+
+                    if (nodes[3] != null)
+
+                        nodes[3].Previous = nodes[2];
+                }
+
+
+
+                IncrementEnumerableVersion();
+
+
+
+                //Action updateFirst = null;
+                //Action updateLast = null;
+
+
+
+                if (x == First)
+
+                    First = y;
+
+                else if (y == First)
+
+                    First = x;
+
+
+
+                if (x == Last)
+
+                    Last = y;
+
+                else if (y == Last)
+
+                    Last = x;
+
+
+
+                if (x.Next == y)
+
+                    swap(x, y);
+
+                else if (y.Next == x)
+
+                    swap(y, x);
+
+                else
+                {
+                    LinkedListNode[] nodes = { x.Previous, y, x.Next, y.Previous, x, y.Next };
+
+                    y.Previous = null;
+                    y.Next = null;
+                    x.Previous = null;
+                    x.Next = null;
+
+                    _Weld(nodes[0], nodes[1], nodes[2]);
+
+                    _Weld(nodes[3], nodes[4], nodes[5]);
+
+                    //LinkedListNode tempPrevious = y.Previous;
+                    //LinkedListNode tempNext = y.Next;
+
+                    //y.Previous = x.Previous;
+                    //y.Next = x.Next;
+
+                    //x.Previous = tempPrevious;
+                    //x.Next = tempNext;
+                }
 
                 return true;
             }
@@ -823,19 +883,31 @@ namespace WinCopies.Collections.DotNetFix
                 LinkedListNode current = Last;
                 LinkedListNode _previous;
 
+                void sort()
+                {
+                    _previous = _previous.Previous;
+
+#if DEBUG
+                    if (_previous == null)
+
+                        throw new Exception();
+#endif
+
+                    if (comparison(_previous, max) > 0)
+
+                        max = _previous;
+                }
+
                 for (uint i = Count - 1; i > 0; i--)
                 {
                     max = current;
                     _previous = current;
 
-                    for (uint j = i - 1; j >= 0; j--)
-                    {
-                        _previous = _previous.Previous;
+                    for (uint j = i - 1; j > 0; j--)
 
-                        if (comparison(_previous, max) > 0)
+                        sort();
 
-                            max = _previous;
-                    }
+                    sort(); // In order to avoid uint j >= 0; j--, because uint j = 0; j-- won't result to -1.
 
                     if (current == max)
 
@@ -850,6 +922,7 @@ namespace WinCopies.Collections.DotNetFix
                 }
             }
             #endregion
+#endif
         }
 #if !WinCopies2
     }

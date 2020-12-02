@@ -167,48 +167,14 @@ System.Collections.Generic.LinkedListNode
         bool IsReadOnly { get; }
     }
 
+#if !WinCopies2
     public interface ILinkedList3<T> : ILinkedList2<T>
     {
-        bool MoveAfter(
-#if WinCopies2
-            System.Collections.Generic.LinkedListNode
-#else
-            ILinkedListNode
-#endif
-            <T> node,
-#if WinCopies2
-            System.Collections.Generic.LinkedListNode
-#else
-            ILinkedListNode
-#endif
-            <T> after);
+        bool MoveAfter(ILinkedListNode<T> node, ILinkedListNode<T> after);
 
-        bool MoveBefore(
-#if WinCopies2
-            System.Collections.Generic.LinkedListNode
-#else
-            ILinkedListNode
-#endif
-            <T> node,
-#if WinCopies2
-            System.Collections.Generic.LinkedListNode
-#else
-            ILinkedListNode
-#endif
-            <T> before);
+        bool MoveBefore(ILinkedListNode<T> node, ILinkedListNode<T> before);
 
-        void Swap(
-#if WinCopies2
-            System.Collections.Generic.LinkedListNode
-#else
-            ILinkedListNode
-#endif
-            <T> x,
-#if WinCopies2
-            System.Collections.Generic.LinkedListNode
-#else
-            ILinkedListNode
-#endif
-            <T> y);
+        void Swap(ILinkedListNode<T> x, ILinkedListNode<T> y);
     }
+#endif
 }

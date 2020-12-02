@@ -42,7 +42,7 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "WinCopies.Collections.Tests
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinCopies.Util.Extensions.Tests", "..\Tests\WinCopies.Util.Extensions.Tests\WinCopies.Util.Extensions.Tests.csproj", "{324F290D-7D29-4ECB-BC9C-2A5B856057B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinCopies.Util.2.x.Tests", "..\Tests\WinCopies.Util.2.x.Tests\WinCopies.Util.2.x.Tests.csproj", "{02632237-A279-4811-8E16-695015578677}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinCopies.Util.2.x.Tests", "..\Tests\WinCopies.Util.2.x.Tests\WinCopies.Util.2.x.Tests.csproj", "{02632237-A279-4811-8E16-695015578677}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution

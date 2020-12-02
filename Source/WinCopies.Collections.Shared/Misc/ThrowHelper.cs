@@ -16,11 +16,14 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using System;
-using WinCopies.Collections.DotNetFix.Generic;
 
 #if WinCopies2
+using WinCopies.Collections.DotNetFix;
+
 using static WinCopies.Util.Resources.ExceptionMessages;
 #else
+using WinCopies.Collections.DotNetFix.Generic;
+
 using static WinCopies.UtilHelpers;
 using static WinCopies.ThrowHelper;
 using static WinCopies.Resources.ExceptionMessages;

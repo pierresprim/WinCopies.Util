@@ -17,12 +17,13 @@ Updates
 - Additions:
 	- Add GetIf methods in WinCopies.Util.Extensions.
 	- Add ArrayMerger class.
+	- Methods to the LinkedList class.
 
 11/01/2020 3.0.0-preview
 ========================
 
 - Changes:
-	- WinCopies.Util namespace to WinCopies (WinCopies.Util.Data namespace has not changed because of WinCopies.Data package.
+	- WinCopies.Util namespace to WinCopies (WinCopies.Util.Data namespace has not changed because of WinCopies.Data package).
 	- IBackgroundWorker interface moved to WinCopies.Util.Desktop package. Some items and names have changed.
 	- Some obsolete types and members have been removed.
 
@@ -56,6 +57,7 @@ WinCopies.Util 3.0.0-preview
 			- UIntIndexedCollectionEnumerator\<T>
 			- ReadOnlyObservableCollection\<T>
 - Changes:
+	- All linked lists (Stack and Stack-based, Queue and Queue-based and linked lists and collections) are now completely WinCopies Framework native and have changed consequently.
 	- Classes:
 		- WinCopies.Util.Util => WinCopies.UtilHelpers
 	- Enums:
@@ -92,7 +94,10 @@ WinCopies.Util (2.6.1)
 	- Add new (Bit)Array static and extension methods.
 	- ILinkedList3
 	- ISortable
-	- Collection exception helper methods.
+	- Static methods:
+		- Array moving and swapping methods.
+		- Collection exception helper methods.
+		- Other exception helper methods.
 
 WinCopies.Util.Desktop (2.6.1)
 ------------------------------

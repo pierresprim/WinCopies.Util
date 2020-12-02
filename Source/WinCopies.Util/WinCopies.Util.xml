@@ -417,7 +417,7 @@
             <returns><see langword="true"/> if <paramref name="flagsEnum"/> type has the <see cref="T:System.FlagsAttribute"/> and has multiple flags; otherwise, <see langword="false"/>.</returns>
             <remarks><paramref name="flagsEnum"/> type must have the <see cref="T:System.FlagsAttribute"/>.</remarks>
         </member>
-        <member name="M:WinCopies.Extensions.Between(System.SByte,System.SByte,System.SByte)">
+        <member name="M:WinCopies.Extensions.Between(System.SByte,System.SByte@,System.SByte@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -426,7 +426,7 @@
             <param name="y">The right operand.</param>
             <returns><see langword="true"/> if <paramref name="b"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Extensions.Between(System.Byte,System.Byte,System.Byte)">
+        <member name="M:WinCopies.Extensions.Between(System.Byte,System.Byte@,System.Byte@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -435,7 +435,7 @@
             <param name="y">The right operand.</param>
             <returns><see langword="true"/> if <paramref name="b"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Extensions.Between(System.Int16,System.Int16,System.Int16)">
+        <member name="M:WinCopies.Extensions.Between(System.Int16,System.Int16@,System.Int16@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -444,7 +444,7 @@
             <param name="y">The right operand.</param>
             <returns><see langword="true"/> if <paramref name="s"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Extensions.Between(System.UInt16,System.UInt16,System.UInt16)">
+        <member name="M:WinCopies.Extensions.Between(System.UInt16,System.UInt16@,System.UInt16@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -453,7 +453,7 @@
             <param name="y">The right operand.</param>
             <returns><see langword="true"/> if <paramref name="s"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Extensions.Between(System.Int32,System.Int32,System.Int32)">
+        <member name="M:WinCopies.Extensions.Between(System.Int32,System.Int32@,System.Int32@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -462,7 +462,7 @@
             <param name="y">The right operand.</param>
             <returns><see langword="true"/> if <paramref name="i"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Extensions.Between(System.UInt32,System.UInt32,System.UInt32)">
+        <member name="M:WinCopies.Extensions.Between(System.UInt32,System.UInt32@,System.UInt32@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -471,7 +471,7 @@
             <param name="y">The right operand.</param>
             <returns><see langword="true"/> if <paramref name="i"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Extensions.Between(System.Int64,System.Int64,System.Int64)">
+        <member name="M:WinCopies.Extensions.Between(System.Int64,System.Int64@,System.Int64@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -480,7 +480,7 @@
             <param name="y">The right operand.</param>
             <returns><see langword="true"/> if <paramref name="l"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Extensions.Between(System.UInt64,System.UInt64,System.UInt64)">
+        <member name="M:WinCopies.Extensions.Between(System.UInt64,System.UInt64@,System.UInt64@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -489,7 +489,7 @@
             <param name="y">The right operand.</param>
             <returns><see langword="true"/> if <paramref name="l"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Extensions.Between(System.Single,System.Single,System.Single)">
+        <member name="M:WinCopies.Extensions.Between(System.Single,System.Single@,System.Single@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -498,7 +498,7 @@
             <param name="y">The right operand.</param>
             <returns><see langword="true"/> if <paramref name="f"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Extensions.Between(System.Double,System.Double,System.Double)">
+        <member name="M:WinCopies.Extensions.Between(System.Double,System.Double@,System.Double@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -507,7 +507,7 @@
             <param name="y">The right operand.</param>
             <returns><see langword="true"/> if <paramref name="d"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Extensions.Between(System.Decimal,System.Decimal,System.Decimal)">
+        <member name="M:WinCopies.Extensions.Between(System.Decimal,System.Decimal@,System.Decimal@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
