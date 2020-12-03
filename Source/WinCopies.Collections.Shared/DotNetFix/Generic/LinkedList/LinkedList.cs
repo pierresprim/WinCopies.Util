@@ -577,7 +577,9 @@ namespace WinCopies.Collections.DotNetFix
 
             public System.Collections.Generic.IEnumerator<LinkedListNode> GetNodeEnumerator(in EnumerationDirection enumerationDirection) => new Enumerator(this, enumerationDirection);
 
-            System.Collections.Generic.IEnumerator<ILinkedListNode<T>> ILinkedList<T>.GetNodeEnumerator(EnumerationDirection enumerationDirection) => GetNodeEnumerator(enumerationDirection);
+            System.Collections.Generic.IEnumerator<ILinkedListNode<T>> ILinkedList3<T>.GetNodeEnumerator(EnumerationDirection enumerationDirection) => GetNodeEnumerator(enumerationDirection);
+
+            System.Collections.Generic.IEnumerator<ILinkedListNode<T>> System.Collections.Generic.IEnumerable<ILinkedListNode<T>>.GetEnumerator() => GetNodeEnumerator(EnumerationDirection.FIFO);
 
             public void Remove(LinkedListNode node)
             {
@@ -586,7 +588,7 @@ namespace WinCopies.Collections.DotNetFix
                 _Remove(node);
             }
 
-            public void _Remove(LinkedListNode node)
+            private void _Remove(LinkedListNode node)
             {
                 if (node == First)
 
@@ -606,7 +608,9 @@ namespace WinCopies.Collections.DotNetFix
 
             void ILinkedList<T>.Remove(ILinkedListNode<T> node) => Remove(node as LinkedListNode ?? throw new ArgumentException($"{nameof(node)} must be an instance of {nameof(LinkedListNode)}."));
 
-            public bool Remove(T item)
+            public bool Remove(T item) => Remove2(item) != null;
+
+            public LinkedListNode Remove2(T item)
             {
                 ILinkedListNode<T> node = Find(item);
 
@@ -614,11 +618,13 @@ namespace WinCopies.Collections.DotNetFix
                 {
                     Remove(_node);
 
-                    return true;
+                    return _node;
                 }
 
-                return false;
+                return null;
             }
+
+            ILinkedListNode<T> ILinkedList3<T>.Remove(T item) => Remove2(item);
 
             public void RemoveFirst()
             {

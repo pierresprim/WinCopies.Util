@@ -204,9 +204,8 @@
             <returns>The new <see cref="T:System.Collections.Generic.LinkedListNode`1"/> containing value.</returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
             <exception cref="T:System.InvalidOperationException"><paramref name="node"/> is not in the current <see cref="T:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1"/>.</exception>
-            <seealso cref="!:AddAfter(in System.Collections.Generic.LinkedListNode&lt;T&gt;, in System.Collections.Generic.LinkedListNode&lt;T&gt;)"/>
         </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1.AddBefore(WinCopies.Collections.DotNetFix.Generic.ILinkedListNode{`0}@,`0@)">
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1.AddBefore(WinCopies.Collections.DotNetFix.Generic.ILinkedListNode{`0},`0)">
             <summary>
             Adds a new node containing the specified value before the specified existing node in the <see cref="T:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1"/>. Override the <see cref="!:AddItemBefore(System.Collections.Generic.LinkedListNode&lt;T&gt;, T)"/> method to provide a custom implementation.
             </summary>
@@ -215,23 +214,20 @@
             <returns>The new <see cref="T:System.Collections.Generic.LinkedListNode`1"/> containing value.</returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
             <exception cref="T:System.InvalidOperationException"><paramref name="node"/> is not in the current <see cref="T:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1"/>.</exception>
-            <seealso cref="!:AddBefore(in System.Collections.Generic.LinkedListNode&lt;T&gt;, in System.Collections.Generic.LinkedListNode&lt;T&gt;)"/>
         </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1.AddFirst(`0@)">
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1.AddFirst(`0)">
             <summary>
             Adds a new node containing the specified value at the start of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1.AddFirstItem(`0)"/> method to provide a custom implementation.
             </summary>
             <param name="value">The value to add at the start of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1"/>.</param>
             <returns>The new <see cref="T:System.Collections.Generic.LinkedListNode`1"/> containing value.</returns>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1.AddFirst(`0@)"/>
         </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1.AddLast(`0@)">
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1.AddLast(`0)">
             <summary>
             Adds a new node containing the specified value at the end of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1.AddLastItem(`0)"/> method to provide a custom implementation.
             </summary>
             <param name="value">The value to add at the end of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1"/>.</param>
             <returns>The new <see cref="T:System.Collections.Generic.LinkedListNode`1"/> containing value.</returns>
-            <seealso cref="!:AddLast(in System.Collections.Generic.LinkedListNode&lt;T&gt;)"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.Generic.LinkedList`1.#ctor">
             <summary>
@@ -614,7 +610,7 @@
             Initializes a new instance of the <see cref="T:WinCopies.Collections.Generic.ArrayMerger`1"/> class.
             </summary>
         </member>
-        <member name="M:WinCopies.Collections.Generic.ArrayMerger`1.#ctor(System.Collections.Generic.IEnumerable{WinCopies.Collections.DotNetFix.ICountableEnumerable{`0}}@)">
+        <member name="M:WinCopies.Collections.Generic.ArrayMerger`1.#ctor(System.Collections.Generic.IEnumerable{WinCopies.Collections.DotNetFix.Generic.IUIntCountableEnumerable{`0}}@)">
             <summary>
             Initializes a new instance of the <see cref="T:WinCopies.Collections.Generic.ArrayMerger`1"/> class with a given <see cref="T:WinCopies.Collections.Generic.IEnumerable`1"/>.
             </summary>

@@ -17,7 +17,6 @@
 
 using System.Collections;
 
-using WinCopies.Collections.DotNetFix;
 using WinCopies.Collections.DotNetFix.Generic;
 
 namespace WinCopies.Collections.Generic
@@ -33,5 +32,20 @@ namespace WinCopies.Collections.Generic
         public System.Collections.Generic.IEnumerator<T> GetEnumerator() => new ArrayEnumerator<T>(_array);
 
         System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    }
+
+    public class UIntCountableEnumerableArray<T> : IUIntCountableEnumerable<T>
+    {
+        private CountableEnumerableArray<T> _array;
+
+        public UIntCountableEnumerableArray(T[] array) : this(new CountableEnumerableArray<T>(array)) { /* Left empty. */ }
+
+        public UIntCountableEnumerableArray(CountableEnumerableArray<T> array) => _array = array;
+
+        public uint Count => (uint)_array.Count;
+
+        public System.Collections.Generic.IEnumerator<T> GetEnumerator() => _array.GetEnumerator();
+
+        System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_array).GetEnumerator();
     }
 }

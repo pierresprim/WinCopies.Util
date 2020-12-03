@@ -32,7 +32,7 @@ namespace WinCopies.Collections.DotNetFix
 #if WinCopies2
             ISerializable, IDeserializationCallback, System.Collections.Generic.IEnumerable<T>,
 #else
-            IUIntCountableEnumerable<T>, Collections.Generic.IEnumerable<T>,
+            IUIntCountableEnumerable<T>, Collections.Generic.IEnumerable<T> /* In order to have the GetReversedEnumerator() method. */,
 #endif
             ICollection<T>, ICollection, IReadOnlyCollection<T>
     {
@@ -145,10 +145,6 @@ System.Collections.Generic.LinkedList<T>.Enumerator
 #endif
                 GetEnumerator();
 
-#if !WinCopies2
-        System.Collections.Generic.IEnumerator<ILinkedListNode<T>> GetNodeEnumerator(EnumerationDirection enumerationDirection);
-#endif
-
         void Remove(
 #if WinCopies2
 System.Collections.Generic.LinkedListNode
@@ -168,8 +164,14 @@ System.Collections.Generic.LinkedListNode
     }
 
 #if !WinCopies2
-    public interface ILinkedList3<T> : ILinkedList2<T>
+    public interface ILinkedList3<T> : ILinkedList2<T>, IUIntCountableEnumerable<ILinkedListNode<T>>
     {
+        System.Collections.Generic.IEnumerator<T> GetEnumerator(EnumerationDirection enumerationDirection);
+
+        System.Collections.Generic.IEnumerator<ILinkedListNode<T>> GetNodeEnumerator(EnumerationDirection enumerationDirection);
+
+        ILinkedListNode<T> Remove(T item);
+
         bool MoveAfter(ILinkedListNode<T> node, ILinkedListNode<T> after);
 
         bool MoveBefore(ILinkedListNode<T> node, ILinkedListNode<T> before);

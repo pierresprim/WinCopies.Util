@@ -79,7 +79,9 @@ int
 #if WinCopies2
         new System.Collections.Generic.LinkedList<T>.Enumerator GetEnumerator();
 #else
-            System.Collections.Generic.IEnumerator<ILinkedListNode<T>> GetNodeEnumerator(EnumerationDirection enumerationDirection);
+        // Not available because the GetNodeEnumerator() is now in ILinkedList3<T> for better compatibility.
+
+        //System.Collections.Generic.IEnumerator<ILinkedListNode<T>> GetNodeEnumerator(EnumerationDirection enumerationDirection);
 #endif
     }
 }

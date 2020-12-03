@@ -14,5 +14,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\Stack.Tests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\EmptyCheckEnumerator.Tests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\ArrayBuilder.Tests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generic\ArrayMerger.Tests.cs" />
   </ItemGroup>
 </Project>

@@ -14,10 +14,22 @@ Updates
 
 - Bug fixes:
 	- Bug fixed in linked lists.
+- Changes:
+	- WinCopies.Collections.DotNetFix namespace:
+		- ICountableEnumerable\<T> and IUIntCountableEnumerable\<T> are now in the WinCopies.Collections.DotNetFix.Generic namespace.
+	- WinCopies.Collections.DotNetFix.Generic.ILinkedList\<T>.GetNodeEnumerator(EnumerationDirection enumerationDirection) is now in ILinkedList3\<T> for better compatibility with previous versions.
+	- WinCopies.Collections.DotNetFix.Generic.LinkedCollection\<T> now implements ILinkedList3\<T> and has new protected virtual methods.
 - Additions:
-	- Add GetIf methods in WinCopies.Util.Extensions.
-	- Add ArrayMerger class.
-	- Methods to the LinkedList class.
+	- Classes:
+		- WinCopies.Collections.Generic.UIntCountableEnumerableArray\<T>
+		- WinCopies.Collections.DotNetFix.Generic.UIntCountableEnumerable
+		- WinCopies.Collections.Generic.ArrayMerger\<T>
+	- Methods:
+		- Add GetIf methods in WinCopies.Util.Extensions.
+		- Methods to the LinkedList\<T> class and the ILinkedList3\<T> interface.
+- Removals:
+	- WinCopies.Collections.DotNetFix.Generic.ReadOnlyLinkedList.GetNodeEnumerator(EnumerationDirection enumerationDirection) was removed because the GetNodeEnumerator() is now in ILinkedList3<T> for better compatibility.
+	- WinCopies.Collections.DotNetFix.Generic.IReadOnlyLinkedList\<T>.GetNodeEnumerator(EnumerationDirection enumerationDirection) was removed because the GetNodeEnumerator() is now in ILinkedList3<T> for better compatibility.
 
 11/01/2020 3.0.0-preview
 ========================

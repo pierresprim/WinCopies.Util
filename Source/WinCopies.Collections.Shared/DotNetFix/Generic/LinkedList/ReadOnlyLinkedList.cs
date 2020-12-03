@@ -129,7 +129,9 @@ InnerList
 #else
         public System.Collections.Generic.IEnumerator<T> GetReversedEnumerator() => InnerList.GetReversedEnumerator();
 
-        public System.Collections.Generic.IEnumerator<ILinkedListNode<T>> GetNodeEnumerator(EnumerationDirection enumerationDirection) => InnerList.GetNodeEnumerator(enumerationDirection);
+        // Not available because the GetNodeEnumerator() is now in ILinkedList3<T> for better compatibility.
+
+        //public System.Collections.Generic.IEnumerator<ILinkedListNode<T>> GetNodeEnumerator(EnumerationDirection enumerationDirection) => InnerList.GetNodeEnumerator(enumerationDirection);
 #endif
 
         void ICollection<T>.Add(T item) => throw GetReadOnlyListOrCollectionException();

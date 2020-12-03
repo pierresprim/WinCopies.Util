@@ -16,7 +16,6 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using System.Collections;
-using System.Collections.Generic;
 
 namespace WinCopies.Collections.DotNetFix
 {
@@ -32,11 +31,6 @@ namespace WinCopies.Collections.DotNetFix
 #endif
     }
 
-    public interface ICountableEnumerable<out T> : System.Collections.Generic.IEnumerable<T>, ICountableEnumerable
-    {
-        // Left empty.
-    }
-
     public interface IUIntCountableEnumerable : IEnumerable
 #if !WinCopies2
 , IUIntCountable
@@ -49,8 +43,33 @@ namespace WinCopies.Collections.DotNetFix
 #endif
     }
 
-    public interface IUIntCountableEnumerable<out T> : System.Collections.Generic.IEnumerable<T>, IUIntCountableEnumerable
+#if !WinCopies2
+    namespace Generic
     {
-        // Left empty.
+#endif
+        public interface ICountableEnumerable<out T> : System.Collections.Generic.IEnumerable<T>, ICountableEnumerable
+        {
+            // Left empty.
+        }
+
+        public interface IUIntCountableEnumerable<out T> : System.Collections.Generic.IEnumerable<T>, IUIntCountableEnumerable
+        {
+            // Left empty.
+        }
+
+        public class UIntCountableEnumerable<T> : IUIntCountableEnumerable<T>
+        {
+            private ICountableEnumerable<T> _enumerable;
+
+            public uint Count => (uint)_enumerable.Count;
+
+            public UIntCountableEnumerable(ICountableEnumerable<T> enumerable) => _enumerable = enumerable;
+
+            public System.Collections.Generic.IEnumerator<T> GetEnumerator() => _enumerable.GetEnumerator();
+
+            System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_enumerable).GetEnumerator();
+        }
+#if !WinCopies2
     }
+#endif
 }

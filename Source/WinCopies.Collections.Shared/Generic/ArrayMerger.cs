@@ -22,8 +22,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-using WinCopies;
-using WinCopies.Collections.DotNetFix;
 using WinCopies.Collections.DotNetFix.Generic;
 
 using static WinCopies.ThrowHelper;
@@ -35,7 +33,7 @@ namespace WinCopies.Collections.Generic
     /// </summary>
     /// <typeparam name="T">The type of the items.</typeparam>
     [DebuggerDisplay("Count = {Count}")]
-    public class ArrayMerger<T> : WinCopies.Collections.DotNetFix.Generic.LinkedList<ICountableEnumerable<T>>
+    public class ArrayMerger<T> : WinCopies.Collections.DotNetFix.Generic.LinkedCollection<IUIntCountableEnumerable<T>>
     {
         private ulong? _realCount = null;
 
@@ -49,7 +47,7 @@ namespace WinCopies.Collections.Generic
 
                 ulong realCount = 0;
 
-                foreach (ICountableEnumerable<T> array in this)
+                foreach (IUIntCountableEnumerable<T> array in this)
 
                     realCount += (ulong)array.Count;
 
@@ -68,7 +66,9 @@ namespace WinCopies.Collections.Generic
         /// Initializes a new instance of the <see cref="ArrayMerger{T}"/> class with a given <see cref="IEnumerable{T}"/>.
         /// </summary>
         /// <param name="enumerable">An enumerable from which to add values.</param>
-        public ArrayMerger(in System.Collections.Generic.IEnumerable<ICountableEnumerable<T>> enumerable) : base(enumerable) { /* Left empty. */ }
+        public ArrayMerger(in System.Collections.Generic.IEnumerable<IUIntCountableEnumerable<T>> enumerable) : this(new WinCopies.Collections.DotNetFix.Generic.LinkedList<IUIntCountableEnumerable<T>>(enumerable)) { /* Left empty. */ }
+
+        public ArrayMerger(in ILinkedList3<IUIntCountableEnumerable<T>> linkedList) : base(linkedList) { /* Left empty. */ }
 
         private void ValidateParameters(in T[] array, in int? startIndex) => ValidateParameters((array ?? throw GetArgumentNullException(nameof(array))).Length, startIndex, true);
 
@@ -128,7 +128,7 @@ namespace WinCopies.Collections.Generic
 
             else
 
-                foreach (ICountableEnumerable<T> _array in this)
+                foreach (IUIntCountableEnumerable<T> _array in this)
 
                     foreach (T item in _array)
 
@@ -162,7 +162,7 @@ namespace WinCopies.Collections.Generic
         {
             if (remove)
             {
-                Action<ICountableEnumerable<T>> action;
+                Action<IUIntCountableEnumerable<T>> action;
 
                 if (startIndex.HasValue)
                 {
@@ -205,7 +205,7 @@ namespace WinCopies.Collections.Generic
 
                     action = item => _ = arrayList.Add(item);
 
-                foreach (ICountableEnumerable<T> array in this)
+                foreach (IUIntCountableEnumerable<T> array in this)
 
                     foreach (T item in array)
 
@@ -240,7 +240,7 @@ namespace WinCopies.Collections.Generic
         {
             if (remove)
             {
-                Action<ICountableEnumerable<T>> action;
+                Action<IUIntCountableEnumerable<T>> action;
 
                 if (startIndex.HasValue)
                 {
@@ -283,13 +283,26 @@ namespace WinCopies.Collections.Generic
 
                     action = item => list.Add(item);
 
-                foreach (ICountableEnumerable<T> array in this)
+                foreach (IUIntCountableEnumerable<T> array in this)
 
                     foreach (T item in array)
 
                         action(item);
             }
         }
+
+        #region Overrides
+        protected override void OnNodeAdded(ILinkedListNode<IUIntCountableEnumerable<T>> node) => _realCount = RealCount + (ulong)node.Value.Count;
+
+        protected override void OnNodeRemoved(ILinkedListNode<IUIntCountableEnumerable<T>> node) => _realCount = RealCount - (ulong)node.Value.Count;
+
+        protected override void ClearItems()
+        {
+            base.ClearItems();
+
+            _realCount = 0ul;
+        }
+        #endregion
     }
 }
 
