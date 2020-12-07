@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -158,9 +159,10 @@ System.Collections.Generic.LinkedListNode
         void RemoveLast();
     }
 
+    [Obsolete("The IsReadOnly property is available through the ICollection<T> interface.")]
     public interface ILinkedList2<T> : ILinkedList<T>
     {
-        bool IsReadOnly { get; }
+        new bool IsReadOnly { get; }
     }
 
 #if !WinCopies2
@@ -170,7 +172,7 @@ System.Collections.Generic.LinkedListNode
 
         System.Collections.Generic.IEnumerator<ILinkedListNode<T>> GetNodeEnumerator(EnumerationDirection enumerationDirection);
 
-        ILinkedListNode<T> Remove(T item);
+        new ILinkedListNode<T> Remove(T item);
 
         bool MoveAfter(ILinkedListNode<T> node, ILinkedListNode<T> after);
 

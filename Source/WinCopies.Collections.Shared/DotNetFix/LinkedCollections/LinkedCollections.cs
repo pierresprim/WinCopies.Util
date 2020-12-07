@@ -160,6 +160,8 @@ namespace WinCopies.Collections.DotNetFix
 
         public abstract uint Count { get; }
 
+        public bool HasItems => Count != 0;
+
         object ISimpleLinkedListBase.SyncRoot
         {
             get
@@ -718,9 +720,11 @@ namespace WinCopies.Collections.DotNetFix
 
         public void CopyTo(Array array, int arrayIndex) =>
 #if WinCopies2
-                WinCopies.Util.
+                WinCopies.Util.Extensions
+#else
+            EnumerableExtensions
 #endif
-                Extensions.CopyTo(this, array, arrayIndex, Count);
+                .CopyTo(this, array, arrayIndex, Count);
 
         public object[] ToArray()
         {
@@ -976,9 +980,11 @@ WinCopies.Collections.Enumerator
 
         public void CopyTo(Array array, int arrayIndex) =>
 #if WinCopies2
-                WinCopies.Util.
+                WinCopies.Util.Extensions
+#else
+            EnumerableExtensions
 #endif
-                Extensions.CopyTo(this, array, arrayIndex, Count);
+                .CopyTo(this, array, arrayIndex, Count);
 
         public object[] ToArray() => _stack.ToArray();
 
@@ -1147,7 +1153,7 @@ WinCopies.Collections.Enumerator
             protected override bool MoveNextOverride()
             {
 #endif
-                    ThrowIfVersionHasChanged(_queue.EnumerableVersion, _version);
+                ThrowIfVersionHasChanged(_queue.EnumerableVersion, _version);
 
 #if WinCopies2
                 if (_currentNode == null)
@@ -1247,9 +1253,11 @@ WinCopies.Collections.Enumerator
 
         public void CopyTo(Array array, int arrayIndex) =>
 #if WinCopies2
-                WinCopies.Util.
+                WinCopies.Util.Extensions
+#else
+            EnumerableExtensions
 #endif
-                Extensions.CopyTo(this, array, arrayIndex, Count);
+                .CopyTo(this, array, arrayIndex, Count);
 
         public object[] ToArray() => _queue.ToArray();
 

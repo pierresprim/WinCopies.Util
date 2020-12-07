@@ -42,9 +42,9 @@ namespace WinCopies.Collections.DotNetFix
 
         protected internal uint? Index { get { ThrowIfDisposed(this); return index; } set { ThrowIfDisposed(this); index = value; } }
 
-        private readonly Func<bool> moveNextMethod;
+        private Func<bool> _moveNextMethod;
 
-        protected internal Func<bool> MoveNextMethod { get { ThrowIfDisposed(this); return moveNextMethod; } set { ThrowIfDisposed(this); MoveNextMethod = value; } }
+        protected internal Func<bool> MoveNextMethod { get { ThrowIfDisposed(this); return _moveNextMethod; } set { ThrowIfDisposed(this); _moveNextMethod = value; } }
 
         #region IDisposable Support
         public bool IsDisposed { get; private set; } = false;

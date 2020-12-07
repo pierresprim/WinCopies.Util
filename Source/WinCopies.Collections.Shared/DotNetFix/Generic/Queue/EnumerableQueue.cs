@@ -42,6 +42,8 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
         public sealed override uint Count => _queue.Count;
 
+        public bool HasItems => _queue.HasItems;
+
         public EnumerableQueue() => _queue = new Queue<T>();
 
         public void Enqueue(T item)

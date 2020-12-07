@@ -46,8 +46,8 @@ namespace WinCopies.Collections
 
             System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
-#if !WinCopies2
 
+#if !WinCopies2
         /// <summary>
         /// A collection that can be enumerated.
         /// </summary>
@@ -66,7 +66,14 @@ namespace WinCopies.Collections
             /// <remarks>
             /// This method returns an enumerator which enumerate in the reversed direction that the enumerator returned by the <see cref="System.Collections.Generic.IEnumerable{T}.GetEnumerator"/> method. So, for a queue, the <see cref="System.Collections.Generic.IEnumerable{T}.GetEnumerator"/> method will return an enumerator that will enumerate through the queue using the FIFO direction and the <see cref="GetReversedEnumerator"/> will throw an exception, because any reversed enumerator can be returned while a queue only supports the FIFO direction. However, a stack, which only supports the LIFO direction, will return a LIFO-enumerator as its main enumerator and throw an exception if we ask it to return a reversed enumerator. A linked list that supports the two directions, but which stores items using the FIFO direction by default, will return a FIFO-enumerator as its main enumerator and a LIFO-enumerator as its reversed enumerator.
             /// </remarks>
-            IEnumerator<T> GetReversedEnumerator();
+            System.Collections.Generic.IEnumerator<T> GetReversedEnumerator();
+        }
+
+        public interface IEnumerableInfo<out T> : IEnumerable<T>
+        {
+            new IEnumeratorInfo2<T> GetEnumerator();
+
+            new IEnumeratorInfo2<T> GetReversedEnumerator();
         }
     }
 #endif

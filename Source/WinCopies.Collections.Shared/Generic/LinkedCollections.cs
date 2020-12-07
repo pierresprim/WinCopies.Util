@@ -39,34 +39,36 @@ namespace WinCopies.Collections.Generic
 
         uint IUIntCountable.Count => (uint)Count;
 
-#if !(NETCORE || NETSTANDARD2_1)
-            public bool TryPeek(out T result)
+        public bool HasItems => Count != 0;
+
+#if CS7
+        public new bool TryPeek(out T result)
+        {
+            if (Count > 0)
             {
-                if (Count > 0)
-                {
-                    result = Peek();
+                result = Peek();
 
-                    return true;
-                }
-
-                result = default;
-
-                return false;
+                return true;
             }
 
-            public bool TryPop(out T result)
+            result = default;
+
+            return false;
+        }
+
+        public new bool TryPop(out T result)
+        {
+            if (Count > 0)
             {
-                if (Count > 0)
-                {
-                    result = Pop();
+                result = Pop();
 
-                    return true;
-                }
-
-                result = default;
-
-                return false;
+                return true;
             }
+
+            result = default;
+
+            return false;
+        }
 #endif
     }
 
@@ -84,34 +86,36 @@ namespace WinCopies.Collections.Generic
 
         uint IUIntCountable.Count => (uint)Count;
 
-#if !(NETCORE || NETSTANDARD2_1)
-            public bool TryPeek(out T result)
+        public bool HasItems => Count != 0;
+
+#if CS7
+        public bool TryPeek(out T result)
+        {
+            if (Count > 0)
             {
-                if (Count > 0)
-                {
-                    result = Peek();
+                result = Peek();
 
-                    return true;
-                }
-
-                result = default;
-
-                return false;
+                return true;
             }
 
-            public bool TryDequeue(out T result)
+            result = default;
+
+            return false;
+        }
+
+        public bool TryDequeue(out T result)
+        {
+            if (Count > 0)
             {
-                if (Count > 0)
-                {
-                    result = Dequeue();
+                result = Dequeue();
 
-                    return true;
-                }
-
-                result = default;
-
-                return false;
+                return true;
             }
+
+            result = default;
+
+            return false;
+        }
 #endif
     }
 }

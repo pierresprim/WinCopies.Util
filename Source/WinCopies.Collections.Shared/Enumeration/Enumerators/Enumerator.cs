@@ -295,14 +295,14 @@ System.Collections.IEnumerator, WinCopies.Util.DotNetFix.IDisposable
 #if WinCopies2
 System.Collections.Generic.IEnumerator<T>, WinCopies.Util.DotNetFix.IDisposable
 #else
-           EnumeratorInfoBase, IDisposableEnumerator<T>, IDisposableEnumeratorInfo
+           EnumeratorInfoBase, IDisposableEnumerator<T>, IDisposableEnumeratorInfo, IEnumeratorInfo2<T>
 #endif
         {
 #if WinCopies2
             private T _current;
-#endif
 
             public bool IsDisposed { get; private set; }
+#endif
 
             public T Current
 #if WinCopies2
@@ -382,6 +382,11 @@ _enumerationStarted
         }
 
 #if !WinCopies2
+        public interface IEnumeratorInfo2<out T> : IEnumeratorInfo<T>, WinCopies.Collections.DotNetFix.IDisposableEnumeratorInfo, IEnumeratorBase, IDisposableEnumerator<T>, IDisposableEnumeratorInfo
+        {
+            new bool MoveNext();
+        }
+
         public class EnumeratorInfo<T> : Enumerator<T>
         {
             private System.Collections.Generic.IEnumerator<T> _innerEnumerator;
@@ -393,6 +398,8 @@ _enumerationStarted
             public override bool? IsResetSupported => null;
 
             public EnumeratorInfo(in System.Collections.Generic.IEnumerator<T> enumerator) => _innerEnumerator = enumerator;
+
+            public EnumeratorInfo(in System.Collections.Generic.IEnumerable<T> enumerable) : this(enumerable.GetEnumerator()) { /* Left empty. */ }
 
             protected override bool MoveNextOverride() => InnerEnumerator.MoveNext();
 
@@ -414,16 +421,18 @@ _enumerationStarted
         }
 #endif
 
-        public abstract class Enumerator<TSource, TDestination> :
+        public abstract class Enumerator<TSource, TEnumSource, TDestination, TEnumDestination> :
 #if WinCopies2
             System.Collections.Generic.IEnumerator<TDestination>, WinCopies.Util.DotNetFix.IDisposable
 #else
             Enumerator<TDestination>
 #endif
+            where TEnumSource : System.Collections.Generic.IEnumerator<TSource>
+            where TEnumDestination : System.Collections.Generic.IEnumerator<TDestination>
         {
-            private System.Collections.Generic.IEnumerator<TSource> _innerEnumerator;
+            private TEnumSource _innerEnumerator;
 
-            protected System.Collections.Generic.IEnumerator<TSource> InnerEnumerator => IsDisposed ? throw GetExceptionForDispose(false) : _innerEnumerator;
+            protected TEnumSource InnerEnumerator => IsDisposed ? throw GetExceptionForDispose(false) : _innerEnumerator;
 
 #if WinCopies2
         private TDestination _current;
@@ -468,14 +477,19 @@ _enumerationStarted
             /// <summary>
             /// When overridden in a derived class, initializes a new instance of the <see cref="Enumerator{TSource, TDestination}"/> class.
             /// </summary>
-            /// <param name="enumerable">An enumerable from which to get an enumerator to enumerate.</param>
-            public Enumerator(System.Collections.Generic.IEnumerable<TSource> enumerable) => _innerEnumerator = (enumerable ?? throw GetArgumentNullException(nameof(enumerable))).GetEnumerator();
-
-            /// <summary>
-            /// When overridden in a derived class, initializes a new instance of the <see cref="Enumerator{TSource, TDestination}"/> class.
-            /// </summary>
             /// <param name="enumerator">The enumerator to enumerate.</param>
-            public Enumerator(System.Collections.Generic.IEnumerator<TSource> enumerator) => _innerEnumerator = enumerator ?? throw GetArgumentNullException(nameof(enumerator));
+            public Enumerator(TEnumSource enumerator)
+#if CS7
+            {
+                if (enumerator == null)
+
+                    throw GetArgumentNullException(nameof(enumerator));
+
+                _innerEnumerator = enumerator;
+            }
+#else
+                => _innerEnumerator = enumerator ?? throw GetArgumentNullException(nameof(enumerator));
+#endif
 
             protected
 #if WinCopies2
@@ -495,7 +509,7 @@ _enumerationStarted
 
             protected
 #if WinCopies2
-                virtual void Dispose(bool disposing) => _innerEnumerator = null;
+                virtual void Dispose(bool disposing) => _innerEnumerator = default;
 #else
                 override void DisposeManaged()
             {
@@ -505,9 +519,24 @@ _enumerationStarted
 
                 _innerEnumerator.Dispose();
 
-                _innerEnumerator = null;
+                _innerEnumerator = default;
             }
 #endif
+        }
+
+        public abstract class Enumerator<TSource, TDestination> : Enumerator<TSource, System.Collections.Generic.IEnumerator<TSource>, TDestination, System.Collections.Generic.IEnumerator<TDestination>>
+        {
+            /// <summary>
+            /// When overridden in a derived class, initializes a new instance of the <see cref="Enumerator{TSource, TDestination}"/> class.
+            /// </summary>
+            /// <param name="enumerable">An enumerable from which to get an enumerator to enumerate.</param>
+            public Enumerator(System.Collections.Generic.IEnumerable<TSource> enumerable) : base((enumerable ?? throw GetArgumentNullException(nameof(enumerable))).GetEnumerator()) { /* Left empty. */ }
+
+            /// <summary>
+            /// When overridden in a derived class, initializes a new instance of the <see cref="Enumerator{TSource, TDestination}"/> class.
+            /// </summary>
+            /// <param name="enumerator">The enumerator to enumerate.</param>
+            public Enumerator(System.Collections.Generic.IEnumerator<TSource> enumerator) : base(enumerator ?? throw GetArgumentNullException(nameof(enumerator))) { /* Left empty. */ }
         }
 #if !WinCopies2
     }

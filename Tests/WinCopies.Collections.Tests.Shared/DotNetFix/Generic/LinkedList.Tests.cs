@@ -52,7 +52,17 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
 #endif
           <int>>();
 
-        void AssertCleared(bool assertNodeQueueCleared = true)
+        static void AssertCleared(WinCopies.Collections.DotNetFix.
+#if !WinCopies2
+           Generic.
+#endif
+           ILinkedList<int> list, WinCopies.Collections.DotNetFix.Generic.Queue<
+#if WinCopies2
+               LinkedListNode
+#else
+               ILinkedListNode
+#endif
+               <int>> queue, bool assertNodeQueueCleared = true)
         {
             Assert.AreEqual(
 #if WinCopies2
@@ -60,11 +70,11 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
 #else
                 0u
 #endif
-                , LinkedList.Count, "LinkedList should be empty.");
+                , list.Count, "list should be empty.");
 
-            Assert.IsNull(LinkedList.First, $"{nameof(LinkedList)}.{nameof(LinkedList.First)} should be null.");
+            Assert.IsNull(list.First, $"{nameof(list)}.{nameof(list.First)} should be null.");
 
-            Assert.IsNull(LinkedList.Last, $"{nameof(LinkedList)}.{nameof(LinkedList.Last)} should be null.");
+            Assert.IsNull(list.Last, $"{nameof(list)}.{nameof(list.Last)} should be null.");
 
 #if WinCopies2
             LinkedListNode
@@ -74,11 +84,11 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
           <int> node;
             uint i = 0;
 
-            while (NodeQueue.Count != 0)
+            while (queue.Count != 0)
             {
                 i++;
 
-                node = NodeQueue.Dequeue();
+                node = queue.Dequeue();
 
                 Assert.IsNull(node.Previous);
 
@@ -92,13 +102,19 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
                 Assert.AreEqual(10u, i);
         }
 
-        void AddNode(Func<
+        static void AddNode(Func<
 #if WinCopies2
             LinkedListNode
 #else
             ILinkedListNode
 #endif
-            <int>> action, int expected)
+            <int>> action, int expected, WinCopies.Collections.DotNetFix.Generic.Queue<
+#if WinCopies2
+                LinkedListNode
+#else
+                ILinkedListNode
+#endif
+                <int>> queue)
         {
 #if WinCopies2
             LinkedListNode
@@ -109,15 +125,27 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
 
             Assert.AreEqual(expected, node.Value);
 
-            NodeQueue.Enqueue(node);
+            queue.Enqueue(node);
         }
 
         [TestMethod]
-        public void TestAddFirstAndLast()
+        public void TestAddFirstAndLast() => TestAddFirstAndLastStatic(LinkedList, NodeQueue);
+
+        public static void TestAddFirstAndLastStatic(WinCopies.Collections.DotNetFix.
+#if !WinCopies2
+            Generic.
+#endif
+            ILinkedList<int> list, WinCopies.Collections.DotNetFix.Generic.Queue<
+#if WinCopies2
+LinkedListNode
+#else
+                ILinkedListNode
+#endif
+                <int>> queue)
         {
             for (int i = 1; i < 11; i++)
 
-                AddNode(() => LinkedList.AddFirst(i), i);
+                AddNode(() => list.AddFirst(i), i, queue);
 
             Assert.AreEqual(
 #if WinCopies2
@@ -125,29 +153,29 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
 #else
                 10u
 #endif
-                , LinkedList.Count, "AddFirst assertion fialed: Count should be 10.");
+                , list.Count, "AddFirst assertion fialed: Count should be 10.");
 
-            Assert.AreEqual(10, LinkedList.First.Value);
+            Assert.AreEqual(10, list.First.Value);
 
-            Assert.AreEqual(1, LinkedList.Last.Value);
+            Assert.AreEqual(1, list.Last.Value);
 
             int j = 10;
 
-            foreach (int i in LinkedList)
+            foreach (int i in list)
 
                 Assert.AreEqual(j--, i, "Error during enumeration.");
 
             Assert.AreEqual(0, j, "Enumeration failed.");
 
-            LinkedList.Clear();
+            list.Clear();
 
-            AssertCleared();
+            AssertCleared(list, queue);
 
 
 
             for (int i = 1; i < 11; i++)
 
-                AddNode(() => LinkedList.AddLast(i), i);
+                AddNode(() => list.AddLast(i), i, queue);
 
             Assert.AreEqual(
 #if WinCopies2
@@ -155,23 +183,23 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
 #else
                 10u
 #endif
-                , LinkedList.Count, "AddLast assertion failed: Count should be 10.");
+                , list.Count, "AddLast assertion failed: Count should be 10.");
 
-            Assert.AreEqual(1, LinkedList.First.Value);
+            Assert.AreEqual(1, list.First.Value);
 
-            Assert.AreEqual(10, LinkedList.Last.Value);
+            Assert.AreEqual(10, list.Last.Value);
 
             j = 0;
 
-            foreach (int i in LinkedList)
+            foreach (int i in list)
 
                 Assert.AreEqual(++j, i, "Error during enumeration.");
 
             Assert.AreEqual(10, j, "Enumeration failed.");
 
-            LinkedList.Clear();
+            list.Clear();
 
-            AssertCleared();
+            AssertCleared(list, queue);
         }
 
         [TestMethod]
@@ -191,7 +219,7 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
 
             for (int i = 1; i < 11; i++)
 
-                AddNode(() => LinkedList.AddLast(i), i);
+                AddNode(() => LinkedList.AddLast(i), i, NodeQueue);
 
             assertValues(LinkedList, 0, i => i + 1);
 
@@ -213,7 +241,7 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
 
             LinkedList.Clear();
 
-            AssertCleared();
+            AssertCleared(LinkedList, NodeQueue);
         }
 
         [TestMethod]
@@ -221,7 +249,7 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
         {
             for (int i = 1; i < 11; i++)
 
-                AddNode(() => LinkedList.AddLast(i), i);
+                AddNode(() => LinkedList.AddLast(i), i, NodeQueue);
 
 #if WinCopies2
             LinkedListNode
@@ -257,7 +285,7 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
 
             Assert.AreEqual(null, node);
 
-            AssertCleared();
+            AssertCleared(LinkedList, NodeQueue);
         }
 
         [TestMethod]
@@ -265,7 +293,7 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
         {
             for (int i = 1; i < 11; i++)
 
-                AddNode(() => LinkedList.AddLast(i), i);
+                AddNode(() => LinkedList.AddLast(i), i, NodeQueue);
 
 #if WinCopies2
             LinkedListNode
@@ -301,7 +329,7 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
 
             Assert.AreEqual(null, node);
 
-            AssertCleared();
+            AssertCleared(LinkedList, NodeQueue);
         }
 
 #if !WinCopies2
@@ -360,7 +388,7 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
 
             LinkedList.Clear();
 
-            AssertCleared(false);
+            AssertCleared(LinkedList, NodeQueue, false);
         }
 
         [TestMethod]
@@ -406,7 +434,7 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
 
             LinkedList.Clear();
 
-            AssertCleared(false);
+            AssertCleared(LinkedList, NodeQueue, false);
         }
 
         [TestMethod]
@@ -538,7 +566,7 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
 
             LinkedList.Clear();
 
-            AssertCleared(false);
+            AssertCleared(LinkedList, NodeQueue, false);
         }
 
         [TestMethod]
@@ -575,7 +603,7 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
 
             LinkedList.Clear();
 
-            AssertCleared(false);
+            AssertCleared(LinkedList, NodeQueue, false);
         }
 
 #endif

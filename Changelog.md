@@ -12,18 +12,26 @@ Updates
 ??/??/???? 3.0.0.1-preview
 ==========================
 
-- Bug fixes:
-	- Bug fixed in linked lists.
+- Bug fixes.
 - Changes:
 	- WinCopies.Collections.DotNetFix namespace:
 		- ICountableEnumerable\<T> and IUIntCountableEnumerable\<T> are now in the WinCopies.Collections.DotNetFix.Generic namespace.
 	- WinCopies.Collections.DotNetFix.Generic.ILinkedList\<T>.GetNodeEnumerator(EnumerationDirection enumerationDirection) is now in ILinkedList3\<T> for better compatibility with previous versions.
 	- WinCopies.Collections.DotNetFix.Generic.LinkedCollection\<T> now implements ILinkedList3\<T> and has new protected virtual methods.
+	- Some changes in linked list-related interfaces (such as IStack\<T>, IQueue\<T>, ...)
+	- WinCopies.TypeForDataTemplateAttribute is now sealed.
+	- Some extension methods have moved to specific static extension classes.
+	- ILinkedList2\<T> is now obsolete.
 - Additions:
 	- Classes:
 		- WinCopies.Collections.Generic.UIntCountableEnumerableArray\<T>
 		- WinCopies.Collections.DotNetFix.Generic.UIntCountableEnumerable
 		- WinCopies.Collections.Generic.ArrayMerger\<T>
+		- WinCopies.Collections.Generic.(I)LinkedTreeNode
+		- EnumerableHelper\<T>. This class contains static methods that return linked list-based interfaces that are "simplified" versions of their related "complete" interface versions. These interfaces are useful to work only with the features that are really needed.
+		- IEnumerableInfo\<T>
+		- IEnumeratorInfo2\<T>
+		- Enumerator<TSource, TEnumSource, TDestination, TEnumDestination>
 	- Methods:
 		- Add GetIf methods in WinCopies.Util.Extensions.
 		- Methods to the LinkedList\<T> class and the ILinkedList3\<T> interface.

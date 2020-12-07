@@ -28,11 +28,11 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
         public void CopyTo(T[] array, int arrayIndex) => WinCopies.
 #if WinCopies2
-                Util.
+                Util.Extensions
 #else
-                Collections.
+                Collections.EnumerableExtensions
 #endif
-                Extensions.CopyTo(this, array, arrayIndex, Count);
+                .CopyTo(this, array, arrayIndex, Count);
 
         System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 

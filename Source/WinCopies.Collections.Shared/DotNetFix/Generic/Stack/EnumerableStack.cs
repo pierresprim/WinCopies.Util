@@ -43,6 +43,8 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
         public sealed override uint Count => _stack.Count;
 
+        public bool HasItems => _stack.HasItems;
+
         public EnumerableStack() => _stack = new Stack<T>();
 
         public sealed override void Clear() => _stack.Clear();

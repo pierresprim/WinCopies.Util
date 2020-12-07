@@ -31,6 +31,7 @@ namespace WinCopies
     /// <summary>
     /// The exception that is thrown when an operation is performed on a disposing object.
     /// </summary>
+    [Serializable]
     public class ObjectDisposingException : InvalidOperationException
     {
         #region

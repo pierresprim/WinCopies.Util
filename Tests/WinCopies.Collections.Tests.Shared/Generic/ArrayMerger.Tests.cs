@@ -61,14 +61,14 @@ namespace WinCopies.Collections.Generic.Tests
 
                 for (j = 0; j < 10; j++)
 
-                    array[i][j] = i * 10 + j + 1;
+                    array[i][j] = (i * 10) + j + 1;
             }
 
             for (i = 0; i < 10; i++)
 
                 for (j = 0; j < 10; j++)
 
-                    Assert.AreEqual(i * 10 + j + 1, array[i][j]);
+                    Assert.AreEqual((i * 10) + j + 1, array[i][j]);
 
             foreach (int[] _array in array)
 

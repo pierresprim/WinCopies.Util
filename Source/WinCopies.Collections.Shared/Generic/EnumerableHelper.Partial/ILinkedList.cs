@@ -15,24 +15,41 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-namespace WinCopies.Collections
-{
-    public interface IEnumerableEnumerator
-    {
-        object Current { get; }
-
-        bool MoveNext();
-    }
-
 #if !WinCopies2
-namespace Generic
+
+using WinCopies.Collections.DotNetFix.Generic;
+
+namespace WinCopies.Collections.Generic
 {
-#endif
-    public interface IEnumerableEnumerator<T> : IEnumerableEnumerator, System.IDisposable
+    public static partial class EnumerableHelper<T>
     {
-        new T Current { get; }
+        public interface ILinkedList : IQueueBase<T>, IStackBase<T>
+        {
+            T First { get; }
+
+            T Last { get; }
+
+            bool TryGetFirst(out T result);
+
+            bool TryGetLast(out T result);
+
+            void AddFirst(T item);
+
+            void AddLast(T item);
+
+            void RemoveFirst();
+
+            T GetAndRemoveFirst();
+
+            bool TryGetAndRemoveFirst(out T result);
+
+            void RemoveLast();
+
+            T GetAndRemoveLast();
+
+            bool TryGetAndRemoveLast(out T result);
+        }
     }
-#if !WinCopies2
 }
+
 #endif
-}

@@ -33,11 +33,20 @@ namespace WinCopies.Collections
     {
 
         public static bool Equals<T>(in INullableValueEntry<T> value, in object obj) where T : struct
+#if CS7
         {
             if (value == null) return obj == null;
 
             return value.Value.HasValue ? value.Value.Equals(obj) : obj == null;
         }
+#else
+            => value switch
+            {
+                null => obj == null,
+
+                _ => value.Value.HasValue ? value.Value.Equals(obj) : obj == null
+            };
+#endif
 
         public static bool Equals<T>(in INullableValueEntry<T> left, in T right) where T : struct, IEquatable<T> => left == null ? false : left.Value.HasValue && left.Value.Equals(right);
 
@@ -55,6 +64,7 @@ namespace WinCopies.Collections
         }
 
         public static int Compare<T>(in INullableValueEntry<T> left, in T? right) where T : struct, IComparable<T>
+#if CS7
         {
             if (right.HasValue) return Compare(left, right.Value);
 
@@ -62,6 +72,14 @@ namespace WinCopies.Collections
 
             return left.Value.HasValue ? 1 : 0;
         }
+#else
+            => right.HasValue ? Compare(left, right.Value) : (left switch
+            {
+                null => 0,
+
+                _ => left.Value.HasValue ? 1 : 0
+            });
+#endif
 
         public static int Compare<T>(in INullableValueEntry<T> left, in INullableValueEntry<T> right) where T : struct, IComparable<T>
         {
@@ -263,11 +281,20 @@ namespace WinCopies.Collections
         public static int Compare<T>(in INullableRefEntry<T> left, in T right) where T : class, IComparable<T> => left == null || left.Value == null ? -1 : left.Value.CompareTo(right);
 
         public static int Compare<T>(in INullableRefEntry<T> left, in INullableRefEntry<T> right) where T : class, IComparable<T>
+#if CS7
         {
             if (right == null) return left == null || left.Value == null ? 0 : 1;
 
             return Compare(left, right.Value);
         }
+#else
+            => right switch
+            {
+                null => left == null || left.Value == null ? 0 : 1,
+
+                _ => Compare(left, right.Value)
+            };
+#endif
     }
 
     public struct NullableRefEntry<T> : INullableRefEntry<T> where T : class

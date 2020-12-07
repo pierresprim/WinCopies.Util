@@ -17,14 +17,38 @@
 
 namespace WinCopies.Collections.DotNetFix.Generic
 {
-    public interface IQueue<T> : ISimpleLinkedList<T>
+    public interface
+#if WinCopies2
+        IQueue<T> : ISimpleLinkedList<T>
+#else
+        IQueueBase<T> 
+#endif
     {
         void Enqueue(T item);
 
         T Dequeue();
 
 #if !WinCopies2
+        bool HasItems { get; }
+
         bool TryDequeue(out T result);
+
+        T Peek();
+
+        bool TryPeek(out T result);
+
+        void Clear();
+    }
+
+    public interface IQueue<T> : ISimpleLinkedList<T>, IQueueBase<T>
+    {
+        // These methods are re-defined to avoid amibguous calls.
+
+        new T Peek();
+
+        new bool TryPeek(out T result);
+
+        new void Clear();
 #endif
     }
 

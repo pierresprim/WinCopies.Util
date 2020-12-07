@@ -17,14 +17,38 @@
 
 namespace WinCopies.Collections.DotNetFix.Generic
 {
-    public interface IStack<T> : ISimpleLinkedList<T>
+    public interface
+#if WinCopies2
+        IStack<T> : ISimpleLinkedList<T>
+#else
+        IStackBase<T>
+#endif
     {
         void Push(T item);
 
         T Pop();
 
 #if !WinCopies2
+        bool HasItems { get; }
+
         bool TryPop(out T result);
+
+        T Peek();
+
+        bool TryPeek(out T result);
+
+        void Clear();
+    }
+
+    public interface IStack<T> : ISimpleLinkedList<T>, IStackBase<T>
+    {
+        // These methods are re-defined to avoid amibguous calls.
+
+        new T Peek();
+
+        new bool TryPeek(out T result);
+
+        new void Clear();
 #endif
     }
 

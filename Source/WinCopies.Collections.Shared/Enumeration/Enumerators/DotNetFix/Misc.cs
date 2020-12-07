@@ -17,19 +17,75 @@
 
 using System.Collections.Generic;
 
-namespace WinCopies.Collections.DotNetFix.Generic
+namespace WinCopies.Collections.DotNetFix
 {
-    public interface ICountableEnumerator<out T> : System.Collections.Generic.IEnumerator<T>, ICountable
+#if !WinCopies2
+    public interface IEnumeratorBase
+    {
+        /// <summary>
+        /// Advances the enumerator to the next element of the collection.
+        /// </summary>
+        /// <returns><see langword="true"/> if the enumerator was successfully advanced to the next element; <see langword="false"/> if the enumerator has passed the end of the collection.</returns>
+        /// <exception cref="System.InvalidOperationException">The collection was modified after the enumerator was created.</exception>
+        bool MoveNext();
+
+        /// <summary>
+        /// Sets the enumerator to its initial position, which is before the first element in the collection.
+        /// </summary>
+        /// <exception cref="System.InvalidOperationException">The collection was modified after the enumerator was created.</exception>
+        void Reset();
+    }
+
+    public interface IEnumeratorInfo
+    {
+        bool? IsResetSupported { get; }
+
+        bool IsStarted { get; }
+
+        bool IsCompleted { get; }
+    }
+
+    public interface IDisposableEnumerator : System.Collections.IEnumerator, WinCopies.DotNetFix.IDisposable
     {
         // Left empty.
     }
 
-    public interface ICountableDisposableEnumerator<out T> : ICountableEnumerator<T>, WinCopies.
+    public interface IDisposableEnumeratorInfo : IEnumeratorInfo, WinCopies.DotNetFix.IDisposable
+    {
+        // Left empty.
+    }
+
+    public interface IEnumerator : System.Collections.IEnumerator, IEnumeratorBase
+    {
+        // Left empty.
+    }
+#endif
+
+    namespace Generic
+    {
+#if !WinCopies2
+        public interface IEnumerator<out T> : System.Collections.Generic.IEnumerator<T>, IEnumeratorBase
+        {
+            // Left empty.
+        }
+
+        public interface IDisposableEnumerator<out T> : System.Collections.Generic.IEnumerator<T>, WinCopies.DotNetFix.IDisposable
+        {
+            // Left empty.
+        }
+#endif
+        public interface ICountableEnumerator<out T> : System.Collections.Generic.IEnumerator<T>, ICountable
+        {
+            // Left empty.
+        }
+
+        public interface ICountableDisposableEnumerator<out T> : ICountableEnumerator<T>, WinCopies.
 #if WinCopies2
         Util.
 #endif
         DotNetFix.IDisposable
-    {
-        // Left empty.
+        {
+            // Left empty.
+        }
     }
 }

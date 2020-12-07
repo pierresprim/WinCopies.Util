@@ -25,18 +25,40 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
         public sealed override uint Count => _stack.Count;
 
+#if !WinCopies2
+        public bool HasItems => _stack.HasItems;
+#endif
+
         public ReadOnlyStack(IStack<T> stack) => _stack = stack;
 
         public sealed override T Peek() => _stack.Peek();
 
-        void IStack<T>.Push(T item) => throw GetReadOnlyListOrCollectionException();
+        void
+#if WinCopies2
+IStack
+#else
+            IStackBase
+#endif
+            <T>.Push(T item) => throw GetReadOnlyListOrCollectionException();
 
-        T IStack<T>.Pop() => throw GetReadOnlyListOrCollectionException();
+        T
+#if WinCopies2
+IStack
+#else
+            IStackBase
+#endif
+            <T>.Pop() => throw GetReadOnlyListOrCollectionException();
 
 #if !WinCopies2
         public sealed override bool TryPeek(out T result) => _stack.TryPeek(out result);
 
-        bool IStack<T>.TryPop(out T result)
+        bool
+#if WinCopies2
+IStack
+#else
+            IStackBase
+#endif
+            <T>.TryPop(out T result)
         {
             result = default;
 

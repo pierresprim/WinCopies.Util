@@ -46,7 +46,11 @@ namespace WinCopies
     }
 
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-    public class TypeForDataTemplateAttribute : Attribute
+    public
+#if !WinCopies2
+        sealed
+#endif
+        class TypeForDataTemplateAttribute : Attribute
     {
         public Type Type { get; }
 

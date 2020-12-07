@@ -23,10 +23,6 @@ using System.Diagnostics;
 using WinCopies.Util;
 
 using static WinCopies.Util.Util;
-#else
-using WinCopies;
-
-using static WinCopies.ThrowHelper;
 #endif
 
 namespace WinCopies.Collections

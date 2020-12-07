@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedList.Tests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedTreeNode.Tests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\Queue.Tests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\Stack.Tests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\EmptyCheckEnumerator.Tests.cs" />

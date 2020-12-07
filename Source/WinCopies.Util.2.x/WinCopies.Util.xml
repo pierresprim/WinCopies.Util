@@ -2332,7 +2332,7 @@
             </summary>
             <returns>An <see cref="T:System.Collections.Generic.IEnumerator`1"/> for the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddAfter(System.Collections.Generic.LinkedListNode{`0}@,System.Collections.Generic.LinkedListNode{`0}@)">
+        <member name="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddAfter(System.Collections.Generic.LinkedListNode{`0},System.Collections.Generic.LinkedListNode{`0})">
             <summary>
             Adds the specified new node after the specified existing node in the <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddItemAfter(System.Collections.Generic.LinkedListNode{`0},System.Collections.Generic.LinkedListNode{`0})"/> method to provide a custom implementation.
             </summary>
@@ -2342,7 +2342,7 @@
             <exception cref="T:System.InvalidOperationException"><paramref name="node"/> is not in the current <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>. -or- <paramref name="newNode"/> belongs to another <see cref="T:System.Collections.Generic.LinkedList`1"/>.</exception>
             <seealso cref="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddAfter(System.Collections.Generic.LinkedListNode{`0},`0)"/>
         </member>
-        <member name="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddBefore(System.Collections.Generic.LinkedListNode{`0}@,System.Collections.Generic.LinkedListNode{`0}@)">
+        <member name="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddBefore(System.Collections.Generic.LinkedListNode{`0},System.Collections.Generic.LinkedListNode{`0})">
             <summary>
             Adds the specified new node before the specified existing node in the <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddItemBefore(System.Collections.Generic.LinkedListNode{`0},System.Collections.Generic.LinkedListNode{`0})"/> method to provide a custom implementation.
             </summary>
@@ -2350,25 +2350,22 @@
             <param name="newNode">The new <see cref="T:System.Collections.Generic.LinkedListNode`1"/> to add to the <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>.</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="node"/> is <see langword="null"/>. -or- <paramref name="newNode"/> is <see langword="null"/>.</exception>
             <exception cref="T:System.InvalidOperationException"><paramref name="node"/> is not in the current <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>. -or- <paramref name="newNode"/> belongs to another <see cref="T:System.Collections.Generic.LinkedList`1"/>.</exception>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddBefore(System.Collections.Generic.LinkedListNode{`0}@,`0@)"/>
         </member>
-        <member name="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddFirst(System.Collections.Generic.LinkedListNode{`0}@)">
+        <member name="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddFirst(System.Collections.Generic.LinkedListNode{`0})">
             <summary>
             Adds the specified new node at the start of the <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddFirstItem(System.Collections.Generic.LinkedListNode{`0})"/> method to provide a custom implementation.
             </summary>
             <param name="node">The new <see cref="T:System.Collections.Generic.LinkedListNode`1"/> to add at the start of the <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>.</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
             <exception cref="T:System.InvalidOperationException"><paramref name="node"/> belongs to another <see cref="T:System.Collections.Generic.LinkedList`1"/>.</exception>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddFirst(`0@)"/>
         </member>
-        <member name="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddLast(System.Collections.Generic.LinkedListNode{`0}@)">
+        <member name="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddLast(System.Collections.Generic.LinkedListNode{`0})">
             <summary>
             Adds the specified new node at the end of the <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddLastItem(System.Collections.Generic.LinkedListNode{`0})"/> method to provide a custom implementation.
             </summary>
             <param name="node">The new <see cref="T:System.Collections.Generic.LinkedListNode`1"/> to add at the end of the <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>.</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
             <exception cref="T:System.InvalidOperationException"><paramref name="node"/> belongs to another <see cref="T:System.Collections.Generic.LinkedList`1"/>.</exception>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddLast(`0@)"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddAfter(System.Collections.Generic.LinkedListNode{`0},`0)">
             <summary>
@@ -2379,9 +2376,8 @@
             <returns>The new <see cref="T:System.Collections.Generic.LinkedListNode`1"/> containing value.</returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
             <exception cref="T:System.InvalidOperationException"><paramref name="node"/> is not in the current <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>.</exception>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddAfter(System.Collections.Generic.LinkedListNode{`0}@,System.Collections.Generic.LinkedListNode{`0}@)"/>
         </member>
-        <member name="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddBefore(System.Collections.Generic.LinkedListNode{`0}@,`0@)">
+        <member name="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddBefore(System.Collections.Generic.LinkedListNode{`0},`0)">
             <summary>
             Adds a new node containing the specified value before the specified existing node in the <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddItemBefore(System.Collections.Generic.LinkedListNode{`0},`0)"/> method to provide a custom implementation.
             </summary>
@@ -2390,23 +2386,20 @@
             <returns>The new <see cref="T:System.Collections.Generic.LinkedListNode`1"/> containing value.</returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
             <exception cref="T:System.InvalidOperationException"><paramref name="node"/> is not in the current <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>.</exception>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddBefore(System.Collections.Generic.LinkedListNode{`0}@,System.Collections.Generic.LinkedListNode{`0}@)"/>
         </member>
-        <member name="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddFirst(`0@)">
+        <member name="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddFirst(`0)">
             <summary>
             Adds a new node containing the specified value at the start of the <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddFirstItem(`0)"/> method to provide a custom implementation.
             </summary>
             <param name="value">The value to add at the start of the <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>.</param>
             <returns>The new <see cref="T:System.Collections.Generic.LinkedListNode`1"/> containing value.</returns>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddFirst(`0@)"/>
         </member>
-        <member name="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddLast(`0@)">
+        <member name="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddLast(`0)">
             <summary>
             Adds a new node containing the specified value at the end of the <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddLastItem(`0)"/> method to provide a custom implementation.
             </summary>
             <param name="value">The value to add at the end of the <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>.</param>
             <returns>The new <see cref="T:System.Collections.Generic.LinkedListNode`1"/> containing value.</returns>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddLast(System.Collections.Generic.LinkedListNode{`0}@)"/>
         </member>
         <member name="P:WinCopies.Collections.DotNetFix.IUIntIndexedCollection.Count">
             <summary>
@@ -3060,6 +3053,12 @@
             <param name="y">Second parameter to compare</param>
             <returns><see langword="true"/> if x is equal to y, otherwise <see langword="false"/>.</returns>
         </member>
+        <member name="M:WinCopies.Collections.Enumerator`4.#ctor(`1)">
+            <summary>
+            When overridden in a derived class, initializes a new instance of the <see cref="T:WinCopies.Collections.Enumerator`2"/> class.
+            </summary>
+            <param name="enumerator">The enumerator to enumerate.</param>
+        </member>
         <member name="M:WinCopies.Collections.Enumerator`2.#ctor(System.Collections.Generic.IEnumerable{`0})">
             <summary>
             When overridden in a derived class, initializes a new instance of the <see cref="T:WinCopies.Collections.Enumerator`2"/> class.
@@ -3191,9 +3190,9 @@
         </member>
         <member name="M:WinCopies.Collections.TreeNode`1.GetEnumerator">
             <summary>
-            Returns an <see cref="!:System.Collections.IEnumerator&lt;T&gt;"/> for this <see cref="T:WinCopies.Collections.TreeNode`1"/>.
+            Returns an <see cref="T:System.Collections.Generic.IEnumerator`1"/> for this <see cref="T:WinCopies.Collections.TreeNode`1"/>.
             </summary>
-            <returns><see cref="!:System.Collections.IEnumerator&lt;T&gt;"/> for this <see cref="T:WinCopies.Collections.TreeNode`1"/>.</returns>
+            <returns><see cref="T:System.Collections.Generic.IEnumerator`1"/> for this <see cref="T:WinCopies.Collections.TreeNode`1"/>.</returns>
         </member>
         <member name="M:WinCopies.Collections.TreeNode`1.Add(WinCopies.Collections.TreeNode{`0})">
             <summary>

@@ -551,7 +551,7 @@ override object Model => ModelGeneric;
 
         void ICollection.CopyTo(Array array, int index) =>
 #if !WinCopies2
-            WinCopies.Collections.Extensions.
+            WinCopies.Collections.EnumerableExtensions.
 #endif
             CopyTo(this, array, index, Count);
 

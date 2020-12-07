@@ -58,6 +58,12 @@ namespace WinCopies.Linq
                     yield return value;
         }
 
-        public static System.Collections.Generic.IEnumerator<TDestination> Select<TSource, TDestination>(this System.Collections.Generic.IEnumerator<TSource> enumerator, Func<TSource, TDestination> func) => new SelectEnumerator<TSource, TDestination>(enumerator, func);
+        public static
+#if WinCopies2
+System.Collections.Generic.IEnumerator
+#else
+            IEnumeratorInfo2
+#endif
+            <TDestination> Select<TSource, TDestination>(this System.Collections.Generic.IEnumerator<TSource> enumerator, Func<TSource, TDestination> func) => new SelectEnumerator<TSource, TDestination>(enumerator, func);
     }
 }

@@ -15,24 +15,26 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-namespace WinCopies.Collections
-{
-    public interface IEnumerableEnumerator
-    {
-        object Current { get; }
-
-        bool MoveNext();
-    }
-
 #if !WinCopies2
-namespace Generic
+
+namespace WinCopies.Collections.Generic
 {
-#endif
-    public interface IEnumerableEnumerator<T> : IEnumerableEnumerator, System.IDisposable
+    public static partial class EnumerableHelper<T>
     {
-        new T Current { get; }
+        internal partial class LinkedList
+        {
+            internal class Node
+            {
+                public T Value { get; set; }
+
+                public Node Previous { get; set; }
+
+                public Node Next { get; set; }
+
+                public Node(T value) => Value = value;
+            }
+        }
     }
-#if !WinCopies2
 }
+
 #endif
-}

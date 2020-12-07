@@ -64,11 +64,12 @@ namespace WinCopies.Collections.DotNetFix
         }
 
         [DebuggerDisplay("Count = {Count}")]
+        [Serializable]
         public class LinkedList<T> :
 #if WinCopies2
             System.Collections.Generic.LinkedList<T>, ILinkedList2<T>
 #else
-            ILinkedList3<T>, ISortable<T>
+            ILinkedList3<T>, ISortable<T>, IEnumerableInfo<T>
 #endif
         {
             #region Properties
@@ -151,7 +152,7 @@ namespace WinCopies.Collections.DotNetFix
                 }
             }
 
-            public class Enumerator : WinCopies.Collections.Generic.Enumerator<LinkedListNode>
+            public class Enumerator : WinCopies.Collections.Generic.Enumerator<LinkedListNode>, IEnumeratorInfo2<LinkedListNode>
             {
                 private LinkedList<T> _list;
                 private Action _action;
@@ -406,23 +407,7 @@ namespace WinCopies.Collections.DotNetFix
                 next.Previous = previous;
             }
 
-            ILinkedListNode<T> ILinkedList<T>.AddAfter(ILinkedListNode<T> node, T value)
-            {
-                if (node is LinkedListNode _node)
-                {
-                    _ThrowIfNotContainedNode(_node, nameof(node));
-
-                    var newNode = new LinkedListNode(value);
-
-                    _AddAfter(_node, newNode);
-
-                    return newNode;
-                }
-
-                else
-
-                    throw new ArgumentException($"{nameof(node)} must be an instance of {nameof(LinkedListNode)}.");
-            }
+            ILinkedListNode<T> ILinkedList<T>.AddAfter(ILinkedListNode<T> node, T value) => AddAfter(node is LinkedListNode _node ? _node : throw new ArgumentException($"{nameof(node)} must be an instance of {nameof(LinkedListNode)}."), value);
 
             public LinkedListNode AddAfter(LinkedListNode node, T value)
             {
@@ -438,34 +423,24 @@ namespace WinCopies.Collections.DotNetFix
             public void AddAfter(LinkedListNode addAfter, LinkedListNode node)
             {
                 ThrowIfNotContainedNode(addAfter, nameof(addAfter));
-                ThrowIfNodeAlreadyHasList(node, nameof(node));
-                ThrowIfNodesAreEqual(node, addAfter);
 
                 _AddAfter(addAfter, node);
             }
 
-            private void _AddAfter(LinkedListNode addAfter, LinkedListNode node) => Weld(addAfter, node, addAfter.Next);
-
-            ILinkedListNode<T> ILinkedList<T>.AddBefore(ILinkedListNode<T> node, T value)
+            private void _AddAfter(LinkedListNode addAfter, LinkedListNode node)
             {
-                if (node is LinkedListNode _node)
-                {
-                    _ThrowIfNotContainedNode(_node, nameof(node));
+                ThrowIfNodeAlreadyHasList(node, nameof(node));
+                ThrowIfNodesAreEqual(node, addAfter);
 
-                    var newNode = new LinkedListNode(value);
-
-                    _AddBefore(_node, newNode);
-
-                    return newNode;
-                }
-
-                else
-
-                    throw new ArgumentException($"{nameof(node)} must be an instance of {nameof(LinkedListNode)}.");
+                Weld(addAfter, node, addAfter.Next);
             }
+
+            ILinkedListNode<T> ILinkedList<T>.AddBefore(ILinkedListNode<T> node, T value) => AddBefore(node is LinkedListNode _node ? _node : throw new ArgumentException($"{nameof(node)} must be an instance of {nameof(LinkedListNode)}."), value);
 
             public LinkedListNode AddBefore(LinkedListNode node, T value)
             {
+                ThrowIfNotContainedNode(node, nameof(node));
+
                 var newNode = new LinkedListNode(value);
 
                 _AddBefore(node, newNode);
@@ -476,13 +451,17 @@ namespace WinCopies.Collections.DotNetFix
             public void AddBefore(LinkedListNode addBefore, LinkedListNode node)
             {
                 ThrowIfNotContainedNode(addBefore, nameof(addBefore));
-                ThrowIfNodeAlreadyHasList(node, nameof(node));
-                ThrowIfNodesAreEqual(node, addBefore);
 
                 _AddBefore(addBefore, node);
             }
 
-            private void _AddBefore(LinkedListNode addBefore, LinkedListNode node) => Weld(addBefore.Previous, node, addBefore);
+            private void _AddBefore(in LinkedListNode addBefore, in LinkedListNode node)
+            {
+                ThrowIfNodeAlreadyHasList(node, nameof(node));
+                ThrowIfNodesAreEqual(node, addBefore);
+
+                Weld(addBefore.Previous, node, addBefore);
+            }
 
             public ILinkedListNode<T> AddFirst(T value)
             {
@@ -561,21 +540,48 @@ namespace WinCopies.Collections.DotNetFix
 
 
 
-            public ILinkedListNode<T> Find(T value) => Find(value, EnumerationDirection.FIFO);
+            public LinkedListNode Find(T value) => Find(value, EnumerationDirection.FIFO);
 
-            public ILinkedListNode<T> FindLast(T value) => Find(value, EnumerationDirection.LIFO);
+            ILinkedListNode<T> ILinkedList<T>.Find(T value) => Find(value);
 
-            private ILinkedListNode<T> Find(T value, EnumerationDirection enumerationDirection) => new Enumerable<LinkedListNode>(() => GetNodeEnumerator(enumerationDirection)).FirstOrDefault(node => (node.Value == null && value == null) || node.Value.Equals(value));
+            public LinkedListNode FindLast(T value) => Find(value, EnumerationDirection.LIFO);
+
+            ILinkedListNode<T> ILinkedList<T>.FindLast(T value) => FindLast(value);
+
+            private LinkedListNode Find(T value, EnumerationDirection enumerationDirection)
+            {
+                Func<LinkedListNode, bool> predicate;
+
+                if (value == null)
+
+                    predicate = node => node.Value == null;
+
+                else
+
+                    predicate = node => value.Equals(node.Value);
+
+                return new Enumerable<LinkedListNode>(() => GetNodeEnumerator(enumerationDirection)).FirstOrDefault(predicate);
+            }
 
 
 
-            public System.Collections.Generic.IEnumerator<T> GetEnumerator() => GetEnumerator(EnumerationDirection.FIFO);
+            public IEnumeratorInfo2<T> GetEnumerator() => GetEnumerator(EnumerationDirection.FIFO);
 
-            public System.Collections.Generic.IEnumerator<T> GetReversedEnumerator() => GetEnumerator(EnumerationDirection.LIFO);
+            System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetEnumerator();
 
-            public System.Collections.Generic.IEnumerator<T> GetEnumerator(EnumerationDirection enumerationDirection) => GetNodeEnumerator(enumerationDirection).Select(node => node.Value);
+            System.Collections.Generic.IEnumerator<T> ILinkedList<T>.GetEnumerator() => GetEnumerator();
 
-            public System.Collections.Generic.IEnumerator<LinkedListNode> GetNodeEnumerator(in EnumerationDirection enumerationDirection) => new Enumerator(this, enumerationDirection);
+            System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+            public IEnumeratorInfo2<T> GetReversedEnumerator() => GetEnumerator(EnumerationDirection.LIFO);
+
+            System.Collections.Generic.IEnumerator<T> WinCopies.Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => GetReversedEnumerator();
+
+            public IEnumeratorInfo2<T> GetEnumerator(EnumerationDirection enumerationDirection) => GetNodeEnumerator(enumerationDirection).Select(node => node.Value);
+
+            System.Collections.Generic.IEnumerator<T> ILinkedList3<T>.GetEnumerator(EnumerationDirection enumerationDirection) => GetEnumerator(enumerationDirection);
+
+            public IEnumeratorInfo2<LinkedListNode> GetNodeEnumerator(in EnumerationDirection enumerationDirection) => new Enumerator(this, enumerationDirection);
 
             System.Collections.Generic.IEnumerator<ILinkedListNode<T>> ILinkedList3<T>.GetNodeEnumerator(EnumerationDirection enumerationDirection) => GetNodeEnumerator(enumerationDirection);
 
@@ -608,20 +614,19 @@ namespace WinCopies.Collections.DotNetFix
 
             void ILinkedList<T>.Remove(ILinkedListNode<T> node) => Remove(node as LinkedListNode ?? throw new ArgumentException($"{nameof(node)} must be an instance of {nameof(LinkedListNode)}."));
 
-            public bool Remove(T item) => Remove2(item) != null;
+            bool ICollection<T>.Remove(T item) => Remove2(item) != null;
 
             public LinkedListNode Remove2(T item)
             {
-                ILinkedListNode<T> node = Find(item);
+                LinkedListNode node = Find(item);
 
-                if (node is LinkedListNode _node)
-                {
-                    Remove(_node);
+                if (node == null)
 
-                    return _node;
-                }
+                    return null;
 
-                return null;
+                Remove(node);
+
+                return node;
             }
 
             ILinkedListNode<T> ILinkedList3<T>.Remove(T item) => Remove2(item);
@@ -673,11 +678,21 @@ namespace WinCopies.Collections.DotNetFix
 
             public bool Contains(T item)
             {
+                Predicate<T> predicate;
+
+                if (item == null)
+
+                    predicate = _item => _item == null;
+
+                else
+
+                    predicate = _item => item.Equals(_item);
+
                 LinkedListNode node = First;
 
                 while (node != null)
                 {
-                    if ((node.Value == null && item == null) || node.Value.Equals(item))
+                    if (predicate(node.Value))
 
                         return true;
 
@@ -696,9 +711,7 @@ namespace WinCopies.Collections.DotNetFix
                     array[arrayIndex++] = item;
             }
 
-            public void CopyTo(Array array, int index) => Extensions.CopyTo(this, array, index, Count);
-
-            System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+            public void CopyTo(Array array, int index) => EnumerableExtensions.CopyTo(this, array, index, Count);
 
             #endregion
 #endif
@@ -706,9 +719,6 @@ namespace WinCopies.Collections.DotNetFix
 #if !WinCopies2
             protected bool OnNodeCoupleAction(in ILinkedListNode<T> x, in string xArgumentName, in ILinkedListNode<T> y, in string yArgumentName, in Func<LinkedListNode, LinkedListNode, bool> func)
             {
-                ThrowIfNull(x, xArgumentName);
-                ThrowIfNull(y, yArgumentName);
-
                 if (x is LinkedListNode _x)
 
                     if (y is LinkedListNode _y)
@@ -717,11 +727,11 @@ namespace WinCopies.Collections.DotNetFix
 
                     else
 
-                        throw GetNotContainedLinkedListNodeException(nameof(y));
+                        throw y == null ? GetArgumentNullException(xArgumentName) : GetNotContainedLinkedListNodeException(nameof(y));
 
                 else
 
-                    throw GetNotContainedLinkedListNodeException(nameof(x));
+                    throw x == null ? GetArgumentNullException(yArgumentName) : GetNotContainedLinkedListNodeException(nameof(x));
             }
 
             /// <summary>

@@ -17,6 +17,9 @@
 
 using System.Collections;
 
+#if WinCopies2
+using WinCopies.Collections.DotNetFix;
+#endif
 using WinCopies.Collections.DotNetFix.Generic;
 
 namespace WinCopies.Collections.Generic

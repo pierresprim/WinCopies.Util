@@ -22,26 +22,35 @@ namespace WinCopies.Collections.DotNetFix.Generic
         : ISimpleLinkedListNode
 #endif
     {
-        T Value { get; }
+        new T Value { get; }
 
 #if WinCopies2
-        ISimpleLinkedListNode<T> NextNode { get; }
+        new ISimpleLinkedListNode<T> NextNode { get; }
 #else
-        ISimpleLinkedListNode<T> Next { get; }
+        new ISimpleLinkedListNode<T> Next { get; }
 #endif
     }
+
+#if !WinCopies2
+    public interface ISimpleLinkedListBase<T>
+    {
+        T Peek();
+
+        bool TryPeek(out T result);
+    }
+#endif
 
     public interface ISimpleLinkedList<T> :
 #if WinCopies2
         IUIntCountable
 #else
-        ISimpleLinkedListBase
+        ISimpleLinkedListBase, ISimpleLinkedListBase<T>
 #endif
     {
+#if WinCopies2
         T Peek();
-
-#if !WinCopies2
-        bool TryPeek(out T result);
+#else
+        // Left empty.
 #endif
     }
 
@@ -130,11 +139,11 @@ namespace WinCopies.Collections.DotNetFix.Generic
         }
 
 #if !WinCopies2
-        #region ISimpleLinkedListNode implementation
+#region ISimpleLinkedListNode implementation
         object ISimpleLinkedListNode.Value => Value;
 
         ISimpleLinkedListNode ISimpleLinkedListNode.Next => Next;
-        #endregion
+#endregion
 #endif
     }
 

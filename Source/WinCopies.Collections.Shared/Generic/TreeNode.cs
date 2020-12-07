@@ -235,9 +235,9 @@ namespace WinCopies.Collections
         public bool IsFixedSize => Items is IList _items ? _items.IsFixedSize : false /*Items.IsReadOnly*/;
 
         /// <summary>
-        /// Returns an <see cref="System.Collections.IEnumerator{T}"/> for this <see cref="TreeNode{T}"/>.
+        /// Returns an <see cref="System.Collections.Generic.IEnumerator{T}"/> for this <see cref="TreeNode{T}"/>.
         /// </summary>
-        /// <returns><see cref="System.Collections.IEnumerator{T}"/> for this <see cref="TreeNode{T}"/>.</returns>
+        /// <returns><see cref="System.Collections.Generic.IEnumerator{T}"/> for this <see cref="TreeNode{T}"/>.</returns>
         public System.Collections.Generic.IEnumerator<TreeNode<T>> GetEnumerator() => Items.GetEnumerator();
 
         System.Collections.Generic.IEnumerator<ITreeNode<T>> IEnumerable<ITreeNode<T>>.GetEnumerator() => GetEnumerator();

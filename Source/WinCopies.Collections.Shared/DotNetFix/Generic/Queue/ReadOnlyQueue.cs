@@ -25,18 +25,40 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
         public sealed override uint Count => _queue.Count;
 
+#if !WinCopies2
+        public bool HasItems => _queue.HasItems;
+#endif
+
         public ReadOnlyQueue(IQueue<T> queue) => _queue = queue;
 
         public sealed override T Peek() => _queue.Peek();
 
-        void IQueue<T>.Enqueue(T item) => GetReadOnlyListOrCollectionException();
+        void
+#if WinCopies2
+IQueue
+#else
+            IQueueBase
+#endif
+            <T>.Enqueue(T item) => throw GetReadOnlyListOrCollectionException();
 
-        T IQueue<T>.Dequeue() => throw GetReadOnlyListOrCollectionException();
+        T
+#if WinCopies2
+IQueue
+#else
+            IQueueBase
+#endif
+            <T>.Dequeue() => throw GetReadOnlyListOrCollectionException();
 
 #if !WinCopies2
         public sealed override bool TryPeek(out T result) => _queue.TryPeek(out result);
 
-        bool IQueue<T>.TryDequeue(out T result)
+        bool
+#if WinCopies2
+IQueue
+#else
+            IQueueBase
+#endif
+            <T>.TryDequeue(out T result)
         {
             result = default;
 

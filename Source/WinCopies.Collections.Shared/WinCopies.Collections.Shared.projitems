@@ -35,6 +35,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\Stack\ReadOnlyStackCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\Stack\Stack.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\Stack\StackCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\EnumerableExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\ArrayBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Comparers.cs" />
@@ -59,24 +60,36 @@
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\SelectEnumerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\ArrayMerger.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\CountableEnumerableArray.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generic\EnumerableHelper.Partial\LinkedList.Partial\Enumerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generic\EnumerableHelper.Partial\LinkedList.Partial\Node.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generic\EnumerableHelper.Partial\EnumerableHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generic\EnumerableHelper.Partial\ILinkedList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generic\EnumerableHelper.Partial\Enumerable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generic\EnumerableHelper.Partial\LinkedList.Partial\LinkedList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generic\EnumerableHelper.Partial\Queue.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generic\EnumerableHelper.Partial\Stack.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\LinkedCollections.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generic\LinkedTree.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\Misc.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\ITreeNode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generic\RecursiveEnumerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ISortable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LinkedCollections.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\LinkedList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Linq\Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\NullableEntry.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\ArrayExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\StringExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ReadOnlyArrayList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ReadOnlyTreeNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\TreeNode.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Misc\Extensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Misc\InvalidEnumArgumentException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Misc\ThrowHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Misc\Util.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Enumeration\Enumerables\" />
-    <Folder Include="$(MSBuildThisFileDirectory)Misc\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Generic\EnumerableHelper.Partial\LinkedList.Partial\" />
   </ItemGroup>
 </Project>

@@ -87,7 +87,7 @@
             </summary>
             <returns>The object that is removed from the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.TryDequeue(`0@)"/>
+            <seealso cref="!:TryDequeue(out T)"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.EnqueueItem(`0)">
             <summary>
@@ -107,36 +107,13 @@
             </summary>
             <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.TryPeek(`0@)"/>
+            <seealso cref="!:TryPeek(out T)"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.ToArray">
             <summary>
             Copies the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> elements to a new array.
             </summary>
             <returns>A new array containing elements copied from the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.TryDequeueItem(`0@)">
-            <summary>
-            Tries to remove and return the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. Override this method to provide a custom implementation.
-            </summary>
-            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
-            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been removed and retrieved.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.TryDequeue(`0@)">
-            <summary>
-            Tries to remove and return the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.TryDequeueItem(`0@)"/> method to provide a custom implementation.
-            </summary>
-            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
-            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been removed and retrieved.</returns>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.Dequeue"/>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.TryPeek(`0@)">
-            <summary>
-            Tries to peek the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> without removing it.
-            </summary>
-            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
-            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been retrieved.</returns>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.Peek"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.GetEnumerator">
             <summary>
@@ -179,15 +156,7 @@
             </summary>
             <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`1.TryPeek(`0@)"/>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`1.TryPeek(`0@)">
-            <summary>
-            Tries to peek the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> without removing it.
-            </summary>
-            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
-            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been retrieved.</returns>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`1.Peek"/>
+            <seealso cref="!:TryPeek(out T)"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`1.GetEnumerator">
             <summary>
@@ -529,6 +498,77 @@
             </summary>
             <returns>An <see cref="T:System.Collections.IEnumerator"/> for the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection"/>.</returns>
         </member>
+        <member name="M:WinCopies.Collections.EnumerableExtensions.ToList(System.Collections.IEnumerable,System.Int32@,System.Nullable{System.Int32}@)">
+            <summary>
+            Converts an <see cref="T:System.Collections.IEnumerable"/> to an <see cref="T:System.Collections.ArrayList"/> from a given index for a given length.
+            </summary>
+            <param name="array">The <see cref="T:System.Collections.IEnumerable"/> to convert</param>
+            <param name="startIndex">The index from which start the conversion.</param>
+            <param name="length">The length of items to copy in the out <see cref="T:System.Collections.ArrayList"/>. Leave this parameter to null if you want to copy all the source <see cref="T:System.Collections.IEnumerable"/>.</param>
+            <returns>The result <see cref="T:System.Collections.ArrayList"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.EnumerableExtensions.ToList``1(System.Collections.Generic.IEnumerable{``0},System.Int32@,System.Nullable{System.Int32}@)">
+            <summary>
+            Converts an <see cref="T:System.Collections.IEnumerable"/> to a <see cref="T:System.Collections.Generic.List`1"/> from a given index for a given length.
+            </summary>
+            <param name="array">The <see cref="T:System.Collections.IEnumerable"/> to convert</param>
+            <param name="startIndex">The index from which start the conversion.</param>
+            <param name="length">The length of items to copy in the out <see cref="T:System.Collections.Generic.List`1"/>. Leave this parameter to null if you want to copy all the source <see cref="T:System.Collections.IEnumerable"/>.</param>
+            <returns>The result <see cref="T:System.Collections.Generic.List`1"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.EnumerableExtensions.AsObjectEnumerable(System.Collections.IEnumerable)">
+            <summary>
+            Yield returns each object of an <see cref="T:System.Collections.IEnumerable"/>, so the given <see cref="T:System.Collections.IEnumerable"/> will be considered as an <see cref="T:WinCopies.Collections.Generic.IEnumerable`1"/>.
+            </summary>
+            <param name="enumerable">An <see cref="T:System.Collections.IEnumerable"/> to consider as a <see cref="T:WinCopies.Collections.Generic.IEnumerable`1"/>.</param>
+            <returns>Yield returns the same enumerable as the given <paramref name="enumerable"/>, as an <see cref="T:WinCopies.Collections.Generic.IEnumerable`1"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.EnumerableExtensions.FirstOrDefault``1(System.Collections.IEnumerable)">
+            <summary>
+            Returns the first item, if any, from <typeparamref name="T"/> in a given <see cref="T:System.Collections.IEnumerable"/>.
+            </summary>
+            <typeparam name="T">The type of the item to return.</typeparam>
+            <param name="enumerable">The <see cref="T:System.Collections.IEnumerable"/> in which to look for the first item of the given type.</param>
+            <returns>The first item, if any, from <typeparamref name="T"/> in <paramref name="enumerable"/> or the default value for <typeparamref name="T"/> if none value was found.</returns>
+            <seealso cref="M:WinCopies.Collections.EnumerableExtensions.LastOrDefault``1(System.Collections.IEnumerable)"/>
+            <seealso cref="M:WinCopies.Collections.EnumerableExtensions.FirstOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
+            <seealso cref="M:WinCopies.Collections.EnumerableExtensions.LastOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
+        </member>
+        <member name="M:WinCopies.Collections.EnumerableExtensions.FirstOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)">
+            <summary>
+            Returns the first item, if any, from <typeparamref name="T"/> and that validates a given predicate in a given <see cref="T:System.Collections.IEnumerable"/>.
+            </summary>
+            <typeparam name="T">The type of the item to return.</typeparam>
+            <param name="enumerable">The <see cref="T:System.Collections.IEnumerable"/> in which to look for the first item of the given type.</param>
+            <param name="predicate">The predicate to validate.</param>
+            <returns>The first item, if any, from <typeparamref name="T"/> in <paramref name="enumerable"/> or the default value for <typeparamref name="T"/> if none value was found.</returns>
+            <seealso cref="M:WinCopies.Collections.EnumerableExtensions.LastOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
+            <seealso cref="M:WinCopies.Collections.EnumerableExtensions.FirstOrDefault``1(System.Collections.IEnumerable)"/>
+            <seealso cref="M:WinCopies.Collections.EnumerableExtensions.LastOrDefault``1(System.Collections.IEnumerable)"/>
+        </member>
+        <member name="M:WinCopies.Collections.EnumerableExtensions.LastOrDefault``1(System.Collections.IEnumerable)">
+            <summary>
+            Returns the last item, if any, from <typeparamref name="T"/> in a given <see cref="T:System.Collections.IEnumerable"/>.
+            </summary>
+            <typeparam name="T">The type of the item to return.</typeparam>
+            <param name="enumerable">The <see cref="T:System.Collections.IEnumerable"/> in which to look for the last item of the given type.</param>
+            <returns>The last item, if any, from <typeparamref name="T"/> in <paramref name="enumerable"/> or the default value for <typeparamref name="T"/> if none value was found.</returns>
+            <seealso cref="M:WinCopies.Collections.EnumerableExtensions.FirstOrDefault``1(System.Collections.IEnumerable)"/>
+            <seealso cref="M:WinCopies.Collections.EnumerableExtensions.FirstOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
+            <seealso cref="M:WinCopies.Collections.EnumerableExtensions.LastOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
+        </member>
+        <member name="M:WinCopies.Collections.EnumerableExtensions.LastOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)">
+            <summary>
+            Returns the last item, if any, from <typeparamref name="T"/> and that validates a given predicate in a given <see cref="T:System.Collections.IEnumerable"/>.
+            </summary>
+            <typeparam name="T">The type of the item to return.</typeparam>
+            <param name="enumerable">The <see cref="T:System.Collections.IEnumerable"/> in which to look for the last item of the given type.</param>
+            <param name="predicate">The predicate to validate.</param>
+            <returns>The last item, if any, from <typeparamref name="T"/> in <paramref name="enumerable"/> or the default value for <typeparamref name="T"/> if none value was found.</returns>
+            <seealso cref="M:WinCopies.Collections.EnumerableExtensions.FirstOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
+            <seealso cref="M:WinCopies.Collections.EnumerableExtensions.FirstOrDefault``1(System.Collections.IEnumerable)"/>
+            <seealso cref="M:WinCopies.Collections.EnumerableExtensions.LastOrDefault``1(System.Collections.IEnumerable)"/>
+        </member>
         <member name="T:WinCopies.Collections.Generic.ArrayBuilder`1">
             <summary>
             Builds arrays and lists by sizing them only when required. This class can be used to initialize your array or list before adding or removing values to it.
@@ -586,6 +626,12 @@
             <remarks>
             This method returns an enumerator which enumerate in the reversed direction that the enumerator returned by the <see cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/> method. So, for a queue, the <see cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/> method will return an enumerator that will enumerate through the queue using the FIFO direction and the <see cref="M:WinCopies.Collections.Generic.IEnumerable`1.GetReversedEnumerator"/> will throw an exception, because any reversed enumerator can be returned while a queue only supports the FIFO direction. However, a stack, which only supports the LIFO direction, will return a LIFO-enumerator as its main enumerator and throw an exception if we ask it to return a reversed enumerator. A linked list that supports the two directions, but which stores items using the FIFO direction by default, will return a FIFO-enumerator as its main enumerator and a LIFO-enumerator as its reversed enumerator.
             </remarks>
+        </member>
+        <member name="M:WinCopies.Collections.Generic.Enumerator`4.#ctor(`1)">
+            <summary>
+            When overridden in a derived class, initializes a new instance of the <see cref="T:WinCopies.Collections.Generic.Enumerator`2"/> class.
+            </summary>
+            <param name="enumerator">The enumerator to enumerate.</param>
         </member>
         <member name="M:WinCopies.Collections.Generic.Enumerator`2.#ctor(System.Collections.Generic.IEnumerable{`0})">
             <summary>
@@ -713,6 +759,14 @@
             Represents a tree node.
             </summary>
         </member>
+        <member name="M:WinCopies.Collections.ArrayExtensions.Append(System.Array,System.Array[])">
+            <summary>
+            Appends data to the table. Arrays must have only one dimension.
+            </summary>
+            <param name="array">The source table.</param>
+            <param name="arrays">The tables to concatenate.</param>
+            <returns></returns>
+        </member>
         <member name="T:WinCopies.Collections.TreeNode`1">
             <summary>
             Represents a tree node.
@@ -812,9 +866,9 @@
         </member>
         <member name="M:WinCopies.Collections.TreeNode`1.GetEnumerator">
             <summary>
-            Returns an <see cref="!:System.Collections.IEnumerator&lt;T&gt;"/> for this <see cref="T:WinCopies.Collections.TreeNode`1"/>.
+            Returns an <see cref="T:System.Collections.Generic.IEnumerator`1"/> for this <see cref="T:WinCopies.Collections.TreeNode`1"/>.
             </summary>
-            <returns><see cref="!:System.Collections.IEnumerator&lt;T&gt;"/> for this <see cref="T:WinCopies.Collections.TreeNode`1"/>.</returns>
+            <returns><see cref="T:System.Collections.Generic.IEnumerator`1"/> for this <see cref="T:WinCopies.Collections.TreeNode`1"/>.</returns>
         </member>
         <member name="M:WinCopies.Collections.TreeNode`1.Add(WinCopies.Collections.TreeNode{`0})">
             <summary>
@@ -1153,24 +1207,6 @@
             <param name="array">The values to add to a <see cref="T:WinCopies.Collections.DotNetFix.Generic.ILinkedList`1"/></param>
             <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.ToList(System.Collections.IEnumerable,System.Int32@,System.Nullable{System.Int32}@)">
-            <summary>
-            Converts an <see cref="T:System.Collections.IEnumerable"/> to an <see cref="T:System.Collections.ArrayList"/> from a given index for a given length.
-            </summary>
-            <param name="array">The <see cref="T:System.Collections.IEnumerable"/> to convert</param>
-            <param name="startIndex">The index from which start the conversion.</param>
-            <param name="length">The length of items to copy in the out <see cref="T:System.Collections.ArrayList"/>. Leave this parameter to null if you want to copy all the source <see cref="T:System.Collections.IEnumerable"/>.</param>
-            <returns>The result <see cref="T:System.Collections.ArrayList"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.Extensions.ToList``1(System.Collections.Generic.IEnumerable{``0},System.Int32@,System.Nullable{System.Int32}@)">
-            <summary>
-            Converts an <see cref="T:System.Collections.IEnumerable"/> to a <see cref="T:System.Collections.Generic.List`1"/> from a given index for a given length.
-            </summary>
-            <param name="array">The <see cref="T:System.Collections.IEnumerable"/> to convert</param>
-            <param name="startIndex">The index from which start the conversion.</param>
-            <param name="length">The length of items to copy in the out <see cref="T:System.Collections.Generic.List`1"/>. Leave this parameter to null if you want to copy all the source <see cref="T:System.Collections.IEnumerable"/>.</param>
-            <returns>The result <see cref="T:System.Collections.Generic.List`1"/>.</returns>
-        </member>
         <member name="M:WinCopies.Collections.Extensions.RemoveRange(System.Collections.IList,System.Int32@,System.Int32@)">
             <summary>
             Removes multiple items in an <see cref="T:System.Collections.IList"/> collection, from a given start index for a given length.
@@ -1178,14 +1214,6 @@
             <param name="collection">The collection from which remove the items.</param>
             <param name="start">The start index in the collection from which delete the items.</param>
             <param name="length">The length to remove.</param>
-        </member>
-        <member name="M:WinCopies.Collections.Extensions.Append(System.Array,System.Array[])">
-            <summary>
-            Appends data to the table. Arrays must have only one dimension.
-            </summary>
-            <param name="array">The source table.</param>
-            <param name="arrays">The tables to concatenate.</param>
-            <returns></returns>
         </member>
         <member name="M:WinCopies.Collections.Extensions.Sort``1(System.Collections.ObjectModel.ObservableCollection{``0})">
             <summary>
@@ -1497,59 +1525,6 @@
             <param name="equalityComparer">The <see cref="T:System.Collections.Generic.IEqualityComparer`1"/> used to compare the values</param>
             <param name="values">The values to compare</param>
             <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.Extensions.AsObjectEnumerable(System.Collections.IEnumerable)">
-            <summary>
-            Yield returns each object of an <see cref="T:System.Collections.IEnumerable"/>, so the given <see cref="T:System.Collections.IEnumerable"/> will be considered as an <see cref="T:WinCopies.Collections.Generic.IEnumerable`1"/>.
-            </summary>
-            <param name="enumerable">An <see cref="T:System.Collections.IEnumerable"/> to consider as a <see cref="T:WinCopies.Collections.Generic.IEnumerable`1"/>.</param>
-            <returns>Yield returns the same enumerable as the given <paramref name="enumerable"/>, as an <see cref="T:WinCopies.Collections.Generic.IEnumerable`1"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.Extensions.FirstOrDefault``1(System.Collections.IEnumerable)">
-            <summary>
-            Returns the first item, if any, from <typeparamref name="T"/> in a given <see cref="T:System.Collections.IEnumerable"/>.
-            </summary>
-            <typeparam name="T">The type of the item to return.</typeparam>
-            <param name="enumerable">The <see cref="T:System.Collections.IEnumerable"/> in which to look for the first item of the given type.</param>
-            <returns>The first item, if any, from <typeparamref name="T"/> in <paramref name="enumerable"/> or the default value for <typeparamref name="T"/> if none value was found.</returns>
-            <seealso cref="M:WinCopies.Collections.Extensions.LastOrDefault``1(System.Collections.IEnumerable)"/>
-            <seealso cref="M:WinCopies.Collections.Extensions.FirstOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
-            <seealso cref="M:WinCopies.Collections.Extensions.LastOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
-        </member>
-        <member name="M:WinCopies.Collections.Extensions.FirstOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)">
-            <summary>
-            Returns the first item, if any, from <typeparamref name="T"/> and that validates a given predicate in a given <see cref="T:System.Collections.IEnumerable"/>.
-            </summary>
-            <typeparam name="T">The type of the item to return.</typeparam>
-            <param name="enumerable">The <see cref="T:System.Collections.IEnumerable"/> in which to look for the first item of the given type.</param>
-            <param name="predicate">The predicate to validate.</param>
-            <returns>The first item, if any, from <typeparamref name="T"/> in <paramref name="enumerable"/> or the default value for <typeparamref name="T"/> if none value was found.</returns>
-            <seealso cref="M:WinCopies.Collections.Extensions.LastOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
-            <seealso cref="M:WinCopies.Collections.Extensions.FirstOrDefault``1(System.Collections.IEnumerable)"/>
-            <seealso cref="M:WinCopies.Collections.Extensions.LastOrDefault``1(System.Collections.IEnumerable)"/>
-        </member>
-        <member name="M:WinCopies.Collections.Extensions.LastOrDefault``1(System.Collections.IEnumerable)">
-            <summary>
-            Returns the last item, if any, from <typeparamref name="T"/> in a given <see cref="T:System.Collections.IEnumerable"/>.
-            </summary>
-            <typeparam name="T">The type of the item to return.</typeparam>
-            <param name="enumerable">The <see cref="T:System.Collections.IEnumerable"/> in which to look for the last item of the given type.</param>
-            <returns>The last item, if any, from <typeparamref name="T"/> in <paramref name="enumerable"/> or the default value for <typeparamref name="T"/> if none value was found.</returns>
-            <seealso cref="M:WinCopies.Collections.Extensions.FirstOrDefault``1(System.Collections.IEnumerable)"/>
-            <seealso cref="M:WinCopies.Collections.Extensions.FirstOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
-            <seealso cref="M:WinCopies.Collections.Extensions.LastOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
-        </member>
-        <member name="M:WinCopies.Collections.Extensions.LastOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)">
-            <summary>
-            Returns the last item, if any, from <typeparamref name="T"/> and that validates a given predicate in a given <see cref="T:System.Collections.IEnumerable"/>.
-            </summary>
-            <typeparam name="T">The type of the item to return.</typeparam>
-            <param name="enumerable">The <see cref="T:System.Collections.IEnumerable"/> in which to look for the last item of the given type.</param>
-            <param name="predicate">The predicate to validate.</param>
-            <returns>The last item, if any, from <typeparamref name="T"/> in <paramref name="enumerable"/> or the default value for <typeparamref name="T"/> if none value was found.</returns>
-            <seealso cref="M:WinCopies.Collections.Extensions.FirstOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
-            <seealso cref="M:WinCopies.Collections.Extensions.FirstOrDefault``1(System.Collections.IEnumerable)"/>
-            <seealso cref="M:WinCopies.Collections.Extensions.LastOrDefault``1(System.Collections.IEnumerable)"/>
         </member>
         <member name="M:WinCopies.Collections.ThrowHelper.GetReadOnlyListOrCollectionException">
             <summary>

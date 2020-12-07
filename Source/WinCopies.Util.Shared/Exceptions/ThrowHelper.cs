@@ -127,7 +127,7 @@ namespace WinCopies
 
         public static void ThrowIfArrayHasNotEnoughSpace(in Array array, in int arrayIndex, in int count, in string arrayArgumentName)
         {
-            if (array.Length - arrayIndex < count)
+            if (count <= array.Length - arrayIndex)
 
                 throw GetArrayHasNotEnoughSpaceException(arrayArgumentName);
         }
