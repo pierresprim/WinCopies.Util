@@ -17,25 +17,33 @@
 
 using static WinCopies.Collections.ThrowHelper;
 
-namespace WinCopies.Collections.DotNetFix.Generic
+namespace WinCopies.Collections.DotNetFix
 {
-    public abstract class SimpleLinkedList<T> : SimpleLinkedListBase, ISimpleLinkedList<T>
+
+    public abstract class SimpleLinkedList : SimpleLinkedListBase, ISimpleLinkedList
     {
         private uint _count = 0;
 
         public sealed override bool IsReadOnly => false;
 
-        protected internal SimpleLinkedListNode<T> FirstItem { get; private set; }
+        protected internal SimpleLinkedListNode FirstItem { get; private set; }
 
+        /// <summary>
+        /// Gets the number of items in the current list.
+        /// </summary>
         public sealed override uint Count => _count;
 
-        protected void Add(in T item)
+        /// <summary>
+        /// Adds a given item to the current list.
+        /// </summary>
+        /// <param name="value">The item to add.</param>
+        protected void Add(in object value)
         {
             if (IsReadOnly)
 
                 throw GetReadOnlyListOrCollectionException();
 
-            FirstItem = AddItem(item, out bool actionAfter);
+            FirstItem = AddItem(value, out bool actionAfter);
 
             _count++;
 
@@ -44,26 +52,31 @@ namespace WinCopies.Collections.DotNetFix.Generic
                 OnItemAdded();
         }
 
-        protected abstract SimpleLinkedListNode<T> AddItem(T item, out bool actionAfter);
+        /// <summary>
+        /// When overridden in a derived class, adds a given item to the current list.
+        /// </summary>
+        /// <param name="value">The item to add.</param>
+        protected abstract SimpleLinkedListNode AddItem(object value, out bool actionAfter);
 
         protected abstract void OnItemAdded();
 
-        private T OnRemove()
+        private object OnRemove()
         {
-            SimpleLinkedListNode<T> firstItem = FirstItem;
+            object result = FirstItem.Value;
 
-            T result = firstItem.Value;
+            FirstItem.Clear();
 
             FirstItem = RemoveItem();
-
-            firstItem.Clear();
 
             _count--;
 
             return result;
         }
 
-        protected T Remove()
+        /// <summary>
+        /// Removes the first or last item from the current list, depending on the linked list type (FIFO/LIFO).
+        /// </summary>
+        protected object Remove()
         {
             if (IsReadOnly)
 
@@ -74,16 +87,16 @@ namespace WinCopies.Collections.DotNetFix.Generic
 #else
             ThrowIfEmptyListOrCollection
 #endif
-            (this);
+                (this);
 
             return OnRemove();
         }
 
-        protected bool TryRemove(out T result)
+        protected bool TryRemove(out object result)
         {
             if (IsReadOnly || Count == 0)
             {
-                result = default;
+                result = null;
 
                 return false;
             }
@@ -93,11 +106,15 @@ namespace WinCopies.Collections.DotNetFix.Generic
             return true;
         }
 
-        protected abstract SimpleLinkedListNode<T> RemoveItem();
+        /// <summary>
+        /// When overridden in a derived class, removes the first or last item from the current list, depending on the linked list type (FIFO/LIFO).
+        /// </summary>
+        protected abstract SimpleLinkedListNode RemoveItem();
 
         protected sealed override void ClearItems()
         {
-            SimpleLinkedListNode<T> node, temp;
+            SimpleLinkedListNode node, temp;
+
             node = FirstItem;
 
             while (node != null)
@@ -114,11 +131,11 @@ namespace WinCopies.Collections.DotNetFix.Generic
             _count = 0;
         }
 
-        protected T _Peek() => FirstItem.Value;
+        protected object _Peek() => FirstItem.Value;
 
-        public T Peek() => _count > 0 ? _Peek() : throw GetEmptyListOrCollectionException();
+        public object Peek() => _count > 0 ? _Peek() : throw GetEmptyListOrCollectionException();
 
-        public bool TryPeek(out T result)
+        public bool TryPeek(out object result)
         {
             if (_count > 0)
             {
@@ -127,7 +144,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
                 return true;
             }
 
-            result = default;
+            result = null;
 
             return false;
         }

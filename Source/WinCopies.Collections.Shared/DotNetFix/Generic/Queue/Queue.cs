@@ -21,7 +21,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
 #if WinCopies2
         IQueue<T> : ISimpleLinkedList<T>
 #else
-        IQueueBase<T> 
+        IQueueBase<T>
 #endif
     {
         void Enqueue(T item);
@@ -33,6 +33,8 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
         bool TryDequeue(out T result);
 
+        // These methods are defined here because the Peek operation of the Queue is not the same as the Stack one.
+
         T Peek();
 
         bool TryPeek(out T result);
@@ -42,7 +44,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
     public interface IQueue<T> : ISimpleLinkedList<T>, IQueueBase<T>
     {
-        // These methods are re-defined to avoid amibguous calls.
+        // This method is re-defined to avoid amibguous calls.
 
         new T Peek();
 
