@@ -9,7 +9,7 @@ CHANGELOG
 Updates
 -------
 
-??/??/???? 3.0.0.1-preview
+12/09/2020 3.1.0.0-preview
 ==========================
 
 - Bug fixes.
@@ -103,7 +103,7 @@ WinCopies.Util.Desktop 3.0.0-preview
 	- Properties:
 		- WinCopies.Util.Commands.ApplicationCommands.CloseWindow
 
-??/??/???? 2.6.1
+12/09/2020 2.6.1
 ================
 
 WinCopies.Util (2.6.1)
