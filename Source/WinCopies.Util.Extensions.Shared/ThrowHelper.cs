@@ -19,7 +19,7 @@ using System;
 
 using WinCopies.Collections;
 
-using static WinCopies.Collections.ThrowHelper;
+using static WinCopies.ThrowHelper;
 
 using IfCT = WinCopies.Diagnostics.ComparisonType;
 
@@ -43,7 +43,7 @@ namespace WinCopies.Util.Extensions // To avoid name conflicts.
         /// <exception cref="ArgumentException"><paramref name="enum"/> does not have the <see cref="FlagsAttribute"/> and <paramref name="throwIfNotFlagsEnum"/> is set to <see langword="true"/>.</exception>
         /// <exception cref="InvalidEnumArgumentException"><paramref name="enum"/> is equal to zero and the <paramref name="throwIfZero"/> parameter is set to true or <paramref name="enum"/> is lesser than zero.</exception>
         /// <seealso cref="WinCopies.Extensions.IsValidEnumValue(Enum)"/>
-        /// <seealso cref="Collections.ThrowHelper.ThrowIfNotValidEnumValue(in string, in Enum)"/>
+        /// <seealso cref="WinCopies.ThrowHelper.ThrowIfNotValidEnumValue(in string, in Enum)"/>
         public static void ThrowIfNotValidFlagsEnumValue(in Enum @enum, in bool throwIfNotFlagsEnum, in bool throwIfZero)
         {
             if (!@enum.IsValidFlagsEnumValue(throwIfNotFlagsEnum, throwIfZero))

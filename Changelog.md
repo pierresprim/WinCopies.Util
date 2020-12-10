@@ -9,6 +9,15 @@ CHANGELOG
 Updates
 -------
 
+??/??/???? 3.2.0.0-preview
+==========================
+
+- Changes:
+	- WinCopies.Collections.DotNetFix.SimpleLinkedListBase.ClearItems() is now protected.
+	- WinCopies.InvalidEnumArgumentException is now in the WinCopies.Util package.
+	- Some comparison-related types in the WinCopies.Collections namespace have moved to the WinCopies.Util package, and are still in the same namespace.
+	- Enum throw methods are now in the WinCopies.ThrowHelper class of the WinCopies.Util package.
+
 12/09/2020 3.1.0.0-preview
 ==========================
 

@@ -3344,7 +3344,7 @@ namespace WinCopies
 
             if (!@enum.IsFlagsEnum())
 
-                return throwIfNotFlagsEnum ? throw GetExceptionForNonFlagsEnum(nameof(@enum)) : false;
+                return throwIfNotFlagsEnum ? throw Util.GetExceptionForNonFlagsEnum(nameof(@enum)) : false;
 
             // Now, we have to check if the given value is directly defined in the enum.
 
@@ -3472,7 +3472,7 @@ namespace WinCopies
         {
             if (!value.IsFlagsEnum())
 
-                throw GetExceptionForNonFlagsEnum(argumentName);
+                throw Util.GetExceptionForNonFlagsEnum(argumentName);
         }
 
         public static InvalidEnumArgumentException GetInvalidEnumArgumentException(this Enum value, string argumentName) => new InvalidEnumArgumentException(string.Format(ExceptionMessages.ParameterIsNotAnExpectedValue, value), argumentName, value);
@@ -3517,7 +3517,7 @@ namespace WinCopies
         {
             ThrowIfNull(values, nameof(values));
 
-            ThrowIfNotFlagsEnumType<T>(nameof(T));
+            Util.ThrowIfNotFlagsEnumType<T>(nameof(T));
 
 #if WinCopies2
             comparisonType.ThrowIfNotValidEnumValue(nameof(comparisonType));

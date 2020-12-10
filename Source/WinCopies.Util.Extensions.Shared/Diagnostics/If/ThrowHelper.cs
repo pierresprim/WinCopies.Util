@@ -16,12 +16,10 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 using WinCopies.Collections;
-using WinCopies.Collections.Generic;
-using static WinCopies.Collections.ThrowHelper;
+
+using static WinCopies.ThrowHelper;
 
 using IfCT = WinCopies.Diagnostics.ComparisonType;
 using IfCM = WinCopies.Diagnostics.ComparisonMode;

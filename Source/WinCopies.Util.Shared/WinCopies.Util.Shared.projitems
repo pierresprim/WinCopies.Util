@@ -10,6 +10,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)CheckedUInt64.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Comparers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EnumComparer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Exceptions\InvalidEnumArgumentException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Monitors.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Date.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\InvalidArgumentException.cs" />

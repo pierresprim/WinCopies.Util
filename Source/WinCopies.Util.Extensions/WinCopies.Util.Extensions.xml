@@ -218,7 +218,7 @@
             <exception cref="T:System.ArgumentException"><paramref name="enum"/> does not have the <see cref="T:System.FlagsAttribute"/> and <paramref name="throwIfNotFlagsEnum"/> is set to <see langword="true"/>.</exception>
             <exception cref="T:WinCopies.InvalidEnumArgumentException"><paramref name="enum"/> is equal to zero and the <paramref name="throwIfZero"/> parameter is set to true or <paramref name="enum"/> is lesser than zero.</exception>
             <seealso cref="M:WinCopies.Extensions.IsValidEnumValue(System.Enum)"/>
-            <seealso cref="M:WinCopies.Collections.ThrowHelper.ThrowIfNotValidEnumValue(System.String@,System.Enum@)"/>
+            <seealso cref="M:WinCopies.ThrowHelper.ThrowIfNotValidEnumValue(System.String@,System.Enum@)"/>
         </member>
         <member name="M:WinCopies.Util.Extensions.ThrowHelper.ThrowIfNotValidFlagsEnumValue(System.Enum@,System.String@,System.Boolean@,System.Boolean@)">
             <summary>

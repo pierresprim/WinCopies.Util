@@ -87,7 +87,7 @@
             </summary>
             <returns>The object that is removed from the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="!:TryDequeue(out T)"/>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.TryDequeue(`0@)"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.EnqueueItem(`0)">
             <summary>
@@ -107,13 +107,36 @@
             </summary>
             <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="!:TryPeek(out T)"/>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.TryPeek(`0@)"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.ToArray">
             <summary>
             Copies the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> elements to a new array.
             </summary>
             <returns>A new array containing elements copied from the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.TryDequeueItem(`0@)">
+            <summary>
+            Tries to remove and return the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. Override this method to provide a custom implementation.
+            </summary>
+            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been removed and retrieved.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.TryDequeue(`0@)">
+            <summary>
+            Tries to remove and return the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.TryDequeueItem(`0@)"/> method to provide a custom implementation.
+            </summary>
+            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been removed and retrieved.</returns>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.Dequeue"/>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.TryPeek(`0@)">
+            <summary>
+            Tries to peek the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> without removing it.
+            </summary>
+            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been retrieved.</returns>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.Peek"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.GetEnumerator">
             <summary>
@@ -156,7 +179,15 @@
             </summary>
             <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="!:TryPeek(out T)"/>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`1.TryPeek(`0@)"/>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`1.TryPeek(`0@)">
+            <summary>
+            Tries to peek the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> without removing it.
+            </summary>
+            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been retrieved.</returns>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`1.Peek"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`1.GetEnumerator">
             <summary>
@@ -220,99 +251,17 @@
             <param name="otherArgumentName">The argument name of <paramref name="other"/> for exception throws.</param>
             <exception cref="T:System.ArgumentException"><paramref name="node"/> or <paramref name="other"/> is not in the current list. OR <paramref name="node"/> and <paramref name="other"/> are equal.</exception>
         </member>
-        <member name="M:WinCopies.Collections.DotNetFix.IEnumeratorBase.MoveNext">
+        <member name="M:WinCopies.Collections.DotNetFix.EnumerableQueue.GetEnumerator">
             <summary>
-            Advances the enumerator to the next element of the collection.
+            Returns an <see cref="T:System.Collections.IEnumerator"/> for this <see cref="T:WinCopies.Collections.DotNetFix.EnumerableQueue"/>.
             </summary>
-            <returns><see langword="true"/> if the enumerator was successfully advanced to the next element; <see langword="false"/> if the enumerator has passed the end of the collection.</returns>
-            <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created.</exception>
+            <returns>An <see cref="T:System.Collections.IEnumerator"/> for this <see cref="T:WinCopies.Collections.DotNetFix.EnumerableQueue"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.DotNetFix.IEnumeratorBase.Reset">
+        <member name="M:WinCopies.Collections.DotNetFix.EnumerableQueue.Enumerator.#ctor(WinCopies.Collections.DotNetFix.EnumerableQueue@)">
             <summary>
-            Sets the enumerator to its initial position, which is before the first element in the collection.
+            Initializes a new instance of the <see cref="T:WinCopies.Collections.DotNetFix.EnumerableQueue.Enumerator"/> class.
             </summary>
-            <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created.</exception>
-        </member>
-        <member name="P:WinCopies.Collections.DotNetFix.IUIntIndexedCollection.Count">
-            <summary>
-            Gets the number of items in the collection.
-            </summary>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.IUIntIndexedCollection.CopyTo(System.Array@,System.Int32)">
-            <summary>
-            Copies the items of this collection to a given array starting at a given index.
-            </summary>
-            <param name="array">The array to copy the items.</param>
-            <param name="index">The index in the array from which to start to copy.</param>
-        </member>
-        <member name="P:WinCopies.Collections.DotNetFix.IUIntIndexedList.Item(System.UInt32)">
-            <summary>
-            Gets the item at a given index in the list.
-            </summary>
-            <param name="index">The index of the item.</param>
-            <returns>The item at <paramref name="index"/>.</returns>
-        </member>
-        <member name="P:WinCopies.Collections.DotNetFix.IUIntIndexedList.IsFixedSize">
-            <summary>
-            Gets a value that indicates whether the current list is fixed size.
-            </summary>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.IUIntIndexedList.Add(System.Object@)">
-            <summary>
-            Adds a value to the list.
-            </summary>
-            <param name="value">The value to add.</param>
-            <returns>The index of the new value in the list.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.IUIntIndexedList.Clear">
-            <summary>
-            Removes all items from the list.
-            </summary>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.IUIntIndexedList.Insert(System.UInt32@,System.Object@)">
-            <summary>
-            Inserts a value to the list.
-            </summary>
-            <param name="index">The index at which to add the value.</param>
-            <param name="value">The value to add.</param>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.IUIntIndexedList.Remove(System.Object@)">
-            <summary>
-            Removes a given value from the list.
-            </summary>
-            <param name="value">The value to remove.</param>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.IUIntIndexedList.RemoveAt(System.UInt32@)">
-            <summary>
-            Removes a value from the list at a given index.
-            </summary>
-            <param name="index">The index of the value to remove.</param>
-        </member>
-        <member name="P:WinCopies.Collections.DotNetFix.IReadOnlyUIntIndexedList.Item(System.UInt32)">
-            <summary>
-            Gets or sets an item at a given index in the list.
-            </summary>
-            <param name="index">The index of the item.</param>
-            <returns>The item at <paramref name="index"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.IReadOnlyUIntIndexedList.Contains(System.Object@)">
-            <summary>
-            Checks if the list contains a given value.
-            </summary>
-            <param name="value">The value to check.</param>
-            <returns><see langword="true"/> if the list contains <paramref name="value"/>, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.IReadOnlyUIntIndexedList.IndexOf(System.Object@)">
-            <summary>
-            Returns the index of a given value in the list.
-            </summary>
-            <param name="value">The value for which return the index.</param>
-            <returns>The index of <paramref name="value"/> if it was found, or <see langword="null"/> otherwise.</returns>
-        </member>
-        <member name="P:WinCopies.Collections.DotNetFix.SimpleLinkedListBase.IsReadOnly">
-            <summary>
-            Gets a value indicating whether the current list is read-only.
-            </summary>
+            <param name="queue">The <see cref="T:WinCopies.Collections.DotNetFix.EnumerableQueue"/> to enumerate.</param>
         </member>
         <member name="P:WinCopies.Collections.DotNetFix.SimpleLinkedList.Count">
             <summary>
@@ -341,23 +290,10 @@
             When overridden in a derived class, removes the first or last item from the current list, depending on the linked list type (FIFO/LIFO).
             </summary>
         </member>
-        <member name="M:WinCopies.Collections.DotNetFix.EnumerableStack.Enumerator.#ctor(WinCopies.Collections.DotNetFix.EnumerableStack@)">
+        <member name="P:WinCopies.Collections.DotNetFix.SimpleLinkedListBase.IsReadOnly">
             <summary>
-            Initializes a new instance of the <see cref="T:WinCopies.Collections.DotNetFix.EnumerableStack.Enumerator"/> class.
+            Gets a value indicating whether the current list is read-only.
             </summary>
-            <param name="stack">The <see cref="T:WinCopies.Collections.DotNetFix.EnumerableStack"/> to enumerate.</param>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.EnumerableQueue.GetEnumerator">
-            <summary>
-            Returns an <see cref="T:System.Collections.IEnumerator"/> for this <see cref="T:WinCopies.Collections.DotNetFix.EnumerableQueue"/>.
-            </summary>
-            <returns>An <see cref="T:System.Collections.IEnumerator"/> for this <see cref="T:WinCopies.Collections.DotNetFix.EnumerableQueue"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.EnumerableQueue.Enumerator.#ctor(WinCopies.Collections.DotNetFix.EnumerableQueue@)">
-            <summary>
-            Initializes a new instance of the <see cref="T:WinCopies.Collections.DotNetFix.EnumerableQueue.Enumerator"/> class.
-            </summary>
-            <param name="queue">The <see cref="T:WinCopies.Collections.DotNetFix.EnumerableQueue"/> to enumerate.</param>
         </member>
         <member name="P:WinCopies.Collections.DotNetFix.QueueCollection.Count">
             <summary>
@@ -497,6 +433,101 @@
             Returns an enumerator that iterates through the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection"/>.
             </summary>
             <returns>An <see cref="T:System.Collections.IEnumerator"/> for the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.EnumerableStack.Enumerator.#ctor(WinCopies.Collections.DotNetFix.EnumerableStack@)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Collections.DotNetFix.EnumerableStack.Enumerator"/> class.
+            </summary>
+            <param name="stack">The <see cref="T:WinCopies.Collections.DotNetFix.EnumerableStack"/> to enumerate.</param>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.IEnumeratorBase.MoveNext">
+            <summary>
+            Advances the enumerator to the next element of the collection.
+            </summary>
+            <returns><see langword="true"/> if the enumerator was successfully advanced to the next element; <see langword="false"/> if the enumerator has passed the end of the collection.</returns>
+            <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created.</exception>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.IEnumeratorBase.Reset">
+            <summary>
+            Sets the enumerator to its initial position, which is before the first element in the collection.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created.</exception>
+        </member>
+        <member name="P:WinCopies.Collections.DotNetFix.IUIntIndexedCollection.Count">
+            <summary>
+            Gets the number of items in the collection.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.IUIntIndexedCollection.CopyTo(System.Array@,System.Int32)">
+            <summary>
+            Copies the items of this collection to a given array starting at a given index.
+            </summary>
+            <param name="array">The array to copy the items.</param>
+            <param name="index">The index in the array from which to start to copy.</param>
+        </member>
+        <member name="P:WinCopies.Collections.DotNetFix.IUIntIndexedList.Item(System.UInt32)">
+            <summary>
+            Gets the item at a given index in the list.
+            </summary>
+            <param name="index">The index of the item.</param>
+            <returns>The item at <paramref name="index"/>.</returns>
+        </member>
+        <member name="P:WinCopies.Collections.DotNetFix.IUIntIndexedList.IsFixedSize">
+            <summary>
+            Gets a value that indicates whether the current list is fixed size.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.IUIntIndexedList.Add(System.Object@)">
+            <summary>
+            Adds a value to the list.
+            </summary>
+            <param name="value">The value to add.</param>
+            <returns>The index of the new value in the list.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.IUIntIndexedList.Clear">
+            <summary>
+            Removes all items from the list.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.IUIntIndexedList.Insert(System.UInt32@,System.Object@)">
+            <summary>
+            Inserts a value to the list.
+            </summary>
+            <param name="index">The index at which to add the value.</param>
+            <param name="value">The value to add.</param>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.IUIntIndexedList.Remove(System.Object@)">
+            <summary>
+            Removes a given value from the list.
+            </summary>
+            <param name="value">The value to remove.</param>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.IUIntIndexedList.RemoveAt(System.UInt32@)">
+            <summary>
+            Removes a value from the list at a given index.
+            </summary>
+            <param name="index">The index of the value to remove.</param>
+        </member>
+        <member name="P:WinCopies.Collections.DotNetFix.IReadOnlyUIntIndexedList.Item(System.UInt32)">
+            <summary>
+            Gets or sets an item at a given index in the list.
+            </summary>
+            <param name="index">The index of the item.</param>
+            <returns>The item at <paramref name="index"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.IReadOnlyUIntIndexedList.Contains(System.Object@)">
+            <summary>
+            Checks if the list contains a given value.
+            </summary>
+            <param name="value">The value to check.</param>
+            <returns><see langword="true"/> if the list contains <paramref name="value"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.IReadOnlyUIntIndexedList.IndexOf(System.Object@)">
+            <summary>
+            Returns the index of a given value in the list.
+            </summary>
+            <param name="value">The value for which return the index.</param>
+            <returns>The index of <paramref name="value"/> if it was found, or <see langword="null"/> otherwise.</returns>
         </member>
         <member name="M:WinCopies.Collections.EnumerableExtensions.ToList(System.Collections.IEnumerable,System.Int32@,System.Nullable{System.Int32}@)">
             <summary>
@@ -682,30 +713,6 @@
             </summary>
             <param name="remove">Indicates whether items have to be removed from the current <see cref="T:WinCopies.Collections.Generic.ArrayMerger`1"/> after they has been added to the new list.</param>
             <returns>A <see cref="T:System.Collections.Generic.List`1"/> with the items of this <see cref="T:WinCopies.Collections.Generic.ArrayMerger`1"/>.</returns>
-        </member>
-        <member name="T:WinCopies.Collections.Comparison">
-            <summary>
-            Delegate for a non-generic comparison.
-            </summary>
-            <param name="x">First parameter to compare</param>
-            <param name="y">Second parameter to compare</param>
-            <returns>An <see cref="T:System.Int32"/> which is lesser than 0 if x is lesser than y, 0 if x is equal to y and greater than 0 if x is greater than y.</returns>
-        </member>
-        <member name="T:WinCopies.Collections.EqualityComparison">
-            <summary>
-            Delegate for a non-generic equality comparison.
-            </summary>
-            <param name="x">First parameter to compare</param>
-            <param name="y">Second parameter to compare</param>
-            <returns><see langword="true"/> if x is equal to y, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="T:WinCopies.Collections.EqualityComparison`1">
-            <summary>
-            Delegate for a generic equality comparison.
-            </summary>
-            <param name="x">First parameter to compare</param>
-            <param name="y">Second parameter to compare</param>
-            <returns><see langword="true"/> if x is equal to y, otherwise <see langword="false"/>.</returns>
         </member>
         <member name="T:WinCopies.Collections.EnumeratorInfo">
             <summary>
@@ -1582,100 +1589,6 @@
             <returns>A value obtained by a <see cref="T:WinCopies.Func"/>, depending on the result of a comparison.</returns>
             <exception cref="T:System.ArgumentNullException">One or more of the given <see cref="T:WinCopies.Func"/>s are <see langword="null"/>.</exception>
             <remarks>See <see cref="M:WinCopies.Collections.Util.GetIf(System.Object@,System.Object@,WinCopies.Collections.Comparison@,WinCopies.Func@,WinCopies.Func@,WinCopies.Func@)"/> for the non-generic version.</remarks>
-        </member>
-        <member name="M:WinCopies.InvalidEnumArgumentException.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:WinCopies.InvalidEnumArgumentException"/> class.
-            </summary>
-        </member>
-        <member name="M:WinCopies.InvalidEnumArgumentException.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:WinCopies.InvalidEnumArgumentException"/> class with a specified error message.
-            </summary>
-            <param name="message">The message that describes the error.</param>
-        </member>
-        <member name="M:WinCopies.InvalidEnumArgumentException.#ctor(System.String,System.Exception)">
-            <summary>
-            Initializes a new instance of the System.Exception class with a specified error message and a reference to the inner exception that is the cause of this exception.
-            </summary>
-            <param name="message">The error message that explains the reason for the exception.</param>
-            <param name="innerException">The exception that is the cause of the current exception, or a <see langword="null"/> reference (<see langword="Nothing"/> in Visual Basic) if no inner exception is specified.</param>
-        </member>
-        <member name="M:WinCopies.InvalidEnumArgumentException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-            <summary>
-            Initializes a new instance of the <see cref="T:WinCopies.InvalidEnumArgumentException"/> class with serialized data.
-            </summary>
-            <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
-            <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.</param>
-            <exception cref="T:System.ArgumentNullException">info is null.</exception>
-            <exception cref="T:System.Runtime.Serialization.SerializationException">The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0).</exception>
-        </member>
-        <member name="M:WinCopies.InvalidEnumArgumentException.#ctor(System.String,System.Int32,System.Type)">
-            <summary>
-            Initializes a new instance of the <see cref="T:WinCopies.InvalidEnumArgumentException"/> class with a message generated from the argument, the invalid value, and an enumeration class.
-            </summary>
-            <param name="argumentName">The name of the argument that caused the exception.</param>
-            <param name="invalidValue">The value of the argument that failed.</param>
-            <param name="enumClass">A <see cref="T:System.Type"/> that represents the enumeration class with the valid values.</param>
-            <remarks>This constructor will create a localized message saying that the <paramref name="argumentName"/> parameter was invalid because the value passed in was invalid, and that the value should be one of the values in the enumeration class.</remarks>
-        </member>
-        <member name="M:WinCopies.InvalidEnumArgumentException.#ctor(System.String,System.Int64,System.Type)">
-            <summary>
-            Initializes a new instance of the <see cref="T:WinCopies.InvalidEnumArgumentException"/> class with a message generated from the argument, the invalid value, and an enumeration class.
-            </summary>
-            <param name="argumentName">The name of the argument that caused the exception.</param>
-            <param name="invalidValue">The value of the argument that failed.</param>
-            <param name="enumClass">A <see cref="T:System.Type"/> that represents the enumeration class with the valid values.</param>
-        </member>
-        <member name="M:WinCopies.InvalidEnumArgumentException.#ctor(System.String,System.Enum)">
-            <summary>
-            Initializes a new instance of the <see cref="T:WinCopies.InvalidEnumArgumentException"/> class with a message generated from the argument, the invalid value, and an enumeration class.
-            </summary>
-            <param name="argumentName">The name of the argument that caused the exception.</param>
-            <param name="invalidValue">The value of the argument that failed.</param>
-        </member>
-        <member name="M:WinCopies.InvalidEnumArgumentException.#ctor(System.String,System.String,System.Int32,System.Type)">
-            <summary>
-            Initializes a new instance of the <see cref="T:WinCopies.InvalidEnumArgumentException"/> class with a custom message, the argument name, the invalid value, and an enumeration class.
-            </summary>
-            <param name="message">A custom message describing this exception.</param>
-            <param name="argumentName">The name of the argument that caused the exception.</param>
-            <param name="invalidValue">The value of the argument that failed.</param>
-            <param name="enumClass">A <see cref="T:System.Type"/> that represents the enumeration class with the valid values.</param>
-        </member>
-        <member name="M:WinCopies.InvalidEnumArgumentException.#ctor(System.String,System.String,System.Int64,System.Type)">
-            <summary>
-            Initializes a new instance of the <see cref="T:WinCopies.InvalidEnumArgumentException"/> class with a custom message, the argument name, the invalid value, and an enumeration class.
-            </summary>
-            <param name="message">A custom message describing this exception.</param>
-            <param name="argumentName">The name of the argument that caused the exception.</param>
-            <param name="invalidValue">The value of the argument that failed.</param>
-            <param name="enumClass">A <see cref="T:System.Type"/> that represents the enumeration class with the valid values.</param>
-        </member>
-        <member name="M:WinCopies.InvalidEnumArgumentException.#ctor(System.String,System.String,System.Enum)">
-            <summary>
-            Initializes a new instance of the <see cref="T:WinCopies.InvalidEnumArgumentException"/> class with a message generated from the argument, the invalid value, and an enumeration class.
-            </summary>
-            <param name="message">A custom message describing this exception.</param>
-            <param name="argumentName">The name of the argument that caused the exception.</param>
-            <param name="invalidValue">The value of the argument that failed.</param>
-        </member>
-        <member name="P:WinCopies.InvalidEnumArgumentException.Message">
-            <summary>
-            Gets the error message and the parameter name, or only the error message if no parameter name is set.
-            </summary>
-            <returns>A text string describing the details of the exception. The value of this property takes one of two forms: Condition Value The paramName is a null reference (Nothing in Visual Basic) or of zero length. The message string passed to the constructor. The paramName is not null reference (Nothing in Visual Basic) and it has a length greater than zero. The message string appended with the name of the invalid parameter.</returns>
-        </member>
-        <member name="P:WinCopies.InvalidEnumArgumentException.ParamName">
-            <summary>
-            Gets the name of the parameter that causes this exception.
-            </summary>
-            <returns>The parameter name.</returns>
-        </member>
-        <member name="P:WinCopies.InvalidEnumArgumentException.InvalidValue">
-            <summary>
-            The value of the argument that failed.
-            </summary>
         </member>
     </members>
 </doc>

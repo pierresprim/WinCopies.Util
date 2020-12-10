@@ -17,6 +17,10 @@
 
 using System;
 
+#if WinCopies2
+using WinCopies.Util;
+#endif
+
 using static WinCopies.Collections.ThrowHelper;
 
 namespace WinCopies.Collections.DotNetFix

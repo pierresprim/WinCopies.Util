@@ -111,7 +111,12 @@ namespace WinCopies.Collections.DotNetFix
         /// </summary>
         protected abstract SimpleLinkedListNode RemoveItem();
 
-        protected sealed override void ClearItems()
+#if WinCopies2
+        public
+#else
+            protected
+#endif
+            sealed override void ClearItems()
         {
             SimpleLinkedListNode node, temp;
 
