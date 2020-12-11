@@ -127,23 +127,27 @@ namespace WinCopies
 
         public static ArgumentException GetExceptionForNonFlagsEnum(in string argumentName) => new ArgumentException(NonFlagsEnumException, argumentName);
 
+#if CS7
         public static void ThrowIfNotFlagsEnum(in Enum value, in string argumentName)
         {
             if (!value.IsFlagsEnum())
 
                 throw GetExceptionForNonFlagsEnum(argumentName);
         }
+#endif
 
         public static TypeArgumentException GetExceptionForNonFlagsEnumType(in string typeArgumentName) => new TypeArgumentException(NonFlagsEnumTypeException, typeArgumentName);
 
+#if CS7
         public static void ThrowIfNotFlagsEnumType<T>(in string typeArgumentName) where T : Enum
         {
             if (!IsFlagsEnum<T>())
 
                 throw GetExceptionForNonFlagsEnum(typeArgumentName);
         }
+#endif
 
-        #endregion
+#endregion
 #endif
 
         #region Array Throws

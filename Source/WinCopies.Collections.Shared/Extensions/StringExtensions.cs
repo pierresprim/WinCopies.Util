@@ -192,6 +192,7 @@ namespace WinCopies.Collections
             Split(s, splitEmptyValues, stringBuilder, _s => list.AddLast(_s), separators);
         }
 
+#if CS7
         public static ILinkedList<string> SplitToILinkedList(this string s, in bool splitEmptyValues, params char[] separators)
         {
             var list = new DotNetFix.Generic.LinkedList<string>();
@@ -207,8 +208,9 @@ namespace WinCopies.Collections
 
             Split(s, splitEmptyValues, stringBuilder, _s => list.AddLast(_s), separators);
         }
+#endif
 
-        #endregion
+#endregion
 
         public static string Join(this System.Collections.Generic.IEnumerable<string> enumerable, in bool keepEmptyValues, params char[] join) => Join(enumerable, keepEmptyValues, new string(join));
 
@@ -216,12 +218,12 @@ namespace WinCopies.Collections
         {
             System.Collections.Generic.IEnumerator<string> enumerator = (enumerable ?? throw GetArgumentNullException(nameof(enumerable))).GetEnumerator();
 
-#if CS7
+#if CS8
+            stringBuilder ??= new StringBuilder();
+#else
             if (stringBuilder == null)
 
                 stringBuilder = new StringBuilder();
-#else
-            stringBuilder ??= new StringBuilder();
 #endif
 
             try

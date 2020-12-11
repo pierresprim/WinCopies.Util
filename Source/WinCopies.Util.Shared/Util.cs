@@ -119,7 +119,7 @@ namespace WinCopies
         public const BindingFlags DefaultBindingFlagsForPropertySet = BindingFlags.Public | BindingFlags.NonPublic |
                          BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly;
 
-#if WinCopies2
+#if WinCopies2 && CS7
         [Obsolete("This method has been replaced by the WinCopies.Util.Extensions.SetBackgroundWorkerProperty method overloads.")]
         public static (bool propertyChanged, object oldValue) SetPropertyWhenNotBusy<T>(T bgWorker, string propertyName, string fieldName, object newValue, Type declaringType, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, bool throwIfBusy = true) where T : IBackgroundWorker, INotifyPropertyChanged => bgWorker.IsBusy
                 ? throwIfBusy ? throw new InvalidOperationException("Cannot change property value when BackgroundWorker is busy.") : (false, Extensions.GetField(fieldName, declaringType, bindingFlags).GetValue(bgWorker))
@@ -139,7 +139,6 @@ namespace WinCopies
         public static Predicate<T> GetCommonPredicate<T>() => (T value) => true;
 
 #if WinCopies2
-
         [Obsolete("This method has been replaced by the WinCopies.Util.Extensions.ThrowIfInvalidEnumValue(params Enum[] values) method.")]
         public static void ThrowOnNotValidEnumValue(params Enum[] values) => ThrowIfInvalidEnumValue(values);
 
@@ -168,16 +167,19 @@ namespace WinCopies
 
         public static TypeArgumentException GetExceptionForNonFlagsEnumType(in string typeArgumentName) => new TypeArgumentException(ExceptionMessages.NonFlagsEnumTypeException, typeArgumentName);
 
+#if CS7
         public static void ThrowIfNotFlagsEnumType<T>(in string typeArgumentName) where T : Enum
         {
             if (!IsFlagsEnum<T>())
 
                 throw GetExceptionForNonFlagsEnum(typeArgumentName);
         }
-
+#endif
 #endif
 
+#if CS7
         public static bool IsFlagsEnum<T>() where T : Enum => typeof(T).GetCustomAttribute<FlagsAttribute>() is object;
+#endif
 
         // public static KeyValuePair<TKey, Func<bool>>[] GetIfKeyValuePairPredicateArray<TKey>(params KeyValuePair<TKey, Func<bool>>[] keyValuePairs) => keyValuePairs;
 
@@ -362,7 +364,24 @@ namespace WinCopies
 
             if (comparison != IfComp.NotEqual && !predicateResult()) return false;
 
-#if CS7
+#if CS8
+
+            return comparison switch
+            {
+                IfComp.Equal => comparisonDelegate(value, valueToCompare),
+
+                IfComp.NotEqual => !predicateResult() || !comparisonDelegate(value, valueToCompare),
+
+#pragma warning disable IDE0002
+
+                IfComp.ReferenceEqual => object.ReferenceEquals(value, valueToCompare),
+
+#pragma warning restore IDE0002
+
+                _ => false
+            };
+
+#else
 
             switch (comparison)
             {
@@ -388,23 +407,6 @@ namespace WinCopies
                     return false;
 
             }
-
-#else
-
-            return comparison switch
-            {
-                IfComp.Equal => comparisonDelegate(value, valueToCompare),
-
-                IfComp.NotEqual => !predicateResult() || !comparisonDelegate(value, valueToCompare),
-
-#pragma warning disable IDE0002
-
-                IfComp.ReferenceEqual => object.ReferenceEquals(value, valueToCompare),
-
-#pragma warning restore IDE0002
-
-                _ => false
-            };
 
 #endif
         }
@@ -415,8 +417,22 @@ namespace WinCopies
 
             if (comparison != IfComp.NotEqual && !predicateResult()) return false;
 
-#if CS7
+#if CS8
+            return comparison switch
+            {
+                IfComp.Equal => comparisonDelegate(value, valueToCompare),
 
+                IfComp.NotEqual => !predicateResult() || !comparisonDelegate(value, valueToCompare),
+
+#pragma warning disable IDE0002
+
+                IfComp.ReferenceEqual => object.ReferenceEquals(value, valueToCompare),
+
+#pragma warning restore IDE0002
+
+                _ => false
+            };
+#else
             switch (comparison)
             {
                 case IfComp.Equal:
@@ -439,24 +455,6 @@ namespace WinCopies
             
                     return false;
             }
-
-#else
-
-            return comparison switch
-            {
-                IfComp.Equal => comparisonDelegate(value, valueToCompare),
-
-                IfComp.NotEqual => !predicateResult() || !comparisonDelegate(value, valueToCompare),
-
-#pragma warning disable IDE0002
-
-                IfComp.ReferenceEqual => object.ReferenceEquals(value, valueToCompare),
-
-#pragma warning restore IDE0002
-
-                _ => false
-            };
-
 #endif
         }
 
@@ -1422,14 +1420,10 @@ namespace WinCopies
                 totalArraysIndex += _array.Length;
             }
 
-#if CS7
-
-            arrays[arrays.Length - 1].CopyTo(newArray, totalArraysIndex);
-
-#else
-
+#if CS8
             arrays[^1].CopyTo(newArray, totalArraysIndex);
-
+#else
+            arrays[arrays.Length - 1].CopyTo(newArray, totalArraysIndex);
 #endif
 
             return newArray;
@@ -1517,6 +1511,7 @@ namespace WinCopies
         /// <returns>A <see cref="bool"/> value that indicates whether the <see cref="string"/> given is a <see cref="decimal"/>.</returns>
         public static bool IsNumeric(in string s, out decimal d) => decimal.TryParse(s, out d);
 
+#if CS7
         /// <summary>
         /// Get all the flags in a flags enum.
         /// </summary>
@@ -1534,6 +1529,7 @@ namespace WinCopies
 
             return enumType.GetEnumUnderlyingType().IsType(typeof(sbyte), typeof(short), typeof(int), typeof(long)) ? (T)Enum.ToObject(enumType, NumericArrayToLongValue(array)) : (T)Enum.ToObject(enumType, NumericArrayToULongValue(array));
         }
+#endif
 
         public static long NumericArrayToLongValue(Array array)
         {

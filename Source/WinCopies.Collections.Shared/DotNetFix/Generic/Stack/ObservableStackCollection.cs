@@ -15,6 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
+#if CS7
+
 using System;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -104,3 +106,4 @@ namespace WinCopies.Collections.DotNetFix
     }
 #endif
 }
+#endif

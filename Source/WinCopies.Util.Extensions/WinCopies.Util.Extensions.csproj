@@ -4,7 +4,7 @@
     <PackageId>WinCopies.Util.Extensions</PackageId>
     <AssemblyName>WinCopies.Util.Extensions</AssemblyName>
     <Title>WinCopies.Util.Extensions</Title>
-    <TargetFrameworks>netcoreapp3.0;netcoreapp3.1;net472;net48;netstandard2.0;netstandard2.1</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.0;netcoreapp3.1;net5.0;net40;net472;net48;netstandard2.0;netstandard2.1</TargetFrameworks>
     <DocumentationFile>WinCopies.Util.Extensions.xml</DocumentationFile>
     <SignAssembly>true</SignAssembly>
     <Description>WinCopies framework utilities</Description>
@@ -16,14 +16,6 @@
     <FileVersion>3.1.0.0</FileVersion>
     <RootNamespace>WinCopies</RootNamespace>
     <AssemblyOriginatorKeyFile>WinCopies.Util.Extensions.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework.TrimEnd(`0123456789.`))' == 'netstandard'">
-    <DefineConstants>NETSTANDARD;$(DefineConstants)</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework.TrimEnd(`0123456789.`))' == 'netcoreapp'">
-    <DefineConstants>NETCORE;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

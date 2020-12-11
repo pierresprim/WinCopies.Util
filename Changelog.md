@@ -12,6 +12,7 @@ Updates
 ??/??/???? 3.2.0.0-preview
 ==========================
 
+- Now supports .Net Framework 4.0 and .Net 5.
 - Changes:
 	- WinCopies.Collections.DotNetFix.SimpleLinkedListBase.ClearItems() is now protected.
 	- WinCopies.InvalidEnumArgumentException is now in the WinCopies.Util package.

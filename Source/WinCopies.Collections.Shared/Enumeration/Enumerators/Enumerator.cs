@@ -479,7 +479,9 @@ _enumerationStarted
             /// </summary>
             /// <param name="enumerator">The enumerator to enumerate.</param>
             public Enumerator(TEnumSource enumerator)
-#if CS7
+#if CS8
+                => _innerEnumerator = enumerator ?? throw GetArgumentNullException(nameof(enumerator));
+#else
             {
                 if (enumerator == null)
 
@@ -487,8 +489,6 @@ _enumerationStarted
 
                 _innerEnumerator = enumerator;
             }
-#else
-                => _innerEnumerator = enumerator ?? throw GetArgumentNullException(nameof(enumerator));
 #endif
 
             protected

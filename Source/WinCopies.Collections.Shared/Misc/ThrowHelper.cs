@@ -88,6 +88,7 @@ ThrowIfEmptyListOrCollection
 
         public static ArgumentException GetNotContainedLinkedListNodeException(in string argumentName) => new ArgumentException("The given node is not contained in the current list.", argumentName);
 
+#if CS7
         public static void ThrowIfNotContainedNode<T>(in ILinkedListNode<T> node, in string argumentName, in ILinkedList<T> list)
         {
             if (node.List != list)
@@ -95,14 +96,15 @@ ThrowIfEmptyListOrCollection
                 throw GetNotContainedLinkedListNodeException(argumentName);
         }
 
-        public static ArgumentException GetNodesAreEqualException() => new ArgumentException("The given nodes are equal.");
-
         public static void ThrowIfNodesAreEqual<T>(in ILinkedListNode<T> x, in ILinkedListNode<T> y)
         {
             if (x == y)
 
                 throw GetNodesAreEqualException();
         }
+#endif
+
+        public static ArgumentException GetNodesAreEqualException() => new ArgumentException("The given nodes are equal.");
 
 #if !WinCopies2
         public static void ThrowIfEnumeratorNotStartedOrDisposedException(in WinCopies.Collections.IDisposableEnumeratorInfo enumerator)

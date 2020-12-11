@@ -15,27 +15,25 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
+#if CS7
+
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-
-#if WinCopies2
-using WinCopies.Util.Resources;
-#endif
-
-using WinCopies.Collections.Generic;
 
 #if WinCopies2
 using System.Runtime.Serialization;
 #else
+using System.Collections.Generic;
+using System.Linq;
+
+using WinCopies.Collections.Generic;
 using WinCopies.Linq;
 
+using static WinCopies.Collections.ThrowHelper;
 using static WinCopies.ThrowHelper;
 #endif
-
-using static WinCopies.Collections.ThrowHelper;
+#endif
 
 namespace WinCopies.Collections.DotNetFix
 {
@@ -46,7 +44,9 @@ namespace WinCopies.Collections.DotNetFix
 
         LIFO = 2
     }
-
+#endif
+#if CS7
+#if !WinCopies2
     namespace Generic
     {
 #endif
@@ -485,12 +485,12 @@ namespace WinCopies.Collections.DotNetFix
 
                     Weld(node, First);
 
-#if CS7
+#if CS8
+                Last ??= node;
+#else
                 if (Last == null)
 
                     Last = node;
-#else
-                Last ??= node;
 #endif
 
                 First = node;
@@ -523,12 +523,12 @@ namespace WinCopies.Collections.DotNetFix
                     Last.Next = node;
                 }
 
-#if CS7
+#if CS8
+                First ??= node;
+#else
                 if (First == null)
 
                     First = node;
-#else
-                First ??= node;
 #endif
 
                 Last = node;
@@ -942,5 +942,6 @@ namespace WinCopies.Collections.DotNetFix
         }
 #if !WinCopies2
     }
+#endif
 #endif
 }

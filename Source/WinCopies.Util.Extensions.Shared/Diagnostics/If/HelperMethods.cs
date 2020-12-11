@@ -69,9 +69,26 @@ namespace WinCopies.Diagnostics
 
             if (comparison != IfComp.NotEqual && !predicateResult()) return false;
 
-#if CS7
+#if CS8
 
-            switch (comparison)
+            return comparison switch
+            {
+                IfComp.Equal => comparisonDelegate(value, valueToCompare),
+
+                IfComp.NotEqual => !predicateResult() || !comparisonDelegate(value, valueToCompare),
+
+#pragma warning disable IDE0002
+
+                IfComp.ReferenceEqual => object.ReferenceEquals(value, valueToCompare),
+
+#pragma warning restore IDE0002
+
+                _ => false
+            };
+
+#else
+
+ switch (comparison)
             {
 
                 case IfComp.Equal:
@@ -95,23 +112,6 @@ namespace WinCopies.Diagnostics
                     return false;
 
             }
-
-#else
-
-            return comparison switch
-            {
-                IfComp.Equal => comparisonDelegate(value, valueToCompare),
-
-                IfComp.NotEqual => !predicateResult() || !comparisonDelegate(value, valueToCompare),
-
-#pragma warning disable IDE0002
-
-                IfComp.ReferenceEqual => object.ReferenceEquals(value, valueToCompare),
-
-#pragma warning restore IDE0002
-
-                _ => false
-            };
 
 #endif
         }
@@ -122,32 +122,7 @@ namespace WinCopies.Diagnostics
 
             if (comparison != IfComp.NotEqual && !predicateResult()) return false;
 
-#if CS7
-
-            switch (comparison)
-            {
-                case IfComp.Equal:
-            
-                    return comparisonDelegate(value, valueToCompare);
-
-                case IfComp.NotEqual:
-            
-                    return !predicateResult() || !comparisonDelegate(value, valueToCompare);
-
-#pragma warning disable IDE0002
-
-                case IfComp.ReferenceEqual:
-            
-                    return object.ReferenceEquals(value, valueToCompare);
-
-#pragma warning restore IDE0002
-
-                default:
-            
-                    return false;
-            }
-
-#else
+#if CS8
 
             return comparison switch
             {
@@ -163,6 +138,31 @@ namespace WinCopies.Diagnostics
 
                 _ => false
             };
+
+#else
+
+            switch (comparison)
+            {
+                case IfComp.Equal:
+
+                    return comparisonDelegate(value, valueToCompare);
+
+                case IfComp.NotEqual:
+
+                    return !predicateResult() || !comparisonDelegate(value, valueToCompare);
+
+#pragma warning disable IDE0002
+
+                case IfComp.ReferenceEqual:
+
+                    return object.ReferenceEquals(value, valueToCompare);
+
+#pragma warning restore IDE0002
+
+                default:
+
+                    return false;
+            }
 
 #endif
         }

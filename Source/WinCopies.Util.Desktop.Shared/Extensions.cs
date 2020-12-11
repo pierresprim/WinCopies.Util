@@ -24,6 +24,7 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+
 #if !WinCopies2
 using WinCopies.DotNetFix;
 #endif
@@ -393,6 +394,10 @@ namespace WinCopies.Desktop
                     Desktop.Resources.ExceptionMessages.BackgroundWorkerIsBusy) : (false, (IDisposable)GetProperty(propertyName, declaringType, bindingFlags).GetValue(obj))
                 : obj.DisposeAndSetProperty(propertyName, newValue, declaringType, throwIfReadOnly, bindingFlags, paramName, setOnlyIfNotNull, throwIfNull, validateValueCallback, throwIfValidationFails, valueChangedCallback);
 
+        [DllImport("gdi32.dll", CharSet = CharSet.Auto)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool DeleteObject([In] IntPtr hObject);
+
         /// <summary>
         /// Converts a <see cref="Bitmap"/> to an <see cref="ImageSource"/>.
         /// </summary>
@@ -410,7 +415,7 @@ namespace WinCopies.Desktop
                 Int32Rect.Empty,
                 BitmapSizeOptions.FromEmptyOptions());
 
-            if (!Microsoft.WindowsAPICodePack.Win32Native.GDI.GDI.DeleteObject(hBitmap))
+            if (!DeleteObject(hBitmap))
 
                 Marshal.ThrowExceptionForHR(Marshal.GetHRForLastWin32Error());
 

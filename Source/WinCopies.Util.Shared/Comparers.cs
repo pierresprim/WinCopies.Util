@@ -118,11 +118,11 @@ namespace WinCopies.Collections
     public interface IEqualityComparer<in T> : System.Collections.Generic.IEqualityComparer<T>
     {
         bool Equals(
-#if !CS7
+#if CS8
             [AllowNull]
 #endif
         T x,
-#if !CS7
+#if CS8
             [AllowNull]
 #endif
         object y);
@@ -131,31 +131,31 @@ namespace WinCopies.Collections
     public abstract class EqualityComparer<T> : System.Collections.Generic.EqualityComparer<T>
     {
         public bool Equals(
-#if !CS7
+#if CS8
             [AllowNull]
 #endif
         in T x,
-#if !CS7
+#if CS8
             [AllowNull]
 #endif
         in object y) => y is T _y && EqualsOverride(x, _y);
 
         public sealed override bool Equals(
-#if !CS7
+#if CS8
             [AllowNull]
 #endif
         T x,
-#if !CS7
+#if CS8
             [AllowNull]
 #endif
         T y) => EqualsOverride(x, y);
 
         protected abstract bool EqualsOverride(
-#if !CS7
+#if CS8
             [AllowNull]
 #endif
         T x,
-#if !CS7
+#if CS8
             [AllowNull]
 #endif
         T y);

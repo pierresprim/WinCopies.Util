@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <TargetFrameworks>netcoreapp3.0;netcoreapp3.1;net5.0;net40;net472;net48;netstandard2.0;netstandard2.1</TargetFrameworks>
     <PackageId>WinCopies.Util</PackageId>
     <AssemblyName>WinCopies.Util</AssemblyName>
     <Title>WinCopies.Util</Title>
-    <TargetFrameworks>netcoreapp3.0;netcoreapp3.1;net472;net48;netstandard2.0;netstandard2.1</TargetFrameworks>
     <DocumentationFile>WinCopies.Util.xml</DocumentationFile>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>WinCopies.Util.snk</AssemblyOriginatorKeyFile>
@@ -19,14 +19,6 @@
   </PropertyGroup>
 
   <Import Project="..\WinCopies.Util.Shared\WinCopies.Util.Shared.projitems" Label="Shared" />
-
-  <PropertyGroup Condition="'$(TargetFramework.TrimEnd(`0123456789.`))' == 'netstandard'">
-    <DefineConstants>NETSTANDARD;$(DefineConstants)</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework.TrimEnd(`0123456789.`))' == 'netcoreapp'">
-    <DefineConstants>NETCORE;$(DefineConstants)</DefineConstants>
-  </PropertyGroup>
 
   <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />

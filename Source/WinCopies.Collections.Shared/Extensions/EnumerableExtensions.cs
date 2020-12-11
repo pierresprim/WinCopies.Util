@@ -241,6 +241,7 @@ namespace WinCopies.Collections
                 array[i++] = value;
         }
 
+#if CS7
         public static ArrayList ToList(this IEnumerable array) => array.ToList(0);
 
         /// <summary>
@@ -298,6 +299,7 @@ namespace WinCopies.Collections
                 return arrayList;
             }
         }
+#endif
 
         //public static List<T> ToList<T>(this System.Collections.Generic.IEnumerable<T> array)
         //{
@@ -310,6 +312,7 @@ namespace WinCopies.Collections
         //    return arrayList;
         //}
 
+#if CS7
         /// <summary>
         /// Converts an <see cref="IEnumerable"/> to a <see cref="List{T}"/> from a given index for a given length.
         /// </summary>
@@ -378,6 +381,7 @@ namespace WinCopies.Collections
 
             return _array.ToArray();
         }
+#endif
 
         public static object[] ToArray(this IEnumerable array, in int startIndex, in int length)
         {

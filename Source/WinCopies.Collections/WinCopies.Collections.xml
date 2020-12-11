@@ -87,7 +87,7 @@
             </summary>
             <returns>The object that is removed from the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.TryDequeue(`0@)"/>
+            <seealso cref="!:TryDequeue(out T)"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.EnqueueItem(`0)">
             <summary>
@@ -107,36 +107,13 @@
             </summary>
             <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.TryPeek(`0@)"/>
+            <seealso cref="!:TryPeek(out T)"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.ToArray">
             <summary>
             Copies the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> elements to a new array.
             </summary>
             <returns>A new array containing elements copied from the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.TryDequeueItem(`0@)">
-            <summary>
-            Tries to remove and return the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. Override this method to provide a custom implementation.
-            </summary>
-            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
-            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been removed and retrieved.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.TryDequeue(`0@)">
-            <summary>
-            Tries to remove and return the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.TryDequeueItem(`0@)"/> method to provide a custom implementation.
-            </summary>
-            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
-            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been removed and retrieved.</returns>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.Dequeue"/>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.TryPeek(`0@)">
-            <summary>
-            Tries to peek the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> without removing it.
-            </summary>
-            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
-            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been retrieved.</returns>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.Peek"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.GetEnumerator">
             <summary>
@@ -179,15 +156,7 @@
             </summary>
             <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`1.TryPeek(`0@)"/>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`1.TryPeek(`0@)">
-            <summary>
-            Tries to peek the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> without removing it.
-            </summary>
-            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
-            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been retrieved.</returns>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`1.Peek"/>
+            <seealso cref="!:TryPeek(out T)"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`1.GetEnumerator">
             <summary>
@@ -981,13 +950,13 @@
             <param name="values">The values to try to add to the collection</param>
             <returns><see langword="true"/> if the value has been added to the collection, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.AddIfNotContains``1(System.Collections.Generic.ICollection{``0},``0@)">
+        <member name="M:WinCopies.Collections.Extensions.AddRangeIfNotContains``1(System.Collections.Generic.ICollection{``0},System.Collections.Generic.IEnumerable{``0}@)">
             <summary>
-            Tries to add a value to an <see cref="T:System.Collections.Generic.ICollection`1"/> if it does not contain it already.
+            Tries to add multiple values to an <see cref="T:System.Collections.Generic.ICollection`1"/> if it does not contain them already.
             </summary>
             <typeparam name="T">The value type</typeparam>
             <param name="collection">The collection to which try to add the value</param>
-            <param name="value">The value to try to add to the collection</param>
+            <param name="values">The values to try to add to the collection</param>
             <returns><see langword="true"/> if the value has been added to the collection, otherwise <see langword="false"/>.</returns>
         </member>
         <member name="M:WinCopies.Collections.Extensions.AddRangeIfNotContains``1(System.Collections.Generic.ICollection{``0},``0[])">
@@ -999,13 +968,13 @@
             <param name="values">The values to try to add to the collection</param>
             <returns><see langword="true"/> if the value has been added to the collection, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.AddRangeIfNotContains``1(System.Collections.Generic.ICollection{``0},System.Collections.Generic.IEnumerable{``0}@)">
+        <member name="M:WinCopies.Collections.Extensions.AddIfNotContains``1(System.Collections.Generic.ICollection{``0},``0@)">
             <summary>
-            Tries to add multiple values to an <see cref="T:System.Collections.Generic.ICollection`1"/> if it does not contain them already.
+            Tries to add a value to an <see cref="T:System.Collections.Generic.ICollection`1"/> if it does not contain it already.
             </summary>
             <typeparam name="T">The value type</typeparam>
             <param name="collection">The collection to which try to add the value</param>
-            <param name="values">The values to try to add to the collection</param>
+            <param name="value">The value to try to add to the collection</param>
             <returns><see langword="true"/> if the value has been added to the collection, otherwise <see langword="false"/>.</returns>
         </member>
         <member name="M:WinCopies.Collections.Extensions.InsertIfNotContains(System.Collections.IList,System.Int32@,System.Object@)">
@@ -1146,6 +1115,24 @@
             <param name="node">The node after which to add the values</param>
             <param name="array">The values to add to a <see cref="T:System.Collections.Generic.LinkedList`1"/></param>
         </member>
+        <member name="M:WinCopies.Collections.Extensions.AddRangeAfter``1(WinCopies.Collections.DotNetFix.Generic.ILinkedList{``0},WinCopies.Collections.DotNetFix.Generic.ILinkedListNode{``0}@,``0[])">
+            <summary>
+            Add multiple values after a specified node in a <see cref="T:WinCopies.Collections.DotNetFix.Generic.ILinkedList`1"/>. For better performance, use the <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> class.
+            </summary>
+            <param name="collection">The <see cref="T:WinCopies.Collections.DotNetFix.Generic.ILinkedList`1"/> into which add the values.</param>
+            <param name="node">The node after which to add the values</param>
+            <param name="values">The values to add to a <see cref="T:WinCopies.Collections.DotNetFix.Generic.ILinkedList`1"/></param>
+            <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.Extensions.AddRangeAfter``1(WinCopies.Collections.DotNetFix.Generic.ILinkedList{``0},WinCopies.Collections.DotNetFix.Generic.ILinkedListNode{``0}@,System.Collections.Generic.IEnumerable{``0}@)">
+            <summary>
+            Add multiple values after a specified node in a <see cref="T:WinCopies.Collections.DotNetFix.Generic.ILinkedList`1"/>. For better performance, use the <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> class.
+            </summary>
+            <param name="collection">The <see cref="T:WinCopies.Collections.DotNetFix.Generic.ILinkedList`1"/> into which add the values.</param>
+            <param name="node">The node after which to add the values</param>
+            <param name="array">The values to add to a <see cref="T:WinCopies.Collections.DotNetFix.Generic.ILinkedList`1"/></param>
+            <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
+        </member>
         <member name="M:WinCopies.Collections.Extensions.AddRangeFirst``1(WinCopies.Collections.DotNetFix.Generic.ILinkedList{``0},``0[])">
             <summary>
             Add multiple values at the top of a <see cref="T:WinCopies.Collections.DotNetFix.Generic.ILinkedList`1"/>. For better performance, use the <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> class.
@@ -1193,24 +1180,6 @@
             </summary>
             <param name="collection">The <see cref="T:WinCopies.Collections.DotNetFix.Generic.ILinkedList`1"/> into which add the values.</param>
             <param name="node">The node before which to add the values</param>
-            <param name="array">The values to add to a <see cref="T:WinCopies.Collections.DotNetFix.Generic.ILinkedList`1"/></param>
-            <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.Extensions.AddRangeAfter``1(WinCopies.Collections.DotNetFix.Generic.ILinkedList{``0},WinCopies.Collections.DotNetFix.Generic.ILinkedListNode{``0}@,``0[])">
-            <summary>
-            Add multiple values after a specified node in a <see cref="T:WinCopies.Collections.DotNetFix.Generic.ILinkedList`1"/>. For better performance, use the <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> class.
-            </summary>
-            <param name="collection">The <see cref="T:WinCopies.Collections.DotNetFix.Generic.ILinkedList`1"/> into which add the values.</param>
-            <param name="node">The node after which to add the values</param>
-            <param name="values">The values to add to a <see cref="T:WinCopies.Collections.DotNetFix.Generic.ILinkedList`1"/></param>
-            <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.Extensions.AddRangeAfter``1(WinCopies.Collections.DotNetFix.Generic.ILinkedList{``0},WinCopies.Collections.DotNetFix.Generic.ILinkedListNode{``0}@,System.Collections.Generic.IEnumerable{``0}@)">
-            <summary>
-            Add multiple values after a specified node in a <see cref="T:WinCopies.Collections.DotNetFix.Generic.ILinkedList`1"/>. For better performance, use the <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> class.
-            </summary>
-            <param name="collection">The <see cref="T:WinCopies.Collections.DotNetFix.Generic.ILinkedList`1"/> into which add the values.</param>
-            <param name="node">The node after which to add the values</param>
             <param name="array">The values to add to a <see cref="T:WinCopies.Collections.DotNetFix.Generic.ILinkedList`1"/></param>
             <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
         </member>

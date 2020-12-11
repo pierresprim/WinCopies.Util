@@ -15,6 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
+#if CS7
+
 #if WinCopies2
 using System;
 #endif
@@ -116,3 +118,5 @@ namespace WinCopies.Collections.DotNetFix.Generic
         System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }
+
+#endif
