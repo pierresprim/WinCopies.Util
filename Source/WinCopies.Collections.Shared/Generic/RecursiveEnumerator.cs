@@ -61,14 +61,14 @@ bool _completed = false;
 
         public RecursiveEnumerator(in System.Collections.Generic.IEnumerable<IRecursiveEnumerable<T>> enumerable, in IStack<System.Collections.Generic.IEnumerator<IRecursiveEnumerable<T>>> stack) : base(enumerable ?? throw GetArgumentNullException(nameof(enumerable))) => InnerStack = stack;
 
-        public RecursiveEnumerator(in System.Collections.Generic.IEnumerable<IRecursiveEnumerable<T>> enumerable) : this(enumerable, new WinCopies.Collections.Generic.Stack<System.Collections.Generic.IEnumerator<IRecursiveEnumerable<T>>>())
+        public RecursiveEnumerator(in System.Collections.Generic.IEnumerable<IRecursiveEnumerable<T>> enumerable) : this(enumerable, new WinCopies.Collections.DotNetFix.Generic.Stack<System.Collections.Generic.IEnumerator<IRecursiveEnumerable<T>>>())
         {
             // Left empty.
         }
 
         public RecursiveEnumerator(IRecursiveEnumerableProviderEnumerable<T> enumerable, in IStack<System.Collections.Generic.IEnumerator<IRecursiveEnumerable<T>>> stack) : base(new Enumerable<IRecursiveEnumerable<T>>(() => (enumerable ?? throw GetArgumentNullException(nameof(enumerable))).GetRecursiveEnumerator())) => InnerStack = stack;
 
-        public RecursiveEnumerator(in IRecursiveEnumerableProviderEnumerable<T> enumerable) : this(enumerable, new WinCopies.Collections.Generic.Stack<System.Collections.Generic.IEnumerator<IRecursiveEnumerable<T>>>())
+        public RecursiveEnumerator(in IRecursiveEnumerableProviderEnumerable<T> enumerable) : this(enumerable, new WinCopies.Collections.DotNetFix.Generic.Stack<System.Collections.Generic.IEnumerator<IRecursiveEnumerable<T>>>())
         {
             // Left empty.
         }

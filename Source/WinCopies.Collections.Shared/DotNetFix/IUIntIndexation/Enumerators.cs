@@ -16,17 +16,19 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 
 using static WinCopies
 #if WinCopies2
-    .Util.Util
+    .Util.Util;
+
+using System.Collections;
+using System.Collections.Generic;
 #else
-    .ThrowHelper
+    .ThrowHelper;
+
+using WinCopies.Collections.DotNetFix.Generic;
 #endif
-    ;
 
 namespace WinCopies.Collections.DotNetFix
 {

@@ -21,13 +21,18 @@ using System.Collections.Generic;
 
 namespace WinCopies.Collections.DotNetFix
 {
-    public interface IUIntIndexedCollection : IEnumerable
+    public interface IUIntIndexedCollection :
+#if WinCopies2
+IEnumerable
     {
         /// <summary>
         /// Gets the number of items in the collection.
         /// </summary>
         uint Count { get; }
-
+#else
+        IUIntCountableEnumerable
+    {
+#endif
         object SyncRoot { get; }
 
         bool IsSynchronized { get; }
@@ -40,7 +45,37 @@ namespace WinCopies.Collections.DotNetFix
         void CopyTo(in Array array, int index);
     }
 
-    public interface IUIntIndexedList : IReadOnlyUIntIndexedList, IEnumerable
+    public interface IReadOnlyUIntIndexedList : IUIntIndexedCollection
+#if WinCopies2
+, IEnumerable
+#endif
+    {
+        /// <summary>
+        /// Gets or sets an item at a given index in the list.
+        /// </summary>
+        /// <param name="index">The index of the item.</param>
+        /// <returns>The item at <paramref name="index"/>.</returns>
+        object this[uint index] { get; }
+
+        /// <summary>
+        /// Checks if the list contains a given value.
+        /// </summary>
+        /// <param name="value">The value to check.</param>
+        /// <returns><see langword="true"/> if the list contains <paramref name="value"/>, otherwise <see langword="false"/>.</returns>
+        bool Contains(in object value);
+
+        /// <summary>
+        /// Returns the index of a given value in the list.
+        /// </summary>
+        /// <param name="value">The value for which return the index.</param>
+        /// <returns>The index of <paramref name="value"/> if it was found, or <see langword="null"/> otherwise.</returns>
+        uint? IndexOf(in object value);
+    }
+
+    public interface IUIntIndexedList : IReadOnlyUIntIndexedList
+#if WinCopies2
+, IEnumerable
+#endif
     {
         /// <summary>
         /// Gets the item at a given index in the list.
@@ -86,61 +121,89 @@ namespace WinCopies.Collections.DotNetFix
         void RemoveAt(in uint index);
     }
 
-    public interface IReadOnlyUIntIndexedList : IUIntIndexedCollection, IEnumerable
-    {
-        /// <summary>
-        /// Gets or sets an item at a given index in the list.
-        /// </summary>
-        /// <param name="index">The index of the item.</param>
-        /// <returns>The item at <paramref name="index"/>.</returns>
-        object this[uint index] { get; }
-
-        /// <summary>
-        /// Checks if the list contains a given value.
-        /// </summary>
-        /// <param name="value">The value to check.</param>
-        /// <returns><see langword="true"/> if the list contains <paramref name="value"/>, otherwise <see langword="false"/>.</returns>
-        bool Contains(in object value);
-
-        /// <summary>
-        /// Returns the index of a given value in the list.
-        /// </summary>
-        /// <param name="value">The value for which return the index.</param>
-        /// <returns>The index of <paramref name="value"/> if it was found, or <see langword="null"/> otherwise.</returns>
-        uint? IndexOf(in object value);
-    }
-
-    public interface IUIntIndexedCollection<T> : IReadOnlyUIntIndexedCollection<T>, System.Collections.Generic.IEnumerable<T>, IEnumerable
-    {
-        void Add(in T item);
-
-        void Clear();
-
-        bool Contains(in T item);
-
-        void CopyTo(in T[] array, uint arrayIndex);
-
-        bool Remove(in T item);
-    }
-
+#if WinCopies2
     public interface IReadOnlyUIntIndexedCollection<out T> : System.Collections.Generic.IEnumerable<T>, IEnumerable
     {
         uint Count { get; }
     }
-
-    public interface IUIntIndexedList<T> : IUIntIndexedCollection<T>, IReadOnlyUIntIndexedList<T>, System.Collections.Generic.IEnumerable<T>, IEnumerable
+#else
+    namespace Generic
     {
-        new T this[uint index] { get; set; }
+#endif
+        public interface IUIntIndexedCollection<T> :
+#if WinCopies2
+            IReadOnlyUIntIndexedCollection<T>, System.Collections.Generic.IEnumerable<T>, IEnumerable
+#else
+            IUIntCountableEnumerable<T>
+#endif
+        {
+            void Add(
+#if WinCopies2
+in
+#endif
+                T item);
 
-        uint? IndexOf(in T item);
+            void Clear();
 
-        void Insert(in uint index, in T item);
+            bool Contains(
+#if WinCopies2
+in
+#endif
+                 T item);
 
-        void RemoveAt(in uint index);
+            void CopyTo(
+#if WinCopies2
+in
+#endif
+                 T[] array, uint arrayIndex);
+
+            bool Remove(
+#if WinCopies2
+in
+#endif
+                 T item);
+        }
+
+        public interface IReadOnlyUIntIndexedList<out T> :
+#if WinCopies2
+            IReadOnlyUIntIndexedCollection<T>, System.Collections.Generic.IEnumerable<T>, IEnumerable
+#else
+            IUIntCountableEnumerable<T>
+#endif
+        {
+            T this[uint index] { get; }
+        }
+
+        public interface IUIntIndexedList<T> : IUIntIndexedCollection<T>, IReadOnlyUIntIndexedList<T>
+#if WinCopies2
+, System.Collections.Generic.IEnumerable<T>, IEnumerable
+#endif
+        {
+            new T this[uint index] { get; set; }
+
+            uint? IndexOf(
+#if WinCopies2
+in
+#endif
+                 T item);
+
+            void Insert(
+#if WinCopies2
+in
+#endif
+                 uint index,
+#if WinCopies2
+in
+#endif
+                 T item);
+
+            void RemoveAt(
+#if WinCopies2
+in
+#endif
+                 uint index);
+        }
+#if !WinCopies2
     }
-
-    public interface IReadOnlyUIntIndexedList<out T> : IReadOnlyUIntIndexedCollection<T>, System.Collections.Generic.IEnumerable<T>, IEnumerable
-    {
-        T this[uint index] { get; }
-    }
+#endif
 }

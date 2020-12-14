@@ -56,19 +56,6 @@ namespace WinCopies.Collections.DotNetFix
         {
             // Left empty.
         }
-
-        public class UIntCountableEnumerable<T> : IUIntCountableEnumerable<T>
-        {
-            private ICountableEnumerable<T> _enumerable;
-
-            public uint Count => (uint)_enumerable.Count;
-
-            public UIntCountableEnumerable(ICountableEnumerable<T> enumerable) => _enumerable = enumerable;
-
-            public System.Collections.Generic.IEnumerator<T> GetEnumerator() => _enumerable.GetEnumerator();
-
-            System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_enumerable).GetEnumerator();
-        }
 #if !WinCopies2
     }
 #endif

@@ -12,12 +12,17 @@ Updates
 ??/??/???? 3.2.0.0-preview
 ==========================
 
-- Now supports .Net Framework 4.0 and .Net 5.
+- Supports .Net Framework 4.0 and .Net 5. (All features are not available in the .Net Framework 4.0 version.)
+- Depends on Microsoft.CodeAnalysis.NetAnalyzers. (.Net 5 version.)
+- Fixes #15
 - Changes:
 	- WinCopies.Collections.DotNetFix.SimpleLinkedListBase.ClearItems() is now protected.
 	- WinCopies.InvalidEnumArgumentException is now in the WinCopies.Util package.
 	- Some comparison-related types in the WinCopies.Collections namespace have moved to the WinCopies.Util package, and are still in the same namespace.
 	- Enum throw methods are now in the WinCopies.ThrowHelper class of the WinCopies.Util package.
+	- Some interface for uint indexation have changed in order to implement the non-generic version of the IUIntCountableEnumerable interface and the generic version in a generic context.
+- Removals:
+	- UIntCountableEnumerable<T> class.
 
 12/09/2020 3.1.0.0-preview
 ==========================

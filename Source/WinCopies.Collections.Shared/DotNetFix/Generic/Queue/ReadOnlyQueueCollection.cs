@@ -82,7 +82,7 @@ int
             /// Determines whether an element is in the <see cref="QueueCollection{T}"/>.
             /// </summary>
             /// <param name="item">The object to locate in the <see cref="QueueCollection{T}"/>. The value can be <see langword="null"/> for reference types.</param>
-            /// <returns><see langword="true"/> if <paramref name="item"/> is found in the <see cref="System.Collections.Generic.Queue{T}"/>; otherwise, <see langword="false"/>.</returns>
+            /// <returns><see langword="true"/> if <paramref name="item"/> is found in the queue; otherwise, <see langword="false"/>.</returns>
             public bool Contains(T item) => InnerQueue.Contains(item);
 
             void ICollection.CopyTo(Array array, int index) => ((ICollection)InnerQueue).CopyTo(array, index);

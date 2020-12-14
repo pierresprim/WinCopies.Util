@@ -2218,7 +2218,7 @@
             Determines whether an element is in the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.
             </summary>
             <param name="item">The object to locate in the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. The value can be <see langword="null"/> for reference types.</param>
-            <returns><see langword="true"/> if <paramref name="item"/> is found in the <see cref="T:System.Collections.Generic.Queue`1"/>; otherwise, <see langword="false"/>.</returns>
+            <returns><see langword="true"/> if <paramref name="item"/> is found in the queue; otherwise, <see langword="false"/>.</returns>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.CopyTo(`0[]@,System.Int32@)">
             <summary>
@@ -2299,7 +2299,7 @@
             Determines whether an element is in the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.
             </summary>
             <param name="item">The object to locate in the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. The value can be <see langword="null"/> for reference types.</param>
-            <returns><see langword="true"/> if <paramref name="item"/> is found in the <see cref="T:System.Collections.Generic.Queue`1"/>; otherwise, <see langword="false"/>.</returns>
+            <returns><see langword="true"/> if <paramref name="item"/> is found in the queue; otherwise, <see langword="false"/>.</returns>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.CopyTo(`0[]@,System.Int32@)">
             <summary>
@@ -2607,6 +2607,27 @@
             <param name="array">The array to copy the items.</param>
             <param name="index">The index in the array from which to start to copy.</param>
         </member>
+        <member name="P:WinCopies.Collections.DotNetFix.IReadOnlyUIntIndexedList.Item(System.UInt32)">
+            <summary>
+            Gets or sets an item at a given index in the list.
+            </summary>
+            <param name="index">The index of the item.</param>
+            <returns>The item at <paramref name="index"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.IReadOnlyUIntIndexedList.Contains(System.Object@)">
+            <summary>
+            Checks if the list contains a given value.
+            </summary>
+            <param name="value">The value to check.</param>
+            <returns><see langword="true"/> if the list contains <paramref name="value"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.IReadOnlyUIntIndexedList.IndexOf(System.Object@)">
+            <summary>
+            Returns the index of a given value in the list.
+            </summary>
+            <param name="value">The value for which return the index.</param>
+            <returns>The index of <paramref name="value"/> if it was found, or <see langword="null"/> otherwise.</returns>
+        </member>
         <member name="P:WinCopies.Collections.DotNetFix.IUIntIndexedList.Item(System.UInt32)">
             <summary>
             Gets the item at a given index in the list.
@@ -2649,27 +2670,6 @@
             Removes a value from the list at a given index.
             </summary>
             <param name="index">The index of the value to remove.</param>
-        </member>
-        <member name="P:WinCopies.Collections.DotNetFix.IReadOnlyUIntIndexedList.Item(System.UInt32)">
-            <summary>
-            Gets or sets an item at a given index in the list.
-            </summary>
-            <param name="index">The index of the item.</param>
-            <returns>The item at <paramref name="index"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.IReadOnlyUIntIndexedList.Contains(System.Object@)">
-            <summary>
-            Checks if the list contains a given value.
-            </summary>
-            <param name="value">The value to check.</param>
-            <returns><see langword="true"/> if the list contains <paramref name="value"/>, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.IReadOnlyUIntIndexedList.IndexOf(System.Object@)">
-            <summary>
-            Returns the index of a given value in the list.
-            </summary>
-            <param name="value">The value for which return the index.</param>
-            <returns>The index of <paramref name="value"/> if it was found, or <see langword="null"/> otherwise.</returns>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.LinkedList`1.#ctor">
             <summary>

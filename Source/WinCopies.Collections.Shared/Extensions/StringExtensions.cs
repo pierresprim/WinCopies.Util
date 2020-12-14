@@ -144,32 +144,32 @@ namespace WinCopies.Collections
             }
         }
 
-        public static System.Collections.Generic.Queue<string> SplitToQueue(this string s, in bool skipEmptyValues, params char[] separators)
+        public static WinCopies.Collections.DotNetFix.Generic.IQueue<string> SplitToQueue(this string s, in bool skipEmptyValues, params char[] separators)
         {
-            var queue = new System.Collections.Generic.Queue<string>();
+            var queue = new WinCopies.Collections.DotNetFix.Generic.Queue<string>();
 
             SplitToQueue(s, skipEmptyValues, new StringBuilder(), queue, separators);
 
             return queue;
         }
 
-        public static void SplitToQueue(this string s, in bool skipEmptyValues, in StringBuilder stringBuilder, System.Collections.Generic.Queue<string> queue, params char[] separators)
+        public static void SplitToQueue(this string s, in bool skipEmptyValues, in StringBuilder stringBuilder, WinCopies.Collections.DotNetFix.Generic.IQueue<string> queue, params char[] separators)
         {
             ThrowIfNull(queue, nameof(queue));
 
             Split(s, skipEmptyValues, stringBuilder, _s => queue.Enqueue(_s), separators);
         }
 
-        public static System.Collections.Generic.Stack<string> SplitToStack(this string s, in bool splitEmptyValues, params char[] separators)
+        public static WinCopies.Collections.DotNetFix.Generic.IStack<string> SplitToStack(this string s, in bool splitEmptyValues, params char[] separators)
         {
-            var stack = new System.Collections.Generic.Stack<string>();
+            var stack = new WinCopies.Collections.DotNetFix.Generic.Stack<string>();
 
             SplitToStack(s, splitEmptyValues, new StringBuilder(), stack, separators);
 
             return stack;
         }
 
-        public static void SplitToStack(this string s, in bool splitEmptyValues, in StringBuilder stringBuilder, System.Collections.Generic.Stack<string> stack, params char[] separators)
+        public static void SplitToStack(this string s, in bool splitEmptyValues, in StringBuilder stringBuilder, WinCopies.Collections.DotNetFix.Generic.IStack<string> stack, params char[] separators)
         {
             ThrowIfNull(stack, nameof(stack));
 

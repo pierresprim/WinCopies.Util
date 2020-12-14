@@ -286,7 +286,7 @@ namespace WinCopies.Collections.DotNetFix.Extensions
     //    event LinkedCollectionChangedEventHandler<T> CollectionChanged;
     //}
 
-    [Obsolete("This type has been replaced by WinCopies.Collections.DotNetFix.Generic.LinkedCollection<T>.")]
+    [Obsolete("This type has been replaced by WinCopies.Collections.DotNetFix.Generic.ObservableLinkedCollection<T>.")]
     [Serializable]
     public class ObservableLinkedCollection<T> : LinkedCollection<T>, INotifyPropertyChanged, INotifyLinkedCollectionChanged<T>
     {
