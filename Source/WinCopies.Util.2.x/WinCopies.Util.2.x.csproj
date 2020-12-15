@@ -11,10 +11,10 @@
     <Description>WinCopies framework utilities</Description>
     <Copyright>Copyright © 2020 Pierre Sprimont</Copyright>
     <PackageTags>WinCopies</PackageTags>
-    <VersionPrefix>2.6.1</VersionPrefix>
+    <VersionPrefix>2.6.1.1</VersionPrefix>
     <!--<VersionSuffix>preview</VersionSuffix>-->
-    <AssemblyVersion>2.6.1.0</AssemblyVersion>
-    <FileVersion>2.6.1.0</FileVersion>
+    <AssemblyVersion>2.6.1.1</AssemblyVersion>
+    <FileVersion>2.6.1.1</FileVersion>
     <DefineConstants>WinCopies2;$(DefineConstants)</DefineConstants>
     <RootNamespace>WinCopies.Util</RootNamespace>
   </PropertyGroup>

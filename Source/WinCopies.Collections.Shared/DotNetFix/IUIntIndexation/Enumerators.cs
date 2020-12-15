@@ -124,19 +124,31 @@ namespace WinCopies.Collections.DotNetFix
             }
         }
 
-        public UIntIndexedListEnumerator(IUIntIndexedList uintIndexedList)
+        public UIntIndexedListEnumerator(IReadOnlyUIntIndexedList uintIndexedList)
         {
             MoveNextMethod = moveNextToReset = () => DefaultMoveNextMethod(this);
 
             innerList = uintIndexedList;
         }
 
-        public UIntIndexedListEnumerator(IUIntIndexedList uintIndexedList, Func<bool> moveNextMethod)
+        public UIntIndexedListEnumerator(IReadOnlyUIntIndexedList uintIndexedList, Func<bool> moveNextMethod)
         {
             MoveNextMethod = moveNextMethod;
 
             innerList = uintIndexedList;
         }
+
+#if WinCopies2
+        public UIntIndexedListEnumerator(IUIntIndexedList uintIndexedList):this(uintIndexedList)
+        {
+            // Left empty.
+        }
+
+        public UIntIndexedListEnumerator(IUIntIndexedList uintIndexedList, Func<bool> moveNextMethod):this(uintIndexedList, moveNextMethod)
+        {
+            // Left empty.
+        }
+#endif
 
         protected override void Dispose(bool disposing)
         {
@@ -158,82 +170,101 @@ namespace WinCopies.Collections.DotNetFix
         }
     }
 
-    public sealed class UIntIndexedListEnumerator<T> : UIntIndexedListEnumeratorBase, System.Collections.Generic.IEnumerator<T>
+#if !WinCopies2
+    namespace Generic
     {
-        private IReadOnlyUIntIndexedList<T> innerList;
-
-        internal IReadOnlyUIntIndexedList<T> InnerList { get { ThrowIfDisposed(this); return innerList; } private set { ThrowIfDisposed(this); innerList = value; } }
-
-        private Func<bool> moveNextMethodToReset;
-
-        public static Func<UIntIndexedListEnumerator<T>, bool> DefaultMoveNextMethod => (UIntIndexedListEnumerator<T> e) =>
+#endif
+        public sealed class UIntIndexedListEnumerator<T> : UIntIndexedListEnumeratorBase, System.Collections.Generic.IEnumerator<T>
         {
-            if (e.InnerList.Count > 0)
-            {
-                e.Index = 0;
+            private IReadOnlyUIntIndexedList<T> innerList;
 
-                e.MoveNextMethod = () =>
+            internal IReadOnlyUIntIndexedList<T> InnerList { get { ThrowIfDisposed(this); return innerList; } private set { ThrowIfDisposed(this); innerList = value; } }
+
+            private Func<bool> moveNextMethodToReset;
+
+            public static Func<UIntIndexedListEnumerator<T>, bool> DefaultMoveNextMethod => (UIntIndexedListEnumerator<T> e) =>
+            {
+                if (e.InnerList.Count > 0)
                 {
-                    if (e.Index < e.InnerList.Count - 1)
+                    e.Index = 0;
+
+                    e.MoveNextMethod = () =>
                     {
-                        e.Index++;
+                        if (e.Index < e.InnerList.Count - 1)
+                        {
+                            e.Index++;
 
-                        return true;
-                    }
+                            return true;
+                        }
 
-                    else return false;
-                };
+                        else return false;
+                    };
 
-                return true;
-            }
+                    return true;
+                }
 
-            else return false;
-        };
+                else return false;
+            };
 
-        public T Current
-        {
-            get
+            public T Current
             {
-                Debug.Assert(Index.HasValue, "_index does not have value.");
+                get
+                {
+                    Debug.Assert(Index.HasValue, "_index does not have value.");
 
-                return InnerList[Index.Value];
+                    return InnerList[Index.Value];
+                }
             }
-        }
 
-        object System.Collections.IEnumerator.Current => Current;
+            object System.Collections.IEnumerator.Current => Current;
 
-        public UIntIndexedListEnumerator(IUIntIndexedList<T> uintIndexedList)
-        {
-            MoveNextMethod = moveNextMethodToReset = () => DefaultMoveNextMethod(this);
-
-            innerList = uintIndexedList;
-        }
-
-        public UIntIndexedListEnumerator(IUIntIndexedList<T> uintIndexedList, Func<bool> moveNextMethod)
-        {
-            MoveNextMethod = moveNextMethod;
-
-            innerList = uintIndexedList;
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (!IsDisposed)
+            public UIntIndexedListEnumerator(IReadOnlyUIntIndexedList<T> uintIndexedList)
             {
+                MoveNextMethod = moveNextMethodToReset = () => DefaultMoveNextMethod(this);
 
-                InnerList = null;
+                innerList = uintIndexedList;
+            }
 
-                moveNextMethodToReset = null;
+            public UIntIndexedListEnumerator(IReadOnlyUIntIndexedList<T> uintIndexedList, Func<bool> moveNextMethod)
+            {
+                MoveNextMethod = moveNextMethod;
 
-                base.Dispose(disposing);
+                innerList = uintIndexedList;
+            }
+
+#if WinCopies2
+            public UIntIndexedListEnumerator(IUIntIndexedList<T> uintIndexedList):this(uintIndexedList)
+            {
+                // Left empty.
+            }
+
+            public UIntIndexedListEnumerator(IUIntIndexedList<T> uintIndexedList, Func<bool> moveNextMethod):this(uintIndexedList, moveNextMethod)
+            {
+                // Left empty.
+            }
+#endif
+
+            protected override void Dispose(bool disposing)
+            {
+                if (!IsDisposed)
+                {
+
+                    InnerList = null;
+
+                    moveNextMethodToReset = null;
+
+                    base.Dispose(disposing);
+                }
+            }
+
+            public override void Reset()
+            {
+                base.Reset();
+
+                MoveNextMethod = moveNextMethodToReset;
             }
         }
-
-        public override void Reset()
-        {
-            base.Reset();
-
-            MoveNextMethod = moveNextMethodToReset;
-        }
+#if !WinCopies2
     }
+#endif
 }

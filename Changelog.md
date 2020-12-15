@@ -12,6 +12,11 @@ Updates
 ??/??/???? 3.2.0.0-preview
 ==========================
 
+- Update WinCopies.Collections.DotNetFix.UIntIndexedListEnumerator and WinCopies.Collections.DotNetFix.Generic.UIntIndexedListEnumerator\<T> constructors.
+
+12/14/2020 3.1.0.1-preview
+==========================
+
 - Supports .Net Framework 4.0 and .Net 5. (All features are not available in the .Net Framework 4.0 version.)
 - Depends on Microsoft.CodeAnalysis.NetAnalyzers. (.Net 5 version.)
 - Fixes #15
@@ -117,6 +122,16 @@ WinCopies.Util.Desktop 3.0.0-preview
 - Removals:
 	- Properties:
 		- WinCopies.Util.Commands.ApplicationCommands.CloseWindow
+
+??/??/???? 2.7.0.0
+==================
+
+- Update WinCopies.Collections.DotNetFix.UIntIndexedListEnumerator and WinCopies.Collections.DotNetFix.Generic.UIntIndexedListEnumerator\<T> constructors.
+
+12/14/2020 2.6.1.1
+==================
+
+- Add support for .Net 5.0 and .Net Framework 4.0.
 
 12/09/2020 2.6.1
 ================
@@ -406,8 +421,8 @@ Available for .Net Framework, .Net Core and .Net Standard*
 - Additions:
 	- Interfaces:
 		- IUIntIndexedCollection and IUIntIndexedCollection<T\>
-		- UIntIndexedCollectionEnumeratorBase, UIntIndexedCollectionEnumerator and UIntIndexedCollectionEnumerator<T\>
 		- WinCopies.Util.DotNetFix.IDisposable
+	- UIntIndexedCollectionEnumeratorBase, UIntIndexedCollectionEnumerator and UIntIndexedCollectionEnumerator<T\>
 
 - Removals:
 	- WinCopies.Util.Extensions.ToImageSource(this Bitmap bitmap); this method was only available for the 2.0.0 version for the .Net Framework and has now been removed.
