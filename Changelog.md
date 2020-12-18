@@ -21,8 +21,13 @@ Updates
 	- Some comparison-related types in the WinCopies.Collections namespace have moved to the WinCopies.Util package, and are still in the same namespace.
 	- Enum throw methods are now in the WinCopies.ThrowHelper class of the WinCopies.Util package.
 	- Some interface for uint indexation have changed in order to implement the non-generic version of the IUIntCountableEnumerable interface and the generic version in a generic context.
-	- WinCopies.Collections namespace:
-		- EqualityComparison\<in T>, IComparer\<in T>, Comparer\<T>, IEqualityComparer\<in T>, EqualityComparer\<T> are now in the WinCopies.Collections.Generic namespace.
+	- WinCopies.Collections namespace: All the types below are now in the WinCopies.Collections.Generic namespace:
+		- EqualityComparison\<in T>
+		- IComparer\<in T>
+		- Comparer\<T>
+		- IEqualityComparer\<in T>
+		- EqualityComparer\<T>
+	- UIntIndexedListEnumerator\<T> is now in the WinCopies.Collections.DotNetFix.Generic namespace.
 - Removals:
 	- UIntCountableEnumerable<T> class.
 
