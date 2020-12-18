@@ -21,11 +21,12 @@ using System.Collections.Generic;
 
 using static WinCopies.
 #if WinCopies2
-    Util.Util
+    Util.Util;
+
+using WinCopies.Util;
 #else
-    ThrowHelper
+    ThrowHelper;
 #endif
-    ;
 
 namespace WinCopies.Collections.Generic
 {
