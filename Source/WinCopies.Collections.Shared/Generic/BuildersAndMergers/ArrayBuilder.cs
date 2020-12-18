@@ -42,19 +42,19 @@ namespace WinCopies.Collections
     namespace Generic
     {
 #endif
-    /// <summary>
-    /// Builds arrays and lists by sizing them only when required. This class can be used to initialize your array or list before adding or removing values to it.
-    /// </summary>
-    /// <typeparam name="T">The type of the items.</typeparam>
-    [DebuggerDisplay("Count = {Count}")]
-    public class ArrayBuilder<T> :
+        /// <summary>
+        /// Builds arrays and lists by sizing them only when required. This class can be used to initialize your array or list before adding or removing values to it.
+        /// </summary>
+        /// <typeparam name="T">The type of the items.</typeparam>
+        [DebuggerDisplay("Count = {Count}")]
+        public class ArrayBuilder<T> :
 #if WinCopies2
             ILinkedList
 #else
             WinCopies.Collections.DotNetFix.Generic.LinkedList
 #endif
             <T>
-    {
+        {
 #if WinCopies2
         protected EnumeratorCollection Enumerators { get; } = new EnumeratorCollection();
 
@@ -205,7 +205,7 @@ namespace WinCopies.Collections
             OnUpdate();
         }
 
-        #region AddRange methods
+            #region AddRange methods
 
         /// <summary>
         /// Add multiple values at the top of this <see cref="ArrayBuilder{T}"/>.
@@ -415,7 +415,7 @@ namespace WinCopies.Collections
         /// <param name="array">The values to add to this <see cref="ArrayBuilder{T}"/></param>
         public void AddRangeAfter(in System.Collections.Generic.LinkedListNode<T> node, in IEnumerable<System.Collections.Generic.LinkedListNode<T>> array) { if (node.Next == null) AddRangeLast(array); else AddRangeBefore(node.Next, array); }
 
-        #endregion
+            #endregion
 
         /// <summary>
         /// Removes all nodes from this <see cref="ArrayBuilder{T}"/>.
@@ -548,30 +548,30 @@ namespace WinCopies.Collections
         void ICollection.CopyTo(Array array, int index) => ((ICollection)InnerList).CopyTo(array, index);
 #endif
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ArrayBuilder{T}"/> class.
-        /// </summary>
-        public ArrayBuilder()
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ArrayBuilder{T}"/> class.
+            /// </summary>
+            public ArrayBuilder()
 #if WinCopies2
             : this(new System.Collections.Generic.LinkedList<T>())
 #endif
-        {
-            // Left empty.
-        }
+            {
+                // Left empty.
+            }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ArrayBuilder{T}"/> class with a given <see cref="IEnumerable{T}"/>.
-        /// </summary>
-        /// <param name="enumerable">An enumerable from which to add values.</param>
-        public ArrayBuilder(in System.Collections.Generic.IEnumerable<T> enumerable) :
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ArrayBuilder{T}"/> class with a given <see cref="IEnumerable{T}"/>.
+            /// </summary>
+            /// <param name="enumerable">An enumerable from which to add values.</param>
+            public ArrayBuilder(in System.Collections.Generic.IEnumerable<T> enumerable) :
 #if WinCopies2
                 this(new System.Collections.Generic.LinkedList<T>(enumerable))
 #else
                 base(enumerable)
 #endif
-        {
-            // Left empty.
-        }
+            {
+                // Left empty.
+            }
 
 #if WinCopies2
         /// <summary>
@@ -581,52 +581,68 @@ namespace WinCopies.Collections
         protected ArrayBuilder(in System.Collections.Generic.LinkedList<T> innerList) => InnerList = innerList;
 #endif
 
-        private void ValidateParameters(in T[] array, in int? startIndex) => ValidateParameters((array ?? throw GetArgumentNullException(nameof(array))).Length, startIndex, true);
+            protected void ValidateParameters(in T[] array, in int? startIndex) => ValidateParameters((array ?? throw GetArgumentNullException(nameof(array))).Length, startIndex, true);
 
-        private void ValidateParameters(in ArrayList arrayList, in int? startIndex) => ValidateParameters((arrayList ?? throw GetArgumentNullException(nameof(arrayList))).Count, startIndex, false);
+            protected void ValidateParameters(in ArrayList arrayList, in int? startIndex) => ValidateParameters((arrayList ?? throw GetArgumentNullException(nameof(arrayList))).Count, startIndex, false);
 
-        private void ValidateParameters(in IList<T> list, in int? startIndex) => ValidateParameters((list ?? throw GetArgumentNullException(nameof(list))).Count, startIndex, false);
+            protected void ValidateParameters(in IList<T> list, in int? startIndex) => ValidateParameters((list ?? throw GetArgumentNullException(nameof(list))).Count, startIndex, false);
 
-        private void ValidateParameters(in int count, in int? startIndex, in bool isFixedSize)
-        {
-            if (startIndex.HasValue && ((isFixedSize ? startIndex + Count : startIndex) > count))
+            protected void ValidateParameters(in int count, in int? startIndex, in bool isFixedSize)
+            {
+#if !WinCopies2
+                ValidateCount();
+#endif
 
-                throw new IndexOutOfRangeException($"{nameof(startIndex)} is not in the value range.");
-        }
+                if (startIndex.HasValue && ((isFixedSize ? startIndex + Count : startIndex) > count))
 
-        /// <summary>
-        /// Returns an array with the items of this <see cref="ArrayBuilder{T}"/>.
-        /// </summary>
-        /// <param name="remove">Indicates whether items have to be removed from the current <see cref="ArrayBuilder{T}"/> after they has been added to the new list.</param>
-        /// <returns>An array with the items of this <see cref="ArrayBuilder{T}"/>.</returns>
-        public T[] ToArray(in bool remove = false)
-        {
-            var array = new T[
+                    throw new IndexOutOfRangeException($"{nameof(startIndex)} is not in the value range.");
+            }
+
+#if !WinCopies2
+            protected void ValidateCount()
+            {
+                if (Count > int.MaxValue)
+
+                    throw new IndexOutOfRangeException($"{nameof(Count)} is greater than {nameof(Int32)}.{nameof(Int32.MaxValue)}.");
+            }
+#endif
+
+            /// <summary>
+            /// Returns an array with the items of this <see cref="ArrayBuilder{T}"/>.
+            /// </summary>
+            /// <param name="remove">Indicates whether items have to be removed from the current <see cref="ArrayBuilder{T}"/> after they has been added to the new list.</param>
+            /// <returns>An array with the items of this <see cref="ArrayBuilder{T}"/>.</returns>
+            public T[] ToArray(in bool remove = false)
+            {
+#if !WinCopies2
+                ValidateCount();
+#endif
+
+                var array = new T[
 #if WinCopies2
 InnerList.
 #endif
                     Count];
 
-            ToArrayPrivate(array, remove, 0);
+                ToArrayPrivate(array, remove, 0);
 
-            return array;
-        }
+                return array;
+            }
 
-        public void ToArray(in T[] array, in bool remove = false, in int startIndex = 0)
-        {
-            ValidateParameters(array, startIndex);
+            public void ToArray(in T[] array, in bool remove = false, in int startIndex = 0)
+            {
+                ValidateParameters(array, startIndex);
 
-            ToArrayPrivate(array, remove, startIndex);
-        }
+                ToArrayPrivate(array, remove, startIndex);
+            }
 
-        private void ToArrayPrivate(in T[] array, in bool remove, int startIndex)
-        {
-            if (remove)
+            private void ToArrayPrivate(in T[] array, in bool remove, int startIndex)
+            {
+                if (remove)
 
-                while (Count != 0)
-
-                {
-                    array[startIndex++] =
+                    while (Count != 0)
+                    {
+                        array[startIndex++] =
 #if WinCopies2
 InnerList.
 #endif
@@ -636,11 +652,11 @@ InnerList.
                     InnerList.
 #endif
                         RemoveFirst();
-                }
+                    }
 
-            else
+                else
 
-                foreach (T item in
+                    foreach (T item in
 #if WinCopies2
 InnerList
 #else
@@ -648,17 +664,21 @@ InnerList
 #endif
                         )
 
-                    array[startIndex++] = item;
-        }
+                        array[startIndex++] = item;
+            }
 
-        /// <summary>
-        /// Returns an <see cref="ArrayList"/> with the items of this <see cref="ArrayBuilder{T}"/>.
-        /// </summary>
-        /// <param name="remove">Indicates whether items have to be removed from the current <see cref="ArrayBuilder{T}"/> after they has been added to the new list.</param>
-        /// <returns>An <see cref="ArrayList"/> with the items of this <see cref="ArrayBuilder{T}"/>.</returns>
-        public ArrayList ToArrayList(in bool remove = false)
-        {
-            var arrayList = new ArrayList(
+            /// <summary>
+            /// Returns an <see cref="ArrayList"/> with the items of this <see cref="ArrayBuilder{T}"/>.
+            /// </summary>
+            /// <param name="remove">Indicates whether items have to be removed from the current <see cref="ArrayBuilder{T}"/> after they has been added to the new list.</param>
+            /// <returns>An <see cref="ArrayList"/> with the items of this <see cref="ArrayBuilder{T}"/>.</returns>
+            public ArrayList ToArrayList(in bool remove = false)
+            {
+#if !WinCopies2
+                ValidateCount();
+#endif
+
+                var arrayList = new ArrayList(
 #if WinCopies2
 InnerList.
 #else
@@ -666,68 +686,68 @@ InnerList.
 #endif
                     Count);
 
-            ToArrayListPrivate(arrayList, remove, null);
+                ToArrayListPrivate(arrayList, remove, null);
 
-            return arrayList;
-        }
-
-        public void ToArrayList(in ArrayList arrayList, in bool remove = false, in int? startIndex = null)
-        {
-            ValidateParameters(arrayList, startIndex);
-
-            ToArrayListPrivate(arrayList, remove, startIndex);
-        }
-
-        private void ToArrayListPrivate(ArrayList arrayList, in bool remove, in int? startIndex)
-        {
-            if (remove)
-            {
-                Action action;
-
-                if (startIndex.HasValue)
-                {
-                    int index = startIndex.Value;
-
-                    action = () => arrayList.Insert(index++,
-#if WinCopies2
-                            InnerList
-#else
-                            this
-#endif
-                            .RemoveAndGetFirstValue().Value);
-                }
-
-                else
-
-                    action = () => _ = arrayList.Add(
-#if WinCopies2
-                            InnerList
-#else
-                            this
-#endif
-                            .RemoveAndGetFirstValue().Value);
-
-                while (Count != 0)
-
-                    action();
+                return arrayList;
             }
 
-            else
+            public void ToArrayList(in ArrayList arrayList, in bool remove = false, in int? startIndex = null)
             {
-                Action<T> action;
+                ValidateParameters(arrayList, startIndex);
 
-                if (startIndex.HasValue)
+                ToArrayListPrivate(arrayList, remove, startIndex);
+            }
+
+            private void ToArrayListPrivate(ArrayList arrayList, in bool remove, in int? startIndex)
+            {
+                if (remove)
                 {
-                    int index = startIndex.Value;
+                    Action action;
 
-                    action = item => arrayList.Insert(index++, item);
+                    if (startIndex.HasValue)
+                    {
+                        int index = startIndex.Value;
+
+                        action = () => arrayList.Insert(index++,
+#if WinCopies2
+                            InnerList
+#else
+                            this
+#endif
+                            .RemoveAndGetFirstValue().Value);
+                    }
+
+                    else
+
+                        action = () => _ = arrayList.Add(
+#if WinCopies2
+                            InnerList
+#else
+                            this
+#endif
+                            .RemoveAndGetFirstValue().Value);
+
+                    while (Count != 0)
+
+                        action();
                 }
 
                 else
+                {
+                    Action<T> action;
 
-                    action = item => _ = arrayList.Add(item);
+                    if (startIndex.HasValue)
+                    {
+                        int index = startIndex.Value;
 
-                foreach (T item in
+                        action = item => arrayList.Insert(index++, item);
+                    }
+
+                    else
+
+                        action = item => _ = arrayList.Add(item);
+
+                    foreach (T item in
 #if WinCopies2
 InnerList
 #else
@@ -735,18 +755,22 @@ InnerList
 #endif
                         )
 
-                    action(item);
+                        action(item);
+                }
             }
-        }
 
-        /// <summary>
-        /// Returns a <see cref="List{T}"/> with the items of this <see cref="ArrayBuilder{T}"/>.
-        /// </summary>
-        /// <param name="remove">Indicates whether items have to be removed from the current <see cref="ArrayBuilder{T}"/> after they has been added to the new list.</param>
-        /// <returns>A <see cref="List{T}"/> with the items of this <see cref="ArrayBuilder{T}"/>.</returns>
-        public List<T> ToList(in bool remove = false)
-        {
-            var list = new List<T>(
+            /// <summary>
+            /// Returns a <see cref="List{T}"/> with the items of this <see cref="ArrayBuilder{T}"/>.
+            /// </summary>
+            /// <param name="remove">Indicates whether items have to be removed from the current <see cref="ArrayBuilder{T}"/> after they has been added to the new list.</param>
+            /// <returns>A <see cref="List{T}"/> with the items of this <see cref="ArrayBuilder{T}"/>.</returns>
+            public List<T> ToList(in bool remove = false)
+            {
+#if !WinCopies2
+                ValidateCount();
+#endif
+
+                var list = new List<T>(
 #if WinCopies2
 InnerList.
 #else
@@ -754,68 +778,68 @@ InnerList.
 #endif
                     Count);
 
-            ToListPrivate(list, remove, null);
+                ToListPrivate(list, remove, null);
 
-            return list;
-        }
-
-        public void ToList(in IList<T> list, in bool remove = false, in int? startIndex = null)
-        {
-            ValidateParameters(list, startIndex);
-
-            ToListPrivate(list, remove, startIndex);
-        }
-
-        private void ToListPrivate(IList<T> list, in bool remove, in int? startIndex)
-        {
-            if (remove)
-            {
-                Action action;
-
-                if (startIndex.HasValue)
-                {
-                    int index = startIndex.Value;
-
-                    action = () => list.Insert(index++,
-#if WinCopies2
-                            InnerList
-#else
-                            this
-#endif
-                            .RemoveAndGetFirstValue().Value);
-                }
-
-                else
-
-                    action = () => list.Add(
-#if WinCopies2
-                            InnerList
-#else
-                            this
-#endif
-                            .RemoveAndGetFirstValue().Value);
-
-                while (Count != 0)
-
-                    action();
+                return list;
             }
 
-            else
+            public void ToList(in IList<T> list, in bool remove = false, in int? startIndex = null)
             {
-                Action<T> action;
+                ValidateParameters(list, startIndex);
 
-                if (startIndex.HasValue)
+                ToListPrivate(list, remove, startIndex);
+            }
+
+            private void ToListPrivate(IList<T> list, in bool remove, in int? startIndex)
+            {
+                if (remove)
                 {
-                    int index = startIndex.Value;
+                    Action action;
 
-                    action = item => list.Insert(index++, item);
+                    if (startIndex.HasValue)
+                    {
+                        int index = startIndex.Value;
+
+                        action = () => list.Insert(index++,
+#if WinCopies2
+                            InnerList
+#else
+                            this
+#endif
+                            .RemoveAndGetFirstValue().Value);
+                    }
+
+                    else
+
+                        action = () => list.Add(
+#if WinCopies2
+                            InnerList
+#else
+                            this
+#endif
+                            .RemoveAndGetFirstValue().Value);
+
+                    while (Count != 0)
+
+                        action();
                 }
 
                 else
+                {
+                    Action<T> action;
 
-                    action = item => list.Add(item);
+                    if (startIndex.HasValue)
+                    {
+                        int index = startIndex.Value;
 
-                foreach (T item in
+                        action = item => list.Insert(index++, item);
+                    }
+
+                    else
+
+                        action = item => list.Add(item);
+
+                    foreach (T item in
 #if WinCopies2
 InnerList
 #else
@@ -823,9 +847,9 @@ InnerList
 #endif
                         )
 
-                    action(item);
+                        action(item);
+                }
             }
-        }
 
 #if WinCopies2
         [Serializable]
@@ -889,7 +913,7 @@ InnerList
             public void Reset() => Current = null;
         }
 #endif
-    }
+        }
 #if !WinCopies2
     }
 #endif

@@ -56,7 +56,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Stack\StackCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Stack\SynchronizedStack.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\EnumerableExtensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Generic\ArrayBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generic\BuildersAndMergers\ArrayBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\LinkedCollections.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\DotNetFix\Misc.cs" />
@@ -76,8 +76,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\JoinEnumerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\EnumeratorCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\SelectEnumerator.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Generic\ArrayMerger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generic\BuildersAndMergers\ArrayMerger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generic\BuildersAndMergers\DictionaryMerger.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\CountableEnumerableArray.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generic\BuildersAndMergers\DictionaryBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\EnumerableHelper.Partial\LinkedList.Partial\Enumerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\EnumerableHelper.Partial\LinkedList.Partial\Node.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\EnumerableHelper.Partial\EnumerableHelper.cs" />

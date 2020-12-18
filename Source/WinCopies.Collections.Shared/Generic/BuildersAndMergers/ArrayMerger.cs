@@ -70,20 +70,20 @@ namespace WinCopies.Collections.Generic
 
         public ArrayMerger(in ILinkedList3<IUIntCountableEnumerable<T>> linkedList) : base(linkedList) { /* Left empty. */ }
 
-        private void ValidateParameters(in T[] array, in int? startIndex) => ValidateParameters((array ?? throw GetArgumentNullException(nameof(array))).Length, startIndex, true);
+        protected void ValidateParameters(in T[] array, in int? startIndex) => ValidateParameters((array ?? throw GetArgumentNullException(nameof(array))).Length, startIndex, true);
 
-        private void ValidateParameters(in ArrayList arrayList, in int? startIndex) => ValidateParameters((arrayList ?? throw GetArgumentNullException(nameof(arrayList))).Count, startIndex, false);
+        protected void ValidateParameters(in ArrayList arrayList, in int? startIndex) => ValidateParameters((arrayList ?? throw GetArgumentNullException(nameof(arrayList))).Count, startIndex, false);
 
-        private void ValidateParameters(in IList<T> list, in int? startIndex) => ValidateParameters((list ?? throw GetArgumentNullException(nameof(list))).Count, startIndex, false);
+        protected void ValidateParameters(in IList<T> list, in int? startIndex) => ValidateParameters((list ?? throw GetArgumentNullException(nameof(list))).Count, startIndex, false);
 
-        private void ValidateRealCount()
+        protected void ValidateRealCount()
         {
             if (RealCount > int.MaxValue)
 
                 throw new IndexOutOfRangeException($"{nameof(RealCount)} is greater than {nameof(Int32)}.{nameof(Int32.MaxValue)}.");
         }
 
-        private void ValidateParameters(in int count, in int? startIndex, in bool isFixedSize)
+        protected void ValidateParameters(in int count, in int? startIndex, in bool isFixedSize)
         {
             if (RealCount > int.MaxValue || (startIndex.HasValue && ((isFixedSize ? startIndex + (int)RealCount : startIndex) > count)))
 
