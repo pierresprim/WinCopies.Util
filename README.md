@@ -3,7 +3,13 @@ WinCopies-framework (WinCopies.Util packages)
 
 The WinCopies® software framework
 
+- WinCopies.Util:
+
 [![NuGet Badge](https://buildstats.info/nuget/WinCopies.Util)](https://www.nuget.org/packages/WinCopies.Util/)
+
+- WinCopies.Util.Desktop:
+
+[![NuGet Badge](https://buildstats.info/nuget/WinCopies.Util.Desktop)](https://www.nuget.org/packages/WinCopies.Util.Desktop/)
 
 README
 ======
