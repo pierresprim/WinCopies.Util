@@ -29,7 +29,7 @@ using System.Linq;
 
 namespace WinCopies.Collections.DotNetFix
 {
-#if !WinCopies2
+#if WinCopies3
     namespace Generic
     {
 #endif
@@ -42,7 +42,7 @@ namespace WinCopies.Collections.DotNetFix
             ILinkedList3<T>
 #endif
         {
-#if !WinCopies2
+#if WinCopies3
             public enum MoveDirection : sbyte
             {
                 Before = -1,
@@ -92,7 +92,7 @@ int
 #endif
             ;
 
-#if !WinCopies2
+#if WinCopies3
             int ICollection.Count => (int)Count;
 
             int ICollection<T>.Count => (int)Count;
@@ -116,7 +116,7 @@ int
 #endif
                 <T> list) => InnerList = list;
 
-#if !WinCopies2
+#if WinCopies3
             protected virtual void OnNodeAdded(ILinkedListNode<T> node) { /* Left empty. */ }
 #endif
 
@@ -124,7 +124,7 @@ int
             {
                 ((ICollection<T>)InnerList).Add(item);
 
-#if !WinCopies2
+#if WinCopies3
                 OnNodeAdded(InnerList.First<ILinkedListNode<T>>(node => node.Value.Equals(item)));
 #endif
             }
@@ -197,7 +197,7 @@ int
 #endif
                 InnerList.AddAfter(node, value);
 
-#if !WinCopies2
+#if WinCopies3
                 OnNodeAdded(newNode);
 
                 return newNode;
@@ -246,7 +246,7 @@ int
                 ILinkedListNode<T> newNode =
 #endif
                 InnerList.AddBefore(node, value);
-#if !WinCopies2
+#if WinCopies3
                 OnNodeAdded(newNode);
 
                 return newNode;
@@ -289,7 +289,7 @@ int
                 ILinkedListNode<T> node =
 #endif
                     InnerList.AddFirst(value);
-#if !WinCopies2
+#if WinCopies3
                 OnNodeAdded(node);
 
                 return node;
@@ -323,7 +323,7 @@ int
                 ILinkedListNode<T> node =
 #endif
                     InnerList.AddLast(value);
-#if !WinCopies2
+#if WinCopies3
                 OnNodeAdded(node);
 
                 return node;
@@ -376,11 +376,11 @@ int
 System.Collections.Generic.IEnumerator<T>
 #endif
             GetEnumerator() =>
-#if !WinCopies2
+#if WinCopies3
                 ((ILinkedList<T>)
 #endif
                 InnerList
-#if !WinCopies2
+#if WinCopies3
                 )
 #endif
                 .GetEnumerator();
@@ -417,7 +417,7 @@ System.Collections.Generic.IEnumerator<T>
                 ILinkedListNode<T> node =
 #endif
                     InnerList.Remove(item);
-#if !WinCopies2
+#if WinCopies3
                 if (node == null)
 
                     return false;
@@ -443,7 +443,7 @@ System.Collections.Generic.IEnumerator<T>
 
             public bool Remove(T item) => RemoveItem(item);
 
-#if !WinCopies2
+#if WinCopies3
             public ILinkedListNode<T> Remove2(T item) => RemoveItem2(item);
 
             ILinkedListNode<T> ILinkedList3<T>.Remove(T item) => Remove2(item);
@@ -462,7 +462,7 @@ System.Collections.Generic.IEnumerator<T>
             {
 #endif
                 InnerList.Remove(node);
-#if !WinCopies2
+#if WinCopies3
                 OnNodeRemoved(node);
             }
 #endif
@@ -480,7 +480,7 @@ System.Collections.Generic.IEnumerator<T>
             {
 #endif
                 RemoveItem(node);
-#if !WinCopies2
+#if WinCopies3
 
                 OnNodeRemoved(node);
             }
@@ -494,7 +494,7 @@ System.Collections.Generic.IEnumerator<T>
                 ILinkedListNode<T> node = InnerList.First;
 #endif
                 InnerList.RemoveFirst();
-#if !WinCopies2
+#if WinCopies3
                 OnNodeRemoved(node);
             }
 #endif
@@ -509,14 +509,14 @@ System.Collections.Generic.IEnumerator<T>
                 ILinkedListNode<T> node = InnerList.Last;
 #endif
                 InnerList.RemoveLast();
-#if !WinCopies2
+#if WinCopies3
                 OnNodeRemoved(node);
             }
 #endif
 
             public void RemoveLast() => RemoveLastItem();
 
-#if !WinCopies2
+#if WinCopies3
             protected virtual void SwapItem(ILinkedListNode<T> x, ILinkedListNode<T> y) => InnerList.Swap(x, y);
 
             public void Swap(ILinkedListNode<T> x, ILinkedListNode<T> y) => SwapItem(x, y);
@@ -552,7 +552,7 @@ System.Collections.Generic.IEnumerator<T>
             public bool MoveBefore(ILinkedListNode<T> node, ILinkedListNode<T> before) => MoveNodeBefore(node, before);
 #endif
         }
-#if !WinCopies2
+#if WinCopies3
     }
 #endif
 }

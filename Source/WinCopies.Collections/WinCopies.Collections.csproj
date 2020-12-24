@@ -15,6 +15,7 @@
     <FileVersion>3.1.0.0</FileVersion>
     <RootNamespace>WinCopies.Util</RootNamespace>
     <AssemblyOriginatorKeyFile>WinCopies.Collections.snk</AssemblyOriginatorKeyFile>
+    <DefineConstants>WinCopies3;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
 
   <Import Project="..\WinCopies.Collections.Shared\WinCopies.Collections.Shared.projitems" Label="Shared" />

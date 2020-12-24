@@ -58,12 +58,159 @@ namespace WinCopies.Linq
                     yield return value;
         }
 
+#if WinCopies2
+        [Obsolete("This method has been replaced by Select<TSource, TDestination>(this System.Collections.Generic.IEnumerator<TSource> enumerator, System.Converter<TSource, TDestination> func).")]
+        public static System.Collections.Generic.IEnumerator<TDestination> Select<TSource, TDestination>(this System.Collections.Generic.IEnumerator<TSource> enumerator, Func<TSource, TDestination> func) => new SelectEnumerator<TSource, TDestination>(enumerator, func);
+#endif
+
         public static
 #if WinCopies2
 System.Collections.Generic.IEnumerator
 #else
             IEnumeratorInfo2
 #endif
-            <TDestination> Select<TSource, TDestination>(this System.Collections.Generic.IEnumerator<TSource> enumerator, Func<TSource, TDestination> func) => new SelectEnumerator<TSource, TDestination>(enumerator, func);
+            <TDestination> Select<TSource, TDestination>(this System.Collections.Generic.IEnumerator<TSource> enumerator, Converter<TSource, TDestination> func) => new SelectEnumerator<TSource, TDestination>(enumerator, func);
+
+        /// <summary>
+        /// Returns the first item, if any, from <typeparamref name="T"/> in a given <see cref="IEnumerable"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of the item to return.</typeparam>
+        /// <param name="enumerable">The <see cref="IEnumerable"/> in which to look for the first item of the given type.</param>
+        /// <returns>The first item, if any, from <typeparamref name="T"/> in <paramref name="enumerable"/> or the default value for <typeparamref name="T"/> if none value was found.</returns>
+        /// <seealso cref="LastOrDefault{T}(IEnumerable)"/>
+        /// <seealso cref="FirstOrDefault{T}(IEnumerable, in Predicate{T})"/>
+        /// <seealso cref="LastOrDefault{T}(IEnumerable, in Predicate{T})"/>
+        public static T FirstOrDefault<T>(this IEnumerable enumerable)
+        {
+            ThrowIfNull(enumerable, nameof(enumerable));
+
+            foreach (object item in enumerable)
+
+                if (item is T _item) return _item;
+
+            return default;
+        }
+
+        /// <summary>
+        /// Returns the first item, if any, from <typeparamref name="T"/> and that validates a given predicate in a given <see cref="IEnumerable"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of the item to return.</typeparam>
+        /// <param name="enumerable">The <see cref="IEnumerable"/> in which to look for the first item of the given type.</param>
+        /// <param name="predicate">The predicate to validate.</param>
+        /// <returns>The first item, if any, from <typeparamref name="T"/> in <paramref name="enumerable"/> or the default value for <typeparamref name="T"/> if none value was found.</returns>
+        /// <seealso cref="LastOrDefault{T}(IEnumerable, in Predicate{T})"/>
+        /// <seealso cref="FirstOrDefault{T}(IEnumerable)"/>
+        /// <seealso cref="LastOrDefault{T}(IEnumerable)"/>
+        public static T FirstOrDefault<T>(this IEnumerable enumerable, in Predicate<T> predicate)
+        {
+            ThrowIfNull(enumerable, nameof(enumerable));
+
+            foreach (object item in enumerable)
+
+                if (item is T _item && predicate(_item)) return _item;
+
+            return default;
+        }
+
+        /// <summary>
+        /// Returns the last item, if any, from <typeparamref name="T"/> in a given <see cref="IEnumerable"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of the item to return.</typeparam>
+        /// <param name="enumerable">The <see cref="IEnumerable"/> in which to look for the last item of the given type.</param>
+        /// <returns>The last item, if any, from <typeparamref name="T"/> in <paramref name="enumerable"/> or the default value for <typeparamref name="T"/> if none value was found.</returns>
+        /// <seealso cref="FirstOrDefault{T}(IEnumerable)"/>
+        /// <seealso cref="FirstOrDefault{T}(IEnumerable, in Predicate{T})"/>
+        /// <seealso cref="LastOrDefault{T}(IEnumerable, in Predicate{T})"/>
+        public static T LastOrDefault<T>(this IEnumerable enumerable)
+        {
+            ThrowIfNull(enumerable, nameof(enumerable));
+
+            T value = default;
+
+            foreach (object item in enumerable)
+
+                if (item is T _item)
+
+                    value = _item;
+
+            return value;
+        }
+
+        /// <summary>
+        /// Returns the last item, if any, from <typeparamref name="T"/> and that validates a given predicate in a given <see cref="IEnumerable"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of the item to return.</typeparam>
+        /// <param name="enumerable">The <see cref="IEnumerable"/> in which to look for the last item of the given type.</param>
+        /// <param name="predicate">The predicate to validate.</param>
+        /// <returns>The last item, if any, from <typeparamref name="T"/> in <paramref name="enumerable"/> or the default value for <typeparamref name="T"/> if none value was found.</returns>
+        /// <seealso cref="FirstOrDefault{T}(IEnumerable, in Predicate{T})"/>
+        /// <seealso cref="FirstOrDefault{T}(IEnumerable)"/>
+        /// <seealso cref="LastOrDefault{T}(IEnumerable)"/>
+        public static T LastOrDefault<T>(this IEnumerable enumerable, in Predicate<T> predicate)
+        {
+            ThrowIfNull(enumerable, nameof(enumerable));
+
+            T value = default;
+
+            foreach (object item in enumerable)
+
+                if (item is T _item && predicate(_item))
+
+                    value = _item;
+
+            return value;
+        }
+
+        public static T FirstOrDefault<T>(this IEnumerable enumerable, in Func<object, object> func)
+        {
+            ThrowIfNull(enumerable, nameof(enumerable));
+
+            foreach (object item in enumerable)
+
+                if (func(item) is T _item) return _item;
+
+            return default;
+        }
+
+        public static T LastOrDefault<T>(this IEnumerable enumerable, in Func<object, object> func)
+        {
+            ThrowIfNull(enumerable, nameof(enumerable));
+
+            T value = default;
+
+            foreach (object item in enumerable)
+
+                if (func(item) is T _item)
+
+                    value = _item;
+
+            return value;
+        }
+
+        public static TOut FirstOrDefault<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, in Func<TIn, object> func)
+        {
+            ThrowIfNull(enumerable, nameof(enumerable));
+
+            foreach (TIn item in enumerable)
+
+                if (func(item) is TOut _item) return _item;
+
+            return default;
+        }
+
+        public static TOut LastOrDefault<TIn, TOut>(this IEnumerable enumerable, in Func<TIn, object> func)
+        {
+            ThrowIfNull(enumerable, nameof(enumerable));
+
+            TOut value = default;
+
+            foreach (TIn item in enumerable)
+
+                if (func(item) is TOut _item)
+
+                    value = _item;
+
+            return value;
+        }
     }
 }

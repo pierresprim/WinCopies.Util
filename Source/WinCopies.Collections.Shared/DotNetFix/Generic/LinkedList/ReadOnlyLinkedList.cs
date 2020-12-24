@@ -31,7 +31,7 @@ using WinCopies.Util.Resources;
 #endif
 
 namespace WinCopies.Collections.DotNetFix
-#if !WinCopies2
+#if WinCopies3
     .Generic
 #endif
 {
@@ -66,7 +66,7 @@ System.Collections.Generic.LinkedListNode
 #endif
                 Count => InnerList.Count;
 
-#if !WinCopies2
+#if WinCopies3
         int ICollection.Count => (int)Count;
 
         int ICollection<T>.Count => (int)Count;

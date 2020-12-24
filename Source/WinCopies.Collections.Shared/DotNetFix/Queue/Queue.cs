@@ -23,7 +23,7 @@ namespace WinCopies.Collections.DotNetFix
 
         object Dequeue();
 
-#if !WinCopies2
+#if WinCopies3
         bool TryDequeue(out object result);
 #endif
     }

@@ -1570,7 +1570,7 @@ namespace WinCopies
             <T>(
 #endif
             in string fieldName)
-#if !WinCopies2
+#if WinCopies3
 where T : Enum
 #endif
         {

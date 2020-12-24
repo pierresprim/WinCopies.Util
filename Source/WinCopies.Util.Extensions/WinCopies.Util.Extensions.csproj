@@ -16,6 +16,7 @@
     <FileVersion>3.1.0.0</FileVersion>
     <RootNamespace>WinCopies</RootNamespace>
     <AssemblyOriginatorKeyFile>WinCopies.Util.Extensions.snk</AssemblyOriginatorKeyFile>
+    <DefineConstants>WinCopies3;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

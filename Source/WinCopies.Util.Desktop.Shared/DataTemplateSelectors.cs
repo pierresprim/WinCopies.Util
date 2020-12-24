@@ -20,7 +20,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
-#if !WinCopies2
+#if WinCopies3
 using WinCopies.Collections;
 #endif
 
@@ -47,7 +47,7 @@ namespace WinCopies
 
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     public
-#if !WinCopies2
+#if WinCopies3
         sealed
 #endif
         class TypeForDataTemplateAttribute : Attribute

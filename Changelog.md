@@ -14,12 +14,19 @@ Updates
 
 - Supports .Net Framework 4.0 and .Net 5. (All features are not available in the .Net Framework 4.0 version.)
 - Depends on Microsoft.CodeAnalysis.NetAnalyzers. (.Net 5 version.)
-- Fixes #15
 - Changes:
-	- WinCopies.Collections.DotNetFix.SimpleLinkedListBase.ClearItems() is now protected.
 	- WinCopies.InvalidEnumArgumentException is now in the WinCopies.Util package.
 	- Some comparison-related types in the WinCopies.Collections namespace have moved to the WinCopies.Util package, and are still in the same namespace.
 	- Enum throw methods are now in the WinCopies.ThrowHelper class of the WinCopies.Util package.
+	- ValueConverters inherit from new generic abstract types.
+
+WinCopies.Collections 3.2.0.0-preview
+-------------------------------------
+
+- Changes:
+	- Fixes #15
+	- Fixes #22
+	- WinCopies.Collections.DotNetFix.SimpleLinkedListBase.ClearItems() is now protected.
 	- Some interface for uint indexation have changed in order to implement the non-generic version of the IUIntCountableEnumerable interface and the generic version in a generic context.
 	- WinCopies.Collections namespace: All the types below are now in the WinCopies.Collections.Generic namespace:
 		- EqualityComparison\<in T>
@@ -28,6 +35,7 @@ Updates
 		- IEqualityComparer\<in T>
 		- EqualityComparer\<T>
 	- UIntIndexedListEnumerator\<T> is now in the WinCopies.Collections.DotNetFix.Generic namespace.
+	- ICountableEnumerable\<T> implements System.Collections.Generic.IReadOnlyCollection\<T>.
 - Removals:
 	- UIntCountableEnumerable<T> class.
 

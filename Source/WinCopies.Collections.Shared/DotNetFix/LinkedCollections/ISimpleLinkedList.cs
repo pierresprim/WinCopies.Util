@@ -34,7 +34,7 @@ namespace WinCopies.Collections.DotNetFix
 
         bool IsSynchronized { get; }
 
-#if !WinCopies2
+#if WinCopies3
         bool IsReadOnly { get; }
 
         void Clear();

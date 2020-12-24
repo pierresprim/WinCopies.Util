@@ -19,7 +19,7 @@ using System.Collections.Generic;
 
 namespace WinCopies.Collections.DotNetFix
 {
-#if !WinCopies2
+#if WinCopies3
     public interface IEnumeratorBase
     {
         /// <summary>
@@ -63,7 +63,7 @@ namespace WinCopies.Collections.DotNetFix
 
     namespace Generic
     {
-#if !WinCopies2
+#if WinCopies3
         public interface IEnumerator<out T> : System.Collections.Generic.IEnumerator<T>, IEnumeratorBase
         {
             // Left empty.

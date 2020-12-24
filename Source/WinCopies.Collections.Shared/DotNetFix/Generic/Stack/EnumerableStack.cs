@@ -108,7 +108,10 @@ WinCopies.Collections.Generic.Enumerator<T>
             private bool _first = true;
 
             public override bool? IsResetSupported => true;
-
+            
+            /// <summary>
+            /// When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            /// </summary>
             protected override T CurrentOverride => _currentNode.Value;
 #endif
 
@@ -139,7 +142,7 @@ WinCopies.Collections.Generic.Enumerator<T>
 #endif
                 ThrowIfVersionHasChanged(_stack.EnumerableVersion, _version);
 
-#if !WinCopies2
+#if WinCopies3
                 _first = true;
 #endif
 

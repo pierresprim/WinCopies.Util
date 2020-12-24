@@ -24,7 +24,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace WinCopies.Collections.DotNetFix
 {
-#if !WinCopies2
+#if WinCopies3
     namespace Generic
     {
 #endif
@@ -53,7 +53,7 @@ int
 #endif
                 Count => InnerQueue.Count;
 
-#if !WinCopies2
+#if WinCopies3
             int ICollection.Count => (int)Count;
             int IReadOnlyCollection<T>.Count => (int)Count;
 #endif
@@ -125,7 +125,7 @@ int
 
             System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerQueue).GetEnumerator();
         }
-#if !WinCopies2
+#if WinCopies3
     }
 #endif
 }

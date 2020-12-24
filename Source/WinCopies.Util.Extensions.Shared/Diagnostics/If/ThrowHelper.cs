@@ -25,6 +25,10 @@ using IfCT = WinCopies.Diagnostics.ComparisonType;
 using IfCM = WinCopies.Diagnostics.ComparisonMode;
 using IfComp = WinCopies.Diagnostics.Comparison;
 
+#if WinCopies3
+using WinCopies.Collections.Generic;
+#endif
+
 namespace WinCopies.Diagnostics
 {
     internal static class ThrowHelper

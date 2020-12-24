@@ -123,6 +123,9 @@ namespace WinCopies.Collections.DotNetFix
 #else
             private bool _first = true;
 
+            /// <summary>
+            /// When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            /// </summary>
             protected override object CurrentOverride => _currentNode.Value;
 
             public override bool? IsResetSupported => true;

@@ -26,7 +26,7 @@ using System.Runtime.Serialization;
 #endif
 
 namespace WinCopies.Collections.DotNetFix
-#if !WinCopies2
+#if WinCopies3
 .Generic
 #endif
 {
@@ -167,7 +167,7 @@ System.Collections.Generic.LinkedListNode
         new bool IsReadOnly { get; }
     }
 
-#if !WinCopies2
+#if WinCopies3
     public interface ILinkedList3<T> : ILinkedList2<T>, IUIntCountableEnumerable<ILinkedListNode<T>>
     {
         System.Collections.Generic.IEnumerator<T> GetEnumerator(EnumerationDirection enumerationDirection);

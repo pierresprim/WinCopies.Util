@@ -17,7 +17,7 @@
 
 #if CS7
 
-#if !WinCopies2
+#if WinCopies3
 using System.Collections;
 #endif
 

@@ -30,7 +30,7 @@ using static WinCopies.ThrowHelper;
 namespace WinCopies.Collections
 {
     public sealed class JoinSubEnumerator<T> :
-#if !WinCopies2
+#if WinCopies3
         WinCopies.Collections.Generic.
 #endif
         Enumerator<T, T>
@@ -44,6 +44,9 @@ namespace WinCopies.Collections
 #else
         private T _current;
 
+        /// <summary>
+        /// When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+        /// </summary>
         protected override T CurrentOverride => _current;
 
         public override bool? IsResetSupported => null;
@@ -82,7 +85,7 @@ namespace WinCopies.Collections
                 return false;
         };
 
-#if !WinCopies2
+#if WinCopies3
         protected override void ResetCurrent() => _current = default;
 #endif
 
@@ -181,7 +184,7 @@ Current
     }
 
     public sealed class JoinEnumerator<T> :
-#if !WinCopies2
+#if WinCopies3
         WinCopies.Collections.Generic.
 #endif
         Enumerator<System.Collections.Generic.IEnumerable<T>, T>
@@ -197,6 +200,9 @@ Current
 #else
         private T _current;
 
+        /// <summary>
+        /// When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+        /// </summary>
         protected override T CurrentOverride => _current;
 
         public override bool? IsResetSupported => null;

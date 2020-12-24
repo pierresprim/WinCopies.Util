@@ -158,7 +158,7 @@ namespace WinCopies.Collections.DotNetFix
         }
     }
 
-#if !WinCopies2
+#if WinCopies3
     namespace Generic
     {
 #endif
@@ -239,7 +239,7 @@ namespace WinCopies.Collections.DotNetFix
                 MoveNextMethod = moveNextMethodToReset;
             }
         }
-#if !WinCopies2
+#if WinCopies3
     }
 #endif
 }

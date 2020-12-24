@@ -23,7 +23,7 @@ namespace WinCopies.Collections.DotNetFix
 
         object Pop();
 
-#if !WinCopies2
+#if WinCopies3
         bool TryPop(out object result);
 #endif
     }

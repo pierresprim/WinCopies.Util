@@ -37,7 +37,7 @@ using static WinCopies.ThrowHelper;
 
 namespace WinCopies.Collections.DotNetFix
 {
-#if !WinCopies2
+#if WinCopies3
     public enum EnumerationDirection
     {
         FIFO = 1,
@@ -46,7 +46,7 @@ namespace WinCopies.Collections.DotNetFix
     }
 #endif
 #if CS7
-#if !WinCopies2
+#if WinCopies3
     namespace Generic
     {
 #endif
@@ -123,7 +123,7 @@ namespace WinCopies.Collections.DotNetFix
 #endif
             #endregion
 
-#if !WinCopies2
+#if WinCopies3
             public class LinkedListNode : ILinkedListNode<T>
             {
                 public bool IsReadOnly => false;
@@ -165,6 +165,9 @@ namespace WinCopies.Collections.DotNetFix
 
                 public override bool? IsResetSupported => true;
 
+                /// <summary>
+                /// When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+                /// </summary>
                 protected override LinkedListNode CurrentOverride => _currentNode;
 
                 public Enumerator(LinkedList<T> list, in EnumerationDirection enumerationDirection)
@@ -716,7 +719,7 @@ namespace WinCopies.Collections.DotNetFix
             #endregion
 #endif
 
-#if !WinCopies2
+#if WinCopies3
             protected bool OnNodeCoupleAction(in ILinkedListNode<T> x, in string xArgumentName, in ILinkedListNode<T> y, in string yArgumentName, in Func<LinkedListNode, LinkedListNode, bool> func)
             {
                 if (x is LinkedListNode _x)
@@ -940,7 +943,7 @@ namespace WinCopies.Collections.DotNetFix
             #endregion
 #endif
         }
-#if !WinCopies2
+#if WinCopies3
     }
 #endif
 #endif

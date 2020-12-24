@@ -28,7 +28,7 @@ ThrowHelper;
 
 namespace WinCopies.Collections
 {
-#if !WinCopies2
+#if WinCopies3
     public abstract class EnumeratorInfoBase : WinCopies.Collections.DotNetFix.IDisposableEnumeratorInfo, IEnumeratorBase
     {
         public bool IsStarted { get; private set; }
@@ -227,11 +227,14 @@ System.Collections.IEnumerator, WinCopies.Util.DotNetFix.IDisposable
             }
         }
 #else
+        /// <summary>
+        /// When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+        /// </summary>
         protected abstract object CurrentOverride { get; }
 #endif
     }
 
-#if !WinCopies2
+#if WinCopies3
     /// <summary>
     /// <see cref="System.Collections.IEnumerator"/> wrapper that inherits from <see cref="Enumerator"/>, a class that extends the info provided by the <see cref="System.Collections.IEnumerator"/> interface.
     /// </summary>
@@ -249,6 +252,9 @@ System.Collections.IEnumerator, WinCopies.Util.DotNetFix.IDisposable
         /// </summary>
         public override bool? IsResetSupported => null;
 
+        /// <summary>
+        /// When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+        /// </summary>
         protected override object CurrentOverride => _innerEnumerator.Current;
 
         protected override void ResetCurrent()
@@ -287,7 +293,7 @@ System.Collections.IEnumerator, WinCopies.Util.DotNetFix.IDisposable
     }
 #endif
 
-#if !WinCopies2
+#if WinCopies3
     namespace Generic
     {
 #endif
@@ -304,6 +310,10 @@ System.Collections.Generic.IEnumerator<T>, WinCopies.Util.DotNetFix.IDisposable
             public bool IsDisposed { get; private set; }
 #endif
 
+            /// <summary>
+            /// Gets the element in the collection at the current position of the enumerator.
+            /// </summary>
+            /// <exception cref="InvalidOperationException">The enumerator is disposed.</exception>
             public T Current
 #if WinCopies2
             {
@@ -321,6 +331,9 @@ _enumerationStarted
             }
 #endif
 
+            /// <summary>
+            /// When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            /// </summary>
             protected abstract T CurrentOverride { get; }
 
             object System.Collections.IEnumerator.Current => Current;
@@ -381,7 +394,7 @@ _enumerationStarted
 #endif
         }
 
-#if !WinCopies2
+#if WinCopies3
         public interface IEnumeratorInfo2<out T> : IEnumeratorInfo<T>, WinCopies.Collections.DotNetFix.IDisposableEnumeratorInfo, IEnumeratorBase, IDisposableEnumerator<T>, IDisposableEnumeratorInfo
         {
             new bool MoveNext();
@@ -393,6 +406,9 @@ _enumerationStarted
 
             protected System.Collections.Generic.IEnumerator<T> InnerEnumerator => IsDisposed ? throw GetExceptionForDispose(false) : _innerEnumerator;
 
+            /// <summary>
+            /// When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            /// </summary>
             protected override T CurrentOverride => InnerEnumerator.Current; // The disposed check is performed in the InnerEnumerator property.
 
             public override bool? IsResetSupported => null;
@@ -513,7 +529,7 @@ _enumerationStarted
 #else
                 override void DisposeManaged()
             {
-#if !WinCopies2
+#if WinCopies3
                 base.DisposeManaged();
 #endif
 
@@ -538,7 +554,7 @@ _enumerationStarted
             /// <param name="enumerator">The enumerator to enumerate.</param>
             public Enumerator(System.Collections.Generic.IEnumerator<TSource> enumerator) : base(enumerator ?? throw GetArgumentNullException(nameof(enumerator))) { /* Left empty. */ }
         }
-#if !WinCopies2
+#if WinCopies3
     }
 #endif
 }

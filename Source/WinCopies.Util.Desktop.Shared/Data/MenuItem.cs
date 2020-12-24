@@ -21,7 +21,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 
-#if !WinCopies2
+#if WinCopies3
 using WinCopies.Collections;
 #endif
 

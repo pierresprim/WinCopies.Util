@@ -28,7 +28,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
         T Dequeue();
 
-#if !WinCopies2
+#if WinCopies3
         bool HasItems { get; }
 
         bool TryDequeue(out T result);

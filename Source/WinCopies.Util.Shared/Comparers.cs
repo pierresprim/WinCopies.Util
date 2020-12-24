@@ -36,7 +36,7 @@ namespace WinCopies.Collections
     /// <returns><see langword="true"/> if x is equal to y, otherwise <see langword="false"/>.</returns>
     public delegate bool EqualityComparison(object x, object y);
 
-#if !WinCopies2
+#if WinCopies3
     namespace Generic
     {
 #endif
@@ -112,7 +112,7 @@ namespace WinCopies.Collections
 #endif
         T y);
         }
-#if !WinCopies2
+#if WinCopies3
     }
 #endif
 

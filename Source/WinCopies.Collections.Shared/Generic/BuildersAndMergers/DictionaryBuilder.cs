@@ -34,12 +34,12 @@ namespace WinCopies.Collections.Generic
     {
         public Dictionary<TKey, TValue> ToDictionary(in bool remove = false)
         {
-#if !WinCopies2
+#if WinCopies3
             ValidateCount();
 #endif
 
             var dic = new Dictionary<TKey, TValue>(
-#if !WinCopies2
+#if WinCopies3
 (int)
 #endif
                 Count);
@@ -51,7 +51,7 @@ namespace WinCopies.Collections.Generic
 
         public void ToDictionary(in IDictionary<TKey, TValue> dic, in bool remove = false)
         {
-#if !WinCopies2
+#if WinCopies3
             ValidateCount();
 #endif
 

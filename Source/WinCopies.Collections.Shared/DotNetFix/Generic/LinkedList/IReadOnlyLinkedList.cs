@@ -25,7 +25,7 @@ using System.Runtime.Serialization;
 #endif
 
 namespace WinCopies.Collections.DotNetFix
-#if !WinCopies2
+#if WinCopies3
 .Generic
 #endif
 {

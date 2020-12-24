@@ -33,31 +33,31 @@
     <Compile Include="$(MSBuildThisFileDirectory)Commands\KeyCommandHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Commands\SimpleCommand.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataTemplateSelectors.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\BooleanToVisibilityConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\CheckableObject.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\CoalesceConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\CoalesceConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\ConverterArray.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\ConverterBase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\EnumToBooleanConverter.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\EnumToReversedBooleanConverter.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\EnumToStringArrayConverter.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\IconToImageSourceConverter.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\IsNullConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\ConverterBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\EnumToBooleanConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\EnumToReversedBooleanConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\EnumToStringArrayConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\IconToImageSourceConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\IsNullConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\MenuItem.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\MultiConverterBase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\MultiStringConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\MultiConverterBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\MultiStringConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\MultiValueConversionAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\NamedObject.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\ObjectToTypeConverter.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\PercentConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\ObjectToTypeConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\PercentConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\PropertyChangedEventArgs.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\ReverseBooleanConverter.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\ReversedBooleanToVisibilityConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\ReverseBooleanConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\ReversedBooleanToVisibilityConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\ValueChangedEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\ValueObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\ViewModels.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\VisibilityToBooleanConverter.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\VisibilityToReversedBooleanConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\VisibilityToBooleanConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\VisibilityToReversedBooleanConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IBackgroundWorker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MergedStylesMarkupExtension.cs" />
@@ -65,5 +65,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)RoutedEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ThrowHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Clipboard.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Data\Converters\" />
   </ItemGroup>
 </Project>

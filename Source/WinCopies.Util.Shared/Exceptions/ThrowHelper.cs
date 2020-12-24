@@ -33,7 +33,7 @@ namespace WinCopies
 {
     public static class ThrowHelper
     {
-#if !WinCopies2
+#if WinCopies3
         #region Enum Throws
         ///// <summary>
         ///// Throws an <see cref="InvalidEnumArgumentException"/> if the enum value is not in the required enum value range. See the Remarks section.

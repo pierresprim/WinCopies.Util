@@ -23,7 +23,7 @@ using System.Collections.Generic;
 
 namespace WinCopies.Collections.DotNetFix
 {
-#if !WinCopies2
+#if WinCopies3
     namespace Generic
     {
 #endif
@@ -48,7 +48,7 @@ int
 #endif
                 Count => InnerStack.Count;
 
-#if !WinCopies2
+#if WinCopies3
             int ICollection.Count => (int)Count;
 
             int IReadOnlyCollection<T>.Count => (int)Count;
@@ -115,7 +115,7 @@ int
 
             System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerStack).GetEnumerator();
         }
-#if !WinCopies2
+#if WinCopies3
     }
 #endif
 }

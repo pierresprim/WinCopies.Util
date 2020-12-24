@@ -25,7 +25,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-#if !WinCopies2
+#if WinCopies3
 using WinCopies.DotNetFix;
 #endif
 
@@ -527,7 +527,7 @@ namespace WinCopies.Desktop
             return false;
         }
 
-#if !WinCopies2
+#if WinCopies3
 
         public static bool TryPauseAsync(this IPausableBackgroundWorker backgroundWorker)
         {
@@ -731,7 +731,7 @@ namespace WinCopies.Desktop
             return false;
         }
 
-#if !WinCopies2
+#if WinCopies3
 
         public static bool TryPauseAsync(this PausableBackgroundWorker backgroundWorker)
         {
