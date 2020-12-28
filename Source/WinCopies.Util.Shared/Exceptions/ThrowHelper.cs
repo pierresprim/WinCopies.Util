@@ -207,6 +207,21 @@ namespace WinCopies
                 throw GetVersionHasChangedException();
         }
 
+        public static ArgumentException GetArrayHasNotEnoughSpaceException(in string arrayArgumentName) => new ArgumentException(ArrayHasNotEnoughSpace, arrayArgumentName);
+
+        public static void ThrowIfIndexIsLowerThanZero(in int index, in string indexArgumentName)
+        {
+            if (index < 0)
+
+                throw new
+#if WinCopies2
+                    ArgumentOutOfRangeException
+#else
+                    IndexOutOfRangeException
+#endif
+                    (indexArgumentName);
+        }
+
 #if WinCopies2
         public static void ThrowIfEnumeratorNotStartedOrDisposedException(in WinCopies.Collections.IDisposableEnumeratorInfo enumerator)
         {
@@ -241,26 +256,11 @@ namespace WinCopies
 
         public static ArgumentException GetArrayHasNonZeroLowerBoundException(in string arrayArgumentName) => new ArgumentException(ArrayHasNonZeroLowerBound, arrayArgumentName);
 
-        public static ArgumentException GetArrayHasNotEnoughSpaceException(in string arrayArgumentName) => new ArgumentException(ArrayHasNotEnoughSpace, arrayArgumentName);
-
         public static void ThrowIfArrayHasNotEnoughSpace(in Array array, in int arrayIndex, in int count, in string arrayArgumentName)
         {
             if (count <= array.Length - arrayIndex)
 
                 throw GetArrayHasNotEnoughSpaceException(arrayArgumentName);
-        }
-
-        public static void ThrowIfIndexIsLowerThanZero(in int index, in string indexArgumentName)
-        {
-            if (index < 0)
-
-                throw new
-#if WinCopies2
-                    ArgumentOutOfRangeException
-#else
-                    IndexOutOfRangeException
-#endif
-                    (indexArgumentName);
         }
 
         public static void ThrowOnInvalidCopyToArrayOperation(in Array array, in int arrayIndex, in int count, in string arrayArgumentName, in string arrayIndexArgumentName)

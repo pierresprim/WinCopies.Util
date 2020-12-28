@@ -18,7 +18,6 @@ Updates
 	- WinCopies.InvalidEnumArgumentException is now in the WinCopies.Util package.
 	- Some comparison-related types in the WinCopies.Collections namespace have moved to the WinCopies.Util package, and are still in the same namespace.
 	- Enum throw methods are now in the WinCopies.ThrowHelper class of the WinCopies.Util package.
-	- ValueConverters inherit from new generic abstract types.
 
 WinCopies.Collections 3.2.0.0-preview
 -------------------------------------
@@ -38,6 +37,16 @@ WinCopies.Collections 3.2.0.0-preview
 	- ICountableEnumerable\<T> implements System.Collections.Generic.IReadOnlyCollection\<T>.
 - Removals:
 	- UIntCountableEnumerable<T> class.
+
+WinCopies.Util.Desktop 3.2.0.0-preview
+--------------------------------------
+
+- Changes:
+	- ValueConverters inherit from new generic abstract types.
+	- IconToImageSourceConverter now takes System.Drawing.Icon values.
+- Additions:
+	- BitmapToImageSourceConverter
+	- Bitmap-, Icon- and ImageSource-related extension methods.
 
 12/09/2020 3.1.0.0-preview
 ==========================
@@ -142,6 +151,7 @@ WinCopies.Util (2.7)
 - Supports .Net 5.0.
 - Additions:
 	- WinCopies.Collections.Generic.DictionaryBuilder/Merger
+	- Add static methods.
 - Bug fixes:
 	- WinCopies.Collections.EqualityComparer\<T> now implements WinCopies.Collections.IEqualityComparer\<in T>
 

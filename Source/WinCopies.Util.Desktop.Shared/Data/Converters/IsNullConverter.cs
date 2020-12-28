@@ -25,10 +25,41 @@ namespace WinCopies.Util.Data
     /// Determines whether an object is null. You can set to <see langword="true"/> the parameter of the <see cref="Binding"/> that will use this converter to get a reversed <see cref="bool"/>.
     /// </summary>
     [ValueConversion(typeof(object), typeof(bool))]
-    public class IsNullConverter : ConverterBase
+    public class IsNullConverter :
+#if WinCopies3
+        AlwaysConvertibleOneWayConverter<object, bool, bool>
     {
-        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture) => parameter is bool _parameter && _parameter == true ? !(value is null) : value is null;
+        public override ConversionOptions ConvertOptions => NotNull;
+
+        public override ConversionOptions ConvertBackOptions => null;
+
+        protected override bool Convert(object value, bool parameter, CultureInfo culture)
+        {
+            bool result = value is null;
+
+            if (parameter is bool _parameter && _parameter == true)
+
+                result = !result;
+
+            return result;
+        }
+
+        protected override object ConvertBack(bool value, bool parameter, CultureInfo culture) => null;
+#else
+        ConverterBase
+    {
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            bool result = value is null;
+            
+            if (parameter is bool _parameter && _parameter == true)
+            
+                result = !result;
+
+            return result;
+        }
 
         public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
+#endif
     }
 }

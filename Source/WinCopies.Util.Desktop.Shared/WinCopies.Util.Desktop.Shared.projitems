@@ -41,6 +41,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\EnumToBooleanConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\EnumToReversedBooleanConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\EnumToStringArrayConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\BitmapToImageSourceConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\IconToImageSourceConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\IsNullConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\MenuItem.cs" />
@@ -65,8 +66,5 @@
     <Compile Include="$(MSBuildThisFileDirectory)RoutedEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ThrowHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Clipboard.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Data\Converters\" />
   </ItemGroup>
 </Project>

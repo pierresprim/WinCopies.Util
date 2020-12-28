@@ -47,8 +47,11 @@ namespace WinCopies.Collections.DotNetFix
     namespace Generic
     {
 #endif
-        public interface ICountableEnumerable<out T> : System.Collections.Generic.IEnumerable<T>, ICountableEnumerable, System.Collections.Generic.IReadOnlyCollection<T>
-        {
+        public interface ICountableEnumerable<out T> : System.Collections.Generic.IEnumerable<T>, ICountableEnumerable
+#if WinCopies3
+, System.Collections.Generic.IReadOnlyCollection<T>
+#endif
+    {
             // Left empty.
         }
 

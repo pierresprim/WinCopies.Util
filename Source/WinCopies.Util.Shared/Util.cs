@@ -1790,7 +1790,7 @@ Type enumType = typeof(T);
         }
 #endif
 
-#if NETCORE || NETSTANDARD
+#if NETCORE || NETSTANDARD || NET5
         // https://brockallen.com/2016/09/24/process-start-for-urls-on-net-core/
 
         public static Process StartProcessNetCore(in string url) =>
