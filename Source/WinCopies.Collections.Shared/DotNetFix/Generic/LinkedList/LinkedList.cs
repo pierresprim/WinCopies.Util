@@ -54,7 +54,13 @@ namespace WinCopies.Collections.DotNetFix
         {
             bool IsReadOnly { get; }
 
-            ILinkedList<T> List { get; }
+#if WinCopies3
+            IReadOnlyLinkedList
+#else
+ILinkedList
+#endif
+                <T> List
+            { get; }
 
             ILinkedListNode<T> Previous { get; }
 
@@ -66,10 +72,10 @@ namespace WinCopies.Collections.DotNetFix
         [DebuggerDisplay("Count = {Count}")]
         [Serializable]
         public class LinkedList<T> :
-#if WinCopies2
-            System.Collections.Generic.LinkedList<T>, ILinkedList2<T>
-#else
+#if WinCopies3
             ILinkedList3<T>, ISortable<T>, IEnumerableInfo<T>
+#else
+            System.Collections.Generic.LinkedList<T>, ILinkedList2<T>
 #endif
         {
             #region Properties
@@ -130,7 +136,7 @@ namespace WinCopies.Collections.DotNetFix
 
                 public LinkedList<T> List { get; internal set; }
 
-                ILinkedList<T> ILinkedListNode<T>.List => List;
+                IReadOnlyLinkedList<T> ILinkedListNode<T>.List => List;
 
                 public LinkedListNode Previous { get; internal set; }
 
@@ -276,37 +282,30 @@ namespace WinCopies.Collections.DotNetFix
 
             private uint EnumerableVersion { get; set; } = 0;
 
-            #region Methods
-
-            private void IncrementEnumeratorsCount() => _enumeratorsCount++;
-
-            private void DecrementEnumeratorsCount()
-            {
-                _enumeratorsCount--;
-
-                if (_enumeratorsCount == 0)
-
-                    EnumerableVersion = 0;
-            }
-
-            private void ThrowIfNodeAlreadyHasList(in LinkedListNode node, in string argumentName)
-            {
-                if ((node ?? throw GetArgumentNullException(argumentName)).List != null)
-
-                    throw new ArgumentException("The given node is already contained in another list.");
-            }
-
-            private void ThrowIfNotContainedNode(in LinkedListNode node, in string argumentName) => _ThrowIfNotContainedNode(node ?? throw GetArgumentNullException(argumentName), argumentName);
-
-            private void _ThrowIfNotContainedNode(in LinkedListNode node, in string argumentName) => ThrowHelper.ThrowIfNotContainedNode(node, argumentName, this);
-
+            #region Properties
             public LinkedListNode First { get; private set; }
 
-            ILinkedListNode<T> ILinkedList<T>.First => First;
+            ILinkedListNode<T>
+#if WinCopies3
+                IReadOnlyLinkedList
+#else
+                ILinkedList
+#endif
+                <T>.First => First;
+
+            public T FirstValue => First.Value;
 
             public LinkedListNode Last { get; private set; }
 
-            ILinkedListNode<T> ILinkedList<T>.Last => Last;
+            ILinkedListNode<T>
+#if WinCopies3
+                IReadOnlyLinkedList
+#else
+                ILinkedList
+#endif
+                <T>.Last => Last;
+
+            public T LastValue => Last.Value;
 
             public uint Count { get; private set; }
 
@@ -329,6 +328,30 @@ namespace WinCopies.Collections.DotNetFix
                     return _syncRoot;
                 }
             }
+            #endregion
+
+            #region Methods
+            private void IncrementEnumeratorsCount() => _enumeratorsCount++;
+
+            private void DecrementEnumeratorsCount()
+            {
+                _enumeratorsCount--;
+
+                if (_enumeratorsCount == 0)
+
+                    EnumerableVersion = 0;
+            }
+
+            private static void ThrowIfNodeAlreadyHasList(in LinkedListNode node, in string argumentName)
+            {
+                if ((node ?? throw GetArgumentNullException(argumentName)).List != null)
+
+                    throw new ArgumentException("The given node is already contained in another list.");
+            }
+
+            private void ThrowIfNotContainedNode(in LinkedListNode node, in string argumentName) => _ThrowIfNotContainedNode(node ?? throw GetArgumentNullException(argumentName), argumentName);
+
+            private void _ThrowIfNotContainedNode(in LinkedListNode node, in string argumentName) => ThrowHelper.ThrowIfNotContainedNode(node, argumentName, this);
 
             private void IncrementEnumerableVersion()
             {
@@ -545,11 +568,23 @@ namespace WinCopies.Collections.DotNetFix
 
             public LinkedListNode Find(T value) => Find(value, EnumerationDirection.FIFO);
 
-            ILinkedListNode<T> ILinkedList<T>.Find(T value) => Find(value);
+            ILinkedListNode<T>
+#if WinCopies3
+                IReadOnlyLinkedList
+#else
+                ILinkedList
+#endif
+                <T>.Find(T value) => Find(value);
 
             public LinkedListNode FindLast(T value) => Find(value, EnumerationDirection.LIFO);
 
-            ILinkedListNode<T> ILinkedList<T>.FindLast(T value) => FindLast(value);
+            ILinkedListNode<T>
+#if WinCopies3
+                IReadOnlyLinkedList
+#else
+                ILinkedList
+#endif
+                <T>.FindLast(T value) => FindLast(value);
 
             private LinkedListNode Find(T value, EnumerationDirection enumerationDirection)
             {
@@ -570,23 +605,31 @@ namespace WinCopies.Collections.DotNetFix
 
             public IEnumeratorInfo2<T> GetEnumerator() => GetEnumerator(EnumerationDirection.FIFO);
 
+            System.Collections.Generic.IEnumerator<T> ILinkedList<T>.GetEnumerator() => GetEnumerator();
+
             System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetEnumerator();
 
+#if !WinCopies3
             System.Collections.Generic.IEnumerator<T> ILinkedList<T>.GetEnumerator() => GetEnumerator();
+#endif
 
             System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
             public IEnumeratorInfo2<T> GetReversedEnumerator() => GetEnumerator(EnumerationDirection.LIFO);
 
-            System.Collections.Generic.IEnumerator<T> WinCopies.Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => GetReversedEnumerator();
+            System.Collections.Generic.IEnumerator<T> Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => GetReversedEnumerator();
+
+            System.Collections.Generic.IEnumerator<T> ILinkedList<T>.GetReversedEnumerator() => GetReversedEnumerator();
+
+            System.Collections.Generic.IEnumerator<ILinkedListNode<T>> Collections.Generic.IEnumerable<ILinkedListNode<T>>.GetReversedEnumerator() => GetNodeEnumerator(EnumerationDirection.LIFO);
 
             public IEnumeratorInfo2<T> GetEnumerator(EnumerationDirection enumerationDirection) => GetNodeEnumerator(enumerationDirection).Select(node => node.Value);
 
-            System.Collections.Generic.IEnumerator<T> ILinkedList3<T>.GetEnumerator(EnumerationDirection enumerationDirection) => GetEnumerator(enumerationDirection);
+            System.Collections.Generic.IEnumerator<T> IReadOnlyLinkedList2<T>.GetEnumerator(EnumerationDirection enumerationDirection) => GetEnumerator(enumerationDirection);
 
             public IEnumeratorInfo2<LinkedListNode> GetNodeEnumerator(in EnumerationDirection enumerationDirection) => new Enumerator(this, enumerationDirection);
 
-            System.Collections.Generic.IEnumerator<ILinkedListNode<T>> ILinkedList3<T>.GetNodeEnumerator(EnumerationDirection enumerationDirection) => GetNodeEnumerator(enumerationDirection);
+            System.Collections.Generic.IEnumerator<ILinkedListNode<T>> ILinkedList<T>.GetNodeEnumerator(EnumerationDirection enumerationDirection) => GetNodeEnumerator(enumerationDirection);
 
             System.Collections.Generic.IEnumerator<ILinkedListNode<T>> System.Collections.Generic.IEnumerable<ILinkedListNode<T>>.GetEnumerator() => GetNodeEnumerator(EnumerationDirection.FIFO);
 
@@ -715,7 +758,6 @@ namespace WinCopies.Collections.DotNetFix
             }
 
             public void CopyTo(Array array, int index) => EnumerableExtensions.CopyTo(this, array, index, Count);
-
             #endregion
 #endif
 

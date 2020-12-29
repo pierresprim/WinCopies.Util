@@ -35,6 +35,7 @@ WinCopies.Collections 3.2.0.0-preview
 		- EqualityComparer\<T>
 	- UIntIndexedListEnumerator\<T> is now in the WinCopies.Collections.DotNetFix.Generic namespace.
 	- ICountableEnumerable\<T> implements System.Collections.Generic.IReadOnlyCollection\<T>.
+	- Update (I)(ReadOnly)LinkedList(Node)\<T> read-only issues.
 - Removals:
 	- UIntCountableEnumerable<T> class.
 

@@ -32,37 +32,26 @@ namespace WinCopies.Collections.DotNetFix
 {
     public interface ILinkedList<T> :
             // TODO:
-#if WinCopies2
-            ISerializable, IDeserializationCallback, System.Collections.Generic.IEnumerable<T>,
+#if WinCopies3
+         IReadOnlyLinkedList2<T>,   IUIntCountableEnumerable<T>, Collections.Generic.IEnumerable<T> /* In order to have the GetReversedEnumerator() method. */, Collections.Generic.IEnumerable<ILinkedListNode<T>>, 
 #else
-            IUIntCountableEnumerable<T>, Collections.Generic.IEnumerable<T> /* In order to have the GetReversedEnumerator() method. */,
+            ISerializable, IDeserializationCallback, System.Collections.Generic.IEnumerable<T>,
 #endif
             ICollection<T>, ICollection, IReadOnlyCollection<T>
     {
 #if WinCopies2
-        System.Collections.Generic.LinkedListNode
-#else
-        ILinkedListNode
+        System.Collections.Generic.LinkedListNode<T> Last{ get; }
 #endif
-                <T> Last
-        { get; }
 
 #if WinCopies2
-        System.Collections.Generic.LinkedListNode
-#else
-        ILinkedListNode
+        System.Collections.Generic.LinkedListNode<T> First { get; }
 #endif
-                <T> First
-        { get; }
 
-        new
 #if WinCopies2
-                int
-#else
-                uint
+           new     int  Count { get; }
 #endif
-                Count
-        { get; }
+              
+       
 
 #if WinCopies2
         System.Collections.Generic.LinkedListNode
@@ -124,29 +113,20 @@ System.Collections.Generic.LinkedListNode
 
 
 #if WinCopies2
-        System.Collections.Generic.LinkedListNode
-#else
-        ILinkedListNode
+        System.Collections.Generic.LinkedListNode  <T> Find(T value);
 #endif
-                <T> Find(T value);
-
 
 #if WinCopies2
-        System.Collections.Generic.LinkedListNode
-#else
-        ILinkedListNode
+        System.Collections.Generic.LinkedListNode   <T> FindLast(T value);
 #endif
-                <T> FindLast(T value);
 
         //todo: to remove
 
-        new
 #if WinCopies2
-System.Collections.Generic.LinkedList<T>.Enumerator
-#else
-              System.Collections.Generic.IEnumerator<T>
+        new System.Collections.Generic.LinkedList<T>.Enumerator    GetEnumerator();
 #endif
-                GetEnumerator();
+            
+
 
         void Remove(
 #if WinCopies2
@@ -159,6 +139,14 @@ System.Collections.Generic.LinkedListNode
         void RemoveFirst();
 
         void RemoveLast();
+
+#if WinCopies3
+        new System.Collections.Generic.IEnumerator<T> GetEnumerator();
+
+        new System.Collections.Generic.IEnumerator<T> GetReversedEnumerator();
+
+        System.Collections.Generic.IEnumerator<ILinkedListNode<T>> GetNodeEnumerator(EnumerationDirection enumerationDirection);
+#endif
     }
 
     [Obsolete("The IsReadOnly property is available through the ICollection<T> interface.")]
@@ -167,13 +155,14 @@ System.Collections.Generic.LinkedListNode
         new bool IsReadOnly { get; }
     }
 
-#if WinCopies3
-    public interface ILinkedList3<T> : ILinkedList2<T>, IUIntCountableEnumerable<ILinkedListNode<T>>
+    public interface ILinkedList3<T> :
+#if WinCopies4
+        ILinkedList
+#else
+        ILinkedList2
+#endif
+        <T>, IUIntCountableEnumerable<ILinkedListNode<T>>
     {
-        System.Collections.Generic.IEnumerator<T> GetEnumerator(EnumerationDirection enumerationDirection);
-
-        System.Collections.Generic.IEnumerator<ILinkedListNode<T>> GetNodeEnumerator(EnumerationDirection enumerationDirection);
-
         new ILinkedListNode<T> Remove(T item);
 
         bool MoveAfter(ILinkedListNode<T> node, ILinkedListNode<T> after);
@@ -182,7 +171,6 @@ System.Collections.Generic.LinkedListNode
 
         void Swap(ILinkedListNode<T> x, ILinkedListNode<T> y);
     }
-#endif
 }
 
 #endif
