@@ -27,6 +27,7 @@ using System.Windows.Media.Imaging;
 
 #if WinCopies3
 using WinCopies.DotNetFix;
+using WinCopies.Util;
 #endif
 
 #if WinCopies2

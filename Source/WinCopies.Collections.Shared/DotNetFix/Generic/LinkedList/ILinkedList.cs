@@ -145,7 +145,7 @@ System.Collections.Generic.LinkedListNode
 
         new System.Collections.Generic.IEnumerator<T> GetReversedEnumerator();
 
-        System.Collections.Generic.IEnumerator<ILinkedListNode<T>> GetNodeEnumerator(EnumerationDirection enumerationDirection);
+        new bool SupportsReversedEnumeration { get; } 
 #endif
     }
 
@@ -163,6 +163,8 @@ System.Collections.Generic.LinkedListNode
 #endif
         <T>, IUIntCountableEnumerable<ILinkedListNode<T>>
     {
+        System.Collections.Generic.IEnumerator<ILinkedListNode<T>> GetNodeEnumerator(EnumerationDirection enumerationDirection);
+
         new ILinkedListNode<T> Remove(T item);
 
         bool MoveAfter(ILinkedListNode<T> node, ILinkedListNode<T> after);

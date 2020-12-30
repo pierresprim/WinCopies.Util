@@ -23,6 +23,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 
 using IComparer = System.Collections.IComparer;
+using WinCopies.Util;
 
 #if WinCopies2
 using System.Collections.Generic;

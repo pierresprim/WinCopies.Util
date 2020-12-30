@@ -37,13 +37,14 @@ using static WinCopies.ThrowHelper;
 
 namespace WinCopies.Collections.DotNetFix
 {
-#if WinCopies3
     public enum EnumerationDirection
     {
         FIFO = 1,
 
         LIFO = 2
     }
+
+#if WinCopies3
 #endif
 #if CS7
 #if WinCopies3
@@ -629,7 +630,7 @@ ILinkedList
 
             public IEnumeratorInfo2<LinkedListNode> GetNodeEnumerator(in EnumerationDirection enumerationDirection) => new Enumerator(this, enumerationDirection);
 
-            System.Collections.Generic.IEnumerator<ILinkedListNode<T>> ILinkedList<T>.GetNodeEnumerator(EnumerationDirection enumerationDirection) => GetNodeEnumerator(enumerationDirection);
+            System.Collections.Generic.IEnumerator<ILinkedListNode<T>> ILinkedList3<T>.GetNodeEnumerator(EnumerationDirection enumerationDirection) => GetNodeEnumerator(enumerationDirection);
 
             System.Collections.Generic.IEnumerator<ILinkedListNode<T>> System.Collections.Generic.IEnumerable<ILinkedListNode<T>>.GetEnumerator() => GetNodeEnumerator(EnumerationDirection.FIFO);
 

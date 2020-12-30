@@ -1481,18 +1481,52 @@
         </member>
         <member name="T:WinCopies.Util.Data.EnumToBooleanConverter">
             <summary>
-            Data converter for checking wheter an enum equals a parameter.
+            Data converter for checking whether an enum equals a parameter.
             </summary>
-            <remarks>This class can also work for numeric types (int, ...)</remarks>
         </member>
-        <member name="M:WinCopies.Util.Data.EnumToBooleanConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+        <member name="P:WinCopies.Util.Data.EnumToBooleanConverter.ConvertOptions">
+            <summary>
+            No <see langword="null"/> argument is allowed for value nor parameter.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.Data.EnumToBooleanConverter.ConvertBackOptions">
+            <summary>
+            No <see langword="null"/> argument is allowed for value nor parameter.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.Data.EnumToBooleanConverter.Convert(System.Enum,System.Enum,System.Globalization.CultureInfo,System.Boolean@)">
             <summary>
             Checks if an enum value equals a parameter.
             </summary>
             <param name="value">The value produced by the binding source.</param>
-            <param name="targetType">The type of the binding target property. This type must be <see cref="T:System.Boolean"/>.</param>
             <param name="parameter">The converter parameter to use. This represents the value to compare with the value.</param>
             <param name="culture">The culture to use in the converter.</param>
+            <param name="result">A value indicating whether <paramref name="value"/> is equal to <paramref name="parameter"/>.</param>
+            <returns>Always <see langword="true"/>.</returns>
+        </member>
+        <member name="T:WinCopies.Util.Data.EnumToReversedBooleanConverter">
+            <summary>
+            Data converter for checking whether an enum is not equal to a parameter.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.Data.EnumToStringArrayConverter.ConvertOptions">
+            <summary>
+            <para>Value: ignored.</para>
+            <para>Parameter: cannot be <see langword="null"/>.</para>
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.Data.EnumToStringArrayConverter.ConvertBackOptions">
+            <summary>
+            Invalid operation.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.Data.EnumToStringArrayConverter.ConvertBack(System.String[],System.Type,System.Globalization.CultureInfo)">
+            <summary>
+            Never called.
+            </summary>
+            <param name="value"></param>
+            <param name="parameter"></param>
+            <param name="culture"></param>
             <returns></returns>
         </member>
         <member name="T:WinCopies.Util.Data.IsNullConverter">
@@ -1730,6 +1764,15 @@
             Removes the unmanaged resources and the managed resources if needed. If you override this method, you should call this implementation of this method in your override implementation to avoid unexpected results when using this object laater.
             </summary>
             <param name="disposing"><see langword="true"/> to dispose managed resources, otherwise <see langword="false"/>.</param>
+        </member>
+        <member name="M:WinCopies.Util.Data.ObjectToTypeConverter.ConvertBack(System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Never called.
+            </summary>
+            <param name="value"></param>
+            <param name="parameter"></param>
+            <param name="culture"></param>
+            <returns></returns>
         </member>
         <member name="T:WinCopies.Util.Data.PropertyChangedEventArgs">
             <summary>

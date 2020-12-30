@@ -20,8 +20,13 @@ using WinCopies.Collections;
 
 namespace WinCopies.Util.Tests
 {
-    [TestClass]
-    public class Util
+#if WinCopies3
+[TestClass]
+public  
+#else
+    public partial
+#endif
+    class Util
     {
         [TestMethod]
         public void GetIf()
@@ -32,7 +37,7 @@ namespace WinCopies.Util.Tests
 
             for (int i = -1; i <= 1; i++)
 
-                _result[i + 1] = WinCopies.Util.Extensions.UtilHelpers.GetIf(i, 0, new Comparison((x, y) => ((int)x).CompareTo((int)y)), () => 'a', () => 'b', () => 'c');
+                _result[i + 1] = WinCopies.Extensions.UtilHelpers.GetIf(i, 0, new Comparison((x, y) => ((int)x).CompareTo((int)y)), () => 'a', () => 'b', () => 'c');
 
             for (int i = 0; i <= 2; i++)
 
@@ -40,7 +45,7 @@ namespace WinCopies.Util.Tests
 
             for (int i = -1; i <= 1; i++)
 
-                _result[i + 1] = (char)WinCopies.Util.Extensions.UtilHelpers.GetIf(i, 0, System.Collections.Generic.Comparer<int>.Default, () => 'a', () => 'b', () => 'c');
+                _result[i + 1] = (char)WinCopies.Extensions.UtilHelpers.GetIf(i, 0, System.Collections.Generic.Comparer<int>.Default, () => 'a', () => 'b', () => 'c');
 
             for (int i = 0; i <= 2; i++)
 

@@ -23,8 +23,16 @@ namespace WinCopies.Tests.Util.Util
 
             if (numericTypes.HasFlag(NumericTypes.ULong))
             {
-                result = WinCopies.Math.IsAdditionResultInRange(left, right, maxValue);
-                ulong? resultULong = WinCopies.Math.TryAdd(left, right, maxValue);
+                result = WinCopies.
+                    #if !WinCopies3
+                    Util.
+#endif
+                    Math.IsAdditionResultInRange(left, right, maxValue);
+                ulong? resultULong = WinCopies.
+#if !WinCopies3
+                    Util.
+#endif
+                    Math.TryAdd(left, right, maxValue);
 
                 if (shouldSucceed)
                 {
@@ -47,8 +55,16 @@ namespace WinCopies.Tests.Util.Util
                 var _right = (uint)right;
                 var _maxValue = (uint)maxValue;
 
-                result = WinCopies.Math.IsAdditionResultInRange(_left, _right, _maxValue);
-                uint? resultUInt = WinCopies.Math.TryAdd(_left, _right, _maxValue);
+                result = WinCopies.
+#if !WinCopies3
+                    Util.
+#endif
+                    Math.IsAdditionResultInRange(_left, _right, _maxValue);
+                uint? resultUInt = WinCopies.
+#if !WinCopies3
+                    Util.
+#endif
+                    Math.TryAdd(_left, _right, _maxValue);
 
                 if (shouldSucceed)
                 {
@@ -71,8 +87,16 @@ namespace WinCopies.Tests.Util.Util
                 var _right = (ushort)right;
                 var _maxValue = (ushort)maxValue;
 
-                result = WinCopies.Math.IsAdditionResultInRange(_left, _right, _maxValue);
-                ushort? resultUShort = WinCopies.Math.TryAdd(_left, _right, _maxValue);
+                result = WinCopies.
+#if !WinCopies3
+                    Util.
+#endif
+                    Math.IsAdditionResultInRange(_left, _right, _maxValue);
+                ushort? resultUShort = WinCopies.
+#if !WinCopies3
+                    Util.
+#endif
+                    Math.TryAdd(_left, _right, _maxValue);
 
                 if (shouldSucceed)
                 {
@@ -95,8 +119,16 @@ namespace WinCopies.Tests.Util.Util
                 var _right = (byte)right;
                 var _maxValue = (byte)maxValue;
 
-                result = WinCopies.Math.IsAdditionResultInRange(_left, _right, _maxValue);
-                byte? resultByte = WinCopies.Math.TryAdd(_left, _right, _maxValue);
+                result = WinCopies.
+#if !WinCopies3
+                    Util.
+#endif
+                    Math.IsAdditionResultInRange(_left, _right, _maxValue);
+                byte? resultByte = WinCopies.
+#if !WinCopies3
+                    Util.
+#endif
+                    Math.TryAdd(_left, _right, _maxValue);
 
                 if (shouldSucceed)
                 {
@@ -204,8 +236,16 @@ namespace WinCopies.Tests.Util.Util
 
             if (numericTypes.HasFlag(NumericTypes.ULong))
             {
-                result = WinCopies.Math.IsMultiplicationResultInRange(left, right, maxValue);
-                ulong? resultULong = WinCopies.Math.TryMultiply(left, right, maxValue);
+                result = WinCopies.
+#if !WinCopies3
+                    Util.
+#endif
+                    Math.IsMultiplicationResultInRange(left, right, maxValue);
+                ulong? resultULong = WinCopies.
+#if !WinCopies3
+                    Util.
+#endif
+                    Math.TryMultiply(left, right, maxValue);
 
                 if (shouldSucceed)
                 {
@@ -228,8 +268,16 @@ namespace WinCopies.Tests.Util.Util
                 var _right = (uint)right;
                 var _maxValue = (uint)maxValue;
 
-                result = WinCopies.Math.IsMultiplicationResultInRange(_left, _right, _maxValue);
-                uint? resultUInt = WinCopies.Math.TryMultiply(_left, _right, _maxValue);
+                result = WinCopies.
+#if !WinCopies3
+                    Util.
+#endif
+                    Math.IsMultiplicationResultInRange(_left, _right, _maxValue);
+                uint? resultUInt = WinCopies.
+#if !WinCopies3
+                    Util.
+#endif
+                    Math.TryMultiply(_left, _right, _maxValue);
 
                 if (shouldSucceed)
                 {
@@ -252,8 +300,16 @@ namespace WinCopies.Tests.Util.Util
                 var _right = (ushort)right;
                 var _maxValue = (ushort)maxValue;
 
-                result = WinCopies.Math.IsMultiplicationResultInRange(_left, _right, _maxValue);
-                ushort? resultUShort = WinCopies.Math.TryMultiply(_left, _right, _maxValue);
+                result = WinCopies.
+#if !WinCopies3
+                    Util.
+#endif
+                    Math.IsMultiplicationResultInRange(_left, _right, _maxValue);
+                ushort? resultUShort = WinCopies.
+#if !WinCopies3
+                    Util.
+#endif
+                    Math.TryMultiply(_left, _right, _maxValue);
 
                 if (shouldSucceed)
                 {
@@ -276,8 +332,16 @@ namespace WinCopies.Tests.Util.Util
                 var _right = (byte)right;
                 var _maxValue = (byte)maxValue;
 
-                result = WinCopies.Math.IsMultiplicationResultInRange(_left, _right, _maxValue);
-                byte? resultByte = WinCopies.Math.TryMultiply(_left, _right, _maxValue);
+                result = WinCopies.
+#if !WinCopies3
+                    Util.
+#endif
+                    Math.IsMultiplicationResultInRange(_left, _right, _maxValue);
+                byte? resultByte = WinCopies.
+#if !WinCopies3
+                    Util.
+#endif
+                    Math.TryMultiply(_left, _right, _maxValue);
 
                 if (shouldSucceed)
                 {

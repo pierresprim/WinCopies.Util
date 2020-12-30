@@ -21,6 +21,7 @@
 
   <Import Project="..\WinCopies.Util.Shared\WinCopies.Util.Shared.projitems" Label="Shared" />
   <Import Project="..\WinCopies.Collections.Shared\WinCopies.Collections.Shared.projitems" Label="Shared" />
+  <Import Project="..\WinCopies.Util.Extensions.Shared\WinCopies.Util.Extensions.Shared.projitems" Label="Shared" />
 
   <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />

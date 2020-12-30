@@ -40,7 +40,7 @@ namespace WinCopies.Collections.DotNetFix
 #if WinCopies3
         ILinkedList3
 #else
-IReadOnlyLinkedList<T>, ILinkedList
+IReadOnlyLinkedList<T>, ILinkedList2
 #endif
         <T>
     {
@@ -90,7 +90,11 @@ IReadOnlyLinkedList<T>, ILinkedList
 
         public bool SupportsReversedEnumeration => true;
 
+#if WinCopies3
         bool ILinkedList2<T>.IsReadOnly => true;
+#endif
+
+
 
         public bool Contains(T value) => InnerList.Contains(value);
 
@@ -171,7 +175,7 @@ public System.Collections.Generic.LinkedListNode<T>
 #if WinCopies3
             ILinkedListNode
 #else
-System.Collections.Generic.LinkedListNode<T>                
+System.Collections.Generic.LinkedListNode                
 #endif
                 <T> node, T value) => throw GetReadOnlyListOrCollectionException();
 
@@ -238,7 +242,7 @@ System.Collections.Generic.LinkedListNode
 
         System.Collections.Generic.IEnumerator<T> IReadOnlyLinkedList2<T>.GetEnumerator(EnumerationDirection enumerationDirection) => InnerList.GetEnumerator(enumerationDirection);
 
-        System.Collections.Generic.IEnumerator<ILinkedListNode<T>> ILinkedList<T>.GetNodeEnumerator(EnumerationDirection enumerationDirection) => throw GetReadOnlyListOrCollectionException();
+        System.Collections.Generic.IEnumerator<ILinkedListNode<T>> ILinkedList3<T>.GetNodeEnumerator(EnumerationDirection enumerationDirection) => throw GetReadOnlyListOrCollectionException();
 
         bool ILinkedList3<T>.MoveAfter(ILinkedListNode<T> node, ILinkedListNode<T> after) => throw GetReadOnlyListOrCollectionException();
 

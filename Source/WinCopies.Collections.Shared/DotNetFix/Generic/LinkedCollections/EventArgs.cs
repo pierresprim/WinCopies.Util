@@ -19,11 +19,10 @@
 
 using System;
 using System.Collections.Specialized;
+using WinCopies.Util;
 
 #if WinCopies2
 using static WinCopies.Util.Util;
-
-using WinCopies.Util;
 #endif
 
 namespace WinCopies.Collections.DotNetFix

@@ -44,7 +44,7 @@ namespace WinCopies.Collections.Generic
         public bool HasItems => Count != 0;
 
 #if CS7
-        public new bool TryPeek(out T result)
+        public  bool TryPeek(out T result)
         {
             if (Count > 0)
             {
@@ -58,7 +58,7 @@ namespace WinCopies.Collections.Generic
             return false;
         }
 
-        public new bool TryPop(out T result)
+        public  bool TryPop(out T result)
         {
             if (Count > 0)
             {

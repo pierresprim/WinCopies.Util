@@ -16,8 +16,10 @@ Updates
 - Depends on Microsoft.CodeAnalysis.NetAnalyzers. (.Net 5 version.)
 - Changes:
 	- WinCopies.InvalidEnumArgumentException is now in the WinCopies.Util package.
+	- Classes named UtilHelpers, ThrowHelper and Extensions exist in both WinCopies.Util and WinCopies.Util.Extensions packages. Now, those from the WinCopies.Util package are now in the WinCopies namespace, except Extensions which is in the WinCopies.Util namespace, and those from the WinCopies.Util.Extensions package are now in the WinCopies.Extensions namespace in order to avoid name conflicts.
 	- Some comparison-related types in the WinCopies.Collections namespace have moved to the WinCopies.Util package, and are still in the same namespace.
 	- Enum throw methods are now in the WinCopies.ThrowHelper class of the WinCopies.Util package.
+	- Some types are not supported anymore by the .Net Framework 4.0 targetting version.
 
 WinCopies.Collections 3.2.0.0-preview
 -------------------------------------
@@ -35,7 +37,7 @@ WinCopies.Collections 3.2.0.0-preview
 		- EqualityComparer\<T>
 	- UIntIndexedListEnumerator\<T> is now in the WinCopies.Collections.DotNetFix.Generic namespace.
 	- ICountableEnumerable\<T> implements System.Collections.Generic.IReadOnlyCollection\<T>.
-	- Update (I)(ReadOnly)LinkedList(Node)\<T> read-only issues.
+	- Update (I)(ReadOnly)LinkedList(Node)\<T> to avoid read-only issues.
 - Removals:
 	- UIntCountableEnumerable<T> class.
 
@@ -155,6 +157,7 @@ WinCopies.Util (2.7)
 	- Add static methods.
 - Bug fixes:
 	- WinCopies.Collections.EqualityComparer\<T> now implements WinCopies.Collections.IEqualityComparer\<in T>
+	- #23
 
 12/09/2020 2.6.1
 ================

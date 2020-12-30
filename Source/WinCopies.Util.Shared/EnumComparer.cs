@@ -21,7 +21,9 @@ using System;
 using WinCopies.Util;
 using static WinCopies.Util.Util;
 #else
-using WinCopies;
+using WinCopies.Collections.Generic;
+using WinCopies.Util;
+
 using static WinCopies.UtilHelpers;
 #endif
 

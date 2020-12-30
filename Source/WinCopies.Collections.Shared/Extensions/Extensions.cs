@@ -25,7 +25,7 @@ using System.Linq;
 using WinCopies.Collections;
 using WinCopies.Collections.DotNetFix.Generic;
 using WinCopies.Collections.Generic;
-
+using WinCopies.Util;
 using static WinCopies.ThrowHelper;
 
 namespace WinCopies.Collections

@@ -19,9 +19,9 @@ using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using WinCopies.Extensions;
 
 #if WinCopies3
-using WinCopies.Collections;
 using WinCopies.Linq;
 #endif
 
@@ -53,7 +53,7 @@ namespace WinCopies.Util
 
             Type itemType = item.GetType();
 
-            return System.Linq.Enumerable.Repeat(itemType, 1).Concat(itemType.GetInterfaces())
+            return System.Linq.Enumerable.Repeat(itemType, 1).Concat(itemType.GetDirectInterfaces(true, true))
                     .FirstOrDefault<DataTemplate>(t => containerElement.TryFindResource(new DataTemplateKey(t))) ?? base.SelectTemplate(item, container);
         }
     }

@@ -41,6 +41,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WinCopies.Collections\WinCopies.Collections.csproj" />
+    <ProjectReference Include="..\WinCopies.Util.Extensions\WinCopies.Util.Extensions.csproj" />
     <ProjectReference Include="..\WinCopies.Util\WinCopies.Util.csproj" />
   </ItemGroup>
 

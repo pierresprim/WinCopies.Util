@@ -15,11 +15,19 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
+#if CS7
+
 using System;
 
 using WinCopies.Collections;
+using WinCopies.Util;
 
-using static WinCopies.ThrowHelper;
+using static WinCopies.
+#if WinCopies3
+    ThrowHelper;
+#else
+    Extensions.Extensions;
+#endif
 
 using IfCT = WinCopies.Diagnostics.ComparisonType;
 using IfCM = WinCopies.Diagnostics.ComparisonMode;
@@ -79,3 +87,5 @@ namespace WinCopies.Diagnostics
         }
     }
 }
+
+#endif

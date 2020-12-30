@@ -15,6 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
+#if CS7
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,10 +24,17 @@ using System.Text;
 
 using WinCopies.Collections;
 using WinCopies.Collections.Generic;
+using WinCopies.Util;
 
 using static WinCopies.Diagnostics.HelperMethods;
 using static WinCopies.Diagnostics.ThrowHelper;
-using static WinCopies.UtilHelpers;
+
+using static WinCopies.
+#if WinCopies3
+UtilHelpers;
+#else
+    Util.Util;
+#endif
 
 using IComparer = System.Collections.IComparer;
 
@@ -387,9 +396,9 @@ namespace WinCopies.Diagnostics
             }
         }
 
-        #region Non generic methods
+#region Non generic methods
 
-        #region Comparisons without key notification
+#region Comparisons without key notification
 
         /// <summary>
         /// Performs a comparison by testing a value compared to an array of values.
@@ -535,9 +544,9 @@ namespace WinCopies.Diagnostics
             return IfInternal(comparisonType, comparisonMode, (in object _value, in Func<bool> _predicate) => CheckEqualityComparison(comparison, _value, value, _predicate, comparisonDelegate), new IfKeyValuePairEnumerable(values));
         }
 
-        #endregion
+#endregion
 
-        #region Comparisons with key notification
+#region Comparisons with key notification
 
         /// <summary>
         /// Performs a comparison by testing a value compared to an array of objects or values.
@@ -622,13 +631,13 @@ namespace WinCopies.Diagnostics
             return IfInternal(comparisonType, comparisonMode, (in object _value, in Func<bool> _predicate) => CheckEqualityComparison(comparison, _value, value, _predicate, comparisonDelegate), out key, new IfKeyKeyValuePairEnumerable(values));
         }
 
-        #endregion
+#endregion
 
-        #endregion
+#endregion
 
-        #region Generic methods
+#region Generic methods
 
-        #region Comparisons without key notification
+#region Comparisons without key notification
 
         /// <summary>
         /// Performs a comparison by testing a value compared to an array of objects or values.
@@ -691,9 +700,9 @@ namespace WinCopies.Diagnostics
             return IfInternal(comparisonType, comparisonMode, (in T _value, in Func<bool> _predicate) => CheckEqualityComparison(comparison, _value, value, _predicate, comparisonDelegate), new IfKeyValuePairEnumerable<T>(values));
         }
 
-        #endregion
+#endregion
 
-        #region Comparisons with key notification
+#region Comparisons with key notification
 
         /// <summary>
         /// Performs a comparison by testing a value compared to an array of objects or values.
@@ -753,8 +762,10 @@ namespace WinCopies.Diagnostics
             return IfInternal(comparisonType, comparisonMode, (in TValue _value, in Func<bool> _predicate) => CheckEqualityComparison(comparison, _value, value, _predicate, comparisonDelegate), out key, new IfKeyKeyValuePairEnumerable<TKey, TValue>(values));
         }
 
-        #endregion
+#endregion
 
-        #endregion
+#endregion
     }
 }
+
+#endif

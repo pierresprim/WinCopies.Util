@@ -20,12 +20,15 @@
 using System;
 
 using WinCopies.Collections;
+using WinCopies.Util;
 
+#if WinCopies3
 using static WinCopies.ThrowHelper;
+#endif
 
 using IfCT = WinCopies.Diagnostics.ComparisonType;
 
-namespace WinCopies.Util.Extensions // To avoid name conflicts.
+namespace WinCopies.Extensions // To avoid name conflicts.
 {
     public static class ThrowHelper
     {
@@ -33,7 +36,11 @@ namespace WinCopies.Util.Extensions // To avoid name conflicts.
         {
             if (!value.IsValidFlagsEnumValue(comparisonType, argumentName, values))
 
+#if WinCopies3
                 throw GetInvalidEnumArgumentException(argumentName, value);
+#else
+                throw WinCopies.Util.Extensions.GetInvalidEnumArgumentException(value, argumentName);
+#endif
         }
 
         /// <summary>
@@ -50,7 +57,11 @@ namespace WinCopies.Util.Extensions // To avoid name conflicts.
         {
             if (!@enum.IsValidFlagsEnumValue(throwIfNotFlagsEnum, throwIfZero))
 
+#if WinCopies3
                 throw GetInvalidEnumArgumentException(nameof(@enum), @enum);
+#else
+                throw WinCopies.Util.Extensions.GetInvalidEnumArgumentException(@enum, nameof(@enum));
+#endif
         }
 
         /// <summary>

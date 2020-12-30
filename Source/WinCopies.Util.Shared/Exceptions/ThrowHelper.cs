@@ -17,6 +17,7 @@
 
 using System;
 using System.Globalization;
+using WinCopies.Util;
 
 #if WinCopies2
 using static WinCopies.Util.Util;
