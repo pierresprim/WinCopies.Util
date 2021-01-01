@@ -44,6 +44,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\BitmapToImageSourceConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\IconToImageSourceConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\IsNullConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\StringToIntConversionResultConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\MenuItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\MultiConverterBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\MultiStringConverter.cs" />
@@ -54,6 +55,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\PropertyChangedEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\ReverseBooleanConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\ReversedBooleanToVisibilityConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Validation\IntRangeRule.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Validation\ValidationRule.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\ValueChangedEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\ValueObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\ViewModels.cs" />
