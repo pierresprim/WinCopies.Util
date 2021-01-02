@@ -54,6 +54,6 @@ namespace WinCopies.Util.Data
         /// <param name="value">The value from the binding target to check.</param>
         /// <param name="cultureInfo">The culture to use in this rule.</param>
         /// <returns>A <see cref="ValidationResult"/> object.</returns>
-        public sealed override ValidationResult Validate(object value, CultureInfo cultureInfo) => value == null ? AllowNullValue ? ValidationResult.ValidResult : new ValidationResult(false, "The value cannot be null or empty.") : value is T _value ? Validate(_value, cultureInfo): new ValidationResult(false, $"The value is not a {typeof(T).Name} value.");
+        public sealed override ValidationResult Validate(object value, CultureInfo cultureInfo) => value == null ? AllowNullValueOverride ? ValidationResult.ValidResult : new ValidationResult(false, "The value cannot be null or empty.") : value is T _value ? Validate(_value, cultureInfo): new ValidationResult(false, $"The value is not a {typeof(T).Name} value.");
     }
 }

@@ -144,7 +144,7 @@ namespace WinCopies.Util.Data
 
                 if (value != null && !(value is TDestination))
 
-                    throw new ArgumentException($"{nameof(value)} must be null or from {nameof(TDestination)}.");
+                    throw new ArgumentException($"{nameof(value)} must be null or from {typeof(TDestination).Name}. {nameof(value)} is {(value == null ? "null" : value.GetType().Name)}.");
 
                 if (parameter != null && !(parameter is TParam))
 

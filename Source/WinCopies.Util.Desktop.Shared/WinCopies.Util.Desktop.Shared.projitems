@@ -33,6 +33,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Commands\KeyCommandHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Commands\SimpleCommand.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataTemplateSelectors.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Binding\FreezableBinding.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Binding\PushBinding.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Binding\PushBindingCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Binding\PushBindingManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\CheckableObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\CoalesceConverter.cs" />
@@ -44,7 +48,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\BitmapToImageSourceConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\IconToImageSourceConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\IsNullConverter.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\StringToIntConversionResultConverter.cs" />
+    <Compile Include="..\WinCopies.Util.Desktop.Shared\Data\Converters\IntConversionResultToStringConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\MenuItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\MultiConverterBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\MultiStringConverter.cs" />

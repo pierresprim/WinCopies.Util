@@ -44,14 +44,14 @@ namespace WinCopies.Util.Data
         public override string ToString() => ConversionSucceeded ? _value.ToString() : "NaN";
     }
 
-    public class StringToIntConversionResultConverter : AlwaysConvertibleTwoWayConverter<string, object, IntConversionResult>
+    public class IntConversionResultToStringConverter : AlwaysConvertibleTwoWayConverter<IntConversionResult, object, string>
     {
-        public override ConversionOptions ConvertOptions => AllowNull;
+        public override ConversionOptions ConvertOptions => ParameterCanBeNull;
 
-        public override ConversionOptions ConvertBackOptions => ParameterCanBeNull;
+        public override ConversionOptions ConvertBackOptions => AllowNull;
 
-        protected override IntConversionResult Convert(string value, object parameter, CultureInfo culture) => value == null || value.Length == 0 ? new IntConversionResult(null) : int.TryParse(value, out int _value) ? new IntConversionResult(_value) : IntConversionResult.InvalidValue;
+        protected override string Convert(IntConversionResult value, object parameter, CultureInfo culture) => value.ToString();
 
-        protected override string ConvertBack(IntConversionResult value, object parameter, CultureInfo culture) => value.ToString();
+        protected override IntConversionResult ConvertBack(string value, object parameter, CultureInfo culture) => value == null || value.Length == 0 ? new IntConversionResult(null) : int.TryParse(value, out int _value) ? new IntConversionResult(_value) : IntConversionResult.InvalidValue;
     }
 }

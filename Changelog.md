@@ -155,6 +155,7 @@ WinCopies.Util (2.7)
 - Additions:
 	- WinCopies.Collections.Generic.DictionaryBuilder/Merger
 	- Add static methods.
+	- Add PushBindings.
 - Bug fixes:
 	- WinCopies.Collections.EqualityComparer\<T> now implements WinCopies.Collections.IEqualityComparer\<in T>
 	- #23
