@@ -55,4 +55,73 @@ namespace WinCopies.Util.Data
         /// <returns>The object value to set on the property where the extension is applied.</returns>
         public override object ProvideValue(IServiceProvider serviceProvider) => this;
     }
+
+    public abstract class ConverterBase<TSource, TParam, TDestination> : ConverterBase
+    {
+        public abstract TDestination Convert(TSource value, TParam parameter, CultureInfo culture);
+
+        public abstract TSource ConvertBack(TDestination value, TParam parameter, CultureInfo culture);
+
+        public sealed override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value != null && !(value is TSource))
+
+                throw new ArgumentException($"{nameof(value)} must be null or from {nameof(TSource)}.");
+
+            if (parameter != null && !(parameter is TParam))
+
+                throw new ArgumentException($"{nameof(parameter)} must be null or from {nameof(TParam)}.");
+
+            TDestination convert(in TSource _value, in TParam _parameter) => Convert(_value, _parameter, culture);
+
+            if (value == null)
+
+                if (parameter == null)
+
+                    return convert(default, default);
+
+                else
+
+                    return convert(default, (TParam)parameter);
+
+            else if (parameter == null)
+
+                return convert((TSource)value, default);
+
+            else
+
+                return convert((TSource)value, (TParam)parameter);
+        }
+
+        public sealed override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value != null && !(value is TDestination))
+
+                throw new ArgumentException($"{nameof(value)} must be null or from {nameof(TDestination)}.");
+
+            if (parameter != null && !(parameter is TParam))
+
+                throw new ArgumentException($"{nameof(parameter)} must be null or from {nameof(TParam)}.");
+
+            TSource convertBack(in TDestination _value, in TParam _parameter) => ConvertBack(_value, _parameter, culture);
+
+            if (value == null)
+
+                if (parameter == null)
+
+                    return convertBack(default, default);
+
+                else
+
+                    return convertBack(default, (TParam)parameter);
+
+            else if (parameter == null)
+
+                return convertBack((TDestination)value, default);
+
+            else
+
+                return convertBack((TDestination)value, (TParam)parameter);
+        }
+    }
 }
