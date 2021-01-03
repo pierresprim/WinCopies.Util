@@ -89,7 +89,7 @@ IEnumerableStack
 
         object IStack.Pop() => throw GetReadOnlyListOrCollectionException();
 
-#if !WinCopies2
+#if WinCopies3
         bool ISimpleLinkedList.TryPeek(out object result) => InnerStack.TryPeek(out result);
 
         bool IStack.TryPop(out object result)

@@ -31,7 +31,7 @@ using static WinCopies.ThrowHelper;
 
 namespace WinCopies.Collections
 {
-#if !WinCopies2
+#if WinCopies3
     internal class EmptyCheckEnumeratorHelper
     {
         #region Fields
@@ -229,6 +229,9 @@ System.Collections.IEnumerator, WinCopies.Util.DotNetFix.IDisposable
 
         #region Properties
 
+        /// <summary>
+        /// When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+        /// </summary>
         protected override object CurrentOverride => InnerEnumerator.Current;
 
         public override bool? IsResetSupported => null;
@@ -327,7 +330,7 @@ System.Collections.IEnumerator, WinCopies.Util.DotNetFix.IDisposable
 #endregion
     }
 
-#if !WinCopies2
+#if WinCopies3
     namespace Generic
     {
 #endif
@@ -365,6 +368,9 @@ System.Collections.IEnumerator, WinCopies.Util.DotNetFix.IDisposable
 
             System.Collections.IEnumerator IEnumeratorProvider.Enumerator => InnerEnumerator;
 
+            /// <summary>
+            /// When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            /// </summary>
             protected override T CurrentOverride => InnerEnumerator.Current;
 
             public override bool? IsResetSupported => null;
@@ -523,7 +529,7 @@ System.Collections.IEnumerator, WinCopies.Util.DotNetFix.IDisposable
 #endregion
 #endregion
         }
-#if !WinCopies2
+#if WinCopies3
     }
 #endif
 }

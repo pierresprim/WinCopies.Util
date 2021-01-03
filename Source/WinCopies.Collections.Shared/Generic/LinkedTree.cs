@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if !WinCopies2 && CS7
+#if WinCopies3 && CS7
 
 using System;
 using System.Collections;
@@ -40,12 +40,15 @@ namespace WinCopies.Collections.Generic
         ILinkedTreeNode<T> Parent { get; }
     }
 
-    public class LinkedTreeNode<T> : ILinkedTreeNode<T> , IEnumerableInfo<T>  
+    public class LinkedTreeNode<T> : ILinkedTreeNode<T>, IEnumerableInfo<T>
     {
         public class Enumerator : Enumerator<WinCopies.Collections.DotNetFix.Generic.LinkedList<LinkedTreeNode<T>>.LinkedListNode, IEnumeratorInfo2<WinCopies.Collections.DotNetFix.Generic.LinkedList<LinkedTreeNode<T>>.LinkedListNode>, LinkedTreeNode<T>, IEnumeratorInfo2<LinkedTreeNode<T>>> // LinkedTreeNode<T> does not make checks during enumeration because these checks are performed in the inner LinkedList<LinkedTreeNode<T>>'s enumerator.
         {
             public Enumerator(in LinkedTreeNode<T> treeNode, in EnumerationDirection enumerationDirection) : base(treeNode._list.GetNodeEnumerator(enumerationDirection)) { /* Left empty. */ }
 
+            /// <summary>
+            /// When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            /// </summary>
             protected override LinkedTreeNode<T> CurrentOverride => InnerEnumerator.Current.Value;
 
             public override bool? IsResetSupported => InnerEnumerator.IsResetSupported;
@@ -58,7 +61,7 @@ namespace WinCopies.Collections.Generic
 
         public bool IsReadOnly => false;
 
-        ILinkedList<T> ILinkedListNode<T>.List => Parent;
+        IReadOnlyLinkedList<T> ILinkedListNode<T>.List => Parent;
 
         public LinkedTreeNode<T> Previous => _node?.Previous?.Value;
 
@@ -84,11 +87,15 @@ namespace WinCopies.Collections.Generic
 
         public LinkedTreeNode<T> Last => _list.Last?.Value;
 
-        ILinkedListNode<T> ILinkedList<T>.Last => Last;
+        ILinkedListNode<T> IReadOnlyLinkedList<T>.Last => Last;
+
+        public T LastValue => Last.Value;
 
         public LinkedTreeNode<T> First => _list.First?.Value;
 
-        ILinkedListNode<T> ILinkedList<T>.First => First;
+        ILinkedListNode<T> IReadOnlyLinkedList<T>.First => First;
+
+        public T FirstValue => First.Value;
 
         public uint Count => _list.Count;
 
@@ -106,7 +113,7 @@ namespace WinCopies.Collections.Generic
 
 
 
-        private void ThrowIfNodeAlreadyHasList(in LinkedTreeNode<T> node, in string argumentName)
+        private static void ThrowIfNodeAlreadyHasList(in LinkedTreeNode<T> node, in string argumentName)
         {
             if ((node ?? throw GetArgumentNullException(argumentName)).Parent != null)
 
@@ -151,9 +158,13 @@ namespace WinCopies.Collections.Generic
 
         System.Collections.Generic.IEnumerator<T> WinCopies.Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => GetReversedEnumerator();
 
+        System.Collections.Generic.IEnumerator<T> ILinkedList<T>.GetReversedEnumerator() => GetReversedEnumerator();
+
+        System.Collections.Generic.IEnumerator<ILinkedListNode<T>> IEnumerable<ILinkedListNode<T>>.GetReversedEnumerator() => GetNodeEnumerator(EnumerationDirection.LIFO);
+
         public IEnumeratorInfo2<T> GetEnumerator(EnumerationDirection enumerationDirection) => GetNodeEnumerator(enumerationDirection).Select(node => node.Value);
 
-        System.Collections.Generic.IEnumerator<T> ILinkedList3<T>.GetEnumerator(EnumerationDirection enumerationDirection) => GetEnumerator(enumerationDirection);
+        System.Collections.Generic.IEnumerator<T> IReadOnlyLinkedList2<T>.GetEnumerator(EnumerationDirection enumerationDirection) => GetEnumerator(enumerationDirection);
 
         public IEnumeratorInfo2<LinkedTreeNode<T>> GetNodeEnumerator(EnumerationDirection enumerationDirection) => new Enumerator(this, enumerationDirection);
 
@@ -308,11 +319,11 @@ namespace WinCopies.Collections.Generic
 
         public LinkedTreeNode<T> Find(in T value) => Find(value, EnumerationDirection.FIFO);
 
-        ILinkedListNode<T> ILinkedList<T>.Find(T value) => Find(value);
+        ILinkedListNode<T> IReadOnlyLinkedList<T>.Find(T value) => Find(value);
 
         public LinkedTreeNode<T> FindLast(in T value) => Find(value, EnumerationDirection.LIFO);
 
-        ILinkedListNode<T> ILinkedList<T>.FindLast(T value) => FindLast(value);
+        ILinkedListNode<T> IReadOnlyLinkedList<T>.FindLast(T value) => FindLast(value);
 
         private LinkedTreeNode<T> Find(T value, EnumerationDirection enumerationDirection)
         {

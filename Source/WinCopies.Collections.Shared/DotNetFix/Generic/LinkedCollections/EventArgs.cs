@@ -19,16 +19,15 @@
 
 using System;
 using System.Collections.Specialized;
+using WinCopies.Util;
 
 #if WinCopies2
 using static WinCopies.Util.Util;
-
-using WinCopies.Util;
 #endif
 
 namespace WinCopies.Collections.DotNetFix
 {
-#if !WinCopies2
+#if WinCopies3
     namespace Generic
     {
 #endif
@@ -139,7 +138,7 @@ namespace WinCopies.Collections.DotNetFix
         {
             event LinkedCollectionChangedEventHandler<T> CollectionChanged;
         }
-#if !WinCopies2
+#if WinCopies3
     }
 #endif
 }

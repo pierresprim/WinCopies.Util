@@ -40,7 +40,7 @@ namespace WinCopies.Collections.DotNetFix
 
         object IQueue.Dequeue() => throw GetReadOnlyListOrCollectionException();
 
-#if !WinCopies2
+#if WinCopies3
         public sealed override bool TryPeek(out object result) => _queue.TryPeek(out result);
 
         bool IQueue.TryDequeue(out object result)

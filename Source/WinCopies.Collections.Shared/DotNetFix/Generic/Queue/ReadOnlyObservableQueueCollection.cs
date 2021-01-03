@@ -38,7 +38,7 @@ using static WinCopies.Util.ThrowHelper;
 
 namespace WinCopies.Collections.DotNetFix
 {
-#if !WinCopies2
+#if WinCopies3
     namespace Generic
     {
 #endif
@@ -56,7 +56,7 @@ int
 #endif
                 Count => InnerQueueCollection.Count;
 
-#if !WinCopies2
+#if WinCopies3
             int ICollection.Count => (int)Count;
 
             int IReadOnlyCollection<T>.Count => (int)Count;
@@ -97,7 +97,7 @@ int
 
             void ICollection.CopyTo(Array array, int index) => ((ICollection)InnerQueueCollection).CopyTo(array, index);
         }
-#if !WinCopies2
+#if WinCopies3
     }
 #endif
 }

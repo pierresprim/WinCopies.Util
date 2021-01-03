@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>AttachedCommandBehaviorDemo.snk</AssemblyOriginatorKeyFile>
+    <PackageId>AttachedCommandBehaviorDemo</PackageId>
+    <Version>3.1.0.3</Version>
+    <Description>Demo for the AttachedCommandBehavior package</Description>
+    <Product>WinCopies.AttachedCommandBehavior</Product>
+    <Copyright>Copyright © Pierre Sprimont 2020</Copyright>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/pierresprim/AttachedCommandBehavior</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/pierresprim/AttachedCommandBehavior.git</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+    <PackageReleaseNotes>See https://github.com/pierresprim/AttachedCommandBehavior/blob/master/Changelog.md</PackageReleaseNotes>
+    <PackageTags>AttachedCommandBehavior, WPF, Commands</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Source\WinCopies.Util.Desktop\WinCopies.Util.Desktop.csproj" />
+    <ProjectReference Include="..\..\Source\WinCopies.Util\WinCopies.Util.csproj" />
+  </ItemGroup>
+
+</Project>

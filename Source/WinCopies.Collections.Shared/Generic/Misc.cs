@@ -30,7 +30,7 @@ namespace WinCopies.Collections.Generic
     }
 
     public interface IEnumeratorInfo<out T> : System.Collections.Generic.IEnumerator<T>, IEnumeratorInfo
-#if !WinCopies2
+#if WinCopies3
         , WinCopies.DotNetFix.IDisposable
 #endif
     {

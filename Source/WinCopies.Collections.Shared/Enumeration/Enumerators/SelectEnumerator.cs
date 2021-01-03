@@ -16,21 +16,16 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 
 #if WinCopies2
+using System.Collections;
+using System.Collections.Generic;
 
 using static WinCopies.Util.Util;
 using static WinCopies.Util.ThrowHelper;
 
 #else
-
-using WinCopies;
-
 using static WinCopies.ThrowHelper;
-
-using IDisposable = WinCopies.DotNetFix.IDisposable;
 
 #endif
 
@@ -38,24 +33,32 @@ namespace WinCopies.Collections.Generic
 {
     public sealed class SelectEnumerator<TSource, TDestination> : Enumerator<TSource, TDestination>
     {
-        private Func<TSource, TDestination> _func;
+        private Converter<TSource, TDestination> _func;
 
-#if !WinCopies2
+#if WinCopies3
         private TDestination _current;
 
+        /// <summary>
+        /// When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+        /// </summary>
         protected override TDestination CurrentOverride => _current;
 
         public override bool? IsResetSupported => null;
 #endif
 
-        public SelectEnumerator(in System.Collections.Generic.IEnumerator<TSource> enumerator, in Func<TSource, TDestination> func) : base(enumerator) => _func = func ?? throw GetArgumentNullException(nameof(func));
+#if WinCopies2
+        [Obsolete("This constructor has been replaced by SelectEnumerator(in System.Collections.Generic.IEnumerator<TSource> enumerator, in Converter<TSource, TDestination> func) : base(enumerator) => _func = func ?? throw GetArgumentNullException(nameof(func)).")]
+        public SelectEnumerator(in System.Collections.Generic.IEnumerator<TSource> enumerator, Func<TSource, TDestination> func) : base(enumerator) => _func = item => (func ?? throw GetArgumentNullException(nameof(func)))(item);
+#endif
+
+        public SelectEnumerator(in System.Collections.Generic.IEnumerator<TSource> enumerator, in Converter<TSource, TDestination> func) : base(enumerator) => _func = func ?? throw GetArgumentNullException(nameof(func));
 
         protected override bool MoveNextOverride()
         {
             if (InnerEnumerator.MoveNext())
             {
 #if WinCopies2
-Current 
+                Current
 #else
                 _current
 #endif
@@ -74,23 +77,22 @@ Current
             InnerEnumerator.Reset();
         }
 
-        protected
+        protected override void
 #if WinCopies2
-            override void Dispose(bool disposing)
+              Dispose(bool disposing)
         {
             base.Dispose(disposing);
 
-            if(disposing)
+            if (disposing)
 
                 _func = null;
-        }
 #else
-override void DisposeManaged()
+        DisposeManaged()
         {
             base.DisposeManaged();
 
             _func = null;
-        }
 #endif
+        }
     }
 }

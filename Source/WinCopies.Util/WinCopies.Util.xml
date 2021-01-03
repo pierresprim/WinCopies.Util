@@ -136,7 +136,7 @@
             <param name="y">Second parameter to compare</param>
             <returns><see langword="true"/> if x is equal to y, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="T:WinCopies.Collections.EqualityComparison`1">
+        <member name="T:WinCopies.Collections.Generic.EqualityComparison`1">
             <summary>
             Delegate for a generic equality comparison.
             </summary>
@@ -413,12 +413,12 @@
             <param name="obj">The object or value retrieved by the current iteration.</param>
             <returns><see langword="true"/> to break the loop; otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="T:WinCopies.Extensions">
+        <member name="T:WinCopies.Util.Extensions">
             <summary>
             Provides some static extension methods.
             </summary>
         </member>
-        <member name="M:WinCopies.Extensions.Is(System.Object,System.Boolean@,System.Type[])">
+        <member name="M:WinCopies.Util.Extensions.Is(System.Object,System.Boolean@,System.Type[])">
             <summary>
             Checks if the current object is assignable from at least one type of a given <see cref="T:System.Type"/> array.
             </summary>
@@ -427,7 +427,7 @@
             <param name="types">The types to compare</param>
             <returns><see langword="true"/> if the current object is assignable from at least one of the given types, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Extensions.SetProperty(System.Object,System.String,System.String,System.Object,System.Type,System.Boolean@,System.Reflection.BindingFlags,System.String,System.Boolean@,System.Boolean@,WinCopies.FieldValidateValueCallback,System.Boolean@,WinCopies.FieldValueChangedCallback)">
+        <member name="M:WinCopies.Util.Extensions.SetProperty(System.Object,System.String,System.String,System.Object,System.Type,System.Boolean@,System.Reflection.BindingFlags,System.String,System.Boolean@,System.Boolean@,WinCopies.FieldValidateValueCallback,System.Boolean@,WinCopies.FieldValueChangedCallback)">
             <summary>
             Sets a value to a property if the new value is different.
             </summary>
@@ -449,7 +449,7 @@
             <exception cref="T:System.ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
             <exception cref="T:System.Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="T:System.ArgumentException"/> otherwise.</exception>
         </member>
-        <member name="M:WinCopies.Extensions.SetProperty(System.Object,System.String,System.Object,System.Type,System.Boolean@,System.Reflection.BindingFlags,System.String,System.Boolean@,System.Boolean@,WinCopies.PropertyValidateValueCallback,System.Boolean@,WinCopies.PropertyValueChangedCallback)">
+        <member name="M:WinCopies.Util.Extensions.SetProperty(System.Object,System.String,System.Object,System.Type,System.Boolean@,System.Reflection.BindingFlags,System.String,System.Boolean@,System.Boolean@,WinCopies.PropertyValidateValueCallback,System.Boolean@,WinCopies.PropertyValueChangedCallback)">
             <summary>
             Sets a value to a property if the new value is different.
             </summary>
@@ -470,7 +470,7 @@
             <exception cref="T:System.ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
             <exception cref="T:System.Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="T:System.ArgumentException"/> otherwise.</exception>
         </member>
-        <member name="M:WinCopies.Extensions.DisposeAndSetProperty(System.Object,System.String,System.String,WinCopies.IDisposable,System.Type,System.Boolean@,System.Reflection.BindingFlags,System.String,System.Boolean@,System.Boolean@,WinCopies.FieldValidateValueCallback,System.Boolean@,WinCopies.FieldValueChangedCallback)">
+        <member name="M:WinCopies.Util.Extensions.DisposeAndSetProperty(System.Object,System.String,System.String,WinCopies.IDisposable,System.Type,System.Boolean@,System.Reflection.BindingFlags,System.String,System.Boolean@,System.Boolean@,WinCopies.FieldValidateValueCallback,System.Boolean@,WinCopies.FieldValueChangedCallback)">
             <summary>
             Disposes an old value of a property then sets a new value to the given property if the new value is different.
             </summary>
@@ -492,7 +492,7 @@
             <exception cref="T:System.ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
             <exception cref="T:System.Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="T:System.ArgumentException"/> otherwise.</exception>
         </member>
-        <member name="M:WinCopies.Extensions.DisposeAndSetProperty(System.Object,System.String,WinCopies.IDisposable,System.Type,System.Boolean@,System.Reflection.BindingFlags,System.String,System.Boolean@,System.Boolean@,WinCopies.PropertyValidateValueCallback,System.Boolean@,WinCopies.PropertyValueChangedCallback)">
+        <member name="M:WinCopies.Util.Extensions.DisposeAndSetProperty(System.Object,System.String,WinCopies.IDisposable,System.Type,System.Boolean@,System.Reflection.BindingFlags,System.String,System.Boolean@,System.Boolean@,WinCopies.PropertyValidateValueCallback,System.Boolean@,WinCopies.PropertyValueChangedCallback)">
             <summary>
             Disposes an old value of a property then sets a new value to the given property if the new value is different.
             </summary>
@@ -513,21 +513,21 @@
             <exception cref="T:System.ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
             <exception cref="T:System.Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="T:System.ArgumentException"/> otherwise.</exception>
         </member>
-        <member name="M:WinCopies.Extensions.GetNumValue(System.Enum)">
+        <member name="M:WinCopies.Util.Extensions.GetNumValue(System.Enum)">
             <summary>
             Gets the numeric value for an enum.
             </summary>
             <param name="enum">The enum for which get the corresponding numeric value.</param>
             <returns>The numeric value corresponding to this enum, in the given enum type underlying type.</returns>
         </member>
-        <member name="M:WinCopies.Extensions.GetNumValue``1(``0)">
+        <member name="M:WinCopies.Util.Extensions.GetNumValue``1(``0)">
             <summary>
             Gets the numeric value for an enum.
             </summary>
             <param name="enum">The enum for which get the corresponding numeric value.</param>
             <returns>The numeric value corresponding to this enum, in the given enum type underlying type.</returns>
         </member>
-        <member name="M:WinCopies.Extensions.HasMultipleFlags(System.Enum)">
+        <member name="M:WinCopies.Util.Extensions.HasMultipleFlags(System.Enum)">
             <summary>
             Determines whether an enum has multiple flags.
             </summary>
@@ -535,7 +535,7 @@
             <returns><see langword="true"/> if <paramref name="flagsEnum"/> type has the <see cref="T:System.FlagsAttribute"/> and has multiple flags; otherwise, <see langword="false"/>.</returns>
             <remarks><paramref name="flagsEnum"/> type must have the <see cref="T:System.FlagsAttribute"/>.</remarks>
         </member>
-        <member name="M:WinCopies.Extensions.Between(System.SByte,System.SByte@,System.SByte@)">
+        <member name="M:WinCopies.Util.Extensions.Between(System.SByte,System.SByte@,System.SByte@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -544,7 +544,7 @@
             <param name="y">The right operand.</param>
             <returns><see langword="true"/> if <paramref name="b"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Extensions.Between(System.Byte,System.Byte@,System.Byte@)">
+        <member name="M:WinCopies.Util.Extensions.Between(System.Byte,System.Byte@,System.Byte@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -553,7 +553,7 @@
             <param name="y">The right operand.</param>
             <returns><see langword="true"/> if <paramref name="b"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Extensions.Between(System.Int16,System.Int16@,System.Int16@)">
+        <member name="M:WinCopies.Util.Extensions.Between(System.Int16,System.Int16@,System.Int16@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -562,7 +562,7 @@
             <param name="y">The right operand.</param>
             <returns><see langword="true"/> if <paramref name="s"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Extensions.Between(System.UInt16,System.UInt16@,System.UInt16@)">
+        <member name="M:WinCopies.Util.Extensions.Between(System.UInt16,System.UInt16@,System.UInt16@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -571,7 +571,7 @@
             <param name="y">The right operand.</param>
             <returns><see langword="true"/> if <paramref name="s"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Extensions.Between(System.Int32,System.Int32@,System.Int32@)">
+        <member name="M:WinCopies.Util.Extensions.Between(System.Int32,System.Int32@,System.Int32@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -580,7 +580,7 @@
             <param name="y">The right operand.</param>
             <returns><see langword="true"/> if <paramref name="i"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Extensions.Between(System.UInt32,System.UInt32@,System.UInt32@)">
+        <member name="M:WinCopies.Util.Extensions.Between(System.UInt32,System.UInt32@,System.UInt32@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -589,7 +589,7 @@
             <param name="y">The right operand.</param>
             <returns><see langword="true"/> if <paramref name="i"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Extensions.Between(System.Int64,System.Int64@,System.Int64@)">
+        <member name="M:WinCopies.Util.Extensions.Between(System.Int64,System.Int64@,System.Int64@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -598,7 +598,7 @@
             <param name="y">The right operand.</param>
             <returns><see langword="true"/> if <paramref name="l"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Extensions.Between(System.UInt64,System.UInt64@,System.UInt64@)">
+        <member name="M:WinCopies.Util.Extensions.Between(System.UInt64,System.UInt64@,System.UInt64@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -607,7 +607,7 @@
             <param name="y">The right operand.</param>
             <returns><see langword="true"/> if <paramref name="l"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Extensions.Between(System.Single,System.Single@,System.Single@)">
+        <member name="M:WinCopies.Util.Extensions.Between(System.Single,System.Single@,System.Single@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -616,7 +616,7 @@
             <param name="y">The right operand.</param>
             <returns><see langword="true"/> if <paramref name="f"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Extensions.Between(System.Double,System.Double@,System.Double@)">
+        <member name="M:WinCopies.Util.Extensions.Between(System.Double,System.Double@,System.Double@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -625,7 +625,7 @@
             <param name="y">The right operand.</param>
             <returns><see langword="true"/> if <paramref name="d"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Extensions.Between(System.Decimal,System.Decimal@,System.Decimal@)">
+        <member name="M:WinCopies.Util.Extensions.Between(System.Decimal,System.Decimal@,System.Decimal@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>

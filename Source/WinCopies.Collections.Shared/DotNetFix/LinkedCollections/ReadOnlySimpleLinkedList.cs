@@ -29,7 +29,7 @@ using static WinCopies.Util.ThrowHelper;
 namespace WinCopies.Collections.DotNetFix
 {
     public abstract class ReadOnlySimpleLinkedListBase
-#if !WinCopies2
+#if WinCopies3
             : ISimpleLinkedListBase
 #endif
     {
@@ -53,7 +53,7 @@ namespace WinCopies.Collections.DotNetFix
 
         public bool IsSynchronized => false;
 
-#if !WinCopies2
+#if WinCopies3
         public void Clear() => throw GetReadOnlyListOrCollectionException();
 #endif
     }
@@ -62,7 +62,7 @@ namespace WinCopies.Collections.DotNetFix
     {
         public abstract object Peek();
 
-#if !WinCopies2
+#if WinCopies3
         public abstract bool TryPeek(out object result);
 #endif
     }

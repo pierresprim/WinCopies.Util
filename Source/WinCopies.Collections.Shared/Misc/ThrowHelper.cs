@@ -106,7 +106,7 @@ ThrowIfEmptyListOrCollection
 
         public static ArgumentException GetNodesAreEqualException() => new ArgumentException("The given nodes are equal.");
 
-#if !WinCopies2
+#if WinCopies3
         public static void ThrowIfEnumeratorNotStartedOrDisposedException(in WinCopies.Collections.IDisposableEnumeratorInfo enumerator)
         {
             if (Extensions.IsEnumeratorNotStartedOrDisposed(enumerator))

@@ -24,7 +24,7 @@ namespace WinCopies.Collections
         bool MoveNext();
     }
 
-#if !WinCopies2
+#if WinCopies3
 namespace Generic
 {
 #endif
@@ -32,7 +32,7 @@ namespace Generic
     {
         new T Current { get; }
     }
-#if !WinCopies2
+#if WinCopies3
 }
 #endif
 }

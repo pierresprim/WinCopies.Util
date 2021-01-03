@@ -27,7 +27,7 @@ namespace WinCopies.Collections.DotNetFix
             IEnumerableSimpleLinkedListBase, IEnumerable
 #endif
     {
-#if !WinCopies2
+#if WinCopies3
         void CopyTo(Array array, int index);
 
         object[] ToArray();

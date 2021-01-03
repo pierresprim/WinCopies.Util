@@ -20,6 +20,7 @@ using System.Runtime.Serialization;
 using System.Security;
 
 using WinCopies.Collections;
+using WinCopies.Util;
 
 #if WinCopies2
 namespace WinCopies.Util

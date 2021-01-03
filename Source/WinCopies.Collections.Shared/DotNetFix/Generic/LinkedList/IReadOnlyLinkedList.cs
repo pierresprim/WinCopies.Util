@@ -25,7 +25,7 @@ using System.Runtime.Serialization;
 #endif
 
 namespace WinCopies.Collections.DotNetFix
-#if !WinCopies2
+#if WinCopies3
 .Generic
 #endif
 {
@@ -85,6 +85,15 @@ int
 
         //System.Collections.Generic.IEnumerator<ILinkedListNode<T>> GetNodeEnumerator(EnumerationDirection enumerationDirection);
 #endif
+    }
+
+    public interface IReadOnlyLinkedList2<T>:IReadOnlyLinkedList<T>
+    {
+        T FirstValue { get; }
+
+        T LastValue { get; }
+
+        System.Collections.Generic.IEnumerator<T> GetEnumerator(EnumerationDirection enumerationDirection);
     }
 }
 #endif

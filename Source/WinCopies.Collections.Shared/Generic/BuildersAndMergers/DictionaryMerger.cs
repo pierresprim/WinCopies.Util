@@ -15,19 +15,13 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if CS7
+#if WinCopies3 && CS7
 
 using System.Collections.Generic;
 
 using WinCopies.Collections.DotNetFix.Generic;
 
-using static WinCopies.
-#if WinCopies2
-    Util.Util
-#else
-    ThrowHelper
-#endif
-    ;
+using static WinCopies.ThrowHelper    ;
 
 namespace WinCopies.Collections.Generic
 {
@@ -37,11 +31,7 @@ namespace WinCopies.Collections.Generic
         {
             ValidateRealCount();
 
-            var dic = new Dictionary<TKey, TValue>(
-#if !WinCopies2
-(int)
-#endif
-                Count);
+            var dic = new Dictionary<TKey, TValue>((int)  Count);
 
             ToDictionaryPrivate(dic, remove);
 

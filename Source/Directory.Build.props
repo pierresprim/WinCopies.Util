@@ -31,11 +31,11 @@
     <DefineConstants>CS6;CS7;CS8;NETCORE;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)'=='net5.0'">
+  <PropertyGroup Condition="'$(TargetFramework.TrimEnd(`-windows`))'=='net5.0'">
     <DefineConstants>CS6;CS7;CS8;CS9;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework.TrimEnd(`0123456789-windows`))' == 'net5'">
+  <PropertyGroup Condition="'$(TargetFramework.TrimEnd(`0123456789-windows`))' == 'net5.'">
     <DefineConstants>NET5;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
 

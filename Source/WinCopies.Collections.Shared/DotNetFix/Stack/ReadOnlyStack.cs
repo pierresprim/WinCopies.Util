@@ -33,7 +33,7 @@ namespace WinCopies.Collections.DotNetFix
 
         object IStack.Pop() => throw GetReadOnlyListOrCollectionException();
 
-#if !WinCopies2
+#if WinCopies3
         public sealed override bool TryPeek(out object result) => _stack.TryPeek(out result);
 
         bool IStack.TryPop(out object result)

@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if !WinCopies2
+#if WinCopies3
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -28,11 +28,11 @@ namespace WinCopies.Collections.Generic.Tests
     public class ArrayMerger
     {
         private readonly WinCopies.Collections.
-#if !WinCopies2
+#if WinCopies3
             Generic.
 #endif
             ArrayMerger<int> _arrayMerger = new WinCopies.Collections.
-#if !WinCopies2
+#if WinCopies3
             Generic.
 #endif
             ArrayMerger<int>();

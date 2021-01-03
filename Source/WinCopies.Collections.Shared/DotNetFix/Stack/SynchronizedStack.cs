@@ -17,7 +17,7 @@
 
 namespace WinCopies.Collections.DotNetFix
 {
-#if !WinCopies2
+#if WinCopies3
     public class SynchronizedStack : IStack
     {
         private readonly IStack _stack;

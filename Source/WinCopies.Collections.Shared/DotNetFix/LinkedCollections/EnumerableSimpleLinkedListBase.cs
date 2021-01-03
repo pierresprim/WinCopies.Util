@@ -20,7 +20,7 @@ using System.Threading;
 
 namespace WinCopies.Collections.DotNetFix
 {
-#if !WinCopies2
+#if WinCopies3
     public interface IEnumerableSimpleLinkedListBase : ISimpleLinkedListBase
     {
         // Left empty.
@@ -28,7 +28,7 @@ namespace WinCopies.Collections.DotNetFix
 #endif
 
     public abstract class EnumerableSimpleLinkedListBase
-#if !WinCopies2
+#if WinCopies3
 : IEnumerableSimpleLinkedListBase
 #endif
     {

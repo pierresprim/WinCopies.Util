@@ -28,7 +28,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
         T Pop();
 
-#if !WinCopies2
+#if WinCopies3
         bool HasItems { get; }
 
         bool TryPop(out T result);

@@ -1230,9 +1230,6 @@
             <returns>The object value to set on the property where the extension is applied.</returns>
         </member>
         <member name="T:WinCopies.Util.Data.EnumToBooleanConverter">
-            <summary>
-            Data converter for checking wheter an enum equals a parameter.
-            </summary>
             <remarks>This class can also work for numeric types (int, ...)</remarks>
         </member>
         <member name="M:WinCopies.Util.Data.EnumToBooleanConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
@@ -1243,7 +1240,10 @@
             <param name="targetType">The type of the binding target property. This type must be <see cref="T:System.Boolean"/>.</param>
             <param name="parameter">The converter parameter to use. This represents the value to compare with the value.</param>
             <param name="culture">The culture to use in the converter.</param>
-            <returns></returns>
+            <returns>A value indicating whether <paramref name="value"/> is equal to <paramref name="parameter"/>.</returns>
+        </member>
+        <member name="T:WinCopies.Util.Data.EnumToReversedBooleanConverter">
+            <remarks>This class can also work for numeric types (int, ...)</remarks>
         </member>
         <member name="T:WinCopies.Util.Data.IsNullConverter">
             <summary>

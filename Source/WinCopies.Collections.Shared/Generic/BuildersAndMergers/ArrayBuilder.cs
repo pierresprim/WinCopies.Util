@@ -38,7 +38,7 @@ using static WinCopies.ThrowHelper;
 
 namespace WinCopies.Collections
 {
-#if !WinCopies2
+#if WinCopies3
     namespace Generic
     {
 #endif
@@ -589,7 +589,7 @@ namespace WinCopies.Collections
 
             protected void ValidateParameters(in int count, in int? startIndex, in bool isFixedSize)
             {
-#if !WinCopies2
+#if WinCopies3
                 ValidateCount();
 #endif
 
@@ -598,7 +598,7 @@ namespace WinCopies.Collections
                     throw new IndexOutOfRangeException($"{nameof(startIndex)} is not in the value range.");
             }
 
-#if !WinCopies2
+#if WinCopies3
             protected void ValidateCount()
             {
                 if (Count > int.MaxValue)
@@ -614,7 +614,7 @@ namespace WinCopies.Collections
             /// <returns>An array with the items of this <see cref="ArrayBuilder{T}"/>.</returns>
             public T[] ToArray(in bool remove = false)
             {
-#if !WinCopies2
+#if WinCopies3
                 ValidateCount();
 #endif
 
@@ -674,7 +674,7 @@ InnerList
             /// <returns>An <see cref="ArrayList"/> with the items of this <see cref="ArrayBuilder{T}"/>.</returns>
             public ArrayList ToArrayList(in bool remove = false)
             {
-#if !WinCopies2
+#if WinCopies3
                 ValidateCount();
 #endif
 
@@ -766,7 +766,7 @@ InnerList
             /// <returns>A <see cref="List{T}"/> with the items of this <see cref="ArrayBuilder{T}"/>.</returns>
             public List<T> ToList(in bool remove = false)
             {
-#if !WinCopies2
+#if WinCopies3
                 ValidateCount();
 #endif
 
@@ -914,7 +914,7 @@ InnerList
         }
 #endif
         }
-#if !WinCopies2
+#if WinCopies3
     }
 #endif
 }

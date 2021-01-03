@@ -222,7 +222,7 @@ namespace WinCopies.Util.Data
     public abstract class ViewModel : ViewModelAbstract
     {
         protected
-#if !WinCopies2
+#if WinCopies3
             sealed
 #endif
             override object Model
@@ -241,7 +241,7 @@ namespace WinCopies.Util.Data
     public abstract class ViewModel<T> : ViewModelAbstract
     {
         protected
-#if !WinCopies2
+#if WinCopies3
             sealed
 #endif
 override object Model => ModelGeneric;
@@ -550,7 +550,7 @@ override object Model => ModelGeneric;
 #endif
 
         void ICollection.CopyTo(Array array, int index) =>
-#if !WinCopies2
+#if WinCopies3
             WinCopies.Collections.EnumerableExtensions.
 #endif
             CopyTo(this, array, index, Count);

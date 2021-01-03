@@ -25,7 +25,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
         public sealed override uint Count => _queue.Count;
 
-#if !WinCopies2
+#if WinCopies3
         public bool HasItems => _queue.HasItems;
 #endif
 
@@ -49,7 +49,7 @@ IQueue
 #endif
             <T>.Dequeue() => throw GetReadOnlyListOrCollectionException();
 
-#if !WinCopies2
+#if WinCopies3
         public sealed override bool TryPeek(out T result) => _queue.TryPeek(out result);
 
         bool

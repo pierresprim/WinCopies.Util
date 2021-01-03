@@ -201,11 +201,13 @@ namespace WinCopies.Commands
         private static CommandBehaviorBinding FetchOrCreateBinding(DependencyObject d)
         {
             CommandBehaviorBinding binding = GetBehavior(d);
+
             if (binding == null)
             {
                 binding = new CommandBehaviorBinding();
                 SetBehavior(d, binding);
             }
+
             return binding;
         }
         #endregion

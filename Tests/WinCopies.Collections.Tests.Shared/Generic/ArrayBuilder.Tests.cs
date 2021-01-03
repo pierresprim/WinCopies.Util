@@ -26,11 +26,11 @@ namespace WinCopies.Collections.Generic.Tests
     public class ArrayBuilder
     {
         private readonly WinCopies.Collections.
-#if !WinCopies2
+#if WinCopies3
             Generic.
 #endif
             ArrayBuilder<int> _arrayBuilder = new WinCopies.Collections.
-#if !WinCopies2
+#if WinCopies3
             Generic.
 #endif
             ArrayBuilder<int>();

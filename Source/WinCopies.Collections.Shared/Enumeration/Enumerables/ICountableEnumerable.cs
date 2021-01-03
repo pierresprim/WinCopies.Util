@@ -20,7 +20,7 @@ using System.Collections;
 namespace WinCopies.Collections.DotNetFix
 {
     public interface ICountableEnumerable : IEnumerable
-#if !WinCopies2
+#if WinCopies3
 , ICountable
 #endif
     {
@@ -32,7 +32,7 @@ namespace WinCopies.Collections.DotNetFix
     }
 
     public interface IUIntCountableEnumerable : IEnumerable
-#if !WinCopies2
+#if WinCopies3
 , IUIntCountable
 #endif
     {
@@ -43,20 +43,23 @@ namespace WinCopies.Collections.DotNetFix
 #endif
     }
 
-#if !WinCopies2
+#if WinCopies3
     namespace Generic
     {
 #endif
-        public interface ICountableEnumerable<out T> : System.Collections.Generic.IEnumerable<T>, ICountableEnumerable
-        {
-            // Left empty.
-        }
+    public interface ICountableEnumerable<out T> : System.Collections.Generic.IEnumerable<T>, ICountableEnumerable
+#if WinCopies3 && CS7
+, System.Collections.Generic.IReadOnlyCollection<T>
+#endif
+    {
+        // Left empty.
+    }
 
-        public interface IUIntCountableEnumerable<out T> : System.Collections.Generic.IEnumerable<T>, IUIntCountableEnumerable
-        {
-            // Left empty.
-        }
-#if !WinCopies2
+    public interface IUIntCountableEnumerable<out T> : System.Collections.Generic.IEnumerable<T>, IUIntCountableEnumerable
+    {
+        // Left empty.
+    }
+#if WinCopies3
     }
 #endif
 }

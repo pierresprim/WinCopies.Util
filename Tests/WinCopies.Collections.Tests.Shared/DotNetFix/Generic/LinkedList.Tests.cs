@@ -31,7 +31,7 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
     public class LinkedListTests
     {
         public WinCopies.Collections.DotNetFix.
-#if !WinCopies2
+#if WinCopies3
             Generic.
 #endif
             LinkedList<int> LinkedList
@@ -53,7 +53,7 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
           <int>>();
 
         static void AssertCleared(WinCopies.Collections.DotNetFix.
-#if !WinCopies2
+#if WinCopies3
            Generic.
 #endif
            ILinkedList<int> list, WinCopies.Collections.DotNetFix.Generic.Queue<
@@ -132,7 +132,7 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
         public void TestAddFirstAndLast() => TestAddFirstAndLastStatic(LinkedList, NodeQueue);
 
         public static void TestAddFirstAndLastStatic(WinCopies.Collections.DotNetFix.
-#if !WinCopies2
+#if WinCopies3
             Generic.
 #endif
             ILinkedList<int> list, WinCopies.Collections.DotNetFix.Generic.Queue<
@@ -225,7 +225,7 @@ LinkedListNode
 
             assertValues(new Enumerable<int>(() => LinkedList.GetEnumerator()), 0, i => i + 1);
 
-#if !WinCopies2
+#if WinCopies3
 
             assertValues(new Enumerable<int>(() => LinkedList.GetEnumerator(EnumerationDirection.FIFO)), 0, i => i + 1);
 
@@ -332,7 +332,7 @@ LinkedListNode
             AssertCleared(LinkedList, NodeQueue);
         }
 
-#if !WinCopies2
+#if WinCopies3
 
         public void Fill()
         {

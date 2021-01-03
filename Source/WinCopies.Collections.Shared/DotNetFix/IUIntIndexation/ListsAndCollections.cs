@@ -203,7 +203,7 @@ in
 #endif
                  uint index);
         }
-#if !WinCopies2
+#if WinCopies3
     }
 #endif
 }

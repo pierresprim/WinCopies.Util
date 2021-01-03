@@ -14,12 +14,20 @@ Updates
 
 - Supports .Net Framework 4.0 and .Net 5. (All features are not available in the .Net Framework 4.0 version.)
 - Depends on Microsoft.CodeAnalysis.NetAnalyzers. (.Net 5 version.)
-- Fixes #15
 - Changes:
-	- WinCopies.Collections.DotNetFix.SimpleLinkedListBase.ClearItems() is now protected.
 	- WinCopies.InvalidEnumArgumentException is now in the WinCopies.Util package.
+	- Classes named UtilHelpers, ThrowHelper and Extensions exist in both WinCopies.Util and WinCopies.Util.Extensions packages. Now, those from the WinCopies.Util package are now in the WinCopies namespace, except Extensions which is in the WinCopies.Util namespace, and those from the WinCopies.Util.Extensions package are now in the WinCopies.Extensions namespace in order to avoid name conflicts.
 	- Some comparison-related types in the WinCopies.Collections namespace have moved to the WinCopies.Util package, and are still in the same namespace.
 	- Enum throw methods are now in the WinCopies.ThrowHelper class of the WinCopies.Util package.
+	- Some types are not supported anymore by the .Net Framework 4.0 targetting version.
+
+WinCopies.Collections 3.2.0.0-preview
+-------------------------------------
+
+- Changes:
+	- Fixes #15
+	- Fixes #22
+	- WinCopies.Collections.DotNetFix.SimpleLinkedListBase.ClearItems() is now protected.
 	- Some interface for uint indexation have changed in order to implement the non-generic version of the IUIntCountableEnumerable interface and the generic version in a generic context.
 	- WinCopies.Collections namespace: All the types below are now in the WinCopies.Collections.Generic namespace:
 		- EqualityComparison\<in T>
@@ -28,8 +36,20 @@ Updates
 		- IEqualityComparer\<in T>
 		- EqualityComparer\<T>
 	- UIntIndexedListEnumerator\<T> is now in the WinCopies.Collections.DotNetFix.Generic namespace.
+	- ICountableEnumerable\<T> implements System.Collections.Generic.IReadOnlyCollection\<T>.
+	- Update (I)(ReadOnly)LinkedList(Node)\<T> to avoid read-only issues.
 - Removals:
 	- UIntCountableEnumerable<T> class.
+
+WinCopies.Util.Desktop 3.2.0.0-preview
+--------------------------------------
+
+- Changes:
+	- ValueConverters inherit from new generic abstract types.
+	- IconToImageSourceConverter now takes System.Drawing.Icon values.
+- Additions:
+	- BitmapToImageSourceConverter
+	- Bitmap-, Icon- and ImageSource-related extension methods.
 
 12/09/2020 3.1.0.0-preview
 ==========================
@@ -134,8 +154,11 @@ WinCopies.Util (2.7)
 - Supports .Net 5.0.
 - Additions:
 	- WinCopies.Collections.Generic.DictionaryBuilder/Merger
+	- Add static methods.
+	- Add PushBindings.
 - Bug fixes:
 	- WinCopies.Collections.EqualityComparer\<T> now implements WinCopies.Collections.IEqualityComparer\<in T>
+	- #23
 
 12/09/2020 2.6.1
 ================

@@ -49,7 +49,7 @@ int
 #endif
             Count => InnerQueue.Count;
 
-#if !WinCopies2
+#if WinCopies3
         int ICollection.Count => (int)Count;
 #endif
 

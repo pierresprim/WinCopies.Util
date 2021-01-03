@@ -19,35 +19,48 @@ using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using WinCopies.Extensions;
 
-#if !WinCopies2
-using WinCopies.Collections;
+#if WinCopies3
+using WinCopies.Linq;
 #endif
 
-#if WinCopies2
-namespace WinCopies.Util
-#else
+#if WinCopies3
 namespace WinCopies
+#else
+namespace WinCopies.Util
 #endif
 {
     public class InterfaceDataTemplateSelector : DataTemplateSelector
     {
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
-            if (item == null || !(container is FrameworkElement containerElement))
+            if (item == null ||
+#if !CS9
+                !(
+#endif
+                container is
+#if CS9
+                not
+#endif
+                FrameworkElement containerElement
+#if !CS9
+                )
+#endif
+                )
 
                 return base.SelectTemplate(item, container);
 
             Type itemType = item.GetType();
 
-            return System.Linq.Enumerable.Repeat(itemType, 1).Concat(itemType.GetInterfaces())
+            return System.Linq.Enumerable.Repeat(itemType, 1).Concat(itemType.GetDirectInterfaces(true, true))
                     .FirstOrDefault<DataTemplate>(t => containerElement.TryFindResource(new DataTemplateKey(t))) ?? base.SelectTemplate(item, container);
         }
     }
 
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     public
-#if !WinCopies2
+#if WinCopies3
         sealed
 #endif
         class TypeForDataTemplateAttribute : Attribute

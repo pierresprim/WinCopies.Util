@@ -36,7 +36,7 @@ using static WinCopies.Collections.ThrowHelper;
 
 namespace WinCopies.Collections.DotNetFix
 {
-#if !WinCopies2
+#if WinCopies3
     namespace Generic
     {
 #endif
@@ -80,7 +80,7 @@ int
 #endif
                 Count => InnerList.Count;
 
-#if !WinCopies2
+#if WinCopies3
             int ICollection.Count => (int)Count;
 
             int ICollection<T>.Count => (int)Count;
@@ -144,7 +144,7 @@ int
 
             bool ICollection<T>.Remove(T item) => throw GetReadOnlyListOrCollectionException();
         }
-#if !WinCopies2
+#if WinCopies3
     }
 #endif
 }

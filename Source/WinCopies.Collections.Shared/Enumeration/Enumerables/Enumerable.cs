@@ -32,7 +32,7 @@ namespace WinCopies.Collections
         System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 
-#if !WinCopies2
+#if WinCopies3
     namespace Generic
     {
 #endif
@@ -47,7 +47,7 @@ namespace WinCopies.Collections
             System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 
-#if !WinCopies2
+#if WinCopies3
         /// <summary>
         /// A collection that can be enumerated.
         /// </summary>

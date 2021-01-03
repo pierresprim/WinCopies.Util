@@ -30,7 +30,7 @@ using WinCopies.Util;
 
 namespace WinCopies.Collections.DotNetFix
 {
-#if !WinCopies2
+#if WinCopies3
     namespace Generic
     {
 #endif
@@ -304,7 +304,7 @@ namespace WinCopies.Collections.DotNetFix
                 RaiseCollectionChangedEvent(LinkedCollectionChangedAction.Remove, null, null, node);
             }
         }
-#if !WinCopies2
+#if WinCopies3
     }
 #endif
 }

@@ -23,6 +23,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 
 using IComparer = System.Collections.IComparer;
+using WinCopies.Util;
 
 #if WinCopies2
 using System.Collections.Generic;
@@ -1570,7 +1571,7 @@ namespace WinCopies
             <T>(
 #endif
             in string fieldName)
-#if !WinCopies2
+#if WinCopies3
 where T : Enum
 #endif
         {
@@ -1790,7 +1791,7 @@ Type enumType = typeof(T);
         }
 #endif
 
-#if NETCORE || NETSTANDARD
+#if NETCORE || NETSTANDARD || NET5
         // https://brockallen.com/2016/09/24/process-start-for-urls-on-net-core/
 
         public static Process StartProcessNetCore(in string url) =>
