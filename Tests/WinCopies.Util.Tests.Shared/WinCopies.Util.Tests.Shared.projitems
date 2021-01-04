@@ -9,6 +9,7 @@
     <Import_RootNamespace>WinCopies.Util.Tests.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Math.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util.cs" />
   </ItemGroup>

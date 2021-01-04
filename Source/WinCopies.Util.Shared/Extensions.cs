@@ -2245,22 +2245,69 @@ namespace WinCopies
 
                 Type objType = obj.GetType();
 
+                Predicate<Type> predicate;
+
+                if (typeEquality)
+
+                    predicate = t => objType == t;
+
+                else
+
+                    predicate = t => t.IsAssignableFrom(objType);
+
                 foreach (Type type in types)
 
-                    if (typeEquality ? objType == type : type.IsAssignableFrom(objType))
+                    if (predicate(type))
 
                         return true;
 
                 return false;
             }
 
-            public static bool IsType(this Type t, params Type[] types)
+            public static bool IsType(this Type t, params Type[] types) => IsType(t, types);
+
+            public static bool IsType(this Type t, in System.Collections.Generic.IEnumerable<Type> types)
             {
+                ThrowIfNull(t, nameof(t));
+                ThrowIfNull(types, nameof(types));
+
                 foreach (Type type in types)
 
                     if (t == type)
 
                         return true;
+
+                return false;
+            }
+
+            public static bool IsAssignableFrom<T>(this Type t)
+            {
+                ThrowIfNull(t, nameof(t));
+
+                Type from = typeof(T);
+
+                if (from == t)
+
+                    return true;
+
+                if (t.IsInterface)
+
+                    return t.IsType(from.GetInterfaces());
+
+                if (from.IsInterface)
+
+                    return false;
+
+                from = from.BaseType;
+
+                while (from != null)
+                {
+                    if (from == t)
+
+                        return true;
+
+                    from = from.BaseType;
+                }
 
                 return false;
             }

@@ -25,7 +25,7 @@ namespace WinCopies.Util.Tests
 #if !WinCopies3
         partial
 #endif
-        class Util
+        class UtilTests
     {
         public enum TestEnum : ushort
         {

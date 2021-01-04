@@ -26,7 +26,7 @@ public
 #else
     public partial
 #endif
-    class Util
+    class UtilTests
     {
         [TestMethod]
         public void GetIf()
