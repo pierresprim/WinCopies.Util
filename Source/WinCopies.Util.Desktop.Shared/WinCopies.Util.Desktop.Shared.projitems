@@ -48,6 +48,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\BitmapToImageSourceConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\IconToImageSourceConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\IsNullConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MarkupExtensions\BooleanMarkupExtension.cs" />
     <Compile Include="..\WinCopies.Util.Desktop.Shared\Data\Converters\IntConversionResultToStringConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\MenuItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\MultiConverterBase.cs" />
@@ -68,7 +69,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\VisibilityToReversedBooleanConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IBackgroundWorker.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)MergedStylesMarkupExtension.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MarkupExtensions\MergedStylesMarkupExtension.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Resources.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RoutedEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ThrowHelper.cs" />
