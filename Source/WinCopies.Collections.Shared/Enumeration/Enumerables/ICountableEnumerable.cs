@@ -52,13 +52,21 @@ namespace WinCopies.Collections.DotNetFix
 , System.Collections.Generic.IReadOnlyCollection<T>
 #endif
     {
+#if WinCopies3
+new ICountableEnumerator<T> GetEnumerator();
+#else
         // Left empty.
+#endif
     }
 
     public interface IUIntCountableEnumerable<out T> : System.Collections.Generic.IEnumerable<T>, IUIntCountableEnumerable
-    {
+        {
+#if WinCopies3
+            new IUIntCountableEnumerator<T> GetEnumerator();
+#else
         // Left empty.
-    }
+#endif
+        }
 #if WinCopies3
     }
 #endif

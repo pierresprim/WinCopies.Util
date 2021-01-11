@@ -14,12 +14,16 @@ Updates
 
 - Supports .Net Framework 4.0 and .Net 5. (All features are not available in the .Net Framework 4.0 version.)
 - Depends on Microsoft.CodeAnalysis.NetAnalyzers. (.Net 5 version.)
+- Add new interfaces.
 - Changes:
 	- WinCopies.InvalidEnumArgumentException is now in the WinCopies.Util package.
 	- Classes named UtilHelpers, ThrowHelper and Extensions exist in both WinCopies.Util and WinCopies.Util.Extensions packages. Now, those from the WinCopies.Util package are now in the WinCopies namespace, except Extensions which is in the WinCopies.Util namespace, and those from the WinCopies.Util.Extensions package are now in the WinCopies.Extensions namespace in order to avoid name conflicts.
 	- Some comparison-related types in the WinCopies.Collections namespace have moved to the WinCopies.Util package, and are still in the same namespace.
 	- Enum throw methods are now in the WinCopies.ThrowHelper class of the WinCopies.Util package.
 	- Some types are not supported anymore by the .Net Framework 4.0 targetting version.
+	- ArrayEnumerator\<T> is now defined as : public class ArrayEnumerator\<T> : Enumerator\<T>, ICountableDisposableEnumeratorInfo\<T>
+	- CountableEnumerableArray\<T> is now defined as : public class CountableEnumerableArray<T> : WinCopies.Collections.Generic.IReadOnlyList\<T>
+	- WinCopies.Collections.DotNetFix.IEnumerator has now a MoveNext() method.
 
 WinCopies.Collections 3.2.0.0-preview
 -------------------------------------

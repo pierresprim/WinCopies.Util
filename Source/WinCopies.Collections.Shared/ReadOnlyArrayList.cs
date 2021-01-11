@@ -26,7 +26,6 @@ namespace WinCopies.Collections
     public interface IReadOnlyList : IList
     {
         object this[int index] { get; }
-
     }
 
     [Obsolete("This class is obsolete and will be removed in later versions. Please use the ArrayList.ReadOnly method instead.")]

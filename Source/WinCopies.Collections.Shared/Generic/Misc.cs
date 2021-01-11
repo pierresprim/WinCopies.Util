@@ -58,4 +58,19 @@ namespace WinCopies.Collections.Generic
     {
         // Left empty.
     }
+
+    public interface IUIntCountableEnumeratorInfo<out T> : IEnumeratorInfo<T>, IUIntCountableEnumerator<T>
+    {
+        // Left empty.
+    }
+
+    public interface IUIntCountableDisposableEnumeratorInfo<out T> : IUIntCountableDisposableEnumerator<T>, IUIntCountableEnumeratorInfo<T>
+#if WinCopies2
+, IDisposableEnumeratorInfo<T>
+#else
+        , IEnumeratorInfo<T>
+#endif
+    {
+        // Left empty.
+    }
 }
