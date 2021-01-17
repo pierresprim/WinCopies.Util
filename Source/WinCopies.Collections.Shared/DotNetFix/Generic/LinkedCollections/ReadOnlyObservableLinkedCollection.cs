@@ -23,7 +23,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 
 using static WinCopies
-#if WinCopies2
+#if !WinCopies3
     .Util.Util;
 
 using System.Runtime.Serialization;
@@ -46,7 +46,7 @@ namespace WinCopies.Collections.DotNetFix
             protected ObservableLinkedCollection<T> InnerLinkedCollection { get; }
 
             public
-#if WinCopies2
+#if !WinCopies3
 int
 #else
                 uint
@@ -89,19 +89,19 @@ int
             protected virtual void OnCollectionChanged(LinkedCollectionChangedEventArgs<T> e) => CollectionChanged?.Invoke(this, e);
 
             protected void RaiseCollectionChangedEvent(in LinkedCollectionChangedAction action, in
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
 #endif
                 <T> addedBefore, in
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
 #endif
                 <T> addedAfter, in
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode

@@ -25,12 +25,12 @@ namespace WinCopies.Collections.DotNetFix
 
     [Serializable]
     public class ReadOnlyStackCollection : IEnumerableStack, ICollection
-#if WinCopies2
+#if !WinCopies3
         , ICloneable
 #endif
     {
         protected
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Stack
 #else
 IEnumerableStack
@@ -39,7 +39,7 @@ IEnumerableStack
         { get; }
 
         public
-#if WinCopies2
+#if !WinCopies3
 
             int
 #else
@@ -47,7 +47,7 @@ IEnumerableStack
 #endif
             Count => InnerStack.Count;
 
-#if WinCopies2
+#if !WinCopies3
         uint IUIntCountable.Count => (uint)Count;
 
         uint IUIntCountableEnumerable.Count => (uint)Count;
@@ -62,7 +62,7 @@ IEnumerableStack
         public object SyncRoot => InnerStack.SyncRoot;
 
         public ReadOnlyStackCollection(in
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Stack
 #else
             IEnumerableStack
@@ -71,7 +71,7 @@ IEnumerableStack
 
         public ReadOnlyStackCollection(in StackCollection stackCollection) : this(stackCollection.InnerStack) { }
 
-#if WinCopies2
+#if !WinCopies3
         public object Clone() => InnerStack.Clone();
 #endif
 

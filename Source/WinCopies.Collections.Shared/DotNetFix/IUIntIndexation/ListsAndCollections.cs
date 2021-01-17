@@ -22,7 +22,7 @@ using System.Collections.Generic;
 namespace WinCopies.Collections.DotNetFix
 {
     public interface IUIntIndexedCollection :
-#if WinCopies2
+#if !WinCopies3
 IEnumerable
     {
         /// <summary>
@@ -46,7 +46,7 @@ IEnumerable
     }
 
     public interface IReadOnlyUIntIndexedList : IUIntIndexedCollection
-#if WinCopies2
+#if !WinCopies3
 , IEnumerable
 #endif
     {
@@ -73,7 +73,7 @@ IEnumerable
     }
 
     public interface IUIntIndexedList : IReadOnlyUIntIndexedList
-#if WinCopies2
+#if !WinCopies3
 , IEnumerable
 #endif
     {
@@ -121,7 +121,7 @@ IEnumerable
         void RemoveAt(in uint index);
     }
 
-#if WinCopies2
+#if !WinCopies3
     public interface IReadOnlyUIntIndexedCollection<out T> : System.Collections.Generic.IEnumerable<T>, IEnumerable
     {
         uint Count { get; }
@@ -131,14 +131,14 @@ IEnumerable
     {
 #endif
         public interface IUIntIndexedCollection<T> :
-#if WinCopies2
+#if !WinCopies3
             IReadOnlyUIntIndexedCollection<T>, System.Collections.Generic.IEnumerable<T>, IEnumerable
 #else
             IUIntCountableEnumerable<T>
 #endif
         {
             void Add(
-#if WinCopies2
+#if !WinCopies3
 in
 #endif
                 T item);
@@ -146,26 +146,26 @@ in
             void Clear();
 
             bool Contains(
-#if WinCopies2
+#if !WinCopies3
 in
 #endif
                  T item);
 
             void CopyTo(
-#if WinCopies2
+#if !WinCopies3
 in
 #endif
                  T[] array, uint arrayIndex);
 
             bool Remove(
-#if WinCopies2
+#if !WinCopies3
 in
 #endif
                  T item);
         }
 
         public interface IReadOnlyUIntIndexedList<out T> :
-#if WinCopies2
+#if !WinCopies3
             IReadOnlyUIntIndexedCollection<T>, System.Collections.Generic.IEnumerable<T>, IEnumerable
 #else
             IUIntCountableEnumerable<T>
@@ -175,30 +175,30 @@ in
         }
 
         public interface IUIntIndexedList<T> : IUIntIndexedCollection<T>, IReadOnlyUIntIndexedList<T>
-#if WinCopies2
+#if !WinCopies3
 , System.Collections.Generic.IEnumerable<T>, IEnumerable
 #endif
         {
             new T this[uint index] { get; set; }
 
             uint? IndexOf(
-#if WinCopies2
+#if !WinCopies3
 in
 #endif
                  T item);
 
             void Insert(
-#if WinCopies2
+#if !WinCopies3
 in
 #endif
                  uint index,
-#if WinCopies2
+#if !WinCopies3
 in
 #endif
                  T item);
 
             void RemoveAt(
-#if WinCopies2
+#if !WinCopies3
 in
 #endif
                  uint index);

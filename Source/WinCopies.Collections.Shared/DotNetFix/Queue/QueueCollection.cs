@@ -23,12 +23,12 @@ namespace WinCopies.Collections.DotNetFix
 
     [Serializable]
     public class QueueCollection : IEnumerable, ICollection
-#if WinCopies2
+#if !WinCopies3
         , ICloneable
 #endif
     {
         protected internal
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Queue
 #else
 IEnumerableQueue
@@ -42,7 +42,7 @@ IEnumerableQueue
         /// </summary>
         /// <value>The number of elements contained in the <see cref="QueueCollection"/>.</value>
         public
-#if WinCopies2
+#if !WinCopies3
 int
 #else
             uint
@@ -63,7 +63,7 @@ int
         /// Initializes a new instance of the <see cref="QueueCollection"/> class.
         /// </summary>
         public QueueCollection() : this(new
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Queue
 #else
             EnumerableQueue
@@ -76,14 +76,14 @@ int
         /// </summary>
         /// <param name="queue">The inner queue for this <see cref="QueueCollection"/>.</param>
         public QueueCollection(in
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Queue
 #else
             IEnumerableQueue
 #endif
             queue) => InnerQueue = queue;
 
-#if WinCopies2
+#if !WinCopies3
 
         /// <summary>
         /// Creates a shallow copy of the <see cref="QueueCollection"/>.

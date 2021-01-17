@@ -34,7 +34,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
         public sealed override T Peek() => _queue.Peek();
 
         void
-#if WinCopies2
+#if !WinCopies3
 IQueue
 #else
             IQueueBase
@@ -42,7 +42,7 @@ IQueue
             <T>.Enqueue(T item) => throw GetReadOnlyListOrCollectionException();
 
         T
-#if WinCopies2
+#if !WinCopies3
 IQueue
 #else
             IQueueBase
@@ -53,7 +53,7 @@ IQueue
         public sealed override bool TryPeek(out T result) => _queue.TryPeek(out result);
 
         bool
-#if WinCopies2
+#if !WinCopies3
 IQueue
 #else
             IQueueBase

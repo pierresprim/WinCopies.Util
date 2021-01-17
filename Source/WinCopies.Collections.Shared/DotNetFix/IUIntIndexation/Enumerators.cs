@@ -19,7 +19,7 @@ using System;
 using System.Diagnostics;
 
 using static WinCopies
-#if WinCopies2
+#if !WinCopies3
     .Util.Util;
 
 using System.Collections;
@@ -35,7 +35,7 @@ namespace WinCopies.Collections.DotNetFix
     // todo: check if the given collection implements the WinCopies.DotNetFix.IDisposable (or WinCopies.IDisposable) interface and, if yes, check the given collection is not disposed (or disposing) in the Current property and in the MoveNext method.
 
     public abstract class UIntIndexedListEnumeratorBase : WinCopies.
-#if WinCopies2
+#if !WinCopies3
         Util.
 #endif
         DotNetFix.IDisposable

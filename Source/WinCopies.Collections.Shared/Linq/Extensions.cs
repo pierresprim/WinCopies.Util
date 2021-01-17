@@ -19,9 +19,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using WinCopies.Collections;
+using WinCopies.Collections.DotNetFix;
+using WinCopies.Collections.DotNetFix.Generic;
 using WinCopies.Collections.Generic;
 
-#if WinCopies2
+#if !WinCopies3
 using WinCopies.Collections;
 using WinCopies.Util;
 
@@ -34,6 +37,14 @@ namespace WinCopies.Linq
 {
     public static class Extensions
     {
+        public static
+#if !WinCopies3
+System.Collections.Generic.IEnumerable
+#else
+            IEnumerableInfo
+#endif
+            <T> Join<T>(this System.Collections.Generic.IEnumerable<System.Collections.Generic.IEnumerable<T>> enumerable, bool keepEmptyEnumerables, params T[] join) => new EnumerableInfo<T>(() => new JoinEnumerator<T>(enumerable, keepEmptyEnumerables, join), null);
+
         public static System.Collections.Generic.IEnumerable<T> WherePredicate<T>(this System.Collections.Generic.IEnumerable<T> enumerable, Predicate<T> func)
         {
             ThrowIfNull(enumerable, nameof(enumerable));
@@ -58,18 +69,70 @@ namespace WinCopies.Linq
                     yield return value;
         }
 
-#if WinCopies2
+#if !WinCopies3
         [Obsolete("This method has been replaced by Select<TSource, TDestination>(this System.Collections.Generic.IEnumerator<TSource> enumerator, System.Converter<TSource, TDestination> func).")]
         public static System.Collections.Generic.IEnumerator<TDestination> Select<TSource, TDestination>(this System.Collections.Generic.IEnumerator<TSource> enumerator, Func<TSource, TDestination> func) => new SelectEnumerator<TSource, TDestination>(enumerator, func);
 #endif
 
         public static
-#if WinCopies2
+#if !WinCopies3
 System.Collections.Generic.IEnumerator
 #else
             IEnumeratorInfo2
 #endif
-            <TDestination> Select<TSource, TDestination>(this System.Collections.Generic.IEnumerator<TSource> enumerator, Converter<TSource, TDestination> func) => new SelectEnumerator<TSource, TDestination>(enumerator, func);
+            <TDestination>
+#if !WinCopies3
+Select
+#else
+            SelectConverter
+#endif
+            <TSource, TDestination>(this System.Collections.Generic.IEnumerator<TSource> enumerator, Converter<TSource, TDestination> func) => new SelectEnumerator<TSource, TDestination>(enumerator, func);
+
+        public static
+#if !WinCopies3
+System.Collections.Generic.IEnumerable
+#else
+            IEnumerableInfo
+#endif
+            <TOut>
+#if !WinCopies3
+Select
+#else
+            SelectConverter
+#endif
+            <TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, Converter<TIn, TOut> selector)
+#if !WinCopies3
+        {
+            foreach (TIn item in enumerable)
+
+                yield return selector(item);
+        }
+#else
+            => new EnumerableInfo<TOut>(() => new SelectEnumerator<TIn, TOut>(enumerable, selector), null);
+#endif
+
+        public static
+#if !WinCopies3
+System.Collections.Generic.IEnumerable
+#else
+            IEnumerableInfo
+#endif
+            <TOut>
+#if !WinCopies3
+Select
+#else
+            SelectConverter
+#endif
+            <TIn, TOut>(this IEnumerableInfo<TIn> enumerable, Converter<TIn, TOut> selector)
+#if !WinCopies3
+        {
+            foreach (TIn item in enumerable)
+
+                yield return selector(item);
+        }
+#else
+            => new EnumerableInfo<TOut>(() => new SelectEnumerator<TIn, TOut>(enumerable, selector), () => new SelectEnumerator<TIn, TOut>(enumerable.GetReversedEnumerator(), selector));
+#endif
 
 #if WinCopies3
         public static T Last<T>(this WinCopies.Collections.Generic.IEnumerable<T> enumerable)
@@ -102,7 +165,7 @@ System.Collections.Generic.IEnumerator
 
             // todo:
 
-            return ((System.Collections.Generic.IEnumerable<T>)enumerable).Last(item=>predicate(item));
+            return ((System.Collections.Generic.IEnumerable<T>)enumerable).Last(item => predicate(item));
         }
 
         public static T LastOrDefault<T>(this WinCopies.Collections.Generic.IEnumerable<T> enumerable)
@@ -135,7 +198,7 @@ System.Collections.Generic.IEnumerator
 
             // todo:
 
-            return ((System.Collections.Generic.IEnumerable<T>)enumerable).LastOrDefault(item=>predicate(item));
+            return ((System.Collections.Generic.IEnumerable<T>)enumerable).LastOrDefault(item => predicate(item));
         }
 #endif
 

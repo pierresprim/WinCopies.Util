@@ -253,7 +253,7 @@ namespace WinCopies.Collections
 
         // todo: add other methods and overloads for StringComparison, IEqualityComparer<char>, Comparer<char>, Comparison<char>, ignore case and CultureInfo parameters
 
-#if WinCopies2
+#if !WinCopies3
 
         [Obsolete("This method has been replaced by the Contains(this string, string, IEqualityComparer<char>) method.")]
         public static bool Contains(this string s, System.Collections.Generic.IEqualityComparer<char> comparer, string value) => s.Contains(value, comparer);

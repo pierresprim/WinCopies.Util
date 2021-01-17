@@ -36,14 +36,14 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
         { get; } = new LinkedTreeNode<int>();
 
         public WinCopies.Collections.DotNetFix.Generic.Queue<
-#if WinCopies2
+#if !WinCopies3
             LinkedListNode
 #else
             ILinkedListNode
 #endif
           <int>> NodeQueue
         { get; } = new Queue<
-#if WinCopies2
+#if !WinCopies3
             LinkedListNode
 #else
             ILinkedListNode

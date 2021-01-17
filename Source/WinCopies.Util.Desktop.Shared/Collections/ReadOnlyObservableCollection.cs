@@ -61,7 +61,7 @@ namespace WinCopies.Collections
         }
     }
 
-#if WinCopies2
+#if !WinCopies3
     [Obsolete("This class has been moved to the WinCopies.Collections.DotNetFix namespace. This implementation is still here temporarily only.")]
     [Serializable]
     public class ReadOnlyObservableCollection<T> : System.Collections.ObjectModel.ReadOnlyObservableCollection<T>, INotifyCollectionChanging

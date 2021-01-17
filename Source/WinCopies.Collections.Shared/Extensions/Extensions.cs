@@ -737,7 +737,7 @@ namespace WinCopies.Collections
                 collection.AddRangeBefore(node.Next, array);
         }
 
-#if WinCopies2
+#if !WinCopies3
         /// <summary>
         /// Add multiple <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s at the top of a <see cref="ILinkedList{T}"/>.
         /// </summary>
@@ -835,13 +835,13 @@ namespace WinCopies.Collections
         /// <param name="values">The values to add to a <see cref="ILinkedList{T}"/></param>
         /// <returns>The added <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s.</returns>
         public static
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.LinkedListNode
 #else
             ILinkedListNode
 #endif
             <T>[] AddRangeAfter<T>(this ILinkedList<T> collection, in
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.LinkedListNode
 #else
             ILinkedListNode
@@ -861,13 +861,13 @@ namespace WinCopies.Collections
         /// <param name="array">The values to add to a <see cref="ILinkedList{T}"/></param>
         /// <returns>The added <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s.</returns>
         public static
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.LinkedListNode
 #else
             ILinkedListNode
 #endif
             <T>[] AddRangeAfter<T>(this ILinkedList<T> collection, in
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.LinkedListNode
 #else
             ILinkedListNode
@@ -886,7 +886,7 @@ namespace WinCopies.Collections
         /// <param name="values">The values to add to this <see cref="ILinkedList{T}"/></param>
         /// <returns>The added <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s.</returns>
         public static
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.LinkedListNode
 #else
             ILinkedListNode
@@ -905,7 +905,7 @@ namespace WinCopies.Collections
         /// <param name="array">The values to add to this <see cref="ILinkedList{T}"/></param>
         /// <returns>The added <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s.</returns>
         public static
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.LinkedListNode
 #else
             ILinkedListNode
@@ -924,7 +924,7 @@ namespace WinCopies.Collections
         /// <param name="values">The values to add to a <see cref="ILinkedList{T}"/></param>
         /// <returns>The added <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s.</returns>
         public static
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.LinkedListNode
 #else
             ILinkedListNode
@@ -938,7 +938,7 @@ namespace WinCopies.Collections
         /// <param name="array">The values to add to a <see cref="ILinkedList{T}"/></param>
         /// <returns>The added <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s.</returns>
         public static
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.LinkedListNode
 #else
             ILinkedListNode
@@ -949,7 +949,7 @@ namespace WinCopies.Collections
             ThrowIfNull(array, nameof(array));
 
             var result = new DotNetFix.Generic.EnumerableQueue<
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.LinkedListNode
 #else
             ILinkedListNode
@@ -961,7 +961,7 @@ namespace WinCopies.Collections
                 result.Enqueue(collection.AddLast(item));
 
             return result.ToArray<
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.LinkedListNode
 #else
             ILinkedListNode
@@ -977,13 +977,13 @@ namespace WinCopies.Collections
         /// <param name="values">The values to add to a <see cref="ILinkedList{T}"/></param>
         /// <returns>The added <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s.</returns>
         public static
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.LinkedListNode
 #else
             ILinkedListNode
 #endif
             <T>[] AddRangeBefore<T>(this ILinkedList<T> collection, in
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.LinkedListNode
 #else
             ILinkedListNode
@@ -998,13 +998,13 @@ namespace WinCopies.Collections
         /// <param name="array">The values to add to a <see cref="ILinkedList{T}"/></param>
         /// <returns>The added <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s.</returns>
         public static
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.LinkedListNode
 #else
             ILinkedListNode
 #endif
             <T>[] AddRangeBefore<T>(this ILinkedList<T> collection, in
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.LinkedListNode
 #else
             ILinkedListNode
@@ -1015,7 +1015,7 @@ namespace WinCopies.Collections
             ThrowIfNull(array, nameof(array));
 
             var result = new EnumerableQueue<
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.LinkedListNode
 #else
             ILinkedListNode
@@ -1027,7 +1027,7 @@ namespace WinCopies.Collections
                 result.Enqueue(collection.AddBefore(node, item));
 
             return result.ToArray<
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.LinkedListNode
 #else
             ILinkedListNode
@@ -1036,7 +1036,7 @@ namespace WinCopies.Collections
         }
 #endif
 
-#if WinCopies2
+#if !WinCopies3
         /// <summary>
         /// Add multiple values after a specified node in a <see cref="ILinkedList{T}"/>.
         /// </summary>
@@ -1216,7 +1216,7 @@ namespace WinCopies.Collections
             return ContainsOneValue(array, (object value, object _value) => comparer.Compare(value, _value) == 0, out containsMoreThanOneValue, values);
         }
 
-#if WinCopies2
+#if !WinCopies3
         /// <summary>
         /// Checks whether an array contains <i>exactly</i> one value of a given array using a custom comparer.
         /// </summary>
@@ -1826,7 +1826,7 @@ namespace WinCopies.Collections
 
 #if CS7
         public static
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.LinkedListNode
 #else
             ILinkedListNode
@@ -1834,7 +1834,7 @@ namespace WinCopies.Collections
             <T> RemoveAndGetFirstValue<T>(this ILinkedList<T> items)
         {
 
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.LinkedListNode
 #else
             ILinkedListNode
@@ -1858,7 +1858,7 @@ namespace WinCopies.Collections
 
 #if CS7
         public static
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.LinkedListNode
 #else
             ILinkedListNode
@@ -1866,7 +1866,7 @@ namespace WinCopies.Collections
             <T> RemoveAndGetLastValue<T>(this ILinkedList<T> items)
         {
 
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.LinkedListNode
 #else
             ILinkedListNode
@@ -2067,7 +2067,7 @@ namespace WinCopies.Collections
 
 #if CS7
         public static
-#if WinCopies2
+#if !WinCopies3
 int 
 #else
             uint
@@ -2075,14 +2075,14 @@ int
             GetCapacity<T>(this ArrayBuilder<T>[] arrayBuilders) => (arrayBuilders ?? throw GetArgumentNullException(nameof(arrayBuilders))).GetCapacityInternal();
 
         private static
-#if WinCopies2
+#if !WinCopies3
             int
 #else
             uint
 #endif
             GetCapacityInternal<T>(this ArrayBuilder<T>[] arrayBuilders)
         {
-#if WinCopies2
+#if !WinCopies3
 int
 #else
             uint

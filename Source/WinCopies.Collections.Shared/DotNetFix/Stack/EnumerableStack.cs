@@ -18,12 +18,12 @@
 using System;
 using System.Collections;
 
-#if WinCopies2
+#if !WinCopies3
 using static WinCopies.Util.Util;
 #endif
 
 using static WinCopies.
-#if WinCopies2
+#if !WinCopies3
     Util.
 #endif
     ThrowHelper;
@@ -42,7 +42,7 @@ namespace WinCopies.Collections.DotNetFix
         [NonSerialized]
         private readonly Stack _stack;
 
-#if WinCopies2
+#if !WinCopies3
         public new bool IsReadOnly => base.IsReadOnly;
 #endif
 
@@ -98,11 +98,11 @@ namespace WinCopies.Collections.DotNetFix
             return enumerator;
         }
 
-#if WinCopies2
+#if !WinCopies3
         [Serializable]
 #endif
         public sealed class Enumerator :
-#if WinCopies2
+#if !WinCopies3
 IEnumerator, Util.DotNetFix.IDisposable
 #else
 WinCopies.Collections.Enumerator
@@ -113,7 +113,7 @@ WinCopies.Collections.Enumerator
             private readonly uint _version;
             private bool _first = true;
 
-#if WinCopies2
+#if !WinCopies3
             public object Current => IsDisposed ? throw GetExceptionForDispose(false) : _currentNode.Value;
 
             public bool IsDisposed { get; private set; }
@@ -136,14 +136,14 @@ WinCopies.Collections.Enumerator
 
                 _version = stack.EnumerableVersion;
 
-#if WinCopies2
+#if !WinCopies3
                 Reset();
 #else
                 ResetOverride();
 #endif
             }
 
-#if WinCopies2
+#if !WinCopies3
             public void Reset()
             {
                 if (IsDisposed)
@@ -162,7 +162,7 @@ WinCopies.Collections.Enumerator
                 _currentNode = _stack._stack.FirstItem;
             }
 
-#if WinCopies2
+#if !WinCopies3
             public bool MoveNext()
             {
                 if (IsDisposed)
@@ -183,7 +183,7 @@ WinCopies.Collections.Enumerator
                 }
 
                 if (_currentNode.
-#if WinCopies2
+#if !WinCopies3
                     NextNode
 #else
                     Next
@@ -196,7 +196,7 @@ WinCopies.Collections.Enumerator
                 }
 
                 _currentNode = _currentNode.
-#if WinCopies2
+#if !WinCopies3
                     NextNode
 #else
                     Next
@@ -206,7 +206,7 @@ WinCopies.Collections.Enumerator
                 return true;
             }
 
-#if WinCopies2
+#if !WinCopies3
             private void Dispose(bool disposing)
             {
                 if (IsDisposed)

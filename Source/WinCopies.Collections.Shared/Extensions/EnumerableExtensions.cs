@@ -172,8 +172,6 @@ namespace WinCopies.Collections
             }
         }
 
-        public static System.Collections.Generic.IEnumerable<T> Join<T>(this System.Collections.Generic.IEnumerable<System.Collections.Generic.IEnumerable<T>> enumerable, bool keepEmptyEnumerables, params T[] join) => new Enumerable<T>(() => new JoinEnumerator<T>(enumerable, keepEmptyEnumerables, join));
-
         private static void ThrowOnInvalidCopyToArrayParameters(in IEnumerable enumerable, in Array array)
         {
             ThrowIfNull(enumerable, nameof(enumerable));
@@ -462,7 +460,6 @@ namespace WinCopies.Collections
         }
 
         static void Append(object _value, ref StringBuilder stringBuilder, in bool parseStrings, in bool parseSubEnumerables)
-
         {
             ThrowIfNull(stringBuilder, nameof(stringBuilder));
 

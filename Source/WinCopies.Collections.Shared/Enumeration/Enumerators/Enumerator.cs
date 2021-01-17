@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using WinCopies.Collections.DotNetFix;
 using WinCopies.Collections.DotNetFix.Generic;
 using static WinCopies.
-#if WinCopies2
+#if !WinCopies3
     Util.Util;
 #else
 ThrowHelper;
@@ -119,42 +119,43 @@ namespace WinCopies.Collections
 
         public void Dispose()
         {
-            if (!IsDisposed)
-            {
-                Dispose(true);
+            if (IsDisposed)
 
-                GC.SuppressFinalize(this);
-            }
+                return;
+
+            Dispose(true);
+
+            GC.SuppressFinalize(this);
         }
     }
 #endif
 
     public abstract class Enumerator :
-#if WinCopies2
+#if !WinCopies3
 System.Collections.IEnumerator, WinCopies.Util.DotNetFix.IDisposable
 #else
         EnumeratorInfoBase, IDisposableEnumerator, IDisposableEnumeratorInfo
 #endif
     {
         public object Current
-#if WinCopies2
+#if !WinCopies3
         {
             get
 #endif
             => IsDisposed ? throw GetExceptionForDispose(false) : IsStarted ?
-#if WinCopies2
+#if !WinCopies3
                 _current 
 #else
                 CurrentOverride
 #endif
                 : throw new InvalidOperationException("The enumeration has not been started or has completed.");
 
-#if WinCopies2
+#if !WinCopies3
             protected set => _current = IsDisposed ? throw GetExceptionForDispose(false) : value;
         }
 #endif
 
-#if WinCopies2
+#if !WinCopies3
         private object _current;
 
         public bool IsStarted { get; private set; }
@@ -298,13 +299,13 @@ System.Collections.IEnumerator, WinCopies.Util.DotNetFix.IDisposable
     {
 #endif
         public abstract class Enumerator<T> :
-#if WinCopies2
+#if !WinCopies3
 System.Collections.Generic.IEnumerator<T>, WinCopies.Util.DotNetFix.IDisposable
 #else
            EnumeratorInfoBase, IDisposableEnumerator<T>, IDisposableEnumeratorInfo, IEnumeratorInfo2<T>
 #endif
         {
-#if WinCopies2
+#if !WinCopies3
             private T _current;
 
             public bool IsDisposed { get; private set; }
@@ -315,18 +316,18 @@ System.Collections.Generic.IEnumerator<T>, WinCopies.Util.DotNetFix.IDisposable
             /// </summary>
             /// <exception cref="InvalidOperationException">The enumerator is disposed.</exception>
             public T Current
-#if WinCopies2
+#if !WinCopies3
             {
                 get
 #endif
                 => IsDisposed ? throw GetExceptionForDispose(false) :
-#if WinCopies2
+#if !WinCopies3
 _enumerationStarted
 #else
                     IsStarted
 #endif
                     ? CurrentOverride : throw new InvalidOperationException("The enumeration has not been started or has completed.");
-#if WinCopies2
+#if !WinCopies3
                 protected set => _current = IsDisposed ? throw GetExceptionForDispose(false) : value;
             }
 #endif
@@ -338,7 +339,7 @@ _enumerationStarted
 
             object System.Collections.IEnumerator.Current => Current;
 
-#if WinCopies2
+#if !WinCopies3
         private bool _enumerationStarted = false;
 
         protected abstract bool MoveNextOverride();
@@ -395,9 +396,9 @@ _enumerationStarted
         }
 
 #if WinCopies3
-        public interface IEnumeratorInfo2<out T> : IEnumeratorInfo<T>, WinCopies.Collections.DotNetFix.IDisposableEnumeratorInfo, IEnumeratorBase, IDisposableEnumerator<T>, IDisposableEnumeratorInfo
+        public interface IEnumeratorInfo2<out T> : IEnumeratorInfo<T>, WinCopies.Collections.DotNetFix.IDisposableEnumeratorInfo, IDisposableEnumerator<T>, IDisposableEnumeratorInfo
         {
-            new bool MoveNext();
+            // Left empty.
         }
 
         public class EnumeratorInfo<T> : Enumerator<T>
@@ -438,7 +439,7 @@ _enumerationStarted
 #endif
 
         public abstract class Enumerator<TSource, TEnumSource, TDestination, TEnumDestination> :
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.IEnumerator<TDestination>, WinCopies.Util.DotNetFix.IDisposable
 #else
             Enumerator<TDestination>
@@ -450,7 +451,7 @@ _enumerationStarted
 
             protected TEnumSource InnerEnumerator => IsDisposed ? throw GetExceptionForDispose(false) : _innerEnumerator;
 
-#if WinCopies2
+#if !WinCopies3
         private TDestination _current;
 
         public TDestination Current { get => IsDisposed ? throw GetExceptionForDispose(false) : _current; protected set => _current = IsDisposed ? throw GetExceptionForDispose(false) : value; }
@@ -508,14 +509,14 @@ _enumerationStarted
 #endif
 
             protected
-#if WinCopies2
+#if !WinCopies3
                 virtual
 #else
                 override
 #endif
                 void ResetOverride()
             {
-#if WinCopies2
+#if !WinCopies3
             _current = default;
 #else
                 base.ResetOverride();
@@ -524,7 +525,7 @@ _enumerationStarted
             }
 
             protected
-#if WinCopies2
+#if !WinCopies3
                 virtual void Dispose(bool disposing) => _innerEnumerator = default;
 #else
                 override void DisposeManaged()
@@ -554,7 +555,109 @@ _enumerationStarted
             /// <param name="enumerator">The enumerator to enumerate.</param>
             public Enumerator(System.Collections.Generic.IEnumerator<TSource> enumerator) : base(enumerator ?? throw GetArgumentNullException(nameof(enumerator))) { /* Left empty. */ }
         }
+
 #if WinCopies3
+        public abstract class ExtensionEnumerator<TItems, TEnumerator> : WinCopies.Collections.DotNetFix.IDisposableEnumeratorInfo, IEnumeratorBase, IDisposableEnumerator<TItems>, IDisposableEnumeratorInfo, IEnumeratorInfo2<TItems> where TEnumerator : IEnumeratorInfo2<TItems>
+        {
+            protected TEnumerator InnerEnumerator { get; }
+
+            public TItems Current => InnerEnumerator.Current;
+
+            public bool IsDisposed { get; private set; }
+
+            public bool? IsResetSupported => InnerEnumerator.IsResetSupported;
+
+            public bool IsStarted => InnerEnumerator.IsStarted;
+
+            public bool IsCompleted => InnerEnumerator.IsCompleted;
+
+            object System.Collections.IEnumerator.Current => ((System.Collections.IEnumerator)InnerEnumerator).Current;
+
+            public bool MoveNext() => InnerEnumerator.MoveNext();
+
+            public void Reset() => InnerEnumerator.Reset();
+
+            protected ExtensionEnumerator(in TEnumerator enumerator) => InnerEnumerator = enumerator == null ? throw GetArgumentNullException(nameof(enumerator)) : enumerator;
+
+            protected virtual void DisposeManaged()
+            {
+                InnerEnumerator.Dispose();
+
+                IsDisposed = true;
+            }
+
+            protected virtual void Dispose(bool disposing)
+            {
+                if (disposing)
+
+                    DisposeManaged();
+            }
+
+            ~ExtensionEnumerator() => Dispose(false);
+
+            public void Dispose()
+            {
+                if (IsDisposed)
+
+                    return;
+
+                Dispose(true);
+
+                GC.SuppressFinalize(this);
+            }
+        }
+
+        public abstract class CountableEnumeratorInfoBase<TItems, TEnumerator> : ExtensionEnumerator<TItems, TEnumerator>, ICountableEnumeratorInfo<TItems> where TEnumerator : IEnumeratorInfo2<TItems>
+        {
+            private Func<int> _countableFunc;
+
+            protected Func<int> CountableFunc => IsDisposed ? throw GetEnumeratorNotStartedOrDisposedException() : _countableFunc;
+
+            public int Count => CountableFunc();
+
+            protected CountableEnumeratorInfoBase(in TEnumerator enumerator, in Func<int> countableFunc) : base(enumerator) => _countableFunc = countableFunc ?? throw GetArgumentNullException(nameof(countableFunc));
+
+            protected override void DisposeManaged()
+            {
+                _countableFunc = null;
+
+                base.DisposeManaged();
+            }
+        }
+
+        public sealed class CountableEnumeratorInfo<T> : CountableEnumeratorInfoBase<T, IEnumeratorInfo2<T>>
+        {
+            public CountableEnumeratorInfo(in IEnumeratorInfo2<T> enumerator, in Func<int> countableFunc) : base(enumerator, countableFunc)
+            {
+                // Left empty.
+            }
+        }
+
+        public abstract class UIntCountableEnumeratorInfoBase<TItems, TEnumerator> : ExtensionEnumerator<TItems, TEnumerator>, IUIntCountableEnumeratorInfo<TItems> where TEnumerator : IEnumeratorInfo2<TItems>
+        {
+            private Func<uint> _countableFunc;
+
+            protected Func<uint> CountableFunc => IsDisposed ? throw GetEnumeratorNotStartedOrDisposedException() : _countableFunc;
+
+            public uint Count => CountableFunc();
+
+            protected UIntCountableEnumeratorInfoBase(in TEnumerator enumerator, in Func<uint> countableFunc) : base(enumerator) => _countableFunc = countableFunc ?? throw GetArgumentNullException(nameof(countableFunc));
+
+            protected override void DisposeManaged()
+            {
+                _countableFunc = null;
+
+                base.DisposeManaged();
+            }
+        }
+
+        public sealed class UIntCountableEnumeratorInfo<T> : UIntCountableEnumeratorInfoBase<T, IEnumeratorInfo2<T>>
+        {
+            public UIntCountableEnumeratorInfo(in IEnumeratorInfo2<T> enumerator, in Func<uint> countableFunc) : base(enumerator, countableFunc)
+            {
+                // Left empty.
+            }
+        }
     }
 #endif
 }

@@ -16,7 +16,7 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using System;
-#if WinCopies2
+#if !WinCopies3
 using WinCopies.Util.DotNetFix;
 using static WinCopies.Util.Desktop.Resources.ExceptionMessages;
 #else

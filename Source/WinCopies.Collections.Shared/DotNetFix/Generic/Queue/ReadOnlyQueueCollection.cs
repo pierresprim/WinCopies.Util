@@ -33,7 +33,7 @@ namespace WinCopies.Collections.DotNetFix
         public class ReadOnlyQueueCollection<T> : System.Collections.Generic.IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection
         {
             protected
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.Queue
 #else
 IEnumerableQueue
@@ -46,7 +46,7 @@ IEnumerableQueue
             /// </summary>
             /// <value>The number of elements contained in the <see cref="QueueCollection{T}"/>.</value>
             public
-#if WinCopies2
+#if !WinCopies3
 int
 #else
                 uint
@@ -69,7 +69,7 @@ int
             /// </summary>
             /// <param name="queue">The inner <see cref="System.Collections.Generic.Queue{T}"/> for this <see cref="QueueCollection{T}"/>.</param>
             public ReadOnlyQueueCollection(in
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.Queue<T>
 #else
                 IEnumerableQueue<T>

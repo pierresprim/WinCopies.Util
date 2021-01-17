@@ -27,7 +27,7 @@ namespace WinCopies.Collections
     {
         public bool IsReadOnly => false;
 
-#if WinCopies2
+#if !WinCopies3
         uint IUIntCountableEnumerable.Count => (uint)Count;
 #endif
 
@@ -66,7 +66,7 @@ namespace WinCopies.Collections
     {
         public bool IsReadOnly => false;
 
-#if WinCopies2
+#if !WinCopies3
         uint IUIntCountableEnumerable.Count => (uint)Count;
 #endif
 

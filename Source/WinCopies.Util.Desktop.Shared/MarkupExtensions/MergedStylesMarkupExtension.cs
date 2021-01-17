@@ -21,7 +21,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Markup;
 
-#if WinCopies2
+#if !WinCopies3
 namespace WinCopies.Util
 #else
 using WinCopies.Collections;

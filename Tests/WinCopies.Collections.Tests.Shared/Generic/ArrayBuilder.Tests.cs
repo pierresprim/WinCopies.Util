@@ -83,7 +83,7 @@ namespace WinCopies.Collections.Generic.Tests
             int[] array = _arrayBuilder.ToArray(true);
 
             Assert.AreEqual(
-#if WinCopies2
+#if !WinCopies3
 0
 #else
                 0u
@@ -117,7 +117,7 @@ namespace WinCopies.Collections.Generic.Tests
             _arrayBuilder.ToArray(array, true, 4);
 
             Assert.AreEqual(
-#if WinCopies2
+#if !WinCopies3
 0
 #else
                 0u
@@ -166,7 +166,7 @@ namespace WinCopies.Collections.Generic.Tests
             var arrayList = _arrayBuilder.ToArrayList(true);
 
             Assert.AreEqual(
-#if WinCopies2
+#if !WinCopies3
 0
 #else
                 0u
@@ -204,7 +204,7 @@ namespace WinCopies.Collections.Generic.Tests
             _arrayBuilder.ToArrayList(arrayList, true, 4);
 
             Assert.AreEqual(
-#if WinCopies2
+#if !WinCopies3
 0
 #else
                 0u
@@ -253,7 +253,7 @@ namespace WinCopies.Collections.Generic.Tests
             IList<int> list = _arrayBuilder.ToList(true);
 
             Assert.AreEqual(
-#if WinCopies2
+#if !WinCopies3
 0
 #else
                 0u
@@ -291,7 +291,7 @@ namespace WinCopies.Collections.Generic.Tests
             _arrayBuilder.ToList(list, true, 4);
 
             Assert.AreEqual(
-#if WinCopies2
+#if !WinCopies3
 0
 #else
                 0u

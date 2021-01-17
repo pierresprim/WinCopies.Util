@@ -18,7 +18,7 @@
 namespace WinCopies.Collections.DotNetFix.Generic
 {
     public interface
-#if WinCopies2
+#if !WinCopies3
         IStack<T> : ISimpleLinkedList<T>
 #else
         IStackBase<T>
@@ -56,7 +56,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
     public class Stack<T> : SimpleLinkedList<T>, IStack<T>
     {
-#if WinCopies2
+#if !WinCopies3
         public new uint Count => base.Count;
 
         public new T Peek() => base.Peek();

@@ -17,7 +17,7 @@
 
 using System.Windows.Input;
 
-#if WinCopies2
+#if !WinCopies3
 using System;
 
 namespace WinCopies.Util.Commands
@@ -34,7 +34,7 @@ namespace WinCopies.Commands
         /// Gets the <b>NewTab</b> command.
         /// </summary>
         public static RoutedUICommand NewTab { get; } = new RoutedUICommand(WinCopies.
-            #if WinCopies2
+            #if !WinCopies3
             Util.
 #endif
             Desktop.Resources.Commands.WPF.ApplicationCommands.NewTab, nameof(NewTab), typeof(ApplicationCommands), new InputGestureCollection() { new KeyGesture(Key.T, ModifierKeys.Control) });
@@ -43,7 +43,7 @@ namespace WinCopies.Commands
         /// Gets the <b>NewWindow</b> command.
         /// </summary>
         public static RoutedUICommand NewWindow { get; } = new RoutedUICommand(WinCopies.
-#if WinCopies2
+#if !WinCopies3
             Util.
 #endif
             Desktop.Resources.Commands.WPF.ApplicationCommands.NewWindow, nameof(NewWindow), typeof(ApplicationCommands), new InputGestureCollection() { new KeyGesture(Key.W, ModifierKeys.Alt) });
@@ -52,7 +52,7 @@ namespace WinCopies.Commands
         /// Gets the <b>NewWindowInNewInstance</b> command.
         /// </summary>
         public static RoutedUICommand NewWindowInNewInstance { get; } = new RoutedUICommand(WinCopies.
-#if WinCopies2
+#if !WinCopies3
             Util.
 #endif
             Desktop.Resources.Commands.WPF.ApplicationCommands.NewWindowInNewInstance, nameof(NewWindowInNewInstance), typeof(ApplicationCommands), new InputGestureCollection() { new KeyGesture(Key.W, ModifierKeys.Control | ModifierKeys.Shift) });
@@ -61,13 +61,13 @@ namespace WinCopies.Commands
         /// Gets the <b>CloseTab</b> command.
         /// </summary>
         public static RoutedUICommand CloseTab { get; } = new RoutedUICommand(WinCopies.
-#if WinCopies2
+#if !WinCopies3
             Util.
 #endif
             Desktop.Resources.Commands.WPF.ApplicationCommands.CloseTab, nameof(CloseTab), typeof(ApplicationCommands), new InputGestureCollection() { new KeyGesture(Key.W, ModifierKeys.Control) });
 
         public static RoutedUICommand CloseOtherTabs { get; } = new RoutedUICommand(WinCopies.
-#if WinCopies2
+#if !WinCopies3
             Util.
 #endif
             Desktop.Resources.Commands.WPF.ApplicationCommands.CloseOtherTabs, nameof(CloseOtherTabs), typeof(ApplicationCommands), new InputGestureCollection() { new KeyGesture(Key.W, ModifierKeys.Control | ModifierKeys.Alt) });
@@ -76,12 +76,12 @@ namespace WinCopies.Commands
         /// Gets the <b>CloseAllTabs</b> command.
         /// </summary>
         public static RoutedUICommand CloseAllTabs { get; } = new RoutedUICommand(WinCopies.
-#if WinCopies2
+#if !WinCopies3
             Util.
 #endif
             Desktop.Resources.Commands.WPF.ApplicationCommands.CloseAllTabs, nameof(CloseAllTabs), typeof(ApplicationCommands), new InputGestureCollection() { new KeyGesture(Key.W, ModifierKeys.Control | ModifierKeys.Shift) });
 
-#if WinCopies2
+#if !WinCopies3
         /// <summary>
         /// Gets the <b>CloseWindow</b> command.
         /// </summary>
@@ -90,7 +90,7 @@ namespace WinCopies.Commands
 #endif
 
         public static RoutedUICommand Quit { get; } = new RoutedUICommand(WinCopies.
-#if WinCopies2
+#if !WinCopies3
             Util.
 #endif
             Desktop.Resources.Commands.WPF.ApplicationCommands.Quit, nameof(Quit), typeof(ApplicationCommands), new InputGestureCollection() { new KeyGesture(Key.Q, ModifierKeys.Control) });
@@ -99,7 +99,7 @@ namespace WinCopies.Commands
         /// Gets the <b>DeselectAll</b> command.
         /// </summary>
         public static RoutedUICommand DeselectAll { get; } = new RoutedUICommand(WinCopies.
-#if WinCopies2
+#if !WinCopies3
             Util.
 #endif
             Desktop.Resources.Commands.WPF.ApplicationCommands.DeselectAll, nameof(DeselectAll), typeof(ApplicationCommands));
@@ -108,7 +108,7 @@ namespace WinCopies.Commands
         /// Gets the <b>ReverseSelection</b> command.
         /// </summary>
         public static RoutedUICommand ReverseSelection { get; } = new RoutedUICommand(WinCopies.
-#if WinCopies2
+#if !WinCopies3
             Util.
 #endif
             Desktop.Resources.Commands.WPF.ApplicationCommands.ReverseSelection, nameof(ReverseSelection), typeof(ApplicationCommands));

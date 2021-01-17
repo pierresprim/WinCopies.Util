@@ -22,7 +22,7 @@ using System.Security;
 using WinCopies.Collections;
 using WinCopies.Util;
 
-#if WinCopies2
+#if !WinCopies3
 namespace WinCopies.Util
 #else
 namespace WinCopies

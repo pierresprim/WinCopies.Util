@@ -22,7 +22,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-#if WinCopies2
+#if !WinCopies3
 using System.Runtime.Serialization;
 
 using WinCopies.Collections.DotNetFix;
@@ -48,14 +48,14 @@ namespace WinCopies.Collections
         /// <typeparam name="T">The type of the items.</typeparam>
         [DebuggerDisplay("Count = {Count}")]
         public class ArrayBuilder<T> :
-#if WinCopies2
+#if !WinCopies3
             ILinkedList
 #else
             WinCopies.Collections.DotNetFix.Generic.LinkedList
 #endif
             <T>
         {
-#if WinCopies2
+#if !WinCopies3
         protected EnumeratorCollection Enumerators { get; } = new EnumeratorCollection();
 
         /// <summary>
@@ -552,7 +552,7 @@ namespace WinCopies.Collections
             /// Initializes a new instance of the <see cref="ArrayBuilder{T}"/> class.
             /// </summary>
             public ArrayBuilder()
-#if WinCopies2
+#if !WinCopies3
             : this(new System.Collections.Generic.LinkedList<T>())
 #endif
             {
@@ -564,7 +564,7 @@ namespace WinCopies.Collections
             /// </summary>
             /// <param name="enumerable">An enumerable from which to add values.</param>
             public ArrayBuilder(in System.Collections.Generic.IEnumerable<T> enumerable) :
-#if WinCopies2
+#if !WinCopies3
                 this(new System.Collections.Generic.LinkedList<T>(enumerable))
 #else
                 base(enumerable)
@@ -573,7 +573,7 @@ namespace WinCopies.Collections
                 // Left empty.
             }
 
-#if WinCopies2
+#if !WinCopies3
         /// <summary>
         /// Initializes a new instance of the <see cref="ArrayBuilder{T}"/> class using a custom <see cref="System.Collections.Generic.LinkedList{T}"/> to build the arrays and collections.
         /// </summary>
@@ -619,7 +619,7 @@ namespace WinCopies.Collections
 #endif
 
                 var array = new T[
-#if WinCopies2
+#if !WinCopies3
 InnerList.
 #endif
                     Count];
@@ -643,12 +643,12 @@ InnerList.
                     while (Count != 0)
                     {
                         array[startIndex++] =
-#if WinCopies2
+#if !WinCopies3
 InnerList.
 #endif
                             First.Value;
 
-#if WinCopies2
+#if !WinCopies3
                     InnerList.
 #endif
                         RemoveFirst();
@@ -657,7 +657,7 @@ InnerList.
                 else
 
                     foreach (T item in
-#if WinCopies2
+#if !WinCopies3
 InnerList
 #else
                         this
@@ -679,7 +679,7 @@ InnerList
 #endif
 
                 var arrayList = new ArrayList(
-#if WinCopies2
+#if !WinCopies3
 InnerList.
 #else
                     (int)
@@ -709,7 +709,7 @@ InnerList.
                         int index = startIndex.Value;
 
                         action = () => arrayList.Insert(index++,
-#if WinCopies2
+#if !WinCopies3
                             InnerList
 #else
                             this
@@ -720,7 +720,7 @@ InnerList.
                     else
 
                         action = () => _ = arrayList.Add(
-#if WinCopies2
+#if !WinCopies3
                             InnerList
 #else
                             this
@@ -748,7 +748,7 @@ InnerList.
                         action = item => _ = arrayList.Add(item);
 
                     foreach (T item in
-#if WinCopies2
+#if !WinCopies3
 InnerList
 #else
                         this
@@ -771,7 +771,7 @@ InnerList
 #endif
 
                 var list = new List<T>(
-#if WinCopies2
+#if !WinCopies3
 InnerList.
 #else
                     (int)
@@ -801,7 +801,7 @@ InnerList.
                         int index = startIndex.Value;
 
                         action = () => list.Insert(index++,
-#if WinCopies2
+#if !WinCopies3
                             InnerList
 #else
                             this
@@ -812,7 +812,7 @@ InnerList.
                     else
 
                         action = () => list.Add(
-#if WinCopies2
+#if !WinCopies3
                             InnerList
 #else
                             this
@@ -840,7 +840,7 @@ InnerList.
                         action = item => list.Add(item);
 
                     foreach (T item in
-#if WinCopies2
+#if !WinCopies3
 InnerList
 #else
                         this
@@ -851,7 +851,7 @@ InnerList
                 }
             }
 
-#if WinCopies2
+#if !WinCopies3
         [Serializable]
         public struct Enumerator : System.Collections.Generic.IEnumerator<System.Collections.Generic.LinkedListNode<T>>, System.Collections.IEnumerator
         {

@@ -21,7 +21,7 @@ using System;
 using System.Collections;
 using System.Diagnostics;
 
-#if WinCopies2
+#if !WinCopies3
 using System.Runtime.Serialization;
 #else
 using System.Collections.Generic;
@@ -74,7 +74,7 @@ ILinkedList
         [Serializable]
         public class LinkedList<T> :
 #if WinCopies3
-            ILinkedList3<T>, ISortable<T>, IEnumerableInfo<T>
+            ILinkedList3<T>, ISortable<T>, IEnumerableInfoLinkedList<T>
 #else
             System.Collections.Generic.LinkedList<T>, ILinkedList2<T>
 #endif
@@ -91,7 +91,7 @@ ILinkedList
             /// Initializes a new instance of the <see cref="System.Collections.Generic.LinkedList{T}"/> class that is empty.
             /// </summary>
             public LinkedList()
-#if WinCopies2
+#if !WinCopies3
             : base()
 #endif
             {
@@ -104,11 +104,11 @@ ILinkedList
             /// <param name="collection">The <see cref="IEnumerable"/> whose elements are copied to the new <see cref="System.Collections.Generic.LinkedList{T}"/>.</param>
             /// <exception cref="System.ArgumentNullException"><paramref name="collection"/> is <see langword="null"/>.</exception>
             public LinkedList(System.Collections.Generic.IEnumerable<T> collection)
-#if WinCopies2
+#if !WinCopies3
 : base(collection)
 #endif
             {
-#if WinCopies2
+#if !WinCopies3
             // Left empty.
 #else
                 foreach (T item in collection)
@@ -117,7 +117,7 @@ ILinkedList
 #endif
             }
 
-#if WinCopies2
+#if !WinCopies3
         /// <summary>
         /// Initializes a new instance of the <see cref="System.Collections.Generic.LinkedList{T}"/> class that is serializable with the specified <see cref="SerializationInfo"/> and <see cref="StreamingContext"/>.
         /// </summary>
@@ -159,7 +159,7 @@ ILinkedList
                 }
             }
 
-            public class Enumerator : WinCopies.Collections.Generic.Enumerator<LinkedListNode>, IEnumeratorInfo2<LinkedListNode>
+            public class Enumerator : WinCopies.Collections.Generic.Enumerator<LinkedListNode>, IUIntCountableEnumeratorInfo<LinkedListNode>
             {
                 private LinkedList<T> _list;
                 private Action _action;
@@ -169,6 +169,8 @@ ILinkedList
                 private readonly uint _version;
 
                 public EnumerationDirection EnumerationDirection { get; }
+
+                public uint Count => _list.Count;
 
                 public override bool? IsResetSupported => true;
 
@@ -604,9 +606,17 @@ ILinkedList
 
 
 
-            public IEnumeratorInfo2<T> GetEnumerator() => GetEnumerator(EnumerationDirection.FIFO);
+            public IUIntCountableEnumeratorInfo<T> GetEnumerator() => GetEnumerator(EnumerationDirection.FIFO);
 
-            System.Collections.Generic.IEnumerator<T> ILinkedList<T>.GetEnumerator() => GetEnumerator();
+            public IUIntCountableEnumeratorInfo<T> GetReversedEnumerator() => GetEnumerator(EnumerationDirection.LIFO);
+
+            public IUIntCountableEnumeratorInfo<T> GetEnumerator(EnumerationDirection enumerationDirection) => new UIntCountableEnumeratorInfo<T>(GetNodeEnumerator(enumerationDirection).SelectConverter(node => node.Value), () => Count);
+
+            public IUIntCountableEnumeratorInfo<LinkedListNode> GetNodeEnumerator(in EnumerationDirection enumerationDirection) => new Enumerator(this, enumerationDirection);
+
+            IUIntCountableEnumeratorInfo<ILinkedListNode<T>> IEnumerableInfoLinkedList<T>.GetNodeEnumerator(EnumerationDirection enumerationDirection) => GetNodeEnumerator(enumerationDirection);
+
+            IUIntCountableEnumerator<T> ILinkedList<T>.GetEnumerator() => GetEnumerator();
 
             System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetEnumerator();
 
@@ -616,23 +626,23 @@ ILinkedList
 
             System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-            public IEnumeratorInfo2<T> GetReversedEnumerator() => GetEnumerator(EnumerationDirection.LIFO);
-
             System.Collections.Generic.IEnumerator<T> Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => GetReversedEnumerator();
 
-            System.Collections.Generic.IEnumerator<T> ILinkedList<T>.GetReversedEnumerator() => GetReversedEnumerator();
+            IUIntCountableEnumerator<T> ILinkedList<T>.GetReversedEnumerator() => GetReversedEnumerator();
 
             System.Collections.Generic.IEnumerator<ILinkedListNode<T>> Collections.Generic.IEnumerable<ILinkedListNode<T>>.GetReversedEnumerator() => GetNodeEnumerator(EnumerationDirection.LIFO);
 
-            public IEnumeratorInfo2<T> GetEnumerator(EnumerationDirection enumerationDirection) => GetNodeEnumerator(enumerationDirection).Select(node => node.Value);
+            System.Collections.Generic.IEnumerator<ILinkedListNode<T>> System.Collections.Generic.IEnumerable<ILinkedListNode<T>>.GetEnumerator() => GetNodeEnumerator(EnumerationDirection.FIFO);
 
-            System.Collections.Generic.IEnumerator<T> IReadOnlyLinkedList2<T>.GetEnumerator(EnumerationDirection enumerationDirection) => GetEnumerator(enumerationDirection);
+            IEnumeratorInfo2<T> IEnumerableInfo<T>.GetEnumerator() => GetEnumerator();
 
-            public IEnumeratorInfo2<LinkedListNode> GetNodeEnumerator(in EnumerationDirection enumerationDirection) => new Enumerator(this, enumerationDirection);
+            IEnumeratorInfo2<T> IEnumerableInfo<T>.GetReversedEnumerator() => GetReversedEnumerator();
+
+            IUIntCountableEnumerator<T> IUIntCountableEnumerable<T>.GetEnumerator() => GetEnumerator();
 
             System.Collections.Generic.IEnumerator<ILinkedListNode<T>> ILinkedList3<T>.GetNodeEnumerator(EnumerationDirection enumerationDirection) => GetNodeEnumerator(enumerationDirection);
 
-            System.Collections.Generic.IEnumerator<ILinkedListNode<T>> System.Collections.Generic.IEnumerable<ILinkedListNode<T>>.GetEnumerator() => GetNodeEnumerator(EnumerationDirection.FIFO);
+            System.Collections.Generic.IEnumerator<T> IReadOnlyLinkedList2<T>.GetEnumerator(EnumerationDirection enumerationDirection) => GetEnumerator(enumerationDirection);
 
             public void Remove(LinkedListNode node)
             {
@@ -680,7 +690,7 @@ ILinkedList
 
             public void RemoveFirst()
             {
-#if WinCopies2
+#if !WinCopies3
             ThrowIfEmpty
 #else
                 ThrowIfEmptyListOrCollection
@@ -696,7 +706,7 @@ ILinkedList
 
             public void RemoveLast()
             {
-#if WinCopies2
+#if !WinCopies3
             ThrowIfEmpty
 #else
                 ThrowIfEmptyListOrCollection

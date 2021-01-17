@@ -58,7 +58,7 @@ namespace WinCopies.Util.Data
         /// <param name="obj">Object to compare to the current object.</param>
         /// <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
         public bool Equals(
-#if WinCopies2
+#if !WinCopies3
             WinCopies.Util.IValueObject
 #else
             WinCopies.IValueObject
@@ -149,7 +149,7 @@ namespace WinCopies.Util.Data
         /// <param name="obj">Object to compare to the current object.</param>
         /// <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
         public bool Equals(
-#if WinCopies2
+#if !WinCopies3
             WinCopies.Util.IValueObject
 #else
             WinCopies.IValueObject
@@ -176,7 +176,7 @@ namespace WinCopies.Util.Data
         /// <param name="obj">Object to compare to the current object.</param>
         /// <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
         public bool Equals(
-#if WinCopies2
+#if !WinCopies3
             WinCopies.Util.IValueObject<T>
 #else
             WinCopies.IValueObject<T>
@@ -193,7 +193,7 @@ namespace WinCopies.Util.Data
         object IReadOnlyValueObject.Value => _value;
 
         object
-#if WinCopies2
+#if !WinCopies3
             WinCopies.Util.IValueObject
 #else
             WinCopies.IValueObject

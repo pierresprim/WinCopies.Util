@@ -17,7 +17,7 @@
 
 using System;
 
-#if WinCopies2
+#if !WinCopies3
 using System.Collections;
 using System.Collections.Generic;
 
@@ -46,10 +46,15 @@ namespace WinCopies.Collections.Generic
         public override bool? IsResetSupported => null;
 #endif
 
-#if WinCopies2
+#if !WinCopies3
         [Obsolete("This constructor has been replaced by SelectEnumerator(in System.Collections.Generic.IEnumerator<TSource> enumerator, in Converter<TSource, TDestination> func) : base(enumerator) => _func = func ?? throw GetArgumentNullException(nameof(func)).")]
         public SelectEnumerator(in System.Collections.Generic.IEnumerator<TSource> enumerator, Func<TSource, TDestination> func) : base(enumerator) => _func = item => (func ?? throw GetArgumentNullException(nameof(func)))(item);
 #endif
+
+        public SelectEnumerator(in System.Collections.Generic.IEnumerable<TSource> enumerable, in Converter<TSource, TDestination> func):this(enumerable.GetEnumerator(), func)
+        {
+            // Left empty.
+        }
 
         public SelectEnumerator(in System.Collections.Generic.IEnumerator<TSource> enumerator, in Converter<TSource, TDestination> func) : base(enumerator) => _func = func ?? throw GetArgumentNullException(nameof(func));
 
@@ -57,7 +62,7 @@ namespace WinCopies.Collections.Generic
         {
             if (InnerEnumerator.MoveNext())
             {
-#if WinCopies2
+#if !WinCopies3
                 Current
 #else
                 _current
@@ -78,7 +83,7 @@ namespace WinCopies.Collections.Generic
         }
 
         protected override void
-#if WinCopies2
+#if !WinCopies3
               Dispose(bool disposing)
         {
             base.Dispose(disposing);

@@ -25,7 +25,7 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 
 using static WinCopies
-#if WinCopies2
+#if !WinCopies3
     .Util.Util;
 
 using System.Runtime.Serialization;
@@ -49,7 +49,7 @@ namespace WinCopies.Collections.DotNetFix
             protected ObservableQueueCollection<T> InnerQueueCollection { get; }
 
             public
-#if WinCopies2
+#if !WinCopies3
 int
 #else
                 uint

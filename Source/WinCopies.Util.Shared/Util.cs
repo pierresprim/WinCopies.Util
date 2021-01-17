@@ -25,7 +25,7 @@ using System.Runtime.InteropServices;
 using IComparer = System.Collections.IComparer;
 using WinCopies.Util;
 
-#if WinCopies2
+#if !WinCopies3
 using System.Collections.Generic;
 using System.ComponentModel;
 
@@ -109,7 +109,7 @@ namespace WinCopies
     /// Provides some static helper methods.
     /// </summary>
     public static class
-#if WinCopies2
+#if !WinCopies3
         Util
 #else
         UtilHelpers
@@ -120,7 +120,7 @@ namespace WinCopies
         public const BindingFlags DefaultBindingFlagsForPropertySet = BindingFlags.Public | BindingFlags.NonPublic |
                          BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly;
 
-#if WinCopies2 && CS7
+#if !WinCopies3 && CS7
         [Obsolete("This method has been replaced by the WinCopies.Util.Extensions.SetBackgroundWorkerProperty method overloads.")]
         public static (bool propertyChanged, object oldValue) SetPropertyWhenNotBusy<T>(T bgWorker, string propertyName, string fieldName, object newValue, Type declaringType, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, bool throwIfBusy = true) where T : IBackgroundWorker, INotifyPropertyChanged => bgWorker.IsBusy
                 ? throwIfBusy ? throw new InvalidOperationException("Cannot change property value when BackgroundWorker is busy.") : (false, Extensions.GetField(fieldName, declaringType, bindingFlags).GetValue(bgWorker))
@@ -139,7 +139,7 @@ namespace WinCopies
         /// <returns>Returns the <see langword="true"/> value.</returns>
         public static Predicate<T> GetCommonPredicate<T>() => (T value) => true;
 
-#if WinCopies2
+#if !WinCopies3
         [Obsolete("This method has been replaced by the WinCopies.Util.Extensions.ThrowIfInvalidEnumValue(params Enum[] values) method.")]
         public static void ThrowOnNotValidEnumValue(params Enum[] values) => ThrowIfInvalidEnumValue(values);
 
@@ -184,7 +184,7 @@ namespace WinCopies
 
         // public static KeyValuePair<TKey, Func<bool>>[] GetIfKeyValuePairPredicateArray<TKey>(params KeyValuePair<TKey, Func<bool>>[] keyValuePairs) => keyValuePairs;
 
-#if WinCopies2
+#if !WinCopies3
 
         #region 'If' methods
 
@@ -1364,7 +1364,7 @@ namespace WinCopies
 
         public static bool IsNullEmptyOrWhiteSpace(in string value) => string.IsNullOrEmpty(value) || string.IsNullOrWhiteSpace(value);
 
-#if WinCopies2
+#if !WinCopies3
         public static void ThrowIfNullEmptyOrWhiteSpace(in string value)
         {
             if (IsNullEmptyOrWhiteSpace(value))
@@ -1430,7 +1430,7 @@ namespace WinCopies
             return newArray;
         }
 
-#if WinCopies2
+#if !WinCopies3
 
         /// <summary>
         /// Concatenates multiple arrays from a same item type using the <see cref="Array.LongLength"/> length property. Arrays must have only one dimension.
@@ -1565,7 +1565,7 @@ namespace WinCopies
         /// <param name="fieldName">The enum field to look for.</param>
         /// <returns>The numeric value corresponding to this enum, in the given enum type underlying type.</returns>
         public static object GetNumValue
-#if WinCopies2
+#if !WinCopies3
             (in Type enumType,
 #else
             <T>(
@@ -1575,7 +1575,7 @@ namespace WinCopies
 where T : Enum
 #endif
         {
-#if WinCopies2
+#if !WinCopies3
             ThrowIfNull(enumType, nameof(enumType));
 #else
 Type enumType = typeof(T);
@@ -1584,7 +1584,7 @@ Type enumType = typeof(T);
             return enumType.IsEnum ? Convert.ChangeType(enumType.GetField(fieldName).GetValue(null), Enum.GetUnderlyingType(enumType)) : throw new ArgumentException("'enumType' is not an enum type.");
         }
 
-#if WinCopies2
+#if !WinCopies3
 
         /// <summary>
         /// Returns an <see cref="ArgumentNullException"/> for a given argument name.

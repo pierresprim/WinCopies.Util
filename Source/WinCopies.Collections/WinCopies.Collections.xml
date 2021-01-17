@@ -92,7 +92,7 @@
             </summary>
             <returns>The object that is removed from the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="!:TryDequeue(out T)"/>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.TryDequeue(`0@)"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.EnqueueItem(`0)">
             <summary>
@@ -112,13 +112,36 @@
             </summary>
             <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="!:TryPeek(out T)"/>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.TryPeek(`0@)"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.ToArray">
             <summary>
             Copies the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> elements to a new array.
             </summary>
             <returns>A new array containing elements copied from the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.TryDequeueItem(`0@)">
+            <summary>
+            Tries to remove and return the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. Override this method to provide a custom implementation.
+            </summary>
+            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been removed and retrieved.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.TryDequeue(`0@)">
+            <summary>
+            Tries to remove and return the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.TryDequeueItem(`0@)"/> method to provide a custom implementation.
+            </summary>
+            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been removed and retrieved.</returns>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.Dequeue"/>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.TryPeek(`0@)">
+            <summary>
+            Tries to peek the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> without removing it.
+            </summary>
+            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been retrieved.</returns>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.Peek"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.GetEnumerator">
             <summary>
@@ -161,7 +184,15 @@
             </summary>
             <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="!:TryPeek(out T)"/>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`1.TryPeek(`0@)"/>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`1.TryPeek(`0@)">
+            <summary>
+            Tries to peek the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> without removing it.
+            </summary>
+            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been retrieved.</returns>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`1.Peek"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`1.GetEnumerator">
             <summary>
@@ -581,6 +612,30 @@
             <param name="remove">Indicates whether items have to be removed from the current <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> after they has been added to the new list.</param>
             <returns>A <see cref="T:System.Collections.Generic.List`1"/> with the items of this <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/>.</returns>
         </member>
+        <member name="M:WinCopies.Collections.Generic.EnumerableInfoBase`2.#ctor(System.Func{`1}@,System.Func{`1}@)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Collections.Generic.EnumerableInfoBase`2"/> class.
+            </summary>
+            <param name="enumeratorFunc">The func that provides the enumerators.</param>
+            <param name="reversedEnumeratorFunc">The func that provides the reversed enumerators. This parameter can be null.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="enumeratorFunc"/> is null.</exception>
+        </member>
+        <member name="M:WinCopies.Collections.Generic.EnumerableInfoBase`2.GetReversedEnumerator">
+            <summary>
+            Returns a reversed enumerator for the current collection.
+            </summary>
+            <returns>A reversed enumerator for the current collection.</returns>
+            <exception cref="T:System.InvalidOperationException"><see cref="P:WinCopies.Collections.Generic.IEnumerable`1.SupportsReversedEnumeration"/> is set to <see langword="false"/>.</exception>
+            <seealso cref="M:WinCopies.Collections.Generic.IEnumerable`1.GetReversedEnumerator"/>
+        </member>
+        <member name="M:WinCopies.Collections.Generic.EnumerableInfo`1.#ctor(System.Func{WinCopies.Collections.Generic.IEnumeratorInfo2{`0}}@,System.Func{WinCopies.Collections.Generic.IEnumeratorInfo2{`0}}@)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Collections.Generic.EnumerableInfo`1"/> class.
+            </summary>
+            <param name="enumeratorFunc">The func that provides the enumerators.</param>
+            <param name="reversedEnumeratorFunc">The func that provides the reversed enumerators. This parameter can be null.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="enumeratorFunc"/> is null.</exception>
+        </member>
         <member name="T:WinCopies.Collections.Generic.IEnumerable`1">
             <summary>
             A collection that can be enumerated.
@@ -597,9 +652,18 @@
             Returns a reversed enumerator for the current collection. See the Remarks section.
             </summary>
             <returns>A reversed enumerator for the current collection.</returns>
+            <exception cref="T:System.InvalidOperationException"><see cref="P:WinCopies.Collections.Generic.IEnumerable`1.SupportsReversedEnumeration"/> is set to <see langword="false"/>.</exception>
             <remarks>
             This method returns an enumerator which enumerate in the reversed direction that the enumerator returned by the <see cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/> method. So, for a queue, the <see cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/> method will return an enumerator that will enumerate through the queue using the FIFO direction and the <see cref="M:WinCopies.Collections.Generic.IEnumerable`1.GetReversedEnumerator"/> will throw an exception, because any reversed enumerator can be returned while a queue only supports the FIFO direction. However, a stack, which only supports the LIFO direction, will return a LIFO-enumerator as its main enumerator and throw an exception if we ask it to return a reversed enumerator. A linked list that supports the two directions, but which stores items using the FIFO direction by default, will return a FIFO-enumerator as its main enumerator and a LIFO-enumerator as its reversed enumerator.
             </remarks>
+        </member>
+        <member name="M:WinCopies.Collections.Generic.IEnumerableInfo`1.GetReversedEnumerator">
+            <summary>
+            Returns a reversed enumerator for the current collection.
+            </summary>
+            <returns>A reversed enumerator for the current collection.</returns>
+            <exception cref="T:System.InvalidOperationException"><see cref="P:WinCopies.Collections.Generic.IEnumerable`1.SupportsReversedEnumeration"/> is set to <see langword="false"/>.</exception>
+            <seealso cref="M:WinCopies.Collections.Generic.IEnumerable`1.GetReversedEnumerator"/>
         </member>
         <member name="P:WinCopies.Collections.Generic.EmptyCheckEnumerator`1.CurrentOverride">
             <summary>
@@ -639,6 +703,16 @@
             When overridden in a derived class, initializes a new instance of the <see cref="T:WinCopies.Collections.Generic.Enumerator`2"/> class.
             </summary>
             <param name="enumerator">The enumerator to enumerate.</param>
+        </member>
+        <member name="P:WinCopies.Collections.Generic.JoinSubEnumerator`1.CurrentOverride">
+            <summary>
+            When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Collections.Generic.JoinEnumerator`1.CurrentOverride">
+            <summary>
+            When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            </summary>
         </member>
         <member name="P:WinCopies.Collections.Generic.SelectEnumerator`2.CurrentOverride">
             <summary>
@@ -743,16 +817,6 @@
         <member name="M:WinCopies.Collections.EnumeratorInfo.ResetOverride">
             <summary>
             Calls the <see cref="M:System.Collections.IEnumerator.Reset"/> method on <see cref="T:WinCopies.Collections.Enumerator"/>.
-            </summary>
-        </member>
-        <member name="P:WinCopies.Collections.JoinSubEnumerator`1.CurrentOverride">
-            <summary>
-            When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
-            </summary>
-        </member>
-        <member name="P:WinCopies.Collections.JoinEnumerator`1.CurrentOverride">
-            <summary>
-            When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
             </summary>
         </member>
         <member name="T:WinCopies.Collections.IReadOnlyTreeNode">
@@ -1493,52 +1557,7 @@
             <summary>
             Checks whether an array contains at least one value of a given array using a custom comparer.
             </summary>
-            <param name="array">The array to browse</param>
-            <param name="comparison">The <see cref="T:System.Comparison`1"/> used to compare the values</param>
-            <param name="values">The values to compare</param>
-            <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.Extensions.ContainsOneOrMoreValues``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEqualityComparer{``0},``0[])">
-            <summary>
-            Checks whether an array contains at least one value of a given array using a custom comparer.
-            </summary>
-            <param name="array">The array to browse</param>
-            <param name="equalityComparer">The <see cref="T:System.Collections.Generic.IEqualityComparer`1"/> used to compare the values</param>
-            <param name="values">The values to compare</param>
-            <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.Extensions.Contains``1(System.Collections.Generic.IEnumerable{``0},``0[])">
-            <summary>
-            Checks whether an array contains all values of a given array.
-            </summary>
-            <param name="array">The array to browse</param>
-            <param name="values">The values to compare</param>
-            <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.Extensions.Contains``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IComparer{``0},``0[])">
-            <summary>
-            Checks whether an array contains all values of a given array using a custom comparer.
-            </summary>
-            <param name="array">The array to browse</param>
-            <param name="comparer">The <see cref="T:System.Collections.Generic.IComparer`1"/> used to compare the values</param>
-            <param name="values">The values to compare</param>
-            <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.Extensions.Contains``1(System.Collections.Generic.IEnumerable{``0},System.Comparison{``0},``0[])">
-            <summary>
-            Checks whether an array contains all values of a given array using a custom comparer.
-            </summary>
-            <param name="array">The array to browse</param>
-            <param name="comparison">The <see cref="T:System.Comparison`1"/> used to compare the values</param>
-            <param name="values">The values to compare</param>
-            <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.Extensions.Contains``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEqualityComparer{``0},``0[])">
-            <summary>
-            Checks whether an array contains all values of a given array using a custom comparer.
-            </summary>
-            <param name="array">The array to browse</param>
-            <param name="equalityComparer">The <see cref="T:System.Collections.Generic.IEqualityComparer`1"/> used to compare the values</param>
+            <param name="array">The array to browse</par to compare the values</param>
             <param name="values">The values to compare</param>
             <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         </member>
@@ -1549,6 +1568,43 @@
             <returns>An exception indicating that a list or collection is read-only.</returns>
         </member>
         <member name="M:WinCopies.Collections.ThrowHelper.GetEmptyListOrCollectionException">
+            <summary>
+            Returns an exception indicating that a list or collection is empty.
+            </summary>
+            <returns>An exception indicating that a list or collection is empty.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.ThrowHelper.ThrowIfEmptyListOrCollection(WinCopies.Collections.ICountable@)">
+            <summary>
+            Throws the exception given by <see cref="M:WinCopies.Collections.ThrowHelper.GetEmptyListOrCollectionException"/> if the <see cref="P:WinCopies.Collections.ICountable.Count"/> property of a given <see cref="T:WinCopies.Collections.ICountable"/> object is equal to 0.
+            </summary>
+            <param name="obj">The <see cref="T:WinCopies.Collections.ICountable"/> object for which to check the <see cref="P:WinCopies.Collections.ICountable.Count"/> property.</param>
+        </member>
+        <member name="M:WinCopies.Collections.ThrowHelper.ThrowIfEmptyListOrCollection(WinCopies.Collections.IUIntCountable@)">
+            <summary>
+            Throws the exception given by <see cref="M:WinCopies.Collections.ThrowHelper.GetEmptyListOrCollectionException"/> if the <see cref="P:WinCopies.Collections.IUIntCountable.Count"/> property of a given <see cref="T:WinCopies.Collections.IUIntCountable"/> object is equal to 0.
+            </summary>
+            <param name="obj">The <see cref="T:WinCopies.Collections.IUIntCountable"/> object for which to check the <see cref="P:WinCopies.Collections.IUIntCountable.Count"/> property.</param>
+        </member>
+        <member name="T:WinCopies.Collections.Util">
+            <summary>
+            Collection-oriented helper methods.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Collections.Util.GetIf(System.Object@,System.Object@,WinCopies.Collections.Comparison@,WinCopies.Func@,WinCopies.Func@,WinCopies.Func@)">
+            <summary>
+            Returns a value obtained by a <see cref="T:WinCopies.Func"/>, depending on the result of a comparison.
+            </summary>
+            <param name="x">The value to compare to <paramref name="y"/>.</param>
+            <param name="y">The value to compare to <paramref name="x"/>.</param>
+            <param name="comparison">The comparison delegate.</param>
+            <param name="lower">The <see cref="T:WinCopies.Func"/> that provides the value for <paramref name="x"/> is lower than <paramref name="y"/>.</param>
+            <param name="equals">The <see cref="T:WinCopies.Func"/> that provides the value for <paramref name="x"/> is equal to <paramref name="y"/>.</param>
+            <param name="greater">The <see cref="T:WinCopies.Func"/> that provides the value for <paramref name="x"/> is greater than <paramref name="y"/>.</param>
+            <returns>A value obtained by a <see cref="T:WinCopies.Func"/>, depending on the result of a comparison.</returns>
+            <exception cref="T:System.ArgumentNullException">One or more of the given <see cref="T:WinCopies.Func"/>s are <see langword="null"/>.</exception>
+            <remarks>See <see cref="M:WinCopies.Collections.Util.GetIf``2(``0@,``0@,System.Comparison{``0}@,System.Func{``1}@,System.Func{``1}@,System.Func{``1}@)"/> for the generic version.</remarks>
+        </member>
+        <member name="M:WinCopies.Collections.Util.GetIf``2(``0@,``0@,System.Comparison{``0}@,System.Fume="M:WinCopies.Collections.ThrowHelper.GetEmptyListOrCollectionException">
             <summary>
             Returns an exception indicating that a list or collection is empty.
             </summary>

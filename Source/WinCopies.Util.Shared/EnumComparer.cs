@@ -17,7 +17,7 @@
 
 using System;
 
-#if WinCopies2
+#if !WinCopies3
 using WinCopies.Util;
 using static WinCopies.Util.Util;
 #else

@@ -59,6 +59,8 @@ namespace WinCopies.Collections.DotNetFix
     {
 #if WinCopies3
         bool MoveNext();
+
+        void Reset();
 #else
         // Left empty.
 #endif
@@ -84,7 +86,7 @@ namespace WinCopies.Collections.DotNetFix
         }
 
         public interface ICountableDisposableEnumerator<out T> : ICountableEnumerator<T>, WinCopies.
-#if WinCopies2
+#if !WinCopies3
         Util.
 #endif
         DotNetFix.IDisposable
@@ -98,7 +100,7 @@ namespace WinCopies.Collections.DotNetFix
         }
 
         public interface IUIntCountableDisposableEnumerator<out T> : IUIntCountableEnumerator<T>, WinCopies.
-#if WinCopies2
+#if !WinCopies3
         Util.
 #endif
         DotNetFix.IDisposable

@@ -23,7 +23,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-#if WinCopies2
+#if !WinCopies3
 using System.Globalization;
 
 using WinCopies.Collections;
@@ -108,7 +108,7 @@ namespace WinCopies
         /// </summary>
         public static class Extensions
         {
-#if WinCopies2
+#if !WinCopies3
         private static void ThrowOnInvalidCopyToArrayParameters(in IEnumerable enumerable, in Array array)
         {
             ThrowIfNull(enumerable, nameof(enumerable));
@@ -277,7 +277,7 @@ namespace WinCopies
                 return ToBool(other) ? XOrResult.OneTrueResult : XOrResult.NoTrueResult;
             }
 
-#if WinCopies2
+#if !WinCopies3
             #region Enumerables extension methods
 
         // todo:
@@ -1145,7 +1145,7 @@ namespace WinCopies
             return ContainsOneValue(array, (object value, object _value) => comparer.Compare(value, _value) == 0, out containsMoreThanOneValue, values);
         }
 
-#if WinCopies2
+#if !WinCopies3
         /// <summary>
         /// Checks whether an array contains <i>exactly</i> one value of a given array using a custom comparer.
         /// </summary>
@@ -2411,7 +2411,7 @@ namespace WinCopies
             // todo: use attributes
 
 #if CS7
-#if WinCopies2
+#if !WinCopies3
         /// <summary>
         /// Converts an <see cref="IEnumerable"/> to an <see cref="ArrayList"/> from a given index for a given length.
         /// </summary>
@@ -3351,7 +3351,7 @@ namespace WinCopies
             }
 #endif
 
-#if WinCopies2
+#if !WinCopies3
 
         /// <summary>
         /// Gets the numeric value for an enum.
@@ -3461,7 +3461,7 @@ namespace WinCopies
             public static bool IsFlagsEnum(this Enum @enum) => (@enum ?? throw GetArgumentNullException(nameof(@enum))).GetType().GetCustomAttribute<FlagsAttribute>() is object;
 #endif
 
-#if WinCopies2
+#if !WinCopies3
 
 #if CS7
         /// <summary>
@@ -3578,7 +3578,7 @@ namespace WinCopies
 
             Util.ThrowIfNotFlagsEnumType<T>(nameof(T));
 
-#if WinCopies2
+#if !WinCopies3
             comparisonType.ThrowIfNotValidEnumValue(nameof(comparisonType));
 #else
             ThrowIfNotValidEnumValue(nameof(comparisonType), comparisonType);
@@ -3846,7 +3846,7 @@ namespace WinCopies
             /// <returns><see langword="true"/> if <paramref name="d"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
             public static bool Between(this decimal d, in decimal x, in decimal y) => d >= x && d <= y;
 
-#if WinCopies2
+#if !WinCopies3
         public static void ForEach(this IEnumerableEnumerator enumerator, LoopIteration func)
         {
             while (enumerator.MoveNext())
@@ -4040,7 +4040,7 @@ namespace WinCopies
                     splitFactory.Add(splitFactory.GetEnumerable());
             }
 
-#if WinCopies2
+#if !WinCopies3
         public static void SplitReferences<T, U, V, TContainer>(this System.Collections.Generic.IEnumerable<T> enumerable, in bool skipEmptyEnumerables, IRefSplitFactory<T, U, V, TContainer> splitFactory, params T[] separators) where T : class where U : INullableRefEntry<T> where V : IEnumerable<U>
         {
             ThrowIfNull(enumerable, nameof(enumerable));

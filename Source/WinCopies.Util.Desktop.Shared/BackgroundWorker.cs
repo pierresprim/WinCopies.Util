@@ -21,7 +21,7 @@ using System.Threading;
 
 using static WinCopies.Util.Desktop.ThrowHelper;
 
-#if WinCopies2
+#if !WinCopies3
 namespace WinCopies.Util
 #else
 using WinCopies.Desktop;
@@ -314,7 +314,7 @@ namespace WinCopies
         /// </param>
         private void OnProgressChanged(object args) => ProgressChanged?.Invoke(this, args as ProgressChangedEventArgs);
 
-#if WinCopies2
+#if !WinCopies3
 
         /// <summary>
         /// Notifies of the progress.
@@ -365,7 +365,7 @@ namespace WinCopies
 
             Progress =
 
-#if WinCopies2
+#if !WinCopies3
 
                 percentProgress
 
@@ -402,7 +402,7 @@ progressPercentage
         /// </summary>
         public bool IsDisposed { get; private set; }
 
-#if WinCopies2
+#if !WinCopies3
 
         /// <summary>
         /// Releases resources used by the <see cref="BackgroundWorker"/>.

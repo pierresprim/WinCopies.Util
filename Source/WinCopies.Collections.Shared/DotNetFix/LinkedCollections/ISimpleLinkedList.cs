@@ -21,7 +21,7 @@ namespace WinCopies.Collections.DotNetFix
     {
         object Value { get; }
 
-#if WinCopies2
+#if !WinCopies3
         ISimpleLinkedListNode NextNode { get; }
 #else
         ISimpleLinkedListNode Next { get; }
@@ -42,13 +42,13 @@ namespace WinCopies.Collections.DotNetFix
     }
 
     public interface ISimpleLinkedList :
-#if WinCopies2
+#if !WinCopies3
              IUIntCountable
 #else
              ISimpleLinkedListBase
 #endif
     {
-#if WinCopies2
+#if !WinCopies3
         bool IsReadOnly { get; }
 #else
         bool TryPeek(out object result);

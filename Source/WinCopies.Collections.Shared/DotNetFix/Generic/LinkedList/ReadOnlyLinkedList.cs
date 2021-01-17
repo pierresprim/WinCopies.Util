@@ -21,10 +21,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-
+using WinCopies.Collections.Generic;
 using static WinCopies.Collections.ThrowHelper;
 
-#if WinCopies2
+#if !WinCopies3
 using System.Runtime.Serialization;
 
 using WinCopies.Util.Resources;
@@ -38,7 +38,7 @@ namespace WinCopies.Collections.DotNetFix
     [DebuggerDisplay("Count = {Count}")]
     public class ReadOnlyLinkedList<T> :
 #if WinCopies3
-        ILinkedList3
+        ILinkedList3<T>, IReadOnlyEnumerableInfoLinkedList
 #else
 IReadOnlyLinkedList<T>, ILinkedList2
 #endif
@@ -48,7 +48,14 @@ IReadOnlyLinkedList<T>, ILinkedList2
         public bool IsReadOnly => true;
 #endif
 
-        protected ILinkedList<T> InnerList { get; } // Already was ILinkedList<T> in WinCopies 2.
+        protected
+#if WinCopies3
+            IReadOnlyEnumerableInfoLinkedList
+#else
+ILinkedList
+#endif
+            <T> InnerList
+        { get; } // Already was ILinkedList<T> in WinCopies 2.
 
 #if WinCopies3
         public T LastValue => InnerList.LastValue;
@@ -67,7 +74,7 @@ IReadOnlyLinkedList<T>, ILinkedList2
 #endif
 
         public
-#if WinCopies2
+#if !WinCopies3
                 int
 #else
                 uint
@@ -96,12 +103,14 @@ IReadOnlyLinkedList<T>, ILinkedList2
 
 
 
+        public ReadOnlyLinkedList(IReadOnlyEnumerableInfoLinkedList<T> list) => InnerList = list;
+
         public bool Contains(T value) => InnerList.Contains(value);
 
         public void CopyTo(T[] array, int index) => InnerList.CopyTo(array, index);
 
         public
-#if WinCopies2
+#if !WinCopies3
 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
@@ -109,7 +118,7 @@ System.Collections.Generic.LinkedListNode
                 <T> Find(T value) => InnerList.Find(value);
 
         public
-#if WinCopies2
+#if !WinCopies3
 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
@@ -121,14 +130,15 @@ System.Collections.Generic.LinkedListNode
          System.Collections.Generic.LinkedList<T>.Enumerator GetEnumerator() => InnerList.GetEnumerator();  
 #endif
 
-            System.Collections.Generic.IEnumerator<T>
-#if !WinCopies3
-System.Collections.Generic.IEnumerable<T>.
+#if WinCopies3
+            IUIntCountableEnumeratorInfo<T>
+#else
+System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.
 #endif
                 GetEnumerator() => InnerList.GetEnumerator();
 
         System.Collections.IEnumerator IEnumerable.GetEnumerator() =>
-#if WinCopies2
+#if !WinCopies3
 InnerList
 #else
                 ((IEnumerable)InnerList)
@@ -136,17 +146,33 @@ InnerList
                 .GetEnumerator();
 
 #if WinCopies3
-        public System.Collections.Generic.IEnumerator<ILinkedListNode<T>> GetNodeEnumerator() => throw GetReadOnlyListOrCollectionException();
+        public IUIntCountableEnumeratorInfo<T> GetEnumerator(EnumerationDirection enumerationDirection) => InnerList.GetEnumerator(enumerationDirection);
+
+        public IUIntCountableEnumeratorInfo<T> GetReversedEnumerator() => InnerList.GetReversedEnumerator();
+
+        //System.Collections.Generic.IEnumerator<ILinkedListNode<T>> GetNodeEnumerator() => throw GetReadOnlyListOrCollectionException();
 
         System.Collections.Generic.IEnumerator<ILinkedListNode<T>> System.Collections.Generic.IEnumerable<ILinkedListNode<T>>.GetEnumerator() => throw GetReadOnlyListOrCollectionException();
 
-        public System.Collections.Generic.IEnumerator<T> GetReversedEnumerator() => InnerList.GetReversedEnumerator();
-
         System.Collections.Generic.IEnumerator<ILinkedListNode<T>> Collections.Generic.IEnumerable<ILinkedListNode<T>>.GetReversedEnumerator() => throw GetReadOnlyListOrCollectionException();
 
-        // Not available because the GetNodeEnumerator() is now in ILinkedList3<T> for better compatibility.
+        System.Collections.Generic.IEnumerator<ILinkedListNode<T>> ILinkedList3<T>.GetNodeEnumerator(EnumerationDirection enumerationDirection) => throw GetReadOnlyListOrCollectionException();
 
-        //public System.Collections.Generic.IEnumerator<ILinkedListNode<T>> GetNodeEnumerator(EnumerationDirection enumerationDirection) => InnerList.GetNodeEnumerator(enumerationDirection);
+        IUIntCountableEnumerator<T> ILinkedList<T>.GetEnumerator() => ((ILinkedList<T>)InnerList).GetEnumerator();
+
+        IUIntCountableEnumerator<T> ILinkedList<T>.GetReversedEnumerator() => ((ILinkedList<T>)InnerList).GetReversedEnumerator();
+
+        System.Collections.Generic.IEnumerator<T> IReadOnlyLinkedList2<T>.GetEnumerator(EnumerationDirection enumerationDirection) => ((IReadOnlyLinkedList2<T>)InnerList).GetEnumerator(enumerationDirection);
+
+        IUIntCountableEnumerator<T> IUIntCountableEnumerable<T>.GetEnumerator() => ((IUIntCountableEnumerable<T>)InnerList).GetEnumerator();
+
+        System.Collections.Generic.IEnumerator<T> Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => ((Collections.Generic.IEnumerable<T>)InnerList).GetReversedEnumerator();
+
+        System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => ((System.Collections.Generic.IEnumerable<T>)InnerList).GetEnumerator();
+
+        IEnumeratorInfo2<T> IEnumerableInfo<T>.GetEnumerator() => ((IEnumerableInfo<T>)InnerList).GetEnumerator();
+
+        IEnumeratorInfo2<T> IEnumerableInfo<T>.GetReversedEnumerator() => ((IEnumerableInfo<T>)InnerList).GetReversedEnumerator();
 #else
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context) => InnerList.GetObjectData(info, context);
 
@@ -239,11 +265,6 @@ System.Collections.Generic.LinkedListNode
 
 #if WinCopies3
         ILinkedListNode<T> ILinkedList3<T>.Remove(T item) => throw GetReadOnlyListOrCollectionException();
-
-        System.Collections.Generic.IEnumerator<T> IReadOnlyLinkedList2<T>.GetEnumerator(EnumerationDirection enumerationDirection) => InnerList.GetEnumerator(enumerationDirection);
-
-        System.Collections.Generic.IEnumerator<ILinkedListNode<T>> ILinkedList3<T>.GetNodeEnumerator(EnumerationDirection enumerationDirection) => throw GetReadOnlyListOrCollectionException();
-
         bool ILinkedList3<T>.MoveAfter(ILinkedListNode<T> node, ILinkedListNode<T> after) => throw GetReadOnlyListOrCollectionException();
 
         bool ILinkedList3<T>.MoveBefore(ILinkedListNode<T> node, ILinkedListNode<T> before) => throw GetReadOnlyListOrCollectionException();

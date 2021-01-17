@@ -19,7 +19,7 @@ using System.Threading;
 
 using static WinCopies.Collections.ThrowHelper;
 
-#if WinCopies2
+#if !WinCopies3
 using WinCopies.Util;
 
 using static WinCopies.Util.Util;

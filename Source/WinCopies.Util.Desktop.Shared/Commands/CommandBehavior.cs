@@ -30,7 +30,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 
-#if WinCopies2
+#if !WinCopies3
 namespace WinCopies.Util.Commands
 #else
 namespace WinCopies.Commands

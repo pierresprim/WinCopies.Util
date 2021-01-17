@@ -27,7 +27,7 @@ namespace WinCopies.Collections.DotNetFix
 
         public ReadOnlyQueue(IQueue queue) => _queue = queue;
 
-#if WinCopies2
+#if !WinCopies3
         public ReadOnlyQueue(IStack stack)
         {
             // Left empty.

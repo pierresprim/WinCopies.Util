@@ -68,7 +68,7 @@ namespace WinCopies.Collections.Generic
         /// <param name="enumerable">An enumerable from which to add values.</param>
         public ArrayMerger(in System.Collections.Generic.IEnumerable<IUIntCountableEnumerable<T>> enumerable) : this(new WinCopies.Collections.DotNetFix.Generic.LinkedList<IUIntCountableEnumerable<T>>(enumerable)) { /* Left empty. */ }
 
-        public ArrayMerger(in ILinkedList3<IUIntCountableEnumerable<T>> linkedList) : base(linkedList) { /* Left empty. */ }
+        public ArrayMerger(in IEnumerableInfoLinkedList<IUIntCountableEnumerable<T>> linkedList) : base(linkedList) { /* Left empty. */ }
 
         protected void ValidateParameters(in T[] array, in int? startIndex) => ValidateParameters((array ?? throw GetArgumentNullException(nameof(array))).Length, startIndex, true);
 

@@ -42,20 +42,20 @@ namespace WinCopies.Util.Data
         /// <param name="culture">The culture used for the conversion. This parameter isn't evaluated in this converter.</param>
         /// <returns><see cref="Visibility.Visible"/> if the value to convert is <see langword="true"/>, if not, the value of the parameter if it is not null, otherwise <see cref="Visibility.Collapsed"/>.</returns>
         public override
-#if WinCopies2
+#if !WinCopies3
             object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 #else
             Visibility Convert(bool value, Visibility? parameter, CultureInfo culture)
 #endif
         {
             if (parameter != null &&
-#if WinCopies2
+#if !WinCopies3
 !(parameter is Visibility visibility&&visibility 
 #else
                 parameter
 #endif
                 == Visibility.Visible
-#if WinCopies2
+#if !WinCopies3
                 )
 #endif
                 )
@@ -76,7 +76,7 @@ namespace WinCopies.Util.Data
         /// <param name="culture">The culture used for the conversion. This parameter isn't evaluated in this converter.</param>
         /// <returns><see langword="true"/> if the value to convert is <see cref="Visibility.Visible"/>, otherwise false.</returns>
         public override
-#if WinCopies2
+#if !WinCopies3
 object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) 
 #else
             bool ConvertBack(Visibility value, Visibility? parameter, CultureInfo culture)

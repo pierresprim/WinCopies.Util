@@ -55,7 +55,7 @@ namespace WinCopies.Collections.DotNetFix
         //}
 
         ISimpleLinkedListNode ISimpleLinkedListNode.
-#if WinCopies2
+#if !WinCopies3
                 NextNode
 #else
                 Next

@@ -17,7 +17,7 @@
 
 #if CS7
 
-#if WinCopies2
+#if !WinCopies3
 using System;
 #endif
 using System.Collections;
@@ -25,17 +25,17 @@ using System.Collections.Generic;
 
 namespace WinCopies.Collections.DotNetFix.Generic
 {
-#if WinCopies2
+#if !WinCopies3
     [Serializable]
 #endif
     internal sealed class LinkedListNodeEnumerator<T> : System.Collections.Generic.IEnumerator<
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
 #endif
                 <T>>, IEnumerable<
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
@@ -43,7 +43,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
                 <T>>
     {
         private
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedList
 #else
                 ILinkedList
@@ -51,7 +51,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
                 <T> _list;
 
         public
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
@@ -62,7 +62,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
         object System.Collections.IEnumerator.Current => Current;
 
         public LinkedListNodeEnumerator(
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedList
 #else
                 ILinkedList
@@ -108,7 +108,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
         public void Reset() { }
 
         public System.Collections.Generic.IEnumerator<
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode

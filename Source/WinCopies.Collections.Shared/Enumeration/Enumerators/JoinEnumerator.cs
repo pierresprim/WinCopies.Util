@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-#if WinCopies2
+#if !WinCopies3
 using WinCopies.Util;
 
 using static WinCopies.Util.Util;
@@ -29,34 +29,38 @@ using static WinCopies.ThrowHelper;
 
 namespace WinCopies.Collections
 {
-    public sealed class JoinSubEnumerator<T> :
+#if WinCopies3
+    namespace Generic
+    {
+#endif
+        public sealed class JoinSubEnumerator<T> :
 #if WinCopies3
         WinCopies.Collections.Generic.
 #endif
         Enumerator<T, T>
-    {
-        private System.Collections.Generic.IEnumerator<T> _joinEnumerator;
-        private T _firstValue;
-        private Func<bool> _moveNext;
+        {
+            private System.Collections.Generic.IEnumerator<T> _joinEnumerator;
+            private T _firstValue;
+            private Func<bool> _moveNext;
 
-#if WinCopies2
+#if !WinCopies3
         private bool _completed = false;
 #else
-        private T _current;
+            private T _current;
 
-        /// <summary>
-        /// When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
-        /// </summary>
-        protected override T CurrentOverride => _current;
+            /// <summary>
+            /// When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            /// </summary>
+            protected override T CurrentOverride => _current;
 
-        public override bool? IsResetSupported => null;
+            public override bool? IsResetSupported => null;
 #endif
 
-        public JoinSubEnumerator(System.Collections.Generic.IEnumerable<T> subEnumerable, System.Collections.Generic.IEnumerable<T> joinEnumerable) : base(subEnumerable)
-        {
-            Debug.Assert(subEnumerable != null && joinEnumerable != null);
+            public JoinSubEnumerator(System.Collections.Generic.IEnumerable<T> subEnumerable, System.Collections.Generic.IEnumerable<T> joinEnumerable) : base(subEnumerable)
+            {
+                Debug.Assert(subEnumerable != null && joinEnumerable != null);
 
-            _joinEnumerator =
+                _joinEnumerator =
 #if !DEBUG
                 (
 #endif
@@ -66,246 +70,246 @@ namespace WinCopies.Collections
 #endif
                 .GetEnumerator();
 
-            InitDelegate();
-        }
-
-        private void InitDelegate() => _moveNext = () =>
-        {
-            if (InnerEnumerator.MoveNext())
-            {
-                _firstValue = InnerEnumerator.Current;
-
-                _moveNext = () => _MoveNext();
-
-                return _MoveNext();
+                InitDelegate();
             }
 
-            else
+            private void InitDelegate() => _moveNext = () =>
+            {
+                if (InnerEnumerator.MoveNext())
+                {
+                    _firstValue = InnerEnumerator.Current;
 
-                return false;
-        };
+                    _moveNext = () => _MoveNext();
+
+                    return _MoveNext();
+                }
+
+                else
+
+                    return false;
+            };
 
 #if WinCopies3
-        protected override void ResetCurrent() => _current = default;
+            protected override void ResetCurrent() => _current = default;
 #endif
 
-        private bool _MoveNext()
-        {
-            if (_joinEnumerator.MoveNext())
+            private bool _MoveNext()
             {
-#if WinCopies2
+                if (_joinEnumerator.MoveNext())
+                {
+#if !WinCopies3
+Current
+#else
+                    _current
+#endif
+                    = _joinEnumerator.Current;
+
+                    return true;
+                }
+
+#if !WinCopies3
 Current
 #else
                 _current
 #endif
-                    = _joinEnumerator.Current;
-
-                return true;
-            }
-
-#if WinCopies2
-Current
-#else
-            _current
-#endif
                 = _firstValue;
 
-            _firstValue = default;
+                _firstValue = default;
 
-            _moveNext = () =>
-            {
-                if (InnerEnumerator.MoveNext())
+                _moveNext = () =>
                 {
-#if WinCopies2
+                    if (InnerEnumerator.MoveNext())
+                    {
+#if !WinCopies3
 Current
 #else
                     _current
 #endif
                     = InnerEnumerator.Current;
 
-                    return true;
-                }
-
-                return false;
-            };
-
-            return true;
-        }
-
-        protected override bool MoveNextOverride()
-        {
-#if WinCopies2
-            if (_completed) return false;
-#endif
-
-            if (_moveNext()) return true;
-
-#if WinCopies2
-Current
-#else
-            _current
-#endif
-                = default;
-
-            _moveNext = null;
-
-#if WinCopies2
-            _completed = true;
-#endif
-
-            return false;
-        }
-
-        protected override void ResetOverride()
-        {
-            base.ResetOverride();
-
-            _joinEnumerator.Reset();
-
-            _firstValue = default;
-
-#if WinCopies2
-            _completed = false;
-#endif
-
-            InitDelegate();
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-
-            _joinEnumerator = null;
-
-            _firstValue = default;
-
-            _moveNext = null;
-        }
-    }
-
-    public sealed class JoinEnumerator<T> :
-#if WinCopies3
-        WinCopies.Collections.Generic.
-#endif
-        Enumerator<System.Collections.Generic.IEnumerable<T>, T>
-    {
-        private System.Collections.Generic.IEnumerator<T> _subEnumerator;
-        private System.Collections.Generic.IEnumerable<T> _joinEnumerable;
-        private Action _updateEnumerator;
-        private Func<bool> _moveNext;
-        private readonly bool _keepEmptyEnumerables;
-
-#if WinCopies2
-        private bool _completed = false;
-#else
-        private T _current;
-
-        /// <summary>
-        /// When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
-        /// </summary>
-        protected override T CurrentOverride => _current;
-
-        public override bool? IsResetSupported => null;
-#endif
-
-        public JoinEnumerator(IEnumerable<System.Collections.Generic.IEnumerable<T>> enumerable, bool keepEmptyEnumerables, params T[] join) : base(enumerable)
-        {
-            _joinEnumerable = join;
-
-            _keepEmptyEnumerables = keepEmptyEnumerables;
-
-            InitDelegates();
-        }
-
-        private void InitDelegates()
-        {
-            _updateEnumerator = () =>
-            {
-                _subEnumerator = InnerEnumerator.Current.GetEnumerator();
-
-                if (_keepEmptyEnumerables)
-
-                    _updateEnumerator = () => _subEnumerator = _joinEnumerable.AppendValues(InnerEnumerator.Current).GetEnumerator();
-
-                else
-
-                    _updateEnumerator = () => _subEnumerator = new JoinSubEnumerator<T>(InnerEnumerator.Current, _joinEnumerable);
-            };
-
-            _moveNext = () =>
-            {
-
-                if (_subEnumerator == null && !_MoveNext())
+                        return true;
+                    }
 
                     return false;
-
-                _moveNext = () => __MoveNext();
-
-                return __MoveNext();
-            };
-        }
-
-        private bool __MoveNext()
-        {
-            bool moveNext()
-            {
-                if (_subEnumerator.MoveNext())
-                {
-#if WinCopies2
-Current 
-#else
-                    _current
-#endif
-                        = _subEnumerator.Current;
-
-                    return true;
-                }
-
-                return false;
-            }
-
-            do
-            {
-                if (moveNext())
-
-                    return true;
-
-            } while (_MoveNext());
-
-            return false;
-        }
-
-        private bool _MoveNext()
-        {
-            if (InnerEnumerator.MoveNext())
-            {
-                _updateEnumerator();
+                };
 
                 return true;
             }
 
-            _subEnumerator = null;
+            protected override bool MoveNextOverride()
+            {
+#if !WinCopies3
+            if (_completed) return false;
+#endif
 
-            return false;
+                if (_moveNext()) return true;
+
+#if !WinCopies3
+Current
+#else
+                _current
+#endif
+                = default;
+
+                _moveNext = null;
+
+#if !WinCopies3
+            _completed = true;
+#endif
+
+                return false;
+            }
+
+            protected override void ResetOverride()
+            {
+                base.ResetOverride();
+
+                _joinEnumerator.Reset();
+
+                _firstValue = default;
+
+#if !WinCopies3
+            _completed = false;
+#endif
+
+                InitDelegate();
+            }
+
+            protected override void Dispose(bool disposing)
+            {
+                base.Dispose(disposing);
+
+                _joinEnumerator = null;
+
+                _firstValue = default;
+
+                _moveNext = null;
+            }
         }
 
-        protected override bool MoveNextOverride() =>
-#if WinCopies2
+        public sealed class JoinEnumerator<T> :
+#if WinCopies3
+        WinCopies.Collections.Generic.
+#endif
+        Enumerator<System.Collections.Generic.IEnumerable<T>, T>
+        {
+            private System.Collections.Generic.IEnumerator<T> _subEnumerator;
+            private System.Collections.Generic.IEnumerable<T> _joinEnumerable;
+            private Action _updateEnumerator;
+            private Func<bool> _moveNext;
+            private readonly bool _keepEmptyEnumerables;
+
+#if !WinCopies3
+        private bool _completed = false;
+#else
+            private T _current;
+
+            /// <summary>
+            /// When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            /// </summary>
+            protected override T CurrentOverride => _current;
+
+            public override bool? IsResetSupported => null;
+#endif
+
+            public JoinEnumerator(System.Collections.Generic.IEnumerable<System.Collections.Generic.IEnumerable<T>> enumerable, bool keepEmptyEnumerables, params T[] join) : base(enumerable)
+            {
+                _joinEnumerable = join;
+
+                _keepEmptyEnumerables = keepEmptyEnumerables;
+
+                InitDelegates();
+            }
+
+            private void InitDelegates()
+            {
+                _updateEnumerator = () =>
+                {
+                    _subEnumerator = InnerEnumerator.Current.GetEnumerator();
+
+                    if (_keepEmptyEnumerables)
+
+                        _updateEnumerator = () => _subEnumerator = _joinEnumerable.AppendValues(InnerEnumerator.Current).GetEnumerator();
+
+                    else
+
+                        _updateEnumerator = () => _subEnumerator = new JoinSubEnumerator<T>(InnerEnumerator.Current, _joinEnumerable);
+                };
+
+                _moveNext = () =>
+                {
+
+                    if (_subEnumerator == null && !_MoveNext())
+
+                        return false;
+
+                    _moveNext = () => __MoveNext();
+
+                    return __MoveNext();
+                };
+            }
+
+            private bool __MoveNext()
+            {
+                bool moveNext()
+                {
+                    if (_subEnumerator.MoveNext())
+                    {
+#if !WinCopies3
+Current 
+#else
+                        _current
+#endif
+                        = _subEnumerator.Current;
+
+                        return true;
+                    }
+
+                    return false;
+                }
+
+                do
+                {
+                    if (moveNext())
+
+                        return true;
+
+                } while (_MoveNext());
+
+                return false;
+            }
+
+            private bool _MoveNext()
+            {
+                if (InnerEnumerator.MoveNext())
+                {
+                    _updateEnumerator();
+
+                    return true;
+                }
+
+                _subEnumerator = null;
+
+                return false;
+            }
+
+            protected override bool MoveNextOverride() =>
+#if !WinCopies3
             _completed ? false : 
 #endif
             _moveNext();
 
-        protected override void ResetOverride()
-        {
-            base.ResetOverride();
+            protected override void ResetOverride()
+            {
+                base.ResetOverride();
 
-            _subEnumerator = null;
+                _subEnumerator = null;
 
-            InitDelegates();
-        }
+                InitDelegates();
+            }
 
-        protected override void
-#if WinCopies2
+            protected override void
+#if !WinCopies3
 Dispose(bool disposing)
         {
             base.Dispose(disposing);
@@ -315,23 +319,26 @@ Dispose(bool disposing)
             Current
 #else
             DisposeManaged()
-        {
-            base.DisposeManaged();
+            {
+                base.DisposeManaged();
 
-            _current
+                _current
 #endif
                 = default;
 
-            _joinEnumerable = null;
+                _joinEnumerable = null;
 
-            _updateEnumerator = null;
+                _updateEnumerator = null;
 
-            _moveNext = null;
+                _moveNext = null;
 
-            _subEnumerator = null;
-#if WinCopies2
+                _subEnumerator = null;
+#if !WinCopies3
         }
 #endif
+            }
         }
+#if WinCopies3
     }
+#endif
 }

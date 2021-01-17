@@ -19,7 +19,7 @@ using System;
 using System.Globalization;
 using WinCopies.Util;
 
-#if WinCopies2
+#if !WinCopies3
 using static WinCopies.Util.Util;
 using static WinCopies.Util.Resources.ExceptionMessages;
 #else
@@ -28,7 +28,7 @@ using static WinCopies.Resources.ExceptionMessages;
 #endif
 
 namespace WinCopies
-#if WinCopies2
+#if !WinCopies3
     .Util
 #endif
 {
@@ -80,7 +80,7 @@ namespace WinCopies
                 throw GetInvalidEnumArgumentException(argumentName, value);
         }
 
-#if WinCopies2
+#if !WinCopies3
         public static void ThrowIfInvalidFlagsEnumValue<T>(in T value, in ComparisonType comparisonType, in string argumentName, params T[] values) where T : Enum
         {
             if (!value.IsValidFlagsEnumValue(comparisonType, argumentName, values))
@@ -215,7 +215,7 @@ namespace WinCopies
             if (index < 0)
 
                 throw new
-#if WinCopies2
+#if !WinCopies3
                     ArgumentOutOfRangeException
 #else
                     IndexOutOfRangeException
@@ -223,7 +223,7 @@ namespace WinCopies
                     (indexArgumentName);
         }
 
-#if WinCopies2
+#if !WinCopies3
         public static void ThrowIfEnumeratorNotStartedOrDisposedException(in WinCopies.Collections.IDisposableEnumeratorInfo enumerator)
         {
             if (Extensions.IsEnumeratorNotStartedOrDisposed(enumerator))
@@ -291,7 +291,7 @@ namespace WinCopies
             if (index < 0)
 
                 throw new
-#if WinCopies2
+#if !WinCopies3
                     ArgumentOutOfRangeException
 #else
                     IndexOutOfRangeException

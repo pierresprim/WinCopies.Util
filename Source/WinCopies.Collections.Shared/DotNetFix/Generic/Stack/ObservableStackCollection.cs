@@ -38,7 +38,7 @@ namespace WinCopies.Collections.DotNetFix
             public ObservableStackCollection() : base() { }
 
             public ObservableStackCollection(in
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.Stack
 #else
             IEnumerableStack

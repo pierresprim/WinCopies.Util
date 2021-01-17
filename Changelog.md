@@ -14,7 +14,9 @@ Updates
 
 - Supports .Net Framework 4.0 and .Net 5. (All features are not available in the .Net Framework 4.0 version.)
 - Depends on Microsoft.CodeAnalysis.NetAnalyzers. (.Net 5 version.)
-- Add new interfaces.
+- Additions:
+	- New interfaces.
+	- A constructor to ReadOnlyLinkedList\<T>
 - Changes:
 	- WinCopies.InvalidEnumArgumentException is now in the WinCopies.Util package.
 	- Classes named UtilHelpers, ThrowHelper and Extensions exist in both WinCopies.Util and WinCopies.Util.Extensions packages. Now, those from the WinCopies.Util package are now in the WinCopies namespace, except Extensions which is in the WinCopies.Util namespace, and those from the WinCopies.Util.Extensions package are now in the WinCopies.Extensions namespace in order to avoid name conflicts.
@@ -24,6 +26,8 @@ Updates
 	- ArrayEnumerator\<T> is now defined as : public class ArrayEnumerator\<T> : Enumerator\<T>, ICountableDisposableEnumeratorInfo\<T>
 	- CountableEnumerableArray\<T> is now defined as : public class CountableEnumerableArray<T> : WinCopies.Collections.Generic.IReadOnlyList\<T>
 	- WinCopies.Collections.DotNetFix.IEnumerator has now a MoveNext() method.
+	- WinCopies.Collections.EnumerableExtensions.Join\<T> is now in WinCopies.Linq.Extensions.
+	- Update LinkedList classes and interfaces in order to have a better interface model regarding the enumerator provider methods.
 
 WinCopies.Collections 3.2.0.0-preview
 -------------------------------------

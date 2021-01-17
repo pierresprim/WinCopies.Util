@@ -32,7 +32,7 @@ namespace WinCopies.Collections.DotNetFix
         public class ReadOnlyStackCollection<T> : System.Collections.Generic.IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection
         {
             protected
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.Stack
 #else
 IEnumerableStack
@@ -41,7 +41,7 @@ IEnumerableStack
             { get; }
 
             public
-#if WinCopies2
+#if !WinCopies3
             int
 #else
 uint
@@ -61,7 +61,7 @@ uint
             object ICollection.SyncRoot => ((ICollection)InnerStack).SyncRoot;
 
             public ReadOnlyStackCollection(in
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.Stack
 #else
             IEnumerableStack

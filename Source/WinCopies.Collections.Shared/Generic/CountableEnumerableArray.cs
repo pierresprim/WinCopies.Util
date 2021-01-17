@@ -18,7 +18,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-#if WinCopies2
+#if !WinCopies3
 using WinCopies.Collections.DotNetFix;
 #endif
 using WinCopies.Collections.DotNetFix.Generic;
@@ -38,12 +38,19 @@ namespace WinCopies.Collections.Generic
         protected override bool MoveNextOverride() => InnerEnumerator.MoveNext();
     }
 
+#if CS7
     public interface IReadOnlyList<out T> : System.Collections.Generic.IReadOnlyList<T>, ICountableEnumerable<T>
     {
         // Left empty.
     }
+#endif
 
-    public class CountableEnumerableArray<T> : IReadOnlyList<T>
+    public class CountableEnumerableArray<T> :
+#if CS7
+        IReadOnlyList<T>
+#else
+        ICountableEnumerable<T>
+#endif
     {
         protected T[] Array { get; }
 

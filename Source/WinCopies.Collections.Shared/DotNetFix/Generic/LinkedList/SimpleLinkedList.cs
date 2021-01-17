@@ -24,7 +24,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
     {
         new T Value { get; }
 
-#if WinCopies2
+#if !WinCopies3
         new ISimpleLinkedListNode<T> NextNode { get; }
 #else
         new ISimpleLinkedListNode<T> Next { get; }
@@ -41,13 +41,13 @@ namespace WinCopies.Collections.DotNetFix.Generic
 #endif
 
     public interface ISimpleLinkedList<T> :
-#if WinCopies2
+#if !WinCopies3
         IUIntCountable
 #else
         ISimpleLinkedListBase, ISimpleLinkedListBase<T>
 #endif
     {
-#if WinCopies2
+#if !WinCopies3
         T Peek();
 #else
         // Left empty.
@@ -120,7 +120,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
         public SimpleLinkedListNode<T> Next { get => IsCleared ? throw SimpleLinkedListNodeHelper.GetIsClearedException() : _next; internal set => _next = IsCleared ? throw SimpleLinkedListNodeHelper.GetIsClearedException() : value; }
 
         ISimpleLinkedListNode<T> ISimpleLinkedListNode<T>.
-#if WinCopies2
+#if !WinCopies3
             NextNode
 #else
             Next
@@ -157,7 +157,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
     }
 
     public interface IEnumerableSimpleLinkedList<T> : ISimpleLinkedList<T>,
-#if WinCopies2
+#if !WinCopies3
         IUIntCountableEnumerable<T>
 #else
         IEnumerableSimpleLinkedListBase, System.Collections.Generic.IEnumerable<T>

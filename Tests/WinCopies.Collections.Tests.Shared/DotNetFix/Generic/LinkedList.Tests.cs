@@ -18,7 +18,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System;
-#if WinCopies2
+#if !WinCopies3
 using System.Collections.Generic;
 #endif
 using System.Linq;
@@ -38,14 +38,14 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
         { get; } = new LinkedList<int>();
 
         public WinCopies.Collections.DotNetFix.Generic.Queue<
-#if WinCopies2
+#if !WinCopies3
             LinkedListNode
 #else
             ILinkedListNode
 #endif
           <int>> NodeQueue
         { get; } = new Queue<
-#if WinCopies2
+#if !WinCopies3
             LinkedListNode
 #else
             ILinkedListNode
@@ -57,7 +57,7 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
            Generic.
 #endif
            ILinkedList<int> list, WinCopies.Collections.DotNetFix.Generic.Queue<
-#if WinCopies2
+#if !WinCopies3
                LinkedListNode
 #else
                ILinkedListNode
@@ -65,7 +65,7 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
                <int>> queue, bool assertNodeQueueCleared = true)
         {
             Assert.AreEqual(
-#if WinCopies2
+#if !WinCopies3
 0
 #else
                 0u
@@ -76,7 +76,7 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
 
             Assert.IsNull(list.Last, $"{nameof(list)}.{nameof(list.Last)} should be null.");
 
-#if WinCopies2
+#if !WinCopies3
             LinkedListNode
 #else
             ILinkedListNode
@@ -103,20 +103,20 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
         }
 
         static void AddNode(Func<
-#if WinCopies2
+#if !WinCopies3
             LinkedListNode
 #else
             ILinkedListNode
 #endif
             <int>> action, int expected, WinCopies.Collections.DotNetFix.Generic.Queue<
-#if WinCopies2
+#if !WinCopies3
                 LinkedListNode
 #else
                 ILinkedListNode
 #endif
                 <int>> queue)
         {
-#if WinCopies2
+#if !WinCopies3
             LinkedListNode
 #else
             ILinkedListNode
@@ -136,7 +136,7 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
             Generic.
 #endif
             ILinkedList<int> list, WinCopies.Collections.DotNetFix.Generic.Queue<
-#if WinCopies2
+#if !WinCopies3
 LinkedListNode
 #else
                 ILinkedListNode
@@ -148,7 +148,7 @@ LinkedListNode
                 AddNode(() => list.AddFirst(i), i, queue);
 
             Assert.AreEqual(
-#if WinCopies2
+#if !WinCopies3
 10
 #else
                 10u
@@ -178,7 +178,7 @@ LinkedListNode
                 AddNode(() => list.AddLast(i), i, queue);
 
             Assert.AreEqual(
-#if WinCopies2
+#if !WinCopies3
 10
 #else
                 10u
@@ -251,7 +251,7 @@ LinkedListNode
 
                 AddNode(() => LinkedList.AddLast(i), i, NodeQueue);
 
-#if WinCopies2
+#if !WinCopies3
             LinkedListNode
 #else
             ILinkedListNode
@@ -295,7 +295,7 @@ LinkedListNode
 
                 AddNode(() => LinkedList.AddLast(i), i, NodeQueue);
 
-#if WinCopies2
+#if !WinCopies3
             LinkedListNode
 #else
             ILinkedListNode

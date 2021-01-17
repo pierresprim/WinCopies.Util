@@ -24,7 +24,7 @@ namespace WinCopies.Util.Data
     /// <summary>
     /// Data converter for checking whether an enum is not equal to a parameter.
     /// </summary>
-#if WinCopies2
+#if !WinCopies3
     /// <remarks>This class can also work for numeric types (int, ...)</remarks>
 #else
     [ValueConversion(typeof(Enum), typeof(bool), ParameterType = typeof(Enum))]

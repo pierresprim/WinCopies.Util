@@ -30,7 +30,7 @@ namespace WinCopies.Collections.DotNetFix
 
     public class Stack : SimpleLinkedList, IStack
     {
-#if WinCopies2
+#if !WinCopies3
         public new bool IsReadOnly => base.IsReadOnly;
 
         public new uint Count => base.Count;

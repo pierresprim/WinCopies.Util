@@ -27,7 +27,7 @@
 
 using System;
 
-#if WinCopies2
+#if !WinCopies3
 namespace WinCopies.Util.Commands
 #else
 namespace WinCopies.Commands

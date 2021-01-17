@@ -19,8 +19,9 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using WinCopies.Collections.Generic;
 
-#if WinCopies2
+#if !WinCopies3
 using System.Runtime.Serialization;
 #endif
 
@@ -30,31 +31,31 @@ namespace WinCopies.Collections.DotNetFix
 #endif
 {
     public interface IReadOnlyLinkedList<T> : ICollection<T>, ICollection, IReadOnlyCollection<T>,
-#if WinCopies2
+#if !WinCopies3
             ICountableEnumerable<T>, ISerializable, IDeserializationCallback
 #else
             IUIntCountableEnumerable<T>, Collections.Generic.IEnumerable<T>
 #endif
     {
-#if WinCopies2
+#if !WinCopies3
         System.Collections.Generic.LinkedListNode
 #else
-            ILinkedListNode
+        ILinkedListNode
 #endif
                 <T> Last
         { get; }
 
 
-#if WinCopies2
+#if !WinCopies3
         System.Collections.Generic.LinkedListNode
 #else
-            ILinkedListNode
+        ILinkedListNode
 #endif
                 <T> First
         { get; }
 
         new
-#if WinCopies2
+#if !WinCopies3
 int
 #else
             uint
@@ -63,22 +64,22 @@ int
         { get; }
 
 
-#if WinCopies2
+#if !WinCopies3
         System.Collections.Generic.LinkedListNode
 #else
-            ILinkedListNode
+        ILinkedListNode
 #endif
                 <T> Find(T value);
 
 
-#if WinCopies2
+#if !WinCopies3
         System.Collections.Generic.LinkedListNode
 #else
-            ILinkedListNode
+        ILinkedListNode
 #endif
                 <T> FindLast(T value);
 
-#if WinCopies2
+#if !WinCopies3
         new System.Collections.Generic.LinkedList<T>.Enumerator GetEnumerator();
 #else
         // Not available because the GetNodeEnumerator() is now in ILinkedList3<T> for better compatibility.
@@ -87,13 +88,22 @@ int
 #endif
     }
 
-    public interface IReadOnlyLinkedList2<T>:IReadOnlyLinkedList<T>
+    public interface IReadOnlyLinkedList2<T> : IReadOnlyLinkedList<T>
     {
         T FirstValue { get; }
 
         T LastValue { get; }
 
         System.Collections.Generic.IEnumerator<T> GetEnumerator(EnumerationDirection enumerationDirection);
+    }
+
+    public interface IReadOnlyEnumerableInfoLinkedList<T> : IReadOnlyLinkedList2<T>, IUIntCountableEnumerableInfo<T>
+    {
+        IUIntCountableEnumeratorInfo<T> GetEnumerator(EnumerationDirection enumerationDirection);
+
+        new IUIntCountableEnumeratorInfo<T> GetEnumerator();
+
+        new IUIntCountableEnumeratorInfo<T> GetReversedEnumerator();
     }
 }
 #endif

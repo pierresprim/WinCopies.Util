@@ -27,7 +27,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
         public abstract bool TryPeek(out T result);
 
         public void CopyTo(T[] array, int arrayIndex) => WinCopies.
-#if WinCopies2
+#if !WinCopies3
                 Util.Extensions
 #else
                 Collections.EnumerableExtensions

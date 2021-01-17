@@ -39,7 +39,7 @@ namespace WinCopies.Collections.DotNetFix
         public ObservableQueueCollection() : base() { }
 
         public ObservableQueueCollection(in
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.Queue
 #else
             IEnumerableQueue

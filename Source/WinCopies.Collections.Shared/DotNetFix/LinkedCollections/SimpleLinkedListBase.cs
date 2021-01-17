@@ -57,7 +57,7 @@ namespace WinCopies.Collections.DotNetFix
             ClearItems();
         }
 
-#if WinCopies2
+#if !WinCopies3
 public
 #else
         protected

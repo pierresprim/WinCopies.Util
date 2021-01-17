@@ -32,7 +32,7 @@ namespace WinCopies.Collections.DotNetFix
         public class StackCollection<T> : System.Collections.Generic.IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection
         {
             protected internal
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.Stack
 #else
 IEnumerableStack
@@ -41,7 +41,7 @@ IEnumerableStack
             { get; }
 
             public
-#if WinCopies2
+#if !WinCopies3
 int
 #else
                 uint
@@ -61,7 +61,7 @@ int
             object ICollection.SyncRoot => ((ICollection)InnerStack).SyncRoot;
 
             public StackCollection() : this(new
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.Stack
 #else
             EnumerableStack
@@ -70,7 +70,7 @@ int
             { }
 
             public StackCollection(in
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.Stack
 #else
             IEnumerableStack
@@ -95,7 +95,7 @@ int
 
             public T[] ToArray() => InnerStack.ToArray();
 
-#if WinCopies2
+#if !WinCopies3
         public void TrimExcess() => InnerStack.TrimExcess();
 #endif
 

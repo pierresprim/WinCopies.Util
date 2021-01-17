@@ -23,7 +23,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 
-#if WinCopies2
+#if !WinCopies3
 using WinCopies.Collections.DotNetFix;
 using WinCopies.Util.Resources;
 #else
@@ -33,7 +33,7 @@ using WinCopies.Resources;
 
 namespace WinCopies.Collections
 {
-#if WinCopies2
+#if !WinCopies3
     [Obsolete("Use the WinCopies.Collections.DotNetFix.ILinkedListNode<T> (WinCopies.Collections.DotNetFix.Generic.ILinkedListNode<T> in WinCopies 3) interface instead.")]
     public interface ILinkedListNode<T>
     {

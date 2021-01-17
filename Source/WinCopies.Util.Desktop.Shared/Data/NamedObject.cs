@@ -55,7 +55,7 @@ namespace WinCopies.Util.Data
         /// <param name="obj">Object to compare to the current object.</param>
         /// <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
         public bool Equals(WinCopies.
-#if WinCopies2
+#if !WinCopies3
             Util.
 #endif
             IValueObject obj) => new ValueObjectEqualityComparer().Equals(this, obj);
@@ -66,7 +66,7 @@ namespace WinCopies.Util.Data
         /// <param name="obj">Object to compare to the current object.</param>
         /// <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
         public bool Equals(WinCopies.
-#if WinCopies2
+#if !WinCopies3
             Util.
 #endif
             IReadOnlyValueObject obj) => new ValueObjectEqualityComparer().Equals(this, obj);
@@ -149,7 +149,7 @@ namespace WinCopies.Util.Data
         /// <param name="obj">Object to compare to the current object.</param>
         /// <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
         public bool Equals(WinCopies.
-            #if WinCopies2
+            #if !WinCopies3
             Util.
 #endif
             IValueObject obj) => new ValueObjectEqualityComparer().Equals(this, obj);
@@ -160,7 +160,7 @@ namespace WinCopies.Util.Data
         /// <param name="obj">Object to compare to the current object.</param>
         /// <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
         public bool Equals(WinCopies
-#if WinCopies2
+#if !WinCopies3
             .Util
 #endif
             .IValueObject<T> obj) => new ValueObjectEqualityComparer<T>().Equals(this, obj);
@@ -171,7 +171,7 @@ namespace WinCopies.Util.Data
         /// <param name="obj">Object to compare to the current object.</param>
         /// <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
         public bool Equals(WinCopies.
-#if WinCopies2
+#if !WinCopies3
             Util.
 #endif
             IReadOnlyValueObject obj) => new ValueObjectEqualityComparer().Equals(this, obj);
@@ -182,7 +182,7 @@ namespace WinCopies.Util.Data
         /// <param name="obj">Object to compare to the current object.</param>
         /// <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
         public bool Equals(WinCopies.
-#if WinCopies2
+#if !WinCopies3
             Util.
 #endif
             IReadOnlyValueObject<T> obj) => new ValueObjectEqualityComparer().Equals(this, obj);
@@ -197,7 +197,7 @@ namespace WinCopies.Util.Data
         object IReadOnlyValueObject.Value => _value;
 
         object WinCopies.
-#if WinCopies2
+#if !WinCopies3
             Util.
 #endif
             IValueObject.Value

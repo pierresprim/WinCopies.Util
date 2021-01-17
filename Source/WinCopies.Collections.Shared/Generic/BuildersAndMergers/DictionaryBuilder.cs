@@ -20,7 +20,7 @@
 using System.Collections.Generic;
 
 using static WinCopies.
-#if WinCopies2
+#if !WinCopies3
     Util.Util;
 
 using WinCopies.Util;
@@ -65,7 +65,7 @@ namespace WinCopies.Collections.Generic
                 while (Count != 0)
 
                     dic.Add(First.Value.Key,
-#if WinCopies2
+#if !WinCopies3
                         InnerList
 #else
                         this
@@ -75,7 +75,7 @@ namespace WinCopies.Collections.Generic
             else
 
                 foreach (KeyValuePair<TKey, TValue> keyValuePair in
-#if WinCopies2
+#if !WinCopies3
                 InnerList
 #else
                 this

@@ -24,7 +24,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 
 using static WinCopies
-#if WinCopies2
+#if !WinCopies3
     .Util.Util;
 using static WinCopies.Util.ThrowHelper;
 #else
@@ -44,7 +44,7 @@ namespace WinCopies.Collections.DotNetFix
             protected ObservableStackCollection<T> InnerStackCollection { get; }
 
             public
-#if WinCopies2
+#if !WinCopies3
 int
 #else
                 uint

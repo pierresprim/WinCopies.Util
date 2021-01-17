@@ -21,7 +21,7 @@ using System.Collections;
 namespace WinCopies.Collections.DotNetFix
 {
     public interface IEnumerableSimpleLinkedList : ISimpleLinkedList,
-#if WinCopies2
+#if !WinCopies3
             IUIntCountableEnumerable
 #else
             IEnumerableSimpleLinkedListBase, IEnumerable
@@ -43,7 +43,7 @@ namespace WinCopies.Collections.DotNetFix
         public abstract System.Collections.IEnumerator GetEnumerator();
 
         public void CopyTo(Array array, int arrayIndex) =>
-#if WinCopies2
+#if !WinCopies3
                 WinCopies.Util.Extensions
 #else
             EnumerableExtensions

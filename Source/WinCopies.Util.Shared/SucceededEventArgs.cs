@@ -17,13 +17,13 @@
 
 using System;
 
-#if WinCopies2
+#if !WinCopies3
 namespace WinCopies.Util
 #else
 namespace WinCopies
 #endif
 {
-#if WinCopies2
+#if !WinCopies3
     [Obsolete("Use the TaskCompletedEventHandler delegate instead.")]
     public delegate void SucceededEventHandler(object sender, SucceededEventArgs e);
 
