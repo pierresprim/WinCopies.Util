@@ -437,7 +437,6 @@ namespace WinCopies
         #endregion
 
         #region String Throws
-
         private static string GetNullEmptyOrWhiteSpaceStringFormattedExceptionMessage(in string value) => string.Format(Culture, StringIsNullEmptyOrWhiteSpace, value ?? string.Empty);
 
         public static InvalidOperationException GetNullEmptyOrWhiteSpaceStringException(in string value) => new InvalidOperationException(GetNullEmptyOrWhiteSpaceStringFormattedExceptionMessage(value));
@@ -457,7 +456,6 @@ namespace WinCopies
 
                 throw GetNullEmptyOrWhiteSpaceStringException(GetNullEmptyOrWhiteSpaceStringFormattedExceptionMessage(value), argumentName);
         }
-
         #endregion
 
         /// <summary>

@@ -19,6 +19,7 @@
     <PackageProjectUrl>https://wincopies.com/</PackageProjectUrl>
     <RepositoryType>Git</RepositoryType>
     <PackageReleaseNotes>See https://github.com/pierresprim/WinCopies.Util/blob/master/Changelog.md</PackageReleaseNotes>
+    <PackageIcon>WinCopies.ico</PackageIcon>
   </PropertyGroup>
 
   <!--Constants-->
