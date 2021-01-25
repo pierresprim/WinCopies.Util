@@ -162,11 +162,16 @@ WinCopies.Util (2.7)
 - Supports .Net 5.0.
 - Additions:
 	- WinCopies.Collections.Generic.DictionaryBuilder/Merger
-	- Add static methods.
-	- Add PushBindings.
+	- Static methods.
+	- Extension methods.
 - Bug fixes:
 	- WinCopies.Collections.EqualityComparer\<T> now implements WinCopies.Collections.IEqualityComparer\<in T>
 	- #23
+
+WinCopies.Util.Desktop (2.7)
+----------------------------
+
+- Add PushBindings.
 
 12/09/2020 2.6.1
 ================

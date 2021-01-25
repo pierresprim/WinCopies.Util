@@ -538,7 +538,6 @@ namespace WinCopies.Collections
         }
 
         public static System.Collections.Generic.IEnumerable<T> AppendValues<T>(this System.Collections.Generic.IEnumerable<T> enumerable, params System.Collections.Generic.IEnumerable<T>[] newValues)
-
         {
             ThrowIfNull(enumerable, nameof(enumerable));
 
@@ -546,7 +545,7 @@ namespace WinCopies.Collections
 
                 yield return obj;
 
-            foreach (IEnumerable _enumerable in newValues)
+            foreach (System.Collections.Generic.IEnumerable<T> _enumerable in newValues)
 
                 foreach (T _obj in _enumerable)
 

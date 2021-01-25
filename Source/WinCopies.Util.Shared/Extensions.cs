@@ -184,98 +184,180 @@ namespace WinCopies
 
             public static Result ToResultEnum(this bool value) => value ? Result.True : Result.False;
 
+            public static XOrResult ToXOrResult(this bool value) => value ? XOrResult.OneTrueResult : XOrResult.NoTrueResult;
+
             public static bool ToBool(this bool? value) => value.HasValue && value.Value;
 
-            public static bool ToBoolIgnoreNull(this bool? value) => value.HasValue ? value.Value : true;
+            public static bool ToBoolIgnoreNull(this bool? value) => value ?? true;
 
 
 
             public static bool AndAlso(this bool? value, bool other) => ToBool(value) && other;
 
+            public static bool AndAlso(this bool? value, Func<bool> other) => ToBool(value) && other();
+
             public static bool AndAlso(this bool? value, bool? other) => ToBool(value) && ToBool(other);
+
+            public static bool AndAlso(this bool? value, Func<bool?> other) => ToBool(value) && ToBool(other());
 
             public static bool AndAlsoIgnoreNull(this bool? value, bool other) => value.HasValue ? value.Value && other : other;
 
-            public static bool AndAlsoIgnoreNull(this bool? value, bool? other)
+            public static bool AndAlsoIgnoreNull(this bool? value, Func<bool> other) => value.HasValue ? value.Value && other() : other();
+
+            public static bool AndAlsoIgnoreNull(this bool? value, bool? other) => value.HasValue
+                ? other.HasValue
+                    ? value.AndAlsoIgnoreNull(other.Value)
+                    : value.Value
+                : other ?? false;
+
+            public static bool AndAlsoIgnoreNull(this bool? value, Func<bool?> other)
             {
-                if (value.HasValue)
+                bool? _other = other();
 
-                    return other.HasValue ? value.Value && other.Value : value.Value;
-
-                return ToBool(other);
+                return value.HasValue
+                    ? _other.HasValue
+                        ? value.AndAlsoIgnoreNull(_other.Value)
+                        : value.Value
+                    : _other ?? false;
             }
 
 
 
             public static bool OrElse(this bool? value, bool other) => value.HasValue && (value.Value || other);
 
+            public static bool OrElse(this bool? value, Func<bool> other) => value.HasValue && (value.Value || other());
+
             public static bool OrElse(this bool? value, bool? other) => value.HasValue && other.HasValue && (value.Value || other.Value);
+
+            public static bool OrElse(this bool? value, Func<bool?> other)
+            {
+                bool? _other = other();
+
+                return value.HasValue && _other.HasValue && (value.Value || _other.Value);
+            }
 
             public static bool OrElseIgnoreNull(this bool? value, bool other) => value.HasValue ? value.Value || other : other;
 
-            public static bool OrElseIgnoreValue(this bool? value, bool? other)
+            public static bool OrElseIgnoreNull(this bool? value, Func<bool> other) => value.HasValue ? value.Value || other() : other();
+
+            public static bool OrElseIgnoreValue(this bool? value, bool? other) => value.HasValue
+                ? other.HasValue
+                    ? value.Value || other.Value
+                    : value.Value
+                : other ?? false;
+
+            public static bool OrElseIgnoreValue(this bool? value, Func<bool?> other)
             {
-                if (value.HasValue)
+                bool? _other = other();
 
-                    return other.HasValue ? value.Value || other.Value : value.Value;
-
-                return ToBool(other);
+                return value.HasValue
+                    ? _other.HasValue
+                        ? value.Value || _other.Value
+                        : value.Value
+                    : _other ?? false;
             }
 
 
 
             public static bool XOr(this bool? value, bool other) => value.HasValue && (value.Value ^ other);
 
+            public static bool XOr(this bool? value, Func<bool> other) => value.HasValue && (value.Value ^ other());
+
             public static bool XOr(this bool? value, bool? other) => value.HasValue && other.HasValue && (value.Value ^ other.Value);
+
+            public static bool XOr(this bool? value, Func<bool?> other)
+            {
+                bool? _other = other();
+
+                return value.HasValue && _other.HasValue && (value.Value ^ _other.Value);
+            }
 
             public static bool XOrIgnoreNull(this bool? value, bool other) => value.HasValue ? value.Value ^ other : other;
 
-            public static bool XOrIgnoreValue(this bool? value, bool? other)
+            public static bool XOrIgnoreNull(this bool? value, Func<bool> other) => value.HasValue ? value.Value ^ other() : other();
+
+            public static bool XOrIgnoreValue(this bool? value, bool? other) => value.HasValue
+                ? other.HasValue
+                    ? value.Value ^ other.Value
+                    : value.Value
+                : other ?? false;
+
+            public static bool XOrIgnoreValue(this bool? value, Func<bool?> other)
             {
-                if (value.HasValue)
+                bool? _other = other();
 
-                    return other.HasValue ? value.Value ^ other.Value : value.Value;
-
-                return ToBool(other);
+                return value.HasValue
+                 ? _other.HasValue
+                     ? value.Value ^ _other.Value
+                     : value.Value
+                 : _other ?? false;
             }
 
 
 
-            public static XOrResult GetXOrResult(this bool? value, bool other)
-            {
-                if (ToBool(value))
+            public static XOrResult GetXOrResult(this bool? value, bool other) => ToBool(value)
+                ? other
+                    ? XOrResult.MoreThanOneTrueResult
+                    : XOrResult.OneTrueResult
+                : other
+                    ? XOrResult.OneTrueResult
+                : XOrResult.NoTrueResult;
 
-                    return other ? XOrResult.MoreThanOneTrueResult : XOrResult.OneTrueResult;
+            public static XOrResult GetXOrResult(this bool? value, Func<bool> other) => ToBool(value)
+                ? other()
+                    ? XOrResult.MoreThanOneTrueResult
+                    : XOrResult.OneTrueResult
+                : other()
+                    ? XOrResult.OneTrueResult
+                : XOrResult.NoTrueResult;
 
-                return other ? XOrResult.OneTrueResult : XOrResult.NoTrueResult;
-            }
+            public static XOrResult GetXOrResult(this bool? value, bool? other) => ToBool(value)
+                ? ToBool(other)
+                    ? XOrResult.MoreThanOneTrueResult
+                    : XOrResult.OneTrueResult
+                : ToBool(other)
+                    ? XOrResult.OneTrueResult
+                    : XOrResult.NoTrueResult;
 
-            public static XOrResult GetXOrResult(this bool? value, bool? other)
-            {
-                if (ToBool(value))
+            public static XOrResult GetXOrResult(this bool? value, Func<bool?> other) => ToBool(value)
+                ? ToBool(other())
+                    ? XOrResult.MoreThanOneTrueResult
+                    : XOrResult.OneTrueResult
+                : ToBool(other())
+                    ? XOrResult.OneTrueResult
+                    : XOrResult.NoTrueResult;
 
-                    return ToBool(other) ? XOrResult.MoreThanOneTrueResult : XOrResult.OneTrueResult;
+            public static XOrResult GetXOrResultIgnoreNull(this bool? value, bool other) => ToBool(value)
+                ? other
+                    ? XOrResult.MoreThanOneTrueResult
+                    : XOrResult.OneTrueResult
+                : other
+                    ? XOrResult.OneTrueResult
+                    : XOrResult.NoTrueResult;
 
-                return ToBool(other) ? XOrResult.OneTrueResult : XOrResult.NoTrueResult;
-            }
+            public static XOrResult GetXOrResultIgnoreNull(this bool? value, Func<bool> other) => ToBool(value)
+                ? other()
+                    ? XOrResult.MoreThanOneTrueResult
+                    : XOrResult.OneTrueResult
+                : other()
+                    ? XOrResult.OneTrueResult
+                    : XOrResult.NoTrueResult;
 
-            public static XOrResult GetXOrResultIgnoreNull(this bool? value, bool other)
-            {
-                if (ToBool(value))
+            public static XOrResult GetXOrResultIgnoreValue(this bool? value, bool? other) => ToBool(value)
+                ? ToBool(other)
+                    ? XOrResult.MoreThanOneTrueResult
+                    : XOrResult.OneTrueResult
+                : ToBool(other)
+                    ? XOrResult.OneTrueResult
+                    : XOrResult.NoTrueResult;
 
-                    return other ? XOrResult.MoreThanOneTrueResult : XOrResult.OneTrueResult;
-
-                return other ? XOrResult.OneTrueResult : XOrResult.NoTrueResult;
-            }
-
-            public static XOrResult GetXOrResultIgnoreValue(this bool? value, bool? other)
-            {
-                if (ToBool(value))
-
-                    return ToBool(other) ? XOrResult.MoreThanOneTrueResult : XOrResult.OneTrueResult;
-
-                return ToBool(other) ? XOrResult.OneTrueResult : XOrResult.NoTrueResult;
-            }
+            public static XOrResult GetXOrResultIgnoreValue(this bool? value, Func<bool?> other) => ToBool(value)
+                ? ToBool(other())
+                    ? XOrResult.MoreThanOneTrueResult
+                    : XOrResult.OneTrueResult
+                : ToBool(other())
+                    ? XOrResult.OneTrueResult
+                    : XOrResult.NoTrueResult;
 
 #if !WinCopies3
             #region Enumerables extension methods
@@ -2232,6 +2314,89 @@ namespace WinCopies
                 new BitArray(bits).CopyTo(array, startIndex);
             }
 
+            public static bool And<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Predicate<T> predicate)
+            {
+                ThrowIfNull(enumerable, nameof(enumerable));
+                ThrowIfNull(predicate, nameof(predicate));
+
+                foreach (T item in enumerable)
+
+                    if (!predicate(item))
+
+                        return false;
+
+                return true;
+            }
+
+            public static bool Or<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Predicate<T> predicate)
+            {
+                ThrowIfNull(enumerable, nameof(enumerable));
+                ThrowIfNull(predicate, nameof(predicate));
+
+                foreach (T item in enumerable)
+
+                    if (predicate(item))
+
+                        return true;
+
+                return false;
+            }
+
+            public static bool XOr<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Predicate<T> predicate)
+            {
+                ThrowIfNull(enumerable, nameof(enumerable));
+                ThrowIfNull(predicate, nameof(predicate));
+
+                bool found = false;
+
+                foreach (T item in enumerable)
+
+                    if (predicate(item))
+                    {
+                        if (found)
+
+                            return false;
+
+                        found = true;
+                    }
+
+                return found;
+            }
+
+            public static XOrResult XOrAsXOrResult<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Predicate<T> predicate)
+            {
+                ThrowIfNull(enumerable, nameof(enumerable));
+                ThrowIfNull(predicate, nameof(predicate));
+
+                bool found = false;
+
+                foreach (T item in enumerable)
+
+                    if (predicate(item))
+                    {
+                        if (found)
+
+                            return XOrResult.MoreThanOneTrueResult;
+
+                        found = true;
+                    }
+
+                return found.ToXOrResult();
+            }
+
+            private static Predicate<Type> GetIsCheckPredicate(in object obj, in bool typeEquality)
+            {
+                Type objType = obj.GetType();
+
+                if (typeEquality)
+
+                    return t => objType == t;
+
+                else
+
+                    return t => t.IsAssignableFrom(objType);
+            }
+
             /// <summary>
             /// Checks if the current object is assignable from at least one type of a given <see cref="Type"/> array.
             /// </summary>
@@ -2242,43 +2407,36 @@ namespace WinCopies
             public static bool Is(this object obj, in bool typeEquality, params Type[] types)
             {
                 ThrowIfNull(obj, nameof(obj));
+                ThrowIfNull(types, nameof(types));
 
-                Type objType = obj.GetType();
-
-                Predicate<Type> predicate;
-
-                if (typeEquality)
-
-                    predicate = t => objType == t;
-
-                else
-
-                    predicate = t => t.IsAssignableFrom(objType);
-
-                foreach (Type type in types)
-
-                    if (predicate(type))
-
-                        return true;
-
-                return false;
+                return types.Or(GetIsCheckPredicate(obj, typeEquality));
             }
 
-            public static bool IsType(this Type t, params Type[] types) => IsType(t, types);
+            public static bool IsAND(this object obj, params Type[] types)
+            {
+                ThrowIfNull(obj, nameof(obj));
+                ThrowIfNull(types, nameof(types));
+
+                return types.And(GetIsCheckPredicate(obj, false));
+            }
+
+            public static bool IsXOR(this object obj, params Type[] types)
+            {
+                ThrowIfNull(obj, nameof(obj));
+                ThrowIfNull(types, nameof(types));
+
+                return types.XOr(GetIsCheckPredicate(obj, false));
+            }
 
             public static bool IsType(this Type t, in System.Collections.Generic.IEnumerable<Type> types)
             {
                 ThrowIfNull(t, nameof(t));
                 ThrowIfNull(types, nameof(types));
 
-                foreach (Type type in types)
-
-                    if (t == type)
-
-                        return true;
-
-                return false;
+                return types.Or(item => t == item);
             }
+
+            public static bool IsType(this Type t, params Type[] types) => IsType(t, (System.Collections.Generic.IEnumerable<Type>)types);
 
             public static bool IsAssignableFrom<T>(this Type t)
             {
@@ -2312,6 +2470,27 @@ namespace WinCopies
                 return false;
             }
 
+            public static bool IsAssignableFrom(this Type t, in System.Collections.Generic.IEnumerable<Type> enumerable)
+            {
+                ThrowIfNull(t, nameof(t));
+
+                return (enumerable ?? throw GetArgumentNullException(nameof(enumerable))).Or(_t => t.IsAssignableFrom(_t));
+            }
+
+            public static bool IsAssignableFromAND(this Type t, in System.Collections.Generic.IEnumerable<Type> enumerable)
+            {
+                ThrowIfNull(t, nameof(t));
+
+                return (enumerable ?? throw GetArgumentNullException(nameof(enumerable))).And(_t => t.IsAssignableFrom(_t));
+            }
+
+            public static bool IsAssignableFromXOr(this Type t, in System.Collections.Generic.IEnumerable<Type> enumerable)
+            {
+                ThrowIfNull(t, nameof(t));
+
+                return (enumerable ?? throw GetArgumentNullException(nameof(enumerable))).XOr(_t => t.IsAssignableFrom(_t));
+            }
+
             public static IEnumerable<TKey> GetKeys<TKey, TValue>(this KeyValuePair<TKey, TValue>[] array)
             {
                 ThrowIfNull(array, nameof(array));
@@ -2333,17 +2512,13 @@ namespace WinCopies
             public static bool CheckIntegrity<TKey, TValue>(this KeyValuePair<TKey, TValue>[] array)
             {
 #if CS8
-
                 static
-
 #endif
 
                 bool predicateByVal(TKey keyA, TKey keyB) => Equals(keyA, keyB);
 
 #if CS8
-
                 static
-
 #endif
 
                 bool predicateByRef(TKey keyA, TKey keyB) => ReferenceEquals(keyA, keyB);
