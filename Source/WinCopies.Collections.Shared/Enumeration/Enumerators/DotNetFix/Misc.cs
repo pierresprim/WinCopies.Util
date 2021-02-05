@@ -16,6 +16,7 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using System.Collections.Generic;
+using WinCopies.Collections.Generic;
 
 namespace WinCopies.Collections.DotNetFix
 {

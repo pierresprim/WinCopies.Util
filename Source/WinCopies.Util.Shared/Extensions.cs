@@ -4844,6 +4844,10 @@ namespace WinCopies
 
                 return sb.ToString();
             }
+
+#if !WinCopies3
+            public static System.Collections.Generic.IEnumerable<T> ToEnumerable<T>(this T[] array) => array ?? throw GetArgumentNullException(nameof(array));
+#endif
         }
 #if WinCopies3
     }

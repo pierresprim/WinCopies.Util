@@ -16,19 +16,22 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using WinCopies.Extensions;
 
 #if WinCopies3
+using WinCopies.Collections.Generic;
 using WinCopies.Linq;
+#else
+using WinCopies.Collections;
 #endif
 
-#if WinCopies3
 namespace WinCopies
-#else
-namespace WinCopies.Util
+#if !WinCopies3
+    .Util
 #endif
 {
     public class InterfaceDataTemplateSelector : DataTemplateSelector
@@ -52,6 +55,12 @@ namespace WinCopies.Util
                 return base.SelectTemplate(item, container);
 
             Type itemType = item.GetType();
+
+#if DEBUG
+            foreach (Type i in itemType.GetDirectInterfaces(true, true))
+
+                Debug.WriteLine(item.GetType().ToString() + " " + i.Name);
+#endif
 
             return System.Linq.Enumerable.Repeat(itemType, 1).Concat(itemType.GetDirectInterfaces(true, true))
                     .FirstOrDefault<DataTemplate>(t => containerElement.TryFindResource(new DataTemplateKey(t))) ?? base.SelectTemplate(item, container);

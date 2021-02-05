@@ -24,7 +24,7 @@ using WinCopies.Util;
 
 using static WinCopies.Util.Util;
 #else
-using static WinCopies.ThrowHelper;
+using WinCopies.Linq;
 #endif
 
 namespace WinCopies.Collections

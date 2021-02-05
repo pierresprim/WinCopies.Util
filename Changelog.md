@@ -15,19 +15,19 @@ Updates
 - Supports .Net Framework 4.0 and .Net 5. (All features are not available in the .Net Framework 4.0 version.)
 - Depends on Microsoft.CodeAnalysis.NetAnalyzers. (.Net 5 version.)
 - Additions:
-	- New interfaces.
-	- A constructor to ReadOnlyLinkedList\<T>
+	- Interfaces and classes.
+	- Static exception throwing methods.
+	- Other static methods.
+	- Extension methods.
 - Changes:
 	- WinCopies.InvalidEnumArgumentException is now in the WinCopies.Util package.
 	- Classes named UtilHelpers, ThrowHelper and Extensions exist in both WinCopies.Util and WinCopies.Util.Extensions packages. Now, those from the WinCopies.Util package are now in the WinCopies namespace, except Extensions which is in the WinCopies.Util namespace, and those from the WinCopies.Util.Extensions package are now in the WinCopies.Extensions namespace in order to avoid name conflicts.
 	- Some comparison-related types in the WinCopies.Collections namespace have moved to the WinCopies.Util package, and are still in the same namespace.
 	- Enum throw methods are now in the WinCopies.ThrowHelper class of the WinCopies.Util package.
+	- WinCopies.Collections.EnumerableExtensions.Join\<T> and AppendValues methods are now in WinCopies.Linq.Extensions.
 	- Some types are not supported anymore by the .Net Framework 4.0 targetting version.
-	- ArrayEnumerator\<T> is now defined as : public class ArrayEnumerator\<T> : Enumerator\<T>, ICountableDisposableEnumeratorInfo\<T>
-	- CountableEnumerableArray\<T> is now defined as : public class CountableEnumerableArray<T> : WinCopies.Collections.Generic.IReadOnlyList\<T>
-	- WinCopies.Collections.DotNetFix.IEnumerator has now a MoveNext() method.
-	- WinCopies.Collections.EnumerableExtensions.Join\<T> is now in WinCopies.Linq.Extensions.
-	- Update LinkedList classes and interfaces in order to have a better interface model regarding the enumerator provider methods.
+	- ToEnumerable\<T>(this T[] array) is now in WinCopies.Collections.ArrayExtensions (WinCopies.Collections package).
+	- Some static methods have new return types. These types as compatible with the previous ones, so these methods should remain compatible with older releases, but their new return types extend the capacity of the usage of the returned values.
 
 WinCopies.Collections 3.2.0.0-preview
 -------------------------------------
@@ -35,6 +35,10 @@ WinCopies.Collections 3.2.0.0-preview
 - Changes:
 	- Fixes #15
 	- Fixes #22
+	- ArrayEnumerator\<T> is now defined as : public class ArrayEnumerator\<T> : Enumerator\<T>, ICountableDisposableEnumeratorInfo\<T>
+	- CountableEnumerableArray\<T> is now defined as : public class CountableEnumerableArray<T> : WinCopies.Collections.Generic.IReadOnlyList\<T>
+	- WinCopies.Collections.DotNetFix.IEnumerator has now a MoveNext() and a Reset() method.
+	- Update LinkedList classes and interfaces in order to have a better interface model regarding the enumerator provider methods.
 	- WinCopies.Collections.DotNetFix.SimpleLinkedListBase.ClearItems() is now protected.
 	- Some interface for uint indexation have changed in order to implement the non-generic version of the IUIntCountableEnumerable interface and the generic version in a generic context.
 	- WinCopies.Collections namespace: All the types below are now in the WinCopies.Collections.Generic namespace:
@@ -48,12 +52,13 @@ WinCopies.Collections 3.2.0.0-preview
 	- Update (I)(ReadOnly)LinkedList(Node)\<T> to avoid read-only issues.
 - Removals:
 	- UIntCountableEnumerable<T> class.
+	- StringExtensions.StartsWith(this string s, char value) was removed from the .Net Standard 2.0, .Net Core and .Net 5 and later targetting versions because this method is now available in .Net.
 
 WinCopies.Util.Desktop 3.2.0.0-preview
 --------------------------------------
 
 - Changes:
-	- ValueConverters inherit from new generic abstract types.
+	- ValueConverters inherit from new generic abstract types. The default converters of the WinCopies.Util.Desktop package still work as they did before but are based on new abstract classes.
 	- IconToImageSourceConverter now takes System.Drawing.Icon values.
 - Additions:
 	- BitmapToImageSourceConverter
@@ -164,6 +169,7 @@ WinCopies.Util (2.7)
 	- WinCopies.Collections.Generic.DictionaryBuilder/Merger
 	- Static methods.
 	- Extension methods.
+	- A constructor to ReadOnlyLinkedList\<T>
 - Bug fixes:
 	- WinCopies.Collections.EqualityComparer\<T> now implements WinCopies.Collections.IEqualityComparer\<in T>
 	- #23

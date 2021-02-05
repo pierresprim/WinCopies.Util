@@ -23,7 +23,7 @@ using System.Collections.Generic;
 using System.Text;
 
 using WinCopies.Collections.Generic;
-
+using WinCopies.Linq;
 using static WinCopies.ThrowHelper;
 
 namespace WinCopies.Collections
@@ -459,6 +459,42 @@ namespace WinCopies.Collections
             return _array;
         }
 
+        public static TDestination[] ToArray<TSource, TDestination>(this TSource[] array, Converter<TSource, TDestination> selector) => ToArray(array, 0, array.Length, selector);
+
+        public static TDestination[] ToArray<TSource, TDestination>(this TSource[] array, int startIndex, int length, Converter<TSource, TDestination> selector)
+        {
+            ThrowIfNull(array, nameof(array));
+            ThrowIfNull(selector, nameof(selector));
+            ThrowOnInvalidCopyToArrayOperation(array, startIndex, length, nameof(array), nameof(startIndex));
+
+            var result = new TDestination[array.Length];
+
+            for (int i = 0; i < length; i++)
+
+                result[i + startIndex] = selector(array[i]);
+
+            return result;
+        }
+
+#if CS7
+        public static TDestination[] ToArray<TSource, TDestination>(this System.Collections.Generic.IReadOnlyList<TSource> list, Converter<TSource, TDestination> selector) => ToArray(list, 0, list.Count, selector);
+
+        public static TDestination[] ToArray<TSource, TDestination>(this System.Collections.Generic.IReadOnlyList<TSource> list, int startIndex, int length, Converter<TSource, TDestination> selector)
+        {
+            ThrowIfNull(list, nameof(list));
+            ThrowIfNull(selector, nameof(selector));
+            ThrowOnInvalidCopyToArrayOperation(list, startIndex, length, nameof(list), nameof(startIndex));
+
+            var result = new TDestination[list.Count];
+
+            for (int i = 0; i < length; i++)
+
+                result[i + startIndex] = selector(list[i]);
+
+            return result;
+        }
+#endif
+
         static void Append(object _value, ref StringBuilder stringBuilder, in bool parseStrings, in bool parseSubEnumerables)
         {
             ThrowIfNull(stringBuilder, nameof(stringBuilder));
@@ -522,35 +558,24 @@ namespace WinCopies.Collections
                 yield return item;
         }
 
-        public static IEnumerable AppendValues(this IEnumerable enumerable, params IEnumerable[] newValues)
-        {
-            ThrowIfNull(enumerable, nameof(enumerable));
+        /// <summary>
+        /// Iterates through a given <see cref="System.Collections.IEnumerable"/> and tries to convert the items to a given generic type parameter. If an item cannot be converted, it is ignored in the resulting enumerable.
+        /// </summary>
+        /// <typeparam name="T">The generic type parameter for the resulting enumerable. Only the items that can be converted to this type will be present in the resulting enumerable.</typeparam>
+        /// <param name="enumerable">The source enumerable.</param>
+        /// <returns>An enumerable containing all the items from <paramref name="enumerable"/> that could be converted to <typeparamref name="T"/>.</returns>
+        /// <seealso cref="To{T}(System.Collections.IEnumerable)"/>
+        public static System.Collections.Generic.IEnumerable<T> As<T>(this System.Collections.IEnumerable enumerable) => new Enumerable<T>(() => new TypeConverterEnumerator<T>(enumerable));
 
-            foreach (object obj in enumerable)
-
-                yield return obj;
-
-            foreach (IEnumerable _enumerable in newValues)
-
-                foreach (object _obj in _enumerable)
-
-                    yield return _obj;
-        }
-
-        public static System.Collections.Generic.IEnumerable<T> AppendValues<T>(this System.Collections.Generic.IEnumerable<T> enumerable, params System.Collections.Generic.IEnumerable<T>[] newValues)
-        {
-            ThrowIfNull(enumerable, nameof(enumerable));
-
-            foreach (T obj in enumerable)
-
-                yield return obj;
-
-            foreach (System.Collections.Generic.IEnumerable<T> _enumerable in newValues)
-
-                foreach (T _obj in _enumerable)
-
-                    yield return _obj;
-        }
+        /// <summary>
+        /// Iterates through a given <see cref="System.Collections.IEnumerable"/> and directly converts the items to a given generic type parameter. An <see cref="InvalidCastException"/> is thrown when an item cannot be converted.
+        /// </summary>
+        /// <typeparam name="T">The generic type parameter for the resulting enumerable. All items in <paramref name="enumerable"/> will be converted to this type.</typeparam>
+        /// <param name="enumerable">The source enumerable.</param>
+        /// <returns>An enumerable containing the same items as they from <paramref name="enumerable"/>, with these items converted to <typeparamref name="T"/>.</returns>
+        /// <exception cref="InvalidCastException">An item could not be converted.</exception>
+        /// <seealso cref="As{T}(System.Collections.IEnumerable)"/>
+        public static System.Collections.Generic.IEnumerable<T> To<T>(this System.Collections.IEnumerable enumerable) => enumerable. SelectConverter( value => (T)value);
     }
 }
 

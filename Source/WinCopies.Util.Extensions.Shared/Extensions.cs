@@ -49,6 +49,32 @@ namespace WinCopies.Extensions // To avoid name conflicts.
         }
 #endif
 
+        public static bool HasFlag(this Enum @enum, System.Collections.Generic.IEnumerable<Enum> values)
+        {
+            foreach (Enum value in values)
+
+                if (@enum.HasFlag(value))
+
+                    return true;
+
+            return false;
+        }
+
+        public static bool HasFlag(this Enum @enum, params Enum[] values) => @enum.HasFlag((System.Collections.Generic.IEnumerable<Enum>)values);
+
+        public static bool HasAllFlags(this Enum @enum, System.Collections.Generic.IEnumerable<Enum> values)
+        {
+            foreach (Enum value in values)
+
+                if (!@enum.HasFlag(value))
+
+                    return false;
+
+            return true;
+        }
+
+        public static bool HasAllFlags(this Enum @enum, params Enum[] values) => @enum.HasAllFlags((System.Collections.Generic.IEnumerable<Enum>)values);
+
         public static bool IsValidFlagsEnumValue<T>(this T value, in IfCT comparisonType, in string argumentName, params T[] values) where T : Enum
         {
             ThrowIfNull(values, nameof(values));

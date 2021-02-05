@@ -177,6 +177,7 @@ System.Collections.Generic.LinkedListNode
         void Swap(ILinkedListNode<T> x, ILinkedListNode<T> y);
     }
 
+#if WinCopies3
     public interface IEnumerableInfoLinkedList<T> : ILinkedList3<T>, IReadOnlyEnumerableInfoLinkedList<T>
     {
         new IUIntCountableEnumeratorInfo<T> GetEnumerator();
@@ -185,6 +186,7 @@ System.Collections.Generic.LinkedListNode
 
         IUIntCountableEnumeratorInfo<ILinkedListNode<T>> GetNodeEnumerator(EnumerationDirection enumerationDirection);
     }
+#endif
 }
 
 #endif

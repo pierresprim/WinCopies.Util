@@ -16,15 +16,17 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using System.Collections;
-using System.Collections.Generic;
 
-#if !WinCopies3
+#if WinCopies3
+using System.Collections.Generic;
+#else
 using WinCopies.Collections.DotNetFix;
 #endif
 using WinCopies.Collections.DotNetFix.Generic;
 
 namespace WinCopies.Collections.Generic
 {
+#if WinCopies3
     public class UIntCountableEnumerator<T> : Enumerator<T, ICountableEnumeratorInfo<T>, T, IUIntCountableEnumeratorInfo<T>>, IUIntCountableEnumeratorInfo<T>
     {
         public uint Count => (uint)InnerEnumerator.Count;
@@ -37,6 +39,7 @@ namespace WinCopies.Collections.Generic
 
         protected override bool MoveNextOverride() => InnerEnumerator.MoveNext();
     }
+#endif
 
 #if CS7
     public interface IReadOnlyList<out T> : System.Collections.Generic.IReadOnlyList<T>, ICountableEnumerable<T>
@@ -93,11 +96,19 @@ namespace WinCopies.Collections.Generic
 #else
          System.Collections.Generic.IEnumerator<T> 
 #endif
-            GetEnumerator() => new UIntCountableEnumerator<T>(_array.GetEnumerator());
-
+            GetEnumerator() =>
 #if WinCopies3
+            new UIntCountableEnumerator<T>(
+#endif
+                _array.GetEnumerator()
+#if WinCopies3
+                )
+#endif
+            ;
+
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
+#if WinCopies3
         IUIntCountableEnumerator<T> IUIntCountableEnumerable<T>.GetEnumerator() => GetEnumerator();
 
         System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetEnumerator();

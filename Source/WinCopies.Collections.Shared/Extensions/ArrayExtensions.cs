@@ -20,10 +20,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 
 using static WinCopies.ThrowHelper;
-using static WinCopies.Collections.ThrowHelper;
 
 namespace WinCopies.Collections
 {
@@ -175,6 +173,10 @@ namespace WinCopies.Collections
 
             array[y] = temp;
         }
+
+
+
+        public static System.Collections.Generic.IEnumerable<T> ToEnumerable<T>(this T[] array) => array ?? throw GetArgumentNullException(nameof(array));
     }
 }
 

@@ -45,67 +45,6 @@ namespace WinCopies
 {
 #endif
     /// <summary>
-    /// This enum is designed as an extension of the <see cref="bool"/> type.
-    /// </summary>
-    public enum Result : sbyte
-    {
-        /// <summary>
-        /// An error as occurred.
-        /// </summary>
-        Error = -3,
-
-        /// <summary>
-        /// The operation has been canceled.
-        /// </summary>
-        Canceled = -2,
-
-        /// <summary>
-        /// The operation did not return any particular value. This value is the same as returning a <see langword="null"/> <see cref="Nullable{Boolean}"/>.
-        /// </summary>
-        None = -1,
-
-        /// <summary>
-        /// The operation returned False. This value is the same number as <see langword="false"/>.
-        /// </summary>
-        False = 0,
-
-        /// <summary>
-        /// The operation returned True. This value is the same number as <see langword="true"/>.
-        /// </summary>
-        True = 1
-    }
-
-    public enum XOrResult : sbyte
-    {
-        MoreThanOneTrueResult = -1,
-
-        NoTrueResult = 0,
-
-        OneTrueResult = 1
-    }
-
-    /// <summary>
-    /// Delegate for a non-generic predicate.
-    /// </summary>
-    /// <param name="value">The value to test</param>
-    /// <returns><see langword="true"/> if the predicate success, otherwise <see langword="false"/>.</returns>
-    public delegate bool Predicate(object value);
-
-    public delegate void ActionParams(params object[] args);
-
-    public delegate void ActionParams<in T>(params T[] args);
-
-    /// <summary>
-    /// Represents a delegate that returns an object.
-    /// </summary>
-    /// <returns>Any object.</returns>
-    public delegate object Func();
-
-    public delegate object FuncParams(params object[] args);
-
-    public delegate TResult FuncParams<in TParams, out TResult>(params TParams[] args);
-
-    /// <summary>
     /// Provides some static helper methods.
     /// </summary>
     public static class

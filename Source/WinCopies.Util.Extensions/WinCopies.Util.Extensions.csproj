@@ -17,9 +17,14 @@
     <RootNamespace>WinCopies</RootNamespace>
     <AssemblyOriginatorKeyFile>WinCopies.Util.Extensions.snk</AssemblyOriginatorKeyFile>
     <DefineConstants>WinCopies3;$(DefineConstants)</DefineConstants>
+    <PackageIcon>WinCopies.ico</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="..\..\..\WinCopies-framework\Source\WinCopies.ico">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
     <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
 

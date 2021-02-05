@@ -97,6 +97,7 @@ int
         System.Collections.Generic.IEnumerator<T> GetEnumerator(EnumerationDirection enumerationDirection);
     }
 
+#if WinCopies3
     public interface IReadOnlyEnumerableInfoLinkedList<T> : IReadOnlyLinkedList2<T>, IUIntCountableEnumerableInfo<T>
     {
         IUIntCountableEnumeratorInfo<T> GetEnumerator(EnumerationDirection enumerationDirection);
@@ -105,5 +106,6 @@ int
 
         new IUIntCountableEnumeratorInfo<T> GetReversedEnumerator();
     }
+#endif
 }
 #endif

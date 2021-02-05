@@ -18,6 +18,7 @@
 using System;
 using System.Globalization;
 using WinCopies.Util;
+using System.Collections.Generic;
 
 #if !WinCopies3
 using static WinCopies.Util.Util;
@@ -264,7 +265,38 @@ namespace WinCopies
                 throw GetArrayHasNotEnoughSpaceException(arrayArgumentName);
         }
 
+        public static void ThrowIfArrayHasNotEnoughSpace<T>(in T[] array, in int arrayIndex, in int count, in string arrayArgumentName)
+        {
+            if (count <= array.Length - arrayIndex)
+
+                throw GetArrayHasNotEnoughSpaceException(arrayArgumentName);
+        }
+
+#if CS7
+        public static void ThrowIfArrayHasNotEnoughSpace<T>(in IReadOnlyCollection<T> collection , in int arrayIndex, in int count, in string arrayArgumentName)
+        {
+            if (count <= collection.Count - arrayIndex)
+
+                throw GetArrayHasNotEnoughSpaceException(arrayArgumentName);
+        }
+#endif
+
         public static void ThrowOnInvalidCopyToArrayOperation(in Array array, in int arrayIndex, in int count, in string arrayArgumentName, in string arrayIndexArgumentName)
+        {
+            ThrowIfNull(array, nameof(array));
+
+            ThrowIfMultidimensionalArray(array, arrayArgumentName);
+
+            ThrowIfIndexIsLowerThanZero(arrayIndex, arrayIndexArgumentName);
+
+            //if (array.GetLowerBound(0) != 0)
+
+            //    throw GetArrayHasNonZeroLowerBoundException(arrayArgumentName);
+
+            ThrowIfArrayHasNotEnoughSpace(array, arrayIndex, count, arrayArgumentName);
+        }
+
+        public static void ThrowOnInvalidCopyToArrayOperation<T>(in T[] array, in int arrayIndex, in int count, in string arrayArgumentName, in string arrayIndexArgumentName)
         {
             ThrowIfNull(array, nameof(array));
 
@@ -313,6 +345,21 @@ namespace WinCopies
 
             ThrowIfArrayHasNotEnoughSpace(array, arrayIndex, count, arrayArgumentName);
         }
+
+#if CS7
+        public static void ThrowOnInvalidCopyToArrayOperation<T>(in IReadOnlyCollection<T> collection , in int arrayIndex, in int count, in string arrayArgumentName, in string arrayIndexArgumentName)
+        {
+            ThrowIfNull(collection, nameof(collection));
+
+            ThrowIfIndexIsLowerThanZero(arrayIndex, arrayIndexArgumentName);
+
+            //if (array.GetLowerBound(0) != 0)
+
+            //    throw GetArrayHasNonZeroLowerBoundException(arrayArgumentName);
+
+            ThrowIfArrayHasNotEnoughSpace(collection, arrayIndex, count, arrayArgumentName);
+        }
+#endif
 
         #region IndexOutOfRange throws
 
@@ -512,6 +559,24 @@ namespace WinCopies
         /// <param name="argumentName">The argument name for the <see cref="Exception"/> that is returned.</param>
         /// <returns>An <see cref="ArgumentException"/> with the given argument name.</returns>
         public static Exception GetExceptionForInvalidType<T>(in Type objType, in string argumentName) => new ArgumentException($"{argumentName} must be an instance of {typeof(T)}. {argumentName} is an instance of {objType}", argumentName);
+
+        /// <summary>
+        /// Returns an <see cref="ArgumentException"/> for the given object and argument name.
+        /// </summary>
+        /// <typeparam name="T">The type to check.</typeparam>
+        /// <param name="objTypeName">The type name of the object of the exception.</param>
+        /// <param name="argumentName">The argument name for the <see cref="Exception"/> that is returned.</param>
+        /// <returns>An <see cref="ArgumentException"/> with the given argument name.</returns>
+        public static Exception GetExceptionForInvalidType(in string objTypeName, in string argumentName, in Type t) => new ArgumentException($"{argumentName} must be an instance of {t}. {argumentName} is an instance of {objTypeName}", argumentName);
+
+        /// <summary>
+        /// Returns an <see cref="ArgumentException"/> for the given object and argument name.
+        /// </summary>
+        /// <typeparam name="T">The type to check.</typeparam>
+        /// <param name="objType">The type of the object of the exception.</param>
+        /// <param name="argumentName">The argument name for the <see cref="Exception"/> that is returned.</param>
+        /// <returns>An <see cref="ArgumentException"/> with the given argument name.</returns>
+        public static Exception GetExceptionForInvalidType(in Type objType, in string argumentName, in Type t) => new ArgumentException($"{argumentName} must be an instance of {t}. {argumentName} is an instance of {objType}", argumentName);
 
         /// <summary>
         /// If <paramref name="obj"/> is not <typeparamref name="T"/>, throws the exception that is returned by the <see cref="GetExceptionForInvalidType{T}(in string, in string)"/> method.

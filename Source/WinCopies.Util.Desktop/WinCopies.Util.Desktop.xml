@@ -1303,7 +1303,7 @@
             Provides a converter for conversion from a <see langword="bool"/> value to a <see cref="T:System.Windows.Visibility"/> value.
             </summary>
         </member>
-        <member name="M:WinCopies.Util.Data.BooleanToVisibilityConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+        <member name="M:WinCopies.Util.Data.BooleanToVisibilityConverter.Convert(System.Boolean,System.Nullable{System.Windows.Visibility},System.Globalization.CultureInfo)">
             <summary>
             Converts a <see langword="bool"/> value to a <see cref="T:System.Windows.Visibility"/> value. If the value is <see langword="true"/>, the returned value will be the <see cref="F:System.Windows.Visibility.Visible"/> value, if not and if parameter is not null, it will be the value of the parameter, otherwise it will be <see cref="F:System.Windows.Visibility.Collapsed"/>.
             </summary>
@@ -1313,7 +1313,7 @@
             <param name="culture">The culture used for the conversion. This parameter isn't evaluated in this converter.</param>
             <returns><see cref="F:System.Windows.Visibility.Visible"/> if the value to convert is <see langword="true"/>, if not, the value of the parameter if it is not null, otherwise <see cref="F:System.Windows.Visibility.Collapsed"/>.</returns>
         </member>
-        <member name="M:WinCopies.Util.Data.BooleanToVisibilityConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+        <member name="M:WinCopies.Util.Data.BooleanToVisibilityConverter.ConvertBack(System.Windows.Visibility,System.Nullable{System.Windows.Visibility},System.Globalization.CultureInfo)">
             <summary>
             Converts a <see cref="T:System.Windows.Visibility"/> value to a <see langword="bool"/> value. If the value is <see cref="F:System.Windows.Visibility.Visible"/>, the returned value will be <see langword="true"/>, otherwise false.
             </summary>
@@ -2164,6 +2164,16 @@
         <member name="M:WinCopies.Util.Desktop.ThrowHelper.ThrowIfBackgroundWorkerDoesNotSupportPausing(WinCopies.DotNetFix.PausableBackgroundWorker@)">
             <summary>
             Throws the exception returned by the <see cref="M:WinCopies.Util.Desktop.ThrowHelper.GetBackgroundWorkerDoesNotSupportPausingException"/> method.
+            </summary>
+        </member>
+        <member name="T:WinCopies.Markup.TrueValue">
+            <summary>
+            Represents a markup extension that always returns the <see langword="true"/> value.
+            </summary>
+        </member>
+        <member name="T:WinCopies.Markup.FalseValue">
+            <summary>
+            Represents a markup extension that always returns the <see langword="false"/> value.
             </summary>
         </member>
         <member name="T:WinCopies.IBackgroundWorker">

@@ -101,9 +101,13 @@ ILinkedList
         bool ILinkedList2<T>.IsReadOnly => true;
 #endif
 
-
-
-        public ReadOnlyLinkedList(IReadOnlyEnumerableInfoLinkedList<T> list) => InnerList = list;
+        public ReadOnlyLinkedList(
+            #if WinCopies3
+            IReadOnlyEnumerableInfoLinkedList
+#else
+            ILinkedList
+            #endif
+            <T> list) => InnerList = list;
 
         public bool Contains(T value) => InnerList.Contains(value);
 

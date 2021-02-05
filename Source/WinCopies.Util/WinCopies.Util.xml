@@ -238,6 +238,49 @@
             The value of the argument that failed.
             </summary>
         </member>
+        <member name="T:WinCopies.Result">
+            <summary>
+            This enum is designed as an extension of the <see cref="T:System.Boolean"/> type.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Result.Error">
+            <summary>
+            An error as occurred.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Result.Canceled">
+            <summary>
+            The operation has been canceled.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Result.None">
+            <summary>
+            The operation did not return any particular value. This value is the same as returning a <see langword="null"/> <see cref="T:System.Nullable`1"/>.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Result.False">
+            <summary>
+            The operation returned False. This value is the same number as <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Result.True">
+            <summary>
+            The operation returned True. This value is the same number as <see langword="true"/>.
+            </summary>
+        </member>
+        <member name="T:WinCopies.Predicate">
+            <summary>
+            Delegate for a non-generic predicate.
+            </summary>
+            <param name="value">The value to test</param>
+            <returns><see langword="true"/> if the predicate success, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="T:WinCopies.Func">
+            <summary>
+            Represents a delegate that returns an object.
+            </summary>
+            <returns>Any object.</returns>
+        </member>
         <member name="M:WinCopies.InvalidArgumentException.#ctor">
             <summary>
             Initializes a new instance of the <see cref="T:WinCopies.InvalidArgumentException"/> class.
@@ -305,6 +348,24 @@
             <returns>An <see cref="T:System.ArgumentException"/> with the given argument name.</returns>
         </member>
         <member name="M:WinCopies.ThrowHelper.GetExceptionForInvalidType``1(System.Type@,System.String@)">
+            <summary>
+            Returns an <see cref="T:System.ArgumentException"/> for the given object and argument name.
+            </summary>
+            <typeparam name="T">The type to check.</typeparam>
+            <param name="objType">The type of the object of the exception.</param>
+            <param name="argumentName">The argument name for the <see cref="T:System.Exception"/> that is returned.</param>
+            <returns>An <see cref="T:System.ArgumentException"/> with the given argument name.</returns>
+        </member>
+        <member name="M:WinCopies.ThrowHelper.GetExceptionForInvalidType(System.String@,System.String@,System.Type@)">
+            <summary>
+            Returns an <see cref="T:System.ArgumentException"/> for the given object and argument name.
+            </summary>
+            <typeparam name="T">The type to check.</typeparam>
+            <param name="objTypeName">The type name of the object of the exception.</param>
+            <param name="argumentName">The argument name for the <see cref="T:System.Exception"/> that is returned.</param>
+            <returns>An <see cref="T:System.ArgumentException"/> with the given argument name.</returns>
+        </member>
+        <member name="M:WinCopies.ThrowHelper.GetExceptionForInvalidType(System.Type@,System.String@,System.Type@)">
             <summary>
             Returns an <see cref="T:System.ArgumentException"/> for the given object and argument name.
             </summary>
@@ -743,49 +804,6 @@
             </summary>
             <param name="info">The System.Runtime.Serialization.SerializationInfo that holds the serialized object data about the exception being thrown.</param>
             <param name="context">The System.Runtime.Serialization.StreamingContext that contains contextual information about the source or destination.</param>
-        </member>
-        <member name="T:WinCopies.Result">
-            <summary>
-            This enum is designed as an extension of the <see cref="T:System.Boolean"/> type.
-            </summary>
-        </member>
-        <member name="F:WinCopies.Result.Error">
-            <summary>
-            An error as occurred.
-            </summary>
-        </member>
-        <member name="F:WinCopies.Result.Canceled">
-            <summary>
-            The operation has been canceled.
-            </summary>
-        </member>
-        <member name="F:WinCopies.Result.None">
-            <summary>
-            The operation did not return any particular value. This value is the same as returning a <see langword="null"/> <see cref="T:System.Nullable`1"/>.
-            </summary>
-        </member>
-        <member name="F:WinCopies.Result.False">
-            <summary>
-            The operation returned False. This value is the same number as <see langword="false"/>.
-            </summary>
-        </member>
-        <member name="F:WinCopies.Result.True">
-            <summary>
-            The operation returned True. This value is the same number as <see langword="true"/>.
-            </summary>
-        </member>
-        <member name="T:WinCopies.Predicate">
-            <summary>
-            Delegate for a non-generic predicate.
-            </summary>
-            <param name="value">The value to test</param>
-            <returns><see langword="true"/> if the predicate success, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="T:WinCopies.Func">
-            <summary>
-            Represents a delegate that returns an object.
-            </summary>
-            <returns>Any object.</returns>
         </member>
         <member name="T:WinCopies.UtilHelpers">
             <summary>

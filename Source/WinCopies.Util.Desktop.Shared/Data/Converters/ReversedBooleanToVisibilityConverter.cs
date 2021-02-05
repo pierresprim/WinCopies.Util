@@ -27,9 +27,9 @@ namespace WinCopies.Util.Data
 #if WinCopies3
         BooleanToVisibilityConverter
     {
-        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture) => !(bool)base.Convert(value, targetType, parameter, culture);
+        protected override Visibility Convert(bool value, Visibility? parameter, CultureInfo culture) => base.Convert(!value, parameter, culture);
 
-        public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => base.ConvertBack(!(bool)value, targetType, parameter, culture);
+        protected override bool ConvertBack(Visibility value, Visibility? parameter, CultureInfo culture) => !base.ConvertBack(value, parameter, culture);
 #else
 ConverterBase
     {

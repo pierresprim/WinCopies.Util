@@ -9,6 +9,7 @@
     <Import_RootNamespace>WinCopies.Collections.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Abstraction\Misc.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\EnumerableSimpleLinkedList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\EventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\Extensions.cs" />
@@ -55,6 +56,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Stack\Stack.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Stack\StackCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Stack\SynchronizedStack.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\TypeConverterEnumerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\EnumerableExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\BuildersAndMergers\ArrayBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections.cs" />
