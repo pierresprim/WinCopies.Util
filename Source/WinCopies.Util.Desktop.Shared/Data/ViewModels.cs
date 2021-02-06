@@ -27,7 +27,7 @@ using System.Windows.Markup;
 using WinCopies.Collections;
 
 using static WinCopies.
-#if WinCopies2
+#if !WinCopies3
     Util.Util;
 #else
     ThrowHelper;
@@ -222,7 +222,7 @@ namespace WinCopies.Util.Data
     public abstract class ViewModel : ViewModelAbstract
     {
         protected
-#if !WinCopies2
+#if WinCopies3
             sealed
 #endif
             override object Model
@@ -241,7 +241,7 @@ namespace WinCopies.Util.Data
     public abstract class ViewModel<T> : ViewModelAbstract
     {
         protected
-#if !WinCopies2
+#if WinCopies3
             sealed
 #endif
 override object Model => ModelGeneric;
@@ -529,7 +529,7 @@ override object Model => ModelGeneric;
         /// <exception cref="System.ArgumentException">The number of elements in the source <see cref="CollectionViewModel{T}"/> is greater than the available space from <paramref name="index"/> to the end of the destination array.</exception>
         public void CopyTo(T[] array, int index) => Collection.CopyTo(array, index);
 
-#if WinCopies2
+#if !WinCopies3
         private static void ThrowOnInvalidCopyToArrayParameters(in IEnumerable enumerable, in Array array)
         {
             ThrowIfNull(enumerable, nameof(enumerable));
@@ -550,7 +550,7 @@ override object Model => ModelGeneric;
 #endif
 
         void ICollection.CopyTo(Array array, int index) =>
-#if !WinCopies2
+#if WinCopies3
             WinCopies.Collections.EnumerableExtensions.
 #endif
             CopyTo(this, array, index, Count);

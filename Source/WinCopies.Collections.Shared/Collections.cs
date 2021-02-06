@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if WinCopies2
+#if !WinCopies3
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -37,7 +37,7 @@ namespace WinCopies.Collections
     }
 
     public interface IEnumeratorInfo :
-#if WinCopies2
+#if !WinCopies3
 System.Collections.IEnumerator
     {
         bool? IsResetSupported { get; }
@@ -63,7 +63,7 @@ System.Collections.IEnumerator
     }
 #endif
 
-#if WinCopies2
+#if !WinCopies3
     [Obsolete("This type has been replaced by the types in the WinCopies.Collections.DotNetFix namespace and will be removed in later versions.")]
     public interface IUIntIndexedCollection
     {

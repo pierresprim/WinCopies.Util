@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if !WinCopies2
+#if WinCopies3
 
 using System;
 
@@ -34,6 +34,9 @@ namespace WinCopies.Collections.Generic
                 private Func<Node> _moveNext;
                 private Action __moveNext;
 
+                /// <summary>
+                /// When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+                /// </summary>
                 protected override T CurrentOverride => _current.Value;
 
                 public override bool? IsResetSupported => true;

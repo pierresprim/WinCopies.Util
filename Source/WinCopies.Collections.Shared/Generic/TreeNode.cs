@@ -21,7 +21,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-#if WinCopies2
+#if !WinCopies3
 using WinCopies.Util;
 using static WinCopies.Util.Util;
 #else
@@ -49,7 +49,7 @@ namespace WinCopies.Collections
     [Serializable]
     [DebuggerDisplay("Value = {Value}, Count = {Count}")]
     public class TreeNode<T> : IReadOnlyTreeNode, WinCopies
-#if WinCopies2
+#if !WinCopies3
 .Util
 #endif
         .IValueObject, ITreeNode<T>, ICollection<TreeNode<T>>, System.Collections.Generic.IList<TreeNode<T>>, ICollection, System.Collections.IList, IReadOnlyCollection<TreeNode<T>>, System.Collections.Generic.IReadOnlyList<TreeNode<T>>, IReadOnlyCollection<T>, System.Collections.Generic.IReadOnlyList<T>

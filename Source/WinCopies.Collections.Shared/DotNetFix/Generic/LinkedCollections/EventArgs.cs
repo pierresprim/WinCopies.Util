@@ -19,16 +19,15 @@
 
 using System;
 using System.Collections.Specialized;
-
-#if WinCopies2
-using static WinCopies.Util.Util;
-
 using WinCopies.Util;
+
+#if !WinCopies3
+using static WinCopies.Util.Util;
 #endif
 
 namespace WinCopies.Collections.DotNetFix
 {
-#if !WinCopies2
+#if WinCopies3
     namespace Generic
     {
 #endif
@@ -52,7 +51,7 @@ namespace WinCopies.Collections.DotNetFix
             public LinkedCollectionChangedAction Action { get; }
 
             public
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
@@ -61,7 +60,7 @@ namespace WinCopies.Collections.DotNetFix
             { get; }
 
             public
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
@@ -70,7 +69,7 @@ namespace WinCopies.Collections.DotNetFix
             { get; }
 
             public
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
@@ -79,19 +78,19 @@ namespace WinCopies.Collections.DotNetFix
             { get; }
 
             public LinkedCollectionChangedEventArgs(LinkedCollectionChangedAction action,
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
 #endif
                 <T> addedBefore,
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
 #endif
                 <T> addedAfter,
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
@@ -99,7 +98,7 @@ namespace WinCopies.Collections.DotNetFix
                 <T> node)
             {
                 bool check(LinkedCollectionChangedAction _action,
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
@@ -139,7 +138,7 @@ namespace WinCopies.Collections.DotNetFix
         {
             event LinkedCollectionChangedEventHandler<T> CollectionChanged;
         }
-#if !WinCopies2
+#if WinCopies3
     }
 #endif
 }

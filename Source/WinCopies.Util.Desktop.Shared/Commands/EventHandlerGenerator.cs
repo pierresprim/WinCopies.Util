@@ -32,7 +32,7 @@ using System.Text;
 using System.Reflection.Emit;
 using System.Reflection;
 
-#if WinCopies2
+#if !WinCopies3
 namespace WinCopies.Util.Commands
 #else
 namespace WinCopies.Commands

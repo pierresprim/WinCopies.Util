@@ -30,27 +30,54 @@ namespace WinCopies.Collections.Generic
     }
 
     public interface IEnumeratorInfo<out T> : System.Collections.Generic.IEnumerator<T>, IEnumeratorInfo
-#if !WinCopies2
+#if WinCopies3
         , WinCopies.DotNetFix.IDisposable
 #endif
     {
         // Left empty.
     }
 
-#if WinCopies2
+#if !WinCopies3
     public interface IDisposableEnumeratorInfo<out T> : IEnumeratorInfo<T>, IDisposableEnumeratorInfo
     {
         // Left empty.
     }
 #endif
 
-    public interface ICountableEnumeratorInfo<out T> : IEnumeratorInfo<T>, ICountableEnumerator<T>
+    public interface ICountableEnumeratorInfo<out T> :
+#if WinCopies3
+        IEnumeratorInfo2
+#else
+IEnumeratorInfo
+#endif
+        <T>, ICountableEnumerator<T>
     {
         // Left empty.
     }
 
     public interface ICountableDisposableEnumeratorInfo<out T> : ICountableDisposableEnumerator<T>, ICountableEnumeratorInfo<T>
-#if WinCopies2
+#if !WinCopies3
+, IDisposableEnumeratorInfo<T>
+#else
+        , IEnumeratorInfo<T>
+#endif
+    {
+        // Left empty.
+    }
+
+    public interface IUIntCountableEnumeratorInfo<out T> :
+#if WinCopies3
+        IEnumeratorInfo2
+#else
+IEnumeratorInfo
+#endif
+        <T>, IUIntCountableEnumerator<T>
+    {
+        // Left empty.
+    }
+
+    public interface IUIntCountableDisposableEnumeratorInfo<out T> : IUIntCountableDisposableEnumerator<T>, IUIntCountableEnumeratorInfo<T>
+#if !WinCopies3
 , IDisposableEnumeratorInfo<T>
 #else
         , IEnumeratorInfo<T>

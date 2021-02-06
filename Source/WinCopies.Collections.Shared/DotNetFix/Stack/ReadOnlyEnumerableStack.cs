@@ -19,7 +19,7 @@
 
 using System;
 
-#if WinCopies2
+#if !WinCopies3
 using WinCopies.Util;
 #endif
 
@@ -33,11 +33,11 @@ namespace WinCopies.Collections.DotNetFix
         private readonly IEnumerableStack _stack;
 
         public sealed override uint Count =>
-#if WinCopies2
+#if !WinCopies3
                 ((IUIntCountable)
 #endif
                 _stack
-#if WinCopies2
+#if !WinCopies3
                 )
 #endif
                 .Count;
@@ -47,7 +47,7 @@ namespace WinCopies.Collections.DotNetFix
         public sealed override object Peek() => _stack.Peek();
 
         public void CopyTo(Array array, int arrayIndex) =>
-#if WinCopies2
+#if !WinCopies3
                 WinCopies.Util.Extensions
 #else
             EnumerableExtensions
@@ -60,7 +60,7 @@ namespace WinCopies.Collections.DotNetFix
 
         object IStack.Pop() => throw GetReadOnlyListOrCollectionException();
 
-#if !WinCopies2
+#if WinCopies3
         public sealed override bool TryPeek(out object result) => _stack.TryPeek(out result);
 
         bool IStack.TryPop(out object result)

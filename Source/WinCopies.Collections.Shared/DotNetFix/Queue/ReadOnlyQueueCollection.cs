@@ -23,12 +23,12 @@ namespace WinCopies.Collections.DotNetFix
 
     [Serializable]
     public class ReadOnlyQueueCollection : IEnumerable, ICollection
-#if WinCopies2
+#if !WinCopies3
         , ICloneable
 #endif
     {
         protected
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Queue
 #else
 IEnumerableQueue
@@ -42,14 +42,14 @@ IEnumerableQueue
         /// </summary>
         /// <value>The number of elements contained in the <see cref="QueueCollection"/>.</value>
         public
-#if WinCopies2
+#if !WinCopies3
 int
 #else
             uint
 #endif
             Count => InnerQueue.Count;
 
-#if !WinCopies2
+#if WinCopies3
         int ICollection.Count => (int)Count;
 #endif
 
@@ -64,7 +64,7 @@ int
         /// </summary>
         /// <param name="queue">The inner queue for this <see cref="QueueCollection"/>.</param>
         public ReadOnlyQueueCollection(in
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Queue
 #else
             IEnumerableQueue
@@ -73,7 +73,7 @@ int
 
         public ReadOnlyQueueCollection(in QueueCollection queueCollection) : this(queueCollection.InnerQueue) { }
 
-#if WinCopies2
+#if !WinCopies3
         /// <summary>
         /// Creates a shallow copy of the <see cref="QueueCollection"/>.
         /// </summary>

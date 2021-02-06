@@ -24,7 +24,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 
 using static WinCopies
-#if WinCopies2
+#if !WinCopies3
     .Util.Util;
 using static WinCopies.Util.ThrowHelper;
 #else
@@ -33,7 +33,7 @@ using static WinCopies.Util.ThrowHelper;
 
 namespace WinCopies.Collections.DotNetFix
 {
-#if !WinCopies2
+#if WinCopies3
     namespace Generic
     {
 #endif
@@ -44,14 +44,14 @@ namespace WinCopies.Collections.DotNetFix
             protected ObservableStackCollection<T> InnerStackCollection { get; }
 
             public
-#if WinCopies2
+#if !WinCopies3
 int
 #else
                 uint
 #endif
                 Count => InnerStackCollection.Count;
 
-#if !WinCopies2
+#if WinCopies3
             int ICollection.Count => (int)Count;
 
             int IReadOnlyCollection<T>.Count => (int)Count;
@@ -94,7 +94,7 @@ int
 
             void ICollection.CopyTo(Array array, int index) => ((ICollection)InnerStackCollection).CopyTo(array, index);
         }
-#if !WinCopies2
+#if WinCopies3
     }
 #endif
 }

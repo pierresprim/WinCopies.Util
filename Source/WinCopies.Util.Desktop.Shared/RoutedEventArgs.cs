@@ -19,7 +19,7 @@ using System;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 
-#if WinCopies2
+#if !WinCopies3
 namespace WinCopies.Util
 #else
 namespace WinCopies

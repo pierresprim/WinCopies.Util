@@ -36,4 +36,8 @@
 
   <Import Project="..\WinCopies.Collections.Tests.Shared\WinCopies.Collections.Tests.Shared.projitems" Label="Shared" />
 
+  <Import Project="..\WinCopies.Util.Tests.Shared\WinCopies.Util.Tests.Shared.projitems" Label="Shared" />
+
+  <Import Project="..\WinCopies.Util.Extensions.Tests.Shared\WinCopies.Util.Extensions.Tests.Shared.projitems" Label="Shared" />
+
 </Project>

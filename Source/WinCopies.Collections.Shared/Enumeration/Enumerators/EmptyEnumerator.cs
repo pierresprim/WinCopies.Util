@@ -31,7 +31,7 @@ namespace WinCopies.Collections
         void System.Collections.IEnumerator.Reset() { }
     }
 
-#if !WinCopies2
+#if WinCopies3
 namespace Generic
 {
 #endif
@@ -49,7 +49,7 @@ namespace Generic
 
         void System.IDisposable.Dispose() { }
     }
-#if !WinCopies2
+#if WinCopies3
 }
 #endif
 }

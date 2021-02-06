@@ -19,7 +19,7 @@ using System;
 using System.Diagnostics;
 
 using static WinCopies
-#if WinCopies2
+#if !WinCopies3
     .Util.Util;
 
 using System.Collections;
@@ -35,7 +35,7 @@ namespace WinCopies.Collections.DotNetFix
     // todo: check if the given collection implements the WinCopies.DotNetFix.IDisposable (or WinCopies.IDisposable) interface and, if yes, check the given collection is not disposed (or disposing) in the Current property and in the MoveNext method.
 
     public abstract class UIntIndexedListEnumeratorBase : WinCopies.
-#if WinCopies2
+#if !WinCopies3
         Util.
 #endif
         DotNetFix.IDisposable
@@ -170,7 +170,7 @@ namespace WinCopies.Collections.DotNetFix
         }
     }
 
-#if !WinCopies2
+#if WinCopies3
     namespace Generic
     {
 #endif
@@ -218,37 +218,24 @@ namespace WinCopies.Collections.DotNetFix
 
             object System.Collections.IEnumerator.Current => Current;
 
-            public UIntIndexedListEnumerator(IReadOnlyUIntIndexedList<T> uintIndexedList)
+            public UIntIndexedListEnumerator(IUIntIndexedList<T> uintIndexedList)
             {
                 MoveNextMethod = moveNextMethodToReset = () => DefaultMoveNextMethod(this);
 
                 innerList = uintIndexedList;
             }
 
-            public UIntIndexedListEnumerator(IReadOnlyUIntIndexedList<T> uintIndexedList, Func<bool> moveNextMethod)
+            public UIntIndexedListEnumerator(IUIntIndexedList<T> uintIndexedList, Func<bool> moveNextMethod)
             {
                 MoveNextMethod = moveNextMethod;
 
                 innerList = uintIndexedList;
             }
 
-#if WinCopies2
-            public UIntIndexedListEnumerator(IUIntIndexedList<T> uintIndexedList):this(uintIndexedList)
-            {
-                // Left empty.
-            }
-
-            public UIntIndexedListEnumerator(IUIntIndexedList<T> uintIndexedList, Func<bool> moveNextMethod):this(uintIndexedList, moveNextMethod)
-            {
-                // Left empty.
-            }
-#endif
-
             protected override void Dispose(bool disposing)
             {
                 if (!IsDisposed)
                 {
-
                     InnerList = null;
 
                     moveNextMethodToReset = null;
@@ -264,7 +251,7 @@ namespace WinCopies.Collections.DotNetFix
                 MoveNextMethod = moveNextMethodToReset;
             }
         }
-#if !WinCopies2
+#if WinCopies3
     }
 #endif
 }

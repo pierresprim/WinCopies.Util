@@ -18,12 +18,12 @@
 using System;
 using System.Collections;
 
-#if WinCopies2
+#if !WinCopies3
 using static WinCopies.Util.Util;
 #endif
 
 using static WinCopies.
-#if WinCopies2
+#if !WinCopies3
     Util.
 #endif
     ThrowHelper;
@@ -42,7 +42,7 @@ namespace WinCopies.Collections.DotNetFix
         [NonSerialized]
         private readonly Queue _queue;
 
-#if WinCopies2
+#if !WinCopies3
         public new bool IsReadOnly => base.IsReadOnly;
 #endif
 
@@ -102,11 +102,11 @@ namespace WinCopies.Collections.DotNetFix
             UpdateEnumerableVersion();
         }
 
-#if WinCopies2
+#if !WinCopies3
         [Serializable]
 #endif
         public sealed class Enumerator :
-#if WinCopies2
+#if !WinCopies3
             IEnumerator, Util.DotNetFix.IDisposable
 #else
             WinCopies.Collections.Enumerator
@@ -116,13 +116,16 @@ namespace WinCopies.Collections.DotNetFix
             private ISimpleLinkedListNode _currentNode;
             private readonly uint _version;
 
-#if WinCopies2
+#if !WinCopies3
             public object Current => IsDisposed ? throw GetExceptionForDispose(false) : _currentNode.Value;
 
             public bool IsDisposed { get; private set; }
 #else
             private bool _first = true;
 
+            /// <summary>
+            /// When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            /// </summary>
             protected override object CurrentOverride => _currentNode.Value;
 
             public override bool? IsResetSupported => true;
@@ -138,14 +141,14 @@ namespace WinCopies.Collections.DotNetFix
 
                 _version = queue.EnumerableVersion;
 
-#if WinCopies2
+#if !WinCopies3
                 Reset();
 #else
                 ResetOverride();
 #endif
             }
 
-#if WinCopies2
+#if !WinCopies3
             public void Reset()
             {
                 if (IsDisposed)
@@ -164,7 +167,7 @@ namespace WinCopies.Collections.DotNetFix
                 _currentNode = _queue._queue.FirstItem;
             }
 
-#if WinCopies2
+#if !WinCopies3
             public bool MoveNext()
             {
                 if (IsDisposed)
@@ -178,7 +181,7 @@ namespace WinCopies.Collections.DotNetFix
 #endif
                 ThrowIfVersionHasChanged(_queue.EnumerableVersion, _version);
 
-#if WinCopies2
+#if !WinCopies3
                 if (_currentNode == null)
 
                     return false;
@@ -207,7 +210,7 @@ namespace WinCopies.Collections.DotNetFix
 #endif
             }
 
-#if WinCopies2
+#if !WinCopies3
             private void Dispose(bool disposing)
             {
                 if (IsDisposed)

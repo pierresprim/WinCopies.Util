@@ -17,7 +17,7 @@
 
 using System;
 
-#if WinCopies2
+#if !WinCopies3
 using WinCopies.Collections.DotNetFix;
 
 using static WinCopies.Util.Resources.ExceptionMessages;
@@ -39,7 +39,7 @@ namespace WinCopies.Collections
         /// </summary>
         /// <returns>An exception indicating that a list or collection is read-only.</returns>
         public static InvalidOperationException GetReadOnlyListOrCollectionException() => new InvalidOperationException(
-#if WinCopies2
+#if !WinCopies3
             ReadOnlyCollection
 #else
             ReadOnlyListOrCollection
@@ -57,7 +57,7 @@ namespace WinCopies.Collections
         /// </summary>
         /// <param name="obj">The <see cref="ICountable"/> object for which to check the <see cref="ICountable.Count"/> property.</param>
         public static void
-#if WinCopies2
+#if !WinCopies3
             ThrowIfEmpty
 #else
 ThrowIfEmptyListOrCollection
@@ -74,7 +74,7 @@ ThrowIfEmptyListOrCollection
         /// </summary>
         /// <param name="obj">The <see cref="IUIntCountable"/> object for which to check the <see cref="IUIntCountable.Count"/> property.</param>
         public static void
-#if WinCopies2
+#if !WinCopies3
             ThrowIfEmpty
 #else
 ThrowIfEmptyListOrCollection
@@ -106,7 +106,7 @@ ThrowIfEmptyListOrCollection
 
         public static ArgumentException GetNodesAreEqualException() => new ArgumentException("The given nodes are equal.");
 
-#if !WinCopies2
+#if WinCopies3
         public static void ThrowIfEnumeratorNotStartedOrDisposedException(in WinCopies.Collections.IDisposableEnumeratorInfo enumerator)
         {
             if (Extensions.IsEnumeratorNotStartedOrDisposed(enumerator))

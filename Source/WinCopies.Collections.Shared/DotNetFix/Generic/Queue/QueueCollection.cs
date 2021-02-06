@@ -24,7 +24,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace WinCopies.Collections.DotNetFix
 {
-#if !WinCopies2
+#if WinCopies3
     namespace Generic
     {
 #endif
@@ -33,7 +33,7 @@ namespace WinCopies.Collections.DotNetFix
         public class QueueCollection<T> : System.Collections.Generic.IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection
         {
             protected internal
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.Queue<T>
 #else
 IEnumerableQueue<T>
@@ -46,14 +46,14 @@ IEnumerableQueue<T>
             /// </summary>
             /// <value>The number of elements contained in the <see cref="QueueCollection{T}"/>.</value>
             public
-#if WinCopies2
+#if !WinCopies3
 int
 #else
                 uint
 #endif
                 Count => InnerQueue.Count;
 
-#if !WinCopies2
+#if WinCopies3
             int ICollection.Count => (int)Count;
 
             int IReadOnlyCollection<T>.Count => (int)Count;
@@ -69,7 +69,7 @@ int
             /// Initializes a new instance of the <see cref="QueueCollection{T}"/> class.
             /// </summary>
             public QueueCollection() : this(new
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.Queue
 #else
             EnumerableQueue
@@ -82,7 +82,7 @@ int
             /// </summary>
             /// <param name="queue">The inner queue for this <see cref="QueueCollection{T}"/>.</param>
             public QueueCollection(in
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.Queue<T>
 #else
             IEnumerableQueue<T>
@@ -159,7 +159,7 @@ int
             /// <returns>A new array containing elements copied from the <see cref="QueueCollection{T}"/>.</returns>
             public T[] ToArray() => InnerQueue.ToArray();
 
-#if WinCopies2
+#if !WinCopies3
         /// <summary>
         /// Sets the capacity to the actual number of elements in the <see cref="QueueCollection{T}"/>, if that number is less than 90 percent of current capacity.
         /// </summary>
@@ -201,7 +201,7 @@ int
 
             System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerQueue).GetEnumerator();
         }
-#if !WinCopies2
+#if WinCopies3
     }
 #endif
 }

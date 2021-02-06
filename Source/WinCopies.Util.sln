@@ -33,6 +33,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinCopies.Util.Desktop.2.x", "WinCopies.Util.Desktop.2.x\WinCopies.Util.Desktop.2.x.csproj", "{6DD60261-6C3A-4FC2-B99F-DE6D449AF5CD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{56C3C1DB-0654-4FAF-84B7-9E3DD335B51D}"
+	ProjectSection(SolutionItems) = preProject
+		..\Tests\Directory.Build.props = ..\Tests\Directory.Build.props
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinCopies.Collections.Tests", "..\Tests\WinCopies.Collections.Tests\WinCopies.Collections.Tests.csproj", "{A462CEB6-6BDD-4793-9572-32C7E232EB45}"
 EndProject
@@ -44,22 +47,39 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinCopies.Util.Extensions.T
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinCopies.Util.2.x.Tests", "..\Tests\WinCopies.Util.2.x.Tests\WinCopies.Util.2.x.Tests.csproj", "{02632237-A279-4811-8E16-695015578677}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "WinCopies.Util.Tests.Shared", "..\Tests\WinCopies.Util.Tests.Shared\WinCopies.Util.Tests.Shared.shproj", "{7CF8EBD0-34A6-4D44-A153-A77C74518CE7}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "WinCopies.Util.Extensions.Tests.Shared", "..\Tests\WinCopies.Util.Extensions.Tests.Shared\WinCopies.Util.Extensions.Tests.Shared.shproj", "{FAF3A1F6-04BB-4869-9375-21335873B371}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{A9190466-9158-4BA1-8854-3A1E38C382D3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AttachedCommandBehaviorDemo", "..\Samples\AttachedCommandBehaviorDemo\AttachedCommandBehaviorDemo.csproj", "{4FB44B33-9AD3-4CF4-A647-CDF0E0DC3013}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PushBindingInStyleDemo", "..\Samples\PushBindingInStyleDemo\PushBindingInStyleDemo.csproj", "{6059BDCA-B570-4136-8CFA-2E36C929D447}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		WinCopies.Collections.Shared\WinCopies.Collections.Shared.projitems*{002579a1-5f08-462d-9863-7f2a767fe04e}*SharedItemsImports = 5
+		WinCopies.Util.Extensions.Shared\WinCopies.Util.Extensions.Shared.projitems*{002579a1-5f08-462d-9863-7f2a767fe04e}*SharedItemsImports = 5
 		WinCopies.Util.Shared\WinCopies.Util.Shared.projitems*{002579a1-5f08-462d-9863-7f2a767fe04e}*SharedItemsImports = 5
 		WinCopies.Util.Desktop.Shared\WinCopies.Util.Desktop.Shared.projitems*{02122768-dc6a-467c-a5f5-ae5bf2669308}*SharedItemsImports = 13
 		..\Tests\WinCopies.Collections.Tests.Shared\WinCopies.Collections.Tests.Shared.projitems*{02632237-a279-4811-8e16-695015578677}*SharedItemsImports = 5
+		..\Tests\WinCopies.Util.Extensions.Tests.Shared\WinCopies.Util.Extensions.Tests.Shared.projitems*{02632237-a279-4811-8e16-695015578677}*SharedItemsImports = 5
+		..\Tests\WinCopies.Util.Tests.Shared\WinCopies.Util.Tests.Shared.projitems*{02632237-a279-4811-8e16-695015578677}*SharedItemsImports = 5
+		..\Tests\WinCopies.Util.Tests.Shared\WinCopies.Util.Tests.Shared.projitems*{0c4adf2c-f5d9-4bf3-befe-86f7c552c9a9}*SharedItemsImports = 5
 		WinCopies.Util.Desktop.Shared\WinCopies.Util.Desktop.Shared.projitems*{10a0855f-fbc1-4499-aa2e-2b19d8b29e95}*SharedItemsImports = 5
 		WinCopies.Collections.Shared\WinCopies.Collections.Shared.projitems*{286f53ac-6fdf-4fd9-83af-7ba230de1211}*SharedItemsImports = 5
+		..\Tests\WinCopies.Util.Extensions.Tests.Shared\WinCopies.Util.Extensions.Tests.Shared.projitems*{324f290d-7d29-4ecb-bc9c-2a5b856057b1}*SharedItemsImports = 5
 		WinCopies.Util.Shared\WinCopies.Util.Shared.projitems*{386a44d6-d6d7-4868-9e96-d1b7b4ce068a}*SharedItemsImports = 5
 		WinCopies.Util.Extensions.Shared\WinCopies.Util.Extensions.Shared.projitems*{3b73a800-9780-49f3-a382-9acb627cfb52}*SharedItemsImports = 5
 		..\Tests\WinCopies.Collections.Tests.Shared\WinCopies.Collections.Tests.Shared.projitems*{6db5c78e-c82a-472b-977c-adc2c91fb922}*SharedItemsImports = 13
 		WinCopies.Util.Desktop.Shared\WinCopies.Util.Desktop.Shared.projitems*{6dd60261-6c3a-4fc2-b99f-de6d449af5cd}*SharedItemsImports = 5
+		..\Tests\WinCopies.Util.Tests.Shared\WinCopies.Util.Tests.Shared.projitems*{7cf8ebd0-34a6-4d44-a153-a77c74518ce7}*SharedItemsImports = 13
 		WinCopies.Collections.Shared\WinCopies.Collections.Shared.projitems*{7da3a3b3-f01d-42c6-95a1-22dcfd180188}*SharedItemsImports = 13
 		..\Tests\WinCopies.Collections.Tests.Shared\WinCopies.Collections.Tests.Shared.projitems*{a462ceb6-6bdd-4793-9572-32c7e232eb45}*SharedItemsImports = 5
 		WinCopies.Util.Extensions.Shared\WinCopies.Util.Extensions.Shared.projitems*{d27f795e-c5ae-4031-9499-d9b6182f9512}*SharedItemsImports = 13
 		WinCopies.Util.Shared\WinCopies.Util.Shared.projitems*{e2160f13-964f-409c-9a4f-1fdbbda1b76c}*SharedItemsImports = 13
+		..\Tests\WinCopies.Util.Extensions.Tests.Shared\WinCopies.Util.Extensions.Tests.Shared.projitems*{faf3a1f6-04bb-4869-9375-21335873b371}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -106,6 +126,14 @@ Global
 		{02632237-A279-4811-8E16-695015578677}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02632237-A279-4811-8E16-695015578677}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02632237-A279-4811-8E16-695015578677}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FB44B33-9AD3-4CF4-A647-CDF0E0DC3013}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FB44B33-9AD3-4CF4-A647-CDF0E0DC3013}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FB44B33-9AD3-4CF4-A647-CDF0E0DC3013}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FB44B33-9AD3-4CF4-A647-CDF0E0DC3013}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6059BDCA-B570-4136-8CFA-2E36C929D447}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6059BDCA-B570-4136-8CFA-2E36C929D447}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6059BDCA-B570-4136-8CFA-2E36C929D447}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6059BDCA-B570-4136-8CFA-2E36C929D447}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -116,6 +144,10 @@ Global
 		{6DB5C78E-C82A-472B-977C-ADC2C91FB922} = {56C3C1DB-0654-4FAF-84B7-9E3DD335B51D}
 		{324F290D-7D29-4ECB-BC9C-2A5B856057B1} = {56C3C1DB-0654-4FAF-84B7-9E3DD335B51D}
 		{02632237-A279-4811-8E16-695015578677} = {56C3C1DB-0654-4FAF-84B7-9E3DD335B51D}
+		{7CF8EBD0-34A6-4D44-A153-A77C74518CE7} = {56C3C1DB-0654-4FAF-84B7-9E3DD335B51D}
+		{FAF3A1F6-04BB-4869-9375-21335873B371} = {56C3C1DB-0654-4FAF-84B7-9E3DD335B51D}
+		{4FB44B33-9AD3-4CF4-A647-CDF0E0DC3013} = {A9190466-9158-4BA1-8854-3A1E38C382D3}
+		{6059BDCA-B570-4136-8CFA-2E36C929D447} = {A9190466-9158-4BA1-8854-3A1E38C382D3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AC8E2D74-F33E-4845-A513-58D1E7556181}

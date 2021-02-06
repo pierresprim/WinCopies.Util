@@ -30,6 +30,11 @@
               Looks up a localized string similar to This list or collection is read-only..
             </summary>
         </member>
+        <member name="P:WinCopies.Collections.DotNetFix.Generic.EnumerableQueue`1.Enumerator.CurrentOverride">
+            <summary>
+            When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            </summary>
+        </member>
         <member name="P:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.Count">
             <summary>
             Gets the number of elements contained in the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.
@@ -164,6 +169,11 @@
             </summary>
             <returns>An <see cref="T:System.Collections.Generic.IEnumerator`1"/> for the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</returns>
         </member>
+        <member name="P:WinCopies.Collections.DotNetFix.Generic.EnumerableStack`1.Enumerator.CurrentOverride">
+            <summary>
+            When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            </summary>
+        </member>
         <member name="M:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1.AddAfter(WinCopies.Collections.DotNetFix.Generic.ILinkedListNode{`0},`0)">
             <summary>
             Adds a new node containing the specified value after the specified existing node in the <see cref="T:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1"/>. Override the <see cref="!:AddItemAfter(System.Collections.Generic.LinkedListNode&lt;T&gt;, T)"/> method to provide a custom implementation.
@@ -210,6 +220,11 @@
             <param name="collection">The <see cref="T:System.Collections.IEnumerable"/> whose elements are copied to the new <see cref="T:System.Collections.Generic.LinkedList`1"/>.</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="collection"/> is <see langword="null"/>.</exception>
         </member>
+        <member name="P:WinCopies.Collections.DotNetFix.Generic.LinkedList`1.Enumerator.CurrentOverride">
+            <summary>
+            When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            </summary>
+        </member>
         <member name="M:WinCopies.Collections.DotNetFix.Generic.LinkedList`1.OnMove(WinCopies.Collections.DotNetFix.Generic.LinkedList{`0}.LinkedListNode@,System.String@,WinCopies.Collections.DotNetFix.Generic.LinkedList{`0}.LinkedListNode@,System.String@)">
             <summary>
             Checks if a node can be moved and, if yes, removes it. This method DOES NOT perform null checks and DOES NOT re-add the item. This is only a method for common move actions, the other actions needing to be performed separately.
@@ -225,6 +240,11 @@
             Returns an <see cref="T:System.Collections.IEnumerator"/> for this <see cref="T:WinCopies.Collections.DotNetFix.EnumerableQueue"/>.
             </summary>
             <returns>An <see cref="T:System.Collections.IEnumerator"/> for this <see cref="T:WinCopies.Collections.DotNetFix.EnumerableQueue"/>.</returns>
+        </member>
+        <member name="P:WinCopies.Collections.DotNetFix.EnumerableQueue.Enumerator.CurrentOverride">
+            <summary>
+            When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            </summary>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.EnumerableQueue.Enumerator.#ctor(WinCopies.Collections.DotNetFix.EnumerableQueue@)">
             <summary>
@@ -403,6 +423,11 @@
             </summary>
             <returns>An <see cref="T:System.Collections.IEnumerator"/> for the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection"/>.</returns>
         </member>
+        <member name="P:WinCopies.Collections.DotNetFix.EnumerableStack.Enumerator.CurrentOverride">
+            <summary>
+            When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            </summary>
+        </member>
         <member name="M:WinCopies.Collections.DotNetFix.EnumerableStack.Enumerator.#ctor(WinCopies.Collections.DotNetFix.EnumerableStack@)">
             <summary>
             Initializes a new instance of the <see cref="T:WinCopies.Collections.DotNetFix.EnumerableStack.Enumerator"/> class.
@@ -493,77 +518,6 @@
             </summary>
             <param name="index">The index of the value to remove.</param>
         </member>
-        <member name="M:WinCopies.Collections.EnumerableExtensions.ToList(System.Collections.IEnumerable,System.Int32@,System.Nullable{System.Int32}@)">
-            <summary>
-            Converts an <see cref="T:System.Collections.IEnumerable"/> to an <see cref="T:System.Collections.ArrayList"/> from a given index for a given length.
-            </summary>
-            <param name="array">The <see cref="T:System.Collections.IEnumerable"/> to convert</param>
-            <param name="startIndex">The index from which start the conversion.</param>
-            <param name="length">The length of items to copy in the out <see cref="T:System.Collections.ArrayList"/>. Leave this parameter to null if you want to copy all the source <see cref="T:System.Collections.IEnumerable"/>.</param>
-            <returns>The result <see cref="T:System.Collections.ArrayList"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.EnumerableExtensions.ToList``1(System.Collections.Generic.IEnumerable{``0},System.Int32@,System.Nullable{System.Int32}@)">
-            <summary>
-            Converts an <see cref="T:System.Collections.IEnumerable"/> to a <see cref="T:System.Collections.Generic.List`1"/> from a given index for a given length.
-            </summary>
-            <param name="array">The <see cref="T:System.Collections.IEnumerable"/> to convert</param>
-            <param name="startIndex">The index from which start the conversion.</param>
-            <param name="length">The length of items to copy in the out <see cref="T:System.Collections.Generic.List`1"/>. Leave this parameter to null if you want to copy all the source <see cref="T:System.Collections.IEnumerable"/>.</param>
-            <returns>The result <see cref="T:System.Collections.Generic.List`1"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.EnumerableExtensions.AsObjectEnumerable(System.Collections.IEnumerable)">
-            <summary>
-            Yield returns each object of an <see cref="T:System.Collections.IEnumerable"/>, so the given <see cref="T:System.Collections.IEnumerable"/> will be considered as an <see cref="T:WinCopies.Collections.Generic.IEnumerable`1"/>.
-            </summary>
-            <param name="enumerable">An <see cref="T:System.Collections.IEnumerable"/> to consider as a <see cref="T:WinCopies.Collections.Generic.IEnumerable`1"/>.</param>
-            <returns>Yield returns the same enumerable as the given <paramref name="enumerable"/>, as an <see cref="T:WinCopies.Collections.Generic.IEnumerable`1"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.EnumerableExtensions.FirstOrDefault``1(System.Collections.IEnumerable)">
-            <summary>
-            Returns the first item, if any, from <typeparamref name="T"/> in a given <see cref="T:System.Collections.IEnumerable"/>.
-            </summary>
-            <typeparam name="T">The type of the item to return.</typeparam>
-            <param name="enumerable">The <see cref="T:System.Collections.IEnumerable"/> in which to look for the first item of the given type.</param>
-            <returns>The first item, if any, from <typeparamref name="T"/> in <paramref name="enumerable"/> or the default value for <typeparamref name="T"/> if none value was found.</returns>
-            <seealso cref="M:WinCopies.Collections.EnumerableExtensions.LastOrDefault``1(System.Collections.IEnumerable)"/>
-            <seealso cref="M:WinCopies.Collections.EnumerableExtensions.FirstOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
-            <seealso cref="M:WinCopies.Collections.EnumerableExtensions.LastOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
-        </member>
-        <member name="M:WinCopies.Collections.EnumerableExtensions.FirstOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)">
-            <summary>
-            Returns the first item, if any, from <typeparamref name="T"/> and that validates a given predicate in a given <see cref="T:System.Collections.IEnumerable"/>.
-            </summary>
-            <typeparam name="T">The type of the item to return.</typeparam>
-            <param name="enumerable">The <see cref="T:System.Collections.IEnumerable"/> in which to look for the first item of the given type.</param>
-            <param name="predicate">The predicate to validate.</param>
-            <returns>The first item, if any, from <typeparamref name="T"/> in <paramref name="enumerable"/> or the default value for <typeparamref name="T"/> if none value was found.</returns>
-            <seealso cref="M:WinCopies.Collections.EnumerableExtensions.LastOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
-            <seealso cref="M:WinCopies.Collections.EnumerableExtensions.FirstOrDefault``1(System.Collections.IEnumerable)"/>
-            <seealso cref="M:WinCopies.Collections.EnumerableExtensions.LastOrDefault``1(System.Collections.IEnumerable)"/>
-        </member>
-        <member name="M:WinCopies.Collections.EnumerableExtensions.LastOrDefault``1(System.Collections.IEnumerable)">
-            <summary>
-            Returns the last item, if any, from <typeparamref name="T"/> in a given <see cref="T:System.Collections.IEnumerable"/>.
-            </summary>
-            <typeparam name="T">The type of the item to return.</typeparam>
-            <param name="enumerable">The <see cref="T:System.Collections.IEnumerable"/> in which to look for the last item of the given type.</param>
-            <returns>The last item, if any, from <typeparamref name="T"/> in <paramref name="enumerable"/> or the default value for <typeparamref name="T"/> if none value was found.</returns>
-            <seealso cref="M:WinCopies.Collections.EnumerableExtensions.FirstOrDefault``1(System.Collections.IEnumerable)"/>
-            <seealso cref="M:WinCopies.Collections.EnumerableExtensions.FirstOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
-            <seealso cref="M:WinCopies.Collections.EnumerableExtensions.LastOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
-        </member>
-        <member name="M:WinCopies.Collections.EnumerableExtensions.LastOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)">
-            <summary>
-            Returns the last item, if any, from <typeparamref name="T"/> and that validates a given predicate in a given <see cref="T:System.Collections.IEnumerable"/>.
-            </summary>
-            <typeparam name="T">The type of the item to return.</typeparam>
-            <param name="enumerable">The <see cref="T:System.Collections.IEnumerable"/> in which to look for the last item of the given type.</param>
-            <param name="predicate">The predicate to validate.</param>
-            <returns>The last item, if any, from <typeparamref name="T"/> in <paramref name="enumerable"/> or the default value for <typeparamref name="T"/> if none value was found.</returns>
-            <seealso cref="M:WinCopies.Collections.EnumerableExtensions.FirstOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
-            <seealso cref="M:WinCopies.Collections.EnumerableExtensions.FirstOrDefault``1(System.Collections.IEnumerable)"/>
-            <seealso cref="M:WinCopies.Collections.EnumerableExtensions.LastOrDefault``1(System.Collections.IEnumerable)"/>
-        </member>
         <member name="T:WinCopies.Collections.Generic.ArrayBuilder`1">
             <summary>
             Builds arrays and lists by sizing them only when required. This class can be used to initialize your array or list before adding or removing values to it.
@@ -602,6 +556,30 @@
             <param name="remove">Indicates whether items have to be removed from the current <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> after they has been added to the new list.</param>
             <returns>A <see cref="T:System.Collections.Generic.List`1"/> with the items of this <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/>.</returns>
         </member>
+        <member name="M:WinCopies.Collections.Generic.EnumerableInfoBase`2.#ctor(System.Func{`1}@,System.Func{`1}@)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Collections.Generic.EnumerableInfoBase`2"/> class.
+            </summary>
+            <param name="enumeratorFunc">The func that provides the enumerators.</param>
+            <param name="reversedEnumeratorFunc">The func that provides the reversed enumerators. This parameter can be null.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="enumeratorFunc"/> is null.</exception>
+        </member>
+        <member name="M:WinCopies.Collections.Generic.EnumerableInfoBase`2.GetReversedEnumerator">
+            <summary>
+            Returns a reversed enumerator for the current collection.
+            </summary>
+            <returns>A reversed enumerator for the current collection.</returns>
+            <exception cref="T:System.InvalidOperationException"><see cref="P:WinCopies.Collections.Generic.IEnumerable`1.SupportsReversedEnumeration"/> is set to <see langword="false"/>.</exception>
+            <seealso cref="M:WinCopies.Collections.Generic.IEnumerable`1.GetReversedEnumerator"/>
+        </member>
+        <member name="M:WinCopies.Collections.Generic.EnumerableInfo`1.#ctor(System.Func{WinCopies.Collections.Generic.IEnumeratorInfo2{`0}}@,System.Func{WinCopies.Collections.Generic.IEnumeratorInfo2{`0}}@)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Collections.Generic.EnumerableInfo`1"/> class.
+            </summary>
+            <param name="enumeratorFunc">The func that provides the enumerators.</param>
+            <param name="reversedEnumeratorFunc">The func that provides the reversed enumerators. This parameter can be null.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="enumeratorFunc"/> is null.</exception>
+        </member>
         <member name="T:WinCopies.Collections.Generic.IEnumerable`1">
             <summary>
             A collection that can be enumerated.
@@ -618,9 +596,39 @@
             Returns a reversed enumerator for the current collection. See the Remarks section.
             </summary>
             <returns>A reversed enumerator for the current collection.</returns>
+            <exception cref="T:System.InvalidOperationException"><see cref="P:WinCopies.Collections.Generic.IEnumerable`1.SupportsReversedEnumeration"/> is set to <see langword="false"/>.</exception>
             <remarks>
             This method returns an enumerator which enumerate in the reversed direction that the enumerator returned by the <see cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/> method. So, for a queue, the <see cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/> method will return an enumerator that will enumerate through the queue using the FIFO direction and the <see cref="M:WinCopies.Collections.Generic.IEnumerable`1.GetReversedEnumerator"/> will throw an exception, because any reversed enumerator can be returned while a queue only supports the FIFO direction. However, a stack, which only supports the LIFO direction, will return a LIFO-enumerator as its main enumerator and throw an exception if we ask it to return a reversed enumerator. A linked list that supports the two directions, but which stores items using the FIFO direction by default, will return a FIFO-enumerator as its main enumerator and a LIFO-enumerator as its reversed enumerator.
             </remarks>
+        </member>
+        <member name="M:WinCopies.Collections.Generic.IEnumerableInfo`1.GetReversedEnumerator">
+            <summary>
+            Returns a reversed enumerator for the current collection.
+            </summary>
+            <returns>A reversed enumerator for the current collection.</returns>
+            <exception cref="T:System.InvalidOperationException"><see cref="P:WinCopies.Collections.Generic.IEnumerable`1.SupportsReversedEnumeration"/> is set to <see langword="false"/>.</exception>
+            <seealso cref="M:WinCopies.Collections.Generic.IEnumerable`1.GetReversedEnumerator"/>
+        </member>
+        <member name="P:WinCopies.Collections.Generic.EmptyCheckEnumerator`1.CurrentOverride">
+            <summary>
+            When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Collections.Generic.Enumerator`1.Current">
+            <summary>
+            Gets the element in the collection at the current position of the enumerator.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">The enumerator is disposed.</exception>
+        </member>
+        <member name="P:WinCopies.Collections.Generic.Enumerator`1.CurrentOverride">
+            <summary>
+            When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Collections.Generic.EnumeratorInfo`1.CurrentOverride">
+            <summary>
+            When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            </summary>
         </member>
         <member name="M:WinCopies.Collections.Generic.Enumerator`4.#ctor(`1)">
             <summary>
@@ -639,6 +647,21 @@
             When overridden in a derived class, initializes a new instance of the <see cref="T:WinCopies.Collections.Generic.Enumerator`2"/> class.
             </summary>
             <param name="enumerator">The enumerator to enumerate.</param>
+        </member>
+        <member name="P:WinCopies.Collections.Generic.JoinSubEnumerator`1.CurrentOverride">
+            <summary>
+            When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Collections.Generic.JoinEnumerator`1.CurrentOverride">
+            <summary>
+            When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Collections.Generic.SelectEnumerator`2.CurrentOverride">
+            <summary>
+            When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            </summary>
         </member>
         <member name="T:WinCopies.Collections.Generic.ArrayMerger`1">
             <summary>
@@ -678,6 +701,75 @@
             <param name="remove">Indicates whether items have to be removed from the current <see cref="T:WinCopies.Collections.Generic.ArrayMerger`1"/> after they has been added to the new list.</param>
             <returns>A <see cref="T:System.Collections.Generic.List`1"/> with the items of this <see cref="T:WinCopies.Collections.Generic.ArrayMerger`1"/>.</returns>
         </member>
+        <member name="P:WinCopies.Collections.Generic.EnumerableHelper`1.LinkedList.Enumerator.CurrentOverride">
+            <summary>
+            When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Collections.Generic.LinkedTreeNode`1.Enumerator.CurrentOverride">
+            <summary>
+            When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Collections.Generic.RecursiveEnumerator`1.CurrentOverride">
+            <summary>
+            When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Collections.EnumerableExtensions.ToList(System.Collections.IEnumerable,System.Int32@,System.Nullable{System.Int32}@)">
+            <summary>
+            Converts an <see cref="T:System.Collections.IEnumerable"/> to an <see cref="T:System.Collections.ArrayList"/> from a given index for a given length.
+            </summary>
+            <param name="array">The <see cref="T:System.Collections.IEnumerable"/> to convert</param>
+            <param name="startIndex">The index from which start the conversion.</param>
+            <param name="length">The length of items to copy in the out <see cref="T:System.Collections.ArrayList"/>. Leave this parameter to null if you want to copy all the source <see cref="T:System.Collections.IEnumerable"/>.</param>
+            <returns>The result <see cref="T:System.Collections.ArrayList"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.EnumerableExtensions.ToList``1(System.Collections.Generic.IEnumerable{``0},System.Int32@,System.Nullable{System.Int32}@)">
+            <summary>
+            Converts an <see cref="T:System.Collections.IEnumerable"/> to a <see cref="T:System.Collections.Generic.List`1"/> from a given index for a given length.
+            </summary>
+            <param name="array">The <see cref="T:System.Collections.IEnumerable"/> to convert</param>
+            <param name="startIndex">The index from which start the conversion.</param>
+            <param name="length">The length of items to copy in the out <see cref="T:System.Collections.Generic.List`1"/>. Leave this parameter to null if you want to copy all the source <see cref="T:System.Collections.IEnumerable"/>.</param>
+            <returns>The result <see cref="T:System.Collections.Generic.List`1"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.EnumerableExtensions.AsObjectEnumerable(System.Collections.IEnumerable)">
+            <summary>
+            Yield returns each object of an <see cref="T:System.Collections.IEnumerable"/>, so the given <see cref="T:System.Collections.IEnumerable"/> will be considered as an <see cref="T:WinCopies.Collections.Generic.IEnumerable`1"/>.
+            </summary>
+            <param name="enumerable">An <see cref="T:System.Collections.IEnumerable"/> to consider as a <see cref="T:WinCopies.Collections.Generic.IEnumerable`1"/>.</param>
+            <returns>Yield returns the same enumerable as the given <paramref name="enumerable"/>, as an <see cref="T:WinCopies.Collections.Generic.IEnumerable`1"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.EnumerableExtensions.As``1(System.Collections.IEnumerable)">
+            <summary>
+            Iterates through a given <see cref="T:System.Collections.IEnumerable"/> and tries to convert the items to a given generic type parameter. If an item cannot be converted, it is ignored in the resulting enumerable.
+            </summary>
+            <typeparam name="T">The generic type parameter for the resulting enumerable. Only the items that can be converted to this type will be present in the resulting enumerable.</typeparam>
+            <param name="enumerable">The source enumerable.</param>
+            <returns>An enumerable containing all the items from <paramref name="enumerable"/> that could be converted to <typeparamref name="T"/>.</returns>
+            <seealso cref="M:WinCopies.Collections.EnumerableExtensions.To``1(System.Collections.IEnumerable)"/>
+        </member>
+        <member name="M:WinCopies.Collections.EnumerableExtensions.To``1(System.Collections.IEnumerable)">
+            <summary>
+            Iterates through a given <see cref="T:System.Collections.IEnumerable"/> and directly converts the items to a given generic type parameter. An <see cref="T:System.InvalidCastException"/> is thrown when an item cannot be converted.
+            </summary>
+            <typeparam name="T">The generic type parameter for the resulting enumerable. All items in <paramref name="enumerable"/> will be converted to this type.</typeparam>
+            <param name="enumerable">The source enumerable.</param>
+            <returns>An enumerable containing the same items as they from <paramref name="enumerable"/>, with these items converted to <typeparamref name="T"/>.</returns>
+            <exception cref="T:System.InvalidCastException">An item could not be converted.</exception>
+            <seealso cref="M:WinCopies.Collections.EnumerableExtensions.As``1(System.Collections.IEnumerable)"/>
+        </member>
+        <member name="P:WinCopies.Collections.EmptyCheckEnumerator.CurrentOverride">
+            <summary>
+            When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Collections.Enumerator.CurrentOverride">
+            <summary>
+            When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            </summary>
+        </member>
         <member name="T:WinCopies.Collections.EnumeratorInfo">
             <summary>
             <see cref="T:System.Collections.IEnumerator"/> wrapper that inherits from <see cref="T:WinCopies.Collections.Enumerator"/>, a class that extends the info provided by the <see cref="T:System.Collections.IEnumerator"/> interface.
@@ -691,6 +783,11 @@
         <member name="P:WinCopies.Collections.EnumeratorInfo.IsResetSupported">
             <summary>
             Always returns <see langword="null"/>.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Collections.EnumeratorInfo.CurrentOverride">
+            <summary>
+            When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
             </summary>
         </member>
         <member name="M:WinCopies.Collections.EnumeratorInfo.#ctor(System.Collections.IEnumerator@)">
@@ -1553,6 +1650,52 @@
             <returns>A value obtained by a <see cref="T:WinCopies.Func"/>, depending on the result of a comparison.</returns>
             <exception cref="T:System.ArgumentNullException">One or more of the given <see cref="T:WinCopies.Func"/>s are <see langword="null"/>.</exception>
             <remarks>See <see cref="M:WinCopies.Collections.Util.GetIf(System.Object@,System.Object@,WinCopies.Collections.Comparison@,WinCopies.Func@,WinCopies.Func@,WinCopies.Func@)"/> for the non-generic version.</remarks>
+        </member>
+        <member name="M:WinCopies.Linq.Extensions.FirstOrDefault``1(System.Collections.IEnumerable)">
+            <summary>
+            Returns the first item, if any, from <typeparamref name="T"/> in a given <see cref="T:System.Collections.IEnumerable"/>.
+            </summary>
+            <typeparam name="T">The type of the item to return.</typeparam>
+            <param name="enumerable">The <see cref="T:System.Collections.IEnumerable"/> in which to look for the first item of the given type.</param>
+            <returns>The first item, if any, from <typeparamref name="T"/> in <paramref name="enumerable"/> or the default value for <typeparamref name="T"/> if none value was found.</returns>
+            <seealso cref="M:WinCopies.Linq.Extensions.LastOrDefault``1(System.Collections.IEnumerable)"/>
+            <seealso cref="M:WinCopies.Linq.Extensions.FirstOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
+            <seealso cref="M:WinCopies.Linq.Extensions.LastOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
+        </member>
+        <member name="M:WinCopies.Linq.Extensions.FirstOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)">
+            <summary>
+            Returns the first item, if any, from <typeparamref name="T"/> and that validates a given predicate in a given <see cref="T:System.Collections.IEnumerable"/>.
+            </summary>
+            <typeparam name="T">The type of the item to return.</typeparam>
+            <param name="enumerable">The <see cref="T:System.Collections.IEnumerable"/> in which to look for the first item of the given type.</param>
+            <param name="predicate">The predicate to validate.</param>
+            <returns>The first item, if any, from <typeparamref name="T"/> in <paramref name="enumerable"/> or the default value for <typeparamref name="T"/> if none value was found.</returns>
+            <seealso cref="M:WinCopies.Linq.Extensions.LastOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
+            <seealso cref="M:WinCopies.Linq.Extensions.FirstOrDefault``1(System.Collections.IEnumerable)"/>
+            <seealso cref="M:WinCopies.Linq.Extensions.LastOrDefault``1(System.Collections.IEnumerable)"/>
+        </member>
+        <member name="M:WinCopies.Linq.Extensions.LastOrDefault``1(System.Collections.IEnumerable)">
+            <summary>
+            Returns the last item, if any, from <typeparamref name="T"/> in a given <see cref="T:System.Collections.IEnumerable"/>.
+            </summary>
+            <typeparam name="T">The type of the item to return.</typeparam>
+            <param name="enumerable">The <see cref="T:System.Collections.IEnumerable"/> in which to look for the last item of the given type.</param>
+            <returns>The last item, if any, from <typeparamref name="T"/> in <paramref name="enumerable"/> or the default value for <typeparamref name="T"/> if none value was found.</returns>
+            <seealso cref="M:WinCopies.Linq.Extensions.FirstOrDefault``1(System.Collections.IEnumerable)"/>
+            <seealso cref="M:WinCopies.Linq.Extensions.FirstOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
+            <seealso cref="M:WinCopies.Linq.Extensions.LastOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
+        </member>
+        <member name="M:WinCopies.Linq.Extensions.LastOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)">
+            <summary>
+            Returns the last item, if any, from <typeparamref name="T"/> and that validates a given predicate in a given <see cref="T:System.Collections.IEnumerable"/>.
+            </summary>
+            <typeparam name="T">The type of the item to return.</typeparam>
+            <param name="enumerable">The <see cref="T:System.Collections.IEnumerable"/> in which to look for the last item of the given type.</param>
+            <param name="predicate">The predicate to validate.</param>
+            <returns>The last item, if any, from <typeparamref name="T"/> in <paramref name="enumerable"/> or the default value for <typeparamref name="T"/> if none value was found.</returns>
+            <seealso cref="M:WinCopies.Linq.Extensions.FirstOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
+            <seealso cref="M:WinCopies.Linq.Extensions.FirstOrDefault``1(System.Collections.IEnumerable)"/>
+            <seealso cref="M:WinCopies.Linq.Extensions.LastOrDefault``1(System.Collections.IEnumerable)"/>
         </member>
     </members>
 </doc>

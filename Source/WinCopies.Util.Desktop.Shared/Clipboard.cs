@@ -23,7 +23,7 @@ using System.Windows;
 using System.Windows.Media.Imaging;
 
 namespace WinCopies
-#if WinCopies2
+#if !WinCopies3
     .Util
 #endif
 {

@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if !WinCopies2
+#if WinCopies3
 using System.Collections;
 #endif
 
@@ -27,7 +27,7 @@ namespace WinCopies.Collections
     {
         public bool IsReadOnly => false;
 
-#if WinCopies2
+#if !WinCopies3
         uint IUIntCountableEnumerable.Count => (uint)Count;
 #endif
 
@@ -66,7 +66,7 @@ namespace WinCopies.Collections
     {
         public bool IsReadOnly => false;
 
-#if WinCopies2
+#if !WinCopies3
         uint IUIntCountableEnumerable.Count => (uint)Count;
 #endif
 

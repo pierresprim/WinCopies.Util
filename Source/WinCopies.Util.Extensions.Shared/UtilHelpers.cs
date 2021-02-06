@@ -15,8 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
+#if CS7
+
 using System;
 using System.Collections;
+using WinCopies.Util;
 
 using static WinCopies.Diagnostics.IfHelpers;
 
@@ -24,7 +27,7 @@ using IfCT = WinCopies.Diagnostics.ComparisonType;
 using IfCM = WinCopies.Diagnostics.ComparisonMode;
 using IfComp = WinCopies.Diagnostics.Comparison;
 
-namespace WinCopies.Util.Extensions // To avoid name conflicts.
+namespace WinCopies.Extensions // To avoid name conflicts.
 {
     public static class UtilHelpers
     {
@@ -97,3 +100,5 @@ namespace WinCopies.Util.Extensions // To avoid name conflicts.
         }
     }
 }
+
+#endif

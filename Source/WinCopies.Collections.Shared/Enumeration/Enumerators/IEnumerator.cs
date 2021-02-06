@@ -29,7 +29,7 @@
 //    namespace Generic
 //    {
 //        public interface IEnumerator<out T> : System.Collections.Generic.IEnumerator<T>, IEnumerator, WinCopies
-//#if WinCopies2
+//#if !WinCopies3
 //            .Util
 //#endif
 //            .DotNetFix.IDisposable

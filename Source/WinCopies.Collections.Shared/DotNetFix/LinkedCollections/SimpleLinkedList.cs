@@ -82,7 +82,7 @@ namespace WinCopies.Collections.DotNetFix
 
                 throw GetReadOnlyListOrCollectionException();
 
-#if WinCopies2
+#if !WinCopies3
             ThrowIfEmpty
 #else
             ThrowIfEmptyListOrCollection
@@ -111,7 +111,7 @@ namespace WinCopies.Collections.DotNetFix
         /// </summary>
         protected abstract SimpleLinkedListNode RemoveItem();
 
-#if WinCopies2
+#if !WinCopies3
         public
 #else
             protected

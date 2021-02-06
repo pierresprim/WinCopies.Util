@@ -23,12 +23,12 @@ namespace WinCopies.Collections.DotNetFix
 
     [Serializable]
     public class StackCollection : IEnumerableStack, ICollection
-#if WinCopies2
+#if !WinCopies3
         , ICloneable
 #endif
     {
         protected internal
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Stack
 #else
 IEnumerableStack
@@ -37,14 +37,14 @@ IEnumerableStack
         { get; }
 
         public
-#if WinCopies2
+#if !WinCopies3
 int
 #else
             uint
 #endif
             Count => InnerStack.Count;
 
-#if WinCopies2
+#if !WinCopies3
         uint IUIntCountable.Count => (uint)Count;
 
         uint IUIntCountableEnumerable.Count => (uint)Count;
@@ -59,7 +59,7 @@ int
         public object SyncRoot => InnerStack.SyncRoot;
 
         public StackCollection() : this(new
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Stack
 #else
             EnumerableStack
@@ -68,7 +68,7 @@ int
         { }
 
         public StackCollection(in
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Stack
 #else
             IEnumerableStack
@@ -97,7 +97,7 @@ int
 
         public System.Collections.IEnumerator GetEnumerator() => InnerStack.GetEnumerator();
 
-#if WinCopies2
+#if !WinCopies3
         public object Clone() => InnerStack.Clone();
 #else
         public bool TryPeek(out object result) => InnerStack.TryPeek(out result);

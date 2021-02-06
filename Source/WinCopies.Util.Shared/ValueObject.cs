@@ -19,7 +19,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-#if WinCopies2
+#if !WinCopies3
 namespace WinCopies.Util
 #else
 namespace WinCopies

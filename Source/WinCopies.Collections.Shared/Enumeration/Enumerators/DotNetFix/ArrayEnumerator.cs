@@ -15,38 +15,50 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if WinCopies2
+#if !WinCopies3
+using WinCopies.Collections.Generic;
+
 using static WinCopies.Util.Util;
 using static WinCopies.Util.ThrowHelper;
 #else
+using WinCopies.Collections.Generic;
+
 using static WinCopies.ThrowHelper;
 #endif
 
 namespace WinCopies.Collections.DotNetFix.Generic
 {
-    public class ArrayEnumerator<T> : ICountableDisposableEnumerator<T>
+    public class ArrayEnumerator<T> :
+#if WinCopies3
+        Enumerator<T>,
+#endif
+        ICountableDisposableEnumeratorInfo<T>
     {
         private T[] _array;
-        private T _current;
-        private int _currentIndex = 0;
+        private int _currentIndex =
+#if WinCopies3
+            -1
+#else
+            0
+#endif
+            ;
 
         protected T[] Array => IsDisposed ? throw GetExceptionForDispose(false) : _array;
 
         public int Count => IsDisposed ? throw GetExceptionForDispose(false) : _array.Length;
 
-        public bool IsStarted { get; private set; }
-
-        public bool IsCompleted { get; private set; }
-
-        public T Current => IsStarted && !IsDisposed ? _current : throw GetEnumeratorNotStartedOrDisposedException();
-
-        object System.Collections.IEnumerator.Current => Current;
-
         protected int CurrentIndex => IsDisposed ? throw GetExceptionForDispose(false) : _currentIndex;
 
-        public bool IsDisposed { get; private set; }
-
         public ArrayEnumerator(T[] array) => _array = array ?? throw GetArgumentNullException(nameof(array));
+
+#if WinCopies3
+        protected override T CurrentOverride => _array[_currentIndex];
+
+        public override bool? IsResetSupported => true;
+
+        protected override bool MoveNextOverride() => ++_currentIndex < _array.Length;
+#else
+        public bool? IsResetSupported => true;
 
         public bool MoveNext()
         {
@@ -73,15 +85,60 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
             return false;
         }
+#endif
 
+#if WinCopies3
+        protected override void ResetCurrent() =>
+#else
         private void _Reset()
         {
+#endif
             _currentIndex = 0;
 
+#if !WinCopies3
             _current = default;
 
             IsStarted = false;
         }
+#endif
+
+#if WinCopies3
+        protected override void DisposeManaged()
+        {
+#else
+        protected virtual void Dispose(bool disposing)
+        {
+            if (IsDisposed)
+
+                return;
+
+            if (disposing)
+            {
+#endif
+                _array = null;
+
+                Reset();
+
+#if !WinCopies3
+                IsDisposed = true;
+            }
+#endif
+        }
+
+#if !WinCopies3
+        private T _current;
+
+        public bool IsStarted { get; private set; }
+
+        public bool IsCompleted { get; private set; }
+
+        public T Current => IsStarted && !IsDisposed ? _current : throw GetEnumeratorNotStartedOrDisposedException();
+
+        object System.Collections.IEnumerator.Current => Current;
+
+        public bool IsDisposed { get; private set; }
+
+        public void Dispose() => Dispose(true);
 
         public void Reset()
         {
@@ -93,23 +150,6 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
             IsCompleted = false;
         }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (IsDisposed)
-
-                return;
-
-            if (disposing)
-            {
-                _array = null;
-
-                Reset();
-
-                IsDisposed = true;
-            }
-        }
-
-        public void Dispose() => Dispose(true);
+#endif
     }
 }

@@ -8,6 +8,8 @@ README
 
 WinCopies.Util.Desktop is now desynchronized with the WinCopies Framework.
 
+Be careful! This is the 3.x branch of WinCopies.Util and almost all of the array/(linked)list/collection-based items are now in the new WinCopies.Collections package.
+
 Updates
 -------
 

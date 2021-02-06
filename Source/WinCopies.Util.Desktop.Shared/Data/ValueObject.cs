@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if WinCopies2
+#if !WinCopies3
 
 using System;
 using System.ComponentModel;
@@ -36,7 +36,7 @@ namespace WinCopies.Util.Data
     /// </summary>
     [Obsolete("This interface has been replaced by the WinCopies.Util.IValueObject (WinCopies.IValueObject in WinCopies 3) interface and will be removed in later versions.")]
     public interface IValueObject<T> :
-#if WinCopies2
+#if !WinCopies3
         WinCopies.Util.IValueObject<T>
 #else
         WinCopies.IValueObject<T>
@@ -70,7 +70,7 @@ namespace WinCopies.Util.Data
         /// <param name="obj">Object to compare to the current object.</param>
         /// <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
         public bool Equals(
-#if WinCopies2
+#if !WinCopies3
 WinCopies.Util.IValueObject
 #else
             WinCopies.IValueObject
@@ -173,7 +173,7 @@ WinCopies.Util.IValueObject
         public T Value { get => _value; set => OnPropertyChanged(nameof(Value), nameof(_value), value, typeof(ValueObject<T>)); }
 
         object
-#if WinCopies2
+#if !WinCopies3
 WinCopies.Util.IValueObject
 #else
             WinCopies.IValueObject
@@ -189,7 +189,7 @@ WinCopies.Util.IValueObject
         /// <param name="obj">Object to compare to the current object.</param>
         /// <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
         public bool Equals(
-#if WinCopies2
+#if !WinCopies3
             WinCopies.Util.IValueObject
 #else
             WinCopies.IValueObject
@@ -202,7 +202,7 @@ WinCopies.Util.IValueObject
         /// <param name="obj">Object to compare to the current object.</param>
         /// <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
         public bool Equals(
-#if WinCopies2
+#if !WinCopies3
 WinCopies.Util.IValueObject<T>
 #else
             WinCopies.IValueObject<T>

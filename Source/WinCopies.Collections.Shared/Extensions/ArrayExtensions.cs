@@ -15,15 +15,13 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if !WinCopies2
+#if WinCopies3
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 
 using static WinCopies.ThrowHelper;
-using static WinCopies.Collections.ThrowHelper;
 
 namespace WinCopies.Collections
 {
@@ -175,6 +173,10 @@ namespace WinCopies.Collections
 
             array[y] = temp;
         }
+
+
+
+        public static System.Collections.Generic.IEnumerable<T> ToEnumerable<T>(this T[] array) => array ?? throw GetArgumentNullException(nameof(array));
     }
 }
 

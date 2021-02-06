@@ -16,10 +16,11 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using System.Collections.Generic;
+using WinCopies.Collections.Generic;
 
 namespace WinCopies.Collections.DotNetFix
 {
-#if !WinCopies2
+#if WinCopies3
     public interface IEnumeratorBase
     {
         /// <summary>
@@ -57,13 +58,19 @@ namespace WinCopies.Collections.DotNetFix
 
     public interface IEnumerator : System.Collections.IEnumerator, IEnumeratorBase
     {
+#if WinCopies3
+        bool MoveNext();
+
+        void Reset();
+#else
         // Left empty.
+#endif
     }
 #endif
 
     namespace Generic
     {
-#if !WinCopies2
+#if WinCopies3
         public interface IEnumerator<out T> : System.Collections.Generic.IEnumerator<T>, IEnumeratorBase
         {
             // Left empty.
@@ -80,7 +87,21 @@ namespace WinCopies.Collections.DotNetFix
         }
 
         public interface ICountableDisposableEnumerator<out T> : ICountableEnumerator<T>, WinCopies.
-#if WinCopies2
+#if !WinCopies3
+        Util.
+#endif
+        DotNetFix.IDisposable
+        {
+            // Left empty.
+        }
+
+        public interface IUIntCountableEnumerator<out T> : System.Collections.Generic.IEnumerator<T>, IUIntCountable
+        {
+            // Left empty.
+        }
+
+        public interface IUIntCountableDisposableEnumerator<out T> : IUIntCountableEnumerator<T>, WinCopies.
+#if !WinCopies3
         Util.
 #endif
         DotNetFix.IDisposable

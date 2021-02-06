@@ -19,17 +19,63 @@
 
 using System;
 using System.Diagnostics;
-
-using static WinCopies.ThrowHelper;
+using System.Linq;
 
 using IfCT = WinCopies.Diagnostics.ComparisonType;
 
-namespace WinCopies.Util.Extensions // To avoid name conflicts.
+#if WinCopies3
+using WinCopies.Collections.Generic;
+
+using static WinCopies.ThrowHelper;
+#else
+using WinCopies.Collections;
+using WinCopies.Util;
+
+using static WinCopies.Util.Util;
+
+using InvalidEnumArgumentException = WinCopies.Util.InvalidEnumArgumentException;
+#endif
+
+namespace WinCopies.Extensions // To avoid name conflicts.
 {
     public static class Extensions
     {
-        public static bool IsValidFlagsEnumValue<T>(this T value, in IfCT comparisonType, in string argumentName, params T[] values) where T : Enum
+#if !WinCopies3
+        internal static void ThrowIfNotValidEnumValue(in string argumentName, in Enum @enum)
+        {
+            if (!@enum.IsValidEnumValue()) throw new InvalidEnumArgumentException(argumentName, @enum);
 
+            // .GetType().IsEnumDefined(@enum)
+        }
+#endif
+
+        public static bool HasFlag(this Enum @enum, System.Collections.Generic.IEnumerable<Enum> values)
+        {
+            foreach (Enum value in values)
+
+                if (@enum.HasFlag(value))
+
+                    return true;
+
+            return false;
+        }
+
+        public static bool HasFlag(this Enum @enum, params Enum[] values) => @enum.HasFlag((System.Collections.Generic.IEnumerable<Enum>)values);
+
+        public static bool HasAllFlags(this Enum @enum, System.Collections.Generic.IEnumerable<Enum> values)
+        {
+            foreach (Enum value in values)
+
+                if (!@enum.HasFlag(value))
+
+                    return false;
+
+            return true;
+        }
+
+        public static bool HasAllFlags(this Enum @enum, params Enum[] values) => @enum.HasAllFlags((System.Collections.Generic.IEnumerable<Enum>)values);
+
+        public static bool IsValidFlagsEnumValue<T>(this T value, in IfCT comparisonType, in string argumentName, params T[] values) where T : Enum
         {
             ThrowIfNull(values, nameof(values));
 
@@ -83,6 +129,101 @@ namespace WinCopies.Util.Extensions // To avoid name conflicts.
 
                     return false;
             }
+        }
+
+        public static System.Collections.Generic.IEnumerable<Type> GetDirectInterfaces(this Type t, bool ignoreGenerics, bool directTypeOnly)
+        {
+            var interfaces = new ArrayBuilder<Type>();
+            var subInterfaces = new ArrayBuilder<Type>();
+
+            void _addInterface(in Type i) => _ = interfaces.AddLast(i);
+
+            void _addSubInterface(in Type i) => _ = subInterfaces.AddLast(i);
+
+            void addNonGenericSubInterfaces(Type _t)
+            {
+                foreach (Type i in _t.GetInterfaces())
+
+                    if (!i.IsGenericType)
+
+                        _addSubInterface(i);
+            }
+
+            void addNonGenericInterfaces()
+            {
+                foreach (Type i in t.GetInterfaces())
+
+                    if (!i.IsGenericType)
+                    {
+                        _addInterface(i);
+
+                        addNonGenericSubInterfaces(i);
+                    }
+            }
+
+            void addSubInterfaces(Type _t)
+            {
+                foreach (Type i in _t.GetInterfaces())
+
+                    _addSubInterface(i);
+            }
+
+            void addInterfaces()
+            {
+                foreach (Type i in t.GetInterfaces())
+                {
+                    _addInterface(i);
+
+                    addSubInterfaces(i);
+                }
+            }
+
+            void addBaseTypesInterfaces(Action<Type> _action)
+            {
+                Type _t = t.BaseType;
+
+                while (_t != null)
+                {
+                    _action(_t);
+
+                    _t = _t.BaseType;
+                }
+            }
+
+            Action action;
+
+            if (ignoreGenerics)
+
+                if (directTypeOnly)
+
+                    action = () =>
+                    {
+                        addNonGenericInterfaces();
+
+                        addBaseTypesInterfaces(addNonGenericSubInterfaces);
+                    };
+
+                else
+
+                    action = addNonGenericInterfaces;
+
+            else if (directTypeOnly)
+
+                action = () =>
+                {
+                    addInterfaces();
+
+                    addBaseTypesInterfaces(addSubInterfaces);
+                };
+
+
+            else
+
+                action = addInterfaces;
+
+            action();
+
+            return ((System.Collections.Generic.IEnumerable<Type>)interfaces).Except(subInterfaces);
         }
     }
 }

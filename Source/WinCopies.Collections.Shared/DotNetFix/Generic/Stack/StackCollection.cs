@@ -23,7 +23,7 @@ using System.Collections.Generic;
 
 namespace WinCopies.Collections.DotNetFix
 {
-#if !WinCopies2
+#if WinCopies3
     namespace Generic
     {
 #endif
@@ -32,7 +32,7 @@ namespace WinCopies.Collections.DotNetFix
         public class StackCollection<T> : System.Collections.Generic.IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection
         {
             protected internal
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.Stack
 #else
 IEnumerableStack
@@ -41,14 +41,14 @@ IEnumerableStack
             { get; }
 
             public
-#if WinCopies2
+#if !WinCopies3
 int
 #else
                 uint
 #endif
                 Count => InnerStack.Count;
 
-#if !WinCopies2
+#if WinCopies3
             int ICollection.Count => (int)Count;
 
             int IReadOnlyCollection<T>.Count => (int)Count;
@@ -61,7 +61,7 @@ int
             object ICollection.SyncRoot => ((ICollection)InnerStack).SyncRoot;
 
             public StackCollection() : this(new
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.Stack
 #else
             EnumerableStack
@@ -70,7 +70,7 @@ int
             { }
 
             public StackCollection(in
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.Stack
 #else
             IEnumerableStack
@@ -95,7 +95,7 @@ int
 
             public T[] ToArray() => InnerStack.ToArray();
 
-#if WinCopies2
+#if !WinCopies3
         public void TrimExcess() => InnerStack.TrimExcess();
 #endif
 
@@ -115,7 +115,7 @@ int
 
             System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerStack).GetEnumerator();
         }
-#if !WinCopies2
+#if WinCopies3
     }
 #endif
 }

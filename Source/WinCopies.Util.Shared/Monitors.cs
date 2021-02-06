@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Text;
 
 using static WinCopies.
-#if WinCopies2
+#if !WinCopies3
 Util.Util;
 #else
 ThrowHelper;
 #endif
 
 namespace WinCopies
-#if WinCopies2
+#if !WinCopies3
 .Util
 #endif
 {

@@ -15,19 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if !WinCopies2
+#if WinCopies3
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
-#if WinCopies2
-using WinCopies.Collections;
-#endif
-
 using WinCopies.Collections.Generic;
-
+using WinCopies.Linq;
 using static WinCopies.ThrowHelper;
 
 namespace WinCopies.Collections
@@ -175,8 +171,6 @@ namespace WinCopies.Collections
                 splitFactory.Add(splitFactory.GetEnumerable());
             }
         }
-
-        public static System.Collections.Generic.IEnumerable<T> Join<T>(this System.Collections.Generic.IEnumerable<System.Collections.Generic.IEnumerable<T>> enumerable, bool keepEmptyEnumerables, params T[] join) => new Enumerable<T>(() => new JoinEnumerator<T>(enumerable, keepEmptyEnumerables, join));
 
         private static void ThrowOnInvalidCopyToArrayParameters(in IEnumerable enumerable, in Array array)
         {
@@ -465,8 +459,43 @@ namespace WinCopies.Collections
             return _array;
         }
 
-        static void Append(object _value, ref StringBuilder stringBuilder, in bool parseStrings, in bool parseSubEnumerables)
+        public static TDestination[] ToArray<TSource, TDestination>(this TSource[] array, Converter<TSource, TDestination> selector) => ToArray(array, 0, array.Length, selector);
 
+        public static TDestination[] ToArray<TSource, TDestination>(this TSource[] array, int startIndex, int length, Converter<TSource, TDestination> selector)
+        {
+            ThrowIfNull(array, nameof(array));
+            ThrowIfNull(selector, nameof(selector));
+            ThrowOnInvalidCopyToArrayOperation(array, startIndex, length, nameof(array), nameof(startIndex));
+
+            var result = new TDestination[array.Length];
+
+            for (int i = 0; i < length; i++)
+
+                result[i + startIndex] = selector(array[i]);
+
+            return result;
+        }
+
+#if CS7
+        public static TDestination[] ToArray<TSource, TDestination>(this System.Collections.Generic.IReadOnlyList<TSource> list, Converter<TSource, TDestination> selector) => ToArray(list, 0, list.Count, selector);
+
+        public static TDestination[] ToArray<TSource, TDestination>(this System.Collections.Generic.IReadOnlyList<TSource> list, int startIndex, int length, Converter<TSource, TDestination> selector)
+        {
+            ThrowIfNull(list, nameof(list));
+            ThrowIfNull(selector, nameof(selector));
+            ThrowOnInvalidCopyToArrayOperation(list, startIndex, length, nameof(list), nameof(startIndex));
+
+            var result = new TDestination[list.Count];
+
+            for (int i = 0; i < length; i++)
+
+                result[i + startIndex] = selector(list[i]);
+
+            return result;
+        }
+#endif
+
+        static void Append(object _value, ref StringBuilder stringBuilder, in bool parseStrings, in bool parseSubEnumerables)
         {
             ThrowIfNull(stringBuilder, nameof(stringBuilder));
 
@@ -530,177 +559,23 @@ namespace WinCopies.Collections
         }
 
         /// <summary>
-        /// Returns the first item, if any, from <typeparamref name="T"/> in a given <see cref="IEnumerable"/>.
+        /// Iterates through a given <see cref="System.Collections.IEnumerable"/> and tries to convert the items to a given generic type parameter. If an item cannot be converted, it is ignored in the resulting enumerable.
         /// </summary>
-        /// <typeparam name="T">The type of the item to return.</typeparam>
-        /// <param name="enumerable">The <see cref="IEnumerable"/> in which to look for the first item of the given type.</param>
-        /// <returns>The first item, if any, from <typeparamref name="T"/> in <paramref name="enumerable"/> or the default value for <typeparamref name="T"/> if none value was found.</returns>
-        /// <seealso cref="LastOrDefault{T}(IEnumerable)"/>
-        /// <seealso cref="FirstOrDefault{T}(IEnumerable, in Predicate{T})"/>
-        /// <seealso cref="LastOrDefault{T}(IEnumerable, in Predicate{T})"/>
-        public static T FirstOrDefault<T>(this IEnumerable enumerable)
-        {
-            ThrowIfNull(enumerable, nameof(enumerable));
-
-            foreach (object item in enumerable)
-
-                if (item is T _item) return _item;
-
-            return default;
-        }
+        /// <typeparam name="T">The generic type parameter for the resulting enumerable. Only the items that can be converted to this type will be present in the resulting enumerable.</typeparam>
+        /// <param name="enumerable">The source enumerable.</param>
+        /// <returns>An enumerable containing all the items from <paramref name="enumerable"/> that could be converted to <typeparamref name="T"/>.</returns>
+        /// <seealso cref="To{T}(System.Collections.IEnumerable)"/>
+        public static System.Collections.Generic.IEnumerable<T> As<T>(this System.Collections.IEnumerable enumerable) => new Enumerable<T>(() => new TypeConverterEnumerator<T>(enumerable));
 
         /// <summary>
-        /// Returns the first item, if any, from <typeparamref name="T"/> and that validates a given predicate in a given <see cref="IEnumerable"/>.
+        /// Iterates through a given <see cref="System.Collections.IEnumerable"/> and directly converts the items to a given generic type parameter. An <see cref="InvalidCastException"/> is thrown when an item cannot be converted.
         /// </summary>
-        /// <typeparam name="T">The type of the item to return.</typeparam>
-        /// <param name="enumerable">The <see cref="IEnumerable"/> in which to look for the first item of the given type.</param>
-        /// <param name="predicate">The predicate to validate.</param>
-        /// <returns>The first item, if any, from <typeparamref name="T"/> in <paramref name="enumerable"/> or the default value for <typeparamref name="T"/> if none value was found.</returns>
-        /// <seealso cref="LastOrDefault{T}(IEnumerable, in Predicate{T})"/>
-        /// <seealso cref="FirstOrDefault{T}(IEnumerable)"/>
-        /// <seealso cref="LastOrDefault{T}(IEnumerable)"/>
-        public static T FirstOrDefault<T>(this IEnumerable enumerable, in Predicate<T> predicate)
-        {
-            ThrowIfNull(enumerable, nameof(enumerable));
-
-            foreach (object item in enumerable)
-
-                if (item is T _item && predicate(_item)) return _item;
-
-            return default;
-        }
-
-        /// <summary>
-        /// Returns the last item, if any, from <typeparamref name="T"/> in a given <see cref="IEnumerable"/>.
-        /// </summary>
-        /// <typeparam name="T">The type of the item to return.</typeparam>
-        /// <param name="enumerable">The <see cref="IEnumerable"/> in which to look for the last item of the given type.</param>
-        /// <returns>The last item, if any, from <typeparamref name="T"/> in <paramref name="enumerable"/> or the default value for <typeparamref name="T"/> if none value was found.</returns>
-        /// <seealso cref="FirstOrDefault{T}(IEnumerable)"/>
-        /// <seealso cref="FirstOrDefault{T}(IEnumerable, in Predicate{T})"/>
-        /// <seealso cref="LastOrDefault{T}(IEnumerable, in Predicate{T})"/>
-        public static T LastOrDefault<T>(this IEnumerable enumerable)
-        {
-            ThrowIfNull(enumerable, nameof(enumerable));
-
-            T value = default;
-
-            foreach (object item in enumerable)
-
-                if (item is T _item)
-
-                    value = _item;
-
-            return value;
-        }
-
-        /// <summary>
-        /// Returns the last item, if any, from <typeparamref name="T"/> and that validates a given predicate in a given <see cref="IEnumerable"/>.
-        /// </summary>
-        /// <typeparam name="T">The type of the item to return.</typeparam>
-        /// <param name="enumerable">The <see cref="IEnumerable"/> in which to look for the last item of the given type.</param>
-        /// <param name="predicate">The predicate to validate.</param>
-        /// <returns>The last item, if any, from <typeparamref name="T"/> in <paramref name="enumerable"/> or the default value for <typeparamref name="T"/> if none value was found.</returns>
-        /// <seealso cref="FirstOrDefault{T}(IEnumerable, in Predicate{T})"/>
-        /// <seealso cref="FirstOrDefault{T}(IEnumerable)"/>
-        /// <seealso cref="LastOrDefault{T}(IEnumerable)"/>
-        public static T LastOrDefault<T>(this IEnumerable enumerable, in Predicate<T> predicate)
-        {
-            ThrowIfNull(enumerable, nameof(enumerable));
-
-            T value = default;
-
-            foreach (object item in enumerable)
-
-                if (item is T _item && predicate(_item))
-
-                    value = _item;
-
-            return value;
-        }
-
-        public static T FirstOrDefault<T>(this IEnumerable enumerable, in Func<object, object> func)
-        {
-            ThrowIfNull(enumerable, nameof(enumerable));
-
-            foreach (object item in enumerable)
-
-                if (func(item) is T _item) return _item;
-
-            return default;
-        }
-
-        public static T LastOrDefault<T>(this IEnumerable enumerable, in Func<object, object> func)
-        {
-            ThrowIfNull(enumerable, nameof(enumerable));
-
-            T value = default;
-
-            foreach (object item in enumerable)
-
-                if (func(item) is T _item)
-
-                    value = _item;
-
-            return value;
-        }
-
-        public static TOut FirstOrDefault<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, in Func<TIn, object> func)
-        {
-            ThrowIfNull(enumerable, nameof(enumerable));
-
-            foreach (TIn item in enumerable)
-
-                if (func(item) is TOut _item) return _item;
-
-            return default;
-        }
-
-        public static TOut LastOrDefault<TIn, TOut>(this IEnumerable enumerable, in Func<TIn, object> func)
-        {
-            ThrowIfNull(enumerable, nameof(enumerable));
-
-            TOut value = default;
-
-            foreach (TIn item in enumerable)
-
-                if (func(item) is TOut _item)
-
-                    value = _item;
-
-            return value;
-        }
-
-        public static IEnumerable AppendValues(this IEnumerable enumerable, params IEnumerable[] newValues)
-        {
-            ThrowIfNull(enumerable, nameof(enumerable));
-
-            foreach (object obj in enumerable)
-
-                yield return obj;
-
-            foreach (IEnumerable _enumerable in newValues)
-
-                foreach (object _obj in _enumerable)
-
-                    yield return _obj;
-        }
-
-        public static System.Collections.Generic.IEnumerable<T> AppendValues<T>(this System.Collections.Generic.IEnumerable<T> enumerable, params System.Collections.Generic.IEnumerable<T>[] newValues)
-
-        {
-            ThrowIfNull(enumerable, nameof(enumerable));
-
-            foreach (T obj in enumerable)
-
-                yield return obj;
-
-            foreach (IEnumerable _enumerable in newValues)
-
-                foreach (T _obj in _enumerable)
-
-                    yield return _obj;
-        }
+        /// <typeparam name="T">The generic type parameter for the resulting enumerable. All items in <paramref name="enumerable"/> will be converted to this type.</typeparam>
+        /// <param name="enumerable">The source enumerable.</param>
+        /// <returns>An enumerable containing the same items as they from <paramref name="enumerable"/>, with these items converted to <typeparamref name="T"/>.</returns>
+        /// <exception cref="InvalidCastException">An item could not be converted.</exception>
+        /// <seealso cref="As{T}(System.Collections.IEnumerable)"/>
+        public static System.Collections.Generic.IEnumerable<T> To<T>(this System.Collections.IEnumerable enumerable) => enumerable. SelectConverter( value => (T)value);
     }
 }
 

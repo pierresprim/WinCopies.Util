@@ -23,7 +23,7 @@ namespace WinCopies.Collections.DotNetFix
 
         object Dequeue();
 
-#if !WinCopies2
+#if WinCopies3
         bool TryDequeue(out object result);
 #endif
     }
@@ -32,7 +32,7 @@ namespace WinCopies.Collections.DotNetFix
     {
         private SimpleLinkedListNode _lastItem;
 
-#if WinCopies2
+#if !WinCopies3
         public new bool IsReadOnly => base.IsReadOnly;
 
         public new uint Count => base.Count;

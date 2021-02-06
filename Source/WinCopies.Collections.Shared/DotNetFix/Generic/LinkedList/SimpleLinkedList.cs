@@ -18,20 +18,20 @@
 namespace WinCopies.Collections.DotNetFix.Generic
 {
     public interface ISimpleLinkedListNode<T>
-#if !WinCopies2
+#if WinCopies3
         : ISimpleLinkedListNode
 #endif
     {
         new T Value { get; }
 
-#if WinCopies2
+#if !WinCopies3
         new ISimpleLinkedListNode<T> NextNode { get; }
 #else
         new ISimpleLinkedListNode<T> Next { get; }
 #endif
     }
 
-#if !WinCopies2
+#if WinCopies3
     public interface ISimpleLinkedListBase<T>
     {
         T Peek();
@@ -41,13 +41,13 @@ namespace WinCopies.Collections.DotNetFix.Generic
 #endif
 
     public interface ISimpleLinkedList<T> :
-#if WinCopies2
+#if !WinCopies3
         IUIntCountable
 #else
         ISimpleLinkedListBase, ISimpleLinkedListBase<T>
 #endif
     {
-#if WinCopies2
+#if !WinCopies3
         T Peek();
 #else
         // Left empty.
@@ -120,7 +120,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
         public SimpleLinkedListNode<T> Next { get => IsCleared ? throw SimpleLinkedListNodeHelper.GetIsClearedException() : _next; internal set => _next = IsCleared ? throw SimpleLinkedListNodeHelper.GetIsClearedException() : value; }
 
         ISimpleLinkedListNode<T> ISimpleLinkedListNode<T>.
-#if WinCopies2
+#if !WinCopies3
             NextNode
 #else
             Next
@@ -138,7 +138,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
             IsCleared = true;
         }
 
-#if !WinCopies2
+#if WinCopies3
 #region ISimpleLinkedListNode implementation
         object ISimpleLinkedListNode.Value => Value;
 
@@ -151,19 +151,19 @@ namespace WinCopies.Collections.DotNetFix.Generic
     {
         public abstract T Peek();
 
-#if !WinCopies2
+#if WinCopies3
         public abstract bool TryPeek(out T result);
 #endif
     }
 
     public interface IEnumerableSimpleLinkedList<T> : ISimpleLinkedList<T>,
-#if WinCopies2
+#if !WinCopies3
         IUIntCountableEnumerable<T>
 #else
         IEnumerableSimpleLinkedListBase, System.Collections.Generic.IEnumerable<T>
 #endif
     {
-#if !WinCopies2
+#if WinCopies3
         void CopyTo(T[] array, int index);
 
         T[] ToArray();

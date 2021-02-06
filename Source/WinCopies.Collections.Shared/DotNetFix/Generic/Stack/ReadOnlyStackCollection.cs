@@ -23,7 +23,7 @@ using System.Collections.Generic;
 
 namespace WinCopies.Collections.DotNetFix
 {
-#if !WinCopies2
+#if WinCopies3
     namespace Generic
     {
 #endif
@@ -32,7 +32,7 @@ namespace WinCopies.Collections.DotNetFix
         public class ReadOnlyStackCollection<T> : System.Collections.Generic.IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection
         {
             protected
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.Stack
 #else
 IEnumerableStack
@@ -41,14 +41,14 @@ IEnumerableStack
             { get; }
 
             public
-#if WinCopies2
+#if !WinCopies3
             int
 #else
 uint
 #endif
             Count => InnerStack.Count;
 
-#if !WinCopies2
+#if WinCopies3
             int ICollection.Count => (int)Count;
 
             int IReadOnlyCollection<T>.Count => (int)Count;
@@ -61,7 +61,7 @@ uint
             object ICollection.SyncRoot => ((ICollection)InnerStack).SyncRoot;
 
             public ReadOnlyStackCollection(in
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.Stack
 #else
             IEnumerableStack
@@ -90,7 +90,7 @@ uint
 
             System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerStack).GetEnumerator();
         }
-#if !WinCopies2
+#if WinCopies3
     }
 #endif
 }

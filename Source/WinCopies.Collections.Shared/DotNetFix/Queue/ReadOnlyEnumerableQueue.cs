@@ -19,7 +19,7 @@
 
 using System;
 
-#if WinCopies2
+#if !WinCopies3
 using WinCopies.Util;
 #endif
 
@@ -29,7 +29,7 @@ namespace WinCopies.Collections.DotNetFix
 {
     [Serializable]
     public class ReadOnlyEnumerableQueue : ReadOnlySimpleLinkedList,
-#if WinCopies2
+#if !WinCopies3
             IEnumerableStack,
 #endif
             IEnumerableQueue
@@ -37,11 +37,11 @@ namespace WinCopies.Collections.DotNetFix
         private readonly IEnumerableQueue _queue;
 
         public sealed override uint Count =>
-#if WinCopies2
+#if !WinCopies3
                 ((IUIntCountable)
 #endif
                 _queue
-#if WinCopies2
+#if !WinCopies3
                 )
 #endif
                 .Count;
@@ -51,7 +51,7 @@ namespace WinCopies.Collections.DotNetFix
         public sealed override object Peek() => _queue.Peek();
 
         public void CopyTo(Array array, int arrayIndex) =>
-#if WinCopies2
+#if !WinCopies3
                 WinCopies.Util.Extensions
 #else
             EnumerableExtensions
@@ -60,7 +60,7 @@ namespace WinCopies.Collections.DotNetFix
 
         public object[] ToArray() => _queue.ToArray();
 
-#if WinCopies2
+#if !WinCopies3
         void IStack.Push(object item) => throw GetReadOnlyListOrCollectionException();
 
         object IStack.Pop() => throw GetReadOnlyListOrCollectionException();
@@ -70,7 +70,7 @@ namespace WinCopies.Collections.DotNetFix
 
         object IQueue.Dequeue() => throw GetReadOnlyListOrCollectionException();
 
-#if !WinCopies2
+#if WinCopies3
         public sealed override bool TryPeek(out object result) => TryPeek(out result);
 
         bool IQueue.TryDequeue(out object result)

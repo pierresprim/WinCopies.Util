@@ -19,7 +19,7 @@ using System;
 using System.Collections;
 
 using static WinCopies
-#if WinCopies2
+#if !WinCopies3
     .Util.Util;
 
 using static WinCopies.Util.ThrowHelper;
@@ -96,11 +96,11 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
         System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-#if WinCopies2
+#if !WinCopies3
         [Serializable]
 #endif
         public sealed class Enumerator :
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.IEnumerator<T>, WinCopies.Util.DotNetFix.IDisposable
 #else
 WinCopies.Collections.Generic.Enumerator<T>
@@ -110,7 +110,7 @@ WinCopies.Collections.Generic.Enumerator<T>
             private ISimpleLinkedListNode<T> _currentNode;
             private readonly uint _version;
 
-#if WinCopies2
+#if !WinCopies3
             private T _current;
 
             public T Current => IsDisposed ? throw GetExceptionForDispose(false) : _current;
@@ -122,7 +122,10 @@ WinCopies.Collections.Generic.Enumerator<T>
             private bool _first = true;
 
             public override bool? IsResetSupported => true;
-
+            
+            /// <summary>
+            /// When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            /// </summary>
             protected override T CurrentOverride => _currentNode.Value;
 #endif
 
@@ -132,14 +135,14 @@ WinCopies.Collections.Generic.Enumerator<T>
 
                 _version = queue.EnumerableVersion;
 
-#if WinCopies2
+#if !WinCopies3
                 Reset();
 #else
                 ResetOverride();
 #endif
             }
 
-#if WinCopies2
+#if !WinCopies3
             public void Reset()
             {
                 if (IsDisposed)
@@ -158,7 +161,7 @@ WinCopies.Collections.Generic.Enumerator<T>
                 _currentNode = _queue._queue.FirstItem;
             }
 
-#if WinCopies2
+#if !WinCopies3
             public bool MoveNext()
             {
                 if (IsDisposed)
@@ -170,7 +173,7 @@ WinCopies.Collections.Generic.Enumerator<T>
 #endif
                 ThrowIfVersionHasChanged(_queue.EnumerableVersion, _version);
 
-#if WinCopies2
+#if !WinCopies3
                 if (_currentNode == null)
 
                     return false;
@@ -201,7 +204,7 @@ WinCopies.Collections.Generic.Enumerator<T>
 #endif
             }
 
-#if WinCopies2
+#if !WinCopies3
             private void Dispose(bool disposing)
             {
                 if (IsDisposed)

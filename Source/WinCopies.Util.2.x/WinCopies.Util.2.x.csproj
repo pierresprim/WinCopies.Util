@@ -11,18 +11,24 @@
     <Description>WinCopies framework utilities</Description>
     <Copyright>Copyright © 2020 Pierre Sprimont</Copyright>
     <PackageTags>WinCopies</PackageTags>
-    <VersionPrefix>2.6.1.1</VersionPrefix>
+    <VersionPrefix>2.7</VersionPrefix>
     <!--<VersionSuffix>preview</VersionSuffix>-->
-    <AssemblyVersion>2.6.1.1</AssemblyVersion>
-    <FileVersion>2.6.1.1</FileVersion>
+    <AssemblyVersion>2.7</AssemblyVersion>
+    <FileVersion>2.7</FileVersion>
     <DefineConstants>WinCopies2;$(DefineConstants)</DefineConstants>
     <RootNamespace>WinCopies.Util</RootNamespace>
+    <PackageIcon>WinCopies.ico</PackageIcon>
   </PropertyGroup>
 
   <Import Project="..\WinCopies.Util.Shared\WinCopies.Util.Shared.projitems" Label="Shared" />
   <Import Project="..\WinCopies.Collections.Shared\WinCopies.Collections.Shared.projitems" Label="Shared" />
+  <Import Project="..\WinCopies.Util.Extensions.Shared\WinCopies.Util.Extensions.Shared.projitems" Label="Shared" />
 
   <ItemGroup>
+    <None Include="..\..\..\WinCopies-framework\Source\WinCopies.ico">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
     <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
 

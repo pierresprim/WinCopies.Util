@@ -19,13 +19,13 @@ using System;
 using System.Globalization;
 using System.Runtime.Serialization;
 using WinCopies
-#if WinCopies2
+#if !WinCopies3
     .Util
 #endif
     .Resources;
 
 namespace WinCopies
-#if WinCopies2
+#if !WinCopies3
 .Util
 #endif
 {

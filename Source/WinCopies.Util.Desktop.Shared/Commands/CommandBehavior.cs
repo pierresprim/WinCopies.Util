@@ -30,7 +30,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 
-#if WinCopies2
+#if !WinCopies3
 namespace WinCopies.Util.Commands
 #else
 namespace WinCopies.Commands
@@ -201,11 +201,13 @@ namespace WinCopies.Commands
         private static CommandBehaviorBinding FetchOrCreateBinding(DependencyObject d)
         {
             CommandBehaviorBinding binding = GetBehavior(d);
+
             if (binding == null)
             {
                 binding = new CommandBehaviorBinding();
                 SetBehavior(d, binding);
             }
+
             return binding;
         }
         #endregion

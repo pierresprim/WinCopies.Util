@@ -25,7 +25,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
         public sealed override uint Count => _stack.Count;
 
-#if !WinCopies2
+#if WinCopies3
         public bool HasItems => _stack.HasItems;
 #endif
 
@@ -34,7 +34,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
         public sealed override T Peek() => _stack.Peek();
 
         void
-#if WinCopies2
+#if !WinCopies3
 IStack
 #else
             IStackBase
@@ -42,18 +42,18 @@ IStack
             <T>.Push(T item) => throw GetReadOnlyListOrCollectionException();
 
         T
-#if WinCopies2
+#if !WinCopies3
 IStack
 #else
             IStackBase
 #endif
             <T>.Pop() => throw GetReadOnlyListOrCollectionException();
 
-#if !WinCopies2
+#if WinCopies3
         public sealed override bool TryPeek(out T result) => _stack.TryPeek(out result);
 
         bool
-#if WinCopies2
+#if !WinCopies3
 IStack
 #else
             IStackBase

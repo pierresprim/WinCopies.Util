@@ -16,38 +16,60 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using WinCopies.Extensions;
 
-#if !WinCopies2
+#if WinCopies3
+using WinCopies.Collections.Generic;
+using WinCopies.Linq;
+#else
 using WinCopies.Collections;
 #endif
 
-#if WinCopies2
-namespace WinCopies.Util
-#else
 namespace WinCopies
+#if !WinCopies3
+    .Util
 #endif
 {
     public class InterfaceDataTemplateSelector : DataTemplateSelector
     {
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
-            if (item == null || !(container is FrameworkElement containerElement))
+            if (item == null ||
+#if !CS9
+                !(
+#endif
+                container is
+#if CS9
+                not
+#endif
+                FrameworkElement containerElement
+#if !CS9
+                )
+#endif
+                )
 
                 return base.SelectTemplate(item, container);
 
             Type itemType = item.GetType();
 
-            return System.Linq.Enumerable.Repeat(itemType, 1).Concat(itemType.GetInterfaces())
+#if DEBUG
+            foreach (Type i in itemType.GetDirectInterfaces(true, true))
+
+                Debug.WriteLine(item.GetType().ToString() + " " + i.Name);
+#endif
+
+            return System.Linq.Enumerable.Repeat(itemType, 1).Concat(itemType.GetDirectInterfaces(true, true))
                     .FirstOrDefault<DataTemplate>(t => containerElement.TryFindResource(new DataTemplateKey(t))) ?? base.SelectTemplate(item, container);
         }
     }
 
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     public
-#if !WinCopies2
+#if WinCopies3
         sealed
 #endif
         class TypeForDataTemplateAttribute : Attribute

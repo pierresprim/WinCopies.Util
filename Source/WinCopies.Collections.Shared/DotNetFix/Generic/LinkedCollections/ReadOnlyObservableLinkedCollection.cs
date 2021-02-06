@@ -23,7 +23,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 
 using static WinCopies
-#if WinCopies2
+#if !WinCopies3
     .Util.Util;
 
 using System.Runtime.Serialization;
@@ -35,7 +35,7 @@ using WinCopies.Util;
 
 namespace WinCopies.Collections.DotNetFix
 {
-#if !WinCopies2
+#if WinCopies3
     namespace Generic
     {
 #endif
@@ -46,14 +46,14 @@ namespace WinCopies.Collections.DotNetFix
             protected ObservableLinkedCollection<T> InnerLinkedCollection { get; }
 
             public
-#if WinCopies2
+#if !WinCopies3
 int
 #else
                 uint
 #endif
                 Count => InnerLinkedCollection.Count;
 
-#if !WinCopies2
+#if WinCopies3
             int ICollection.Count => (int)Count;
 
             int ICollection<T>.Count => (int)Count;
@@ -89,19 +89,19 @@ int
             protected virtual void OnCollectionChanged(LinkedCollectionChangedEventArgs<T> e) => CollectionChanged?.Invoke(this, e);
 
             protected void RaiseCollectionChangedEvent(in LinkedCollectionChangedAction action, in
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
 #endif
                 <T> addedBefore, in
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
 #endif
                 <T> addedAfter, in
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
@@ -124,7 +124,7 @@ int
 
             bool ICollection<T>.Remove(T item) => InnerLinkedCollection.Remove(item);
         }
-#if !WinCopies2
+#if WinCopies3
     }
 #endif
 }

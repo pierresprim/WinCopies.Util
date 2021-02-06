@@ -1230,9 +1230,6 @@
             <returns>The object value to set on the property where the extension is applied.</returns>
         </member>
         <member name="T:WinCopies.Util.Data.EnumToBooleanConverter">
-            <summary>
-            Data converter for checking wheter an enum equals a parameter.
-            </summary>
             <remarks>This class can also work for numeric types (int, ...)</remarks>
         </member>
         <member name="M:WinCopies.Util.Data.EnumToBooleanConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
@@ -1243,7 +1240,10 @@
             <param name="targetType">The type of the binding target property. This type must be <see cref="T:System.Boolean"/>.</param>
             <param name="parameter">The converter parameter to use. This represents the value to compare with the value.</param>
             <param name="culture">The culture to use in the converter.</param>
-            <returns></returns>
+            <returns>A value indicating whether <paramref name="value"/> is equal to <paramref name="parameter"/>.</returns>
+        </member>
+        <member name="T:WinCopies.Util.Data.EnumToReversedBooleanConverter">
+            <remarks>This class can also work for numeric types (int, ...)</remarks>
         </member>
         <member name="T:WinCopies.Util.Data.IsNullConverter">
             <summary>
@@ -1485,6 +1485,39 @@
             <summary>
             Provides data for the <see cref="E:System.ComponentModel.INotifyPropertyChanged.PropertyChanged"/> event.
             </summary>
+        </member>
+        <member name="M:WinCopies.Util.Data.ValidationRule`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Windows.Controls.ValidationRule"/> class.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.Data.ValidationRule`1.#ctor(System.Windows.Controls.ValidationStep,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Windows.Controls.ValidationRule"/> class with the specified validation step and a value that indicates whether the validation rule runs when the target is updated.
+            </summary>
+            <param name="validationStep">One of the enumeration values that specifies when the validation rule runs.</param>
+            <param name="validatesOnTargetUpdated"><see langword="true"/> to have the validation rule run when the target of the <see cref="T:System.Windows.Data.Binding"/> is updated; otherwise, <see langword="false"/>.</param>
+        </member>
+        <member name="P:WinCopies.Util.Data.ValidationRule`1.AllowNullValueOverride">
+            <summary>
+            Gets a value indicating whether null values are allowed. When this property is set to <see langword="false"/>, validation will fail for null values.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.Data.ValidationRule`1.Validate(`0,System.Globalization.CultureInfo)">
+            <summary>
+            When overridden in a derived class, performs validation checks on a value.
+            </summary>
+            <param name="value">The value from the binding target to check.</param>
+            <param name="cultureInfo">The culture to use in this rule.</param>
+            <returns>A <see cref="T:System.Windows.Controls.ValidationResult"/> object.</returns>
+        </member>
+        <member name="M:WinCopies.Util.Data.ValidationRule`1.Validate(System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Performs validation checks on a value.
+            </summary>
+            <param name="value">The value from the binding target to check.</param>
+            <param name="cultureInfo">The culture to use in this rule.</param>
+            <returns>A <see cref="T:System.Windows.Controls.ValidationResult"/> object.</returns>
         </member>
         <member name="T:WinCopies.Util.Data.IValueObject">
             <summary>
@@ -2367,6 +2400,16 @@
             </summary>
             <remarks><para>The base class calls this method when the list is being cleared. This implementation raises the <see cref="E:WinCopies.Collections.INotifyCollectionChanging.CollectionChanging"/> and the <see cref="E:System.Collections.Specialized.INotifyCollectionChanged.CollectionChanged"/> events.</para>
             <para>For more information, see the <see cref="M:System.Collections.ObjectModel.Collection`1.ClearItems"/> method of the <see cref="T:System.Collections.ObjectModel.Collection`1"/> base class.</para></remarks>
+        </member>
+        <member name="T:WinCopies.Markup.TrueValue">
+            <summary>
+            Represents a markup extension that always returns the <see langword="true"/> value.
+            </summary>
+        </member>
+        <member name="T:WinCopies.Markup.FalseValue">
+            <summary>
+            Represents a markup extension that always returns the <see langword="false"/> value.
+            </summary>
         </member>
     </members>
 </doc>

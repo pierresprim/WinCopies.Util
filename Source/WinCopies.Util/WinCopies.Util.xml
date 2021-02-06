@@ -136,7 +136,7 @@
             <param name="y">Second parameter to compare</param>
             <returns><see langword="true"/> if x is equal to y, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="T:WinCopies.Collections.EqualityComparison`1">
+        <member name="T:WinCopies.Collections.Generic.EqualityComparison`1">
             <summary>
             Delegate for a generic equality comparison.
             </summary>
@@ -238,6 +238,49 @@
             The value of the argument that failed.
             </summary>
         </member>
+        <member name="T:WinCopies.Result">
+            <summary>
+            This enum is designed as an extension of the <see cref="T:System.Boolean"/> type.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Result.Error">
+            <summary>
+            An error as occurred.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Result.Canceled">
+            <summary>
+            The operation has been canceled.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Result.None">
+            <summary>
+            The operation did not return any particular value. This value is the same as returning a <see langword="null"/> <see cref="T:System.Nullable`1"/>.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Result.False">
+            <summary>
+            The operation returned False. This value is the same number as <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Result.True">
+            <summary>
+            The operation returned True. This value is the same number as <see langword="true"/>.
+            </summary>
+        </member>
+        <member name="T:WinCopies.Predicate">
+            <summary>
+            Delegate for a non-generic predicate.
+            </summary>
+            <param name="value">The value to test</param>
+            <returns><see langword="true"/> if the predicate success, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="T:WinCopies.Func">
+            <summary>
+            Represents a delegate that returns an object.
+            </summary>
+            <returns>Any object.</returns>
+        </member>
         <member name="M:WinCopies.InvalidArgumentException.#ctor">
             <summary>
             Initializes a new instance of the <see cref="T:WinCopies.InvalidArgumentException"/> class.
@@ -305,6 +348,24 @@
             <returns>An <see cref="T:System.ArgumentException"/> with the given argument name.</returns>
         </member>
         <member name="M:WinCopies.ThrowHelper.GetExceptionForInvalidType``1(System.Type@,System.String@)">
+            <summary>
+            Returns an <see cref="T:System.ArgumentException"/> for the given object and argument name.
+            </summary>
+            <typeparam name="T">The type to check.</typeparam>
+            <param name="objType">The type of the object of the exception.</param>
+            <param name="argumentName">The argument name for the <see cref="T:System.Exception"/> that is returned.</param>
+            <returns>An <see cref="T:System.ArgumentException"/> with the given argument name.</returns>
+        </member>
+        <member name="M:WinCopies.ThrowHelper.GetExceptionForInvalidType(System.String@,System.String@,System.Type@)">
+            <summary>
+            Returns an <see cref="T:System.ArgumentException"/> for the given object and argument name.
+            </summary>
+            <typeparam name="T">The type to check.</typeparam>
+            <param name="objTypeName">The type name of the object of the exception.</param>
+            <param name="argumentName">The argument name for the <see cref="T:System.Exception"/> that is returned.</param>
+            <returns>An <see cref="T:System.ArgumentException"/> with the given argument name.</returns>
+        </member>
+        <member name="M:WinCopies.ThrowHelper.GetExceptionForInvalidType(System.Type@,System.String@,System.Type@)">
             <summary>
             Returns an <see cref="T:System.ArgumentException"/> for the given object and argument name.
             </summary>
@@ -413,12 +474,12 @@
             <param name="obj">The object or value retrieved by the current iteration.</param>
             <returns><see langword="true"/> to break the loop; otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="T:WinCopies.Extensions">
+        <member name="T:WinCopies.Util.Extensions">
             <summary>
             Provides some static extension methods.
             </summary>
         </member>
-        <member name="M:WinCopies.Extensions.Is(System.Object,System.Boolean@,System.Type[])">
+        <member name="M:WinCopies.Util.Extensions.Is(System.Object,System.Boolean@,System.Type[])">
             <summary>
             Checks if the current object is assignable from at least one type of a given <see cref="T:System.Type"/> array.
             </summary>
@@ -427,21 +488,115 @@
             <param name="types">The types to compare</param>
             <returns><see langword="true"/> if the current object is assignable from at least one of the given types, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Extensions.GetNumValue(System.Enum)">
+        <member name="M:WinCopies.Util.Extensions.SetProperty(System.Object,System.String,System.String,System.Object,System.Type,System.Boolean@,System.Reflection.BindingFlags,System.String,System.Boolean@,System.Boolean@,WinCopies.FieldValidateValueCallback,System.Boolean@,WinCopies.FieldValueChangedCallback)">
+            <summary>
+            Sets a value to a property if the new value is different.
+            </summary>
+            <param name="obj">The object in which to set the property.</param>
+            <param name="propertyName">The name of the given property.</param>
+            <param name="fieldName">The field related to the property.</param>
+            <param name="newValue">The value to set.</param>
+            <param name="declaringType">The actual declaring type of the property.</param>
+            <param name="throwIfReadOnly">Whether to throw if the given property is read-only.</param>
+            <param name="bindingFlags">The <see cref="T:System.Reflection.BindingFlags"/> used to get the property.</param>
+            <param name="paramName">The parameter from which the value was passed to this method.</param>
+            <param name="setOnlyIfNotNull">Whether to set only if the given value is not null.</param>
+            <param name="throwIfNull">Whether to throw if the given value is null.</param>
+            <param name="validateValueCallback">The callback used to validate the given value. You can leave this parameter to null if you don't want to perform validation.</param>
+            <param name="throwIfValidationFails">Whether to throw if the validation of <paramref name="validateValueCallback"/> fails.</param>
+            <param name="valueChangedCallback">The callback used to perform actions after the property is set. You can leave this parameter to null if you don't want to perform actions after the property is set.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether the setting succeeded and the old value of the given property (or <see langword="null"/> if the property does not contain any value nor reference).</returns>
+            <exception cref="T:System.InvalidOperationException">The declaring types of the given property and field name doesn't correspond. OR The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
+            <exception cref="T:System.ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
+            <exception cref="T:System.Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="T:System.ArgumentException"/> otherwise.</exception>
+        </member>
+        <member name="M:WinCopies.Util.Extensions.SetProperty(System.Object,System.String,System.Object,System.Type,System.Boolean@,System.Reflection.BindingFlags,System.String,System.Boolean@,System.Boolean@,WinCopies.PropertyValidateValueCallback,System.Boolean@,WinCopies.PropertyValueChangedCallback)">
+            <summary>
+            Sets a value to a property if the new value is different.
+            </summary>
+            <param name="obj">The object in which to set the property.</param>
+            <param name="propertyName">The name of the given property.</param>
+            <param name="newValue">The value to set.</param>
+            <param name="declaringType">The actual declaring type of the property.</param>
+            <param name="throwIfReadOnly">Whether to throw if the given property is read-only.</param>
+            <param name="bindingFlags">The <see cref="T:System.Reflection.BindingFlags"/> used to get the property.</param>
+            <param name="paramName">The parameter from which the value was passed to this method.</param>
+            <param name="setOnlyIfNotNull">Whether to set only if the given value is not null.</param>
+            <param name="throwIfNull">Whether to throw if the given value is null.</param>
+            <param name="validateValueCallback">The callback used to validate the given value. You can leave this parameter to null if you don't want to perform validation.</param>
+            <param name="throwIfValidationFails">Whether to throw if the validation of <paramref name="validateValueCallback"/> fails.</param>
+            <param name="valueChangedCallback">The callback used to perform actions after the property is set. You can leave this parameter to null if you don't want to perform actions after the property is set.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether the setting succeeded and the old value of the given property (or <see langword="null"/> if the property does not contain any value nor reference).</returns>
+            <exception cref="T:System.InvalidOperationException">The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
+            <exception cref="T:System.ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
+            <exception cref="T:System.Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="T:System.ArgumentException"/> otherwise.</exception>
+        </member>
+        <member name="M:WinCopies.Util.Extensions.DisposeAndSetProperty(System.Object,System.String,System.String,WinCopies.IDisposable,System.Type,System.Boolean@,System.Reflection.BindingFlags,System.String,System.Boolean@,System.Boolean@,WinCopies.FieldValidateValueCallback,System.Boolean@,WinCopies.FieldValueChangedCallback)">
+            <summary>
+            Disposes an old value of a property then sets a new value to the given property if the new value is different.
+            </summary>
+            <param name="obj">The object in which to set the property.</param>
+            <param name="propertyName">The name of the given property.</param>
+            <param name="fieldName">The field related to the property.</param>
+            <param name="newValue">The value to set.</param>
+            <param name="declaringType">The actual declaring type of the property.</param>
+            <param name="throwIfReadOnly">Whether to throw if the given property is read-only.</param>
+            <param name="bindingFlags">The <see cref="T:System.Reflection.BindingFlags"/> used to get the property.</param>
+            <param name="paramName">The parameter from which the value was passed to this method.</param>
+            <param name="setOnlyIfNotNull">Whether to set only if the given value is not null.</param>
+            <param name="throwIfNull">Whether to throw if the given value is null.</param>
+            <param name="validateValueCallback">The callback used to validate the given value. You can leave this parameter to null if you don't want to perform validation.</param>
+            <param name="throwIfValidationFails">Whether to throw if the validation of <paramref name="validateValueCallback"/> fails.</param>
+            <param name="valueChangedCallback">The callback used to perform actions after the property is set. You can leave this parameter to null if you don't want to perform actions after the property is set.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether the setting succeeded and the old value of the given property (or <see langword="null"/> if the property does not contain any value nor reference).</returns>
+            <exception cref="T:System.InvalidOperationException">The declaring types of the given property and field name doesn't correspond. OR The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
+            <exception cref="T:System.ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
+            <exception cref="T:System.Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="T:System.ArgumentException"/> otherwise.</exception>
+        </member>
+        <member name="M:WinCopies.Util.Extensions.DisposeAndSetProperty(System.Object,System.String,WinCopies.IDisposable,System.Type,System.Boolean@,System.Reflection.BindingFlags,System.String,System.Boolean@,System.Boolean@,WinCopies.PropertyValidateValueCallback,System.Boolean@,WinCopies.PropertyValueChangedCallback)">
+            <summary>
+            Disposes an old value of a property then sets a new value to the given property if the new value is different.
+            </summary>
+            <param name="obj">The object in which to set the property.</param>
+            <param name="propertyName">The name of the given property.</param>
+            <param name="newValue">The value to set.</param>
+            <param name="declaringType">The actual declaring type of the property.</param>
+            <param name="throwIfReadOnly">Whether to throw if the given property is read-only.</param>
+            <param name="bindingFlags">The <see cref="T:System.Reflection.BindingFlags"/> used to get the property.</param>
+            <param name="paramName">The parameter from which the value was passed to this method.</param>
+            <param name="setOnlyIfNotNull">Whether to set only if the given value is not null.</param>
+            <param name="throwIfNull">Whether to throw if the given value is null.</param>
+            <param name="validateValueCallback">The callback used to validate the given value. You can leave this parameter to null if you don't want to perform validation.</param>
+            <param name="throwIfValidationFails">Whether to throw if the validation of <paramref name="validateValueCallback"/> fails.</param>
+            <param name="valueChangedCallback">The callback used to perform actions after the property is set. You can leave this parameter to null if you don't want to perform actions after the property is set.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether the setting succeeded and the old value of the given property (or <see langword="null"/> if the property does not contain any value nor reference).</returns>
+            <exception cref="T:System.InvalidOperationException">The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
+            <exception cref="T:System.ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
+            <exception cref="T:System.Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="T:System.ArgumentException"/> otherwise.</exception>
+        </member>
+        <member name="M:WinCopies.Util.Extensions.GetNumValue(System.Enum)">
             <summary>
             Gets the numeric value for an enum.
             </summary>
             <param name="enum">The enum for which get the corresponding numeric value.</param>
             <returns>The numeric value corresponding to this enum, in the given enum type underlying type.</returns>
         </member>
-        <member name="M:WinCopies.Extensions.GetNumValue``1(``0)">
+        <member name="M:WinCopies.Util.Extensions.GetNumValue``1(``0)">
             <summary>
             Gets the numeric value for an enum.
             </summary>
             <param name="enum">The enum for which get the corresponding numeric value.</param>
             <returns>The numeric value corresponding to this enum, in the given enum type underlying type.</returns>
         </member>
-        <member name="M:WinCopies.Extensions.Between(System.SByte,System.SByte@,System.SByte@)">
+        <member name="M:WinCopies.Util.Extensions.HasMultipleFlags(System.Enum)">
+            <summary>
+            Determines whether an enum has multiple flags.
+            </summary>
+            <param name="flagsEnum">The enum to check.</param>
+            <returns><see langword="true"/> if <paramref name="flagsEnum"/> type has the <see cref="T:System.FlagsAttribute"/> and has multiple flags; otherwise, <see langword="false"/>.</returns>
+            <remarks><paramref name="flagsEnum"/> type must have the <see cref="T:System.FlagsAttribute"/>.</remarks>
+        </member>
+        <member name="M:WinCopies.Util.Extensions.Between(System.SByte,System.SByte@,System.SByte@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -450,7 +605,7 @@
             <param name="y">The right operand.</param>
             <returns><see langword="true"/> if <paramref name="b"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Extensions.Between(System.Byte,System.Byte@,System.Byte@)">
+        <member name="M:WinCopies.Util.Extensions.Between(System.Byte,System.Byte@,System.Byte@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -459,7 +614,7 @@
             <param name="y">The right operand.</param>
             <returns><see langword="true"/> if <paramref name="b"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Extensions.Between(System.Int16,System.Int16@,System.Int16@)">
+        <member name="M:WinCopies.Util.Extensions.Between(System.Int16,System.Int16@,System.Int16@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -468,7 +623,7 @@
             <param name="y">The right operand.</param>
             <returns><see langword="true"/> if <paramref name="s"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Extensions.Between(System.UInt16,System.UInt16@,System.UInt16@)">
+        <member name="M:WinCopies.Util.Extensions.Between(System.UInt16,System.UInt16@,System.UInt16@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -477,7 +632,7 @@
             <param name="y">The right operand.</param>
             <returns><see langword="true"/> if <paramref name="s"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Extensions.Between(System.Int32,System.Int32@,System.Int32@)">
+        <member name="M:WinCopies.Util.Extensions.Between(System.Int32,System.Int32@,System.Int32@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -486,7 +641,7 @@
             <param name="y">The right operand.</param>
             <returns><see langword="true"/> if <paramref name="i"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Extensions.Between(System.UInt32,System.UInt32@,System.UInt32@)">
+        <member name="M:WinCopies.Util.Extensions.Between(System.UInt32,System.UInt32@,System.UInt32@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -495,7 +650,7 @@
             <param name="y">The right operand.</param>
             <returns><see langword="true"/> if <paramref name="i"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Extensions.Between(System.Int64,System.Int64@,System.Int64@)">
+        <member name="M:WinCopies.Util.Extensions.Between(System.Int64,System.Int64@,System.Int64@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -504,7 +659,7 @@
             <param name="y">The right operand.</param>
             <returns><see langword="true"/> if <paramref name="l"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Extensions.Between(System.UInt64,System.UInt64@,System.UInt64@)">
+        <member name="M:WinCopies.Util.Extensions.Between(System.UInt64,System.UInt64@,System.UInt64@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -513,7 +668,7 @@
             <param name="y">The right operand.</param>
             <returns><see langword="true"/> if <paramref name="l"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Extensions.Between(System.Single,System.Single@,System.Single@)">
+        <member name="M:WinCopies.Util.Extensions.Between(System.Single,System.Single@,System.Single@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -522,7 +677,7 @@
             <param name="y">The right operand.</param>
             <returns><see langword="true"/> if <paramref name="f"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Extensions.Between(System.Double,System.Double@,System.Double@)">
+        <member name="M:WinCopies.Util.Extensions.Between(System.Double,System.Double@,System.Double@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -531,7 +686,7 @@
             <param name="y">The right operand.</param>
             <returns><see langword="true"/> if <paramref name="d"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Extensions.Between(System.Decimal,System.Decimal@,System.Decimal@)">
+        <member name="M:WinCopies.Util.Extensions.Between(System.Decimal,System.Decimal@,System.Decimal@)">
             <summary>
             Checks if a number is between two given numbers.
             </summary>
@@ -649,49 +804,6 @@
             </summary>
             <param name="info">The System.Runtime.Serialization.SerializationInfo that holds the serialized object data about the exception being thrown.</param>
             <param name="context">The System.Runtime.Serialization.StreamingContext that contains contextual information about the source or destination.</param>
-        </member>
-        <member name="T:WinCopies.Result">
-            <summary>
-            This enum is designed as an extension of the <see cref="T:System.Boolean"/> type.
-            </summary>
-        </member>
-        <member name="F:WinCopies.Result.Error">
-            <summary>
-            An error as occurred.
-            </summary>
-        </member>
-        <member name="F:WinCopies.Result.Canceled">
-            <summary>
-            The operation has been canceled.
-            </summary>
-        </member>
-        <member name="F:WinCopies.Result.None">
-            <summary>
-            The operation did not return any particular value. This value is the same as returning a <see langword="null"/> <see cref="T:System.Nullable`1"/>.
-            </summary>
-        </member>
-        <member name="F:WinCopies.Result.False">
-            <summary>
-            The operation returned False. This value is the same number as <see langword="false"/>.
-            </summary>
-        </member>
-        <member name="F:WinCopies.Result.True">
-            <summary>
-            The operation returned True. This value is the same number as <see langword="true"/>.
-            </summary>
-        </member>
-        <member name="T:WinCopies.Predicate">
-            <summary>
-            Delegate for a non-generic predicate.
-            </summary>
-            <param name="value">The value to test</param>
-            <returns><see langword="true"/> if the predicate success, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="T:WinCopies.Func">
-            <summary>
-            Represents a delegate that returns an object.
-            </summary>
-            <returns>Any object.</returns>
         </member>
         <member name="T:WinCopies.UtilHelpers">
             <summary>

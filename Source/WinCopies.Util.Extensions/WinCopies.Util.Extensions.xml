@@ -208,7 +208,7 @@
             <param name="predicate">The comparison predicate</param>
             <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Util.Extensions.ThrowHelper.ThrowIfNotValidFlagsEnumValue(System.Enum@,System.Boolean@,System.Boolean@)">
+        <member name="M:WinCopies.Extensions.ThrowHelper.ThrowIfNotValidFlagsEnumValue(System.Enum@,System.Boolean@,System.Boolean@)">
             <summary>
             Throws an <see cref="T:System.InvalidOperationException"/> if the enum value is not in the required enum value range.
             </summary>
@@ -217,10 +217,10 @@
             <param name="throwIfZero">Whether to throw if the given enum is zero.</param>
             <exception cref="T:System.ArgumentException"><paramref name="enum"/> does not have the <see cref="T:System.FlagsAttribute"/> and <paramref name="throwIfNotFlagsEnum"/> is set to <see langword="true"/>.</exception>
             <exception cref="T:WinCopies.InvalidEnumArgumentException"><paramref name="enum"/> is equal to zero and the <paramref name="throwIfZero"/> parameter is set to true or <paramref name="enum"/> is lesser than zero.</exception>
-            <seealso cref="M:WinCopies.Extensions.IsValidEnumValue(System.Enum)"/>
+            <seealso cref="!:WinCopies.Extensions.IsValidEnumValue(Enum)"/>
             <seealso cref="M:WinCopies.ThrowHelper.ThrowIfNotValidEnumValue(System.String@,System.Enum@)"/>
         </member>
-        <member name="M:WinCopies.Util.Extensions.ThrowHelper.ThrowIfNotValidFlagsEnumValue(System.Enum@,System.String@,System.Boolean@,System.Boolean@)">
+        <member name="M:WinCopies.Extensions.ThrowHelper.ThrowIfNotValidFlagsEnumValue(System.Enum@,System.String@,System.Boolean@,System.Boolean@)">
             <summary>
             Throws an <see cref="T:WinCopies.InvalidEnumArgumentException"/> if the enum value is not in the required enum value range.
             </summary>
@@ -230,9 +230,9 @@
             <param name="throwIfZero">Whether to throw if the given enum is zero.</param>
             <exception cref="T:System.ArgumentException"><paramref name="enum"/> does not have the <see cref="T:System.FlagsAttribute"/> and <paramref name="throwIfNotFlagsEnum"/> is set to <see langword="true"/>.</exception>
             <exception cref="T:WinCopies.InvalidEnumArgumentException"><paramref name="enum"/> is equal to zero and the <paramref name="throwIfZero"/> parameter is set to true or <paramref name="enum"/> is lesser than zero.</exception>
-            <seealso cref="M:WinCopies.Extensions.IsValidEnumValue(System.Enum)"/>
+            <seealso cref="!:WinCopies.Extensions.IsValidEnumValue(Enum)"/>
         </member>
-        <member name="M:WinCopies.Util.Extensions.UtilHelpers.GetIf(System.Object@,System.Object@,WinCopies.Collections.Comparison@,WinCopies.Func@,WinCopies.Func@,WinCopies.Func@)">
+        <member name="M:WinCopies.Extensions.UtilHelpers.GetIf(System.Object@,System.Object@,WinCopies.Collections.Comparison@,WinCopies.Func@,WinCopies.Func@,WinCopies.Func@)">
             <summary>
             Returns a value obtained by a <see cref="T:WinCopies.Func"/>, depending on the result of a comparison.
             </summary>
@@ -244,9 +244,9 @@
             <param name="greater">The <see cref="T:WinCopies.Func"/> that provides the value for <paramref name="x"/> is greater than <paramref name="y"/>.</param>
             <returns>A value obtained by a <see cref="T:WinCopies.Func"/>, depending on the result of a comparison.</returns>
             <exception cref="T:System.ArgumentNullException">One or more of the given <see cref="T:WinCopies.Func"/>s are <see langword="null"/>.</exception>
-            <remarks>See <see cref="M:WinCopies.Util.Extensions.UtilHelpers.GetIf``2(``0@,``0@,System.Comparison{``0}@,System.Func{``1}@,System.Func{``1}@,System.Func{``1}@)"/> for the generic version.</remarks>
+            <remarks>See <see cref="M:WinCopies.Extensions.UtilHelpers.GetIf``2(``0@,``0@,System.Comparison{``0}@,System.Func{``1}@,System.Func{``1}@,System.Func{``1}@)"/> for the generic version.</remarks>
         </member>
-        <member name="M:WinCopies.Util.Extensions.UtilHelpers.GetIf``2(``0@,``0@,System.Comparison{``0}@,System.Func{``1}@,System.Func{``1}@,System.Func{``1}@)">
+        <member name="M:WinCopies.Extensions.UtilHelpers.GetIf``2(``0@,``0@,System.Comparison{``0}@,System.Func{``1}@,System.Func{``1}@,System.Func{``1}@)">
             <summary>
             Returns a value obtained by a <see cref="T:WinCopies.Func"/>, depending on the result of a comparison.
             </summary>
@@ -258,7 +258,7 @@
             <param name="greater">The <see cref="T:WinCopies.Func"/> that provides the value for <paramref name="x"/> is greater than <paramref name="y"/>.</param>
             <returns>A value obtained by a <see cref="T:WinCopies.Func"/>, depending on the result of a comparison.</returns>
             <exception cref="T:System.ArgumentNullException">One or more of the given <see cref="T:WinCopies.Func"/>s are <see langword="null"/>.</exception>
-            <remarks>See <see cref="M:WinCopies.Util.Extensions.UtilHelpers.GetIf(System.Object@,System.Object@,WinCopies.Collections.Comparison@,WinCopies.Func@,WinCopies.Func@,WinCopies.Func@)"/> for the non-generic version.</remarks>
+            <remarks>See <see cref="M:WinCopies.Extensions.UtilHelpers.GetIf(System.Object@,System.Object@,WinCopies.Collections.Comparison@,WinCopies.Func@,WinCopies.Func@,WinCopies.Func@)"/> for the non-generic version.</remarks>
         </member>
     </members>
 </doc>

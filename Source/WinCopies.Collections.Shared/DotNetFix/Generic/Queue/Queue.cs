@@ -18,7 +18,7 @@
 namespace WinCopies.Collections.DotNetFix.Generic
 {
     public interface
-#if WinCopies2
+#if !WinCopies3
         IQueue<T> : ISimpleLinkedList<T>
 #else
         IQueueBase<T>
@@ -28,7 +28,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
         T Dequeue();
 
-#if !WinCopies2
+#if WinCopies3
         bool HasItems { get; }
 
         bool TryDequeue(out T result);
@@ -58,7 +58,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
     {
         private SimpleLinkedListNode<T> _lastItem;
 
-#if WinCopies2
+#if !WinCopies3
         public new uint Count => base.Count;
 
         public new T Peek() => base.Peek();

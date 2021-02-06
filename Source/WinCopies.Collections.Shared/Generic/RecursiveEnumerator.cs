@@ -20,7 +20,7 @@
 using WinCopies.Collections.DotNetFix.Generic;
 
 using static WinCopies
-#if WinCopies2
+#if !WinCopies3
     .Util.Util;
 #else
     .ThrowHelper;
@@ -31,7 +31,7 @@ namespace WinCopies.Collections.Generic
     public class RecursiveEnumerator<T> : Enumerator<IRecursiveEnumerable<T>, T>
     {
         protected
-#if WinCopies2
+#if !WinCopies3
             IStack
 #else
 IStackBase
@@ -40,11 +40,14 @@ IStackBase
         { get; private set; }
 
         private
-#if WinCopies2
+#if !WinCopies3
 bool _completed = false;
 #else
             T _current;
-
+            
+            /// <summary>
+            /// When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            /// </summary>
         protected override T CurrentOverride => _current;
 
         public override bool? IsResetSupported => null;
@@ -75,7 +78,7 @@ bool _completed = false;
 
         protected override bool MoveNextOverride()
         {
-#if WinCopies2
+#if !WinCopies3
             if (_completed) return false;
 #endif
 
@@ -85,7 +88,7 @@ bool _completed = false;
             {
                 enumerator = enumerable.GetRecursiveEnumerator();
 
-#if WinCopies2
+#if !WinCopies3
                 Current
 #else
                 _current
@@ -98,7 +101,7 @@ bool _completed = false;
             while (true)
             {
                 if (
-#if WinCopies2
+#if !WinCopies3
                     InnerStack.Count == 0
 #else
                     !InnerStack.HasItems
@@ -112,7 +115,7 @@ bool _completed = false;
                         return true;
                     }
 
-#if WinCopies2
+#if !WinCopies3
                     _completed = true;
 #endif
 
@@ -135,7 +138,7 @@ bool _completed = false;
         }
 
         protected override void
-#if WinCopies2
+#if !WinCopies3
             Dispose(bool disposing)
         {
             base.Dispose(disposing);

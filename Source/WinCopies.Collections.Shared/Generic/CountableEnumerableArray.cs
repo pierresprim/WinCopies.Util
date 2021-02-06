@@ -17,38 +17,101 @@
 
 using System.Collections;
 
-#if WinCopies2
+#if WinCopies3
+using System.Collections.Generic;
+#else
 using WinCopies.Collections.DotNetFix;
 #endif
 using WinCopies.Collections.DotNetFix.Generic;
 
 namespace WinCopies.Collections.Generic
 {
-    public class CountableEnumerableArray<T> : ICountableEnumerable<T>
+#if WinCopies3
+    public class UIntCountableEnumerator<T> : Enumerator<T, ICountableEnumeratorInfo<T>, T, IUIntCountableEnumeratorInfo<T>>, IUIntCountableEnumeratorInfo<T>
     {
-        private T[] _array;
+        public uint Count => (uint)InnerEnumerator.Count;
 
-        public CountableEnumerableArray(T[] array) => _array = array;
+        protected override T CurrentOverride => InnerEnumerator.Current;
 
-        public int Count => _array.Length;
+        public override bool? IsResetSupported => InnerEnumerator.IsResetSupported;
 
-        public System.Collections.Generic.IEnumerator<T> GetEnumerator() => new ArrayEnumerator<T>(_array);
+        public UIntCountableEnumerator(ICountableEnumeratorInfo<T> enumerator) : base(enumerator) { /* Left empty. */ }
+
+        protected override bool MoveNextOverride() => InnerEnumerator.MoveNext();
+    }
+#endif
+
+#if CS7
+    public interface IReadOnlyList<out T> : System.Collections.Generic.IReadOnlyList<T>, ICountableEnumerable<T>
+    {
+        // Left empty.
+    }
+#endif
+
+    public class CountableEnumerableArray<T> :
+#if CS7
+        IReadOnlyList<T>
+#else
+        ICountableEnumerable<T>
+#endif
+    {
+        protected T[] Array { get; }
+
+        public int Count => Array.Length;
+
+        public T this[int index] => Array[index];
+
+        public CountableEnumerableArray(in T[] array) => Array = array;
+
+        public
+#if WinCopies3
+            ICountableEnumeratorInfo<T>
+#else
+         System.Collections.Generic.IEnumerator<T> 
+#endif
+            GetEnumerator() => new ArrayEnumerator<T>(Array);
 
         System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+#if WinCopies3
+        ICountableEnumerator<T> ICountableEnumerable<T>.GetEnumerator() => GetEnumerator();
+
+        System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetEnumerator();
+#endif
     }
 
     public class UIntCountableEnumerableArray<T> : IUIntCountableEnumerable<T>
     {
-        private CountableEnumerableArray<T> _array;
+        private readonly CountableEnumerableArray<T> _array;
 
-        public UIntCountableEnumerableArray(T[] array) : this(new CountableEnumerableArray<T>(array)) { /* Left empty. */ }
+        public UIntCountableEnumerableArray(in T[] array) : this(new CountableEnumerableArray<T>(array)) { /* Left empty. */ }
 
-        public UIntCountableEnumerableArray(CountableEnumerableArray<T> array) => _array = array;
+        public UIntCountableEnumerableArray(in CountableEnumerableArray<T> array) => _array = array;
 
         public uint Count => (uint)_array.Count;
 
-        public System.Collections.Generic.IEnumerator<T> GetEnumerator() => _array.GetEnumerator();
+        public
+#if WinCopies3
+            IUIntCountableEnumeratorInfo<T>
+#else
+         System.Collections.Generic.IEnumerator<T> 
+#endif
+            GetEnumerator() =>
+#if WinCopies3
+            new UIntCountableEnumerator<T>(
+#endif
+                _array.GetEnumerator()
+#if WinCopies3
+                )
+#endif
+            ;
 
-        System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_array).GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+#if WinCopies3
+        IUIntCountableEnumerator<T> IUIntCountableEnumerable<T>.GetEnumerator() => GetEnumerator();
+
+        System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetEnumerator();
+#endif
     }
 }

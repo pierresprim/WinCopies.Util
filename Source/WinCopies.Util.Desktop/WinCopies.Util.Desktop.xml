@@ -1303,7 +1303,7 @@
             Provides a converter for conversion from a <see langword="bool"/> value to a <see cref="T:System.Windows.Visibility"/> value.
             </summary>
         </member>
-        <member name="M:WinCopies.Util.Data.BooleanToVisibilityConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+        <member name="M:WinCopies.Util.Data.BooleanToVisibilityConverter.Convert(System.Boolean,System.Nullable{System.Windows.Visibility},System.Globalization.CultureInfo)">
             <summary>
             Converts a <see langword="bool"/> value to a <see cref="T:System.Windows.Visibility"/> value. If the value is <see langword="true"/>, the returned value will be the <see cref="F:System.Windows.Visibility.Visible"/> value, if not and if parameter is not null, it will be the value of the parameter, otherwise it will be <see cref="F:System.Windows.Visibility.Collapsed"/>.
             </summary>
@@ -1313,7 +1313,7 @@
             <param name="culture">The culture used for the conversion. This parameter isn't evaluated in this converter.</param>
             <returns><see cref="F:System.Windows.Visibility.Visible"/> if the value to convert is <see langword="true"/>, if not, the value of the parameter if it is not null, otherwise <see cref="F:System.Windows.Visibility.Collapsed"/>.</returns>
         </member>
-        <member name="M:WinCopies.Util.Data.BooleanToVisibilityConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+        <member name="M:WinCopies.Util.Data.BooleanToVisibilityConverter.ConvertBack(System.Windows.Visibility,System.Nullable{System.Windows.Visibility},System.Globalization.CultureInfo)">
             <summary>
             Converts a <see cref="T:System.Windows.Visibility"/> value to a <see langword="bool"/> value. If the value is <see cref="F:System.Windows.Visibility.Visible"/>, the returned value will be <see langword="true"/>, otherwise false.
             </summary>
@@ -1481,18 +1481,52 @@
         </member>
         <member name="T:WinCopies.Util.Data.EnumToBooleanConverter">
             <summary>
-            Data converter for checking wheter an enum equals a parameter.
+            Data converter for checking whether an enum equals a parameter.
             </summary>
-            <remarks>This class can also work for numeric types (int, ...)</remarks>
         </member>
-        <member name="M:WinCopies.Util.Data.EnumToBooleanConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+        <member name="P:WinCopies.Util.Data.EnumToBooleanConverter.ConvertOptions">
+            <summary>
+            No <see langword="null"/> argument is allowed for value nor parameter.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.Data.EnumToBooleanConverter.ConvertBackOptions">
+            <summary>
+            No <see langword="null"/> argument is allowed for value nor parameter.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.Data.EnumToBooleanConverter.Convert(System.Enum,System.Enum,System.Globalization.CultureInfo,System.Boolean@)">
             <summary>
             Checks if an enum value equals a parameter.
             </summary>
             <param name="value">The value produced by the binding source.</param>
-            <param name="targetType">The type of the binding target property. This type must be <see cref="T:System.Boolean"/>.</param>
             <param name="parameter">The converter parameter to use. This represents the value to compare with the value.</param>
             <param name="culture">The culture to use in the converter.</param>
+            <param name="result">A value indicating whether <paramref name="value"/> is equal to <paramref name="parameter"/>.</param>
+            <returns>Always <see langword="true"/>.</returns>
+        </member>
+        <member name="T:WinCopies.Util.Data.EnumToReversedBooleanConverter">
+            <summary>
+            Data converter for checking whether an enum is not equal to a parameter.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.Data.EnumToStringArrayConverter.ConvertOptions">
+            <summary>
+            <para>Value: ignored.</para>
+            <para>Parameter: cannot be <see langword="null"/>.</para>
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.Data.EnumToStringArrayConverter.ConvertBackOptions">
+            <summary>
+            Invalid operation.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.Data.EnumToStringArrayConverter.ConvertBack(System.String[],System.Type,System.Globalization.CultureInfo)">
+            <summary>
+            Never called.
+            </summary>
+            <param name="value"></param>
+            <param name="parameter"></param>
+            <param name="culture"></param>
             <returns></returns>
         </member>
         <member name="T:WinCopies.Util.Data.IsNullConverter">
@@ -1731,10 +1765,52 @@
             </summary>
             <param name="disposing"><see langword="true"/> to dispose managed resources, otherwise <see langword="false"/>.</param>
         </member>
+        <member name="M:WinCopies.Util.Data.ObjectToTypeConverter.ConvertBack(System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Never called.
+            </summary>
+            <param name="value"></param>
+            <param name="parameter"></param>
+            <param name="culture"></param>
+            <returns></returns>
+        </member>
         <member name="T:WinCopies.Util.Data.PropertyChangedEventArgs">
             <summary>
             Provides data for the <see cref="E:System.ComponentModel.INotifyPropertyChanged.PropertyChanged"/> event.
             </summary>
+        </member>
+        <member name="M:WinCopies.Util.Data.ValidationRule`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Windows.Controls.ValidationRule"/> class.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.Data.ValidationRule`1.#ctor(System.Windows.Controls.ValidationStep,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Windows.Controls.ValidationRule"/> class with the specified validation step and a value that indicates whether the validation rule runs when the target is updated.
+            </summary>
+            <param name="validationStep">One of the enumeration values that specifies when the validation rule runs.</param>
+            <param name="validatesOnTargetUpdated"><see langword="true"/> to have the validation rule run when the target of the <see cref="T:System.Windows.Data.Binding"/> is updated; otherwise, <see langword="false"/>.</param>
+        </member>
+        <member name="P:WinCopies.Util.Data.ValidationRule`1.AllowNullValueOverride">
+            <summary>
+            Gets a value indicating whether null values are allowed. When this property is set to <see langword="false"/>, validation will fail for null values.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.Data.ValidationRule`1.Validate(`0,System.Globalization.CultureInfo)">
+            <summary>
+            When overridden in a derived class, performs validation checks on a value.
+            </summary>
+            <param name="value">The value from the binding target to check.</param>
+            <param name="cultureInfo">The culture to use in this rule.</param>
+            <returns>A <see cref="T:System.Windows.Controls.ValidationResult"/> object.</returns>
+        </member>
+        <member name="M:WinCopies.Util.Data.ValidationRule`1.Validate(System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Performs validation checks on a value.
+            </summary>
+            <param name="value">The value from the binding target to check.</param>
+            <param name="cultureInfo">The culture to use in this rule.</param>
+            <returns>A <see cref="T:System.Windows.Controls.ValidationResult"/> object.</returns>
         </member>
         <member name="T:WinCopies.Util.Data.ViewModelBase">
             <summary>
@@ -2088,6 +2164,16 @@
         <member name="M:WinCopies.Util.Desktop.ThrowHelper.ThrowIfBackgroundWorkerDoesNotSupportPausing(WinCopies.DotNetFix.PausableBackgroundWorker@)">
             <summary>
             Throws the exception returned by the <see cref="M:WinCopies.Util.Desktop.ThrowHelper.GetBackgroundWorkerDoesNotSupportPausingException"/> method.
+            </summary>
+        </member>
+        <member name="T:WinCopies.Markup.TrueValue">
+            <summary>
+            Represents a markup extension that always returns the <see langword="true"/> value.
+            </summary>
+        </member>
+        <member name="T:WinCopies.Markup.FalseValue">
+            <summary>
+            Represents a markup extension that always returns the <see langword="false"/> value.
             </summary>
         </member>
         <member name="T:WinCopies.IBackgroundWorker">

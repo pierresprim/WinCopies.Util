@@ -15,14 +15,14 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if WinCopies2
+#if !WinCopies3
 namespace WinCopies.Util
 #else
 namespace WinCopies
 #endif
 {
     public interface IDisposable :
-#if WinCopies2
+#if !WinCopies3
         WinCopies.Util.DotNetFix.IDisposable
 #else
         WinCopies.DotNetFix.IDisposable
@@ -35,7 +35,7 @@ namespace WinCopies
 
 
 namespace WinCopies
-#if WinCopies2
+#if !WinCopies3
     .Util
 #endif
     .DotNetFix

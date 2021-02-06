@@ -18,7 +18,7 @@
 using System;
 using System.Runtime.Serialization;
 
-#if WinCopies2
+#if !WinCopies3
 namespace WinCopies.Util
 #else
 namespace WinCopies

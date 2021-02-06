@@ -23,14 +23,14 @@ namespace WinCopies.Collections.DotNetFix
 
         object Pop();
 
-#if !WinCopies2
+#if WinCopies3
         bool TryPop(out object result);
 #endif
     }
 
     public class Stack : SimpleLinkedList, IStack
     {
-#if WinCopies2
+#if !WinCopies3
         public new bool IsReadOnly => base.IsReadOnly;
 
         public new uint Count => base.Count;

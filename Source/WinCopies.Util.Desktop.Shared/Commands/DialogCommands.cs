@@ -17,7 +17,7 @@
 
 using System.Windows.Input;
 
-#if WinCopies2
+#if !WinCopies3
 namespace WinCopies.Util.Commands
 #else
 namespace WinCopies.Commands
@@ -26,67 +26,67 @@ namespace WinCopies.Commands
     public static class DialogCommands
     {
         public static RoutedUICommand Ok { get; } = new RoutedUICommand(WinCopies.
-#if WinCopies2
+#if !WinCopies3
             Util.
 #endif
             Desktop.Resources.Commands.WPF.DialogCommands.Ok, nameof(Ok), typeof(DialogCommands));
 
         public static RoutedUICommand Cancel { get; } = new RoutedUICommand(WinCopies.
-#if WinCopies2
+#if !WinCopies3
             Util.
 #endif
             Desktop.Resources.Commands.WPF.DialogCommands.Cancel, nameof(Cancel), typeof(DialogCommands));
 
         public static RoutedUICommand Yes { get; } = new RoutedUICommand(WinCopies.
-#if WinCopies2
+#if !WinCopies3
             Util.
 #endif
             Desktop.Resources.Commands.WPF.DialogCommands.YesToAll, nameof(Yes), typeof(DialogCommands));
 
         public static RoutedUICommand YesToAll { get; } = new RoutedUICommand(WinCopies.
-#if WinCopies2
+#if !WinCopies3
             Util.
 #endif
             Desktop.Resources.Commands.WPF.DialogCommands.YesToAll, nameof(YesToAll), typeof(DialogCommands));
 
         public static RoutedUICommand No { get; } = new RoutedUICommand(WinCopies.
-#if WinCopies2
+#if !WinCopies3
             Util.
 #endif
             Desktop.Resources.Commands.WPF.DialogCommands.NoToAll, nameof(No), typeof(DialogCommands));
 
         public static RoutedUICommand NoToAll { get; } = new RoutedUICommand(WinCopies.
-#if WinCopies2
+#if !WinCopies3
             Util.
 #endif
             Desktop.Resources.Commands.WPF.DialogCommands.NoToAll, nameof(NoToAll), typeof(DialogCommands));
 
         public static RoutedUICommand Apply { get; } = new RoutedUICommand(WinCopies.
-#if WinCopies2
+#if !WinCopies3
             Util.
 #endif
             Desktop.Resources.Commands.WPF.DialogCommands.Apply, nameof(Apply), typeof(DialogCommands));
 
         public static RoutedUICommand Retry { get; } = new RoutedUICommand(WinCopies.
-#if WinCopies2
+#if !WinCopies3
             Util.
 #endif
             Desktop.Resources.Commands.WPF.DialogCommands.Retry, nameof(Retry), typeof(DialogCommands));
 
         public static RoutedUICommand Ignore { get; } = new RoutedUICommand(WinCopies.
-#if WinCopies2
+#if !WinCopies3
             Util.
 #endif
             Desktop.Resources.Commands.WPF.DialogCommands.Ignore, nameof(Ignore), typeof(DialogCommands));
 
         public static RoutedUICommand Abort { get; } = new RoutedUICommand(WinCopies.
-#if WinCopies2
+#if !WinCopies3
             Util.
 #endif
             Desktop.Resources.Commands.WPF.DialogCommands.Abort, nameof(Abort), typeof(DialogCommands));
 
         public static RoutedUICommand Continue { get; } = new RoutedUICommand(WinCopies.
-#if WinCopies2
+#if !WinCopies3
             Util.
 #endif
             Desktop.Resources.Commands.WPF.DialogCommands.Continue, nameof(Continue), typeof(DialogCommands));

@@ -20,7 +20,7 @@
 using System;
 using System.ComponentModel;
 
-#if WinCopies2
+#if !WinCopies3
 using static WinCopies.Util.Util;
 
 using System.Runtime.Serialization;
@@ -30,7 +30,7 @@ using WinCopies.Util;
 
 namespace WinCopies.Collections.DotNetFix
 {
-#if !WinCopies2
+#if WinCopies3
     namespace Generic
     {
 #endif
@@ -54,26 +54,26 @@ namespace WinCopies.Collections.DotNetFix
             protected virtual void OnCollectionChanged(LinkedCollectionChangedEventArgs<T> e) => CollectionChanged?.Invoke(this, e);
 
             protected void RaiseCollectionChangedEvent(in LinkedCollectionChangedAction action, in
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
 #endif
                 <T> addedBefore, in
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
 #endif
                 <T> addedAfter, in
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
 #endif
                 <T> node) => OnCollectionChanged(new LinkedCollectionChangedEventArgs<T>(action, addedBefore, addedAfter, node));
 
-#if WinCopies2
+#if !WinCopies3
         protected override void AddFirstItem(System.Collections.Generic.LinkedListNode<T> node)
         {
             base.AddFirstItem(node);
@@ -112,14 +112,14 @@ namespace WinCopies.Collections.DotNetFix
 #endif
 
             protected override
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
 #endif
                 <T> AddFirstItem(T value)
             {
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
@@ -145,13 +145,13 @@ namespace WinCopies.Collections.DotNetFix
             }
 
             protected override
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
 #endif
                 <T> AddItemAfter(
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
@@ -159,7 +159,7 @@ namespace WinCopies.Collections.DotNetFix
                 <T> node, T value)
             {
 
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
@@ -174,13 +174,13 @@ namespace WinCopies.Collections.DotNetFix
             }
 
             protected override
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
 #endif
                 <T> AddItemBefore(
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
@@ -188,7 +188,7 @@ namespace WinCopies.Collections.DotNetFix
                 <T> node, T value)
             {
 
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
@@ -203,14 +203,14 @@ namespace WinCopies.Collections.DotNetFix
             }
 
             protected override
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
 #endif
                 <T> AddLastItem(T value)
             {
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
@@ -235,7 +235,7 @@ namespace WinCopies.Collections.DotNetFix
 
             protected override void RemoveFirstItem()
             {
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
@@ -250,7 +250,7 @@ namespace WinCopies.Collections.DotNetFix
             }
 
             protected override void RemoveItem(
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
@@ -267,7 +267,7 @@ namespace WinCopies.Collections.DotNetFix
             protected override bool RemoveItem(T item)
             {
                 foreach (
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
@@ -290,7 +290,7 @@ namespace WinCopies.Collections.DotNetFix
 
             protected override void RemoveLastItem()
             {
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
@@ -304,7 +304,7 @@ namespace WinCopies.Collections.DotNetFix
                 RaiseCollectionChangedEvent(LinkedCollectionChangedAction.Remove, null, null, node);
             }
         }
-#if !WinCopies2
+#if WinCopies3
     }
 #endif
 }

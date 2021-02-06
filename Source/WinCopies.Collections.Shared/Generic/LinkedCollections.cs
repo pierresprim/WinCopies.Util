@@ -17,7 +17,7 @@
 
 #if CS7
 
-#if !WinCopies2
+#if WinCopies3
 using System.Collections;
 #endif
 
@@ -29,7 +29,7 @@ namespace WinCopies.Collections.Generic
 {
     public class Stack<T> : System.Collections.Generic.Stack<T>, IEnumerableStack<T>
     {
-#if WinCopies2
+#if !WinCopies3
         uint IUIntCountableEnumerable.Count => (uint)Count;
 #else
         public bool IsReadOnly => false;
@@ -44,7 +44,7 @@ namespace WinCopies.Collections.Generic
         public bool HasItems => Count != 0;
 
 #if CS7
-        public new bool TryPeek(out T result)
+        public  bool TryPeek(out T result)
         {
             if (Count > 0)
             {
@@ -58,7 +58,7 @@ namespace WinCopies.Collections.Generic
             return false;
         }
 
-        public new bool TryPop(out T result)
+        public  bool TryPop(out T result)
         {
             if (Count > 0)
             {
@@ -76,7 +76,7 @@ namespace WinCopies.Collections.Generic
 
     public class Queue<T> : System.Collections.Generic.Queue<T>, IEnumerableQueue<T>
     {
-#if WinCopies2
+#if !WinCopies3
         uint IUIntCountableEnumerable.Count => (uint)Count;
 #else
         public bool IsReadOnly => false;

@@ -16,15 +16,16 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using System.Collections;
+using WinCopies.Collections.Generic;
 
 namespace WinCopies.Collections.DotNetFix
 {
     public interface ICountableEnumerable : IEnumerable
-#if !WinCopies2
+#if WinCopies3
 , ICountable
 #endif
     {
-#if WinCopies2
+#if !WinCopies3
         int Count { get; }
 #else
         // Left empty.
@@ -32,31 +33,54 @@ namespace WinCopies.Collections.DotNetFix
     }
 
     public interface IUIntCountableEnumerable : IEnumerable
-#if !WinCopies2
+#if WinCopies3
 , IUIntCountable
 #endif
     {
-#if WinCopies2
+#if !WinCopies3
         uint Count { get; }
 #else
         // Left empty.
 #endif
     }
 
-#if !WinCopies2
+#if WinCopies3
     namespace Generic
     {
 #endif
         public interface ICountableEnumerable<out T> : System.Collections.Generic.IEnumerable<T>, ICountableEnumerable
+#if WinCopies3 && CS7
+, System.Collections.Generic.IReadOnlyCollection<T>
+#endif
         {
-            // Left empty.
+#if WinCopies3
+            new ICountableEnumerator<T> GetEnumerator();
+#else
+        // Left empty.
+#endif
         }
 
         public interface IUIntCountableEnumerable<out T> : System.Collections.Generic.IEnumerable<T>, IUIntCountableEnumerable
         {
+#if WinCopies3
+            new IUIntCountableEnumerator<T> GetEnumerator();
+#else
+        // Left empty.
+#endif
+        }
+
+#if WinCopies3
+        public interface ICountableEnumerableInfo<out T> : ICountableEnumerable<T>, IEnumerableInfo<T>
+        {
             // Left empty.
         }
-#if !WinCopies2
+
+        public interface IUIntCountableEnumerableInfo<out T> : IUIntCountableEnumerable<T>, IEnumerableInfo<T>
+        {
+            // Left empty.
+        }
+#endif
+#if WinCopies3
     }
 #endif
 }

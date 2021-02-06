@@ -21,28 +21,32 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-#if WinCopies2
-using System.Runtime.Serialization;
-#else
+#if WinCopies3
 using System.Linq;
+
+using WinCopies.Collections.Generic;
+
+using static WinCopies.ThrowHelper;
+#else
+using System.Runtime.Serialization;
 #endif
 
 namespace WinCopies.Collections.DotNetFix
 {
-#if !WinCopies2
+#if WinCopies3
     namespace Generic
     {
 #endif
 
         [Serializable]
-        public class LinkedCollection<T> : ICollection<T>, System.Collections.Generic.IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection,
-#if WinCopies2
-            IDeserializationCallback, ISerializable, ILinkedList2<T>
+        public class LinkedCollection<T> : ICollection<T>, IEnumerable, IReadOnlyCollection<T>, ICollection,
+#if !WinCopies3
+            IDeserializationCallback, ISerializable, ILinkedList2<T>, System.Collections.Generic.IEnumerable<T>
 #else
-            ILinkedList3<T>
+            IEnumerableInfoLinkedList<T>
 #endif
         {
-#if !WinCopies2
+#if WinCopies3
             public enum MoveDirection : sbyte
             {
                 Before = -1,
@@ -52,32 +56,36 @@ namespace WinCopies.Collections.DotNetFix
 #endif
 
             protected internal
-#if WinCopies2
+#if !WinCopies3
 System.Collections.Generic.LinkedList
 #else
-                ILinkedList3
+                IEnumerableInfoLinkedList
 #endif
                 <T> InnerList
             { get; }
 
             public
-#if WinCopies2
+#if !WinCopies3
 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
 #endif
                 <T> Last => InnerList.Last;
 
+            public T LastValue => Last.Value;
+
             public
-#if WinCopies2
+#if !WinCopies3
 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
 #endif
                 <T> First => InnerList.First;
 
+            public T FirstValue => First.Value;
+
             public
-#if WinCopies2
+#if !WinCopies3
 int
 #else
                 uint
@@ -85,14 +93,14 @@ int
                 Count => InnerList.Count;
 
             public bool IsReadOnly =>
-#if WinCopies2
+#if !WinCopies3
             false
 #else
             InnerList.IsReadOnly
 #endif
             ;
 
-#if !WinCopies2
+#if WinCopies3
             int ICollection.Count => (int)Count;
 
             int ICollection<T>.Count => (int)Count;
@@ -109,14 +117,18 @@ int
             public LinkedCollection() : this(new LinkedList<T>()) { }
 
             public LinkedCollection(in
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedList
 #else
-                ILinkedList3
+                IEnumerableInfoLinkedList
 #endif
-                <T> list) => InnerList = list;
+                <T> list) => InnerList = list
+#if WinCopies3
+                ?? throw GetArgumentNullException(nameof(list))
+#endif
+                ;
 
-#if !WinCopies2
+#if WinCopies3
             protected virtual void OnNodeAdded(ILinkedListNode<T> node) { /* Left empty. */ }
 #endif
 
@@ -124,14 +136,14 @@ int
             {
                 ((ICollection<T>)InnerList).Add(item);
 
-#if !WinCopies2
+#if WinCopies3
                 OnNodeAdded(InnerList.First<ILinkedListNode<T>>(node => node.Value.Equals(item)));
 #endif
             }
 
             void ICollection<T>.Add(T item) => AddItem(item);
 
-#if WinCopies2
+#if !WinCopies3
         protected virtual void AddItemAfter(System.Collections.Generic.LinkedListNode<T> node, System.Collections.Generic.LinkedListNode<T> newNode) => InnerList.AddAfter(node, newNode);
 
         /// <summary>
@@ -177,19 +189,19 @@ int
 #endif
 
             protected virtual
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
 #endif
                 <T> AddItemAfter(
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
 #endif
                 <T> node, T value)
-#if WinCopies2
+#if !WinCopies3
 =>
 #else
             {
@@ -197,7 +209,7 @@ int
 #endif
                 InnerList.AddAfter(node, value);
 
-#if !WinCopies2
+#if WinCopies3
                 OnNodeAdded(newNode);
 
                 return newNode;
@@ -213,13 +225,13 @@ int
             /// <exception cref="ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
             /// <exception cref="InvalidOperationException"><paramref name="node"/> is not in the current <see cref="LinkedCollection{T}"/>.</exception>
             public
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
 #endif
                 <T> AddAfter(
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
@@ -227,26 +239,26 @@ int
                 <T> node, T value) => AddItemAfter(node, value);
 
             protected virtual
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
 #endif
                 <T> AddItemBefore(
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
 #endif
                 <T> node, T value)
-#if WinCopies2
+#if !WinCopies3
                 =>
 #else
             {
                 ILinkedListNode<T> newNode =
 #endif
                 InnerList.AddBefore(node, value);
-#if !WinCopies2
+#if WinCopies3
                 OnNodeAdded(newNode);
 
                 return newNode;
@@ -262,13 +274,13 @@ int
             /// <exception cref="ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
             /// <exception cref="InvalidOperationException"><paramref name="node"/> is not in the current <see cref="LinkedCollection{T}"/>.</exception>
             public
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
 #endif
                 <T> AddBefore(
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
@@ -276,20 +288,20 @@ int
                 <T> node, T value) => AddItemBefore(node, value);
 
             protected virtual
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
 #endif
                 <T> AddFirstItem(T value)
-#if WinCopies2
+#if !WinCopies3
                 =>
 #else
             {
                 ILinkedListNode<T> node =
 #endif
                     InnerList.AddFirst(value);
-#if !WinCopies2
+#if WinCopies3
                 OnNodeAdded(node);
 
                 return node;
@@ -302,7 +314,7 @@ int
             /// <param name="value">The value to add at the start of the <see cref="LinkedCollection{T}"/>.</param>
             /// <returns>The new <see cref="System.Collections.Generic.LinkedListNode{T}"/> containing value.</returns>
             public
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
@@ -310,20 +322,20 @@ int
                 <T> AddFirst(T value) => AddFirstItem(value);
 
             protected virtual
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
 #endif
                 <T> AddLastItem(T value)
-#if WinCopies2
+#if !WinCopies3
                 =>
 #else
             {
                 ILinkedListNode<T> node =
 #endif
                     InnerList.AddLast(value);
-#if !WinCopies2
+#if WinCopies3
                 OnNodeAdded(node);
 
                 return node;
@@ -336,7 +348,7 @@ int
             /// <param name="value">The value to add at the end of the <see cref="LinkedCollection{T}"/>.</param>
             /// <returns>The new <see cref="System.Collections.Generic.LinkedListNode{T}"/> containing value.</returns>
             public
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
@@ -344,7 +356,7 @@ int
                 <T> AddLast(T value) => AddLastItem(value);
 
             public
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
@@ -352,7 +364,7 @@ int
                 <T> Find(T value) => InnerList.Find(value);
 
             public
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
@@ -370,54 +382,66 @@ int
             public void CopyTo(T[] array, int arrayIndex) => InnerList.CopyTo(array, arrayIndex);
 
             public
-#if WinCopies2
+#if !WinCopies3
             System.Collections.Generic.LinkedList<T>.Enumerator
 #else
-System.Collections.Generic.IEnumerator<T>
+IUIntCountableEnumeratorInfo<T>
 #endif
-            GetEnumerator() =>
-#if !WinCopies2
-                ((ILinkedList<T>)
-#endif
-                InnerList
-#if !WinCopies2
-                )
-#endif
-                .GetEnumerator();
+            GetEnumerator() => InnerList.GetEnumerator();
 
-#if WinCopies2
+#if !WinCopies3
         System.Collections.Generic.IEnumerator<T> IEnumerable<T>.GetEnumerator() => GetEnumerator();
 #endif
 
             System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerList).GetEnumerator();
 
-#if WinCopies2
+#if !WinCopies3
         public void GetObjectData(SerializationInfo info, StreamingContext context) => InnerList.GetObjectData(info, context);
 
         public void OnDeserialization(object sender) => InnerList.OnDeserialization(sender);
 #else
             public bool SupportsReversedEnumeration => InnerList.SupportsReversedEnumeration;
 
-            System.Collections.Generic.IEnumerator<ILinkedListNode<T>> IEnumerable<ILinkedListNode<T>>.GetEnumerator() => ((IEnumerable<ILinkedListNode<T>>)InnerList).GetEnumerator();
+            public IUIntCountableEnumeratorInfo<T> GetEnumerator(EnumerationDirection enumerationDirection) => InnerList.GetEnumerator(enumerationDirection);
 
-            public System.Collections.Generic.IEnumerator<T> GetEnumerator(EnumerationDirection enumerationDirection) => InnerList.GetEnumerator(enumerationDirection);
+            public IUIntCountableEnumeratorInfo<T> GetReversedEnumerator() => InnerList.GetReversedEnumerator();
 
-            public System.Collections.Generic.IEnumerator<ILinkedListNode<T>> GetNodeEnumerator(EnumerationDirection enumerationDirection) => InnerList.GetNodeEnumerator(enumerationDirection);
+            public IUIntCountableEnumeratorInfo<ILinkedListNode<T>> GetNodeEnumerator(EnumerationDirection enumerationDirection) => InnerList.GetNodeEnumerator(enumerationDirection);
 
-            public System.Collections.Generic.IEnumerator<T> GetReversedEnumerator() => InnerList.GetReversedEnumerator();
+            System.Collections.Generic.IEnumerator<ILinkedListNode<T>> Collections.Generic.IEnumerable<ILinkedListNode<T>>.GetReversedEnumerator() => ((Collections.Generic.IEnumerable<ILinkedListNode<T>>)InnerList).GetReversedEnumerator();
+
+            System.Collections.Generic.IEnumerator<T> Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => ((Collections.Generic.IEnumerable<T>)InnerList).GetReversedEnumerator();
+
+            System.Collections.Generic.IEnumerator<ILinkedListNode<T>> ILinkedList3<T>.GetNodeEnumerator(EnumerationDirection enumerationDirection) => GetNodeEnumerator(enumerationDirection);
+
+            IUIntCountableEnumerator<T> ILinkedList<T>.GetEnumerator() => ((ILinkedList<T>)InnerList).GetEnumerator();
+
+            IUIntCountableEnumerator<T> ILinkedList<T>.GetReversedEnumerator() => ((ILinkedList<T>)InnerList).GetReversedEnumerator();
+
+            System.Collections.Generic.IEnumerator<ILinkedListNode<T>> System.Collections.Generic.IEnumerable<ILinkedListNode<T>>.GetEnumerator() => ((System.Collections.Generic.IEnumerable<ILinkedListNode<T>>)InnerList).GetEnumerator();
+
+            System.Collections.Generic.IEnumerator<T> IReadOnlyLinkedList2<T>.GetEnumerator(EnumerationDirection enumerationDirection) => ((IReadOnlyLinkedList2<T>)InnerList).GetEnumerator(enumerationDirection);
+
+            IUIntCountableEnumerator<T> IUIntCountableEnumerable<T>.GetEnumerator() => ((IUIntCountableEnumerable<T>)InnerList).GetEnumerator();
+
+            IEnumeratorInfo2<T> IEnumerableInfo<T>.GetEnumerator() => ((IEnumerableInfo<T>)InnerList).GetEnumerator();
+
+            IEnumeratorInfo2<T> IEnumerableInfo<T>.GetReversedEnumerator() => ((IEnumerableInfo<T>)InnerList).GetReversedEnumerator();
+
+            System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => ((System.Collections.Generic.IEnumerable<T>)InnerList).GetEnumerator();
 
             protected virtual void OnNodeRemoved(ILinkedListNode<T> node) { /* Left empty. */ }
 #endif
 
             protected virtual bool RemoveItem(T item)
-#if WinCopies2
+#if !WinCopies3
                 =>
 #else
             {
                 ILinkedListNode<T> node =
 #endif
                     InnerList.Remove(item);
-#if !WinCopies2
+#if WinCopies3
                 if (node == null)
 
                     return false;
@@ -443,58 +467,58 @@ System.Collections.Generic.IEnumerator<T>
 
             public bool Remove(T item) => RemoveItem(item);
 
-#if !WinCopies2
+#if WinCopies3
             public ILinkedListNode<T> Remove2(T item) => RemoveItem2(item);
 
             ILinkedListNode<T> ILinkedList3<T>.Remove(T item) => Remove2(item);
 #endif
 
             protected virtual void RemoveItem(
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
 #endif
                 <T> node)
-#if WinCopies2
+#if !WinCopies3
                 =>
 #else
             {
 #endif
                 InnerList.Remove(node);
-#if !WinCopies2
+#if WinCopies3
                 OnNodeRemoved(node);
             }
 #endif
 
             public void Remove(
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
 #endif
                 <T> node)
-#if WinCopies2
+#if !WinCopies3
                 =>
 #else
             {
 #endif
                 RemoveItem(node);
-#if !WinCopies2
+#if WinCopies3
 
                 OnNodeRemoved(node);
             }
 #endif
 
             protected virtual void RemoveFirstItem()
-#if WinCopies2
+#if !WinCopies3
                 =>
 #else
             {
                 ILinkedListNode<T> node = InnerList.First;
 #endif
                 InnerList.RemoveFirst();
-#if !WinCopies2
+#if WinCopies3
                 OnNodeRemoved(node);
             }
 #endif
@@ -502,21 +526,21 @@ System.Collections.Generic.IEnumerator<T>
             public void RemoveFirst() => RemoveFirstItem();
 
             protected virtual void RemoveLastItem()
-#if WinCopies2
+#if !WinCopies3
                 =>
 #else
             {
                 ILinkedListNode<T> node = InnerList.Last;
 #endif
                 InnerList.RemoveLast();
-#if !WinCopies2
+#if WinCopies3
                 OnNodeRemoved(node);
             }
 #endif
 
             public void RemoveLast() => RemoveLastItem();
 
-#if !WinCopies2
+#if WinCopies3
             protected virtual void SwapItem(ILinkedListNode<T> x, ILinkedListNode<T> y) => InnerList.Swap(x, y);
 
             public void Swap(ILinkedListNode<T> x, ILinkedListNode<T> y) => SwapItem(x, y);
@@ -552,7 +576,7 @@ System.Collections.Generic.IEnumerator<T>
             public bool MoveBefore(ILinkedListNode<T> node, ILinkedListNode<T> before) => MoveNodeBefore(node, before);
 #endif
         }
-#if !WinCopies2
+#if WinCopies3
     }
 #endif
 }

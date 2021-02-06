@@ -17,7 +17,7 @@
 
 using System.Windows.Input;
 
-#if WinCopies2
+#if !WinCopies3
 namespace WinCopies.Util.Commands
 #else
 namespace WinCopies.Commands
@@ -32,7 +32,7 @@ namespace WinCopies.Commands
         /// Gets the <b>NewFolder</b> command.
         /// </summary>
         public static RoutedUICommand NewFolder { get; } = new RoutedUICommand(WinCopies.
-#if WinCopies2
+#if !WinCopies3
             Util.
 #endif
             Desktop.Resources.Commands.WPF.FileSystemCommands.NewFolder, nameof(NewFolder), typeof(FileSystemCommands), new InputGestureCollection() { new KeyGesture(Key.N, ModifierKeys.Control) });
@@ -41,7 +41,7 @@ namespace WinCopies.Commands
         /// Gets the <b>NewArchive</b> command.
         /// </summary>
         public static RoutedUICommand NewArchive { get; } = new RoutedUICommand(WinCopies.
-#if WinCopies2
+#if !WinCopies3
             Util.
 #endif
             Desktop.Resources.Commands.WPF.FileSystemCommands.NewArchive, nameof(NewArchive), typeof(FileSystemCommands), new InputGestureCollection() { new KeyGesture(Key.N, ModifierKeys.Control | ModifierKeys.Alt) });
@@ -50,7 +50,7 @@ namespace WinCopies.Commands
         /// Gets the <b>FileProperties</b> command.
         /// </summary>
         public static RoutedUICommand FileProperties { get; } = new RoutedUICommand(WinCopies.
-#if WinCopies2
+#if !WinCopies3
             Util.
 #endif
             Desktop.Resources.Commands.WPF.FileSystemCommands.ShowFileProperties, nameof(FileProperties), typeof(FileSystemCommands), new InputGestureCollection() { new KeyGesture(Key.Enter, ModifierKeys.Alt) });
@@ -59,7 +59,7 @@ namespace WinCopies.Commands
         /// Gets the <b>Rename</b> command.
         /// </summary>
         public static RoutedUICommand Rename { get; } = new RoutedUICommand(WinCopies.
-#if WinCopies2
+#if !WinCopies3
             Util.
 #endif
             Desktop.Resources.Commands.WPF.FileSystemCommands.Rename, nameof(Rename), typeof(FileSystemCommands), new InputGestureCollection() { new KeyGesture(Key.R, ModifierKeys.Control) });
@@ -68,7 +68,7 @@ namespace WinCopies.Commands
         /// Gets the <b>DeletePermanently</b> command.
         /// </summary>
         public static RoutedUICommand DeletePermanently { get; } = new RoutedUICommand(WinCopies.
-#if WinCopies2
+#if !WinCopies3
             Util.
 #endif
             Desktop.Resources.Commands.WPF.FileSystemCommands.DeletePermanently, nameof(DeletePermanently), typeof(FileSystemCommands), new InputGestureCollection() { new KeyGesture(Key.Delete, ModifierKeys.Shift) });

@@ -22,7 +22,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using static WinCopies
-#if WinCopies2
+#if !WinCopies3
     .Util.Util;
 
 using System.Runtime.Serialization;
@@ -36,19 +36,19 @@ using static WinCopies.Collections.ThrowHelper;
 
 namespace WinCopies.Collections.DotNetFix
 {
-#if !WinCopies2
+#if WinCopies3
     namespace Generic
     {
 #endif
 
         [Serializable]
         public class ReadOnlyLinkedCollection<T> : ICollection<T>, System.Collections.Generic.IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection
-#if WinCopies2
+#if !WinCopies3
 , IDeserializationCallback, ISerializable
 #endif
         {
             protected
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedList
 #else
                 ILinkedList
@@ -57,7 +57,7 @@ namespace WinCopies.Collections.DotNetFix
             { get; }
 
             public
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
@@ -65,7 +65,7 @@ namespace WinCopies.Collections.DotNetFix
                 <T> Last => InnerList.Last;
 
             public
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
@@ -73,14 +73,14 @@ namespace WinCopies.Collections.DotNetFix
                 <T> First => InnerList.First;
 
             public
-#if WinCopies2
+#if !WinCopies3
 int
 #else
                 uint
 #endif
                 Count => InnerList.Count;
 
-#if !WinCopies2
+#if WinCopies3
             int ICollection.Count => (int)Count;
 
             int ICollection<T>.Count => (int)Count;
@@ -97,7 +97,7 @@ int
             bool ICollection<T>.IsReadOnly => true;
 
             public ReadOnlyLinkedCollection(in
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedList
 #else
                 ILinkedList
@@ -107,7 +107,7 @@ int
             public ReadOnlyLinkedCollection(in LinkedCollection<T> listCollection) : this(listCollection.InnerList) { }
 
             public
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
@@ -115,7 +115,7 @@ int
                 <T> Find(T value) => InnerList.Find(value);
 
             public
-#if WinCopies2
+#if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
@@ -130,7 +130,7 @@ int
 
             System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerList).GetEnumerator();
 
-#if WinCopies2
+#if !WinCopies3
             public void GetObjectData(SerializationInfo info, StreamingContext context) => InnerList.GetObjectData(info, context);
 
             public void OnDeserialization(object sender) => InnerList.OnDeserialization(sender);
@@ -144,7 +144,7 @@ int
 
             bool ICollection<T>.Remove(T item) => throw GetReadOnlyListOrCollectionException();
         }
-#if !WinCopies2
+#if WinCopies3
     }
 #endif
 }

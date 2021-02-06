@@ -15,10 +15,9 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if !WinCopies2
+#if WinCopies3
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Text;
@@ -210,7 +209,7 @@ namespace WinCopies.Collections
         }
 #endif
 
-#endregion
+        #endregion
 
         public static string Join(this System.Collections.Generic.IEnumerable<string> enumerable, in bool keepEmptyValues, params char[] join) => Join(enumerable, keepEmptyValues, new string(join));
 
@@ -253,7 +252,7 @@ namespace WinCopies.Collections
 
         // todo: add other methods and overloads for StringComparison, IEqualityComparer<char>, Comparer<char>, Comparison<char>, ignore case and CultureInfo parameters
 
-#if WinCopies2
+#if !WinCopies3
 
         [Obsolete("This method has been replaced by the Contains(this string, string, IEqualityComparer<char>) method.")]
         public static bool Contains(this string s, System.Collections.Generic.IEqualityComparer<char> comparer, string value) => s.Contains(value, comparer);
@@ -377,7 +376,86 @@ namespace WinCopies.Collections
             return false;
         }
 
+#if !WinCopies3 || !CS8
         public static bool StartsWith(this string s, char value) => s[0] == value;
+        
+        public static bool EndsWith(this string s, char value) => s[s.Length - 1] == value;
+#endif
+
+        public static bool StartsWithAND(this string s, params char[] values) => s.StartsWith(new string(values));
+
+        public static StringBuilder Append(this StringBuilder stringBuilder, params string[] values)
+        {
+            foreach (string value in values)
+
+                _ = stringBuilder.Append(value);
+
+            return stringBuilder;
+        }
+
+        public static bool StartsWithAND(this string s, params string[] values)
+        {
+            var sb = new StringBuilder();
+
+            _ = sb.Append(values);
+
+            return s.StartsWith(sb.ToString());
+        }
+
+        public static bool StartsWithOR(this string s, params char[] values)
+        {
+            foreach (char value in values)
+
+                if (s.StartsWith(value))
+
+                    return true;
+
+            return false;
+        }
+
+        public static bool StartsWithOR(this string s, params string[] values)
+        {
+            foreach (string value in values)
+
+                if (s.StartsWith(value))
+
+                    return true;
+
+            return false;
+        }
+
+        public static bool EndsWithAND(this string s, params char[] values) => s.EndsWith(new string(values));
+
+        public static bool EndsWithAND(this string s, params string[] values)
+        {
+            var sb = new StringBuilder();
+
+            _ = sb.Append(values);
+
+            return false;
+        }
+
+        public static bool EndsWithOR(this string s, params char[] values)
+        {
+            foreach (char value in values)
+
+                if (s.EndsWith(value))
+
+                    return true;
+
+            return false;
+        }
+
+        public static bool EndsWithOR(this string s, params string[] values)
+        {
+            foreach (string value in values)
+
+                if (s.EndsWith(value))
+
+                    return true;
+
+            return false;
+        }
 
         public static string RemoveAccents(this string s)
         {
