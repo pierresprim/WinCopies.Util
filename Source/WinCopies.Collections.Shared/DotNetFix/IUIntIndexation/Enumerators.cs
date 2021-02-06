@@ -139,12 +139,12 @@ namespace WinCopies.Collections.DotNetFix
         }
 
 #if WinCopies2
-        public UIntIndexedListEnumerator(IUIntIndexedList uintIndexedList):this(uintIndexedList)
+        public UIntIndexedListEnumerator(IUIntIndexedList uintIndexedList) : this((IReadOnlyUIntIndexedList)uintIndexedList)
         {
             // Left empty.
         }
 
-        public UIntIndexedListEnumerator(IUIntIndexedList uintIndexedList, Func<bool> moveNextMethod):this(uintIndexedList, moveNextMethod)
+        public UIntIndexedListEnumerator(IUIntIndexedList uintIndexedList, Func<bool> moveNextMethod) : this((IReadOnlyUIntIndexedList)uintIndexedList, moveNextMethod)
         {
             // Left empty.
         }
@@ -174,83 +174,83 @@ namespace WinCopies.Collections.DotNetFix
     namespace Generic
     {
 #endif
-        public sealed class UIntIndexedListEnumerator<T> : UIntIndexedListEnumeratorBase, System.Collections.Generic.IEnumerator<T>
+    public sealed class UIntIndexedListEnumerator<T> : UIntIndexedListEnumeratorBase, System.Collections.Generic.IEnumerator<T>
+    {
+        private IReadOnlyUIntIndexedList<T> innerList;
+
+        internal IReadOnlyUIntIndexedList<T> InnerList { get { ThrowIfDisposed(this); return innerList; } private set { ThrowIfDisposed(this); innerList = value; } }
+
+        private Func<bool> moveNextMethodToReset;
+
+        public static Func<UIntIndexedListEnumerator<T>, bool> DefaultMoveNextMethod => (UIntIndexedListEnumerator<T> e) =>
         {
-            private IReadOnlyUIntIndexedList<T> innerList;
-
-            internal IReadOnlyUIntIndexedList<T> InnerList { get { ThrowIfDisposed(this); return innerList; } private set { ThrowIfDisposed(this); innerList = value; } }
-
-            private Func<bool> moveNextMethodToReset;
-
-            public static Func<UIntIndexedListEnumerator<T>, bool> DefaultMoveNextMethod => (UIntIndexedListEnumerator<T> e) =>
+            if (e.InnerList.Count > 0)
             {
-                if (e.InnerList.Count > 0)
-                {
-                    e.Index = 0;
+                e.Index = 0;
 
-                    e.MoveNextMethod = () =>
+                e.MoveNextMethod = () =>
+                {
+                    if (e.Index < e.InnerList.Count - 1)
                     {
-                        if (e.Index < e.InnerList.Count - 1)
-                        {
-                            e.Index++;
+                        e.Index++;
 
-                            return true;
-                        }
+                        return true;
+                    }
 
-                        else return false;
-                    };
+                    else return false;
+                };
 
-                    return true;
-                }
-
-                else return false;
-            };
-
-            public T Current
-            {
-                get
-                {
-                    Debug.Assert(Index.HasValue, "_index does not have value.");
-
-                    return InnerList[Index.Value];
-                }
+                return true;
             }
 
-            object System.Collections.IEnumerator.Current => Current;
+            else return false;
+        };
 
-            public UIntIndexedListEnumerator(IUIntIndexedList<T> uintIndexedList)
+        public T Current
+        {
+            get
             {
-                MoveNextMethod = moveNextMethodToReset = () => DefaultMoveNextMethod(this);
+                Debug.Assert(Index.HasValue, "_index does not have value.");
 
-                innerList = uintIndexedList;
-            }
-
-            public UIntIndexedListEnumerator(IUIntIndexedList<T> uintIndexedList, Func<bool> moveNextMethod)
-            {
-                MoveNextMethod = moveNextMethod;
-
-                innerList = uintIndexedList;
-            }
-
-            protected override void Dispose(bool disposing)
-            {
-                if (!IsDisposed)
-                {
-                    InnerList = null;
-
-                    moveNextMethodToReset = null;
-
-                    base.Dispose(disposing);
-                }
-            }
-
-            public override void Reset()
-            {
-                base.Reset();
-
-                MoveNextMethod = moveNextMethodToReset;
+                return InnerList[Index.Value];
             }
         }
+
+        object System.Collections.IEnumerator.Current => Current;
+
+        public UIntIndexedListEnumerator(IUIntIndexedList<T> uintIndexedList)
+        {
+            MoveNextMethod = moveNextMethodToReset = () => DefaultMoveNextMethod(this);
+
+            innerList = uintIndexedList;
+        }
+
+        public UIntIndexedListEnumerator(IUIntIndexedList<T> uintIndexedList, Func<bool> moveNextMethod)
+        {
+            MoveNextMethod = moveNextMethod;
+
+            innerList = uintIndexedList;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (!IsDisposed)
+            {
+                InnerList = null;
+
+                moveNextMethodToReset = null;
+
+                base.Dispose(disposing);
+            }
+        }
+
+        public override void Reset()
+        {
+            base.Reset();
+
+            MoveNextMethod = moveNextMethodToReset;
+        }
+    }
 #if WinCopies3
     }
 #endif

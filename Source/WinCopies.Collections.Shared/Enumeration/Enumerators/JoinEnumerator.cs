@@ -16,15 +16,20 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 
 #if !WinCopies3
+using System.Collections.Generic;
+
 using WinCopies.Util;
 
 using static WinCopies.Util.Util;
 #else
 using WinCopies.Linq;
+
+#if !DEBUG
+using static WinCopies.ThrowHelper;
+#endif
 #endif
 
 namespace WinCopies.Collections

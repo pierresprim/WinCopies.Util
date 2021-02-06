@@ -17,11 +17,11 @@
     <RootNamespace>WinCopies</RootNamespace>
     <AssemblyOriginatorKeyFile>WinCopies.Util.Extensions.snk</AssemblyOriginatorKeyFile>
     <DefineConstants>WinCopies3;$(DefineConstants)</DefineConstants>
-    <PackageIcon>WinCopies.ico</PackageIcon>
+    <PackageIcon>WinCopies.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\..\..\WinCopies-framework\Source\WinCopies.ico">
+    <None Include="..\WinCopies.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>

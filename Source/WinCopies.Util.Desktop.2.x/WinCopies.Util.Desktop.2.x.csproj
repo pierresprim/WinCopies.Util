@@ -18,7 +18,7 @@
     <FileVersion>2.7</FileVersion>
     <DefineConstants>WinCopies2;$(DefineConstants)</DefineConstants>
     <RootNamespace>WinCopies.Util.Desktop</RootNamespace>
-    <PackageIcon>WinCopies.ico</PackageIcon>
+    <PackageIcon>WinCopies.png</PackageIcon>
   </PropertyGroup>
 
   <Import Project="..\WinCopies.Util.Desktop.Shared\WinCopies.Util.Desktop.Shared.projitems" Label="Shared" />
@@ -86,7 +86,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\..\..\WinCopies-framework\Source\WinCopies.ico">
+    <None Include="..\WinCopies.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>

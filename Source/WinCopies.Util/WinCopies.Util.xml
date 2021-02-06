@@ -846,6 +846,13 @@
             <param name="d">The <see cref="T:System.Decimal"/> in which one set the <see cref="T:System.Decimal"/> value</param>
             <returns>A <see cref="T:System.Boolean"/> value that indicates whether the <see cref="T:System.String"/> given is a <see cref="T:System.Decimal"/>.</returns>
         </member>
+        <member name="M:WinCopies.UtilHelpers.GetAllEnumFlags``1">
+            <summary>
+            Get all the flags in a flags enum.
+            </summary>
+            <typeparam name="T">The type of the enum.</typeparam>
+            <returns>All the flags in the given enum type.</returns>
+        </member>
         <member name="M:WinCopies.UtilHelpers.GetNumValue``1(System.String@)">
             <summary>
             Gets the numeric value for a field in an enum.

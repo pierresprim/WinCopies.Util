@@ -16,13 +16,13 @@
     <RootNamespace>WinCopies.Util</RootNamespace>
     <AssemblyOriginatorKeyFile>WinCopies.Collections.snk</AssemblyOriginatorKeyFile>
     <DefineConstants>WinCopies3;$(DefineConstants)</DefineConstants>
-    <PackageIcon>WinCopies.ico</PackageIcon>
+    <PackageIcon>WinCopies.png</PackageIcon>
   </PropertyGroup>
 
   <Import Project="..\WinCopies.Collections.Shared\WinCopies.Collections.Shared.projitems" Label="Shared" />
 
   <ItemGroup>
-    <None Include="..\..\..\WinCopies-framework\Source\WinCopies.ico">
+    <None Include="..\WinCopies.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
