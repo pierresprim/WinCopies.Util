@@ -184,6 +184,11 @@ WinCopies.Util.Desktop (2.7)
 
 - Add PushBindings.
 
+12/14/2020 2.6.1.1
+==================
+
+- Add support for .Net 5.0 and .Net Framework 4.0.
+
 12/09/2020 2.6.1
 ================
 
