@@ -9,7 +9,7 @@ CHANGELOG
 Updates
 -------
 
-??/??/???? 3.2.0.0-preview
+02/06/2021 3.2.0.0-preview
 ==========================
 
 - Update WinCopies.Collections.DotNetFix.UIntIndexedListEnumerator and WinCopies.Collections.DotNetFix.Generic.UIntIndexedListEnumerator\<T> constructors.
@@ -163,7 +163,15 @@ WinCopies.Util.Desktop 3.0.0-preview
 	- Properties:
 		- WinCopies.Util.Commands.ApplicationCommands.CloseWindow
 
-??/??/???? 2.7
+02/10/2021 2.7.0.1
+==================
+
+WinCopies.Util.Desktop (2.7.0.1)
+--------------------------------
+
+Bug fixes in the ConverterBase class.
+
+02/06/2021 2.7
 ==============
 
 WinCopies.Util (2.7)

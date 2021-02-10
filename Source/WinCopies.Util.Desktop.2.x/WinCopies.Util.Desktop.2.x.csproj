@@ -12,10 +12,10 @@
     <AssemblyOriginatorKeyFile>WinCopies.Util.Desktop.snk</AssemblyOriginatorKeyFile>
     <DocumentationFile>WinCopies.Util.Desktop.xml</DocumentationFile>
     <PackageTags>WinCopies</PackageTags>
-    <VersionPrefix>2.7</VersionPrefix>
+    <VersionPrefix>2.7.0.1</VersionPrefix>
     <!--<VersionSuffix>preview</VersionSuffix>-->
-    <AssemblyVersion>2.7</AssemblyVersion>
-    <FileVersion>2.7</FileVersion>
+    <AssemblyVersion>2.7.0.1</AssemblyVersion>
+    <FileVersion>2.7.0.1</FileVersion>
     <DefineConstants>WinCopies2;$(DefineConstants)</DefineConstants>
     <RootNamespace>WinCopies.Util.Desktop</RootNamespace>
     <PackageIcon>WinCopies.png</PackageIcon>

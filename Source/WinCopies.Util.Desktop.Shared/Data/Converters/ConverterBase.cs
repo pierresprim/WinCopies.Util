@@ -23,7 +23,7 @@ using System.Windows.Markup;
 namespace WinCopies.Util.Data
 {
     /// <summary>
-    /// Provides a base-class for any data <see cref="Binding"/> converter.
+    /// Provides a base class for any data <see cref="Binding"/> converter.
     /// </summary>
     [MarkupExtensionReturnType(typeof(System.Windows.Data.IValueConverter))]
     public abstract class ConverterBase : MarkupExtension, System.Windows.Data.IValueConverter
@@ -100,15 +100,17 @@ namespace WinCopies.Util.Data
 
         protected abstract bool ConvertBack(TDestination value, TParam parameter, CultureInfo culture, out TSource result);
 
+        public bool CheckForNullItem(in object value, in bool methodParameter) => !methodParameter && value == null;
+
         public sealed override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (Direction.HasFlag(ConversionWays.OneWay))
             {
-                if (!ConvertOptions.AllowNullValue)
+                if (CheckForNullItem(value, ConvertOptions.AllowNullValue))
 
                     throw new ArgumentNullException(nameof(value));
 
-                if (!ConvertOptions.AllowNullParameter)
+                if (CheckForNullItem(parameter, ConvertOptions.AllowNullParameter))
 
                     throw new ArgumentNullException(nameof(parameter));
 
@@ -127,18 +129,18 @@ namespace WinCopies.Util.Data
                     : parameter == null ? convert((TSource)value, default) : convert((TSource)value, (TParam)parameter);
             }
 
-            throw new InvalidOperationException();
+            throw new InvalidOperationException("The OneWay conversion direction is not supported.");
         }
 
         public sealed override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (Direction.HasFlag(ConversionWays.OneWayToSource))
             {
-                if (!ConvertOptions.AllowNullValue)
+                if (CheckForNullItem(value, ConvertOptions.AllowNullValue))
 
                     throw new ArgumentNullException(nameof(value));
 
-                if (!ConvertOptions.AllowNullParameter)
+                if (CheckForNullItem(parameter, ConvertOptions.AllowNullParameter))
 
                     throw new ArgumentNullException(nameof(parameter));
 
@@ -157,7 +159,7 @@ namespace WinCopies.Util.Data
                     : parameter == null ? convertBack((TDestination)value, default) : convertBack((TDestination)value, (TParam)parameter);
             }
 
-            throw new InvalidOperationException();
+            throw new InvalidOperationException("The OneWayToSource conversion direction is not supported.");
         }
     }
 

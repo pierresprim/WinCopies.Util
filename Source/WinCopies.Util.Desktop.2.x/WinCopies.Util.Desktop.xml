@@ -1199,7 +1199,7 @@
         </member>
         <member name="T:WinCopies.Util.Data.ConverterBase">
             <summary>
-            Provides a base-class for any data <see cref="T:System.Windows.Data.Binding"/> converter.
+            Provides a base class for any data <see cref="T:System.Windows.Data.Binding"/> converter.
             </summary>
         </member>
         <member name="M:WinCopies.Util.Data.ConverterBase.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
