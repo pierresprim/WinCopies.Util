@@ -16,8 +16,9 @@ WinCopies.Collections 3.3.0.0-preview
 -------------------------------------
 
 - #24
-- Additions:
-	- Optional parameter to ArrayEnumerator's constructor to allow reversed enumeration.
+- Removals:
+	- TEnumDestination generic type parameter from WinCopies.Collections.Generic.Enumerator\<TSource, TEnumSource, TDestination, TEnumDestination>. This class is now defined as Enumerator\<TSource, TEnumSource, TDestination>.
+	- ArrayEnumerator.Array property.
 
 02/06/2021 3.2.0.0-preview
 ==========================
@@ -172,6 +173,18 @@ WinCopies.Util.Desktop 3.0.0-preview
 - Removals:
 	- Properties:
 		- WinCopies.Util.Commands.ApplicationCommands.CloseWindow
+
+??/??/???? 2.8.0.0
+==================
+
+WinCopies.Collections 2.8.0.0
+-----------------------------
+
+- Additions:
+	- Optional parameter to ArrayEnumerator's constructor to allow reversed enumeration.
+	- New enumeration classes.
+- Changes:
+	- ArrayEnumerator now inherits from a new base class.
 
 02/10/2021 2.7.0.1
 ==================

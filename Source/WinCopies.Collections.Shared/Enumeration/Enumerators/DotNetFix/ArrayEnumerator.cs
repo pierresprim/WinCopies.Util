@@ -30,27 +30,33 @@ using static WinCopies.ThrowHelper;
 
 namespace WinCopies.Collections.DotNetFix.Generic
 {
-    public class ArrayEnumerator<T> :
+    public abstract class ArrayEnumeratorBase<TEnumerable, TItems> :
 #if WinCopies3
-        Enumerator<T>,
+        EnumeratorInfo<TItems>,
 #endif
-        ICountableDisposableEnumeratorInfo<T>
+        ICountableDisposableEnumeratorInfo<TItems> where TEnumerable : System.Collections.Generic.IEnumerable<TItems>
     {
-        private T[] _array;
         private int _currentIndex;
         private readonly bool _reverse;
         private Func<bool> _condition;
         private Func<int> _moveNext;
+        private Func<int, TItems> _getAt;
+        private Func<int> _getLength;
+
+#if !WinCopies3
+        private T[] _array;
 
         protected T[] Array => IsDisposed ? throw GetExceptionForDispose(false) : _array;
+#endif
 
-        public int Count => IsDisposed ? throw GetExceptionForDispose(false) : _array.Length;
+        public int Count => IsDisposed ? throw GetExceptionForDispose(false) : _getLength();
 
         protected int CurrentIndex => IsDisposed ? throw GetExceptionForDispose(false) : _currentIndex;
 
-        public ArrayEnumerator(in T[] array, bool reverse = false)
+        public ArrayEnumeratorBase(in TEnumerable enumerable, in Func<int, TItems> getAt, in Func<int> getLength, in bool reverse = false) : base(enumerable)
         {
-            _array = array ?? throw GetArgumentNullException(nameof(array));
+            _getAt = getAt ?? throw GetArgumentNullException(nameof(getAt));
+            _getLength = getLength ?? throw GetArgumentNullException(nameof(getLength));
 
 #if WinCopies3
             ResetCurrent();
@@ -66,13 +72,13 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
             else
             {
-                _condition = () => _currentIndex < _array.Length;
+                _condition = () => _currentIndex < _getLength();
                 _moveNext = () => _currentIndex++;
             }
         }
 
 #if WinCopies3
-        protected override T CurrentOverride => _array[_currentIndex];
+        protected override TItems CurrentOverride => _getAt(_currentIndex);
 
         public override bool? IsResetSupported => true;
 
@@ -118,7 +124,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
         private void _Reset()
         {
 #endif
-            _currentIndex = _reverse ? _array.Length : -1;
+            _currentIndex = _reverse ? _getLength() : -1;
 
 #if !WinCopies3
             IsStarted = false;
@@ -139,11 +145,10 @@ namespace WinCopies.Collections.DotNetFix.Generic
             if (disposing)
             {
 #endif
-            _array = null;
-
             _condition = null;
-
             _moveNext = null;
+            _getAt = null;
+            _getLength = null;
 
             Reset();
 
@@ -158,7 +163,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
         public bool IsCompleted { get; private set; }
 
-        public T Current => IsStarted && !IsDisposed ? _array[_currentIndex] : throw GetEnumeratorNotStartedOrDisposedException();
+        public T Current => IsStarted && !IsDisposed ? _getAt(_currentIndex) : throw GetEnumeratorNotStartedOrDisposedException();
 
         object System.Collections.IEnumerator.Current => Current;
 
@@ -177,5 +182,21 @@ namespace WinCopies.Collections.DotNetFix.Generic
             IsCompleted = false;
         }
 #endif
+    }
+
+    public class ArrayEnumerator<T> : ArrayEnumeratorBase<T[], T>
+    {
+        public ArrayEnumerator(T[] array, in bool reverse = false) : base(array ?? throw GetArgumentNullException(nameof(array)), i => array[i], () => array.Length, reverse)
+        {
+            // Left empty.
+        }
+    }
+
+    public class ListEnumerator<T> : ArrayEnumeratorBase<System.Collections.Generic.IReadOnlyList<T>, T>
+    {
+        public ListEnumerator(System.Collections.Generic.IReadOnlyList<T> list, in bool reverse = false) : base(list ?? throw GetArgumentNullException(nameof(list)), i => list[i], () => list.Count, reverse)
+        {
+            // Left empty.
+        }
     }
 }

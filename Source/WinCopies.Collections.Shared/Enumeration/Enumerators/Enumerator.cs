@@ -438,14 +438,20 @@ _enumerationStarted
         }
 #endif
 
-        public abstract class Enumerator<TSource, TEnumSource, TDestination, TEnumDestination> :
+        public abstract class Enumerator<TSource, TEnumSource, TDestination
+#if !WinCopies3
+            , TEnumDestination
+#endif
+            > :
 #if !WinCopies3
             System.Collections.Generic.IEnumerator<TDestination>, WinCopies.Util.DotNetFix.IDisposable
 #else
             Enumerator<TDestination>
 #endif
             where TEnumSource : System.Collections.Generic.IEnumerator<TSource>
+#if !WinCopies3
             where TEnumDestination : System.Collections.Generic.IEnumerator<TDestination>
+#endif
         {
             private TEnumSource _innerEnumerator;
 
@@ -541,7 +547,11 @@ _enumerationStarted
 #endif
         }
 
-        public abstract class Enumerator<TSource, TDestination> : Enumerator<TSource, System.Collections.Generic.IEnumerator<TSource>, TDestination, System.Collections.Generic.IEnumerator<TDestination>>
+        public abstract class Enumerator<TSource, TDestination> : Enumerator<TSource, System.Collections.Generic.IEnumerator<TSource>, TDestination
+#if !WinCopies3
+            , System.Collections.Generic.IEnumerator<TDestination>
+#endif
+            >
         {
             /// <summary>
             /// When overridden in a derived class, initializes a new instance of the <see cref="Enumerator{TSource, TDestination}"/> class.
