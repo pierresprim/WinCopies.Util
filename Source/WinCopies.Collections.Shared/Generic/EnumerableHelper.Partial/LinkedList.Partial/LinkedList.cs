@@ -37,8 +37,6 @@ namespace WinCopies.Collections.Generic
 
             public bool HasItems => FirstNode != null;
 
-            public bool SupportsReversedEnumeration => true;
-
             public bool TryGetFirst(out T result)
             {
                 if (FirstNode == null)
@@ -69,7 +67,7 @@ namespace WinCopies.Collections.Generic
 
             public void AddFirst(T item)
             {
-                FirstNode = (FirstNode.Previous = new Node(item));
+                FirstNode = FirstNode == null ? new Node(item) : (FirstNode.Previous = new Node(item));
 
                 if (LastNode == null)
 
@@ -78,7 +76,7 @@ namespace WinCopies.Collections.Generic
 
             public void AddLast(T item)
             {
-                LastNode = (LastNode.Next = new Node(item));
+                LastNode = LastNode == null ? new Node(item) : (LastNode.Next = new Node(item));
 
                 if (FirstNode == null)
 

@@ -9,6 +9,16 @@ CHANGELOG
 Updates
 -------
 
+??/??/???? 3.3.0.0-preview
+==========================
+
+WinCopies.Collections 3.3.0.0-preview
+-------------------------------------
+
+- #24
+- Additions:
+	- Optional parameter to ArrayEnumerator's constructor to allow reversed enumeration.
+
 02/06/2021 3.2.0.0-preview
 ==========================
 
