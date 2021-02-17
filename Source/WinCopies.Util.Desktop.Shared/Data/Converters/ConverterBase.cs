@@ -244,6 +244,14 @@ namespace WinCopies.Util.Data
         bool IOneWayConverter<TSource, TParam, TDestination>.Convert(TSource value, TParam parameter, CultureInfo culture, out TDestination result) => Convert(value, parameter, culture, out result);
 
         TDestination IAlwaysConvertibleOneWayConverter<TSource, TParam, TDestination>.Convert(TSource value, TParam parameter, CultureInfo culture) => Convert(value, parameter, culture);
+
+#if WinCopies3
+        private static InvalidOperationException GetException() => new InvalidOperationException("The current converter does not support back conversion.");
+
+        public sealed override ConversionOptions ConvertBackOptions => throw GetException();
+
+        protected sealed override TSource ConvertBack(TDestination value, TParam parameter, CultureInfo culture) => throw GetException();
+#endif
     }
 
     public abstract class AlwaysConvertibleOneWayToSourceConverter<TSource, TParam, TDestination> : AlwaysConvertibleConverterBase<TSource, TParam, TDestination>, IAlwaysConvertibleOneWayToSourceConverter<TSource, TParam, TDestination>
@@ -253,6 +261,14 @@ namespace WinCopies.Util.Data
         bool IOneWayToSourceConverter<TSource, TParam, TDestination>.ConvertBack(TDestination value, TParam parameter, CultureInfo culture, out TSource result) => ConvertBack(value, parameter, culture, out result);
 
         TSource IAlwaysConvertibleOneWayToSourceConverter<TSource, TParam, TDestination>.ConvertBack(TDestination value, TParam parameter, CultureInfo culture) => ConvertBack(value, parameter, culture);
+
+#if WinCopies3
+        private static InvalidOperationException GetException() => new InvalidOperationException("The current converter does not support back conversion.");
+
+        public sealed override ConversionOptions ConvertOptions => throw GetException();
+
+        protected sealed override TDestination Convert(TSource value, TParam parameter, CultureInfo culture) => throw GetException();
+#endif
     }
 
     public abstract class AlwaysConvertibleTwoWayConverter<TSource, TParam, TDestination> : AlwaysConvertibleConverterBase<TSource, TParam, TDestination>, IAlwaysConvertibleValueConverter<TSource, TParam, TDestination>

@@ -42,7 +42,7 @@ namespace WinCopies.Collections.Generic
 
     public class LinkedTreeNode<T> : ILinkedTreeNode<T>, IEnumerableInfo<T>
     {
-        public class Enumerator : Enumerator<DotNetFix.Generic.LinkedList<LinkedTreeNode<T>>.LinkedListNode, IUIntCountableEnumeratorInfo<DotNetFix.Generic.LinkedList<LinkedTreeNode<T>>.LinkedListNode>, LinkedTreeNode<T>, IUIntCountableEnumeratorInfo<LinkedTreeNode<T>>>, IUIntCountableEnumeratorInfo<LinkedTreeNode<T>> // LinkedTreeNode<T> does not make checks during enumeration because these checks are performed in the inner LinkedList<LinkedTreeNode<T>>'s enumerator.
+        public class Enumerator : Enumerator<DotNetFix.Generic.LinkedList<LinkedTreeNode<T>>.LinkedListNode, IUIntCountableEnumeratorInfo<DotNetFix.Generic.LinkedList<LinkedTreeNode<T>>.LinkedListNode>, LinkedTreeNode<T>>, IUIntCountableEnumeratorInfo<LinkedTreeNode<T>> // LinkedTreeNode<T> does not make checks during enumeration because these checks are performed in the inner LinkedList<LinkedTreeNode<T>>'s enumerator.
         {
             /// <summary>
             /// When overridden in a derived class, gets the element in the collection at the current position of the enumerator.

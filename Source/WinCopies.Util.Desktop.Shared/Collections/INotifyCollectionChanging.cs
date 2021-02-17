@@ -16,6 +16,9 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 namespace WinCopies.Collections
+#if WinCopies3
+.DotNetFix
+#endif
 {
     public interface INotifyCollectionChanging
     {

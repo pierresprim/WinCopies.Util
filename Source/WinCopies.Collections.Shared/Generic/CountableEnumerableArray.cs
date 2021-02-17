@@ -27,7 +27,7 @@ using WinCopies.Collections.DotNetFix.Generic;
 namespace WinCopies.Collections.Generic
 {
 #if WinCopies3
-    public class UIntCountableEnumerator<T> : Enumerator<T, ICountableEnumeratorInfo<T>, T, IUIntCountableEnumeratorInfo<T>>, IUIntCountableEnumeratorInfo<T>
+    public class UIntCountableEnumerator<T> : Enumerator<T, ICountableEnumeratorInfo<T>, T>, IUIntCountableEnumeratorInfo<T>
     {
         public uint Count => (uint)InnerEnumerator.Count;
 

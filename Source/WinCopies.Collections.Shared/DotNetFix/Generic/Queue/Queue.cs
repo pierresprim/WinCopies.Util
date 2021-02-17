@@ -44,7 +44,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
     public interface IQueue<T> : ISimpleLinkedList<T>, IQueueBase<T>
     {
-        // This method is re-defined to avoid amibguous calls.
+        // These methods are re-defined to avoid amibguous calls.
 
         new T Peek();
 

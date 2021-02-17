@@ -15,10 +15,46 @@ Updates
 WinCopies.Collections 3.3.0.0-preview
 -------------------------------------
 
-- #24
+- Additions:
+	- WinCopies.Collections.IObservableCollectionBase
+	- WinCopies.Collections.DotNetFix.Generic.IObservableCollectionBase\<T>
+- Changes:
+	- WinCopies.Collections:
+		The following classes are now in the WinCopies.Collections.DotNetFix namespace:
+		- INotifyCollectionChanging
+		- NotifyCollectionChangingEventHandler
+	- WinCopies.Collections.DotNetFix.IObservableCollection\<T> is now in the WinCopies.Collections.DotNetFix.Generic namespace.
+- WinCopies.Linq.Extensions:
+	- Additions:
+		- Merge(this System.Collections.Generic.IEnumerable<System.Collections.IEnumerable> enumerable)
+	- The name of the following methods of this class have changed:
+		- Last<T>(this WinCopies.Collections.Generic.IEnumerable<T> enumerable, Predicate<T> predicate) ==> PredicateLast
+		- LastOrDefault<T>(this WinCopies.Collections.Generic.IEnumerable<T> enumerable, Predicate<T> predicate) ==> PredicateLastOrDefault
+		- FirstOrDefault<T>(this IEnumerable enumerable, in Predicate<T> predicate) ==> PredicateFirstOrDefault
+- WinCopies.Collections.DotNetFix.NotifyCollectionChangedEventArgs:
+	- Additions:
+		- NotifyCollectionChangedEventArgs(in bool isChangingEvent, in NotifyCollectionChangedAction action)
+	- Removals:
+		- ResetItems property
+		- NotifyCollectionChangedEventArgs constructor
+- Bug fixes:
+	- WinCopies.Collections.DotNetFix.ReadOnlyEnumerableQueue.TryPeek kept calling itself.
+	- #24
 - Removals:
 	- TEnumDestination generic type parameter from WinCopies.Collections.Generic.Enumerator\<TSource, TEnumSource, TDestination, TEnumDestination>. This class is now defined as Enumerator\<TSource, TEnumSource, TDestination>.
 	- ArrayEnumerator.Array property.
+
+WinCopies.Util.Desktop 3.3.0.0-preview
+--------------------------------------
+
+- AlwaysConvertibleOneWayConverter:
+	The following properties and methods have now sealed overrides:
+	- ConvertBackOptions
+	- ConvertBack(TDestination value, TParam parameter, CultureInfo culture)
+- AlwaysConvertibleOneWayToSourceConverter:
+	The following properties and methods have now sealed overrides:
+	- ConvertOptions
+	- Convert(TSource value, TParam parameter, CultureInfo culture)
 
 02/06/2021 3.2.0.0-preview
 ==========================

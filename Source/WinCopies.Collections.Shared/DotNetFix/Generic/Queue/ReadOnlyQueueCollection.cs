@@ -28,7 +28,6 @@ namespace WinCopies.Collections.DotNetFix
     namespace Generic
     {
 #endif
-
         [Serializable]
         public class ReadOnlyQueueCollection<T> : System.Collections.Generic.IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection
         {

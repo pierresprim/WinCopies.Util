@@ -22,17 +22,20 @@ namespace WinCopies.Collections.DotNetFix
 {
     public class NotifyCollectionChangedEventArgs : System.Collections.Specialized.NotifyCollectionChangedEventArgs
     {
-        public bool IsChangingEvent { get; } = false;
+        public bool IsChangingEvent { get; }
 
+#if WinCopies3
+        public NotifyCollectionChangedEventArgs(in bool isChangingEvent, in NotifyCollectionChangedAction action) : base(action) => IsChangingEvent = isChangingEvent;
+#else
         public IList ResetItems { get; }
 
         public NotifyCollectionChangedEventArgs(IList resetItems) : base(NotifyCollectionChangedAction.Reset)
-
         {
             IsChangingEvent = true;
 
             ResetItems = resetItems;
         }
+#endif
 
         public NotifyCollectionChangedEventArgs(bool isChangingEvent, NotifyCollectionChangedAction action, object changedItem) : base(action, changedItem) => IsChangingEvent = isChangingEvent;
 

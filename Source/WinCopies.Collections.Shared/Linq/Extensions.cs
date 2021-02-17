@@ -19,13 +19,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+
 using WinCopies.Collections;
-using WinCopies.Collections.DotNetFix;
-using WinCopies.Collections.DotNetFix.Generic;
 using WinCopies.Collections.Generic;
 
 #if !WinCopies3
-using WinCopies.Collections;
 using WinCopies.Util;
 
 using static WinCopies.Util.Util;
@@ -50,7 +48,7 @@ System.Collections.Generic.IEnumerable
             Enumerable
 #endif
             <T>(() => new JoinEnumerator<T>(enumerable, keepEmptyEnumerables, join)
-            #if WinCopies3
+#if WinCopies3
             , null
 #endif
             );
@@ -134,7 +132,7 @@ Select
             return ((System.Collections.Generic.IEnumerable<T>)enumerable).Last();
         }
 
-        public static T Last<T>(this WinCopies.Collections.Generic.IEnumerable<T> enumerable, Predicate<T> predicate)
+        public static T PredicateLast<T>(this WinCopies.Collections.Generic.IEnumerable<T> enumerable, Predicate<T> predicate)
         {
             ThrowIfNull(enumerable, nameof(enumerable));
             ThrowIfNull(predicate, nameof(predicate));
@@ -167,7 +165,7 @@ Select
             return ((System.Collections.Generic.IEnumerable<T>)enumerable).LastOrDefault();
         }
 
-        public static T LastOrDefault<T>(this WinCopies.Collections.Generic.IEnumerable<T> enumerable, Predicate<T> predicate)
+        public static T PredicateLastOrDefault<T>(this WinCopies.Collections.Generic.IEnumerable<T> enumerable, Predicate<T> predicate)
         {
             ThrowIfNull(enumerable, nameof(enumerable));
             ThrowIfNull(predicate, nameof(predicate));
@@ -196,7 +194,7 @@ Select
         /// <param name="enumerable">The <see cref="IEnumerable"/> in which to look for the first item of the given type.</param>
         /// <returns>The first item, if any, from <typeparamref name="T"/> in <paramref name="enumerable"/> or the default value for <typeparamref name="T"/> if none value was found.</returns>
         /// <seealso cref="LastOrDefault{T}(IEnumerable)"/>
-        /// <seealso cref="FirstOrDefault{T}(IEnumerable, in Predicate{T})"/>
+        /// <seealso cref="PredicateFirstOrDefault{T}(IEnumerable, in Predicate{T})"/>
         /// <seealso cref="LastOrDefault{T}(IEnumerable, in Predicate{T})"/>
         public static T FirstOrDefault<T>(this IEnumerable enumerable)
         {
@@ -219,7 +217,7 @@ Select
         /// <seealso cref="LastOrDefault{T}(IEnumerable, in Predicate{T})"/>
         /// <seealso cref="FirstOrDefault{T}(IEnumerable)"/>
         /// <seealso cref="LastOrDefault{T}(IEnumerable)"/>
-        public static T FirstOrDefault<T>(this IEnumerable enumerable, in Predicate<T> predicate)
+        public static T PredicateFirstOrDefault<T>(this IEnumerable enumerable, in Predicate<T> predicate)
         {
             ThrowIfNull(enumerable, nameof(enumerable));
 
@@ -237,7 +235,7 @@ Select
         /// <param name="enumerable">The <see cref="IEnumerable"/> in which to look for the last item of the given type.</param>
         /// <returns>The last item, if any, from <typeparamref name="T"/> in <paramref name="enumerable"/> or the default value for <typeparamref name="T"/> if none value was found.</returns>
         /// <seealso cref="FirstOrDefault{T}(IEnumerable)"/>
-        /// <seealso cref="FirstOrDefault{T}(IEnumerable, in Predicate{T})"/>
+        /// <seealso cref="PredicateFirstOrDefault{T}(IEnumerable, in Predicate{T})"/>
         /// <seealso cref="LastOrDefault{T}(IEnumerable, in Predicate{T})"/>
         public static T LastOrDefault<T>(this IEnumerable enumerable)
         {
@@ -261,7 +259,7 @@ Select
         /// <param name="enumerable">The <see cref="IEnumerable"/> in which to look for the last item of the given type.</param>
         /// <param name="predicate">The predicate to validate.</param>
         /// <returns>The last item, if any, from <typeparamref name="T"/> in <paramref name="enumerable"/> or the default value for <typeparamref name="T"/> if none value was found.</returns>
-        /// <seealso cref="FirstOrDefault{T}(IEnumerable, in Predicate{T})"/>
+        /// <seealso cref="PredicateFirstOrDefault{T}(IEnumerable, in Predicate{T})"/>
         /// <seealso cref="FirstOrDefault{T}(IEnumerable)"/>
         /// <seealso cref="LastOrDefault{T}(IEnumerable)"/>
         public static T LastOrDefault<T>(this IEnumerable enumerable, in Predicate<T> predicate)
@@ -410,6 +408,15 @@ Select
             foreach (System.Collections.Generic.IEnumerable<T> _enumerable in enumerable)
 
                 foreach (T item in _enumerable)
+
+                    yield return item;
+        }
+
+        public static System.Collections.IEnumerable Merge(this System.Collections.Generic.IEnumerable<System.Collections.IEnumerable> enumerable)
+        {
+            foreach (System.Collections.IEnumerable _enumerable in enumerable)
+
+                foreach (object item in _enumerable)
 
                     yield return item;
         }
