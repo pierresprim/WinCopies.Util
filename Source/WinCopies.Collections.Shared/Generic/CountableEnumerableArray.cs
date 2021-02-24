@@ -17,12 +17,11 @@
 
 using System.Collections;
 
-#if WinCopies3
-using System.Collections.Generic;
-#else
-using WinCopies.Collections.DotNetFix;
-#endif
 using WinCopies.Collections.DotNetFix.Generic;
+
+using WinCopies.Collections.DotNetFix;
+
+using IEnumerator = System.Collections.IEnumerator;
 
 namespace WinCopies.Collections.Generic
 {
@@ -41,25 +40,39 @@ namespace WinCopies.Collections.Generic
     }
 #endif
 
-#if CS7
-    public interface IReadOnlyList<out T> : System.Collections.Generic.IReadOnlyList<T>, ICountableEnumerable<T>
+    public interface IReadOnlyList : ICountableEnumerable
     {
-        // Left empty.
+        object this[int index] { get; }
     }
-#endif
 
-    public class CountableEnumerableArray<T> :
-#if CS7
-        IReadOnlyList<T>
-#else
-        ICountableEnumerable<T>
+    public interface IReadOnlyList<out T> : ICountableEnumerable<T>
+#if WinCopies3
+        , IReadOnlyList
 #endif
+#if CS7
+, System.Collections.Generic.IReadOnlyList<T>
+#endif
+    {
+#if WinCopies3
+        new int Count { get; }
+
+#if !CS7
+        T this[int index] { get; }
+#endif
+#endif
+    }
+
+    public class CountableEnumerableArray<T> : IReadOnlyList<T>
     {
         protected T[] Array { get; }
 
         public int Count => Array.Length;
 
         public T this[int index] => Array[index];
+
+#if WinCopies3
+        object IReadOnlyList.this[int index] => this[index];
+#endif
 
         public CountableEnumerableArray(in T[] array) => Array = array;
 
@@ -69,9 +82,15 @@ namespace WinCopies.Collections.Generic
 #else
          System.Collections.Generic.IEnumerator<T> 
 #endif
-            GetEnumerator() => new ArrayEnumerator<T>(Array);
+            GetEnumerator() => new ArrayEnumerator<T>(
+#if WinCopies3 && !CS7
+                this
+#else
+                Array
+#endif
+                );
 
-        System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
 #if WinCopies3
         ICountableEnumerator<T> ICountableEnumerable<T>.GetEnumerator() => GetEnumerator();

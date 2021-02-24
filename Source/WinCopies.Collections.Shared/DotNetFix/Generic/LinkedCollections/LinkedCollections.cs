@@ -424,9 +424,21 @@ IUIntCountableEnumeratorInfo<T>
 
             IUIntCountableEnumerator<T> IUIntCountableEnumerable<T>.GetEnumerator() => ((IUIntCountableEnumerable<T>)InnerList).GetEnumerator();
 
-            IEnumeratorInfo2<T> IEnumerableInfo<T>.GetEnumerator() => ((IEnumerableInfo<T>)InnerList).GetEnumerator();
+            IEnumeratorInfo2<T>
+#if WinCopies3
+                WinCopies.Collections.DotNetFix.Generic.IEnumerable<T, IEnumeratorInfo2<T>>
+#else
+                IEnumerableInfo<T>
+#endif
+                .GetEnumerator() => ((IEnumerableInfo<T>)InnerList).GetEnumerator();
 
-            IEnumeratorInfo2<T> IEnumerableInfo<T>.GetReversedEnumerator() => ((IEnumerableInfo<T>)InnerList).GetReversedEnumerator();
+            IEnumeratorInfo2<T>
+#if WinCopies3
+               WinCopies.Collections.Generic.IEnumerable<T, IEnumeratorInfo2<T>>
+#else
+                IEnumerableInfo<T>
+#endif
+                .GetReversedEnumerator() => ((IEnumerableInfo<T>)InnerList).GetReversedEnumerator();
 
             System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => ((System.Collections.Generic.IEnumerable<T>)InnerList).GetEnumerator();
 

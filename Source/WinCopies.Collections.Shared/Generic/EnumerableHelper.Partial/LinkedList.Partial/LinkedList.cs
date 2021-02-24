@@ -17,6 +17,7 @@
 
 #if WinCopies3
 
+using WinCopies.Collections.DotNetFix;
 using WinCopies.Collections.DotNetFix.Generic;
 
 using static WinCopies.Collections.ThrowHelper;
@@ -153,6 +154,8 @@ namespace WinCopies.Collections.Generic
 
                     RemoveFirst();
             }
+
+            bool ISimpleLinkedListBase.IsReadOnly => false;
 
             #region IQueueBase implementation
 

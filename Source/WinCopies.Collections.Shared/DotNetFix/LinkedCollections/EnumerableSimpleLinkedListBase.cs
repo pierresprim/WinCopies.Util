@@ -21,7 +21,7 @@ using System.Threading;
 namespace WinCopies.Collections.DotNetFix
 {
 #if WinCopies3
-    public interface IEnumerableSimpleLinkedListBase : ISimpleLinkedListBase
+    public interface IEnumerableSimpleLinkedListBase : ISimpleLinkedListBase2
     {
         // Left empty.
     }
@@ -56,6 +56,8 @@ namespace WinCopies.Collections.DotNetFix
         private protected uint EnumerableVersion => _enumerableVersion;
 
         public abstract uint Count { get; }
+
+        public bool HasItems => Count != 0u;
 
         public bool IsReadOnly => false;
 

@@ -18,10 +18,10 @@
 namespace WinCopies.Collections.DotNetFix.Generic
 {
     public interface
-#if !WinCopies3
-        IStack<T> : ISimpleLinkedList<T>
+#if WinCopies3
+        IStackBase<T> : ISimpleLinkedListBase
 #else
-        IStackBase<T>
+        IStack<T> : ISimpleLinkedList<T>
 #endif
     {
         void Push(T item);
@@ -29,8 +29,6 @@ namespace WinCopies.Collections.DotNetFix.Generic
         T Pop();
 
 #if WinCopies3
-        bool HasItems { get; }
-
         bool TryPop(out T result);
 
         // These methods are defined here because the Peek operation of the Stack is not the same as the Queue one.

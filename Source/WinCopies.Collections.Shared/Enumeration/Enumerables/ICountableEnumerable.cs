@@ -54,6 +54,10 @@ namespace WinCopies.Collections.DotNetFix
 #endif
         {
 #if WinCopies3
+#if CS7
+            new int Count { get; }
+#endif
+
             new ICountableEnumerator<T> GetEnumerator();
 #else
         // Left empty.

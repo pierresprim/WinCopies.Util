@@ -34,9 +34,9 @@ namespace WinCopies.Collections.Generic
 #else
         public bool IsReadOnly => false;
 
-        bool ISimpleLinkedListBase.IsSynchronized => ((ICollection)this).IsSynchronized;
+        bool ISimpleLinkedListBase2.IsSynchronized => ((ICollection)this).IsSynchronized;
 
-        object ISimpleLinkedListBase.SyncRoot => ((ICollection)this).SyncRoot;
+        object ISimpleLinkedListBase2.SyncRoot => ((ICollection)this).SyncRoot;
 #endif
 
         uint IUIntCountable.Count => (uint)Count;
@@ -81,9 +81,9 @@ namespace WinCopies.Collections.Generic
 #else
         public bool IsReadOnly => false;
 
-        bool ISimpleLinkedListBase.IsSynchronized => ((ICollection)this).IsSynchronized;
+        bool ISimpleLinkedListBase2.IsSynchronized => ((ICollection)this).IsSynchronized;
 
-        object ISimpleLinkedListBase.SyncRoot => ((ICollection)this).SyncRoot;
+        object ISimpleLinkedListBase2.SyncRoot => ((ICollection)this).SyncRoot;
 #endif
 
         uint IUIntCountable.Count => (uint)Count;

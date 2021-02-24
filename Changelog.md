@@ -16,14 +16,27 @@ WinCopies.Collections 3.3.0.0-preview
 -------------------------------------
 
 - Additions:
-	- WinCopies.Collections.IObservableCollectionBase
-	- WinCopies.Collections.DotNetFix.Generic.IObservableCollectionBase\<T>
+	- WinCopies.Collections.IEnumerable\<out TItems, out TEnumerator>
 - Changes:
 	- WinCopies.Collections:
-		The following classes are now in the WinCopies.Collections.DotNetFix namespace:
-		- INotifyCollectionChanging
-		- NotifyCollectionChangingEventHandler
-	- WinCopies.Collections.DotNetFix.IObservableCollection\<T> is now in the WinCopies.Collections.DotNetFix.Generic namespace.
+		- Stack/Queue.IsReadOnly are now accessible through the explicit interface implementation of ISimpleLinkedListBase.
+		- The following classes are now in the WinCopies.Collections.DotNetFix namespace:
+			- INotifyCollectionChanging
+			- NotifyCollectionChangingEventHandler
+	- WinCopies.Collections.Generic:
+		- IEnumerableInfo\<out T>.GetReversedEnumerator() is now in the new IEnumerable\<out TItems, out TEnumerator> interface.
+		- IReadOnlyList now implements the new IReadOnlyList interface.
+	- WinCopies.Collections.DotNetFix.ISimpleLinkedListBase has changed. Some of its members are now in the new interface WinCopies.Collections.DotNetFix.ISimpleLinkedListBase2.
+	- WinCopies.Collections.DotNetFix.Generic:
+		- ISimpleLinkedList\<T> now implements WinCopies.Collections.DotNetFix.ISimpleLinkedListBase2.
+		- IQueueBase\<T> and IStackBase\<T> now implement WinCopies.Collections.DotNetFix.ISimpleLinkedListBase.
+	- WinCopies.Collections.DotNetFix:
+		- IEnumerableSimpleLinkedListBase, ReadOnlySimpleLinkedListBase, SimpleLinkedListBase now implement ISimpleLinkedListBase2
+	- WinCopies.Collections.DotNetFix.Generic.ArrayEnumerator\<T> is now compatible with any System.Collections.Generic.IReadOnlyList\<T>. Use WinCopies.Collections.Generic.CountableEnumerableArray\<T> to use an array with ArrayEnumerator\<T>.
+	- The following methods of WinCopies.Collections.EnumerableExtensions are now in WinCopies.Linq.Extensions:
+		- AsObjectEnumerable(this IEnumerable enumerable)
+		- As<T>(this System.Collections.IEnumerable enumerable)
+		- To<T>(this System.Collections.IEnumerable enumerable)
 - WinCopies.Linq.Extensions:
 	- Additions:
 		- Merge(this System.Collections.Generic.IEnumerable<System.Collections.IEnumerable> enumerable)
@@ -43,10 +56,20 @@ WinCopies.Collections 3.3.0.0-preview
 - Removals:
 	- TEnumDestination generic type parameter from WinCopies.Collections.Generic.Enumerator\<TSource, TEnumSource, TDestination, TEnumDestination>. This class is now defined as Enumerator\<TSource, TEnumSource, TDestination>.
 	- ArrayEnumerator.Array property.
+	- ArrayEnumeratorBase
+	- ListEnumerator. Use the new version of ArrayEnumerator instead.
 
 WinCopies.Util.Desktop 3.3.0.0-preview
 --------------------------------------
 
+- Additions:
+	- WinCopies.Collections.IObservableCollectionBase
+	- WinCopies.Collections.DotNetFix.IObservableCollection\<T> is now in the WinCopies.Collections.DotNetFix.Generic namespace.
+	- WinCopies.Collections.DotNetFix.Generic:
+		- ICountableEnumerable.Count
+		- IObservableCollectionBase\<T>
+	- New helper methods to ConverterBase.
+	- Generic MultiConverterBase.
 - AlwaysConvertibleOneWayConverter:
 	The following properties and methods have now sealed overrides:
 	- ConvertBackOptions
@@ -221,6 +244,7 @@ WinCopies.Collections 2.8.0.0
 	- New enumeration classes.
 - Changes:
 	- ArrayEnumerator now inherits from a new base class.
+	- CountableEnumerableArray\<T> is now defined as : public class CountableEnumerableArray<T> : WinCopies.Collections.Generic.IReadOnlyList\<T>
 
 02/10/2021 2.7.0.1
 ==================

@@ -21,7 +21,12 @@ using static WinCopies.Collections.ThrowHelper;
 
 namespace WinCopies.Collections.DotNetFix
 {
-    public abstract class SimpleLinkedListBase : ISimpleLinkedListBase
+    public abstract class SimpleLinkedListBase :
+#if WinCopies3
+            ISimpleLinkedListBase2
+#else
+            ISimpleLinkedListBase
+#endif
     {
         private object _syncRoot;
 
@@ -34,7 +39,13 @@ namespace WinCopies.Collections.DotNetFix
 
         public bool HasItems => Count != 0;
 
-        object ISimpleLinkedListBase.SyncRoot
+        object
+#if WinCopies3
+            ISimpleLinkedListBase2
+#else
+            ISimpleLinkedListBase
+#endif
+            .SyncRoot
         {
             get
             {
@@ -46,7 +57,13 @@ namespace WinCopies.Collections.DotNetFix
             }
         }
 
-        bool ISimpleLinkedListBase.IsSynchronized => false;
+        bool
+#if WinCopies3
+            ISimpleLinkedListBase2
+#else
+            ISimpleLinkedListBase
+#endif
+            .IsSynchronized => false;
 
         public void Clear()
         {

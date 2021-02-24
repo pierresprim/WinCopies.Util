@@ -166,9 +166,21 @@ namespace WinCopies.Collections.Generic
 
         System.Collections.Generic.IEnumerator<ILinkedListNode<T>> System.Collections.Generic.IEnumerable<ILinkedListNode<T>>.GetEnumerator() => GetNodeEnumerator(EnumerationDirection.FIFO);
 
-        IEnumeratorInfo2<T> IEnumerableInfo<T>.GetEnumerator() => GetEnumerator();
+        IEnumeratorInfo2<T>
+#if WinCopies3
+            WinCopies.Collections.DotNetFix.Generic.IEnumerable<T, IEnumeratorInfo2<T>>
+#else
+            IEnumerableInfo<T>
+#endif
+            .GetEnumerator() => GetEnumerator();
 
-        IEnumeratorInfo2<T> IEnumerableInfo<T>.GetReversedEnumerator() => GetReversedEnumerator();
+        IEnumeratorInfo2<T>
+#if WinCopies3
+            WinCopies.Collections.Generic.IEnumerable<T, IEnumeratorInfo2<T>>
+#else
+            IEnumerableInfo<T>
+#endif
+            .GetReversedEnumerator() => GetReversedEnumerator();
 
         IUIntCountableEnumerator<T> ILinkedList<T>.GetEnumerator() => GetEnumerator();
 
@@ -184,7 +196,7 @@ namespace WinCopies.Collections.Generic
 
 
 
-        private ArgumentException GetNodeIsNotLinkedTreeNodeException(in string argumentName) => new ArgumentException($"{argumentName} must be an instance of {nameof(LinkedTreeNode<T>)}.");
+        private static ArgumentException GetNodeIsNotLinkedTreeNodeException(in string argumentName) => new ArgumentException($"{argumentName} must be an instance of {nameof(LinkedTreeNode<T>)}.");
 
         bool ILinkedList3<T>.MoveAfter(ILinkedListNode<T> node, ILinkedListNode<T> after) => _MoveAfter(node is LinkedTreeNode<T> _node ? _node : throw GetNodeIsNotLinkedTreeNodeException(nameof(node)), after is LinkedTreeNode<T> _after ? _after : throw GetNodeIsNotLinkedTreeNodeException(nameof(after)));
 

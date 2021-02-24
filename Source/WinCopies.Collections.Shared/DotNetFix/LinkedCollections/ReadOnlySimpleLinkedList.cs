@@ -30,7 +30,7 @@ namespace WinCopies.Collections.DotNetFix
 {
     public abstract class ReadOnlySimpleLinkedListBase
 #if WinCopies3
-            : ISimpleLinkedListBase
+            : ISimpleLinkedListBase2
 #endif
     {
         private object _syncRoot;
@@ -38,6 +38,8 @@ namespace WinCopies.Collections.DotNetFix
         public bool IsReadOnly => true;
 
         public abstract uint Count { get; }
+
+        public bool HasItems => Count != 0u;
 
         public object SyncRoot
         {

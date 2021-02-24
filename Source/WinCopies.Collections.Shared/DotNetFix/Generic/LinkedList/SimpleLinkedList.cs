@@ -44,7 +44,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
 #if !WinCopies3
         IUIntCountable
 #else
-        ISimpleLinkedListBase, ISimpleLinkedListBase<T>
+        ISimpleLinkedListBase2, ISimpleLinkedListBase<T>
 #endif
     {
 #if !WinCopies3

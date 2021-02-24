@@ -22,7 +22,6 @@ using static WinCopies.Collections.ThrowHelper;
 
 namespace WinCopies.Collections.DotNetFix
 {
-
     [Serializable]
     public class ReadOnlyStackCollection : IEnumerableStack, ICollection
 #if !WinCopies3
@@ -46,6 +45,14 @@ IEnumerableStack
             uint
 #endif
             Count => InnerStack.Count;
+
+        public bool HasItems => Count !=
+#if WinCopies3
+            0u
+#else
+            0
+#endif
+            ;
 
 #if !WinCopies3
         uint IUIntCountable.Count => (uint)Count;
@@ -99,7 +106,7 @@ IEnumerableStack
             return false;
         }
 
-        void ISimpleLinkedListBase.Clear() => throw GetReadOnlyListOrCollectionException();
+        void ISimpleLinkedListBase2.Clear() => throw GetReadOnlyListOrCollectionException();
 #endif
     }
 }

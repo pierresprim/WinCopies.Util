@@ -30,7 +30,6 @@ using static WinCopies.
 
 namespace WinCopies.Collections.DotNetFix
 {
-
     public interface IEnumerableStack : IStack, IEnumerableSimpleLinkedList
     {
         // Left empty.

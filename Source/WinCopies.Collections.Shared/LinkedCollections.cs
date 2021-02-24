@@ -15,23 +15,26 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if WinCopies3
-using System.Collections;
-#endif
-
 using WinCopies.Collections.DotNetFix;
 
 namespace WinCopies.Collections
 {
     public class Stack : System.Collections.Stack, IEnumerableStack
     {
-        public bool IsReadOnly => false;
+#if WinCopies3
+        bool ISimpleLinkedListBase.
+#else
+        public bool
+#endif
+            IsReadOnly => false;
 
 #if !WinCopies3
         uint IUIntCountableEnumerable.Count => (uint)Count;
 #endif
 
         uint IUIntCountable.Count => (uint)Count;
+
+        public bool HasItems => Count != 0u;
 
         public bool TryPeek(out object result)
         {
@@ -64,13 +67,20 @@ namespace WinCopies.Collections
 
     public class Queue : System.Collections.Queue, IEnumerableQueue
     {
-        public bool IsReadOnly => false;
+#if WinCopies3
+        bool ISimpleLinkedListBase.
+#else
+        public bool
+#endif
+            IsReadOnly => false;
 
 #if !WinCopies3
         uint IUIntCountableEnumerable.Count => (uint)Count;
 #endif
 
         uint IUIntCountable.Count => (uint)Count;
+
+        public bool HasItems => Count != 0u;
 
         public bool TryPeek(out object result)
         {

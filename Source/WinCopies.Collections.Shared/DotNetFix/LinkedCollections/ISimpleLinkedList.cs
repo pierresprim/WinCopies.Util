@@ -28,24 +28,33 @@ namespace WinCopies.Collections.DotNetFix
 #endif
     }
 
-    public interface ISimpleLinkedListBase : IUIntCountable
+    public interface ISimpleLinkedListBase
+#if !WinCopies3
+: IUIntCountable
+#else
+    {
+        bool IsReadOnly { get; }
+
+        bool HasItems { get; }
+    }
+
+    public interface ISimpleLinkedListBase2 : ISimpleLinkedListBase, IUIntCountable
+#endif
     {
         object SyncRoot { get; }
 
         bool IsSynchronized { get; }
 
 #if WinCopies3
-        bool IsReadOnly { get; }
-
         void Clear();
 #endif
     }
 
     public interface ISimpleLinkedList :
-#if !WinCopies3
-             IUIntCountable
+#if WinCopies3
+             ISimpleLinkedListBase2
 #else
-             ISimpleLinkedListBase
+             IUIntCountable
 #endif
     {
 #if !WinCopies3

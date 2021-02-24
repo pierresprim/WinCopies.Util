@@ -35,6 +35,39 @@ namespace WinCopies.Linq
 {
     public static class Extensions
     {
+        /// <summary>
+        /// Yield returns each object of an <see cref="IEnumerable"/>, so the given <see cref="IEnumerable"/> will be considered as an <see cref="IEnumerable{Object}"/>.
+        /// </summary>
+        /// <param name="enumerable">An <see cref="IEnumerable"/> to consider as a <see cref="IEnumerable{Object}"/>.</param>
+        /// <returns>Yield returns the same enumerable as the given <paramref name="enumerable"/>, as an <see cref="IEnumerable{Object}"/>.</returns>
+        public static System.Collections.Generic.IEnumerable<object> AsObjectEnumerable(this IEnumerable enumerable)
+        {
+            ThrowIfNull(enumerable, nameof(enumerable));
+
+            foreach (object item in enumerable)
+
+                yield return item;
+        }
+
+        /// <summary>
+        /// Iterates through a given <see cref="System.Collections.IEnumerable"/> and tries to convert the items to a given generic type parameter. If an item cannot be converted, it is ignored in the resulting enumerable.
+        /// </summary>
+        /// <typeparam name="T">The generic type parameter for the resulting enumerable. Only the items that can be converted to this type will be present in the resulting enumerable.</typeparam>
+        /// <param name="enumerable">The source enumerable.</param>
+        /// <returns>An enumerable containing all the items from <paramref name="enumerable"/> that could be converted to <typeparamref name="T"/>.</returns>
+        /// <seealso cref="To{T}(System.Collections.IEnumerable)"/>
+        public static System.Collections.Generic.IEnumerable<T> As<T>(this System.Collections.IEnumerable enumerable) => new Enumerable<T>(() => new TypeConverterEnumerator<T>(enumerable));
+
+        /// <summary>
+        /// Iterates through a given <see cref="System.Collections.IEnumerable"/> and directly converts the items to a given generic type parameter. An <see cref="InvalidCastException"/> is thrown when an item cannot be converted.
+        /// </summary>
+        /// <typeparam name="T">The generic type parameter for the resulting enumerable. All items in <paramref name="enumerable"/> will be converted to this type.</typeparam>
+        /// <param name="enumerable">The source enumerable.</param>
+        /// <returns>An enumerable containing the same items as they from <paramref name="enumerable"/>, with these items converted to <typeparamref name="T"/>.</returns>
+        /// <exception cref="InvalidCastException">An item could not be converted.</exception>
+        /// <seealso cref="As{T}(System.Collections.IEnumerable)"/>
+        public static System.Collections.Generic.IEnumerable<T> To<T>(this System.Collections.IEnumerable enumerable) => enumerable.SelectConverter(value => (T)value);
+
         public static
 #if !WinCopies3
 System.Collections.Generic.IEnumerable

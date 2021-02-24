@@ -20,6 +20,20 @@ using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Markup;
 
+using WinCopies.Collections;
+using WinCopies.Collections.DotNetFix.Generic;
+using WinCopies.Linq;
+
+using static WinCopies.Util.Data.ConverterBase;
+
+#if WinCopies3
+using WinCopies.Collections.Generic;
+
+using static WinCopies.ThrowHelper;
+#else
+using static WinCopies.Util.Util;
+#endif
+
 namespace WinCopies.Util.Data
 {
     /// <summary>
@@ -54,5 +68,154 @@ namespace WinCopies.Util.Data
         /// <param name="serviceProvider">A service provider helper that can provide services for the markup extension.</param>
         /// <returns>The object value to set on the property where the extension is applied.</returns>
         public override object ProvideValue(IServiceProvider serviceProvider) => this;
+    }
+
+    public abstract class MultiConverterBase<TSourceIn, TSourceOut, TParam, TDestination> : MultiConverterBase
+    {
+        public interface IQueue : IUIntCountable
+        {
+            TSourceOut Dequeue();
+        }
+
+        public sealed class SimpleQueue : IQueue
+        {
+            private readonly IQueue<TSourceOut> _queue = new Collections.DotNetFix.Generic.Queue<TSourceOut>();
+
+            public uint Count => _queue.Count;
+
+            public void Enqueue(in TSourceOut item) => _queue.Enqueue(item);
+
+            public TSourceOut Dequeue() => _queue.Dequeue();
+        }
+
+        public sealed class ArrayQueue : IQueue
+        {
+            private readonly object[] _array;
+            private int _index;
+
+            public uint Count => (uint)(_array.Length - _index);
+
+            public ArrayQueue(in object[] array) => _array = array ?? throw GetArgumentNullException(nameof(array));
+
+            public TSourceOut Dequeue()
+            {
+                var item = (TSourceOut)_array[_index];
+
+                _array[_index++] = null;
+
+                return item;
+            }
+        }
+
+        public sealed class Queue : IQueue
+        {
+            private readonly IQueue<TSourceOut> _queue;
+
+            public uint Count => _queue.Count;
+
+            public Queue(IQueue<TSourceOut> queue) => _queue = queue ?? throw GetArgumentNullException(nameof(queue));
+
+            public TSourceOut Dequeue() => _queue.Dequeue();
+        }
+
+        public sealed class Stack : IQueue
+        {
+            private readonly IStack<TSourceOut> _stack;
+
+            public uint Count => _stack.Count;
+
+            public Stack(IStack<TSourceOut> stack) => _stack = stack ?? throw GetArgumentNullException(nameof(stack));
+
+            public TSourceOut Dequeue() => _stack.Pop();
+        }
+
+        public abstract ConversionOptions ConvertOptions { get; }
+
+        public abstract ConversionOptions ConvertBackOptions { get; }
+
+        public abstract ConversionWays Direction { get; }
+
+        protected abstract bool Convert(in System.Collections.Generic.IEnumerable<TSourceIn> values, TParam parameter, CultureInfo culture, out ArrayBuilder<TSourceOut> result);
+
+        protected abstract bool Convert(ArrayBuilder<TSourceOut> value, TParam parameter, CultureInfo culture, out TDestination result);
+
+        protected abstract bool[] ConvertBack(TDestination value, TParam parameter, CultureInfo culture, out IQueue<TSourceOut> result);
+
+#if !WinCopies3
+        public static bool CheckForNullItem(in object value, in bool methodParameter) => !methodParameter && value == null;
+        
+        private static System.Collections.Generic.IEnumerable<T> To<T>(in System.Collections.IEnumerable enumerable) => enumerable.SelectConverter(value => (T)value);
+#endif
+
+        public sealed override object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (Direction.HasFlag(ConversionWays.OneWay))
+            {
+                Check(values, ConvertOptions.AllowNullValue, nameof(values));
+
+                Check<TParam>(parameter, ConvertOptions.AllowNullParameter, nameof(parameter));
+
+                object convert(in TParam _parameter)
+                {
+                    ArrayBuilder<TSourceOut> arrayBuilder = null;
+
+                    try
+                    {
+                        return Convert(
+#if WinCopies3
+                    values?.
+#else
+                    values == null ? null :
+#endif
+                    To<TSourceIn>(
+#if !WinCopies3
+                        values
+#endif
+                    ), _parameter, culture, out arrayBuilder) && Convert(arrayBuilder, _parameter, culture, out TDestination _result) ? _result : Binding.DoNothing;
+                    }
+
+                    finally
+                    {
+                        arrayBuilder?.Clear();
+                    }
+                }
+
+                return convert(parameter == null ? default : (TParam)parameter);
+            }
+
+            throw new InvalidOperationException("The OneWay conversion direction is not supported.");
+        }
+
+        public sealed override object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            if (Direction.HasFlag(ConversionWays.OneWayToSource))
+            {
+                Check<TDestination>(value, ConvertOptions.AllowNullValue, nameof(value));
+
+                Check<TParam>(parameter, ConvertOptions.AllowNullParameter, nameof(parameter));
+
+                object[] convertBack(in TDestination _value, in TParam _parameter)
+                {
+                    bool[] results = ConvertBack(_value, _parameter, culture, out IQueue<TSourceOut> _result);
+
+                    if (results.Length == _result.Count)
+                    {
+                        object[] resultArray = new object[results.Length];
+
+                        for (int i = 0; i < results.Length; i++)
+
+                            resultArray[i] = results[i] ? _result.Dequeue() : Binding.DoNothing;
+                    }
+
+                    throw new InvalidOperationException("The number of items in _result must be equal to ConvertBack result's.");
+                }
+
+                return value == null
+                    ? parameter == null ? convertBack(default, default) : convertBack(default, (TParam)parameter)
+                    : parameter == null ? convertBack((TDestination)value, default) : convertBack((TDestination)value, (TParam)parameter);
+            }
+
+            throw new InvalidOperationException("The OneWayToSource conversion direction is not supported.");
+        }
     }
 }

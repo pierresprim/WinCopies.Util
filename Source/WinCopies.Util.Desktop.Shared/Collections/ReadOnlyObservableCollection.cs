@@ -17,19 +17,17 @@
 
 using System;
 
+using WinCopies.Collections.DotNetFix.Generic;
+
 namespace WinCopies.Collections
 {
     //public interface IReadOnlyObservableCollection<T> : IReadOnlyList<T>, INotifyCollectionChanged, INotifyPropertyChanged, INotifyCollectionChanging
-
     //{
-
-
 
     //}
 
     //public class ReadOnlyObservableCollection<T> : System.Collections.ObjectModel.ReadOnlyObservableCollection<T>, IReadOnlyObservableCollection<T>
     //{
-
     //    protected virtual event NotifyCollectionChangingEventHandler CollectionChanging;
 
     //    event NotifyCollectionChangingEventHandler INotifyCollectionChanging.CollectionChanging
@@ -49,7 +47,8 @@ namespace WinCopies.Collections
 
     //    T IReadOnlyList<T>.this[int index] { get => this[index]; set => ((IReadOnlyList<T>)this)[index] = value; }
 
-    //}using WinCopies.Util;
+    //}
+
     namespace DotNetFix
     {
         [Serializable]
