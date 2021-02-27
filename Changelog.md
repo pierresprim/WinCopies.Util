@@ -9,7 +9,7 @@ CHANGELOG
 Updates
 -------
 
-??/??/???? 3.3.0.0-preview
+02/27/2021 3.3.0.0-preview
 ==========================
 
 WinCopies.Collections 3.3.0.0-preview
@@ -62,6 +62,7 @@ WinCopies.Collections 3.3.0.0-preview
 WinCopies.Util.Desktop 3.3.0.0-preview
 --------------------------------------
 
+- Bug fixed in IsNullConverter.
 - Additions:
 	- WinCopies.Collections.IObservableCollectionBase
 	- WinCopies.Collections.DotNetFix.IObservableCollection\<T> is now in the WinCopies.Collections.DotNetFix.Generic namespace.

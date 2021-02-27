@@ -29,7 +29,7 @@ namespace WinCopies.Util.Data
 #if WinCopies3
         AlwaysConvertibleOneWayConverter<object, bool, bool>
     {
-        public override ConversionOptions ConvertOptions => ConverterHelper.NotNull;
+        public override ConversionOptions ConvertOptions => ConverterHelper.AllowNull;
 
         protected override bool Convert(object value, bool parameter, CultureInfo culture)
         {

@@ -2243,7 +2243,7 @@
             </summary>
             <returns>The object that is removed from the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryDequeue(`0@)"/>
+            <seealso cref="!:TryDequeue(out T)"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.EnqueueItem(`0)">
             <summary>
@@ -2263,7 +2263,7 @@
             </summary>
             <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryPeek(`0@)"/>
+            <seealso cref="!:TryPeek(out T)"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.ToArray">
             <summary>
@@ -2275,29 +2275,6 @@
             <summary>
             Sets the capacity to the actual number of elements in the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>, if that number is less than 90 percent of current capacity.
             </summary>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryDequeueItem(`0@)">
-            <summary>
-            Tries to remove and return the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. Override this method to provide a custom implementation.
-            </summary>
-            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
-            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been removed and retrieved.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryDequeue(`0@)">
-            <summary>
-            Tries to remove and return the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryDequeueItem(`0@)"/> method to provide a custom implementation.
-            </summary>
-            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
-            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been removed and retrieved.</returns>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.QueueCollection`1.Dequeue"/>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.TryPeek(`0@)">
-            <summary>
-            Tries to peek the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> without removing it.
-            </summary>
-            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
-            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been retrieved.</returns>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.QueueCollection`1.Peek"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.QueueCollection`1.GetEnumerator">
             <summary>
@@ -2340,15 +2317,7 @@
             </summary>
             <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.TryPeek(`0@)"/>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.TryPeek(`0@)">
-            <summary>
-            Tries to peek the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> without removing it.
-            </summary>
-            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
-            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been retrieved.</returns>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.Peek"/>
+            <seealso cref="!:TryPeek(out T)"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.GetEnumerator">
             <summary>
@@ -3308,6 +3277,32 @@
             </summary>
             <param name="obj">The <see cref="T:WinCopies.Collections.IUIntCountable"/> object for which to check the <see cref="P:WinCopies.Collections.IUIntCountable.Count"/> property.</param>
         </member>
+        <member name="M:WinCopies.Linq.Extensions.AsObjectEnumerable(System.Collections.IEnumerable)">
+            <summary>
+            Yield returns each object of an <see cref="T:System.Collections.IEnumerable"/>, so the given <see cref="T:System.Collections.IEnumerable"/> will be considered as an <see cref="T:System.Collections.Generic.IEnumerable`1"/>.
+            </summary>
+            <param name="enumerable">An <see cref="T:System.Collections.IEnumerable"/> to consider as a <see cref="T:System.Collections.Generic.IEnumerable`1"/>.</param>
+            <returns>Yield returns the same enumerable as the given <paramref name="enumerable"/>, as an <see cref="T:System.Collections.Generic.IEnumerable`1"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Linq.Extensions.As``1(System.Collections.IEnumerable)">
+            <summary>
+            Iterates through a given <see cref="T:System.Collections.IEnumerable"/> and tries to convert the items to a given generic type parameter. If an item cannot be converted, it is ignored in the resulting enumerable.
+            </summary>
+            <typeparam name="T">The generic type parameter for the resulting enumerable. Only the items that can be converted to this type will be present in the resulting enumerable.</typeparam>
+            <param name="enumerable">The source enumerable.</param>
+            <returns>An enumerable containing all the items from <paramref name="enumerable"/> that could be converted to <typeparamref name="T"/>.</returns>
+            <seealso cref="M:WinCopies.Linq.Extensions.To``1(System.Collections.IEnumerable)"/>
+        </member>
+        <member name="M:WinCopies.Linq.Extensions.To``1(System.Collections.IEnumerable)">
+            <summary>
+            Iterates through a given <see cref="T:System.Collections.IEnumerable"/> and directly converts the items to a given generic type parameter. An <see cref="T:System.InvalidCastException"/> is thrown when an item cannot be converted.
+            </summary>
+            <typeparam name="T">The generic type parameter for the resulting enumerable. All items in <paramref name="enumerable"/> will be converted to this type.</typeparam>
+            <param name="enumerable">The source enumerable.</param>
+            <returns>An enumerable containing the same items as they from <paramref name="enumerable"/>, with these items converted to <typeparamref name="T"/>.</returns>
+            <exception cref="T:System.InvalidCastException">An item could not be converted.</exception>
+            <seealso cref="M:WinCopies.Linq.Extensions.As``1(System.Collections.IEnumerable)"/>
+        </member>
         <member name="M:WinCopies.Linq.Extensions.FirstOrDefault``1(System.Collections.IEnumerable)">
             <summary>
             Returns the first item, if any, from <typeparamref name="T"/> in a given <see cref="T:System.Collections.IEnumerable"/>.
@@ -3316,10 +3311,10 @@
             <param name="enumerable">The <see cref="T:System.Collections.IEnumerable"/> in which to look for the first item of the given type.</param>
             <returns>The first item, if any, from <typeparamref name="T"/> in <paramref name="enumerable"/> or the default value for <typeparamref name="T"/> if none value was found.</returns>
             <seealso cref="M:WinCopies.Linq.Extensions.LastOrDefault``1(System.Collections.IEnumerable)"/>
-            <seealso cref="M:WinCopies.Linq.Extensions.FirstOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
+            <seealso cref="M:WinCopies.Linq.Extensions.PredicateFirstOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
             <seealso cref="M:WinCopies.Linq.Extensions.LastOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
         </member>
-        <member name="M:WinCopies.Linq.Extensions.FirstOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)">
+        <member name="M:WinCopies.Linq.Extensions.PredicateFirstOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)">
             <summary>
             Returns the first item, if any, from <typeparamref name="T"/> and that validates a given predicate in a given <see cref="T:System.Collections.IEnumerable"/>.
             </summary>
@@ -3339,7 +3334,7 @@
             <param name="enumerable">The <see cref="T:System.Collections.IEnumerable"/> in which to look for the last item of the given type.</param>
             <returns>The last item, if any, from <typeparamref name="T"/> in <paramref name="enumerable"/> or the default value for <typeparamref name="T"/> if none value was found.</returns>
             <seealso cref="M:WinCopies.Linq.Extensions.FirstOrDefault``1(System.Collections.IEnumerable)"/>
-            <seealso cref="M:WinCopies.Linq.Extensions.FirstOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
+            <seealso cref="M:WinCopies.Linq.Extensions.PredicateFirstOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
             <seealso cref="M:WinCopies.Linq.Extensions.LastOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
         </member>
         <member name="M:WinCopies.Linq.Extensions.LastOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)">
@@ -3350,7 +3345,7 @@
             <param name="enumerable">The <see cref="T:System.Collections.IEnumerable"/> in which to look for the last item of the given type.</param>
             <param name="predicate">The predicate to validate.</param>
             <returns>The last item, if any, from <typeparamref name="T"/> in <paramref name="enumerable"/> or the default value for <typeparamref name="T"/> if none value was found.</returns>
-            <seealso cref="M:WinCopies.Linq.Extensions.FirstOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
+            <seealso cref="M:WinCopies.Linq.Extensions.PredicateFirstOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
             <seealso cref="M:WinCopies.Linq.Extensions.FirstOrDefault``1(System.Collections.IEnumerable)"/>
             <seealso cref="M:WinCopies.Linq.Extensions.LastOrDefault``1(System.Collections.IEnumerable)"/>
         </member>
