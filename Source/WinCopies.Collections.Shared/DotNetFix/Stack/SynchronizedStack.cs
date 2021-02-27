@@ -24,6 +24,8 @@ namespace WinCopies.Collections.DotNetFix
 
         public bool IsReadOnly => false;
 
+        public bool HasItems => Count != 0;
+
         public bool IsSynchronized => true;
 
         public object SyncRoot { get; private set; }

@@ -20,6 +20,8 @@ using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Markup;
 
+using static WinCopies.Util.Data.ConverterHelper;
+
 namespace WinCopies.Util.Data
 {
     public class ConversionOptions
@@ -46,12 +48,18 @@ namespace WinCopies.Util.Data
         TwoWays = OneWay | OneWayToSource
     }
 
-    /// <summary>
-    /// Provides a base class for any data <see cref="Binding"/> converter.
-    /// </summary>
-    [MarkupExtensionReturnType(typeof(IValueConverter))]
-    public abstract class ConverterBase : MarkupExtension, IValueConverter
+    public static class ConverterHelper
     {
+#if WinCopies3
+        public static ConversionOptions AllowNull { get; } = new ConversionOptions(true, true);
+
+        public static ConversionOptions ValueCanBeNull { get; } = new ConversionOptions(true, false);
+
+        public static ConversionOptions ParameterCanBeNull { get; } = new ConversionOptions(false, true);
+
+        public static ConversionOptions NotNull { get; } = new ConversionOptions(false, false);
+#endif
+
         public static bool CheckForNullItem(in object value, in bool methodParameter) => !methodParameter && value == null;
 
         public static void Check(in object obj, in bool methodParameter, in string argumentName)
@@ -69,7 +77,14 @@ namespace WinCopies.Util.Data
 
                 throw new ArgumentException($"{argumentName} must be null or from {typeof(T).Name}. {argumentName} is {(obj == null ? "null" : obj.GetType().Name)}.");
         }
+    }
 
+    /// <summary>
+    /// Provides a base class for any data <see cref="Binding"/> converter.
+    /// </summary>
+    [MarkupExtensionReturnType(typeof(IValueConverter))]
+    public abstract class ConverterBase : MarkupExtension, IValueConverter
+    {
         /// <summary>
         /// Converts a value.
         /// </summary>
@@ -104,6 +119,7 @@ namespace WinCopies.Util.Data
 
     public abstract class ConverterBase<TSource, TParam, TDestination> : ConverterBase
     {
+#if !WinCopies3
         public static ConversionOptions AllowNull { get; } = new ConversionOptions(true, true);
 
         public static ConversionOptions ValueCanBeNull { get; } = new ConversionOptions(true, false);
@@ -111,6 +127,7 @@ namespace WinCopies.Util.Data
         public static ConversionOptions ParameterCanBeNull { get; } = new ConversionOptions(false, true);
 
         public static ConversionOptions NotNull { get; } = new ConversionOptions(false, false);
+#endif
 
         public abstract ConversionOptions ConvertOptions { get; }
 

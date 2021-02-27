@@ -31,6 +31,8 @@ using System.Windows.Data;
 
 using WinCopies.Util.Data;
 
+using static WinCopies.Util.Data.ConverterHelper;
+
 namespace PushBindingInStyleDemo.Converters
 {
     [ValueConversion(typeof(string), typeof(double))]

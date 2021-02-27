@@ -24,7 +24,7 @@ using WinCopies.Collections;
 using WinCopies.Collections.DotNetFix.Generic;
 using WinCopies.Linq;
 
-using static WinCopies.Util.Data.ConverterBase;
+using static WinCopies.Util.Data.ConverterHelper;
 
 #if WinCopies3
 using WinCopies.Collections.Generic;
@@ -135,7 +135,7 @@ namespace WinCopies.Util.Data
 
         public abstract ConversionWays Direction { get; }
 
-        protected abstract bool Convert(in System.Collections.Generic.IEnumerable<TSourceIn> values, TParam parameter, CultureInfo culture, out ArrayBuilder<TSourceOut> result);
+        protected abstract ArrayBuilder<TSourceOut> Convert(System.Collections.Generic.IEnumerable<TSourceIn> values, TParam parameter, CultureInfo culture);
 
         protected abstract bool Convert(ArrayBuilder<TSourceOut> value, TParam parameter, CultureInfo culture, out TDestination result);
 
@@ -157,11 +157,7 @@ namespace WinCopies.Util.Data
 
                 object convert(in TParam _parameter)
                 {
-                    ArrayBuilder<TSourceOut> arrayBuilder = null;
-
-                    try
-                    {
-                        return Convert(
+                    ArrayBuilder<TSourceOut> arrayBuilder = Convert(
 #if WinCopies3
                     values?.
 #else
@@ -171,7 +167,11 @@ namespace WinCopies.Util.Data
 #if !WinCopies3
                         values
 #endif
-                    ), _parameter, culture, out arrayBuilder) && Convert(arrayBuilder, _parameter, culture, out TDestination _result) ? _result : Binding.DoNothing;
+                    ), _parameter, culture);
+
+                    try
+                    {
+                        return arrayBuilder != null && Convert(arrayBuilder, _parameter, culture, out TDestination _result) ? _result : Binding.DoNothing;
                     }
 
                     finally

@@ -15,9 +15,14 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-using System;
 using System.Globalization;
 using System.Windows.Data;
+
+#if WinCopies3
+using static WinCopies.Util.Data.ConverterHelper;
+#else
+using System;
+#endif
 
 namespace WinCopies.Util.Data
 {

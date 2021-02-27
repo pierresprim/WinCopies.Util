@@ -34,6 +34,8 @@ namespace WinCopies.Collections.Generic
         {
             private protected IEnumerableStack Enumerable { get; } = new Enumerable();
 
+            public bool IsReadOnly => false;
+
             public bool HasItems => Enumerable.HasItems;
 
             public T Peek() => Enumerable.Peek();

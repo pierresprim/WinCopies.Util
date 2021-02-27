@@ -68,7 +68,7 @@ WinCopies.Util.Desktop 3.3.0.0-preview
 	- WinCopies.Collections.DotNetFix.Generic:
 		- ICountableEnumerable.Count
 		- IObservableCollectionBase\<T>
-	- New helper methods to ConverterBase.
+	- New helper methods to ConverterHelper.
 	- Generic MultiConverterBase.
 - AlwaysConvertibleOneWayConverter:
 	The following properties and methods have now sealed overrides:
@@ -235,6 +235,8 @@ WinCopies.Util.Desktop 3.0.0-preview
 
 ??/??/???? 2.8.0.0
 ==================
+
+Add ConverterHelper class to WinCopies.Util.Data (WinCopies.Util.Desktop package).
 
 WinCopies.Collections 2.8.0.0
 -----------------------------

@@ -22,7 +22,12 @@ using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+
 using WinCopies.Desktop;
+
+#if WinCopies3
+using static WinCopies.Util.Data.ConverterHelper;
+#endif
 
 namespace WinCopies.Util.Data
 {

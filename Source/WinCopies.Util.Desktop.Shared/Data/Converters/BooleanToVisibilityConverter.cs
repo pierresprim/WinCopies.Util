@@ -20,6 +20,10 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
+#if WinCopies3
+using static WinCopies.Util.Data.ConverterHelper;
+#endif
+
 namespace WinCopies.Util.Data
 {
     // todo: already exists in the System.Windows.Controls namespace with a bit of features less.

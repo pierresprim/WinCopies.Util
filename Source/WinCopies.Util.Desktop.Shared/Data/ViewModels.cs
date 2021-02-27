@@ -24,13 +24,15 @@ using System.ComponentModel;
 using System.Windows.Data;
 using System.Windows.Markup;
 
-using WinCopies.Collections;
-
 using static WinCopies.
-#if !WinCopies3
-    Util.Util;
+#if WinCopies3
+ThrowHelper;
+
+using WinCopies.Collections.DotNetFix.Generic;
 #else
-    ThrowHelper;
+Util.Util;
+
+using WinCopies.Collections;
 #endif
 
 namespace WinCopies.Util.Data
@@ -515,7 +517,7 @@ override object Model => ModelGeneric;
         /// Returns an enumerator that iterates through the System.Collections.ObjectModel.Collection`1.
         /// </summary>
         /// <returns>An <see cref="System.Collections.Generic.IEnumerator{T}"/> for the <see cref="CollectionViewModel{T}"/>.</returns>
-        public IEnumerator<T> GetEnumerator() => Collection.GetEnumerator();
+        public System.Collections.Generic.IEnumerator<T> GetEnumerator() => Collection.GetEnumerator();
 
         System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 

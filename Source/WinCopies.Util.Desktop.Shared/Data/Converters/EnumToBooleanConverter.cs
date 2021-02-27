@@ -19,6 +19,10 @@ using System;
 using System.Globalization;
 using System.Windows.Data;
 
+#if WinCopies3
+using static WinCopies.Util.Data.ConverterHelper;
+#endif
+
 namespace WinCopies.Util.Data
 {
     /// <summary>

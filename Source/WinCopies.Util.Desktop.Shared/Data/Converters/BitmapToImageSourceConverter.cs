@@ -23,6 +23,8 @@ using System.Windows.Media.Imaging;
 
 #if WinCopies3
 using WinCopies.Desktop;
+
+using static WinCopies.Util.Data.ConverterHelper;
 #else
 using System;
 #endif

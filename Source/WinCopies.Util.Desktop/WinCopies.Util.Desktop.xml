@@ -727,7 +727,7 @@
             </summary>
             <exception cref="T:System.InvalidOperationException"><see cref="P:WinCopies.DotNetFix.IBackgroundWorker.IsBusy"/> is <see langword="true"/>.</exception>
         </member>
-        <member name="T:WinCopies.Collections.DotNetFix.ObservableCollection`1">
+        <member name="T:WinCopies.Collections.DotNetFix.Generic.ObservableCollection`1">
             <summary>
             Represents a dynamic data collection that provides notifications when items get added, removed, or when the whole list is refreshed.
             </summary>
@@ -742,41 +742,41 @@
             <para>For notes on XAML usage, see the following article: https://docs.microsoft.com/en-us/dotnet/api/system.collections.objectmodel.observablecollection-1?view=netframework-4.8</para>
             </remarks>
         </member>
-        <member name="M:WinCopies.Collections.DotNetFix.ObservableCollection`1.#ctor">
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.ObservableCollection`1.#ctor">
             <summary>
-            Initializes a new instance of the <see cref="T:WinCopies.Collections.DotNetFix.ObservableCollection`1"/> class.
+            Initializes a new instance of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.ObservableCollection`1"/> class.
             </summary>
         </member>
-        <member name="M:WinCopies.Collections.DotNetFix.ObservableCollection`1.#ctor(System.Collections.Generic.List{`0})">
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.ObservableCollection`1.#ctor(System.Collections.Generic.List{`0})">
             <summary>
-            Initializes a new instance of the <see cref="T:WinCopies.Collections.DotNetFix.ObservableCollection`1"/> class that contains elements copied from the specified list.
+            Initializes a new instance of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.ObservableCollection`1"/> class that contains elements copied from the specified list.
             </summary>
             <param name="list">The list from which the elements are copied.</param>
-            <remarks>The elements are copied onto the <see cref="T:WinCopies.Collections.DotNetFix.ObservableCollection`1"/> in the same order they are read by the enumerator of the list.</remarks>
+            <remarks>The elements are copied onto the <see cref="T:WinCopies.Collections.DotNetFix.Generic.ObservableCollection`1"/> in the same order they are read by the enumerator of the list.</remarks>
             <exception cref="T:System.ArgumentNullException">The <paramref name="list"/> parameter cannot be <see langword="null"/>.</exception>
         </member>
-        <member name="M:WinCopies.Collections.DotNetFix.ObservableCollection`1.#ctor(System.Collections.Generic.IEnumerable{`0})">
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.ObservableCollection`1.#ctor(System.Collections.Generic.IEnumerable{`0})">
             <summary>
-            Initializes a new instance of the <see cref="T:WinCopies.Collections.DotNetFix.ObservableCollection`1"/> class that contains elements copied from the specified collection.
+            Initializes a new instance of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.ObservableCollection`1"/> class that contains elements copied from the specified collection.
             </summary>
             <param name="collection">The collection from which the elements are copied.</param>
-            <remarks>The elements are copied onto the <see cref="T:WinCopies.Collections.DotNetFix.ObservableCollection`1"/> in the same order they are read by the enumerator of the collection.</remarks>
+            <remarks>The elements are copied onto the <see cref="T:WinCopies.Collections.DotNetFix.Generic.ObservableCollection`1"/> in the same order they are read by the enumerator of the collection.</remarks>
             <exception cref="T:System.ArgumentNullException">The <paramref name="collection"/> parameter cannot be <see langword="null"/>.</exception>
         </member>
-        <member name="M:WinCopies.Collections.DotNetFix.ObservableCollection`1.InsertItem(System.Int32,`0)">
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.ObservableCollection`1.InsertItem(System.Int32,`0)">
             <summary>
             Inserts an item into the collection at the specified index.
             </summary>
             <param name="index">The zero-based index at which <paramref name="item"/> should be inserted.</param>
             <param name="item">The object to insert.</param>
-            <remarks><para>The base class calls this method when an item is added to the collection. This implementation raises the <see cref="E:WinCopies.Collections.INotifyCollectionChanging.CollectionChanging"/> and the <see cref="E:System.Collections.Specialized.INotifyCollectionChanged.CollectionChanged"/> events.</para>
+            <remarks><para>The base class calls this method when an item is added to the collection. This implementation raises the <see cref="E:WinCopies.Collections.DotNetFix.INotifyCollectionChanging.CollectionChanging"/> and the <see cref="E:System.Collections.Specialized.INotifyCollectionChanged.CollectionChanged"/> events.</para>
             <para>For more information, see the <see cref="M:System.Collections.ObjectModel.Collection`1.InsertItem(System.Int32,`0)"/> method of the <see cref="T:System.Collections.ObjectModel.Collection`1"/> base class.</para></remarks>
         </member>
-        <member name="M:WinCopies.Collections.DotNetFix.ObservableCollection`1.ClearItems">
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.ObservableCollection`1.ClearItems">
             <summary>
             Removes all items from the collection.
             </summary>
-            <remarks><para>The base class calls this method when the list is being cleared. This implementation raises the <see cref="E:WinCopies.Collections.INotifyCollectionChanging.CollectionChanging"/> and the <see cref="E:System.Collections.Specialized.INotifyCollectionChanged.CollectionChanged"/> events.</para>
+            <remarks><para>The base class calls this method when the list is being cleared. This implementation raises the <see cref="E:WinCopies.Collections.DotNetFix.INotifyCollectionChanging.CollectionChanging"/> and the <see cref="E:System.Collections.Specialized.INotifyCollectionChanged.CollectionChanged"/> events.</para>
             <para>For more information, see the <see cref="M:System.Collections.ObjectModel.Collection`1.ClearItems"/> method of the <see cref="T:System.Collections.ObjectModel.Collection`1"/> base class.</para></remarks>
         </member>
         <member name="T:WinCopies.Commands.ApplicationCommands">
@@ -1515,20 +1515,6 @@
             <para>Parameter: cannot be <see langword="null"/>.</para>
             </summary>
         </member>
-        <member name="P:WinCopies.Util.Data.EnumToStringArrayConverter.ConvertBackOptions">
-            <summary>
-            Invalid operation.
-            </summary>
-        </member>
-        <member name="M:WinCopies.Util.Data.EnumToStringArrayConverter.ConvertBack(System.String[],System.Type,System.Globalization.CultureInfo)">
-            <summary>
-            Never called.
-            </summary>
-            <param name="value"></param>
-            <param name="parameter"></param>
-            <param name="culture"></param>
-            <returns></returns>
-        </member>
         <member name="T:WinCopies.Util.Data.IsNullConverter">
             <summary>
             Determines whether an object is null. You can set to <see langword="true"/> the parameter of the <see cref="T:System.Windows.Data.Binding"/> that will use this converter to get a reversed <see cref="T:System.Boolean"/>.
@@ -1764,15 +1750,6 @@
             Removes the unmanaged resources and the managed resources if needed. If you override this method, you should call this implementation of this method in your override implementation to avoid unexpected results when using this object laater.
             </summary>
             <param name="disposing"><see langword="true"/> to dispose managed resources, otherwise <see langword="false"/>.</param>
-        </member>
-        <member name="M:WinCopies.Util.Data.ObjectToTypeConverter.ConvertBack(System.Type,System.Object,System.Globalization.CultureInfo)">
-            <summary>
-            Never called.
-            </summary>
-            <param name="value"></param>
-            <param name="parameter"></param>
-            <param name="culture"></param>
-            <returns></returns>
         </member>
         <member name="T:WinCopies.Util.Data.PropertyChangedEventArgs">
             <summary>

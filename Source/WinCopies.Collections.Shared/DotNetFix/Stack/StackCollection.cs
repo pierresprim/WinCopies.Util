@@ -52,6 +52,8 @@ int
         int ICollection.Count => (int)Count;
 #endif
 
+        public bool HasItems => Count != 0;
+
         public bool IsReadOnly => false;
 
         public bool IsSynchronized => InnerStack.IsSynchronized;

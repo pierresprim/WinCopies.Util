@@ -32,6 +32,8 @@ namespace WinCopies.Collections.Generic
         {
             #region IEnumerableInfo implementation
 
+            public bool SupportsReversedEnumeration => true;
+
             public IEnumeratorInfo2<T> GetEnumerator(EnumerationDirection enumerationDirection) => new Enumerator(this, enumerationDirection);
 
             public IEnumeratorInfo2<T> GetEnumerator() => GetEnumerator(EnumerationDirection.FIFO);

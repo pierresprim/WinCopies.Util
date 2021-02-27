@@ -18,6 +18,10 @@
 using System;
 using System.Globalization;
 
+#if WinCopies3
+using static WinCopies.Util.Data.ConverterHelper;
+#endif
+
 namespace WinCopies.Util.Data
 {
     public class IntConversionResult

@@ -32,21 +32,7 @@ namespace WinCopies.Util.Data
         /// </summary>
         public override ConversionOptions ConvertOptions { get; } = new ConversionOptions(true, false);
 
-        /// <summary>
-        /// Invalid operation.
-        /// </summary>
-        public override ConversionOptions ConvertBackOptions => null;
-
         protected override string[] Convert(object value, Type parameter, CultureInfo culture) => parameter.IsEnum ? parameter.GetEnumNames() : null;
-
-        /// <summary>
-        /// Never called.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <param name="parameter"></param>
-        /// <param name="culture"></param>
-        /// <returns></returns>
-        protected override object ConvertBack(string[] value, Type parameter, CultureInfo culture) => null;
 #else
         ConverterBase
     {

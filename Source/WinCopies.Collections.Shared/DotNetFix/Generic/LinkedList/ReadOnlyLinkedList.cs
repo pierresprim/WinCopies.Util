@@ -102,11 +102,11 @@ ILinkedList
 #endif
 
         public ReadOnlyLinkedList(
-            #if WinCopies3
+#if WinCopies3
             IReadOnlyEnumerableInfoLinkedList
 #else
             ILinkedList
-            #endif
+#endif
             <T> list) => InnerList = list;
 
         public bool Contains(T value) => InnerList.Contains(value);
@@ -174,9 +174,9 @@ InnerList
 
         System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => ((System.Collections.Generic.IEnumerable<T>)InnerList).GetEnumerator();
 
-        IEnumeratorInfo2<T> IEnumerableInfo<T>.GetEnumerator() => ((IEnumerableInfo<T>)InnerList).GetEnumerator();
+        IEnumeratorInfo2<T> IEnumerable<T, IEnumeratorInfo2<T>>.GetEnumerator() => ((IEnumerableInfo<T>)InnerList).GetEnumerator();
 
-        IEnumeratorInfo2<T> IEnumerableInfo<T>.GetReversedEnumerator() => ((IEnumerableInfo<T>)InnerList).GetReversedEnumerator();
+        IEnumeratorInfo2<T> Collections.Generic.IEnumerable<T, IEnumeratorInfo2<T>>.GetReversedEnumerator() => ((IEnumerableInfo<T>)InnerList).GetReversedEnumerator();
 #else
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context) => InnerList.GetObjectData(info, context);
 
