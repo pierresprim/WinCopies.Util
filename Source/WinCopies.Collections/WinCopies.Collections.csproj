@@ -7,12 +7,11 @@
     <TargetFrameworks>netcoreapp3.0;netcoreapp3.1;net5.0;net40;net472;net48;netstandard2.0;netstandard2.1</TargetFrameworks>
     <DocumentationFile>WinCopies.Collections.xml</DocumentationFile>
     <SignAssembly>true</SignAssembly>
-    <Copyright>Copyright © 2020 Pierre Sprimont</Copyright>
     <PackageTags>WinCopies</PackageTags>
-    <VersionPrefix>3.2</VersionPrefix>
+    <VersionPrefix>3.3</VersionPrefix>
     <VersionSuffix>preview</VersionSuffix>
-    <AssemblyVersion>3.2.0.0</AssemblyVersion>
-    <FileVersion>3.2.0.0</FileVersion>
+    <AssemblyVersion>3.3.0.0</AssemblyVersion>
+    <FileVersion>3.3.0.0</FileVersion>
     <RootNamespace>WinCopies.Util</RootNamespace>
     <AssemblyOriginatorKeyFile>WinCopies.Collections.snk</AssemblyOriginatorKeyFile>
     <DefineConstants>WinCopies3;$(DefineConstants)</DefineConstants>

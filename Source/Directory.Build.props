@@ -20,6 +20,7 @@
     <RepositoryType>Git</RepositoryType>
     <PackageReleaseNotes>See https://github.com/pierresprim/WinCopies.Util/blob/master/Changelog.md</PackageReleaseNotes>
     <PackageIcon>WinCopies.ico</PackageIcon>
+    <Copyright>Copyright © 2021 Pierre Sprimont</Copyright>
   </PropertyGroup>
 
   <!--Constants-->
