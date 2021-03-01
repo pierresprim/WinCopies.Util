@@ -15,6 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
+#if WinCopies3
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -64,3 +66,4 @@ namespace WinCopies.PropertySystem
         protected override IPropertySystemCollection<ReflectionPropertyId, object> Convert(object value, object parameter, CultureInfo culture) => new ReflectionPropertyCollection(value);
     }
 }
+#endif

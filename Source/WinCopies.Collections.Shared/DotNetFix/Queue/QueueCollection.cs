@@ -20,7 +20,6 @@ using System.Collections;
 
 namespace WinCopies.Collections.DotNetFix
 {
-
     [Serializable]
     public class QueueCollection : IEnumerable, ICollection
 #if !WinCopies3

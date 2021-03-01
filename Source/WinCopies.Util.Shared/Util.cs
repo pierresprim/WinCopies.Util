@@ -71,8 +71,6 @@ namespace WinCopies
 
         public static TValue GetValue<TKey, TValue>(KeyValuePair<TKey, TValue> keyValuePair) => keyValuePair.Value;
 
-        public static System.Collections.Generic.IEnumerable<T> GetEmptyEnumerable<T>() => new WinCopies.Collections.Generic.Enumerable<T>(() => new EmptyEnumerator<T>());
-
 #if !WinCopies3 && CS7
         [Obsolete("This method has been replaced by the WinCopies.Util.Extensions.SetBackgroundWorkerProperty method overloads.")]
         public static (bool propertyChanged, object oldValue) SetPropertyWhenNotBusy<T>(T bgWorker, string propertyName, string fieldName, object newValue, Type declaringType, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, bool throwIfBusy = true) where T : IBackgroundWorker, INotifyPropertyChanged => bgWorker.IsBusy

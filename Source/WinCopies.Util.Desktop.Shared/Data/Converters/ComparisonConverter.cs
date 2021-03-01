@@ -56,6 +56,10 @@ namespace WinCopies.Util.Data
     {
         public override ConversionOptions ConvertOptions => ValueCanBeNull;
 
+#if !WinCopies3
+        public override ConversionOptions ConvertBackOptions => throw new InvalidOperationException();
+#endif
+
         protected override bool Convert(T value, ComparisonConverterParameter<T> parameter, CultureInfo culture)
         {
             Comparison result = parameter.Compare(value);
@@ -112,6 +116,10 @@ namespace WinCopies.Util.Data
 
             throw new InvalidOperationException("The comparison result value returned by the comparison method of the given parameter is not supported.");
         }
+
+#if !WinCopies3
+        protected override T ConvertBack(bool value, ComparisonConverterParameter<T> parameter, CultureInfo culture) => throw new InvalidOperationException();
+#endif
     }
 
     public sealed class IntComparisonConverter : ComparisonConverter<int>

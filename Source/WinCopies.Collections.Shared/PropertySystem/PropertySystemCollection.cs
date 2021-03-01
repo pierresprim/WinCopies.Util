@@ -15,6 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
+#if WinCopies3 && CS7
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -59,13 +61,13 @@ namespace WinCopies.PropertySystem
 
         public abstract IEnumeratorInfo2<KeyValuePair<TPropertyId, IProperty>> GetReversedKeyValuePairEnumerator();
 
-        public ICountableEnumeratorInfo<IProperty> GetEnumerator() => new CountableEnumeratorInfo<IProperty>(GetKeyValuePairEnumerator().Select(GetValue), () => Count);
+        public ICountableEnumeratorInfo<IProperty> GetEnumerator() => new CountableEnumeratorInfo<IProperty>(GetKeyValuePairEnumerator().SelectConverter(GetValue), () => Count);
 
         Collections.DotNetFix.Generic.ICountableEnumerator<IProperty> Collections.DotNetFix.Generic.ICountableEnumerable<IProperty>.GetEnumerator() => GetEnumerator();
 
         IEnumeratorInfo2<IProperty> Collections.DotNetFix.Generic.IEnumerable<IProperty, IEnumeratorInfo2<IProperty>>.GetEnumerator() => GetEnumerator();
 
-        public IEnumeratorInfo2<IProperty> GetReversedEnumerator() => GetReversedKeyValuePairEnumerator().Select(GetValue);
+        public IEnumeratorInfo2<IProperty> GetReversedEnumerator() => GetReversedKeyValuePairEnumerator().SelectConverter(GetValue);
 
         IEnumeratorInfo2<KeyValuePair<TPropertyId, IProperty>> Collections.DotNetFix.Generic.IEnumerable<KeyValuePair<TPropertyId, IProperty>, IEnumeratorInfo2<KeyValuePair<TPropertyId, IProperty>>>.GetEnumerator() => GetKeyValuePairEnumerator();
 
@@ -150,3 +152,5 @@ namespace WinCopies.PropertySystem
         }
     }
 }
+
+#endif

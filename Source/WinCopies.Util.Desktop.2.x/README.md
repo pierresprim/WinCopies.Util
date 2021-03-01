@@ -3,6 +3,8 @@
 
 The WinCopies® software framework
 
+[![NuGet Badge](https://buildstats.info/nuget/WinCopies.Util.Desktop)](https://www.nuget.org/packages/WinCopies.Util.Desktop/)
+
 README
 ======
 

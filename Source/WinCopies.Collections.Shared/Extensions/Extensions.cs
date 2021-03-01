@@ -26,12 +26,14 @@ using WinCopies.Collections;
 using WinCopies.Collections.DotNetFix.Generic;
 using WinCopies.Collections.Generic;
 using WinCopies.Util;
+
 using static WinCopies.ThrowHelper;
 
 namespace WinCopies.Collections
 {
     public static class Extensions
     {
+#if CS7
         public static ReadOnlyQueueCollection<T> ToReadOnlyQueue<T>(this object[] array)
         {
             var queue = new EnumerableQueue<T>();
@@ -42,10 +44,11 @@ namespace WinCopies.Collections
 
             return new ReadOnlyQueueCollection<T>(queue);
         }
+#endif
 
         public static bool IsEnumeratorNotStartedOrDisposed(this IDisposableEnumeratorInfo enumerator) => (enumerator ?? throw GetArgumentNullException(nameof(enumerator))).IsDisposed || !enumerator.IsStarted;
 
-        #region Enumerables extension methods
+#region Enumerables extension methods
 
         // todo:
 
@@ -197,7 +200,7 @@ namespace WinCopies.Collections
 
         // todo: Add-, Insert-, Remove-If(Not)Contains methods: add parameters like the Contains methods
 
-        #region Add(Range)IfNotContains methods
+#region Add(Range)IfNotContains methods
 
         /// <summary>
         /// Tries to add a value to an <see cref="IList"/> if it does not contain it already.
@@ -303,7 +306,7 @@ namespace WinCopies.Collections
 
 #endregion
 
-        #region Insert(Range)IfNotContains methods
+#region Insert(Range)IfNotContains methods
 
         /// <summary>
         /// Inserts a value at the specified index in a given collection if the value does not already exists in the collection.
@@ -380,7 +383,7 @@ namespace WinCopies.Collections
 
 #endregion
 
-        #region Remove(Range)IfContains methods
+#region Remove(Range)IfContains methods
 
         public static bool RemoveIfContains(this IList collection, in object value)
         {
@@ -450,7 +453,7 @@ namespace WinCopies.Collections
 
 #endregion
 
-        #region AddRange methods
+#region AddRange methods
 
         public static void AddRange(this IList collection, params object[] values) => collection.AddRange((IEnumerable)values);
 
@@ -1086,7 +1089,7 @@ namespace WinCopies.Collections
                 collection.AddRangeBefore(node.Next, array);
         }
 #endif
-        #endregion
+#endregion
 
         public static object[] ToArray(this IList arrayList, in int startIndex, in int length)
         {
@@ -1170,11 +1173,11 @@ namespace WinCopies.Collections
                 oc.Move(oc.IndexOf(sorted[i]), i);
         }
 
-        #region Contains methods
+#region Contains methods
 
-        #region Non generic methods
+#region Non generic methods
 
-        #region ContainsOneValue overloads
+#region ContainsOneValue overloads
 
         public static bool ContainsOneValue(this IEnumerable array, in EqualityComparison comparison, out bool containsMoreThanOneValue, in object[] values)
         {
@@ -1269,9 +1272,9 @@ namespace WinCopies.Collections
 
             return ContainsOneValue(array, (object value, object _value) => equalityComparer.Equals(value, _value), out containsMoreThanOneValue, values);
         }
-        #endregion
+#endregion
 
-        #region ContainsOneOrMoreValues with notification whether contains more than one values overloads
+#region ContainsOneOrMoreValues with notification whether contains more than one values overloads
 
         public static bool ContainsOneOrMoreValues(IEnumerable array, in EqualityComparison comparison, out bool containsMoreThanOneValue, object[] values)
         {
@@ -1353,9 +1356,9 @@ namespace WinCopies.Collections
 
             return ContainsOneOrMoreValues(array, (object value, object _value) => equalityComparer.Equals(value, _value), out containsMoreThanOneValue, values);
         }
-        #endregion
+#endregion
 
-        #region ContainsOneOrMoreValues without notification whether contains more than one values overloads
+#region ContainsOneOrMoreValues without notification whether contains more than one values overloads
 
         public static bool ContainsOneOrMoreValues(IEnumerable array, in Func<object, object, bool> comparison, object[] values)
         {
@@ -1421,9 +1424,9 @@ namespace WinCopies.Collections
 
             return ContainsOneOrMoreValues(array, (object value, object _value) => equalityComparer.Equals(value, _value), values);
         }
-        #endregion
+#endregion
 
-        #region Contains array overloads
+#region Contains array overloads
 
         public static bool Contains(IEnumerable array, in EqualityComparison comparison, object[] values)
         {
@@ -1501,13 +1504,13 @@ namespace WinCopies.Collections
 
             return Contains(array, (object value, object _value) => equalityComparer.Equals(value, _value), values);
         }
-        #endregion
+#endregion
 
-        #endregion
+#endregion
 
-        #region Generic methods
+#region Generic methods
 
-        #region ContainsOneValue overloads
+#region ContainsOneValue overloads
 
         public static bool ContainsOneValue<T>(System.Collections.Generic.IEnumerable<T> array, in EqualityComparison<T> comparison, out bool containsMoreThanOneValue, in T[] values)
         {
@@ -1588,9 +1591,9 @@ namespace WinCopies.Collections
 
             return ContainsOneValue(array, (T value, T _value) => equalityComparer.Equals(value, _value), out containsMoreThanOneValue, values); ;
         }
-        #endregion
+#endregion
 
-        #region ContainsOneOrMoreValues with notification whether contains more than one values overloads
+#region ContainsOneOrMoreValues with notification whether contains more than one values overloads
 
         public static bool ContainsOneOrMoreValues<T>(System.Collections.Generic.IEnumerable<T> array, in EqualityComparison<T> comparison, out bool containsMoreThanOneValue, in T[] values)
         {
@@ -1672,9 +1675,9 @@ namespace WinCopies.Collections
 
             return ContainsOneOrMoreValues(array, (T value, T _value) => equalityComparer.Equals(value, _value), out containsMoreThanOneValue, values);
         }
-        #endregion
+#endregion
 
-        #region ContainsOneOrMoreValues without notification whether contains more than one values overloads
+#region ContainsOneOrMoreValues without notification whether contains more than one values overloads
 
         public static bool ContainsOneOrMoreValues<T>(System.Collections.Generic.IEnumerable<T> array, in EqualityComparison<T> comparison, in T[] values)
         {
@@ -1740,9 +1743,9 @@ namespace WinCopies.Collections
 
             return ContainsOneOrMoreValues(array, (T value, T _value) => equalityComparer.Equals(value, _value), values);
         }
-        #endregion
+#endregion
 
-        #region Contains array overloads
+#region Contains array overloads
 
         public static bool Contains<T>(System.Collections.Generic.IEnumerable<T> array, in EqualityComparison<T> comparison, in T[] values)
         {
@@ -1820,11 +1823,11 @@ namespace WinCopies.Collections
 
             return Contains(array, (T value, T _value) => equalityComparer.Equals(value, _value), values);
         }
-        #endregion
+#endregion
 
-        #endregion
+#endregion
 
-        #endregion
+#endregion
 
         public static System.Collections.Generic.LinkedListNode<T> RemoveAndGetFirstValue<T>(this System.Collections.Generic.LinkedList<T> items)
         {
@@ -2074,7 +2077,7 @@ namespace WinCopies.Collections
             return false;
         }
 
-        #endregion
+#endregion
 
 #if CS7
         public static

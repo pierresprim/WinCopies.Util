@@ -15,10 +15,13 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
+#if WinCopies3 && CS7
+
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
+
 using WinCopies.Linq;
 
 using static WinCopies.UtilHelpers;
@@ -194,3 +197,5 @@ namespace WinCopies.PropertySystem
         public override string ToString() => Name;
     }
 }
+
+#endif

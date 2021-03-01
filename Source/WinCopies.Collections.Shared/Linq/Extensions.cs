@@ -121,14 +121,6 @@ namespace WinCopies.Linq
                     yield return select(item);
         }
 
-        public static
-#if !WinCopies3
-System.Collections.Generic.IEnumerator
-#else
-            IEnumeratorInfo2
-#endif
-            <TDestination> Select<TSource, TDestination>(this System.Collections.Generic.IEnumerator<TSource> enumerator, Converter<TSource, TDestination> func) => new SelectEnumerator<TSource, TDestination>(enumerator, value => func(value));
-
         /// <summary>
         /// Yield returns each object of an <see cref="IEnumerable"/>, so the given <see cref="IEnumerable"/> will be considered as an <see cref="IEnumerable{Object}"/>.
         /// </summary>

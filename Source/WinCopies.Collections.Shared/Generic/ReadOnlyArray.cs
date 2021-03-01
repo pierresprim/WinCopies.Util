@@ -15,6 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
+#if WinCopies3 && CS7
+
 using System.Collections;
 using WinCopies.Collections.DotNetFix.Generic;
 
@@ -47,3 +49,4 @@ namespace WinCopies.Collections.Generic
         System.Collections.Generic.IEnumerator<T> Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => GetReversedEnumerator();
     }
 }
+#endif

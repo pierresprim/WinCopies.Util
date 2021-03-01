@@ -19,6 +19,8 @@
 
 using System;
 
+using WinCopies.Collections.Generic;
+
 using static WinCopies.ThrowHelper;
 
 namespace WinCopies.Collections
@@ -28,6 +30,8 @@ namespace WinCopies.Collections
     /// </summary>
     public static class Util
     {
+        public static System.Collections.Generic.IEnumerable<T> GetEmptyEnumerable<T>() => new WinCopies.Collections.Generic.Enumerable<T>(() => new EmptyEnumerator<T>());
+
         /// <summary>
         /// Returns a value obtained by a <see cref="Func"/>, depending on the result of a comparison.
         /// </summary>
