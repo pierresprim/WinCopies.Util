@@ -35,6 +35,100 @@ namespace WinCopies.Linq
 {
     public static class Extensions
     {
+        public static T FirstOrDefault<T>(this System.Collections.IEnumerable enumerable, in Func<object, bool> predicate)
+        {
+            foreach (object item in enumerable)
+
+                if (item is T _item && predicate(item))
+
+                    return _item;
+
+            return default;
+        }
+
+        public static TOut FirstOrDefault<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, in Func<TIn, bool> predicate)
+        {
+            foreach (TIn item in enumerable)
+
+                if (item is TOut _item && predicate(item))
+
+                    return _item;
+
+            return default;
+        }
+
+        public static TOut PredicateFirstOrDefault<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, in Predicate<TIn> predicate)
+        {
+            foreach (TIn item in enumerable)
+
+                if (item is TOut _item && predicate(item))
+
+                    return _item;
+
+            return default;
+        }
+
+        public static TOut FirstOrDefault<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, in Func<TOut, bool> predicate)
+        {
+            foreach (TIn item in enumerable)
+
+                if (item is TOut _item && predicate(_item))
+
+                    return _item;
+
+            return default;
+        }
+
+        public static TOut PredicateFirstOrDefault<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, in Predicate<TOut> predicate)
+        {
+            foreach (TIn item in enumerable)
+
+                if (item is TOut _item && predicate(_item))
+
+                    return _item;
+
+            return default;
+        }
+
+        public static TOut FirstOrDefault<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, in Func<TIn, bool> inPredicate, in Func<TOut, bool> outPredicate)
+        {
+            foreach (TIn item in enumerable)
+
+                if (item is TOut _item && inPredicate(item) && outPredicate(_item))
+
+                    return _item;
+
+            return default;
+        }
+
+        public static TOut PredicateFirstOrDefault<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, in Predicate<TIn> inPredicate, in Predicate<TOut> outPredicate)
+        {
+            foreach (TIn item in enumerable)
+
+                if (item is TOut _item && inPredicate(item) && outPredicate(_item))
+
+                    return _item;
+
+            return default;
+        }
+
+        public static System.Collections.Generic.IEnumerable<TOut> WhereSelect<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, Func<TIn, bool> where, Func<TIn, TOut> select)
+        {
+            foreach (TIn item in enumerable)
+
+                if (where(item))
+
+                    yield return select(item);
+        }
+
+        public static
+#if !WinCopies3
+System.Collections.Generic.IEnumerator
+#else
+            IEnumeratorInfo2
+#endif
+            <TDestination> Select<TSource, TDestination>(this System.Collections.Generic.IEnumerator<TSource> enumerator, Converter<TSource, TDestination> func) => new SelectEnumerator<TSource, TDestination>(enumerator, value => func(value));
+
         /// <summary>
         /// Yield returns each object of an <see cref="IEnumerable"/>, so the given <see cref="IEnumerable"/> will be considered as an <see cref="IEnumerable{Object}"/>.
         /// </summary>
@@ -452,6 +546,84 @@ Select
                 foreach (object item in _enumerable)
 
                     yield return item;
+        }
+        public static System.Collections.IEnumerable TryMerge(this System.Collections.Generic.IEnumerable<System.Collections.IEnumerable> enumerable)
+        {
+            foreach (System.Collections.IEnumerable _enumerable in enumerable)
+
+                if (_enumerable != null)
+
+                    foreach (object item in _enumerable)
+
+                        yield return item;
+        }
+
+        public static System.Collections.Generic.IEnumerable<T> TryMerge<T>(this System.Collections.Generic.IEnumerable<System.Collections.Generic.IEnumerable<T>> enumerable)
+        {
+            foreach (System.Collections.Generic.IEnumerable<T> _enumerable in enumerable)
+
+                if (_enumerable != null)
+
+                    foreach (T item in _enumerable)
+
+                        yield return item;
+        }
+
+        public static System.Collections.Generic.IEnumerable<TOut> WherePredicateSelect<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, Predicate<TIn> where, Converter<TIn, TOut> select)
+        {
+            foreach (TIn item in enumerable)
+
+                if (where(item))
+
+                    yield return select(item);
+        }
+
+        public static System.Collections.Generic.IEnumerable<TOut> SelectWhere<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, Func<TIn, TOut> select, Func<TOut, bool> where)
+        {
+            TOut _item;
+
+            foreach (TIn item in enumerable)
+
+                if (where((_item = select(item))))
+
+                    yield return _item;
+        }
+
+        public static System.Collections.Generic.IEnumerable<TOut> SelectWherePredicate<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, Converter<TIn, TOut> select, Predicate<TOut> where)
+        {
+            TOut _item;
+
+            foreach (TIn item in enumerable)
+
+                if (where((_item = select(item))))
+
+                    yield return _item;
+        }
+
+        public static System.Collections.Generic.IEnumerable<TOut> WhereSelectWhere<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, Func<TIn, bool> inPredicate, Func<TIn, TOut> converter, Func<TOut, bool> outPredicate)
+        {
+            TOut _item;
+
+            foreach (TIn item in enumerable)
+
+                if (inPredicate(item))
+
+                    if (outPredicate((_item = converter(item))))
+
+                        yield return _item;
+        }
+
+        public static System.Collections.Generic.IEnumerable<TOut> WhereSelectWherePredicate<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, Predicate<TIn> inPredicate, Converter<TIn, TOut> converter, Predicate<TOut> outPredicate)
+        {
+            TOut _item;
+
+            foreach (TIn item in enumerable)
+
+                if (inPredicate(item))
+
+                    if (outPredicate((_item = converter(item))))
+
+                        yield return _item;
         }
 
         public static System.Collections.Generic.IEnumerable<T> PrependValues<T>(this System.Collections.Generic.IEnumerable<T> enumerable, System.Collections.Generic.IEnumerable<T> values)

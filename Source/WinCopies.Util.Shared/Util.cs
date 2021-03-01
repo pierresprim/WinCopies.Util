@@ -24,6 +24,7 @@ using System.Runtime.InteropServices;
 
 using IComparer = System.Collections.IComparer;
 using WinCopies.Util;
+using System.Collections.Generic;
 
 #if !WinCopies3
 using System.Collections.Generic;
@@ -44,6 +45,13 @@ using static WinCopies.ThrowHelper;
 namespace WinCopies
 {
 #endif
+    public sealed class NullableReference<T> where T : class
+    {
+        public T Value { get; }
+
+        public NullableReference(T value) => Value = value;
+    }
+
     /// <summary>
     /// Provides some static helper methods.
     /// </summary>
@@ -58,6 +66,12 @@ namespace WinCopies
 
         public const BindingFlags DefaultBindingFlagsForPropertySet = BindingFlags.Public | BindingFlags.NonPublic |
                          BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly;
+
+        public static bool IsNullOrEmpty(in Array array) => array == null || array.Length == 0;
+
+        public static TValue GetValue<TKey, TValue>(KeyValuePair<TKey, TValue> keyValuePair) => keyValuePair.Value;
+
+        public static System.Collections.Generic.IEnumerable<T> GetEmptyEnumerable<T>() => new WinCopies.Collections.Generic.Enumerable<T>(() => new EmptyEnumerator<T>());
 
 #if !WinCopies3 && CS7
         [Obsolete("This method has been replaced by the WinCopies.Util.Extensions.SetBackgroundWorkerProperty method overloads.")]

@@ -41,9 +41,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\CheckableObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\CoalesceConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\ConverterArray.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\ComparisonConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\ConverterBase\ConverterBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\ConverterBase\ConverterBase2.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\ConverterBase\ConverterBase3.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\PropertySystemConverters.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\EnumToBooleanConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\EnumToReversedBooleanConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\EnumToStringArrayConverter.cs" />

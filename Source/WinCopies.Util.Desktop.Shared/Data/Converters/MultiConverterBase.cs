@@ -72,6 +72,7 @@ namespace WinCopies.Util.Data
 
     public abstract class MultiConverterBase<TSourceIn, TSourceOut, TParam, TDestination> : MultiConverterBase
     {
+#if !WinCopies3
         public interface IQueue : IUIntCountable
         {
             TSourceOut Dequeue();
@@ -128,6 +129,7 @@ namespace WinCopies.Util.Data
 
             public TSourceOut Dequeue() => _stack.Pop();
         }
+#endif
 
         public abstract ConversionOptions ConvertOptions { get; }
 

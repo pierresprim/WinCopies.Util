@@ -56,7 +56,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Stack\Stack.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Stack\StackCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Stack\SynchronizedStack.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerables\ReadOnlyEnumerable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\DotNetFix\ArrayEnumerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\MultipleEnumerableEnumerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\TypeConverterEnumerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\EnumerableExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\BuildersAndMergers\ArrayBuilder.cs" />
@@ -95,6 +97,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Generic\LinkedTree.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\Misc.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\ITreeNode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generic\ReadOnlyArray.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\RecursiveEnumerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ISortable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LinkedCollections.cs" />
@@ -103,6 +106,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)Generic\NullableEntry.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ArrayExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\StringExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PropertySystem\Attributes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PropertySystem\IProperty.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PropertySystem\PropertySystemCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PropertySystem\ReflectionProperty.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PropertySystem\ReflectionPropertyCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ReadOnlyArrayList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ReadOnlyTreeNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\TreeNode.cs" />
@@ -111,7 +119,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Misc\Util.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Enumeration\Enumerables\" />
     <Folder Include="$(MSBuildThisFileDirectory)Generic\EnumerableHelper.Partial\LinkedList.Partial\" />
   </ItemGroup>
 </Project>

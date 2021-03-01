@@ -9,6 +9,16 @@ CHANGELOG
 Updates
 -------
 
+03/01/2021 3.4.0.0-preview
+==========================
+
+Add new classes and static methods.
+
+WinCopies.Util.Desktop 3.4.0.0-preview
+--------------------------------------
+
+Remove the nested types in WinCopies.Util.Data.MultiConverterBase\<TSourceIn, TSourceOut, TParam, TDestination>.
+
 02/27/2021 3.3.0.0-preview
 ==========================
 

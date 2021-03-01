@@ -179,6 +179,13 @@ namespace WinCopies
         public static T[] RemoveRangeIfContains<T>(this ICollection<T> collection, params T[] values) => collection.RemoveRangeIfContains((System.Collections.Generic.IEnumerable<T>)values);
 #endif
 #endif
+            public static object GetFromLast(this Array array, int indexation) => (array ?? throw GetArgumentNullException(nameof(array))).Length > indexation ? array.GetValue(array.Length - 1 - indexation) : throw new ArgumentOutOfRangeException(nameof(indexation), indexation, $"{nameof(indexation)} must be less than or equal to {nameof(array)}'s length.");
+
+            public static object GetLast(this Array array) => array.GetFromLast(0);
+
+            public static T GetFromLast<T>(this T[] array, int indexation) => (array ?? throw GetArgumentNullException(nameof(array))).Length > indexation ? array[array.Length - 1 - indexation] : throw new ArgumentOutOfRangeException(nameof(indexation), indexation, $"{nameof(indexation)} must be less than or equal to {nameof(array)}'s length.");
+
+            public static T GetLast<T>(this T[] array) => array.GetFromLast(0);
 
             public static Result ToResultEnum(this bool? value) => value.HasValue ? value.Value.ToResultEnum() : Result.None;
 

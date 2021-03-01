@@ -32,6 +32,17 @@ namespace WinCopies.Collections
 {
     public static class Extensions
     {
+        public static ReadOnlyQueueCollection<T> ToReadOnlyQueue<T>(this object[] array)
+        {
+            var queue = new EnumerableQueue<T>();
+
+            foreach (object value in array)
+
+                queue.Enqueue((T)value);
+
+            return new ReadOnlyQueueCollection<T>(queue);
+        }
+
         public static bool IsEnumeratorNotStartedOrDisposed(this IDisposableEnumeratorInfo enumerator) => (enumerator ?? throw GetArgumentNullException(nameof(enumerator))).IsDisposed || !enumerator.IsStarted;
 
         #region Enumerables extension methods

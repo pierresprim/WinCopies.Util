@@ -173,6 +173,8 @@ namespace WinCopies
 
         #endregion
 
+        public static ArgumentException GetInvalidTypeArgumentException(in string argumentName) => new ArgumentException("The given type is not supported.", argumentName);
+
         public static InvalidOperationException GetMoreThanOneOccurencesWereFoundException() => new InvalidOperationException(MoreThanOneOccurencesWereFound);
 
         public static ArgumentException GetOneOrMoreKeyIsNullException() => new ArgumentException(OneOrMoreKeyIsNull);
