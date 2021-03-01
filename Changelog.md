@@ -244,10 +244,11 @@ WinCopies.Util.Desktop 3.0.0-preview
 	- Properties:
 		- WinCopies.Util.Commands.ApplicationCommands.CloseWindow
 
-??/??/???? 2.8.0.0
+03/01/2021 2.8.0.0
 ==================
 
-Add ConverterHelper class to WinCopies.Util.Data (WinCopies.Util.Desktop package).
+- Add ConverterHelper class to WinCopies.Util.Data (WinCopies.Util.Desktop package).
+- Add new classes and static methods.
 
 WinCopies.Collections 2.8.0.0
 -----------------------------

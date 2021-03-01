@@ -10,10 +10,10 @@
     <Description>WinCopies framework utilities</Description>
     <Copyright>Copyright © 2020 Pierre Sprimont</Copyright>
     <PackageTags>WinCopies</PackageTags>
-    <VersionPrefix>3.3</VersionPrefix>
+    <VersionPrefix>3.4</VersionPrefix>
     <VersionSuffix>preview</VersionSuffix>
-    <AssemblyVersion>3.3.0.0</AssemblyVersion>
-    <FileVersion>3.3.0.0</FileVersion>
+    <AssemblyVersion>3.4.0.0</AssemblyVersion>
+    <FileVersion>3.4.0.0</FileVersion>
     <RootNamespace>WinCopies</RootNamespace>
     <AssemblyOriginatorKeyFile>WinCopies.Util.Extensions.snk</AssemblyOriginatorKeyFile>
     <DefineConstants>WinCopies3;$(DefineConstants)</DefineConstants>
