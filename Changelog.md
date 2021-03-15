@@ -6,252 +6,16 @@ The WinCopies® software framework
 CHANGELOG
 =========
 
-Updates
--------
+### ??/??/???? 2.9
 
-03/01/2021 3.4.0.0-preview
-==========================
+Add UpdateValue method to WinCopies.Util.Data.ViewModelBase
 
-Add new classes and static methods.
-
-WinCopies.Util.Desktop 3.4.0.0-preview
---------------------------------------
-
-Remove the nested types in WinCopies.Util.Data.MultiConverterBase\<TSourceIn, TSourceOut, TParam, TDestination>.
-
-02/27/2021 3.3.0.0-preview
-==========================
-
-WinCopies.Collections 3.3.0.0-preview
--------------------------------------
-
-- Additions:
-	- WinCopies.Collections.IEnumerable\<out TItems, out TEnumerator>
-- Changes:
-	- WinCopies.Collections:
-		- Stack/Queue.IsReadOnly are now accessible through the explicit interface implementation of ISimpleLinkedListBase.
-		- The following classes are now in the WinCopies.Collections.DotNetFix namespace:
-			- INotifyCollectionChanging
-			- NotifyCollectionChangingEventHandler
-	- WinCopies.Collections.Generic:
-		- IEnumerableInfo\<out T>.GetReversedEnumerator() is now in the new IEnumerable\<out TItems, out TEnumerator> interface.
-		- IReadOnlyList now implements the new IReadOnlyList interface.
-	- WinCopies.Collections.DotNetFix.ISimpleLinkedListBase has changed. Some of its members are now in the new interface WinCopies.Collections.DotNetFix.ISimpleLinkedListBase2.
-	- WinCopies.Collections.DotNetFix.Generic:
-		- ISimpleLinkedList\<T> now implements WinCopies.Collections.DotNetFix.ISimpleLinkedListBase2.
-		- IQueueBase\<T> and IStackBase\<T> now implement WinCopies.Collections.DotNetFix.ISimpleLinkedListBase.
-	- WinCopies.Collections.DotNetFix:
-		- IEnumerableSimpleLinkedListBase, ReadOnlySimpleLinkedListBase, SimpleLinkedListBase now implement ISimpleLinkedListBase2
-	- WinCopies.Collections.DotNetFix.Generic.ArrayEnumerator\<T> is now compatible with any System.Collections.Generic.IReadOnlyList\<T>. Use WinCopies.Collections.Generic.CountableEnumerableArray\<T> to use an array with ArrayEnumerator\<T>.
-	- The following methods of WinCopies.Collections.EnumerableExtensions are now in WinCopies.Linq.Extensions:
-		- AsObjectEnumerable(this IEnumerable enumerable)
-		- As<T>(this System.Collections.IEnumerable enumerable)
-		- To<T>(this System.Collections.IEnumerable enumerable)
-- WinCopies.Linq.Extensions:
-	- Additions:
-		- Merge(this System.Collections.Generic.IEnumerable<System.Collections.IEnumerable> enumerable)
-	- The name of the following methods of this class have changed:
-		- Last<T>(this WinCopies.Collections.Generic.IEnumerable<T> enumerable, Predicate<T> predicate) ==> PredicateLast
-		- LastOrDefault<T>(this WinCopies.Collections.Generic.IEnumerable<T> enumerable, Predicate<T> predicate) ==> PredicateLastOrDefault
-		- FirstOrDefault<T>(this IEnumerable enumerable, in Predicate<T> predicate) ==> PredicateFirstOrDefault
-- WinCopies.Collections.DotNetFix.NotifyCollectionChangedEventArgs:
-	- Additions:
-		- NotifyCollectionChangedEventArgs(in bool isChangingEvent, in NotifyCollectionChangedAction action)
-	- Removals:
-		- ResetItems property
-		- NotifyCollectionChangedEventArgs constructor
-- Bug fixes:
-	- WinCopies.Collections.DotNetFix.ReadOnlyEnumerableQueue.TryPeek kept calling itself.
-	- #24
-- Removals:
-	- TEnumDestination generic type parameter from WinCopies.Collections.Generic.Enumerator\<TSource, TEnumSource, TDestination, TEnumDestination>. This class is now defined as Enumerator\<TSource, TEnumSource, TDestination>.
-	- ArrayEnumerator.Array property.
-	- ArrayEnumeratorBase
-	- ListEnumerator. Use the new version of ArrayEnumerator instead.
-
-WinCopies.Util.Desktop 3.3.0.0-preview
---------------------------------------
-
-- Bug fixed in IsNullConverter.
-- Additions:
-	- WinCopies.Collections.IObservableCollectionBase
-	- WinCopies.Collections.DotNetFix.IObservableCollection\<T> is now in the WinCopies.Collections.DotNetFix.Generic namespace.
-	- WinCopies.Collections.DotNetFix.Generic:
-		- ICountableEnumerable.Count
-		- IObservableCollectionBase\<T>
-	- New helper methods to ConverterHelper.
-	- Generic MultiConverterBase.
-- AlwaysConvertibleOneWayConverter:
-	The following properties and methods have now sealed overrides:
-	- ConvertBackOptions
-	- ConvertBack(TDestination value, TParam parameter, CultureInfo culture)
-- AlwaysConvertibleOneWayToSourceConverter:
-	The following properties and methods have now sealed overrides:
-	- ConvertOptions
-	- Convert(TSource value, TParam parameter, CultureInfo culture)
-
-02/06/2021 3.2.0.0-preview
-==========================
-
-- Update WinCopies.Collections.DotNetFix.UIntIndexedListEnumerator and WinCopies.Collections.DotNetFix.Generic.UIntIndexedListEnumerator\<T> constructors.
-
-12/14/2020 3.1.0.1-preview
-==========================
-
-- Supports .Net Framework 4.0 and .Net 5. (All features are not available in the .Net Framework 4.0 version.)
-- Depends on Microsoft.CodeAnalysis.NetAnalyzers. (.Net 5 version.)
-- Additions:
-	- Interfaces and classes.
-	- Static exception throwing methods.
-	- Other static methods.
-	- Extension methods.
-- Changes:
-	- WinCopies.InvalidEnumArgumentException is now in the WinCopies.Util package.
-	- Classes named UtilHelpers, ThrowHelper and Extensions exist in both WinCopies.Util and WinCopies.Util.Extensions packages. Now, those from the WinCopies.Util package are now in the WinCopies namespace, except Extensions which is in the WinCopies.Util namespace, and those from the WinCopies.Util.Extensions package are now in the WinCopies.Extensions namespace in order to avoid name conflicts.
-	- Some comparison-related types in the WinCopies.Collections namespace have moved to the WinCopies.Util package, and are still in the same namespace.
-	- Enum throw methods are now in the WinCopies.ThrowHelper class of the WinCopies.Util package.
-	- WinCopies.Collections.EnumerableExtensions.Join\<T> and AppendValues methods are now in WinCopies.Linq.Extensions.
-	- Some types are not supported anymore by the .Net Framework 4.0 targetting version.
-	- ToEnumerable\<T>(this T[] array) is now in WinCopies.Collections.ArrayExtensions (WinCopies.Collections package).
-	- Some static methods have new return types. These types as compatible with the previous ones, so these methods should remain compatible with older releases, but their new return types extend the capacity of the usage of the returned values.
-
-WinCopies.Collections 3.2.0.0-preview
--------------------------------------
-
-- Changes:
-	- Fixes #15
-	- Fixes #22
-	- ArrayEnumerator\<T> is now defined as : public class ArrayEnumerator\<T> : Enumerator\<T>, ICountableDisposableEnumeratorInfo\<T>
-	- CountableEnumerableArray\<T> is now defined as : public class CountableEnumerableArray<T> : WinCopies.Collections.Generic.IReadOnlyList\<T>
-	- WinCopies.Collections.DotNetFix.IEnumerator has now a MoveNext() and a Reset() method.
-	- Update LinkedList classes and interfaces in order to have a better interface model regarding the enumerator provider methods.
-	- WinCopies.Collections.DotNetFix.SimpleLinkedListBase.ClearItems() is now protected.
-	- Some interface for uint indexation have changed in order to implement the non-generic version of the IUIntCountableEnumerable interface and the generic version in a generic context.
-	- WinCopies.Collections namespace: All the types below are now in the WinCopies.Collections.Generic namespace:
-		- EqualityComparison\<in T>
-		- IComparer\<in T>
-		- Comparer\<T>
-		- IEqualityComparer\<in T>
-		- EqualityComparer\<T>
-	- UIntIndexedListEnumerator\<T> is now in the WinCopies.Collections.DotNetFix.Generic namespace.
-	- ICountableEnumerable\<T> implements System.Collections.Generic.IReadOnlyCollection\<T>.
-	- Update (I)(ReadOnly)LinkedList(Node)\<T> to avoid read-only issues.
-- Removals:
-	- UIntCountableEnumerable<T> class.
-	- StringExtensions.StartsWith(this string s, char value) was removed from the .Net Standard 2.0, .Net Core and .Net 5 and later targetting versions because this method is now available in .Net.
-
-WinCopies.Util.Desktop 3.2.0.0-preview
---------------------------------------
-
-- Changes:
-	- ValueConverters inherit from new generic abstract types. The default converters of the WinCopies.Util.Desktop package still work as they did before but are based on new abstract classes.
-	- IconToImageSourceConverter now takes System.Drawing.Icon values.
-- Additions:
-	- BitmapToImageSourceConverter
-	- Bitmap-, Icon- and ImageSource-related extension methods.
-
-12/09/2020 3.1.0.0-preview
-==========================
-
-- Bug fixes.
-- Changes:
-	- WinCopies.Collections.DotNetFix namespace:
-		- ICountableEnumerable\<T> and IUIntCountableEnumerable\<T> are now in the WinCopies.Collections.DotNetFix.Generic namespace.
-	- WinCopies.Collections.DotNetFix.Generic.ILinkedList\<T>.GetNodeEnumerator(EnumerationDirection enumerationDirection) is now in ILinkedList3\<T> for better compatibility with previous versions.
-	- WinCopies.Collections.DotNetFix.Generic.LinkedCollection\<T> now implements ILinkedList3\<T> and has new protected virtual methods.
-	- Some changes in linked list-related interfaces (such as IStack\<T>, IQueue\<T>, ...)
-	- WinCopies.TypeForDataTemplateAttribute is now sealed.
-	- Some extension methods have moved to specific static extension classes.
-	- ILinkedList2\<T> is now obsolete.
-- Additions:
-	- Classes:
-		- WinCopies.Collections.Generic.UIntCountableEnumerableArray\<T>
-		- WinCopies.Collections.DotNetFix.Generic.UIntCountableEnumerable
-		- WinCopies.Collections.Generic.ArrayMerger\<T>
-		- WinCopies.Collections.Generic.(I)LinkedTreeNode
-		- EnumerableHelper\<T>. This class contains static methods that return linked list-based interfaces that are "simplified" versions of their related "complete" interface versions. These interfaces are useful to work only with the features that are really needed.
-		- IEnumerableInfo\<T>
-		- IEnumeratorInfo2\<T>
-		- Enumerator<TSource, TEnumSource, TDestination, TEnumDestination>
-	- Methods:
-		- Add GetIf methods in WinCopies.Util.Extensions.
-		- Methods to the LinkedList\<T> class and the ILinkedList3\<T> interface.
-- Removals:
-	- WinCopies.Collections.DotNetFix.Generic.ReadOnlyLinkedList.GetNodeEnumerator(EnumerationDirection enumerationDirection) was removed because the GetNodeEnumerator() is now in ILinkedList3<T> for better compatibility.
-	- WinCopies.Collections.DotNetFix.Generic.IReadOnlyLinkedList\<T>.GetNodeEnumerator(EnumerationDirection enumerationDirection) was removed because the GetNodeEnumerator() is now in ILinkedList3<T> for better compatibility.
-
-11/01/2020 3.0.0-preview
-========================
-
-- Changes:
-	- WinCopies.Util namespace to WinCopies (WinCopies.Util.Data namespace has not changed because of WinCopies.Data package).
-	- IBackgroundWorker interface moved to WinCopies.Util.Desktop package. Some items and names have changed.
-	- Some obsolete types and members have been removed.
-
-WinCopies.Util 3.0.0-preview
-----------------------------
-
-- Removals:
-	- Methods:
-		- WinCopies.Util.Util.ThrowIfNull(object, string) method. Please use the generic method instead.
-		- WinCopies.Util.Extensions:
-			- object\[] AddRangeIfNotContains(this System.Collections.ICollection collection, params object\[] values)
-			- T\[] RemoveRangeIfContains\<T>(this ICollection\<T> collection, params T\[] values)
-			- T\[] RemoveRangeIfContains\<T>(this ICollection\<T> collection, in IEnumerable\<T> values)
-			- bool ContainsOneValue(this IEnumerable array, Comparison\<object> comparison, out bool containsMoreThanOneValue, params object\[] values)
-			- object GetNumValue(this Enum @enum, in string enumName)
-			- bool Contains(this string s, IEqualityComparer\<char> comparer, string value)
-			- bool Contains(this string s, char value, IEqualityComparer\<char> comparer, out int index)
-		- WinCopies.Util.Util:
-			- (bool propertyChanged, object oldValue) SetPropertyWhenNotBusy<T>(T bgWorker, string propertyName, string fieldName, object newValue, Type declaringType, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, bool throwIfBusy = true) where T : IBackgroundWorker, INotifyPropertyChanged
-			- void ThrowIfNull(in object obj, in string argumentName)
-			- T\[] ConcatenateLong\<T>(params T[][] arrays)
-	- Classes:
-		- LinkedList\<T>
-		- ReadOnlyLinkedList\<T>
-	- Interfaces:
-		- WinCopies.Collections:
-			- IUIntIndexedCollection
-			- IUIntIndexedCollection\<T>
-			- UIntIndexedCollectionEnumeratorBase
-			- UIntIndexedCollectionEnumerator
-			- UIntIndexedCollectionEnumerator\<T>
-			- ReadOnlyObservableCollection\<T>
-- Changes:
-	- All linked lists (Stack and Stack-based, Queue and Queue-based and linked lists and collections) are now completely WinCopies Framework native and have changed consequently.
-	- Classes:
-		- WinCopies.Util.Util => WinCopies.UtilHelpers
-	- Enums:
-		- WinCopies.Util.Util.ComparisonType => WinCopies.Diagnostics.ComparisonType
-		- WinCopies.Util.Util.ComparisonMode => WinCopies.Diagnostics.ComparisonMode
-		- WinCopies.Util.Util.Comparison => WinCopies.Diagnostics.Comparison
-	- Static and extension methods:
-		- 'If' methods are now in the WinCopies.Diagnostics.IfHelpers namespace.
-		- Get- and ThrowException methods are now all in the WinCopies.ThrowHelper class.
-		- WinCopies.UtilHelpers.GetNumValue is now generic and the 'enumType' parameter has been removed.
-	- Misc:
-		- StringParameterEmptyOrWhiteSpaces resource to StringParameterEmptyOrWhiteSpace
-- Additions:
-	- WinCopies.Collections.Generic.IEnumerable\<T> interface.
-
-WinCopies.Util.Desktop 3.0.0-preview
-------------------------------------
-
-- Additions:
-	- IPausableBackgroundWorker interface.
-	- PausableBackgroundWorker extension methods.
-- Removals:
-	- Properties:
-		- WinCopies.Util.Commands.ApplicationCommands.CloseWindow
-
-03/01/2021 2.8.0.0
-==================
+### 03/01/2021 2.8
 
 - Add ConverterHelper class to WinCopies.Util.Data (WinCopies.Util.Desktop package).
 - Add new classes and static methods.
 
-WinCopies.Collections 2.8.0.0
------------------------------
+#### WinCopies.Collections
 
 - Additions:
 	- Optional parameter to ArrayEnumerator's constructor to allow reversed enumeration.
@@ -260,19 +24,15 @@ WinCopies.Collections 2.8.0.0
 	- ArrayEnumerator now inherits from a new base class.
 	- CountableEnumerableArray\<T> is now defined as : public class CountableEnumerableArray<T> : WinCopies.Collections.Generic.IReadOnlyList\<T>
 
-02/10/2021 2.7.0.1
-==================
+### 02/10/2021 2.7.0.1
 
-WinCopies.Util.Desktop (2.7.0.1)
---------------------------------
+#### WinCopies.Util.Desktop
 
 Bug fixes in the ConverterBase class.
 
-02/06/2021 2.7
-==============
+### 02/06/2021 2.7
 
-WinCopies.Util (2.7)
---------------------
+#### WinCopies.Util
 
 - Supports .Net 5.0.
 - Additions:
@@ -284,21 +44,17 @@ WinCopies.Util (2.7)
 	- WinCopies.Collections.EqualityComparer\<T> now implements WinCopies.Collections.IEqualityComparer\<in T>
 	- #23
 
-WinCopies.Util.Desktop (2.7)
-----------------------------
+#### WinCopies.Util.Desktop
 
 - Add PushBindings.
 
-12/14/2020 2.6.1.1
-==================
+### 12/14/2020 2.6.1.1
 
 - Add support for .Net 5.0 and .Net Framework 4.0.
 
-12/09/2020 2.6.1
-================
+### 12/09/2020 2.6.1
 
-WinCopies.Util (2.6.1)
-----------------------
+#### WinCopies.Util
 
 - Some bug fixes.
 - Additions:
@@ -310,18 +66,15 @@ WinCopies.Util (2.6.1)
 		- Collection exception helper methods.
 		- Other exception helper methods.
 
-WinCopies.Util.Desktop (2.6.1)
-------------------------------
+#### WinCopies.Util.Desktop
 
 Add CollectionViewModel\<T> as a INotifyCollectionChanged Collection\<T> wrapper.
 
-08/14/2020 2.6
-==============
+### 08/14/2020 2.6
 
 - New extension and static throwing methods.
 
-WinCopies.Util (2.6)
---------------------
+#### WinCopies.Util
 
 - Additions:
 	- WinCopies.Collections:
@@ -345,16 +98,13 @@ WinCopies.Util (2.6)
 			- I(Countable)(Disposable)EnumeratorInfo
 		- RecursiveEnumerator
 
-WinCopies.Util.Desktop (2.6)
--------------------------------
+#### WinCopies.Util.Desktop
 
 Add WinCopies.Util.DotNetFix.I(Pausable)BackgroundWorker interfaces and extension methods related to these interfaces.
 
-07/17/2020 2.5.9
-================
+### 07/17/2020 2.5.9
 
-WinCopies.Util (2.5.9)
-----------------------
+#### WinCopies.Util
 
 - Additions:
 	- Classes & Interfaces:
@@ -363,8 +113,7 @@ WinCopies.Util (2.5.9)
 	- ForEach methods for EmptyCheckEnumerator class (generic and non-generic version)
 - Bug fixes
 
-WinCopies.Util.Desktop (2.5.9)
-------------------------------
+#### WinCopies.Util.Desktop
 
 - Package supports .Net Framework v4.8.
 - Additions:
@@ -374,11 +123,9 @@ WinCopies.Util.Desktop (2.5.9)
 		- Clipboard static class
 	- (I)BackgroundWorker extension methods.
 
-07/02/2020 2.5-preview8
-=======================
+### 07/02/2020 2.5-preview8
 
-WinCopies.Util (2.5-preview8)
------------------------------
+#### WinCopies.Util
 
 - Additions:
 	- Delegates:
@@ -410,11 +157,9 @@ WinCopies.Util (2.5-preview8)
 	- String 'Split' methods do not return any value when there is value but no separator in the given string.
 	- Bugs fixes with the CheckedUInt64's IsNaN property and CompareTo(CheckedUInt64) method.
 
-06/14/2020 2.5-preview7
-=======================
+### 06/14/2020 2.5-preview7
 
-WinCopies.Util (2.5-preview7)
------------------------------
+#### WinCopies.Util
 
 - Changes:
 	- Some breaking changes in (ReadOnly)(Observable)Stack/Queue/LinkedCollections and relative code. Fixes #8.
@@ -428,19 +173,15 @@ WinCopies.Util (2.5-preview7)
 - Removals:
 	- Unnecessary types in WinCopies.Collections.DotNetFix.Extensions.
 
-06/02/2020 2.4-preview6.1
-=========================
+### 06/02/2020 2.4-preview6.1
 
-WinCopies.Util (2.4-preview6.1)
--------------------------------
+#### WinCopies.Util
 
 Bug fixes and improvements for the latest features.
 
-06/02/2020 2.4.0-preview6
-=========================
+### 06/02/2020 2.4-preview6
 
-WinCopies.Util (2.4.0-preview6)
--------------------------------
+#### WinCopies.Util
 
 - Existing items behavior updates:
 	- WinCopies.Linq.Extensions.Where has been renamed to WinCopies.Linq.Extensions.WherePredicate. Fixes #4.
@@ -450,11 +191,9 @@ WinCopies.Util (2.4.0-preview6)
 	- (Observable)Stack/Queue/LinkedCollection classes. Fixes #5.
 	- WinCopies.Util.Util.NotApplicable const.
 
-05/21/2020 2.3.0-preview5
-=========================
+### 05/21/2020 2.3-preview5
 
-WinCopies.Util (2.3.0-preview5)
--------------------------------
+#### WinCopies.Util
 
 - Additions:
 	- Interfaces:
@@ -478,49 +217,40 @@ WinCopies.Util (2.3.0-preview5)
 	- The WinCopies.Util.Util.RemoveRangeIfContains<T>(this ICollection<T> collection, in System.Collections.Generic.IEnumerable<T> values) now has the following signature: RemoveRangeIfContains<T>(this IList<T> collection, in System.Collections.Generic.IEnumerable<T> values). The old method is still supported.
 	- The WinCopies.Collections.DotNetFix.IReadOnlyLinkedList interface implements WinCopies.Collections.DotNetFix.ICountableEnumerable.
 
-WinCopies.Util.Desktop (2.3.0-preview5)
----------------------------------------
+#### WinCopies.Util.Desktop
 
 - Additions:
 	- New commands.
 - Existing items behavior updates:
 	- The WinCopies.Util.Commands.ApplicationCommands.CloseAllTabs has now the Shift modifier key instead of Alt.
 
-05/04/2020 2.2.0-preview4
-=========================
+### 05/04/2020 2.2-preview4
 
-WinCopies.Util (2.2.0-preview4)
--------------------------------
+#### WinCopies.Util
 
 - Additions:
-	- Classes:
-		- WinCopies.Linq.Extensions
+	- WinCopies.Linq.Extensions class.
 
 - Removals:
 	- WinCopies.Util.IDisposable.IsDisposed property, as WinCopies.Util.IDisposable implements WinCopies.Util.DotNetFix.IDisposable, that implements this property.
 
-WinCopies.Util.Desktop (2.2.0-preview4)
----------------------------------------
+#### WinCopies.Util.Desktop
 
 - Additions:
-	- Classes:
-		- IconToImageSourceConverter
-	- Extension methods:
-		- ToImageSource(this Bitmap bitmap)
+	- IconToImageSourceConverter class.
+	- ToImageSource(this Bitmap bitmap) extension method.
 
 - Existing items behavior updates:
 	- All command-related items have moved to the WinCopies.Util.Commands namespace.
 	- Change the type of the WinCopies.Util.Commands.DelegateCommand.CanExecuteDelegate property for the non-generic class from System.Predicate<object> to WinCopies.Util.Predicate.
 	- Add explicit constructors to the WinCopies.Util.Commands.DelegateCommand classes (generic and non-generic).
 
-04/24/2020 2.2.0-preview3
-=========================
+### 04/24/2020 2.2-preview3
 
 - Add build property to build symbol packages.
 - Supports .Net Framework 4.7.2, .Net Core 3.0 and .Net Standard 2.0.
 
-WinCopies.Util (2.2.0-preview3)
--------------------------------
+#### WinCopies.Util (2.2.0-preview3)
 
 - Update doc.
 
@@ -538,26 +268,22 @@ WinCopies.Util (2.2.0-preview3)
 	- Constructors:
 		- Default constructor for the ObjectDisposingException exception.
 
-WinCopies.Util.Desktop (2.0.0-preview3)
----------------------------------------
+#### WinCopies.Util.Desktop (2.0.0-preview3)
 
 - Additions:
 	- APIs:
 		- AttachedCommandBehavior (this API is licensed under a specific license).
 
-03/27/2020 2.2.0-preview2
-=========================
+### 03/27/2020 2.2-preview2
 
 - Available for Any CPU configuration only.
 
-03/26/2020 2.2.0-preview1
-=========================
+### 03/26/2020 2.2-preview1
 
 - Available for 32- and 64-bit Windows platforms.
 - Some types have moved to the WinCopies.Util.Desktop package.
 
-WinCopies.Util (2.2.0-preview1)
--------------------------------
+#### WinCopies.Util
 
 - Existing items behavior updates:
 	- The interfaces and enumerators of the WinCopies.Collections namespace for uint-indexed collections have been replaced by the new interfaces for uint-indexed collections in the WinCopies.Collections.DotNetFix namespace and are now obsolete.
@@ -568,11 +294,9 @@ WinCopies.Util (2.2.0-preview1)
 	- Extension and static methods:
 		- Fix #2
 
-02/09/2020 2.1
-==============
+### 02/09/2020 2.1
 
-WinCopies.Util (2.1)
---------------------
+#### WinCopies.Util
 
 Available for .Net Framework, .Net Core and .Net Standard*
 
@@ -590,11 +314,9 @@ Available for .Net Framework, .Net Core and .Net Standard*
 
 \* Some features are not available in the .Net Core and .Net Standard versions since these frameworks do not have the same structure as the .Net Framework. New packages that include these features will be released later.
 
-2.0
-===
+### 2.0
 
-WinCopies.Util (2.0)
---------------------
+#### WinCopies.Util
 
 Available for .Net Framework, .Net Core and .Net Standard*
 
@@ -729,44 +451,26 @@ Available for .Net Framework, .Net Core and .Net Standard*
 
 \*\*\* See WinCopies.Util.Extensions.SetProperty/Field
 
-WinCopies.Data (2.0)
---------------------
+#### WinCopies.Data
 
 First release
 
-WinCoipies.GUI (2.0)
---------------------
+#### WinCoipies.GUI
 
 First release
 
-WinCopies.GUI.Models (2.0)
---------------------------
+#### WinCopies.GUI.Models
 
 First release
 
-WinCopies.GUI.ViewModels (2.0)
-------------------------------
+#### WinCopies.GUI.ViewModels
 
 First release
 
-WinCopies.GUI.Templates (2.0)
------------------------------
+#### WinCopies.GUI.Templates
 
 First release
 
-WinCopies.GUI.Windows (2.0)
----------------------------
+#### WinCopies.GUI.Windows
 
 First release
-
-Project link
-------------
-
-[https://github.com/pierresprim/WinCopies-framework](https://github.com/pierresprim/WinCopies-framework)
-
-License
--------
-
-See [LICENSE](https://github.com/pierresprim/WinCopies-framework/blob/master/LICENSE) for the license of the WinCopies framework.
-
-This framework uses some external dependencies. Each external dependency is integrated to the WinCopies framework under its own license, regardless of the WinCopies framework license.

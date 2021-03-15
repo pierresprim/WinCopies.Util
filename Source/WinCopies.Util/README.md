@@ -15,7 +15,7 @@ Be careful! This is the 3.x branch of WinCopies.Util and almost all of the array
 Updates
 -------
 
-See the Change log.
+See the change log.
 
 Description
 -----------

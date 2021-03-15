@@ -15,7 +15,7 @@ Be careful! This is the 3.x branch of WinCopies.Collections and almost all of th
 Updates
 -------
 
-See the Change log.
+See the change log.
 
 Description
 -----------

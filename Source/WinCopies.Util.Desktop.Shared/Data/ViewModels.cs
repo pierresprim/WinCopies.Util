@@ -63,6 +63,15 @@ namespace WinCopies.Util.Data
             if (propertyChanged) OnPropertyChanged(propertyName, oldValue, newValue);
         }
 
+        protected void UpdateValue<T>(ref T value, in T newValue, in PropertyChangedEventArgs propertyChangedEventArgs)
+        {
+            value = newValue;
+
+            OnPropertyChanged(propertyChangedEventArgs);
+        }
+
+        protected void UpdateValue<T>(ref T value, in T newValue, in string propertyName) => UpdateValue(ref value, newValue, new PropertyChangedEventArgs(propertyName));
+
         protected virtual void OnPropertyChanged(string propertyName) => OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs(propertyName));
 
         protected virtual void OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
