@@ -21,6 +21,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
+using WinCopies.Collections.DotNetFix.Generic;
+
 namespace WinCopies.Collections.DotNetFix
 {
 #if WinCopies3
@@ -28,19 +30,19 @@ namespace WinCopies.Collections.DotNetFix
     {
 #endif
 
-        [Serializable]
-        public class StackCollection<T> : System.Collections.Generic.IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection
-        {
-            protected internal
+    [Serializable]
+    public class StackCollection<T> : IEnumerableStack<T>, IReadOnlyCollection<T>, ICollection
+    {
+        protected internal
 #if !WinCopies3
             System.Collections.Generic.Stack
 #else
-IEnumerableStack
+            IEnumerableStack
 #endif
             <T> InnerStack
-            { get; }
+        { get; }
 
-            public
+        public
 #if !WinCopies3
 int
 #else
@@ -54,22 +56,34 @@ int
             int IReadOnlyCollection<T>.Count => (int)Count;
 #endif
 
-            public bool IsReadOnly => false;
+        public bool IsReadOnly => false;
 
-            bool ICollection.IsSynchronized => ((ICollection)InnerStack).IsSynchronized;
+        bool ICollection.IsSynchronized => ((ICollection)InnerStack).IsSynchronized;
 
-            object ICollection.SyncRoot => ((ICollection)InnerStack).SyncRoot;
+        object ICollection.SyncRoot => ((ICollection)InnerStack).SyncRoot;
 
-            public StackCollection() : this(new
+#if WinCopies3
+            bool ISimpleLinkedListBase2.IsSynchronized => InnerStack.IsSynchronized;
+
+            object ISimpleLinkedListBase2.SyncRoot => InnerStack.SyncRoot;
+
+            bool ISimpleLinkedListBase.HasItems => InnerStack.HasItems;
+#else
+        uint IUIntCountable.Count => (uint)Count;
+
+        uint IUIntCountableEnumerable.Count => (uint)Count;
+#endif
+
+        public StackCollection() : this(new
 #if !WinCopies3
             System.Collections.Generic.Stack
 #else
             EnumerableStack
 #endif
             <T>())
-            { }
+        { }
 
-            public StackCollection(in
+        public StackCollection(in
 #if !WinCopies3
             System.Collections.Generic.Stack
 #else
@@ -77,44 +91,74 @@ int
 #endif
             <T> stack) => InnerStack = stack;
 
-            protected virtual void ClearItems() => InnerStack.Clear();
+        protected virtual void ClearItems() => InnerStack.Clear();
 
-            public void Clear() => ClearItems();
+        public void Clear() => ClearItems();
 
-            public void Contains(T item) => InnerStack.Contains(item);
+        public void Contains(T item) => InnerStack.Contains(item);
 
-            public T Peek() => InnerStack.Peek();
+        public T Peek() => InnerStack.Peek();
 
-            protected virtual T PopItem() => InnerStack.Pop();
+        protected virtual T PopItem() => InnerStack.Pop();
 
-            public T Pop() => PopItem();
+        public T Pop() => PopItem();
 
-            protected virtual void PushItem(T item) => InnerStack.Push(item);
+        protected virtual void PushItem(T item) => InnerStack.Push(item);
 
-            public void Push(in T item) => PushItem(item);
+        public void Push(T item) => PushItem(item);
 
-            public T[] ToArray() => InnerStack.ToArray();
+        public T[] ToArray() => InnerStack.ToArray();
 
 #if !WinCopies3
         public void TrimExcess() => InnerStack.TrimExcess();
 #endif
 
-#if NETCORE
-            public bool TryPeek(out T result) => InnerStack.TryPeek(out result);
+        public bool TryPeek(out T result)
+#if CS8
+            => InnerStack.TryPeek(out result);
+#else
+        {
+            if (Count == 0)
+            {
+                result = default;
 
-            protected virtual bool TryPopItem(out T result) => InnerStack.TryPop(out result);
+                return false;
+            }
 
-            public bool TryPop(out T result) => TryPopItem(out result);
+            result = InnerStack.Peek();
+
+            return true;
+        }
 #endif
 
-            void ICollection.CopyTo(Array array, int index) => ((ICollection)InnerStack).CopyTo(array, index);
+        protected virtual bool TryPopItem(out T result)
+#if CS8
+            => InnerStack.TryPop(out result);
+#else
+        {
+            if (IsReadOnly || Count == 0)
+            {
+                result = default;
 
-            public void CopyTo(in T[] array, in int arrayIndex) => InnerStack.CopyTo(array, arrayIndex);
+                return false;
+            }
 
-            public System.Collections.Generic.IEnumerator<T> GetEnumerator() => InnerStack.GetEnumerator();
+            result = InnerStack.Pop();
 
-            System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerStack).GetEnumerator();
+            return true;
         }
+#endif
+
+        public bool TryPop(out T result) => TryPopItem(out result);
+
+        void ICollection.CopyTo(Array array, int index) => ((ICollection)InnerStack).CopyTo(array, index);
+
+        public void CopyTo(T[] array, int arrayIndex) => InnerStack.CopyTo(array, arrayIndex);
+
+        public System.Collections.Generic.IEnumerator<T> GetEnumerator() => InnerStack.GetEnumerator();
+
+        System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerStack).GetEnumerator();
+    }
 #if WinCopies3
     }
 #endif

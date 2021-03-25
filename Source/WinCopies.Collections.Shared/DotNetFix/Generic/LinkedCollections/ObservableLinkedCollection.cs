@@ -19,6 +19,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Collections.Generic;
 
 #if !WinCopies3
 using static WinCopies.Util.Util;
@@ -37,13 +38,26 @@ namespace WinCopies.Collections.DotNetFix
         [Serializable]
         public class ObservableLinkedCollection<T> : LinkedCollection<T>, INotifyPropertyChanged, INotifyLinkedCollectionChanged<T>
         {
+#if WinCopies3
+            private ILinkedListNode<T> _firstNode;
+            private ILinkedListNode<T> _lastNode;
+#else
+            private LinkedListNode<T> _firstNode;
+            private LinkedListNode<T> _lastNode;
+#endif
+
             public event PropertyChangedEventHandler PropertyChanged;
 
             public event LinkedCollectionChangedEventHandler<T> CollectionChanged;
 
             public ObservableLinkedCollection() : base() { }
 
-            public ObservableLinkedCollection(in LinkedList<T> list) : base(list) { }
+            public ObservableLinkedCollection(in LinkedList<T> list) : base(list)
+            {
+                _firstNode = list.First;
+
+                _lastNode = list.Last;
+            }
 
             protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
 
@@ -71,7 +85,28 @@ namespace WinCopies.Collections.DotNetFix
 #else
                 ILinkedListNode
 #endif
-                <T> node) => OnCollectionChanged(new LinkedCollectionChangedEventArgs<T>(action, addedBefore, addedAfter, node));
+                <T> node)
+            {
+                if (First != _firstNode)
+                {
+                    _firstNode = First;
+
+                    RaisePropertyChangedEvent(nameof(First));
+
+                    RaisePropertyChangedEvent(nameof(FirstValue));
+                }
+
+                else if (Last != _lastNode)
+                {
+                    _lastNode = Last;
+
+                    RaisePropertyChangedEvent(nameof(Last));
+
+                    RaisePropertyChangedEvent(nameof(LastValue));
+                }
+
+                OnCollectionChanged(new LinkedCollectionChangedEventArgs<T>(action, addedBefore, addedAfter, node));
+            }
 
 #if !WinCopies3
         protected override void AddFirstItem(System.Collections.Generic.LinkedListNode<T> node)

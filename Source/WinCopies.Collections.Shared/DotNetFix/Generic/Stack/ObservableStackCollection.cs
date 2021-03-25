@@ -84,8 +84,7 @@ namespace WinCopies.Collections.DotNetFix
                 RaiseCollectionChangedEvent(NotifyCollectionChangedAction.Add, item);
             }
 
-#if NETCORE
-
+#if CS8
             protected override bool TryPopItem(out T result)
             {
                 bool succeeded = base.TryPopItem(out result);
@@ -99,7 +98,6 @@ namespace WinCopies.Collections.DotNetFix
 
                 return succeeded;
             }
-
 #endif
         }
 #if WinCopies3

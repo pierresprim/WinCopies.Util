@@ -8,7 +8,9 @@ CHANGELOG
 
 ### ??/??/???? 2.9
 
-Add UpdateValue method to WinCopies.Util.Data.ViewModelBase
+- Add UpdateValue method to WinCopies.Util.Data.ViewModelBase
+- Bug fixed in ObservableLinkedCollection: the PropertyChanged event is now raised also for First and Last properties.
+- WinCopies.Collections.DotNetFix.Queue/StackCollection\<T> respectively implements IEnumerableQueue/Stack\<T>
 
 ### 03/01/2021 2.8
 

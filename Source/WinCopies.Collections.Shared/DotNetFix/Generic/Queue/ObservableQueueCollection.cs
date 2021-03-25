@@ -85,8 +85,7 @@ namespace WinCopies.Collections.DotNetFix
             RaiseCollectionChangedEvent(NotifyCollectionChangedAction.Add, item);
         }
 
-#if NETCORE
-
+#if CS8
         protected override bool TryDequeueItem([MaybeNullWhen(false)] out T result)
         {
             bool succeeded = base.TryDequeueItem(out result);
@@ -100,7 +99,6 @@ namespace WinCopies.Collections.DotNetFix
 
             return succeeded;
         }
-
 #endif
     }
 #if WinCopies3
