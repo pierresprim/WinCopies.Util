@@ -29,10 +29,14 @@ using static WinCopies.
 ThrowHelper;
 
 using WinCopies.Collections.DotNetFix.Generic;
+
+using static WinCopies.UtilHelpers;
 #else
 Util.Util;
 
 using WinCopies.Collections;
+
+using static WinCopies.Util.Util;
 #endif
 
 namespace WinCopies.Util.Data
@@ -63,14 +67,9 @@ namespace WinCopies.Util.Data
             if (propertyChanged) OnPropertyChanged(propertyName, oldValue, newValue);
         }
 
-        protected void UpdateValue<T>(ref T value, in T newValue, in PropertyChangedEventArgs propertyChangedEventArgs)
-        {
-            value = newValue;
+        protected virtual void UpdateValue<T>(ref T value, in T newValue, in PropertyChangedEventArgs propertyChangedEventArgs) => UpdateValue(ref value, newValue, () => OnPropertyChanged(propertyChangedEventArgs));
 
-            OnPropertyChanged(propertyChangedEventArgs);
-        }
-
-        protected void UpdateValue<T>(ref T value, in T newValue, in string propertyName) => UpdateValue(ref value, newValue, new PropertyChangedEventArgs(propertyName));
+        protected virtual void UpdateValue<T>(ref T value, in T newValue, in string propertyName) => UpdateValue(ref value, newValue, () => OnPropertyChanged(propertyName));
 
         protected virtual void OnPropertyChanged(string propertyName) => OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs(propertyName));
 
