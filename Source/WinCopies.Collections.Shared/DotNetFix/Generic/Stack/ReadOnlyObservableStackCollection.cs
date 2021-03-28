@@ -22,10 +22,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 
 using static WinCopies
 #if !WinCopies3
     .Util.Util;
+
+using System.Runtime.Serialization;
+
+using WinCopies.Util;
 using static WinCopies.Util.ThrowHelper;
 #else
     .ThrowHelper;
@@ -37,63 +42,118 @@ namespace WinCopies.Collections.DotNetFix
     namespace Generic
     {
 #endif
-
-        [Serializable]
-        public class ReadOnlyObservableStackCollection<T> : System.Collections.Generic.IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection, INotifyPropertyChanged, INotifySimpleLinkedCollectionChanged<T>
-        {
-            protected ObservableStackCollection<T> InnerStackCollection { get; }
-
-            public
+    [Serializable]
+    public class ReadOnlyObservableStackCollection<
+#if WinCopies3
+            TStack, TItems
+#else
+            T
+#endif
+            > :
+#if WinCopies3
+            ReadOnlyStackCollection<TStack, TItems>
+#else
+            IReadOnlyCollection<T>, ICollection
+#endif
+        , INotifyPropertyChanged, INotifySimpleLinkedCollectionChanged<
+#if WinCopies3
+                TItems> where TStack : IStack<TItems>
+#else
+                T>
+#endif
+    {
+        public
 #if !WinCopies3
 int
 #else
                 uint
 #endif
-                Count => InnerStackCollection.Count;
-
+                Count =>
 #if WinCopies3
-            int ICollection.Count => (int)Count;
+            InnerStack
+#else
+            InnerStackCollection
+#endif
+            .Count;
 
-            int IReadOnlyCollection<T>.Count => (int)Count;
+        public bool IsReadOnly => true;
+
+#if !WinCopies3
+        bool ICollection.IsSynchronized => ((ICollection)InnerStackCollection).IsSynchronized;
+
+        object ICollection.SyncRoot => ((ICollection)InnerStackCollection).SyncRoot;
 #endif
 
-            public bool IsReadOnly => true;
+        public event PropertyChangedEventHandler PropertyChanged;
 
-            bool ICollection.IsSynchronized => ((ICollection)InnerStackCollection).IsSynchronized;
+        public event SimpleLinkedCollectionChangedEventHandler<
+#if WinCopies3
+                TItems
+#else
+                T
+#endif
+             > CollectionChanged;
 
-            object ICollection.SyncRoot => ((ICollection)InnerStackCollection).SyncRoot;
+        public ReadOnlyObservableStackCollection(in ObservableStackCollection<
+#if WinCopies3
+                TStack, TItems
+#else
+                T
+#endif
+             > StackCollection)
+#if WinCopies3
+: base(StackCollection.InnerStack)
+#endif
+        {
+            (StackCollection ?? throw GetArgumentNullException(nameof(StackCollection))).CollectionChanged += (object sender, SimpleLinkedCollectionChangedEventArgs<
+#if WinCopies3
+                TItems
+#else
+                T
+#endif
+             > e) => OnCollectionChanged(e);
 
-            public event PropertyChangedEventHandler PropertyChanged;
-
-            public event SimpleLinkedCollectionChangedEventHandler<T> CollectionChanged;
-
-            public ReadOnlyObservableStackCollection(in ObservableStackCollection<T> stackCollection)
-            {
-                InnerStackCollection = stackCollection ?? throw GetArgumentNullException(nameof(stackCollection));
-
-                InnerStackCollection.CollectionChanged += (object sender, SimpleLinkedCollectionChangedEventArgs<T> e) => OnCollectionChanged(e);
-
-                InnerStackCollection.PropertyChanged += (object sender, PropertyChangedEventArgs e) => OnPropertyChanged(e);
-            }
-
-            protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
-
-            protected void RaisePropertyChangedEvent(in string propertyName) => OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
-
-            protected void RaiseCountPropertyChangedEvent() => OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
-
-            protected virtual void OnCollectionChanged(SimpleLinkedCollectionChangedEventArgs<T> e) => CollectionChanged?.Invoke(this, e);
-
-            protected void RaiseCollectionChangedEvent(NotifyCollectionChangedAction action, T item) => OnCollectionChanged(new SimpleLinkedCollectionChangedEventArgs<T>(action, item));
-
-            public System.Collections.Generic.IEnumerator<T> GetEnumerator() => InnerStackCollection.GetEnumerator();
-
-            System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerStackCollection).GetEnumerator();
-
-            public void CopyTo(T[] array, int arrayIndex) => InnerStackCollection.CopyTo(array, arrayIndex);
-
-            void ICollection.CopyTo(Array array, int index) => ((ICollection)InnerStackCollection).CopyTo(array, index);
+            StackCollection.PropertyChanged += (object sender, PropertyChangedEventArgs e) => OnPropertyChanged(e);
         }
+
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
+
+        protected void RaisePropertyChangedEvent(in string propertyName) => OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+
+        protected virtual void OnCollectionChanged(SimpleLinkedCollectionChangedEventArgs<
+#if WinCopies3
+                TItems
+#else
+                T
+#endif
+             > e) => CollectionChanged?.Invoke(this, e);
+
+        protected void RaiseCollectionChangedEvent(NotifyCollectionChangedAction action,
+#if WinCopies3
+                TItems
+#else
+                T
+#endif
+              item) => OnCollectionChanged(new SimpleLinkedCollectionChangedEventArgs<
+#if WinCopies3
+                TItems
+#else
+                T
+#endif
+             >(action, item));
+
+#if !WinCopies3
+        protected ObservableStackCollection<T> InnerStackCollection { get; }
+
+        public IEnumerator<T> GetEnumerator() => InnerStackCollection.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerStackCollection).GetEnumerator();
+
+        public void CopyTo(T[] array, int arrayIndex) => InnerStackCollection.CopyTo(array, arrayIndex);
+
+        void ICollection.CopyTo(Array array, int index) => ((ICollection)InnerStackCollection).CopyTo(array, index);
+#endif
+    }
 #if WinCopies3
     }
 #endif

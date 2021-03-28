@@ -29,8 +29,6 @@ using static WinCopies.
 ThrowHelper;
 
 using WinCopies.Collections.DotNetFix.Generic;
-
-using static WinCopies.UtilHelpers;
 #else
 Util.Util;
 
@@ -67,9 +65,21 @@ namespace WinCopies.Util.Data
             if (propertyChanged) OnPropertyChanged(propertyName, oldValue, newValue);
         }
 
-        protected virtual void UpdateValue<T>(ref T value, in T newValue, in PropertyChangedEventArgs propertyChangedEventArgs) => UpdateValue(ref value, newValue, () => OnPropertyChanged(propertyChangedEventArgs));
+        protected virtual void UpdateValue<T>(ref T value, in T newValue, PropertyChangedEventArgs propertyChangedEventArgs) =>
+            #if WinCopies3
+            UtilHelpers
+#else
+            Util
+            #endif
+            .UpdateValue(ref value, newValue, () => OnPropertyChanged(propertyChangedEventArgs));
 
-        protected virtual void UpdateValue<T>(ref T value, in T newValue, in string propertyName) => UpdateValue(ref value, newValue, () => OnPropertyChanged(propertyName));
+        protected virtual void UpdateValue<T>(ref T value, in T newValue, string propertyName) =>
+#if WinCopies3
+            UtilHelpers
+#else
+            Util
+#endif
+            .UpdateValue(ref value, newValue, () => OnPropertyChanged(propertyName));
 
         protected virtual void OnPropertyChanged(string propertyName) => OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs(propertyName));
 
@@ -275,7 +285,7 @@ override object Model => ModelGeneric;
     {
         private CountMonitor _monitor = new CountMonitor();
 
-        #region Properties
+#region Properties
 
         protected Collection<T> Collection { get; }
 
@@ -294,7 +304,7 @@ override object Model => ModelGeneric;
 
         object IList.this[int index] { get => this[index]; set => this[index] = (T)value; }
 
-        #region Interface implementations
+#region Interface implementations
 
         bool ICollection<T>.IsReadOnly => ((ICollection<T>)Collection).IsReadOnly;
 
@@ -306,11 +316,11 @@ override object Model => ModelGeneric;
 
         bool IList.IsFixedSize => ((IList)Collection).IsFixedSize;
 
-        #endregion
+#endregion
 
-        #endregion
+#endregion
 
-        #region Events
+#region Events
 
         /// <summary>
         /// Occurs when a property value changes.
@@ -324,18 +334,18 @@ override object Model => ModelGeneric;
 
         event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged { add => PropertyChanged += value; remove => PropertyChanged -= value; }
 
-        #endregion
+#endregion
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CollectionViewModel{T}"/> class.
         /// </summary>
         public CollectionViewModel(Collection<T> collection) => Collection = collection ?? throw GetArgumentNullException(nameof(collection));
 
-        #region Methods
+#region Methods
 
-        #region Protected Methods
+#region Protected Methods
 
-        #region 'On-' Methods
+#region 'On-' Methods
 
         protected void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
 
@@ -358,9 +368,9 @@ override object Model => ModelGeneric;
 
         protected void OnCollectionReset() => OnCollectionChanged(new System.Collections.Specialized.NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
 
-        #endregion
+#endregion
 
-        #region Reentrancy Checks
+#region Reentrancy Checks
 
         /// <summary>
         /// Checks for reentrant attempts to change this collection.
@@ -388,9 +398,9 @@ override object Model => ModelGeneric;
             return _monitor;
         }
 
-        #endregion
+#endregion
 
-        #region Collection Update Methods
+#region Collection Update Methods
 
         protected void AddOrInsert(int index, T item)
         {
@@ -495,11 +505,11 @@ override object Model => ModelGeneric;
             OnCollectionReset();
         }
 
-        #endregion
+#endregion
 
-        #endregion
+#endregion
 
-        #region Public Methods
+#region Public Methods
 
         public override object ProvideValue(IServiceProvider serviceProvider) => this;
 
@@ -633,8 +643,8 @@ override object Model => ModelGeneric;
         /// </summary>
         public void Clear() => ClearItems();
 
-        #endregion
+#endregion
 
-        #endregion
+#endregion
     }
 }

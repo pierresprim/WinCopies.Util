@@ -15,6 +15,9 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
+using System.Collections;
+using System.Collections.Generic;
+
 namespace WinCopies.Collections.DotNetFix.Generic
 {
     public interface ISimpleLinkedListNode<T>
@@ -139,11 +142,11 @@ namespace WinCopies.Collections.DotNetFix.Generic
         }
 
 #if WinCopies3
-#region ISimpleLinkedListNode implementation
+        #region ISimpleLinkedListNode implementation
         object ISimpleLinkedListNode.Value => Value;
 
         ISimpleLinkedListNode ISimpleLinkedListNode.Next => Next;
-#endregion
+        #endregion
 #endif
     }
 
@@ -156,11 +159,12 @@ namespace WinCopies.Collections.DotNetFix.Generic
 #endif
     }
 
-    public interface IEnumerableSimpleLinkedList<T> : ISimpleLinkedList<T>,
-#if !WinCopies3
-        IUIntCountableEnumerable<T>
-#else
-        IEnumerableSimpleLinkedListBase, System.Collections.Generic.IEnumerable<T>
+    public interface IEnumerableSimpleLinkedList<T> : ISimpleLinkedList<T>, IUIntCountableEnumerable<T>
+#if WinCopies3
+        , IEnumerableSimpleLinkedListBase, System.Collections.Generic.IEnumerable<T>, ICollection
+#if CS7
+        , IReadOnlyCollection<T>
+#endif
 #endif
     {
 #if WinCopies3

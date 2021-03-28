@@ -1742,6 +1742,20 @@ Type enumType = typeof(T);
         }
 #endif
 
+        public static bool UpdateValue<T>(ref T value, in T newValue, in Action action)
+        {
+            if (!Equals(value, newValue))
+            {
+                value = newValue;
+
+                action();
+
+                return true;
+            }
+
+            return false;
+        }
+
 #if NETCORE || NETSTANDARD || NET5
         // https://brockallen.com/2016/09/24/process-start-for-urls-on-net-core/
 

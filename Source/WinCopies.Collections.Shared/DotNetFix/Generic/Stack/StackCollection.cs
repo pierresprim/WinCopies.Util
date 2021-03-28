@@ -30,19 +30,40 @@ namespace WinCopies.Collections.DotNetFix
     {
 #endif
 
-    [Serializable]
-    public class StackCollection<T> : IEnumerableStack<T>, IReadOnlyCollection<T>, ICollection
-    {
-        protected internal
-#if !WinCopies3
-            System.Collections.Generic.Stack
+        [Serializable]
+        public class StackCollection
+                <
+#if WinCopies3
+        TStack, TItems
 #else
-            IEnumerableStack
+        T
 #endif
-            <T> InnerStack
-        { get; }
+       > :
+#if WinCopies3
+        IStack<TItems>, IUIntCountable
+#else
+        IEnumerableStack<T>, IReadOnlyCollection<
+#if WinCopies3
+TItems
+#else
+            T
+#endif
+            >, ICollection
+#endif
+#if WinCopies3
+            where TStack : IStack<TItems>
+#endif
+        {
+            protected internal
+#if WinCopies3
+            TStack
+#else
+            System.Collections.Generic.Stack<T>
+#endif
+            InnerStack
+            { get; }
 
-        public
+            public
 #if !WinCopies3
 int
 #else
@@ -50,17 +71,7 @@ int
 #endif
                 Count => InnerStack.Count;
 
-#if WinCopies3
-            int ICollection.Count => (int)Count;
-
-            int IReadOnlyCollection<T>.Count => (int)Count;
-#endif
-
-        public bool IsReadOnly => false;
-
-        bool ICollection.IsSynchronized => ((ICollection)InnerStack).IsSynchronized;
-
-        object ICollection.SyncRoot => ((ICollection)InnerStack).SyncRoot;
+            public bool IsReadOnly => false;
 
 #if WinCopies3
             bool ISimpleLinkedListBase2.IsSynchronized => InnerStack.IsSynchronized;
@@ -69,51 +80,99 @@ int
 
             bool ISimpleLinkedListBase.HasItems => InnerStack.HasItems;
 #else
+            bool ICollection.IsSynchronized => ((ICollection)InnerStack).IsSynchronized;
+
+            object ICollection.SyncRoot => ((ICollection)InnerStack).SyncRoot;
+
         uint IUIntCountable.Count => (uint)Count;
 
         uint IUIntCountableEnumerable.Count => (uint)Count;
-#endif
 
-        public StackCollection() : this(new
+            public StackCollection() : this(new
 #if !WinCopies3
             System.Collections.Generic.Stack
 #else
             EnumerableStack
 #endif
             <T>())
-        { }
-
-        public StackCollection(in
-#if !WinCopies3
-            System.Collections.Generic.Stack
-#else
-            IEnumerableStack
+            { }
 #endif
-            <T> stack) => InnerStack = stack;
 
-        protected virtual void ClearItems() => InnerStack.Clear();
+            public StackCollection(in
+#if WinCopies3
+                TStack
+#else
+            System.Collections.Generic.Stack<T>
+#endif
+     stack) => InnerStack = stack;
 
-        public void Clear() => ClearItems();
+            protected virtual void ClearItems() => InnerStack.Clear();
 
+            public void Clear() => ClearItems();
+
+            public
+#if WinCopies3
+TItems
+#else
+            T
+#endif
+            Peek() => InnerStack.Peek();
+
+            protected virtual
+#if WinCopies3
+TItems
+#else
+            T
+#endif
+            PopItem() => InnerStack.Pop();
+
+            public
+#if WinCopies3
+TItems
+#else
+            T
+#endif
+            Pop() => PopItem();
+
+            protected virtual void PushItem(
+#if WinCopies3
+TItems
+#else
+            T
+#endif
+            item) => InnerStack.Push(item);
+
+            public void Push(
+#if WinCopies3
+TItems
+#else
+            T
+#endif
+            item) => PushItem(item);
+
+#if !WinCopies3
         public void Contains(T item) => InnerStack.Contains(item);
-
-        public T Peek() => InnerStack.Peek();
-
-        protected virtual T PopItem() => InnerStack.Pop();
-
-        public T Pop() => PopItem();
-
-        protected virtual void PushItem(T item) => InnerStack.Push(item);
-
-        public void Push(T item) => PushItem(item);
 
         public T[] ToArray() => InnerStack.ToArray();
 
-#if !WinCopies3
         public void TrimExcess() => InnerStack.TrimExcess();
+
+        void ICollection.CopyTo(Array array, int index) => ((ICollection)InnerStack).CopyTo(array, index);
+
+        public void CopyTo(T[] array, int arrayIndex) => InnerStack.CopyTo(array, arrayIndex);
+
+        public System.Collections.Generic.IEnumerator<T> GetEnumerator() => InnerStack.GetEnumerator();
+
+        System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerStack).GetEnumerator();
 #endif
 
-        public bool TryPeek(out T result)
+            public bool TryPeek(out
+#if WinCopies3
+TItems
+#else
+            T
+#endif
+            result)
 #if CS8
             => InnerStack.TryPeek(out result);
 #else
@@ -131,7 +190,13 @@ int
         }
 #endif
 
-        protected virtual bool TryPopItem(out T result)
+            protected virtual bool TryPopItem(out
+#if WinCopies3
+TItems
+#else
+            T
+#endif
+            result)
 #if CS8
             => InnerStack.TryPop(out result);
 #else
@@ -149,19 +214,130 @@ int
         }
 #endif
 
-        public bool TryPop(out T result) => TryPopItem(out result);
-
-        void ICollection.CopyTo(Array array, int index) => ((ICollection)InnerStack).CopyTo(array, index);
-
-        public void CopyTo(T[] array, int arrayIndex) => InnerStack.CopyTo(array, arrayIndex);
-
-        public System.Collections.Generic.IEnumerator<T> GetEnumerator() => InnerStack.GetEnumerator();
-
-        System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerStack).GetEnumerator();
-    }
+            public bool TryPop(out
 #if WinCopies3
+TItems
+#else
+            T
+#endif
+            result) => TryPopItem(out result);
+        }
+#if WinCopies3
+        public class StackCollection<T> : StackCollection<IStack<T>, T>
+        {
+            public StackCollection() : this(new Stack<T>())
+            {
+                // Left empty.
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="StackCollection{T}"/> class with a custom Stack.
+            /// </summary>
+            /// <param name="stack">The inner stack for this <see cref="StackCollection{T}"/>.</param>
+            public StackCollection(in IStack<T> stack) : base(stack)
+            {
+                // Left empty.
+            }
+        }
+
+        public class EnumerableStackCollection<TStack, TItems> : IEnumerableStack<TItems>, IReadOnlyCollection<TItems>, ICollection where TStack : StackCollection<IEnumerableStack<TItems>, TItems>
+        {
+            protected TStack InnerStack { get; }
+
+            bool ICollection.IsSynchronized => ((ICollection)InnerStack).IsSynchronized;
+
+            object ICollection.SyncRoot => ((ICollection)InnerStack).SyncRoot;
+
+            int ICollection.Count => ((ICollection)InnerStack.InnerStack).Count;
+
+            int IReadOnlyCollection<TItems>.Count => ((IReadOnlyCollection<TItems>)InnerStack.InnerStack).Count;
+
+            object ISimpleLinkedListBase2.SyncRoot => ((ISimpleLinkedListBase2)InnerStack.InnerStack).SyncRoot;
+
+            bool ISimpleLinkedListBase2.IsSynchronized => ((ISimpleLinkedListBase2)InnerStack.InnerStack).IsSynchronized;
+
+            bool ISimpleLinkedListBase.IsReadOnly => InnerStack.IsReadOnly;
+
+            bool ISimpleLinkedListBase.HasItems => InnerStack.InnerStack.HasItems;
+
+            uint IUIntCountable.Count => InnerStack.Count;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="StackCollection{T}"/> class with a custom Stack.
+            /// </summary>
+            /// <param name="Stack">The inner stack for this <see cref="StackCollection{T}"/>.</param>
+            public EnumerableStackCollection(in TStack Stack) => InnerStack = Stack;
+
+            /// <summary>
+            /// Determines whether an element is in the <see cref="StackCollection{T}"/>.
+            /// </summary>
+            /// <param name="item">The object to locate in the <see cref="StackCollection{T}"/>. The value can be <see langword="null"/> for reference types.</param>
+            /// <returns><see langword="true"/> if <paramref name="item"/> is found in the Stack; otherwise, <see langword="false"/>.</returns>
+            public bool Contains(TItems item) => InnerStack.InnerStack.Contains(item);
+
+            /// <summary>
+            /// Copies the <see cref="StackCollection{T}"/> elements to a new array.
+            /// </summary>
+            /// <returns>A new array containing elements copied from the <see cref="StackCollection{T}"/>.</returns>
+            public TItems[] ToArray() => InnerStack.InnerStack.ToArray();
+
+            /// <summary>
+            /// Returns an enumerator that iterates through the <see cref="StackCollection{T}"/>.
+            /// </summary>
+            /// <returns>An <see cref="System.Collections.Generic.IEnumerator{T}"/> for the <see cref="StackCollection{T}"/>.</returns>
+            public IUIntCountableEnumerator<TItems> GetEnumerator() => InnerStack.InnerStack.GetEnumerator();
+
+            System.Collections.Generic.IEnumerator<TItems> IEnumerable<TItems>.GetEnumerator() => ((IEnumerable<TItems>)InnerStack.InnerStack).GetEnumerator();
+
+            System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerStack.InnerStack).GetEnumerator();
+
+            void ICollection.CopyTo(Array array, int index) => InnerStack.InnerStack.CopyTo(array, index);
+
+            /// <summary>
+            /// Copies the <see cref="StackCollection{T}"/> elements to an existing one-dimensional <see cref="Array"/>, starting at the specified array index.
+            /// </summary>
+            /// <param name="array">The one-dimensional <see cref="Array"/> that is the destination of the elements copied from <see cref="StackCollection{T}"/>. The <see cref="System.Array"/> must have zero-based indexing.</param>
+            /// <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
+            /// <exception cref="ArgumentNullException"><paramref name="array"/> is <see langword="null"/>.</exception>
+            /// <exception cref="ArgumentOutOfRangeException"><paramref name="arrayIndex"/> is less than zero.</exception>
+            /// <exception cref="ArgumentException">The number of elements in the source <see cref="StackCollection{T}"/> is greater than the available space from <paramref name="arrayIndex"/> to the end of the destination array.</exception>
+            public void CopyTo(TItems[] array, int arrayIndex) => InnerStack.InnerStack.CopyTo(array, arrayIndex);
+
+            TItems IStack<TItems>.Peek() => InnerStack.Peek();
+
+            bool IStack<TItems>.TryPeek(out TItems result) => InnerStack.TryPeek(out result);
+
+            void IStack<TItems>.Clear() => InnerStack.Clear();
+
+            void IStackBase<TItems>.Push(TItems item) => InnerStack.Push(item);
+
+            TItems IStackBase<TItems>.Pop() => InnerStack.Pop();
+
+            bool IStackBase<TItems>.TryPop(out TItems result) => InnerStack.TryPop(out result);
+
+            TItems IStackBase<TItems>.Peek() => InnerStack.Peek();
+
+            bool IStackBase<TItems>.TryPeek(out TItems result) => InnerStack.TryPeek(out result);
+
+            void IStackBase<TItems>.Clear() => InnerStack.Clear();
+
+            TItems ISimpleLinkedListBase<TItems>.Peek() => InnerStack.Peek();
+
+            bool ISimpleLinkedListBase<TItems>.TryPeek(out TItems result) => InnerStack.TryPeek(out result);
+
+            void ISimpleLinkedListBase2.Clear() => InnerStack.Clear();
+        }
+
+        public class EnumerableStackCollection<T> : EnumerableStackCollection<StackCollection<IEnumerableStack<T>, T>, T>
+        {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="StackCollection{T}"/> class with a custom stack.
+            /// </summary>
+            /// <param name="stack">The inner stack for this <see cref="StackCollection{T}"/>.</param>
+            public EnumerableStackCollection(in StackCollection<IEnumerableStack<T>, T> stack) : base(stack) { }
+        }
     }
 #endif
-}
+    }
 
 #endif

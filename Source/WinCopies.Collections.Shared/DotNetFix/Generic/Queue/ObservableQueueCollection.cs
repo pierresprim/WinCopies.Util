@@ -18,6 +18,8 @@
 #if CS7
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
@@ -25,26 +27,54 @@ using System.Diagnostics.CodeAnalysis;
 namespace WinCopies.Collections.DotNetFix
 {
 #if WinCopies3
-        namespace Generic
-        {
+    namespace Generic
+    {
 #endif
-
     [Serializable]
-    public class ObservableQueueCollection<T> : QueueCollection<T>, INotifyPropertyChanged, INotifySimpleLinkedCollectionChanged<T>
+    public class ObservableQueueCollection<
+#if WinCopies3
+        TQueue, TItems
+#else
+        T
+#endif
+        > : QueueCollection<
+#if WinCopies3
+        TQueue, TItems
+#else
+        T
+#endif
+       >, INotifyPropertyChanged, INotifySimpleLinkedCollectionChanged<
+#if WinCopies3
+           TItems
+#else
+           T
+#endif
+           >
+#if WinCopies3
+where TQueue : IQueue<TItems>
+#endif
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public event SimpleLinkedCollectionChangedEventHandler<T> CollectionChanged;
+        public event SimpleLinkedCollectionChangedEventHandler<
+#if WinCopies3
+           TItems
+#else
+           T
+#endif
+          > CollectionChanged;
 
+#if !WinCopies3
         public ObservableQueueCollection() : base() { }
+#endif
 
         public ObservableQueueCollection(in
-#if !WinCopies3
-            System.Collections.Generic.Queue
+#if WinCopies3
+            TQueue
 #else
-            IEnumerableQueue
+            System.Collections.Generic.Queue<T>
 #endif
-            <T> queue) : base(queue) { }
+      queue) : base(queue) { }
 
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
 
@@ -52,9 +82,27 @@ namespace WinCopies.Collections.DotNetFix
 
         protected void RaiseCountPropertyChangedEvent() => OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
 
-        protected virtual void OnCollectionChanged(SimpleLinkedCollectionChangedEventArgs<T> e) => CollectionChanged?.Invoke(this, e);
+        protected virtual void OnCollectionChanged(SimpleLinkedCollectionChangedEventArgs<
+#if WinCopies3
+           TItems
+#else
+           T
+#endif
+         > e) => CollectionChanged?.Invoke(this, e);
 
-        protected void RaiseCollectionChangedEvent(NotifyCollectionChangedAction action, T item) => OnCollectionChanged(new SimpleLinkedCollectionChangedEventArgs<T>(action, item));
+        protected void RaiseCollectionChangedEvent(NotifyCollectionChangedAction action,
+#if WinCopies3
+           TItems
+#else
+           T
+#endif
+          item) => OnCollectionChanged(new SimpleLinkedCollectionChangedEventArgs<
+#if WinCopies3
+           TItems
+#else
+           T
+#endif
+         >(action, item));
 
         protected override void ClearItems()
         {
@@ -62,12 +110,29 @@ namespace WinCopies.Collections.DotNetFix
 
             RaiseCountPropertyChangedEvent();
 
-            OnCollectionChanged(new SimpleLinkedCollectionChangedEventArgs<T>(NotifyCollectionChangedAction.Reset, default));
+            OnCollectionChanged(new SimpleLinkedCollectionChangedEventArgs<
+#if WinCopies3
+           TItems
+#else
+           T
+#endif
+         >(NotifyCollectionChangedAction.Reset, default));
         }
 
-        protected override T DequeueItem()
+        protected override
+#if WinCopies3
+           TItems
+#else
+           T
+#endif
+          DequeueItem()
         {
-            T result = base.DequeueItem();
+#if WinCopies3
+                TItems
+#else
+            T
+#endif
+          result = base.DequeueItem();
 
             RaiseCountPropertyChangedEvent();
 
@@ -76,7 +141,13 @@ namespace WinCopies.Collections.DotNetFix
             return result;
         }
 
-        protected override void EnqueueItem(T item)
+        protected override void EnqueueItem(
+#if WinCopies3
+           TItems
+#else
+           T
+#endif
+          item)
         {
             base.EnqueueItem(item);
 
@@ -86,7 +157,13 @@ namespace WinCopies.Collections.DotNetFix
         }
 
 #if CS8
-        protected override bool TryDequeueItem([MaybeNullWhen(false)] out T result)
+        protected override bool TryDequeueItem([MaybeNullWhen(false)] out 
+#if WinCopies3
+           TItems
+#else
+           T
+#endif
+          result)
         {
             bool succeeded = base.TryDequeueItem(out result);
 
@@ -101,7 +178,14 @@ namespace WinCopies.Collections.DotNetFix
         }
 #endif
     }
+
 #if WinCopies3
+        public class ObservableQueueCollection<T> : ObservableQueueCollection<IQueue<T>, T>
+        {
+            public ObservableQueueCollection() : this(new Queue<T>()) { }
+
+            public ObservableQueueCollection(in IQueue<T> queue) : base(queue) { }
+        }
     }
 #endif
 }

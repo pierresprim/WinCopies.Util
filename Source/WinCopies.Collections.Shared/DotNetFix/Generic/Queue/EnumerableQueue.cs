@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 using static WinCopies
 #if !WinCopies3
@@ -41,6 +42,12 @@ namespace WinCopies.Collections.DotNetFix.Generic
         private readonly Queue<T> _queue;
 
         public sealed override uint Count => _queue.Count;
+
+#if WinCopies3
+        int IReadOnlyCollection<T>.Count => (int)Count;
+
+        int ICollection.Count => (int)Count;
+#endif
 
         public bool HasItems => _queue.HasItems;
 
@@ -78,7 +85,13 @@ namespace WinCopies.Collections.DotNetFix.Generic
             return false;
         }
 
-        public sealed override System.Collections.Generic.IEnumerator<T> GetEnumerator()
+        public sealed override
+#if WinCopies3
+            IUIntCountableEnumerator
+#else
+            System.Collections.Generic.IEnumerator
+#endif
+            <T> GetEnumerator()
         {
             var enumerator = new Enumerator(this);
 
@@ -94,8 +107,6 @@ namespace WinCopies.Collections.DotNetFix.Generic
             UpdateEnumerableVersion();
         }
 
-        System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
 #if !WinCopies3
         [Serializable]
 #endif
@@ -103,7 +114,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
 #if !WinCopies3
             System.Collections.Generic.IEnumerator<T>, WinCopies.Util.DotNetFix.IDisposable
 #else
-WinCopies.Collections.Generic.Enumerator<T>
+WinCopies.Collections.Generic.Enumerator<T>, IUIntCountableEnumerator<T>
 #endif
         {
             private EnumerableQueue<T> _queue;
@@ -122,11 +133,13 @@ WinCopies.Collections.Generic.Enumerator<T>
             private bool _first = true;
 
             public override bool? IsResetSupported => true;
-            
+
             /// <summary>
             /// When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
             /// </summary>
             protected override T CurrentOverride => _currentNode.Value;
+
+            public uint Count => _queue.Count;
 #endif
 
             public Enumerator(in EnumerableQueue<T> queue)

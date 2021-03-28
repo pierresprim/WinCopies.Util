@@ -42,61 +42,118 @@ namespace WinCopies.Collections.DotNetFix
     namespace Generic
     {
 #endif
-
-        [Serializable]
-        public class ReadOnlyObservableQueueCollection<T> : System.Collections.Generic.IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection, INotifyPropertyChanged, INotifySimpleLinkedCollectionChanged<T>
-        {
-            protected ObservableQueueCollection<T> InnerQueueCollection { get; }
-
-            public
+    [Serializable]
+    public class ReadOnlyObservableQueueCollection<
+#if WinCopies3
+            TQueue, TItems
+#else
+            T
+#endif
+            > :
+#if WinCopies3
+            ReadOnlyQueueCollection<TQueue, TItems>
+#else
+            IReadOnlyCollection<T>, ICollection
+#endif
+        , INotifyPropertyChanged, INotifySimpleLinkedCollectionChanged<
+#if WinCopies3
+                TItems> where TQueue : IQueue<TItems>
+#else
+                T>
+#endif
+    {
+        public
 #if !WinCopies3
 int
 #else
                 uint
 #endif
-                Count => InnerQueueCollection.Count;
-
+                Count =>
 #if WinCopies3
-            int ICollection.Count => (int)Count;
+            InnerQueue
+#else
+            InnerQueueCollection
+#endif
+            .Count;
 
-            int IReadOnlyCollection<T>.Count => (int)Count;
+        public bool IsReadOnly => true;
+
+#if !WinCopies3
+        bool ICollection.IsSynchronized => ((ICollection)InnerQueueCollection).IsSynchronized;
+
+        object ICollection.SyncRoot => ((ICollection)InnerQueueCollection).SyncRoot;
 #endif
 
-            public bool IsReadOnly => true;
+        public event PropertyChangedEventHandler PropertyChanged;
 
-            bool ICollection.IsSynchronized => ((ICollection)InnerQueueCollection).IsSynchronized;
+        public event SimpleLinkedCollectionChangedEventHandler<
+#if WinCopies3
+                TItems
+#else
+                T
+#endif
+             > CollectionChanged;
 
-            object ICollection.SyncRoot => ((ICollection)InnerQueueCollection).SyncRoot;
+        public ReadOnlyObservableQueueCollection(in ObservableQueueCollection<
+#if WinCopies3
+                TQueue, TItems
+#else
+                T
+#endif
+             > queueCollection)
+#if WinCopies3
+: base(queueCollection.InnerQueue)
+#endif
+        {
+            (queueCollection ?? throw GetArgumentNullException(nameof(queueCollection))).CollectionChanged += (object sender, SimpleLinkedCollectionChangedEventArgs<
+#if WinCopies3
+                TItems
+#else
+                T
+#endif
+             > e) => OnCollectionChanged(e);
 
-            public event PropertyChangedEventHandler PropertyChanged;
-
-            public event SimpleLinkedCollectionChangedEventHandler<T> CollectionChanged;
-
-            public ReadOnlyObservableQueueCollection(in ObservableQueueCollection<T> queueCollection)
-            {
-                InnerQueueCollection = queueCollection ?? throw GetArgumentNullException(nameof(queueCollection));
-
-                InnerQueueCollection.CollectionChanged += (object sender, SimpleLinkedCollectionChangedEventArgs<T> e) => OnCollectionChanged(e);
-
-                InnerQueueCollection.PropertyChanged += (object sender, PropertyChangedEventArgs e) => OnPropertyChanged(e);
-            }
-
-            protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
-
-            protected void RaisePropertyChangedEvent(in string propertyName) => OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
-
-            protected virtual void OnCollectionChanged(SimpleLinkedCollectionChangedEventArgs<T> e) => CollectionChanged?.Invoke(this, e);
-
-            protected void RaiseCollectionChangedEvent(NotifyCollectionChangedAction action, T item) => OnCollectionChanged(new SimpleLinkedCollectionChangedEventArgs<T>(action, item));
-
-            public System.Collections.Generic.IEnumerator<T> GetEnumerator() => InnerQueueCollection.GetEnumerator();
-
-            System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerQueueCollection).GetEnumerator();
-
-            public void CopyTo(T[] array, int arrayIndex) => InnerQueueCollection.CopyTo(array, arrayIndex);
-
-            void ICollection.CopyTo(Array array, int index) => ((ICollection)InnerQueueCollection).CopyTo(array, index);
+            queueCollection.PropertyChanged += (object sender, PropertyChangedEventArgs e) => OnPropertyChanged(e);
         }
+
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
+
+        protected void RaisePropertyChangedEvent(in string propertyName) => OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+
+        protected virtual void OnCollectionChanged(SimpleLinkedCollectionChangedEventArgs<
+#if WinCopies3
+                TItems
+#else
+                T
+#endif
+             > e) => CollectionChanged?.Invoke(this, e);
+
+        protected void RaiseCollectionChangedEvent(NotifyCollectionChangedAction action,
+#if WinCopies3
+                TItems
+#else
+                T
+#endif
+              item) => OnCollectionChanged(new SimpleLinkedCollectionChangedEventArgs<
+#if WinCopies3
+                TItems
+#else
+                T
+#endif
+             >(action, item));
+
+#if !WinCopies3
+        protected ObservableQueueCollection<T> InnerQueueCollection { get; }
+
+        public IEnumerator<T> GetEnumerator() => InnerQueueCollection.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerQueueCollection).GetEnumerator();
+
+        public void CopyTo(T[] array, int arrayIndex) => InnerQueueCollection.CopyTo(array, arrayIndex);
+
+        void ICollection.CopyTo(Array array, int index) => ((ICollection)InnerQueueCollection).CopyTo(array, index);
+#endif
+    }
 #if WinCopies3
     }
 #endif

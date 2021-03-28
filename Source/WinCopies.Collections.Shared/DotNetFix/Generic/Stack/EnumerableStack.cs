@@ -71,7 +71,13 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
         public bool TryPop(out T result) => _stack.TryPop(out result);
 
-        public sealed override System.Collections.Generic.IEnumerator<T> GetEnumerator()
+        public sealed override
+#if WinCopies3
+            IUIntCountableEnumerator
+#else
+            System.Collections.Generic.IEnumerator
+#endif
+          <T> GetEnumerator()
         {
             var enumerator = new Enumerator(this);
 
@@ -86,10 +92,10 @@ namespace WinCopies.Collections.DotNetFix.Generic
         [Serializable]
 #endif
         public sealed class Enumerator :
-#if !WinCopies3
-            System.Collections.Generic.IEnumerator<T>, WinCopies.Util.DotNetFix.IDisposable
+#if WinCopies3
+WinCopies.Collections.Generic.Enumerator<T>, IUIntCountableEnumerator<T>
 #else
-WinCopies.Collections.Generic.Enumerator<T>
+            System.Collections.Generic.IEnumerator<T>, WinCopies.Util.DotNetFix.IDisposable
 #endif
         {
             private EnumerableStack<T> _stack;
@@ -108,11 +114,13 @@ WinCopies.Collections.Generic.Enumerator<T>
             private bool _first = true;
 
             public override bool? IsResetSupported => true;
-            
+
             /// <summary>
             /// When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
             /// </summary>
             protected override T CurrentOverride => _currentNode.Value;
+
+            public uint Count => _stack.Count;
 #endif
 
             public Enumerator(in EnumerableStack<T> stack)

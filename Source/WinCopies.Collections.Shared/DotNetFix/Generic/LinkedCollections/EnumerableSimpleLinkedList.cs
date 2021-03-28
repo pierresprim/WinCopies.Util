@@ -17,11 +17,20 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace WinCopies.Collections.DotNetFix.Generic
 {
     public abstract class EnumerableSimpleLinkedList<T> : EnumerableSimpleLinkedListBase, IEnumerableSimpleLinkedList<T>
     {
+#if WinCopies3
+#if CS7
+        int IReadOnlyCollection<T>.Count => (int)Count;
+#endif
+
+        int ICollection.Count => (int)Count;
+#endif
+
         public abstract T Peek();
 
         public abstract bool TryPeek(out T result);
@@ -34,9 +43,17 @@ namespace WinCopies.Collections.DotNetFix.Generic
 #endif
                 .CopyTo(this, array, arrayIndex, Count);
 
+        System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetEnumerator();
+
         System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        public abstract System.Collections.Generic.IEnumerator<T> GetEnumerator();
+        public abstract
+#if WinCopies3
+IUIntCountableEnumerator
+#else
+System.Collections.Generic.IEnumerator
+#endif
+            <T> GetEnumerator();
 
         public T[] ToArray()
         {
@@ -44,7 +61,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
                 throw new ArgumentOutOfRangeException("Too many items in list or collection.");
 
-            T[] result = new T[Count];
+            var result = new T[Count];
 
             int i = -1;
 
@@ -54,5 +71,13 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
             return result;
         }
+
+        public void CopyTo(Array array, int index) => WinCopies.
+#if !WinCopies3
+                Util.Extensions
+#else
+                Collections.EnumerableExtensions
+#endif
+                .CopyTo(this, array, index, Count);
     }
 }

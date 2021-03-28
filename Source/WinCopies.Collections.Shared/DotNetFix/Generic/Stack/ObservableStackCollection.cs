@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace WinCopies.Collections.DotNetFix
 {
@@ -27,81 +28,164 @@ namespace WinCopies.Collections.DotNetFix
     namespace Generic
     {
 #endif
-
-        [Serializable]
-        public class ObservableStackCollection<T> : StackCollection<T>, INotifyPropertyChanged, INotifySimpleLinkedCollectionChanged<T>
-        {
-            public event PropertyChangedEventHandler PropertyChanged;
-
-            public event SimpleLinkedCollectionChangedEventHandler<T> CollectionChanged;
-
-            public ObservableStackCollection() : base() { }
-
-            public ObservableStackCollection(in
-#if !WinCopies3
-            System.Collections.Generic.Stack
+    [Serializable]
+    public class ObservableStackCollection<
+#if WinCopies3
+        TStack, TItems
 #else
-            IEnumerableStack
+        T
 #endif
-            <T> stack) : base(stack) { }
+        > : StackCollection<
+#if WinCopies3
+        TStack, TItems
+#else
+        T
+#endif
+       >, INotifyPropertyChanged, INotifySimpleLinkedCollectionChanged<
+#if WinCopies3
+           TItems
+#else
+           T
+#endif
+           >
+#if WinCopies3
+where TStack : IStack<TItems>
+#endif
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
 
-            protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
+        public event SimpleLinkedCollectionChangedEventHandler<
+#if WinCopies3
+           TItems
+#else
+           T
+#endif
+          > CollectionChanged;
 
-            protected void RaisePropertyChangedEvent(in string propertyName) => OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+#if !WinCopies3
+        public ObservableStackCollection() : base() { }
+#endif
 
-            protected void RaiseCountPropertyChangedEvent() => OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
+        public ObservableStackCollection(in
+#if WinCopies3
+            TStack
+#else
+            System.Collections.Generic.Stack<T>
+#endif
+      Stack) : base(Stack) { }
 
-            protected virtual void OnCollectionChanged(SimpleLinkedCollectionChangedEventArgs<T> e) => CollectionChanged?.Invoke(this, e);
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
 
-            protected void RaiseCollectionChangedEvent(NotifyCollectionChangedAction action, T item) => OnCollectionChanged(new SimpleLinkedCollectionChangedEventArgs<T>(action, item));
+        protected void RaisePropertyChangedEvent(in string propertyName) => OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
 
-            protected override void ClearItems()
+        protected void RaiseCountPropertyChangedEvent() => OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
+
+        protected virtual void OnCollectionChanged(SimpleLinkedCollectionChangedEventArgs<
+#if WinCopies3
+           TItems
+#else
+           T
+#endif
+         > e) => CollectionChanged?.Invoke(this, e);
+
+        protected void RaiseCollectionChangedEvent(NotifyCollectionChangedAction action,
+#if WinCopies3
+           TItems
+#else
+           T
+#endif
+          item) => OnCollectionChanged(new SimpleLinkedCollectionChangedEventArgs<
+#if WinCopies3
+           TItems
+#else
+           T
+#endif
+         >(action, item));
+
+        protected override void ClearItems()
+        {
+            base.ClearItems();
+
+            RaiseCountPropertyChangedEvent();
+
+            OnCollectionChanged(new SimpleLinkedCollectionChangedEventArgs<
+#if WinCopies3
+           TItems
+#else
+           T
+#endif
+         >(NotifyCollectionChangedAction.Reset, default));
+        }
+
+        protected override
+#if WinCopies3
+           TItems
+#else
+           T
+#endif
+          PopItem()
+        {
+#if WinCopies3
+                TItems
+#else
+            T
+#endif
+          result = base.PopItem();
+
+            RaiseCountPropertyChangedEvent();
+
+            RaiseCollectionChangedEvent(NotifyCollectionChangedAction.Remove, result);
+
+            return result;
+        }
+
+        protected override void PushItem(
+#if WinCopies3
+           TItems
+#else
+           T
+#endif
+          item)
+        {
+            base.PushItem(item);
+
+            RaiseCountPropertyChangedEvent();
+
+            RaiseCollectionChangedEvent(NotifyCollectionChangedAction.Add, item);
+        }
+
+#if CS8
+        protected override bool TryPopItem([MaybeNullWhen(false)] out 
+#if WinCopies3
+           TItems
+#else
+           T
+#endif
+          result)
+        {
+            bool succeeded = base.TryPopItem(out result);
+
+            if (succeeded)
             {
-                base.ClearItems();
-
-                RaiseCountPropertyChangedEvent();
-
-                RaiseCollectionChangedEvent(NotifyCollectionChangedAction.Reset, default);
-            }
-
-            protected override T PopItem()
-            {
-                T result = base.PopItem();
-
                 RaiseCountPropertyChangedEvent();
 
                 RaiseCollectionChangedEvent(NotifyCollectionChangedAction.Remove, result);
-
-                return result;
             }
 
-            protected override void PushItem(T item)
-            {
-                base.PushItem(item);
-
-                RaiseCountPropertyChangedEvent();
-
-                RaiseCollectionChangedEvent(NotifyCollectionChangedAction.Add, item);
-            }
-
-#if CS8
-            protected override bool TryPopItem(out T result)
-            {
-                bool succeeded = base.TryPopItem(out result);
-
-                if (succeeded)
-                {
-                    RaiseCountPropertyChangedEvent();
-
-                    RaiseCollectionChangedEvent(NotifyCollectionChangedAction.Remove, result);
-                }
-
-                return succeeded;
-            }
-#endif
+            return succeeded;
         }
+#endif
+    }
+
 #if WinCopies3
+        public class ObservableStackCollection<T> : ObservableStackCollection<IStack<T>, T>
+        {
+            public ObservableStackCollection() : this(new Stack<T>()) { }
+
+            public ObservableStackCollection(in IStack<T> Stack) : base(Stack) { }
+        }
     }
 #endif
 }
+
 #endif
