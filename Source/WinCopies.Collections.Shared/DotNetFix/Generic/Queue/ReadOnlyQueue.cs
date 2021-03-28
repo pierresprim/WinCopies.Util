@@ -19,9 +19,38 @@ using static WinCopies.Collections.ThrowHelper;
 
 namespace WinCopies.Collections.DotNetFix.Generic
 {
-    public class ReadOnlyQueue<T> : ReadOnlySimpleLinkedList<T>, IQueue<T>
+    public class ReadOnlyQueue
+#if WinCopies3
+<TQueue, TItems>
+#else
+        <T>
+#endif
+        : ReadOnlySimpleLinkedList<
+
+#if WinCopies3
+            TItems
+#else
+            T
+#endif
+            >, IQueue<
+
+#if WinCopies3
+            TItems
+#else
+                T
+#endif
+            >
+#if WinCopies3
+        where TQueue : IQueue<TItems>
+#endif
     {
-        private readonly IQueue<T> _queue;
+        private readonly
+#if WinCopies3
+            TQueue
+#else
+IQueue<T>
+#endif
+            _queue;
 
         public sealed override uint Count => _queue.Count;
 
@@ -29,9 +58,21 @@ namespace WinCopies.Collections.DotNetFix.Generic
         public bool HasItems => _queue.HasItems;
 #endif
 
-        public ReadOnlyQueue(IQueue<T> queue) => _queue = queue;
+        public ReadOnlyQueue(
+#if WinCopies3
+            TQueue
+#else
+IQueue<T>
+#endif
+           queue) => _queue = queue;
 
-        public sealed override T Peek() => _queue.Peek();
+        public sealed override
+#if WinCopies3
+            TItems
+#else
+T
+#endif
+            Peek() => _queue.Peek();
 
         void
 #if !WinCopies3
@@ -39,26 +80,43 @@ IQueue
 #else
             IQueueBase
 #endif
-            <T>.Enqueue(T item) => throw GetReadOnlyListOrCollectionException();
-
-        T
-#if !WinCopies3
-IQueue
+            <
+#if WinCopies3
+            TItems
 #else
-            IQueueBase
+T
 #endif
-            <T>.Dequeue() => throw GetReadOnlyListOrCollectionException();
+            >.Enqueue(
+#if WinCopies3
+            TItems
+#else
+T
+#endif
+             item) => throw GetReadOnlyListOrCollectionException();
 
 #if WinCopies3
-        public sealed override bool TryPeek(out T result) => _queue.TryPeek(out result);
+        TItems
+#else
+        T
+#endif
 
-        bool
 #if !WinCopies3
 IQueue
 #else
             IQueueBase
 #endif
-            <T>.TryDequeue(out T result)
+            <
+#if WinCopies3
+            TItems
+#else
+T
+#endif
+            >.Dequeue() => throw GetReadOnlyListOrCollectionException();
+
+#if WinCopies3
+        public sealed override bool TryPeek(out TItems result) => _queue.TryPeek(out result);
+
+        bool IQueueBase<TItems>.TryDequeue(out TItems result)
         {
             result = default;
 
@@ -66,4 +124,14 @@ IQueue
         }
 #endif
     }
+
+#if WinCopies3
+    public class ReadOnlyQueue<T> : ReadOnlyQueue<IQueue<T>, T>
+    {
+        public ReadOnlyQueue(in IQueue<T> queue) : base(queue)
+        {
+            // Left empty.
+        }
+    }
+#endif
 }

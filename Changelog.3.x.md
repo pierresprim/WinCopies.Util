@@ -14,6 +14,7 @@ CHANGELOG
 	- IEnumerableSimpleLinkedList\<T> is now defined as:
 		IEnumerableSimpleLinkedList<T> : ISimpleLinkedList<T>, IUIntCountableEnumerable<T>, IEnumerableSimpleLinkedListBase, System.Collections.Generic.IEnumerable<T>, ICollection (, IReadOnlyCollection<T> -- only for .Net versions that use CS7 or greater) and contains new methods.
 	- Queue and Stack collections have changed to handle non-enumerable queues/stacks, for better compatibility. For enumerable features, the generic types EnumerableQueue/StackCollection have been added.
+	- Add ReadOnlyQueue/Stack\<TQueue/Stack, TItems>
 
 ### 03/01/2021 3.4-preview
 

@@ -19,9 +19,36 @@ using static WinCopies.Collections.ThrowHelper;
 
 namespace WinCopies.Collections.DotNetFix.Generic
 {
-    public class ReadOnlyStack<T> : ReadOnlySimpleLinkedList<T>, IStack<T>
+    public class ReadOnlyStack
+#if WinCopies3
+        <TStack, TItems>
+#else
+<T>
+#endif
+        : ReadOnlySimpleLinkedList<
+#if WinCopies3
+            TItems
+#else
+            T
+#endif
+            >, IStack<
+#if WinCopies3
+            TItems
+#else
+            T
+#endif
+            >
+#if WinCopies3
+        where TStack : IStack<TItems>
+#endif
     {
-        private readonly IStack<T> _stack;
+        private readonly
+#if WinCopies3
+            TStack
+#else
+IStack<T>
+#endif
+            _stack;
 
         public sealed override uint Count => _stack.Count;
 
@@ -29,9 +56,21 @@ namespace WinCopies.Collections.DotNetFix.Generic
         public bool HasItems => _stack.HasItems;
 #endif
 
-        public ReadOnlyStack(IStack<T> stack) => _stack = stack;
+        public ReadOnlyStack(
+#if WinCopies3
+            TStack
+#else
+            IStack<T>
+#endif
+            stack) => _stack = stack;
 
-        public sealed override T Peek() => _stack.Peek();
+        public sealed override
+#if WinCopies3
+            TItems
+#else
+            T
+#endif
+             Peek() => _stack.Peek();
 
         void
 #if !WinCopies3
@@ -39,26 +78,43 @@ IStack
 #else
             IStackBase
 #endif
-            <T>.Push(T item) => throw GetReadOnlyListOrCollectionException();
-
-        T
-#if !WinCopies3
-IStack
+            <
+#if WinCopies3
+            TItems
 #else
-            IStackBase
+            T
 #endif
-            <T>.Pop() => throw GetReadOnlyListOrCollectionException();
+            >.Push(
+#if WinCopies3
+            TItems
+#else
+            T
+#endif
+             item) => throw GetReadOnlyListOrCollectionException();
+
 
 #if WinCopies3
-        public sealed override bool TryPeek(out T result) => _stack.TryPeek(out result);
-
-        bool
+        TItems
+#else
+            T
+#endif
 #if !WinCopies3
 IStack
 #else
             IStackBase
 #endif
-            <T>.TryPop(out T result)
+            <
+#if WinCopies3
+            TItems
+#else
+            T
+#endif
+            >.Pop() => throw GetReadOnlyListOrCollectionException();
+
+#if WinCopies3
+        public sealed override bool TryPeek(out TItems result) => _stack.TryPeek(out result);
+
+        bool IStackBase<TItems>.TryPop(out TItems result)
         {
             result = default;
 
@@ -66,4 +122,14 @@ IStack
         }
 #endif
     }
+
+#if WinCopies3
+    public class ReadOnlyStack<T> : ReadOnlyStack<IStack<T>, T>
+    {
+        public ReadOnlyStack(in IStack<T> stack) : base(stack)
+        {
+            // Left empty.
+        }
+    }
+#endif
 }
