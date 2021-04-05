@@ -17,11 +17,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\ObservableLinkedCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\ReadOnlyLinkedCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\ReadOnlyObservableLinkedCollection.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\SimpleLinkedList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\SimpleLinkedList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedList\ILinkedList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedList\IReadOnlyLinkedList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedList\ReadOnlyLinkedList.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedList\SimpleLinkedList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\Queue\EnumerableQueue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\Queue\ObservableQueueCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\Queue\Queue.cs" />
