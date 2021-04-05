@@ -224,7 +224,13 @@ int
 
             TItems[] IEnumerableSimpleLinkedList<TItems>.ToArray() => InnerStack.ToArray();
 
-            public IUIntCountableEnumerator<TItems> GetEnumerator() => InnerStack.GetEnumerator();
+            public
+#if WinCopies3
+                System.Collections.Generic.IEnumerator
+#else
+IUIntCountableEnumerator
+#endif
+                <TItems> GetEnumerator() => InnerStack.GetEnumerator();
 
             System.Collections.Generic.IEnumerator<TItems> System.Collections.Generic.IEnumerable<TItems>.GetEnumerator() => GetEnumerator();
 

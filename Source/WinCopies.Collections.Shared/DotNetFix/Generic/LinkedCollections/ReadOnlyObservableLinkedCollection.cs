@@ -21,7 +21,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-
 using static WinCopies
 #if !WinCopies3
     .Util.Util;
@@ -31,7 +30,11 @@ using System.Runtime.Serialization;
 using WinCopies.Util;
 #else
     .ThrowHelper;
+
+using WinCopies.Collections.Generic;
 #endif
+
+using static WinCopies.Collections.ThrowHelper;
 
 namespace WinCopies.Collections.DotNetFix
 {
@@ -39,9 +42,11 @@ namespace WinCopies.Collections.DotNetFix
     namespace Generic
     {
 #endif
-
         [Serializable]
         public class ReadOnlyObservableLinkedCollection<T> : ICollection<T>, System.Collections.Generic.IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection, INotifyPropertyChanged, INotifyLinkedCollectionChanged<T>
+#if WinCopies3
+, IReadOnlyLinkedList2<T>
+#endif
         {
             protected ObservableLinkedCollection<T> InnerLinkedCollection { get; }
 
@@ -67,6 +72,18 @@ int
 
             object ICollection.SyncRoot => ((ICollection)InnerLinkedCollection).SyncRoot;
 
+            public T FirstValue => InnerLinkedCollection.FirstValue;
+
+            public T LastValue => InnerLinkedCollection.LastValue;
+
+#if WinCopies3
+            public ILinkedListNode<T> Last => InnerLinkedCollection.Last;
+
+            public ILinkedListNode<T> First => InnerLinkedCollection.First;
+
+            public bool SupportsReversedEnumeration => InnerLinkedCollection.SupportsReversedEnumeration;
+#endif
+
             public event PropertyChangedEventHandler PropertyChanged;
 
             public event LinkedCollectionChangedEventHandler<T> CollectionChanged;
@@ -88,7 +105,9 @@ int
 
             protected virtual void OnCollectionChanged(LinkedCollectionChangedEventArgs<T> e) => CollectionChanged?.Invoke(this, e);
 
-            protected void RaiseCollectionChangedEvent(in LinkedCollectionChangedAction action, in
+#if !WinCopies3
+        [Obsolete("This method is never used and will be removed in later versions.")]
+        protected void RaiseCollectionChangedEvent(in LinkedCollectionChangedAction action, in
 #if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
@@ -107,8 +126,9 @@ int
                 ILinkedListNode
 #endif
                 <T> node) => OnCollectionChanged(new LinkedCollectionChangedEventArgs<T>(action, addedBefore, addedAfter, node));
+#endif
 
-            public System.Collections.Generic.IEnumerator<T> GetEnumerator() => InnerLinkedCollection.GetEnumerator();
+            System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => ((System.Collections.Generic.IEnumerable<T>)InnerLinkedCollection).GetEnumerator();
 
             System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerLinkedCollection).GetEnumerator();
 
@@ -116,13 +136,25 @@ int
 
             void ICollection.CopyTo(Array array, int index) => ((ICollection)InnerLinkedCollection).CopyTo(array, index);
 
-            void ICollection<T>.Add(T item) => ((ICollection<T>)InnerLinkedCollection).Add(item);
+            void ICollection<T>.Add(T item) => throw GetReadOnlyListOrCollectionException();
 
-            void ICollection<T>.Clear() => InnerLinkedCollection.Clear();
+            void ICollection<T>.Clear() => throw GetReadOnlyListOrCollectionException();
 
             public bool Contains(T item) => InnerLinkedCollection.Contains(item);
 
-            bool ICollection<T>.Remove(T item) => InnerLinkedCollection.Remove(item);
+            bool ICollection<T>.Remove(T item) => throw GetReadOnlyListOrCollectionException();
+
+#if WinCopies3
+            public ILinkedListNode<T> Find(T value) => InnerLinkedCollection.Find(value);
+
+            public ILinkedListNode<T> FindLast(T value) => InnerLinkedCollection.FindLast(value);
+
+            public System.Collections.Generic.IEnumerator<T> GetEnumerator() => InnerLinkedCollection.GetEnumerator();
+
+            public System.Collections.Generic.IEnumerator<T> GetReversedEnumerator() => InnerLinkedCollection.GetReversedEnumerator();
+
+            System.Collections.Generic.IEnumerator<T> Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => ((Collections.Generic.IEnumerable<T>)InnerLinkedCollection).GetReversedEnumerator();
+#endif
         }
 #if WinCopies3
     }

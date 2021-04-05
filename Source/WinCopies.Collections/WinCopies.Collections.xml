@@ -35,140 +35,169 @@
             When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
             </summary>
         </member>
-        <member name="P:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.Count">
+        <member name="P:WinCopies.Collections.DotNetFix.Generic.QueueCollection`2.Count">
             <summary>
             Gets the number of elements contained in the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.
             </summary>
             <value>The number of elements contained in the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</value>
         </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> class.
-            </summary>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.#ctor(WinCopies.Collections.DotNetFix.Generic.IEnumerableQueue{`0}@)">
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`2.#ctor(`0@)">
             <summary>
             Initializes a new instance of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> class with a custom queue.
             </summary>
             <param name="queue">The inner queue for this <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</param>
         </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.ClearItems">
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`2.ClearItems">
             <summary>
             Removes all objects from the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. Override this method to provide a custom implementation.
             </summary>
         </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.Clear">
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`2.Clear">
             <summary>
-            Removes all objects from the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.ClearItems"/> method to provide a custom implementation.
+            Removes all objects from the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`2.ClearItems"/> method to provide a custom implementation.
             </summary>
         </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.Contains(`0)">
-            <summary>
-            Determines whether an element is in the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.
-            </summary>
-            <param name="item">The object to locate in the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. The value can be <see langword="null"/> for reference types.</param>
-            <returns><see langword="true"/> if <paramref name="item"/> is found in the queue; otherwise, <see langword="false"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.CopyTo(`0[]@,System.Int32@)">
-            <summary>
-            Copies the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> elements to an existing one-dimensional <see cref="T:System.Array"/>, starting at the specified array index.
-            </summary>
-            <param name="array">The one-dimensional <see cref="T:System.Array"/> that is the destination of the elements copied from <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. The <see cref="T:System.Array"/> must have zero-based indexing.</param>
-            <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="array"/> is <see langword="null"/>.</exception>
-            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="arrayIndex"/> is less than zero.</exception>
-            <exception cref="T:System.ArgumentException">The number of elements in the source <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> is greater than the available space from <paramref name="arrayIndex"/> to the end of the destination array.</exception>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.DequeueItem">
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`2.DequeueItem">
             <summary>
             Removes and returns the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. Override this method to provide a custom implementation.
             </summary>
             <returns>The object that is removed from the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> is empty.</exception>
         </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.Dequeue">
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`2.Dequeue">
             <summary>
-            Removes and returns the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.DequeueItem"/> to provide a custom implementation.
+            Removes and returns the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`2.DequeueItem"/> to provide a custom implementation.
             </summary>
             <returns>The object that is removed from the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.TryDequeue(`0@)"/>
+            <seealso cref="!:TryDequeue(out T)"/>
         </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.EnqueueItem(`0)">
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`2.EnqueueItem(`1)">
             <summary>
             Adds an object to the end of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. Override this method to provide a custom implementation.
             </summary>
             <param name="item">The object to add to the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. The value can be <see langword="null"/> for reference types.</param>
         </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.Enqueue(`0@)">
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`2.Enqueue(`1)">
             <summary>
-            Adds an object to the end of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.EnqueueItem(`0)"/> method to provide a custom implementation.
+            Adds an object to the end of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. Override the <see cref="!:EnqueueItem(T)"/> method to provide a custom implementation.
             </summary>
             <param name="item">The object to add to the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. The value can be <see langword="null"/> for reference types.</param>
         </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.Peek">
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`2.Peek">
             <summary>
             Returns the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> without removing it.
             </summary>
             <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.TryPeek(`0@)"/>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`2.TryPeek(`1@)"/>
         </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.ToArray">
-            <summary>
-            Copies the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> elements to a new array.
-            </summary>
-            <returns>A new array containing elements copied from the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.TryDequeueItem(`0@)">
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`2.TryDequeueItem(`1@)">
             <summary>
             Tries to remove and return the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. Override this method to provide a custom implementation.
             </summary>
             <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
             <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been removed and retrieved.</returns>
         </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.TryDequeue(`0@)">
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`2.TryDequeue(`1@)">
             <summary>
-            Tries to remove and return the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.TryDequeueItem(`0@)"/> method to provide a custom implementation.
+            Tries to remove and return the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. Override the <see cref="!:TryDequeueItem(out T)"/> method to provide a custom implementation.
             </summary>
             <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
             <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been removed and retrieved.</returns>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.Dequeue"/>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`2.Dequeue"/>
         </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.TryPeek(`0@)">
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`2.TryPeek(`1@)">
             <summary>
             Tries to peek the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> without removing it.
             </summary>
             <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
             <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been retrieved.</returns>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.Peek"/>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`2.Peek"/>
         </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.GetEnumerator">
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1.#ctor(WinCopies.Collections.DotNetFix.Generic.IQueue{`0}@)">
             <summary>
-            Returns an enumerator that iterates through the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.
+            Initializes a new instance of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> class with a custom queue.
             </summary>
-            <returns>An <see cref="T:System.Collections.Generic.IEnumerator`1"/> for the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</returns>
+            <param name="queue">The inner queue for this <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</param>
         </member>
-        <member name="P:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`1.Count">
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.EnumerableQueueCollection`2.#ctor(`0@)">
             <summary>
-            Gets the number of elements contained in the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.
+            Initializes a new instance of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> class with a custom queue.
             </summary>
-            <value>The number of elements contained in the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</value>
+            <param name="queue">The inner queue for this <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</param>
         </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`1.#ctor(WinCopies.Collections.DotNetFix.Generic.IEnumerableQueue{`0}@)">
-            <summary>
-            Initializes a new instance of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> class with a custom <see cref="T:System.Collections.Generic.Queue`1"/>.
-            </summary>
-            <param name="queue">The inner <see cref="T:System.Collections.Generic.Queue`1"/> for this <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</param>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`1.Contains(`0)">
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.EnumerableQueueCollection`2.Contains(`1)">
             <summary>
             Determines whether an element is in the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.
             </summary>
             <param name="item">The object to locate in the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. The value can be <see langword="null"/> for reference types.</param>
             <returns><see langword="true"/> if <paramref name="item"/> is found in the queue; otherwise, <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`1.CopyTo(`0[]@,System.Int32@)">
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.EnumerableQueueCollection`2.ToArray">
+            <summary>
+            Copies the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> elements to a new array.
+            </summary>
+            <returns>A new array containing elements copied from the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.EnumerableQueueCollection`2.GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.
+            </summary>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerator`1"/> for the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.EnumerableQueueCollection`2.CopyTo(`1[],System.Int32)">
+            <summary>
+            Copies the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> elements to an existing one-dimensional <see cref="T:System.Array"/>, starting at the specified array index.
+            </summary>
+            <param name="array">The one-dimensional <see cref="T:System.Array"/> that is the destination of the elements copied from <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. The <see cref="T:System.Array"/> must have zero-based indexing.</param>
+            <param name="arrayIndex">The zero-based index in array to start copying.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="array"/> is <see langword="null"/>.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="arrayIndex"/> is less than zero.</exception>
+            <exception cref="T:System.ArgumentException">The number of elements in the source <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> is greater than the available space from <paramref name="arrayIndex"/> to the end of the destination array.</exception>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.EnumerableQueueCollection`1.#ctor(WinCopies.Collections.DotNetFix.Generic.QueueCollection{WinCopies.Collections.DotNetFix.Generic.IEnumerableQueue{`0},`0}@)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> class with a custom queue.
+            </summary>
+            <param name="queue">The inner queue for this <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</param>
+        </member>
+        <member name="P:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`2.Count">
+            <summary>
+            Gets the number of elements contained in the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.
+            </summary>
+            <value>The number of elements contained in the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</value>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`2.#ctor(`0@)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> class with a custom <see cref="T:System.Collections.Generic.Queue`1"/>.
+            </summary>
+            <param name="queue">The inner <see cref="T:System.Collections.Generic.Queue`1"/> for this <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</param>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`2.Peek">
+            <summary>
+            Returns the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> without removing it.
+            </summary>
+            <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</returns>
+            <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> is empty.</exception>
+            <seealso cref="!:TryPeek(out T)"/>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`2.TryPeek(`1@)">
+            <summary>
+            Tries to peek the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> without removing it.
+            </summary>
+            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been retrieved.</returns>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`2.Peek"/>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyEnumerableQueueCollection`2.Contains(`1)">
+            <summary>
+            Determines whether an element is in the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.
+            </summary>
+            <param name="item">The object to locate in the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. The value can be <see langword="null"/> for reference types.</param>
+            <returns><see langword="true"/> if <paramref name="item"/> is found in the queue; otherwise, <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyEnumerableQueueCollection`2.CopyTo(`1[]@,System.Int32@)">
             <summary>
             Copies the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> elements to an existing one-dimensional <see cref="T:System.Array"/>, starting at the specified array index.
             </summary>
@@ -178,32 +207,102 @@
             <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="arrayIndex"/> is less than zero.</exception>
             <exception cref="T:System.ArgumentException">The number of elements in the source <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> is greater than the available space from <paramref name="arrayIndex"/> to the end of the destination array.</exception>
         </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`1.Peek">
-            <summary>
-            Returns the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> without removing it.
-            </summary>
-            <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</returns>
-            <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`1.TryPeek(`0@)"/>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`1.TryPeek(`0@)">
-            <summary>
-            Tries to peek the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> without removing it.
-            </summary>
-            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
-            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been retrieved.</returns>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`1.Peek"/>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`1.GetEnumerator">
-            <summary>
-            Returns an enumerator that iterates through the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.
-            </summary>
-            <returns>An <see cref="T:System.Collections.Generic.IEnumerator`1"/> for the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</returns>
-        </member>
         <member name="P:WinCopies.Collections.DotNetFix.Generic.EnumerableStack`1.Enumerator.CurrentOverride">
             <summary>
             When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
             </summary>
+        </member>
+        <member name="P:WinCopies.Collections.DotNetFix.Generic.ReadOnlyStackCollection`2.Count">
+            <summary>
+            Gets the number of elements contained in the <see cref="T:WinCopies.Collections.DotNetFix.Generic.StackCollection`1"/>.
+            </summary>
+            <value>The number of elements contained in the <see cref="T:WinCopies.Collections.DotNetFix.Generic.StackCollection`1"/>.</value>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyStackCollection`2.#ctor(`0@)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.StackCollection`1"/> class with a custom <see cref="T:System.Collections.Generic.Stack`1"/>.
+            </summary>
+            <param name="Stack">The inner <see cref="T:System.Collections.Generic.Stack`1"/> for this <see cref="T:WinCopies.Collections.DotNetFix.Generic.StackCollection`1"/>.</param>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyStackCollection`2.Peek">
+            <summary>
+            Returns the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.StackCollection`1"/> without removing it.
+            </summary>
+            <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.StackCollection`1"/>.</returns>
+            <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.Generic.StackCollection`1"/> is empty.</exception>
+            <seealso cref="!:TryPeek(out T)"/>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyStackCollection`2.TryPeek(`1@)">
+            <summary>
+            Tries to peek the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.StackCollection`1"/> without removing it.
+            </summary>
+            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.StackCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been retrieved.</returns>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyStackCollection`2.Peek"/>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyEnumerableStackCollection`2.Contains(`1)">
+            <summary>
+            Determines whether an element is in the <see cref="T:WinCopies.Collections.DotNetFix.Generic.StackCollection`1"/>.
+            </summary>
+            <param name="item">The object to locate in the <see cref="T:WinCopies.Collections.DotNetFix.Generic.StackCollection`1"/>. The value can be <see langword="null"/> for reference types.</param>
+            <returns><see langword="true"/> if <paramref name="item"/> is found in the Stack; otherwise, <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyEnumerableStackCollection`2.CopyTo(`1[]@,System.Int32@)">
+            <summary>
+            Copies the <see cref="T:WinCopies.Collections.DotNetFix.Generic.StackCollection`1"/> elements to an existing one-dimensional <see cref="T:System.Array"/>, starting at the specified array index.
+            </summary>
+            <param name="array">The one-dimensional <see cref="T:System.Array"/> that is the destination of the elements copied from <see cref="T:WinCopies.Collections.DotNetFix.Generic.StackCollection`1"/>. The <see cref="T:System.Array"/> must have zero-based indexing.</param>
+            <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="array"/> is <see langword="null"/>.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="arrayIndex"/> is less than zero.</exception>
+            <exception cref="T:System.ArgumentException">The number of elements in the source <see cref="T:WinCopies.Collections.DotNetFix.Generic.StackCollection`1"/> is greater than the available space from <paramref name="arrayIndex"/> to the end of the destination array.</exception>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.StackCollection`1.#ctor(WinCopies.Collections.DotNetFix.Generic.IStack{`0}@)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.StackCollection`1"/> class with a custom Stack.
+            </summary>
+            <param name="stack">The inner stack for this <see cref="T:WinCopies.Collections.DotNetFix.Generic.StackCollection`1"/>.</param>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.EnumerableStackCollection`2.#ctor(`0@)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.StackCollection`1"/> class with a custom Stack.
+            </summary>
+            <param name="Stack">The inner stack for this <see cref="T:WinCopies.Collections.DotNetFix.Generic.StackCollection`1"/>.</param>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.EnumerableStackCollection`2.Contains(`1)">
+            <summary>
+            Determines whether an element is in the <see cref="T:WinCopies.Collections.DotNetFix.Generic.StackCollection`1"/>.
+            </summary>
+            <param name="item">The object to locate in the <see cref="T:WinCopies.Collections.DotNetFix.Generic.StackCollection`1"/>. The value can be <see langword="null"/> for reference types.</param>
+            <returns><see langword="true"/> if <paramref name="item"/> is found in the Stack; otherwise, <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.EnumerableStackCollection`2.ToArray">
+            <summary>
+            Copies the <see cref="T:WinCopies.Collections.DotNetFix.Generic.StackCollection`1"/> elements to a new array.
+            </summary>
+            <returns>A new array containing elements copied from the <see cref="T:WinCopies.Collections.DotNetFix.Generic.StackCollection`1"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.EnumerableStackCollection`2.GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through the <see cref="T:WinCopies.Collections.DotNetFix.Generic.StackCollection`1"/>.
+            </summary>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerator`1"/> for the <see cref="T:WinCopies.Collections.DotNetFix.Generic.StackCollection`1"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.EnumerableStackCollection`2.CopyTo(`1[],System.Int32)">
+            <summary>
+            Copies the <see cref="T:WinCopies.Collections.DotNetFix.Generic.StackCollection`1"/> elements to an existing one-dimensional <see cref="T:System.Array"/>, starting at the specified array index.
+            </summary>
+            <param name="array">The one-dimensional <see cref="T:System.Array"/> that is the destination of the elements copied from <see cref="T:WinCopies.Collections.DotNetFix.Generic.StackCollection`1"/>. The <see cref="T:System.Array"/> must have zero-based indexing.</param>
+            <param name="arrayIndex">The zero-based index in array to start copying.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="array"/> is <see langword="null"/>.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="arrayIndex"/> is less than zero.</exception>
+            <exception cref="T:System.ArgumentException">The number of elements in the source <see cref="T:WinCopies.Collections.DotNetFix.Generic.StackCollection`1"/> is greater than the available space from <paramref name="arrayIndex"/> to the end of the destination array.</exception>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.EnumerableStackCollection`1.#ctor(WinCopies.Collections.DotNetFix.Generic.StackCollection{WinCopies.Collections.DotNetFix.Generic.IEnumerableStack{`0},`0}@)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.StackCollection`1"/> class with a custom stack.
+            </summary>
+            <param name="stack">The inner stack for this <see cref="T:WinCopies.Collections.DotNetFix.Generic.StackCollection`1"/>.</param>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.Generic.LinkedCollection`1.AddAfter(WinCopies.Collections.DotNetFix.Generic.ILinkedListNode{`0},`0)">
             <summary>

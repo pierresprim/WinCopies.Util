@@ -380,9 +380,14 @@ TItems
             /// Returns an enumerator that iterates through the <see cref="QueueCollection{T}"/>.
             /// </summary>
             /// <returns>An <see cref="System.Collections.Generic.IEnumerator{T}"/> for the <see cref="QueueCollection{T}"/>.</returns>
-            public IUIntCountableEnumerator<TItems> GetEnumerator() => InnerQueue.InnerQueue.GetEnumerator();
+            public
+#if WinCopies3
+                System.Collections.Generic.IEnumerator
+#else
+#endif
+                <TItems> GetEnumerator() => InnerQueue.InnerQueue.GetEnumerator();
 
-            System.Collections.Generic.IEnumerator<TItems> IEnumerable<TItems>.GetEnumerator() => ((IEnumerable<TItems>)InnerQueue.InnerQueue).GetEnumerator();
+            System.Collections.Generic.IEnumerator<TItems> System.Collections.Generic.IEnumerable<TItems>.GetEnumerator() => ((IEnumerable<TItems>)InnerQueue.InnerQueue).GetEnumerator();
 
             System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerQueue.InnerQueue).GetEnumerator();
 
@@ -392,7 +397,7 @@ TItems
             /// Copies the <see cref="QueueCollection{T}"/> elements to an existing one-dimensional <see cref="System.Array"/>, starting at the specified array index.
             /// </summary>
             /// <param name="array">The one-dimensional <see cref="Array"/> that is the destination of the elements copied from <see cref="QueueCollection{T}"/>. The <see cref="System.Array"/> must have zero-based indexing.</param>
-            /// <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
+            /// <param name="arrayIndex">The zero-based index in array to start copying.</param>
             /// <exception cref="ArgumentNullException"><paramref name="array"/> is <see langword="null"/>.</exception>
             /// <exception cref="ArgumentOutOfRangeException"><paramref name="arrayIndex"/> is less than zero.</exception>
             /// <exception cref="ArgumentException">The number of elements in the source <see cref="QueueCollection{T}"/> is greater than the available space from <paramref name="arrayIndex"/> to the end of the destination array.</exception>

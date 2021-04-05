@@ -22,6 +22,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
+using WinCopies.Collections.DotNetFix;
+using WinCopies.Collections.DotNetFix.Generic;
 using WinCopies.Collections.Generic;
 
 using static WinCopies.ThrowHelper;
@@ -30,6 +32,89 @@ namespace WinCopies.Collections
 {
     public static class EnumerableExtensions
     {
+        public static System.Collections.Generic.IEnumerator<T> GetEnumerator<T>(this Generic.IEnumerable<T> enumerable, in EnumerationDirection enumerationDirection)
+#if CS8
+            => enumerationDirection switch
+            {
+                EnumerationDirection.FIFO => enumerable.GetEnumerator(),
+                EnumerationDirection.LIFO => enumerable.GetReversedEnumerator(),
+                _ => throw new InvalidEnumArgumentException($"The given value for the {nameof(enumerationDirection)} parameter is not supported.", nameof(enumerationDirection), enumerationDirection),
+            };
+#else
+        {
+            switch (enumerationDirection)
+            {
+                case EnumerationDirection.FIFO:
+
+                    return enumerable.GetEnumerator();
+
+                case EnumerationDirection.LIFO:
+
+                    return enumerable.GetReversedEnumerator();
+
+                default:
+
+                    throw new InvalidEnumArgumentException($"The given value for the {nameof(enumerationDirection)} parameter is not supported.", nameof(enumerationDirection), enumerationDirection);
+            }
+        }
+#endif
+
+        public static TEnumerator GetEnumerator<TItems, TEnumerator>(this Generic.IEnumerable<TItems, TEnumerator> enumerable, in EnumerationDirection enumerationDirection) where TEnumerator : System.Collections.Generic.IEnumerator<TItems>
+#if CS8
+            => enumerationDirection switch
+            {
+                EnumerationDirection.FIFO => enumerable.GetEnumerator(),
+                EnumerationDirection.LIFO => enumerable.GetReversedEnumerator(),
+                _ => throw new InvalidEnumArgumentException($"The given value for the {nameof(enumerationDirection)} parameter is not supported.", nameof(enumerationDirection), enumerationDirection),
+            };
+#else
+        {
+            switch (enumerationDirection)
+            {
+                case EnumerationDirection.FIFO:
+
+                    return enumerable.GetEnumerator();
+
+                case EnumerationDirection.LIFO:
+
+                    return enumerable.GetReversedEnumerator();
+
+                default:
+
+                    throw new InvalidEnumArgumentException($"The given value for the {nameof(enumerationDirection)} parameter is not supported.", nameof(enumerationDirection), enumerationDirection);
+            }
+        }
+#endif
+
+#if CS7
+        public static System.Collections.Generic.IEnumerator<ILinkedListNode<T>> GetNodeEnumerator<T>(this ILinkedList<T> enumerable, in EnumerationDirection enumerationDirection)
+#if CS8
+            => enumerationDirection switch
+            {
+                EnumerationDirection.FIFO => enumerable.GetNodeEnumerator(),
+                EnumerationDirection.LIFO => enumerable.GetReversedNodeEnumerator(),
+                _ => throw new InvalidEnumArgumentException($"The given value for the {nameof(enumerationDirection)} parameter is not supported.", nameof(enumerationDirection), enumerationDirection),
+            };
+#else
+        {
+            switch (enumerationDirection)
+            {
+                case EnumerationDirection.FIFO:
+
+                    return enumerable.GetNodeEnumerator();
+
+                case EnumerationDirection.LIFO:
+
+                    return enumerable.GetReversedNodeEnumerator();
+
+                default:
+
+                    throw new InvalidEnumArgumentException($"The given value for the {nameof(enumerationDirection)} parameter is not supported.", nameof(enumerationDirection), enumerationDirection);
+            }
+        }
+#endif
+#endif
+
         public static void SplitReferences<T, U, V, TContainer>(this System.Collections.Generic.IEnumerable<T> enumerable, in bool skipEmptyEnumerables, IRefSplitFactory<T, U, V, TContainer> splitFactory, params T[] separators) where T : class where U : INullableRefEntry<T> where V : System.Collections.Generic.IEnumerable<U>
         {
             ThrowIfNull(enumerable, nameof(enumerable));

@@ -27,6 +27,7 @@ using static WinCopies
 
 using System.Runtime.Serialization;
 
+using WinCopies.Collections.Generic;
 using WinCopies.Util;
 #else
     .ThrowHelper;
@@ -43,7 +44,9 @@ namespace WinCopies.Collections.DotNetFix
 
         [Serializable]
         public class ReadOnlyLinkedCollection<T> : ICollection<T>, System.Collections.Generic.IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection
-#if !WinCopies3
+#if WinCopies3
+, IReadOnlyLinkedList2<T>
+#else
 , IDeserializationCallback, ISerializable
 #endif
         {
@@ -94,6 +97,14 @@ int
 
             object ICollection.SyncRoot => ((ICollection)InnerList).SyncRoot;
 
+#if WinCopies3
+            public T FirstValue => InnerList.FirstValue;
+
+            public T LastValue => InnerList.LastValue;
+
+            public bool SupportsReversedEnumeration => InnerList.SupportsReversedEnumeration;
+#endif
+
             bool ICollection<T>.IsReadOnly => true;
 
             public ReadOnlyLinkedCollection(in
@@ -131,18 +142,28 @@ int
             System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerList).GetEnumerator();
 
 #if !WinCopies3
-            public void GetObjectData(SerializationInfo info, StreamingContext context) => InnerList.GetObjectData(info, context);
+        public void GetObjectData(SerializationInfo info, StreamingContext context) => InnerList.GetObjectData(info, context);
 
-            public void OnDeserialization(object sender) => InnerList.OnDeserialization(sender);
+        public void OnDeserialization(object sender) => InnerList.OnDeserialization(sender);
 #endif
-
-            public System.Collections.Generic.IEnumerator<T> GetEnumerator() => InnerList.GetEnumerator();
 
             void ICollection<T>.Add(T item) => throw GetReadOnlyListOrCollectionException();
 
             void ICollection<T>.Clear() => throw GetReadOnlyListOrCollectionException();
 
             bool ICollection<T>.Remove(T item) => throw GetReadOnlyListOrCollectionException();
+
+            public System.Collections.Generic.IEnumerator<T> GetEnumerator() => InnerList.GetEnumerator();
+
+#if WinCopies3
+            public System.Collections.Generic.IEnumerator<T> GetReversedEnumerator() => InnerList.GetReversedEnumerator();
+
+            System.Collections.Generic.IEnumerator<T> Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => ((Collections.Generic.IEnumerable<T>)InnerList).GetReversedEnumerator();
+#endif
+
+#if !(CS8 && WinCopies3)
+            System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => ((System.Collections.Generic.IEnumerable<T>)InnerList).GetEnumerator();
+#endif
         }
 #if WinCopies3
     }

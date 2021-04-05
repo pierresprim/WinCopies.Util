@@ -10,6 +10,9 @@ CHANGELOG
 
 - Add UpdateValue method to WinCopies.Util.Data.ViewModelBase
 - Add UpdateValue\<T> extension method.
+- WinCopies.Collections.DotNetFix.Generic.ReadOnlyObservableLinkedCollection:
+	- Add FirstValue and LastValue properties.
+	- Bug fixes.
 
 #### WinCopies.Collections
 

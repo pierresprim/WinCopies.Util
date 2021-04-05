@@ -19,14 +19,14 @@
 
 using System;
 using System.ComponentModel;
-using System.Collections.Generic;
 
 #if !WinCopies3
-using static WinCopies.Util.Util;
-
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 using WinCopies.Util;
+
+using static WinCopies.Util.Util;
 #endif
 
 namespace WinCopies.Collections.DotNetFix
@@ -37,11 +37,13 @@ namespace WinCopies.Collections.DotNetFix
 #endif
         [Serializable]
         public class ObservableLinkedCollection<T> : LinkedCollection<T>, INotifyPropertyChanged, INotifyLinkedCollectionChanged<T>
-        {
 #if WinCopies3
+, ILinkedList3<T>
+        {
             private ILinkedListNode<T> _firstNode;
             private ILinkedListNode<T> _lastNode;
 #else
+        {
             private LinkedListNode<T> _firstNode;
             private LinkedListNode<T> _lastNode;
 #endif
@@ -52,7 +54,13 @@ namespace WinCopies.Collections.DotNetFix
 
             public ObservableLinkedCollection() : base() { }
 
-            public ObservableLinkedCollection(in LinkedList<T> list) : base(list)
+            public ObservableLinkedCollection(in
+#if WinCopies3
+                ILinkedList3
+#else
+                LinkedList
+#endif
+                <T> list) : base(list)
             {
                 _firstNode = list.First;
 

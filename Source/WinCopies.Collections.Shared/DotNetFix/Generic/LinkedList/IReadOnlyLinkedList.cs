@@ -31,10 +31,10 @@ namespace WinCopies.Collections.DotNetFix
 #endif
 {
     public interface IReadOnlyLinkedList<T> : ICollection<T>, ICollection, IReadOnlyCollection<T>,
-#if !WinCopies3
-            ICountableEnumerable<T>, ISerializable, IDeserializationCallback
+#if WinCopies3
+            IUIntCountable, Collections.Generic.IEnumerable<T> /* In order to have the GetReversedEnumerator() method through the Collections.Generic.IEnumerable<T> interface. */
 #else
-            IUIntCountableEnumerable<T>, Collections.Generic.IEnumerable<T>
+            ICountableEnumerable<T>, ISerializable, IDeserializationCallback
 #endif
     {
 #if !WinCopies3
@@ -94,17 +94,15 @@ int
 
         T LastValue { get; }
 
+#if !WinCopies3
         System.Collections.Generic.IEnumerator<T> GetEnumerator(EnumerationDirection enumerationDirection);
+#endif
     }
 
 #if WinCopies3
-    public interface IReadOnlyEnumerableInfoLinkedList<T> : IReadOnlyLinkedList2<T>, IUIntCountableEnumerableInfo<T>
+    public interface IReadOnlyEnumerableInfoLinkedList<T> : IReadOnlyLinkedList2<T>, IEnumerableInfo<T>
     {
-        IUIntCountableEnumeratorInfo<T> GetEnumerator(EnumerationDirection enumerationDirection);
-
-        new IUIntCountableEnumeratorInfo<T> GetEnumerator();
-
-        new IUIntCountableEnumeratorInfo<T> GetReversedEnumerator();
+        // Left empty.
     }
 #endif
 }

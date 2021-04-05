@@ -22,6 +22,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using WinCopies.Collections.DotNetFix.Generic;
+using WinCopies.Collections.Generic;
 
 namespace WinCopies.Collections.DotNetFix
 {
@@ -176,18 +177,18 @@ TItems
 #if CS8
             => InnerStack.TryPeek(out result);
 #else
-        {
-            if (Count == 0)
             {
-                result = default;
+                if (Count == 0)
+                {
+                    result = default;
 
-                return false;
+                    return false;
+                }
+
+                result = InnerStack.Peek();
+
+                return true;
             }
-
-            result = InnerStack.Peek();
-
-            return true;
-        }
 #endif
 
             protected virtual bool TryPopItem(out
@@ -200,18 +201,18 @@ TItems
 #if CS8
             => InnerStack.TryPop(out result);
 #else
-        {
-            if (IsReadOnly || Count == 0)
             {
-                result = default;
+                if (IsReadOnly || Count == 0)
+                {
+                    result = default;
 
-                return false;
+                    return false;
+                }
+
+                result = InnerStack.Pop();
+
+                return true;
             }
-
-            result = InnerStack.Pop();
-
-            return true;
-        }
 #endif
 
             public bool TryPop(out
@@ -285,9 +286,15 @@ TItems
             /// Returns an enumerator that iterates through the <see cref="StackCollection{T}"/>.
             /// </summary>
             /// <returns>An <see cref="System.Collections.Generic.IEnumerator{T}"/> for the <see cref="StackCollection{T}"/>.</returns>
-            public IUIntCountableEnumerator<TItems> GetEnumerator() => InnerStack.InnerStack.GetEnumerator();
+            public
+#if WinCopies3
+               System.Collections.Generic.IEnumerator
+#else
+IUIntCountableEnumerator
+#endif
+                <TItems> GetEnumerator() => InnerStack.InnerStack.GetEnumerator();
 
-            System.Collections.Generic.IEnumerator<TItems> IEnumerable<TItems>.GetEnumerator() => ((IEnumerable<TItems>)InnerStack.InnerStack).GetEnumerator();
+            System.Collections.Generic.IEnumerator<TItems> System.Collections.Generic.IEnumerable<TItems>.GetEnumerator() => ((System.Collections.Generic.IEnumerable<TItems>)InnerStack.InnerStack).GetEnumerator();
 
             System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerStack.InnerStack).GetEnumerator();
 
@@ -297,7 +304,7 @@ TItems
             /// Copies the <see cref="StackCollection{T}"/> elements to an existing one-dimensional <see cref="Array"/>, starting at the specified array index.
             /// </summary>
             /// <param name="array">The one-dimensional <see cref="Array"/> that is the destination of the elements copied from <see cref="StackCollection{T}"/>. The <see cref="System.Array"/> must have zero-based indexing.</param>
-            /// <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
+            /// <param name="arrayIndex">The zero-based index in array to start copying.</param>
             /// <exception cref="ArgumentNullException"><paramref name="array"/> is <see langword="null"/>.</exception>
             /// <exception cref="ArgumentOutOfRangeException"><paramref name="arrayIndex"/> is less than zero.</exception>
             /// <exception cref="ArgumentException">The number of elements in the source <see cref="StackCollection{T}"/> is greater than the available space from <paramref name="arrayIndex"/> to the end of the destination array.</exception>
@@ -338,6 +345,6 @@ TItems
         }
     }
 #endif
-    }
+}
 
 #endif

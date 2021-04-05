@@ -12,9 +12,38 @@ CHANGELOG
 
 - WinCopies.Collections.DotNetFix.Generic:
 	- IEnumerableSimpleLinkedList\<T> is now defined as:
-		IEnumerableSimpleLinkedList<T> : ISimpleLinkedList<T>, IUIntCountableEnumerable<T>, IEnumerableSimpleLinkedListBase, System.Collections.Generic.IEnumerable<T>, ICollection (, IReadOnlyCollection<T> -- only for .Net versions that use CS7 or greater) and contains new methods.
+		IEnumerableSimpleLinkedList\<T> : ISimpleLinkedList\<T>, IUIntCountableEnumerable\<T>, IEnumerableSimpleLinkedListBase, System.Collections.Generic.IEnumerable\<T>, ICollection (, IReadOnlyCollection\<T> -- only for .Net versions that use CS7 or greater) and contains new methods.
 	- Queue and Stack collections have changed to handle non-enumerable queues/stacks, for better compatibility. For enumerable features, the generic types EnumerableQueue/StackCollection have been added.
 	- Add ReadOnlyQueue/Stack\<TQueue/Stack, TItems>
+	- LinkedCollection implements ILinkedList3 instead of IEnumerableInfoLinkedList.
+	- ObservableLinkedCollection implements ILinkedList3\<T> and its constructor takes a ILinkedList3\<T>.
+	- ReadOnlyLinkedCollection implements IReadOnlyLinkedList2\<T>.
+	- ReadOnlyObservableLinkedCollection:
+		- Implements IReadOnlyLinkedList2\<T>.
+		- Remove the RaiseCollectionChangedEvent method.
+	- ILinkedList\<T> is now defined as :
+		ILinkedList\<T> : IReadOnlyLinkedList2\<T>, Collections.Generic.IEnumerable\<ILinkedListNode\<T>>, ICollection\<T>, ICollection
+		and has new members.
+	- Remove ILinkedList3\<T>.GetNodeEnumerator(EnumerationDirection enumerationDirection) because it was redundant with the new implementation.
+	- IEnumerableInfoLinkedList:
+		- now implements IEnumerableInfo\<ILinkedListNode\<T>>.
+		- has default implementations for C# 8 and higher.
+        - the GetEnumerator method now returns an IEnumeratorInfo2\<T>.
+	- IReadOnlyLinkedList\<T> is now defined as:
+		IReadOnlyLinkedList\<T> : ICollection\<T>, ICollection, IReadOnlyCollection\<T>, IUIntCountable, Collections.Generic.IEnumerable\<T>
+	- Remove IReadOnlyLinkedList2\<T>.GetEnumerator(EnumerationDirection enumerationDirection) because it was redundant with the new implementation.
+	- IReadOnlyEnumerableInfoLinkedList\<T> is now defined as:
+		IReadOnlyEnumerableInfoLinkedList\<T> : IReadOnlyLinkedList2\<T>, IEnumerableInfo\<T>
+		and all of its members have been removed because they was redundant with the new implementation.
+	- ReadOnlyLinkedList\<T> implements IReadOnlyLinkedList2 instead of IReadOnlyEnumerableInfoLinkedList\<T>
+	- IEnumerableSimpleLinkedList\<T> is now defined as:
+		IEnumerableSimpleLinkedList\<T> : ISimpleLinkedList\<T>, IUIntCountable, IEnumerableSimpleLinkedListBase, System.Collections.Generic.IEnumerable\<T>, ICollection (, IReadOnlyCollection\<T> -- for C# 7 and higher).
+	- IEnumerable interfaces have been entirely redefined.
+- ILinkedTreeNode\<T> is now defined as:
+	ILinkedTreeNode\<T> : ILinkedListNode\<T>, IEnumerableInfoLinkedList\<T>
+- LinkedTreeNode\<T> does not implement IEnumerableInfo\<T> anymore.
+- ArrayMerger's constructor takes an ILinkedList3\IUIntCountableEnumerable\<T>>.
+- New extension methods.
 
 ### 03/01/2021 3.4-preview
 

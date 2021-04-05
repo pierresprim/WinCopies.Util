@@ -38,7 +38,7 @@ namespace WinCopies.Collections.DotNetFix
     [DebuggerDisplay("Count = {Count}")]
     public class ReadOnlyLinkedList<T> :
 #if WinCopies3
-        ILinkedList3<T>, IReadOnlyEnumerableInfoLinkedList
+        ILinkedList3<T>, IReadOnlyLinkedList2
 #else
 IReadOnlyLinkedList<T>, ILinkedList2
 #endif
@@ -50,7 +50,7 @@ IReadOnlyLinkedList<T>, ILinkedList2
 
         protected
 #if WinCopies3
-            IReadOnlyEnumerableInfoLinkedList
+            IReadOnlyLinkedList2
 #else
 ILinkedList
 #endif
@@ -103,7 +103,7 @@ ILinkedList
 
         public ReadOnlyLinkedList(
 #if WinCopies3
-            IReadOnlyEnumerableInfoLinkedList
+            IReadOnlyLinkedList2
 #else
             ILinkedList
 #endif
@@ -134,10 +134,9 @@ System.Collections.Generic.LinkedListNode
          System.Collections.Generic.LinkedList<T>.Enumerator GetEnumerator() => InnerList.GetEnumerator();  
 #endif
 
-#if WinCopies3
-            IUIntCountableEnumeratorInfo<T>
-#else
-System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.
+            System.Collections.Generic.IEnumerator<T>
+#if !WinCopies3
+System.Collections.Generic.IEnumerable<T>.
 #endif
                 GetEnumerator() => InnerList.GetEnumerator();
 
@@ -150,33 +149,27 @@ InnerList
                 .GetEnumerator();
 
 #if WinCopies3
-        public IUIntCountableEnumeratorInfo<T> GetEnumerator(EnumerationDirection enumerationDirection) => InnerList.GetEnumerator(enumerationDirection);
-
-        public IUIntCountableEnumeratorInfo<T> GetReversedEnumerator() => InnerList.GetReversedEnumerator();
+        public System.Collections.Generic.IEnumerator<T> GetReversedEnumerator() => InnerList.GetReversedEnumerator();
 
         //System.Collections.Generic.IEnumerator<ILinkedListNode<T>> GetNodeEnumerator() => throw GetReadOnlyListOrCollectionException();
+
+        System.Collections.Generic.IEnumerator<ILinkedListNode<T>> ILinkedList<T>.GetNodeEnumerator() => throw GetReadOnlyListOrCollectionException();
+
+        System.Collections.Generic.IEnumerator<ILinkedListNode<T>> ILinkedList<T>.GetReversedNodeEnumerator() => throw GetReadOnlyListOrCollectionException();
+
+        System.Collections.Generic.IEnumerator<T> ILinkedList<T>.GetEnumerator() => GetEnumerator();
+
+        System.Collections.Generic.IEnumerator<T> ILinkedList<T>.GetReversedEnumerator() => GetReversedEnumerator();
 
         System.Collections.Generic.IEnumerator<ILinkedListNode<T>> System.Collections.Generic.IEnumerable<ILinkedListNode<T>>.GetEnumerator() => throw GetReadOnlyListOrCollectionException();
 
         System.Collections.Generic.IEnumerator<ILinkedListNode<T>> Collections.Generic.IEnumerable<ILinkedListNode<T>>.GetReversedEnumerator() => throw GetReadOnlyListOrCollectionException();
 
-        System.Collections.Generic.IEnumerator<ILinkedListNode<T>> ILinkedList3<T>.GetNodeEnumerator(EnumerationDirection enumerationDirection) => throw GetReadOnlyListOrCollectionException();
-
-        IUIntCountableEnumerator<T> ILinkedList<T>.GetEnumerator() => ((ILinkedList<T>)InnerList).GetEnumerator();
-
-        IUIntCountableEnumerator<T> ILinkedList<T>.GetReversedEnumerator() => ((ILinkedList<T>)InnerList).GetReversedEnumerator();
-
-        System.Collections.Generic.IEnumerator<T> IReadOnlyLinkedList2<T>.GetEnumerator(EnumerationDirection enumerationDirection) => ((IReadOnlyLinkedList2<T>)InnerList).GetEnumerator(enumerationDirection);
-
-        IUIntCountableEnumerator<T> IUIntCountableEnumerable<T>.GetEnumerator() => ((IUIntCountableEnumerable<T>)InnerList).GetEnumerator();
-
+#if !CS8
         System.Collections.Generic.IEnumerator<T> Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => ((Collections.Generic.IEnumerable<T>)InnerList).GetReversedEnumerator();
 
         System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => ((System.Collections.Generic.IEnumerable<T>)InnerList).GetEnumerator();
-
-        IEnumeratorInfo2<T> IEnumerable<T, IEnumeratorInfo2<T>>.GetEnumerator() => ((IEnumerableInfo<T>)InnerList).GetEnumerator();
-
-        IEnumeratorInfo2<T> Collections.Generic.IEnumerable<T, IEnumeratorInfo2<T>>.GetReversedEnumerator() => ((IEnumerableInfo<T>)InnerList).GetReversedEnumerator();
+#endif
 #else
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context) => InnerList.GetObjectData(info, context);
 
@@ -269,6 +262,7 @@ System.Collections.Generic.LinkedListNode
 
 #if WinCopies3
         ILinkedListNode<T> ILinkedList3<T>.Remove(T item) => throw GetReadOnlyListOrCollectionException();
+
         bool ILinkedList3<T>.MoveAfter(ILinkedListNode<T> node, ILinkedListNode<T> after) => throw GetReadOnlyListOrCollectionException();
 
         bool ILinkedList3<T>.MoveBefore(ILinkedListNode<T> node, ILinkedListNode<T> before) => throw GetReadOnlyListOrCollectionException();

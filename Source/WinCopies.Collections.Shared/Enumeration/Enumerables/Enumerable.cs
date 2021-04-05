@@ -41,9 +41,24 @@ namespace WinCopies.Collections
 #if WinCopies3
     namespace DotNetFix.Generic
     {
-        public interface IEnumerable<out TItems, out TEnumerator> : System.Collections.Generic.IEnumerable<TItems> where TEnumerator : System.Collections.Generic.IEnumerator<TItems>
+#if CS8
+        public interface IEnumerable<out T> : System.Collections.Generic.IEnumerable<T>
+        {
+            System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        }
+#endif
+
+        public interface IEnumerable<out TItems, out TEnumerator> :
+#if !CS8
+            System.Collections.Generic.
+#endif
+            IEnumerable<TItems> where TEnumerator : System.Collections.Generic.IEnumerator<TItems>
         {
             new TEnumerator GetEnumerator();
+
+#if CS8 && WinCopies3
+            System.Collections.Generic.IEnumerator<TItems> System.Collections.Generic.IEnumerable<TItems>.GetEnumerator() => GetEnumerator();
+#endif
         }
     }
 
@@ -128,7 +143,13 @@ namespace WinCopies.Collections
         /// A collection that can be enumerated.
         /// </summary>
         /// <typeparam name="T">The item type of the collection.</typeparam>
-        public interface IEnumerable<out T> : System.Collections.Generic.IEnumerable<T>
+        public interface IEnumerable<out T> :
+#if CS8
+            WinCopies.Collections.DotNetFix
+#else
+            System.Collections
+#endif
+            .Generic.IEnumerable<T>
         {
             /// <summary>
             /// Gets a value indicating whether this collection can be enumerated in the two directions (FIFO and LIFO).
@@ -146,9 +167,13 @@ namespace WinCopies.Collections
             System.Collections.Generic.IEnumerator<T> GetReversedEnumerator();
         }
 
-        public interface IEnumerable<out TItems, out TEnumerator> : WinCopies.Collections.DotNetFix.Generic.IEnumerable<TItems, TEnumerator>, IEnumerable<TItems> where TEnumerator : System.Collections.Generic.IEnumerator<TItems>
+        public interface IEnumerable<out TItems, out TEnumerator> : DotNetFix.Generic.IEnumerable<TItems, TEnumerator>, IEnumerable<TItems> where TEnumerator : System.Collections.Generic.IEnumerator<TItems>
         {
             new TEnumerator GetReversedEnumerator();
+
+#if CS8
+            System.Collections.Generic.IEnumerator<TItems> IEnumerable<TItems>.GetReversedEnumerator() => GetReversedEnumerator();
+#endif
         }
 
         public interface IEnumerableInfo<out T> : IEnumerable<T, IEnumeratorInfo2<T>>

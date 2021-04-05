@@ -159,12 +159,14 @@ namespace WinCopies.Collections.DotNetFix.Generic
 #endif
     }
 
-    public interface IEnumerableSimpleLinkedList<T> : ISimpleLinkedList<T>, IUIntCountableEnumerable<T>
+    public interface IEnumerableSimpleLinkedList<T> : ISimpleLinkedList<T>,
 #if WinCopies3
-        , IEnumerableSimpleLinkedListBase, System.Collections.Generic.IEnumerable<T>, ICollection
+        IUIntCountable, IEnumerableSimpleLinkedListBase, System.Collections.Generic.IEnumerable<T>, ICollection
 #if CS7
         , IReadOnlyCollection<T>
 #endif
+#else
+IUIntCountableEnumerable<T>
 #endif
     {
 #if WinCopies3
