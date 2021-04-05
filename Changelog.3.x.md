@@ -39,6 +39,7 @@ CHANGELOG
 	- IEnumerableSimpleLinkedList\<T> is now defined as:
 		IEnumerableSimpleLinkedList\<T> : ISimpleLinkedList\<T>, IUIntCountable, IEnumerableSimpleLinkedListBase, System.Collections.Generic.IEnumerable\<T>, ICollection (, IReadOnlyCollection\<T> -- for C# 7 and higher).
 	- IEnumerable interfaces have been entirely redefined.
+- EnumerableQueue\<T>: remove IReadOnlyCollection<T>.Count and ICollection.Count.
 - ILinkedTreeNode\<T> is now defined as:
 	ILinkedTreeNode\<T> : ILinkedListNode\<T>, IEnumerableInfoLinkedList\<T>
 - LinkedTreeNode\<T> does not implement IEnumerableInfo\<T> anymore.
