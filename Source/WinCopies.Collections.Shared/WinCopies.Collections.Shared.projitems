@@ -9,6 +9,8 @@
     <Import_RootNamespace>WinCopies.Collections.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)AbstractionTypes.Partial\Queue.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AbstractionTypes.Partial\Stack.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstraction\Misc.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\EnumerableSimpleLinkedList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\EventArgs.cs" />
@@ -56,8 +58,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Stack\StackCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Stack\SynchronizedStack.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerables\ReadOnlyEnumerable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerables\UIntCountableEnumerable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\DotNetFix\ArrayEnumerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\MultipleEnumerableEnumerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\RepeatEnumerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\StringEnumerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\TypeConverterEnumerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\EnumerableExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\BuildersAndMergers\ArrayBuilder.cs" />
@@ -116,6 +121,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Misc\ThrowHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Misc\Util.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)StringCharArray.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Generic\EnumerableHelper.Partial\LinkedList.Partial\" />

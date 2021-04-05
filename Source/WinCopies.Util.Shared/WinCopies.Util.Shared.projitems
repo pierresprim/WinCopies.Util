@@ -11,6 +11,7 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)CheckedUInt64.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Comparers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Delegates.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EnumComparer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\InvalidEnumArgumentException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Misc.cs" />
@@ -32,5 +33,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)SucceededEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ValueObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ValueProvider.cs" />
   </ItemGroup>
 </Project>

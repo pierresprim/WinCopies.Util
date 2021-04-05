@@ -43,21 +43,6 @@ using static WinCopies.ThrowHelper;
 namespace WinCopies
 #endif
 {
-    /// <summary>
-    /// This delegate represents the action that is performed for each iteration of a loop.
-    /// </summary>
-    /// <param name="obj">The object or value retrieved by the current iteration.</param>
-    /// <returns><see langword="true"/> to break the loop; otherwise <see langword="false"/>.</returns>
-    public delegate bool LoopIteration(object obj);
-
-    /// <summary>
-    /// This delegate represents the action that is performed for each iteration of a loop.
-    /// </summary>
-    /// <typeparam name="T">The type of the object or value that is retrieved.</typeparam>
-    /// <param name="obj">The object or value retrieved by the current iteration.</param>
-    /// <returns><see langword="true"/> to break the loop; otherwise <see langword="false"/>.</returns>
-    public delegate bool LoopIteration<T>(T obj);
-
     public interface ISplitFactory<T, U, TContainer>
     {
         TContainer Container { get; }
@@ -86,18 +71,6 @@ namespace WinCopies
 
         U GetValueContainer(T value);
     }
-
-#if CS7
-    public delegate (bool result, Exception ex) FieldValidateValueCallback(object obj, object value, FieldInfo field, string paramName);
-#endif
-
-    public delegate void FieldValueChangedCallback(object obj, object value, FieldInfo field, string paramName);
-
-#if CS7
-    public delegate (bool result, Exception ex) PropertyValidateValueCallback(object obj, object value, PropertyInfo property, string paramName);
-#endif
-
-    public delegate void PropertyValueChangedCallback(object obj, object value, PropertyInfo property, string paramName);
 
 #if WinCopies3
     namespace Util // To avoid name conflicts.
@@ -179,6 +152,168 @@ namespace WinCopies
         public static T[] RemoveRangeIfContains<T>(this ICollection<T> collection, params T[] values) => collection.RemoveRangeIfContains((System.Collections.Generic.IEnumerable<T>)values);
 #endif
 #endif
+            public static bool ForEachANDALSO<T>(this System.Collections.Generic.IEnumerable<T> enumerable, Predicate<T> predicate)
+            {
+                foreach (T item in enumerable)
+
+                    if (!predicate(item))
+
+                        return false;
+
+                return true;
+            }
+
+            public static bool ForEachAND<T>(this System.Collections.Generic.IEnumerable<T> enumerable, Predicate<T> predicate)
+            {
+                bool result = true;
+
+                foreach (T item in enumerable)
+
+                    result &= predicate(item);
+
+                return result;
+            }
+
+            public static bool ForEachORELSE<T>(this System.Collections.Generic.IEnumerable<T> enumerable, Predicate<T> predicate)
+            {
+                foreach (T item in enumerable)
+
+                    if (predicate(item))
+
+                        return true;
+
+                return false;
+            }
+
+            public static bool ForEachOR<T>(this System.Collections.Generic.IEnumerable<T> enumerable, Predicate<T> predicate)
+            {
+                bool result = false;
+
+                foreach (T item in enumerable)
+
+                    result |= predicate(item);
+
+                return result;
+            }
+
+            public static bool ForEachXORELSE<T>(this System.Collections.Generic.IEnumerable<T> enumerable, Predicate<T> predicate)
+            {
+                bool result = false;
+
+                enumerable.ForEach(item => result = predicate(item), item =>
+                {
+                    if (predicate(item))
+
+                        if (result)
+
+                            return (result = false);
+
+                        else
+
+                            result = true;
+
+                    return true;
+                });
+
+                return result;
+            }
+
+            public static bool ForEachXOR<T>(this System.Collections.Generic.IEnumerable<T> enumerable, Predicate<T> predicate)
+            {
+                bool result = false;
+
+                Action<T> action = item =>
+                {
+                    if (predicate(item))
+
+                        if (result)
+                        {
+                            result = false;
+
+                            action = _item => predicate(_item);
+                        }
+
+                        else
+
+                            result = true;
+                };
+
+                enumerable.ForEach(item => result = predicate(item), action);
+
+                return result;
+            }
+
+            public static void ForEach<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Predicate<T> firstAction, Predicate<T> otherAction)
+            {
+                System.Collections.Generic.IEnumerator<T> enumerator = enumerable.GetEnumerator();
+
+                try
+                {
+                    if (enumerator.MoveNext())
+
+                        if (firstAction(enumerator.Current))
+
+                            while (enumerator.MoveNext() && otherAction(enumerator.Current))
+                            {
+                                // Left empty.
+                            }
+                }
+
+                finally
+                {
+                    enumerator.Dispose();
+                }
+            }
+
+            public static void ForEach<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Action<T> firstAction, Predicate<T> otherAction)
+            {
+                System.Collections.Generic.IEnumerator<T> enumerator = enumerable.GetEnumerator();
+
+                try
+                {
+                    if (enumerator.MoveNext())
+                    {
+                        firstAction(enumerator.Current);
+
+                        while (enumerator.MoveNext() && otherAction(enumerator.Current))
+                        {
+                            // Left empty.
+                        }
+                    }
+                }
+
+                finally
+                {
+                    enumerator.Dispose();
+                }
+            }
+
+            public static void ForEach<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Action<T> firstAction, Action<T> otherAction)
+            {
+                System.Collections.Generic.IEnumerator<T> enumerator = enumerable.GetEnumerator();
+
+                try
+                {
+                    if (enumerator.MoveNext())
+                    {
+                        firstAction(enumerator.Current);
+
+                        while (enumerator.MoveNext())
+
+                            otherAction(enumerator.Current);
+                    }
+                }
+
+                finally
+                {
+                    enumerator.Dispose();
+                }
+            }
+
+            public static T GetIfNotDisposed<T>(this DotNetFix.IDisposable obj, in T value) => obj.IsDisposed ? throw GetExceptionForDispose(false) : value;
+
+            public static T GetIfNotDisposedOrDisposing<T>(this IDisposable obj, in T value) => obj.IsDisposed ? throw GetExceptionForDispose(false) : obj.IsDisposing ? throw GetExceptionForDispose(true) : value;
+
             public static object GetFromLast(this Array array, int indexation) => (array ?? throw GetArgumentNullException(nameof(array))).Length > indexation ? array.GetValue(array.Length - 1 - indexation) : throw new ArgumentOutOfRangeException(nameof(indexation), indexation, $"{nameof(indexation)} must be less than or equal to {nameof(array)}'s length.");
 
             public static object GetLast(this Array array) => array.GetFromLast(0);

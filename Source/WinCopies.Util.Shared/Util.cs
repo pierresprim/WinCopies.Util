@@ -17,21 +17,23 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-using IComparer = System.Collections.IComparer;
 using WinCopies.Util;
-using System.Collections.Generic;
+
+using IComparer = System.Collections.IComparer;
 
 #if !WinCopies3
-using System.Collections.Generic;
 using System.ComponentModel;
 
 using WinCopies.Collections;
 using WinCopies.Util.Resources;
+
+using static WinCopies.Util.ThrowHelper;
 
 using IfCT = WinCopies.Util.Util.ComparisonType;
 using IfCM = WinCopies.Util.Util.ComparisonMode;
@@ -45,6 +47,20 @@ using static WinCopies.ThrowHelper;
 namespace WinCopies
 {
 #endif
+    public sealed class NullableGeneric<T>
+    {
+        public T Value { get; }
+
+        public NullableGeneric(T value) => Value = value;
+    }
+
+    public interface IPropertyObservable : DotNetFix.IDisposable
+    {
+        void AddPropertyChangedDelegate(Action<string> action);
+
+        void RemovePropertyChangedDelegate(Action<string> action);
+    }
+
     public sealed class NullableReference<T> where T : class
     {
         public T Value { get; }
@@ -66,6 +82,67 @@ namespace WinCopies
 
         public const BindingFlags DefaultBindingFlagsForPropertySet = BindingFlags.Public | BindingFlags.NonPublic |
                          BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly;
+
+        public static bool For(in Func<bool> loopCondition, in Func<bool> action, in Action postIterationAction)
+        {
+            while (loopCondition())
+            {
+                if (action())
+
+                    return true;
+
+                postIterationAction();
+            }
+
+            return false;
+        }
+
+        public static bool For(in Func<bool> loopCondition, Action action, in Action postIterationAction) => For(loopCondition, () =>
+        {
+            try
+            {
+                action();
+
+                return true;
+            }
+
+            catch { return false; }
+
+        }, postIterationAction);
+
+        public static bool PredicateRef<T>(object value, Predicate<T> predicate) where T : class
+#if CS9
+            => predicate(value is T _value ? _value : value == null ? null : throw GetInvalidTypeArgumentException(nameof(value)));
+#else
+
+        {
+            if (value is T _value)
+
+                return predicate(_value);
+
+            else if (value == null)
+
+                return predicate(null);
+
+            throw GetInvalidTypeArgumentException(nameof(value));
+        }
+#endif
+
+        public static bool PredicateVal<T>(object value, Predicate<T> predicate) where T : struct => predicate(value is T _value ? _value : throw GetInvalidTypeArgumentException(nameof(value)));
+
+        public static bool UpdateValue<T>(ref T value, in T newValue, in Action action)
+        {
+            if (!Equals(value, newValue))
+            {
+                value = newValue;
+
+                action();
+
+                return true;
+            }
+
+            return false;
+        }
 
         public static bool IsNullOrEmpty(in Array array) => array == null || array.Length == 0;
 
@@ -1529,7 +1606,7 @@ where T : Enum
 #if !WinCopies3
             ThrowIfNull(enumType, nameof(enumType));
 #else
-Type enumType = typeof(T);
+            Type enumType = typeof(T);
 #endif
 
             return enumType.IsEnum ? Convert.ChangeType(enumType.GetField(fieldName).GetValue(null), Enum.GetUnderlyingType(enumType)) : throw new ArgumentException("'enumType' is not an enum type.");
@@ -1742,21 +1819,7 @@ Type enumType = typeof(T);
         }
 #endif
 
-        public static bool UpdateValue<T>(ref T value, in T newValue, in Action action)
-        {
-            if (!Equals(value, newValue))
-            {
-                value = newValue;
-
-                action();
-
-                return true;
-            }
-
-            return false;
-        }
-
-#if NETCORE || NETSTANDARD || NET5
+#if CS8
         // https://brockallen.com/2016/09/24/process-start-for-urls-on-net-core/
 
         public static Process StartProcessNetCore(in string url) =>

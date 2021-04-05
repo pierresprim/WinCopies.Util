@@ -144,6 +144,21 @@
             <param name="y">Second parameter to compare</param>
             <returns><see langword="true"/> if x is equal to y, otherwise <see langword="false"/>.</returns>
         </member>
+        <member name="T:WinCopies.LoopIteration">
+            <summary>
+            This delegate represents the action that is performed for each iteration of a loop.
+            </summary>
+            <param name="obj">The object or value retrieved by the current iteration.</param>
+            <returns><see langword="true"/> to break the loop; otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="T:WinCopies.LoopIteration`1">
+            <summary>
+            This delegate represents the action that is performed for each iteration of a loop.
+            </summary>
+            <typeparam name="T">The type of the object or value that is retrieved.</typeparam>
+            <param name="obj">The object or value retrieved by the current iteration.</param>
+            <returns><see langword="true"/> to break the loop; otherwise <see langword="false"/>.</returns>
+        </member>
         <member name="M:WinCopies.InvalidEnumArgumentException.#ctor">
             <summary>
             Initializes a new instance of the <see cref="T:WinCopies.InvalidEnumArgumentException"/> class.
@@ -458,21 +473,6 @@
             </summary>
             <param name="info">The object that holds the serialized object data.</param>
             <param name="context">The contextual information about the source or destination.</param>
-        </member>
-        <member name="T:WinCopies.LoopIteration">
-            <summary>
-            This delegate represents the action that is performed for each iteration of a loop.
-            </summary>
-            <param name="obj">The object or value retrieved by the current iteration.</param>
-            <returns><see langword="true"/> to break the loop; otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="T:WinCopies.LoopIteration`1">
-            <summary>
-            This delegate represents the action that is performed for each iteration of a loop.
-            </summary>
-            <typeparam name="T">The type of the object or value that is retrieved.</typeparam>
-            <param name="obj">The object or value retrieved by the current iteration.</param>
-            <returns><see langword="true"/> to break the loop; otherwise <see langword="false"/>.</returns>
         </member>
         <member name="T:WinCopies.Util.Extensions">
             <summary>

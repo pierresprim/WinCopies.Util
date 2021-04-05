@@ -44,7 +44,7 @@ CHANGELOG
 	ILinkedTreeNode\<T> : ILinkedListNode\<T>, IEnumerableInfoLinkedList\<T>
 - LinkedTreeNode\<T> does not implement IEnumerableInfo\<T> anymore.
 - ArrayMerger's constructor takes an ILinkedList3\IUIntCountableEnumerable\<T>>.
-- New extension methods.
+- Add types and new static methods.
 
 ### 03/01/2021 3.4-preview
 
