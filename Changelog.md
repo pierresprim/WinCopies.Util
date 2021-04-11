@@ -6,7 +6,15 @@ The WinCopies® software framework
 CHANGELOG
 =========
 
-### ??/??/???? 2.9
+### ??/??/????
+
+#### WinCopies.Collections
+
+- Additions:
+	- new linked list (node) related interfaces.
+	- ConditionalEnumerator\<T> and DisposableValue\<T> classes.
+
+### 04/05/2021 2.9
 
 - Add UpdateValue method to WinCopies.Util.Data.ViewModelBase
 - Add UpdateValue\<T> extension method.

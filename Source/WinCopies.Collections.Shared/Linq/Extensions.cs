@@ -158,7 +158,7 @@ namespace WinCopies.Linq
 #if !WinCopies3
 System.Collections.Generic.IEnumerable
 #else
-            IEnumerableInfo
+            Collections.Generic.IEnumerableInfo
 #endif
             <T> Join<T>(this System.Collections.Generic.IEnumerable<System.Collections.Generic.IEnumerable<T>> enumerable, bool keepEmptyEnumerables, params T[] join) => new
 #if WinCopies3
@@ -219,7 +219,7 @@ Select
 #if !WinCopies3
 System.Collections.Generic.IEnumerable
 #else
-            IEnumerableInfo
+            Collections.Generic.IEnumerableInfo
 #endif
             <TOut>
 #if !WinCopies3
@@ -237,7 +237,7 @@ Select
 #else
             => new EnumerableInfo<TOut>(() => new SelectEnumerator<TIn, TOut>(enumerable, selector), null);
 
-        public static IEnumerableInfo<TOut> SelectConverter<TIn, TOut>(this IEnumerableInfo<TIn> enumerable, Converter<TIn, TOut> selector) => new EnumerableInfo<TOut>(() => new SelectEnumerator<TIn, TOut>(enumerable, selector), () => new SelectEnumerator<TIn, TOut>(enumerable.GetReversedEnumerator(), selector));
+        public static Collections.Generic.IEnumerableInfo<TOut> SelectConverter<TIn, TOut>(this Collections.Generic.IEnumerableInfo<TIn> enumerable, Converter<TIn, TOut> selector) => new EnumerableInfo<TOut>(() => new SelectEnumerator<TIn, TOut>(enumerable, selector), () => new SelectEnumerator<TIn, TOut>(enumerable.GetReversedEnumerator(), selector));
 
         public static T Last<T>(this WinCopies.Collections.Generic.IEnumerable<T> enumerable)
         {

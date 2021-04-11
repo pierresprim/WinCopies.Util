@@ -64,6 +64,10 @@ namespace WinCopies.Collections.Generic
             public IEnumeratorInfo2<T> GetReversedEnumerator() => Enumerable.GetReversedEnumerator();
 
             System.Collections.Generic.IEnumerator<T> IEnumerable<T>.GetReversedEnumerator() => ((IEnumerable<T>)Enumerable).GetReversedEnumerator();
+
+#if !CS8
+            IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
+#endif
         }
     }
 }

@@ -31,7 +31,6 @@ namespace WinCopies.Collections.Generic
         internal class Enumerable : LinkedList, IEnumerableLinkedList, IEnumerableQueue, IEnumerableStack
         {
             #region IEnumerableInfo implementation
-
             public bool SupportsReversedEnumeration => true;
 
             public IEnumeratorInfo2<T> GetEnumerator(EnumerationDirection enumerationDirection) => new Enumerator(this, enumerationDirection);
@@ -46,7 +45,10 @@ namespace WinCopies.Collections.Generic
 
             System.Collections.Generic.IEnumerator<T> WinCopies.Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => GetReversedEnumerator();
 
-            #endregion
+#if !CS8
+            System.Collections.IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
+#endif
+#endregion
         }
     }
 }

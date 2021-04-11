@@ -66,6 +66,34 @@ namespace WinCopies.Collections.DotNetFix
         // Left empty.
 #endif
     }
+
+    public interface ICountableEnumerator : System.Collections.IEnumerator, ICountable
+    {
+        // Left empty.
+    }
+
+    public interface ICountableDisposableEnumerator : ICountableEnumerator, WinCopies.
+#if !WinCopies3
+        Util.
+#endif
+        DotNetFix.IDisposable
+    {
+        // Left empty.
+    }
+
+    public interface IUIntCountableEnumerator : System.Collections.IEnumerator, IUIntCountable
+    {
+        // Left empty.
+    }
+
+    public interface IUIntCountableDisposableEnumerator : IUIntCountableEnumerator, WinCopies.
+#if !WinCopies3
+        Util.
+#endif
+        DotNetFix.IDisposable
+    {
+        // Left empty.
+    }
 #endif
 
     namespace Generic
@@ -81,30 +109,42 @@ namespace WinCopies.Collections.DotNetFix
             // Left empty.
         }
 #endif
-        public interface ICountableEnumerator<out T> : System.Collections.Generic.IEnumerator<T>, ICountable
-        {
-            // Left empty.
-        }
-
-        public interface ICountableDisposableEnumerator<out T> : ICountableEnumerator<T>, WinCopies.
-#if !WinCopies3
-        Util.
+        public interface ICountableEnumerator<out T> : System.Collections.Generic.IEnumerator<T>,
+#if WinCopies3
+            ICountableEnumerator
+#else
+            ICountable
 #endif
-        DotNetFix.IDisposable
         {
             // Left empty.
         }
 
-        public interface IUIntCountableEnumerator<out T> : System.Collections.Generic.IEnumerator<T>, IUIntCountable
-        {
-            // Left empty.
-        }
-
-        public interface IUIntCountableDisposableEnumerator<out T> : IUIntCountableEnumerator<T>, WinCopies.
-#if !WinCopies3
-        Util.
+        public interface ICountableDisposableEnumerator<out T> : ICountableEnumerator<T>,
+#if WinCopies3
+            ICountableDisposableEnumerator
+#else
+            WinCopies.Util.DotNetFix.IDisposable
 #endif
-        DotNetFix.IDisposable
+        {
+            // Left empty.
+        }
+
+        public interface IUIntCountableEnumerator<out T> : System.Collections.Generic.IEnumerator<T>,
+#if WinCopies3
+            IUIntCountableEnumerator
+#else
+            IUIntCountable
+#endif
+        {
+            // Left empty.
+        }
+
+        public interface IUIntCountableDisposableEnumerator<out T> : IUIntCountableEnumerator<T>,
+#if WinCopies3
+            IUIntCountableDisposableEnumerator
+#else
+            WinCopies.Util.DotNetFix.IDisposable
+#endif
         {
             // Left empty.
         }

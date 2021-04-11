@@ -50,6 +50,29 @@ namespace WinCopies
 
     public delegate void PropertyValueChangedCallback(object obj, object value, PropertyInfo property, string paramName);
 
+    /// <summary>
+    /// Delegate for a non-generic predicate.
+    /// </summary>
+    /// <param name="value">The value to test</param>
+    /// <returns><see langword="true"/> if the predicate success, otherwise <see langword="false"/>.</returns>
+    public delegate bool Predicate(object value);
+
+    public delegate T Converter<T>(object obj);
+
+    public delegate void ActionParams(params object[] args);
+
+    public delegate void ActionParams<in T>(params T[] args);
+
+    /// <summary>
+    /// Represents a delegate that returns an object.
+    /// </summary>
+    /// <returns>Any object.</returns>
+    public delegate object Func();
+
+    public delegate object FuncParams(params object[] args);
+
+    public delegate TResult FuncParams<in TParams, out TResult>(params TParams[] args);
+
     public delegate TResult FuncOut<in T1, T2, out TResult>(T1 p1, out T2 p2);
     public delegate TResult FuncOut<in T1, in T2, T3, out TResult>(T1 p1, T2 p2, out T3 p3);
     public delegate TResult FuncOut<in T1, in T2, in T3, T4, out TResult>(T1 p1, T2 p2, T3 p3, out T4 p4);

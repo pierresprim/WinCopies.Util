@@ -7,15 +7,15 @@
     <TargetFrameworks>netcoreapp3.0;netcoreapp3.1;net472;net48;net5.0-windows</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <Description>WinCopies framework desktop utilities</Description>
-    <Copyright>Copyright © 2020 Pierre Sprimont</Copyright>
+    <Copyright>Copyright © 2021 Pierre Sprimont</Copyright>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>WinCopies.Util.Desktop.snk</AssemblyOriginatorKeyFile>
     <DocumentationFile>WinCopies.Util.Desktop.xml</DocumentationFile>
     <PackageTags>WinCopies</PackageTags>
-    <VersionPrefix>3.4</VersionPrefix>
+    <VersionPrefix>3.5</VersionPrefix>
     <VersionSuffix>preview</VersionSuffix>
-    <AssemblyVersion>3.4.0.0</AssemblyVersion>
-    <FileVersion>3.4.0.0</FileVersion>
+    <AssemblyVersion>3.5.0.0</AssemblyVersion>
+    <FileVersion>3.5.0.0</FileVersion>
     <RootNamespace>WinCopies.Desktop</RootNamespace>
     <DefineConstants>WinCopies3;$(DefineConstants)</DefineConstants>
     <PackageIcon>WinCopies.png</PackageIcon>

@@ -149,7 +149,7 @@ namespace WinCopies
         }
 #endif
 
-#endregion
+        #endregion
 #endif
 
         #region Array Throws
@@ -543,6 +543,10 @@ namespace WinCopies
         /// <param name="argumentName">The argument name for the <see cref="ArgumentNullException"/> that is thrown.</param>
         /// <returns></returns>
         public static T GetOrThrowIfNull<T>(in T obj, in string argumentName) where T : class => obj ?? throw GetArgumentNullException(argumentName);
+
+        public static T TryGetIfTypeOrThrowIfNull<T>(in object obj, in string argumentName) where T : class => GetOrThrowIfNull(obj, argumentName) is T _obj ? _obj : null;
+
+        public static T GetIfType<T>(in object obj, in string argumentName) where T : class => TryGetIfTypeOrThrowIfNull<T>(obj, argumentName) ?? throw new ArgumentException($"{argumentName} must be {typeof(T)}");
 
         /// <summary>
         /// Returns an <see cref="ArgumentException"/> for the given object and argument name.

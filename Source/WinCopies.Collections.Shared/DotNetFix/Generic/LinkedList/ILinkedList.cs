@@ -160,10 +160,14 @@ System.Collections.Generic.LinkedListNode
         bool MoveBefore(ILinkedListNode<T> node, ILinkedListNode<T> before);
 
         void Swap(ILinkedListNode<T> x, ILinkedListNode<T> y);
+
+#if WinCopies3 && CS8
+        System.Collections.IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
+#endif
     }
 
 #if WinCopies3
-    public interface IEnumerableInfoLinkedList<T> : ILinkedList3<T>, IReadOnlyEnumerableInfoLinkedList<T>, IEnumerableInfo<ILinkedListNode<T>>
+    public interface IEnumerableInfoLinkedList<T> : ILinkedList3<T>, IReadOnlyEnumerableInfoLinkedList<T>, Collections.Generic.IEnumerableInfo<ILinkedListNode<T>>
     {
         new IEnumeratorInfo2<T> GetEnumerator();
 
@@ -183,6 +187,8 @@ System.Collections.Generic.LinkedListNode
         System.Collections.Generic.IEnumerator<ILinkedListNode<T>> ILinkedList<T>.GetReversedNodeEnumerator() => GetReversedNodeEnumerator();
 
         IEnumeratorInfo2<ILinkedListNode<T>> IEnumerable<ILinkedListNode<T>, IEnumeratorInfo2<ILinkedListNode<T>>>.GetEnumerator() => GetNodeEnumerator();
+
+        System.Collections.IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
 
         IEnumeratorInfo2<ILinkedListNode<T>> Collections.Generic.IEnumerable<ILinkedListNode<T>, IEnumeratorInfo2<ILinkedListNode<T>>>.GetReversedEnumerator() => GetReversedNodeEnumerator();
 #endif

@@ -32,6 +32,14 @@ namespace WinCopies.Collections
 {
     public static class EnumerableExtensions
     {
+        public static ICountableEnumerable GetCountableEnumerable<TEnumerable>(this TEnumerable enumerable) where TEnumerable : ICountable, System.Collections.IEnumerable => enumerable as ICountableEnumerable ?? new Enumeration.CountableEnumerable<TEnumerable>(enumerable);
+
+        public static IUIntCountableEnumerable GetUIntCountableEnumerable<TEnumerable>(this TEnumerable enumerable) where TEnumerable : IUIntCountable, System.Collections.IEnumerable => enumerable as IUIntCountableEnumerable ?? new Enumeration.UIntCountableEnumerable<TEnumerable>(enumerable);
+
+        public static ICountableDisposableEnumerable<TItems> GetCountableEnumerable<TEnumerable, TItems>(this TEnumerable enumerable) where TEnumerable : ICountable, System.Collections.Generic.IEnumerable<TItems> => enumerable as ICountableDisposableEnumerable<TItems> ?? new Enumeration.Generic.CountableEnumerable<TEnumerable, TItems>(enumerable);
+
+        public static IUIntCountableDisposableEnumerable<TItems> GetUIntCountableEnumerable<TEnumerable, TItems>(this TEnumerable enumerable) where TEnumerable : IUIntCountable, System.Collections.Generic.IEnumerable<TItems> => enumerable as IUIntCountableDisposableEnumerable<TItems> ?? new Enumeration.Generic.UIntCountableEnumerable<TEnumerable, TItems>(enumerable);
+
         public static System.Collections.Generic.IEnumerator<T> GetEnumerator<T>(this Generic.IEnumerable<T> enumerable, in EnumerationDirection enumerationDirection)
 #if CS8
             => enumerationDirection switch

@@ -9,12 +9,12 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>WinCopies.Util.snk</AssemblyOriginatorKeyFile>
     <Description>WinCopies framework utilities</Description>
-    <Copyright>Copyright © 2020 Pierre Sprimont</Copyright>
+    <Copyright>Copyright © 2021 Pierre Sprimont</Copyright>
     <PackageTags>WinCopies</PackageTags>
-    <VersionPrefix>2.8</VersionPrefix>
+    <VersionPrefix>2.9</VersionPrefix>
     <!--<VersionSuffix>preview</VersionSuffix>-->
-    <AssemblyVersion>2.8</AssemblyVersion>
-    <FileVersion>2.8</FileVersion>
+    <AssemblyVersion>2.9</AssemblyVersion>
+    <FileVersion>2.9</FileVersion>
     <DefineConstants>WinCopies2;$(DefineConstants)</DefineConstants>
     <RootNamespace>WinCopies.Util</RootNamespace>
     <PackageIcon>WinCopies.png</PackageIcon>

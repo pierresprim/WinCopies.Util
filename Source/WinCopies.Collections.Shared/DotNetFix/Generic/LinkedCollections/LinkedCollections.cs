@@ -415,6 +415,8 @@ System.Collections.Generic.IEnumerator<T>
             System.Collections.Generic.IEnumerator<T> Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => ((Collections.Generic.IEnumerable<T>)InnerList).GetReversedEnumerator();
 
             System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => ((System.Collections.Generic.IEnumerable<T>)InnerList).GetEnumerator();
+
+            System.Collections.IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
 #endif
 
             protected virtual void OnNodeRemoved(ILinkedListNode<T> node) { /* Left empty. */ }

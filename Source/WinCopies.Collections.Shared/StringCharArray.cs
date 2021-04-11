@@ -24,8 +24,7 @@ using WinCopies.Collections.Generic;
 
 namespace WinCopies.Collections
 {
-    public class StringCharArray :
-        ICountableEnumerableInfo<char>, IReadOnlyList<char>
+    public class StringCharArray : ICountableEnumerableInfo<char>, IReadOnlyList<char>
     {
         private readonly string _s;
 
@@ -45,13 +44,31 @@ namespace WinCopies.Collections
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        ICountableEnumerator<char> ICountableEnumerable<char>.GetEnumerator() => GetEnumerator();
-
         public IEnumeratorInfo2<char> GetReversedEnumerator() => new ArrayEnumerator<char>(this, true);
 
-        IEnumeratorInfo2<char> DotNetFix.Generic.IEnumerable<char, IEnumeratorInfo2<char>>.GetEnumerator() => GetEnumerator();
-
         System.Collections.Generic.IEnumerator<char> Generic.IEnumerable<char>.GetReversedEnumerator() => GetReversedEnumerator();
+
+        ICountableEnumerator<char> IReadOnlyList<char>.GetEnumerator() => GetEnumerator();
+
+        private CountableEnumeratorInfo<char> _GetReversedEnumerator() => new
+#if !CS9
+CountableEnumeratorInfo<char>
+#endif
+            (GetReversedEnumerator(), () => Count);
+
+        ICountableEnumerator<char> ICountableEnumerable<char, ICountableEnumerator<char>>.GetEnumerator() => _GetReversedEnumerator();
+
+        ICountableEnumeratorInfo<char> Generic.IEnumerable<char, ICountableEnumeratorInfo<char>>.GetReversedEnumerator() => _GetReversedEnumerator();
+
+#if !CS8
+        ICountableEnumerator<char> Enumeration.DotNetFix.IEnumerable<ICountableEnumerator<char>>.GetEnumerator() => GetEnumerator();
+
+        ICountableEnumerator<char> DotNetFix.Generic.IEnumerable<char, ICountableEnumerator<char>>.GetEnumerator() => GetEnumerator();
+
+        DotNetFix.ICountableEnumerator Enumeration.DotNetFix.IEnumerable<DotNetFix.ICountableEnumerator>.GetEnumerator() => GetEnumerator();
+
+        IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
+#endif
     }
 }
 

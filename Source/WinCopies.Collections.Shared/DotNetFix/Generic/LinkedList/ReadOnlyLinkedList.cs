@@ -40,7 +40,7 @@ namespace WinCopies.Collections.DotNetFix
 #if WinCopies3
         ILinkedList3<T>, IReadOnlyLinkedList2
 #else
-IReadOnlyLinkedList<T>, ILinkedList2
+ILinkedList2<T>, IReadOnlyLinkedList
 #endif
         <T>
     {
@@ -169,6 +169,8 @@ InnerList
         System.Collections.Generic.IEnumerator<T> Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => ((Collections.Generic.IEnumerable<T>)InnerList).GetReversedEnumerator();
 
         System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => ((System.Collections.Generic.IEnumerable<T>)InnerList).GetEnumerator();
+
+        System.Collections.IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
 #endif
 #else
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context) => InnerList.GetObjectData(info, context);

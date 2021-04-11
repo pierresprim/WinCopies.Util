@@ -62,6 +62,61 @@ namespace WinCopies.Collections
         }
     }
 
+    namespace Enumeration
+    {
+        namespace DotNetFix
+        {
+            public interface IEnumerable<out TEnumerator> : System.Collections.IEnumerable where TEnumerator : IEnumerator
+            {
+                new TEnumerator GetEnumerator();
+
+#if CS8
+                IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
+#endif
+            }
+        }
+
+        /// <summary>
+        /// A collection that can be enumerated.
+        /// </summary>
+        public interface IEnumerable : System.Collections.IEnumerable
+        {
+            /// <summary>
+            /// Gets a value indicating whether this collection can be enumerated in the two directions (FIFO and LIFO).
+            /// </summary>
+            bool SupportsReversedEnumeration { get; }
+
+            /// <summary>
+            /// Returns a reversed enumerator for the current collection. See the Remarks section.
+            /// </summary>
+            /// <returns>A reversed enumerator for the current collection.</returns>
+            /// <exception cref="InvalidOperationException"><see cref="SupportsReversedEnumeration"/> is set to <see langword="false"/>.</exception>
+            /// <remarks>
+            /// This method returns an enumerator that enumerates in the reversed direction that the enumerator returned by the <see cref="System.Collections.Generic.IEnumerable{T}.GetEnumerator"/> method. So, for a queue, the <see cref="System.Collections.Generic.IEnumerable{T}.GetEnumerator"/> method will return an enumerator that will enumerate through the queue using the FIFO direction and the <see cref="GetReversedEnumerator"/> will throw an exception, because any reversed enumerator can be returned while a queue only supports the FIFO direction. However, a stack, which only supports the LIFO direction, will return a LIFO-enumerator as its main enumerator and throw an exception if we ask it to return a reversed enumerator. A linked list that supports the two directions, but which stores items using the FIFO direction by default, will return a FIFO-enumerator as its main enumerator and a LIFO-enumerator as its reversed enumerator.
+            /// </remarks>
+            System.Collections.IEnumerator GetReversedEnumerator();
+        }
+
+        public interface IEnumerable<out TEnumerator> : DotNetFix.IEnumerable<TEnumerator>, IEnumerable where TEnumerator : System.Collections.IEnumerator
+        {
+            new TEnumerator GetReversedEnumerator();
+
+#if CS8
+            System.Collections.IEnumerator IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
+#endif
+        }
+    }
+
+    public interface IEnumerableInfo<out TEnumerator> : Enumeration.IEnumerable<TEnumerator> where TEnumerator : IEnumeratorInfo
+    {
+        // Left empty.
+    }
+
+    public interface IEnumerableInfo : IEnumerableInfo<IEnumeratorInfo>
+    {
+        // Left empty.
+    }
+
     namespace Generic
     {
 #endif
@@ -118,6 +173,8 @@ namespace WinCopies.Collections
             System.Collections.Generic.IEnumerator<TItems> IEnumerable<TItems>.GetReversedEnumerator() => GetReversedEnumerator(); // We call this method and not the delegate directly because we have to make a null-check.
 
             IEnumeratorInfo2<TItems> IEnumerable<TItems, IEnumeratorInfo2<TItems>>.GetReversedEnumerator() => GetReversedEnumerator();
+
+            IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
         }
 
         public sealed class EnumerableInfo<T> : EnumerableInfoBase<T, IEnumeratorInfo2<T>>
@@ -150,11 +207,19 @@ namespace WinCopies.Collections
             System.Collections
 #endif
             .Generic.IEnumerable<T>
+#if WinCopies3
+            , Enumeration.IEnumerable
+        {
+#if CS8
+            IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
+#endif
+#else
         {
             /// <summary>
             /// Gets a value indicating whether this collection can be enumerated in the two directions (FIFO and LIFO).
             /// </summary>
             bool SupportsReversedEnumeration { get; }
+#endif
 
             /// <summary>
             /// Returns a reversed enumerator for the current collection. See the Remarks section.
@@ -162,7 +227,7 @@ namespace WinCopies.Collections
             /// <returns>A reversed enumerator for the current collection.</returns>
             /// <exception cref="InvalidOperationException"><see cref="SupportsReversedEnumeration"/> is set to <see langword="false"/>.</exception>
             /// <remarks>
-            /// This method returns an enumerator which enumerate in the reversed direction that the enumerator returned by the <see cref="System.Collections.Generic.IEnumerable{T}.GetEnumerator"/> method. So, for a queue, the <see cref="System.Collections.Generic.IEnumerable{T}.GetEnumerator"/> method will return an enumerator that will enumerate through the queue using the FIFO direction and the <see cref="GetReversedEnumerator"/> will throw an exception, because any reversed enumerator can be returned while a queue only supports the FIFO direction. However, a stack, which only supports the LIFO direction, will return a LIFO-enumerator as its main enumerator and throw an exception if we ask it to return a reversed enumerator. A linked list that supports the two directions, but which stores items using the FIFO direction by default, will return a FIFO-enumerator as its main enumerator and a LIFO-enumerator as its reversed enumerator.
+            /// This method returns an enumerator that enumerates in the reversed direction that the enumerator returned by the <see cref="System.Collections.Generic.IEnumerable{T}.GetEnumerator"/> method. So, for a queue, the <see cref="System.Collections.Generic.IEnumerable{T}.GetEnumerator"/> method will return an enumerator that will enumerate through the queue using the FIFO direction and the <see cref="GetReversedEnumerator"/> will throw an exception, because any reversed enumerator can be returned while a queue only supports the FIFO direction. However, a stack, which only supports the LIFO direction, will return a LIFO-enumerator as its main enumerator and throw an exception if we ask it to return a reversed enumerator. A linked list that supports the two directions, but which stores items using the FIFO direction by default, will return a FIFO-enumerator as its main enumerator and a LIFO-enumerator as its reversed enumerator.
             /// </remarks>
             System.Collections.Generic.IEnumerator<T> GetReversedEnumerator();
         }
@@ -176,7 +241,12 @@ namespace WinCopies.Collections
 #endif
         }
 
-        public interface IEnumerableInfo<out T> : IEnumerable<T, IEnumeratorInfo2<T>>
+        public interface IEnumerableInfo<out TItems, out TEnumerator> : IEnumerable<TItems, TEnumerator> where TEnumerator : IEnumeratorInfo2<TItems>
+        {
+            // Left empty.
+        }
+
+        public interface IEnumerableInfo<out T> : IEnumerableInfo<T, IEnumeratorInfo2<T>>
         {
             // Left empty.
         }

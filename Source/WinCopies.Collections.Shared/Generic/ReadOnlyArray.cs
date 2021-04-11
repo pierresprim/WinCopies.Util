@@ -18,6 +18,7 @@
 #if WinCopies3 && CS7
 
 using System.Collections;
+
 using WinCopies.Collections.DotNetFix.Generic;
 
 namespace WinCopies.Collections.Generic
@@ -38,15 +39,13 @@ namespace WinCopies.Collections.Generic
 
         System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetEnumerator();
 
-        ICountableEnumerator<T> ICountableEnumerable<T>.GetEnumerator() => GetEnumerator();
-
-        IEnumeratorInfo2<T> Collections.DotNetFix.Generic.IEnumerable<T, IEnumeratorInfo2<T>>.GetEnumerator() => GetEnumerator();
-
         public ICountableEnumeratorInfo<T> GetReversedEnumerator() => new ArrayEnumerator<T>(InnerEnumerable, true);
 
-        IEnumeratorInfo2<T> Collections.Generic.IEnumerable<T, IEnumeratorInfo2<T>>.GetReversedEnumerator() => GetReversedEnumerator();
-
         System.Collections.Generic.IEnumerator<T> Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => GetReversedEnumerator();
+
+#if !CS8
+        IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
+#endif
     }
 }
 #endif

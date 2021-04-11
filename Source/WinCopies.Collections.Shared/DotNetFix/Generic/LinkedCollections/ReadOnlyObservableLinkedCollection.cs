@@ -153,7 +153,11 @@ int
 
             public System.Collections.Generic.IEnumerator<T> GetReversedEnumerator() => InnerLinkedCollection.GetReversedEnumerator();
 
+#if !CS8
             System.Collections.Generic.IEnumerator<T> Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => ((Collections.Generic.IEnumerable<T>)InnerLinkedCollection).GetReversedEnumerator();
+
+            System.Collections.IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
+#endif
 #endif
         }
 #if WinCopies3

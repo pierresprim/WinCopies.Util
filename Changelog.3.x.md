@@ -10,6 +10,19 @@ CHANGELOG
 
 #### WinCopies.Collections
 
+- ILinkedList3\<T>, IEnumerableInfoLinkedList\<T>, IReadOnlyEnumerableInfoLinkedList\<T> and ILinkedTreeNode\<T>: add new default implementations.
+- LinkedList\<T>.LinkedListNode is now defined as: LinkedListNode : ILinkedListNode\<T, LinkedListNode, LinkedList\<T>>, ILinkedListNode\<T>.
+- Add new classes and interfaces for enumeration.
+- Redefinition of I(UInt)CountableEnumerable/Enumerator-related interfaces.
+- RepeatEnumerator:
+	- inherits from ConditionalEnumerator\<T>.
+	- has now protected constructors only. Instances can be created outside the class inheritance hierarchy from new static methods.
+- Add new static methods.
+
+### 04/05/2021
+
+#### WinCopies.Collections
+
 - WinCopies.Collections.DotNetFix.Generic:
 	- IEnumerableSimpleLinkedList\<T> is now defined as:
 		IEnumerableSimpleLinkedList\<T> : ISimpleLinkedList\<T>, IUIntCountableEnumerable\<T>, IEnumerableSimpleLinkedListBase, System.Collections.Generic.IEnumerable\<T>, ICollection (, IReadOnlyCollection\<T> -- only for .Net versions that use CS7 or greater) and contains new methods.

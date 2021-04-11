@@ -23,7 +23,7 @@ using WinCopies.Collections.DotNetFix.Generic;
 
 namespace WinCopies.Collections.Generic
 {
-    public abstract class UIntCountableEnumerable<TEnumerable, TItems> : IUIntCountableEnumerable<TItems> where TEnumerable : ICountableEnumerable<TItems>
+    public abstract class UIntCountableEnumerable<TEnumerable, TEnumerator, TItems> : IUIntCountableEnumerable<TItems> where TEnumerable : ICountableEnumerable<TItems, TEnumerator> where TEnumerator : ICountableEnumerator<TItems>
     {
         protected TEnumerable Enumerable { get; }
 
@@ -37,10 +37,16 @@ namespace WinCopies.Collections.Generic
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        IUIntCountableEnumerator<TItems> IUIntCountableEnumerable<TItems>.GetEnumerator() => GetEnumerator();
+        IUIntCountableEnumerator<TItems> IUIntCountableEnumerable<TItems, IUIntCountableEnumerator<TItems>>.GetEnumerator() => GetEnumerator();
+
+#if !CS8
+        IUIntCountableEnumerator<TItems> Enumeration.DotNetFix.IEnumerable<IUIntCountableEnumerator<TItems>>.GetEnumerator() => GetEnumerator();
+
+        IUIntCountableEnumerator<TItems> DotNetFix.Generic.IEnumerable<TItems, IUIntCountableEnumerator<TItems>>.GetEnumerator() => GetEnumerator();
+#endif
     }
 
-    public class UIntCountableEnumerable<T> : UIntCountableEnumerable<ICountableEnumerable<T>, T>
+    public class UIntCountableEnumerable<T> : UIntCountableEnumerable<ICountableEnumerable<T>, ICountableEnumerator<T>, T>
     {
         public UIntCountableEnumerable(in ICountableEnumerable<T> enumerable) : base(enumerable)
         {
@@ -48,7 +54,7 @@ namespace WinCopies.Collections.Generic
         }
     }
 
-    public class UIntCountableEnumerableInfo<T> : UIntCountableEnumerable<ICountableEnumerableInfo<T>, T>, IUIntCountableEnumerableInfo<T>
+    public class UIntCountableEnumerableInfo<T> : UIntCountableEnumerable<ICountableEnumerableInfo<T>, ICountableEnumeratorInfo<T>, T>, IUIntCountableEnumerableInfo<T>
     {
         public bool SupportsReversedEnumeration => Enumerable.SupportsReversedEnumeration;
 
@@ -57,11 +63,17 @@ namespace WinCopies.Collections.Generic
             // Left empty.
         }
 
-        public IEnumeratorInfo2<T> GetReversedEnumerator() => Enumerable.GetReversedEnumerator();
+        // public IEnumeratorInfo2<T> GetReversedEnumerator() => Enumerable.GetReversedEnumerator();
 
-        IEnumeratorInfo2<T> Collections.DotNetFix.Generic.IEnumerable<T, IEnumeratorInfo2<T>>.GetEnumerator() => GetEnumerator();
+        public IUIntCountableEnumeratorInfo<T> GetReversedEnumerator() => new UIntCountableEnumeratorInfo<T>(new EnumeratorInfo<T>(Enumerable.GetReversedEnumerator()), () => (uint)Enumerable.Count);
 
         System.Collections.Generic.IEnumerator<T> Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => GetReversedEnumerator();
+
+        IUIntCountableEnumeratorInfo<T> IEnumerable<T, IUIntCountableEnumeratorInfo<T>>.GetReversedEnumerator() => GetReversedEnumerator();
+
+#if !CS8
+        IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
+#endif
     }
 }
 
