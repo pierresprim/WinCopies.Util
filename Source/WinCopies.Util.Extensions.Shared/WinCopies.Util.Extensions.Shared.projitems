@@ -19,6 +19,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\EnumerableExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\StringExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SelectorDictionary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ThrowHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UtilHelpers.cs" />
   </ItemGroup>

@@ -38,7 +38,7 @@ namespace WinCopies.Collections.Generic
 
         protected int StartIndex { get; }
 
-        public TItems this[int index] => index.Between(0, Count) ? InnerList[index += StartIndex] : throw new IndexOutOfRangeException($"{nameof(index)} must be between 0 and {nameof(Count)}.");
+        public TItems this[int index] => index.Between(0, Count - 1) ? InnerList[index += StartIndex] : throw new IndexOutOfRangeException($"{nameof(index)} must be between 0 and {nameof(Count)} - 1.");
 
         public int Count { get; }
 
@@ -94,7 +94,7 @@ namespace WinCopies.Collections.Generic
 
         public override ArrayEnumerator<T> GetReversedEnumerator() => new
 #if !CS9
-ArrayEnumerator<T>
+            ArrayEnumerator<T>
 #endif
             (this, true);
     }

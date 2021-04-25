@@ -29,11 +29,11 @@ namespace WinCopies.Extensions // To avoid name conflicts.
 #endif
             (s);
 
-        public static bool Validate(this string s, in string startsWith, in int skipLength, in int length, in int? lowerBound, in int? upperBound, in string value) => s.AsCharArray().Validate(startsWith.AsCharArray(), (char x, char y) => x == y, skipLength, length, lowerBound, upperBound, value.AsCharArray());
+        public static bool Validate(this string s, in string startsWith, in int skipLength, in int? length, in int? lowerBound, in int? upperBound, in string value) => s.AsCharArray().Validate(startsWith.AsCharArray(), (char x, char y) => x == y, skipLength, length, lowerBound, upperBound, value.AsCharArray());
 
-        public static bool Validate(this string s, in char[] startsWith, in int skipLength, in int length, in int? lowerBound, in int? upperBound, params char[] chars) => s.AsCharArray().Validate(startsWith, (char x, char y) => x == y, skipLength, length, lowerBound, upperBound, chars);
+        public static bool Validate(this string s, in char[] startsWith, in int skipLength, in int? length, in int? lowerBound, in int? upperBound, params char[] chars) => s.AsCharArray().Validate(startsWith, (char x, char y) => x == y, skipLength, length, lowerBound, upperBound, chars);
 
-        public static bool Validate(this string s, in char startsWith, in int skipLength, in int length, in int? lowerBound, in int? upperBound, params char[] chars) => s.AsCharArray().Validate(new char[] { startsWith }, (char x, char y) => x == y, skipLength, length, lowerBound, upperBound, chars);
+        public static bool Validate(this string s, in char startsWith, in int skipLength, in int? length, in int? lowerBound, in int? upperBound, params char[] chars) => s.AsCharArray().Validate(new char[] { startsWith }, (char x, char y) => x == y, skipLength, length, lowerBound, upperBound, chars);
     }
 }
 

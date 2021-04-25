@@ -112,5 +112,11 @@ namespace WinCopies.Commands
             Util.
 #endif
             Desktop.Resources.Commands.WPF.ApplicationCommands.ReverseSelection, nameof(ReverseSelection), typeof(ApplicationCommands));
+
+        public static RoutedUICommand Reset { get; } = new RoutedUICommand(WinCopies.
+#if !WinCopies3
+            Util.
+#endif
+            Desktop.Resources.Commands.WPF.ApplicationCommands.Reset, nameof(Reset), typeof(ApplicationCommands));
     }
 }

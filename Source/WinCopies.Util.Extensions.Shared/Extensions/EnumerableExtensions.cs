@@ -18,6 +18,7 @@
 #if CS7
 
 using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 using WinCopies.Collections.Generic;
@@ -251,7 +252,7 @@ namespace WinCopies
 
                     for (int i = 0; i < startsWith.Count; i++)
                     {
-                        if (!comparison(list[i], value[i]))
+                        if (!comparison(list[i], startsWith[i]))
 
                             return false;
                     }

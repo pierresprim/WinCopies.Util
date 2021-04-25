@@ -57,6 +57,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Stack\Stack.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Stack\StackCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Stack\SynchronizedStack.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerables\CustomEnumeratorEnumerable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerables\DotNetFix\ILongCountableEnumerable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerables\ReadOnlyEnumerable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerables\UIntCountableEnumerable.cs" />

@@ -11,7 +11,8 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)CheckedUInt64.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Comparers.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Delegates.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Delegates\Delegates.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Delegates\DelegateTypes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EnumComparer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\InvalidEnumArgumentException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Misc.cs" />
