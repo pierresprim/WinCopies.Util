@@ -135,6 +135,19 @@
             <param name="obj">The object or value retrieved by the current iteration.</param>
             <returns><see langword="true"/> to break the loop; otherwise <see langword="false"/>.</returns>
         </member>
+        <member name="T:WinCopies.Util.Predicate">
+            <summary>
+            Delegate for a non-generic predicate.
+            </summary>
+            <param name="value">The value to test</param>
+            <returns><see langword="true"/> if the predicate success, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="T:WinCopies.Util.Func">
+            <summary>
+            Represents a delegate that returns an object.
+            </summary>
+            <returns>Any object.</returns>
+        </member>
         <member name="M:WinCopies.Util.InvalidEnumArgumentException.#ctor">
             <summary>
             Initializes a new instance of the <see cref="T:WinCopies.Util.InvalidEnumArgumentException"/> class.
@@ -258,19 +271,6 @@
             <summary>
             The operation returned True. This value is the same number as <see langword="true"/>.
             </summary>
-        </member>
-        <member name="T:WinCopies.Util.Predicate">
-            <summary>
-            Delegate for a non-generic predicate.
-            </summary>
-            <param name="value">The value to test</param>
-            <returns><see langword="true"/> if the predicate success, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="T:WinCopies.Util.Func">
-            <summary>
-            Represents a delegate that returns an object.
-            </summary>
-            <returns>Any object.</returns>
         </member>
         <member name="M:WinCopies.Util.InvalidArgumentException.#ctor">
             <summary>
@@ -3046,6 +3046,25 @@
         </member>
         <member name="M:WinCopies.Collections.ArrayBuilder`1.RemoveLast">
             <summary>
+            Removes the node at the end of this <seelue">The value to remove from this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/>.</param>
+            <returns><see langword="true"/> if the element containing value is successfully removed; otherwise, <see langword="false"/>. This method also returns <see langword="false"/> if value was not found in the original <see cref="T:WinCopies.Collections.ArrayBuilder`1"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.ArrayBuilder`1.Remove(System.Collections.Generic.LinkedListNode{`0})">
+            <summary>
+            Removes the specified node from this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/>.
+            </summary>
+            <param name="node">The <see cref="T:System.Collections.Generic.LinkedListNode`1"/> to remove from this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/>.</param>
+            <exception cref="T:System.ArgumentNullException">node is null.</exception>
+            <exception cref="T:System.InvalidOperationException">node is not in the current <see cref="T:WinCopies.Collections.ArrayBuilder`1"/>.</exception>
+        </member>
+        <member name="M:WinCopies.Collections.ArrayBuilder`1.RemoveFirst">
+            <summary>
+            Removes the node at the start of this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/>.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.ArrayBuilder`1"/> is empty.</exception>
+        </member>
+        <member name="M:WinCopies.Collections.ArrayBuilder`1.RemoveLast">
+            <summary>
             Removes the node at the end of this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/>.
             </summary>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.ArrayBuilder`1"/> is empty.</exception>
@@ -3670,6 +3689,11 @@
             <returns>A value obtained by a <see cref="T:WinCopies.Util.Func"/>, depending on the result of a comparison.</returns>
             <exception cref="T:System.ArgumentNullException">One or more of the given <see cref="T:WinCopies.Util.Func"/>s are <see langword="null"/>.</exception>
             <remarks>See <see cref="M:WinCopies.Extensions.UtilHelpers.GetIf(System.Object@,System.Object@,WinCopies.Collections.Comparison@,WinCopies.Util.Func@,WinCopies.Util.Func@,WinCopies.Util.Func@)"/> for the non-generic version.</remarks>
+        </member>
+        <member name="M:WinCopies.SelectorDictionary`2.DisposeUnmanaged">
+            <summary>
+            This method is called by <see cref="M:WinCopies.SelectorDictionary`2.Dispose"/> and by the deconstructor. This overload does nothing and it is not necessary to call this base overload in derived classes.
+            </summary>
         </member>
     </members>
 </doc>

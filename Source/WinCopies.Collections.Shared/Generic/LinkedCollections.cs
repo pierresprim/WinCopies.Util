@@ -43,8 +43,26 @@ namespace WinCopies.Collections.Generic
 
         public bool HasItems => Count != 0;
 
+#if WinCopies3 && !CS8
+        bool ISimpleLinkedList.TryPeek(out object result)
+        {
+            if (TryPeek(out T _result))
+            {
+                result = _result;
+
+                return true;
+            }
+
+            result = null;
+
+            return false;
+        }
+
+        object ISimpleLinkedList.Peek() => Peek();
+#endif
+
 #if CS7
-        public  bool TryPeek(out T result)
+        public bool TryPeek(out T result)
         {
             if (Count > 0)
             {
@@ -89,6 +107,24 @@ namespace WinCopies.Collections.Generic
         uint IUIntCountable.Count => (uint)Count;
 
         public bool HasItems => Count != 0;
+
+#if WinCopies3 && !CS8
+        bool ISimpleLinkedList.TryPeek(out object result)
+        {
+            if (TryPeek(out T _result))
+            {
+                result = _result;
+
+                return true;
+            }
+
+            result = null;
+
+            return false;
+        }
+
+        object ISimpleLinkedList.Peek() => Peek();
+#endif
 
 #if CS7
         public bool TryPeek(out T result)

@@ -79,5 +79,23 @@ System.Collections.Generic.IEnumerator
                 Collections.EnumerableExtensions
 #endif
                 .CopyTo(this, array, index, Count);
+
+#if WinCopies3 && !CS8
+        bool ISimpleLinkedList.TryPeek(out object result)
+        {
+            if (TryPeek(out T _result))
+            {
+                result = _result;
+
+                return true;
+            }
+
+            result = null;
+
+            return false;
+        }
+
+        object ISimpleLinkedList.Peek() => Peek();
+#endif
     }
 }

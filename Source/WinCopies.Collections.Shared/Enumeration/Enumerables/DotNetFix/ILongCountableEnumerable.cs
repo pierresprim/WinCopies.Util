@@ -85,7 +85,7 @@ namespace WinCopies.Collections.DotNetFix
 #if CS8
             int System.Collections.Generic.IReadOnlyCollection<TItems>.Count => Count;
 
-            int ILongCountable.Count => Count;
+            long ILongCountable.Count => Count;
 
             TEnumerator IEnumerable<TItems, TEnumerator>.GetEnumerator() => GetEnumerator();
 

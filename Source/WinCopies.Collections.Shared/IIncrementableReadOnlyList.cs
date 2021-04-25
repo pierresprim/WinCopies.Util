@@ -88,7 +88,7 @@ namespace WinCopies.Collections.Generic
 
         System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
 #endif
     }
 

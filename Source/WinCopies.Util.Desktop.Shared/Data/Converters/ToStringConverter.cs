@@ -27,7 +27,7 @@ namespace WinCopies.Util.Data
 #endif
             ParameterCanBeNull;
 
-#if !WInCopies3
+#if !WinCopies3
         public override ConversionOptions ConvertBackOptions => AllowNull;
 
         protected override object ConvertBack(string value, string parameter, CultureInfo culture) => throw new System.NotSupportedException();
