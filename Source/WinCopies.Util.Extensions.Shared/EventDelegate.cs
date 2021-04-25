@@ -34,7 +34,11 @@ namespace WinCopies
 {
     public abstract class ValueManager<T> : DotNetFix.IDisposable
     {
-        private ILinkedList<T> _values;
+        private ILinkedList<T> _values = new WinCopies.Collections.DotNetFix.
+#if WinCopies3
+            Generic.
+#endif
+            LinkedList<T>();
 
         protected ILinkedList<T> Values => this.GetIfNotDisposed(_values);
 
@@ -45,7 +49,7 @@ namespace WinCopies
         public void Remove(in T action)
         {
 #if WinCopies3
-ILinkedListNode
+            ILinkedListNode
 #else
             LinkedListNode
 #endif

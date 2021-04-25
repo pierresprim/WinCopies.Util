@@ -139,6 +139,22 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
             return false;
         }
+
+        bool ISimpleLinkedList.TryPeek(out object result)
+        {
+            if (TryPeek(out T _result))
+            {
+                result = _result;
+
+                return true;
+            }
+
+            result = null;
+
+            return false;
+        }
+
+        object ISimpleLinkedList.Peek() => Peek();
     }
 
     public interface ISimpleLinkedListNode<T>
@@ -168,7 +184,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
 #if !WinCopies3
         IUIntCountable
 #else
-        ISimpleLinkedListBase2, ISimpleLinkedListBase<T>
+        ISimpleLinkedListBase2, ISimpleLinkedListBase<T>, ISimpleLinkedList
 #endif
     {
 #if !WinCopies3
@@ -277,6 +293,22 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
 #if WinCopies3
         public abstract bool TryPeek(out T result);
+
+        object ISimpleLinkedList.Peek() => Peek();
+
+        bool ISimpleLinkedList.TryPeek(out object result)
+        {
+            if (TryPeek(out T _result))
+            {
+                result = _result;
+
+                return true;
+            }
+
+            result = null;
+
+            return false;
+        }
 #endif
     }
 

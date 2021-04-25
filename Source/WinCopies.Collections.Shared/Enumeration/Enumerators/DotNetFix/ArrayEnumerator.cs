@@ -31,16 +31,10 @@ namespace WinCopies.Collections.DotNetFix.Generic
             System.Collections.Generic.
 #endif
             IReadOnlyList<T> _array;
-        private int _currentIndex =
-#if WinCopies3
-            -1
-#else
-            0
-#endif
-            ;
+        private int _currentIndex = -1;
         private readonly bool _reverse;
         private Func<bool> _condition;
-        private Func<int> _moveNext;
+        private Action _moveNext;
 
         protected
 #if CS7
@@ -80,7 +74,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
         protected override bool MoveNextOverride()
         {
-            _currentIndex = _moveNext();
+            _moveNext();
 
             return _condition();
         }

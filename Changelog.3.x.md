@@ -10,14 +10,28 @@ CHANGELOG
 
 #### WinCopies.Collections
 
+- ISimpleLinkedList\<T> implements ISimpleLinkedList.
 - ILinkedList3\<T>, IEnumerableInfoLinkedList\<T>, IReadOnlyEnumerableInfoLinkedList\<T> and ILinkedTreeNode\<T>: add new default implementations.
 - LinkedList\<T>.LinkedListNode is now defined as: LinkedListNode : ILinkedListNode\<T, LinkedListNode, LinkedList\<T>>, ILinkedListNode\<T>.
 - Add new classes and interfaces for enumeration.
 - Redefinition of I(UInt)CountableEnumerable/Enumerator-related interfaces.
+- The non-generic interface WinCopies.Collections.Generic.IReadOnlyList is now in the WinCopies.Collections namespace.
 - RepeatEnumerator:
 	- inherits from ConditionalEnumerator\<T>.
 	- has now protected constructors only. Instances can be created outside the class inheritance hierarchy from new static methods.
 - Add new static methods.
+- Add EnumeratorInfoBase.GetOrThrowIfDisposed\<T> method.
+- Add ReversedReadOnlyList\<TItems, TList> ReversedReadOnlyList\<T> ReversedArray\<T> classes.
+- Add SubReadOnlyList\<T> classes.
+- Add (I)IncrementableIReadOnlyList\<T> and IDecrementableIReadOnlyList\<T> interfaces and classes.
+- Removed WinCopies.Collections.Generic.IReadOnlyList2\<out T> interface.
+- Bug fixed in ArrayEnumerator\<T> and ArrayMerger\<T>.
+
+#### WinCopies.Util.Extensions
+
+- Add EnumerableExtensions class with the Contains\<T> method.
+- Add StringExtensions class.
+- Bug fixed in ValueManager.
 
 ### 04/05/2021
 

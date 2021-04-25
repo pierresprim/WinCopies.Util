@@ -15,10 +15,13 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if !WinCopies3
-namespace WinCopies.Util
-#else
+#if CS9 && WinCopies3
+using static WinCopies.ThrowHelper;
+#endif
+
 namespace WinCopies
+#if !WinCopies3
+    .Util
 #endif
 {
     public interface IDisposable :
@@ -30,25 +33,23 @@ namespace WinCopies
     {
         bool IsDisposing { get; }
     }
-}
 
-
-
-namespace WinCopies
-#if !WinCopies3
-    .Util
-#endif
-    .DotNetFix
-{
-    /// <summary>
-    /// Provides a mechanism for releasing unmanaged resources.
-    /// </summary>
-    /// <seealso cref="System.IDisposable"/>
-    public interface IDisposable : System.IDisposable
+    namespace DotNetFix
     {
         /// <summary>
-        /// Gets a value that indicates whether the current object is disposed.
+        /// Provides a mechanism for releasing unmanaged resources.
         /// </summary>
-        bool IsDisposed { get; }
+        /// <seealso cref="System.IDisposable"/>
+        public interface IDisposable : System.IDisposable
+        {
+            /// <summary>
+            /// Gets a value that indicates whether the current object is disposed.
+            /// </summary>
+            bool IsDisposed { get; }
+
+#if CS9 && WinCopies3
+            T GetOrThrowIfDisposed<T>(in T value) => IsDisposed ? throw GetExceptionForDispose(false) : value;
+#endif
+        }
     }
 }

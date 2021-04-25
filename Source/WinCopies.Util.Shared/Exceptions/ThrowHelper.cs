@@ -226,6 +226,10 @@ namespace WinCopies
                     (indexArgumentName);
         }
 
+#if !(CS9 && WinCopies3)
+        public static T GetOrThrowIfDisposed<T>(in DotNetFix.IDisposable obj, in T value) => (obj ?? throw GetArgumentNullException(nameof(obj))).IsDisposed ? throw GetExceptionForDispose(false) : value;
+#endif
+
 #if !WinCopies3
         public static void ThrowIfEnumeratorNotStartedOrDisposedException(in WinCopies.Collections.IDisposableEnumeratorInfo enumerator)
         {
@@ -275,7 +279,7 @@ namespace WinCopies
         }
 
 #if CS7
-        public static void ThrowIfArrayHasNotEnoughSpace<T>(in IReadOnlyCollection<T> collection , in int arrayIndex, in int count, in string arrayArgumentName)
+        public static void ThrowIfArrayHasNotEnoughSpace<T>(in IReadOnlyCollection<T> collection, in int arrayIndex, in int count, in string arrayArgumentName)
         {
             if (count <= collection.Count - arrayIndex)
 
@@ -349,7 +353,7 @@ namespace WinCopies
         }
 
 #if CS7
-        public static void ThrowOnInvalidCopyToArrayOperation<T>(in IReadOnlyCollection<T> collection , in int arrayIndex, in int count, in string arrayArgumentName, in string arrayIndexArgumentName)
+        public static void ThrowOnInvalidCopyToArrayOperation<T>(in IReadOnlyCollection<T> collection, in int arrayIndex, in int count, in string arrayArgumentName, in string arrayIndexArgumentName)
         {
             ThrowIfNull(collection, nameof(collection));
 
@@ -638,14 +642,14 @@ namespace WinCopies
 
         public static InvalidOperationException GetExceptionForDispose(in bool forDisposing) => new InvalidOperationException($"The current object or value is {(forDisposing ? "disposing" : "disposed")}.");
 
-        internal static void ThrowIfDisposedInternal(WinCopies.DotNetFix.IDisposable obj)
+        internal static void ThrowIfDisposedInternal(DotNetFix.IDisposable obj)
         {
             if (obj.IsDisposed)
 
                 throw GetExceptionForDispose(false);
         }
 
-        public static void ThrowIfDisposed(WinCopies.DotNetFix.IDisposable obj)
+        public static void ThrowIfDisposed(DotNetFix.IDisposable obj)
         {
             ThrowIfNull(obj, nameof(obj));
 

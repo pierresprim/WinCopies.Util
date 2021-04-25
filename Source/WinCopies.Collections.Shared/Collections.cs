@@ -36,6 +36,16 @@ namespace WinCopies.Collections
         uint Count { get; }
     }
 
+    public interface ILongCountable
+    {
+        long Count { get; }
+    }
+
+    public interface IULongCountable
+    {
+        ulong Count { get; }
+    }
+
     public interface IEnumeratorInfo :
 #if !WinCopies3
 System.Collections.IEnumerator

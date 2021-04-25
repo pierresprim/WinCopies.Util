@@ -46,6 +46,13 @@ namespace WinCopies.Collections
                 throw GetExceptionForDispose(false);
         }
 
+        protected T GetOrThrowIfDisposed<T>(in T value) =>
+#if WinCopies3 && CS9
+            ((WinCopies.DotNetFix.IDisposable)this).GetOrThrowIfDisposed(value);
+#else
+            WinCopies.ThrowHelper.GetOrThrowIfDisposed(this, value);
+#endif
+
         public bool MoveNext()
         {
             ThrowIfDisposed();

@@ -6,7 +6,12 @@ The WinCopies® software framework
 CHANGELOG
 =========
 
-### ??/??/????
+### ??/??/2021 2.10
+
+- Add ICountable-like interfaces with the '(u)long' underlying type.
+- Add WinCopies.Collections.Generic.IReadOnlyList2\<out T> interface.
+- Add WinCopies.Util.ThrowHelper.GetOrThrowIfDisposed static method.
+- Add WinCopies.Util.DotNetFix.IDisposable.GetOrThrowIfDisposed\<T> default implementation.
 
 #### WinCopies.Collections
 

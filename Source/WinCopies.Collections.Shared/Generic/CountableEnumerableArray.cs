@@ -274,6 +274,18 @@ namespace WinCopies.Collections
     }
 #endif
 
+#if !WinCopies3
+namespace Generic
+{
+#endif
+    public interface IReadOnlyList : ICountableEnumerable
+    {
+        object this[int index] { get; }
+    }
+#if !WinCopies3
+}
+#endif
+
     namespace Generic
     {
 #if WinCopies3
@@ -290,11 +302,6 @@ namespace WinCopies.Collections
             protected override bool MoveNextOverride() => InnerEnumerator.MoveNext();
         }
 #endif
-
-        public interface IReadOnlyList : ICountableEnumerable
-        {
-            object this[int index] { get; }
-        }
 
         public interface IReadOnlyList<out T> : DotNetFix.
 #if WinCopies3
@@ -322,6 +329,13 @@ namespace WinCopies.Collections
 #endif
 #endif
         }
+
+#if !(WinCopies3 || CS7)
+        public interface IReadOnlyList2<out T> : IReadOnlyList<T>
+        {
+            T this[int index] { get; }
+        }
+#endif
 
         public class CountableEnumerableArray<T> : IReadOnlyList<T>
         {

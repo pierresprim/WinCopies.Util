@@ -35,27 +35,7 @@ namespace WinCopies.Collections.Generic
     [DebuggerDisplay("Count = {Count}")]
     public class ArrayMerger<T> : WinCopies.Collections.DotNetFix.Generic.LinkedCollection<IUIntCountableEnumerable<T>>
     {
-        private ulong? _realCount = null;
-
-        public ulong RealCount
-        {
-            get
-            {
-                if (_realCount.HasValue)
-
-                    return _realCount.Value;
-
-                ulong realCount = 0;
-
-                foreach (IUIntCountableEnumerable<T> array in this)
-
-                    realCount += (ulong)array.Count;
-
-                _realCount = realCount;
-
-                return realCount;
-            }
-        }
+        public ulong RealCount { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ArrayMerger{T}"/> class.
@@ -292,15 +272,15 @@ namespace WinCopies.Collections.Generic
         }
 
         #region Overrides
-        protected override void OnNodeAdded(ILinkedListNode<IUIntCountableEnumerable<T>> node) => _realCount = RealCount + (ulong)node.Value.Count;
+        protected override void OnNodeAdded(ILinkedListNode<IUIntCountableEnumerable<T>> node) => RealCount += node.Value.Count;
 
-        protected override void OnNodeRemoved(ILinkedListNode<IUIntCountableEnumerable<T>> node) => _realCount = RealCount - (ulong)node.Value.Count;
+        protected override void OnNodeRemoved(ILinkedListNode<IUIntCountableEnumerable<T>> node) => RealCount -= node.Value.Count;
 
         protected override void ClearItems()
         {
             base.ClearItems();
 
-            _realCount = 0ul;
+            RealCount = 0ul;
         }
         #endregion
     }

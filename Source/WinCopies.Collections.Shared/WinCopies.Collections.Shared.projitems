@@ -57,9 +57,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Stack\Stack.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Stack\StackCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Stack\SynchronizedStack.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerables\DotNetFix\ILongCountableEnumerable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerables\ReadOnlyEnumerable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerables\UIntCountableEnumerable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\DotNetFix\ArrayEnumerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\DotNetFix\ICountableEnumerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\DotNetFix\ILongCountableEnumerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\MultipleEnumerableEnumerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\RepeatEnumerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\StringEnumerator.cs" />
@@ -69,7 +72,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Collections.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\LinkedCollections.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\DotNetFix\Misc.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerables\ICountableEnumerable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerables\DotNetFix\ICountableEnumerable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\IUIntIndexation\Enumerators.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\IUIntIndexation\ListsAndCollections.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\LinkedCollections\LinkedCollectionChangedAction.cs" />
@@ -103,6 +106,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Generic\ITreeNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\ReadOnlyArray.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\RecursiveEnumerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generic\ReversedArray.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generic\SubReadOnlyList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IIncrementableReadOnlyList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ISortable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LinkedCollections.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\LinkedList.cs" />
@@ -124,6 +130,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)StringCharArray.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Enumeration\Enumerables\DotNetFix\" />
     <Folder Include="$(MSBuildThisFileDirectory)Generic\EnumerableHelper.Partial\LinkedList.Partial\" />
   </ItemGroup>
 </Project>
