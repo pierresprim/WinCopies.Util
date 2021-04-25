@@ -73,18 +73,15 @@ namespace WinCopies.Collections.DotNetFix.Generic
                 return new SimpleLinkedListNode<T>(item);
             }
 
-            else
-            {
-                actionAfter = false;
+            actionAfter = false;
 
-                var newNode = new SimpleLinkedListNode<T>(item);
+            var newNode = new SimpleLinkedListNode<T>(item);
 
-                _lastItem.Next = newNode;
+            _lastItem.Next = newNode;
 
-                _lastItem = newNode;
+            _lastItem = newNode;
 
-                return FirstItem;
-            }
+            return FirstItem;
         }
 
         protected sealed override void OnItemAdded() => _lastItem = FirstItem;

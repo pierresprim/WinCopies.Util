@@ -74,6 +74,14 @@ namespace WinCopies.Collections.AbstractionInterop.Generic
             bool IStackBase<TDestination>.TryPeek(out TDestination result) => TryPeek(out result);
 
             void IStackBase<TDestination>.Clear() => throw GetReadOnlyListOrCollectionException();
+
+            TDestination ISimpleLinkedList<TDestination>.Peek() => ((ISimpleLinkedList<TDestination>)InnerStack).Peek();
+
+#if !CS8
+            bool ISimpleLinkedList.TryPeek(out object result) => InnerStack.TryPeek(out result);
+
+            object ISimpleLinkedList.Peek() => ((ISimpleLinkedList)InnerStack).Peek();
+#endif
 #else
             public void Push(TDestination item) => throw GetReadOnlyListOrCollectionException();
 

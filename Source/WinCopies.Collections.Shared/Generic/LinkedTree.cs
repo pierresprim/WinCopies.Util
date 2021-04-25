@@ -38,6 +38,14 @@ namespace WinCopies.Collections.Generic
         new ILinkedTreeNode<T> Next { get; }
 
         ILinkedTreeNode<T> Parent { get; }
+
+#if CS8
+        ILinkedListNode<T, ILinkedList<T>> ILinkedListNode<T, ILinkedListNode<T, ILinkedList<T>>, ILinkedList<T>>.Previous => Previous;
+
+        ILinkedListNode<T, ILinkedList<T>> ILinkedListNode<T, ILinkedListNode<T, ILinkedList<T>>, ILinkedList<T>>.Next => Next;
+
+        ILinkedList<T> ILinkedListNode<T>.List => Parent;
+#endif
     }
 
     public class LinkedTreeNode<T> : ILinkedTreeNode<T>
@@ -69,17 +77,11 @@ namespace WinCopies.Collections.Generic
 
         public bool IsReadOnly => false;
 
-        IReadOnlyLinkedList<T> ILinkedListNode<T>.List => Parent;
-
         public LinkedTreeNode<T> Previous => _node?.Previous?.Value;
-
-        ILinkedListNode<T> ILinkedListNode<T>.Previous => Previous;
 
         ILinkedTreeNode<T> ILinkedTreeNode<T>.Previous => Previous;
 
         public LinkedTreeNode<T> Next => _node?.Next?.Value;
-
-        ILinkedListNode<T> ILinkedListNode<T>.Next => Next;
 
         ILinkedTreeNode<T> ILinkedTreeNode<T>.Next => Next;
 
@@ -119,7 +121,31 @@ namespace WinCopies.Collections.Generic
 
         int IReadOnlyCollection<T>.Count => ((IReadOnlyCollection<T>)_list).Count;
 
+        ILinkedListNode<T> ILinkedListNode<T>.Previous => Previous;
 
+        ILinkedListNode<T> ILinkedListNode<T>.Next => Next;
+
+#if !CS8
+        ILinkedList<T> ILinkedListNode<T>.List => Parent;
+
+        ILinkedListNode<T, ILinkedList<T>> ILinkedListNode<T, ILinkedListNode<T, ILinkedList<T>>, ILinkedList<T>>.Previous => Previous;
+
+        ILinkedListNode<T, ILinkedList<T>> ILinkedListNode<T, ILinkedListNode<T, ILinkedList<T>>, ILinkedList<T>>.Next => Next;
+
+        ILinkedListNode<T, ILinkedList<T>> IReadOnlyLinkedListNode<T, ILinkedListNode<T, ILinkedList<T>>, ILinkedList<T>>.Previous => Previous;
+
+        ILinkedListNode<T, ILinkedList<T>> IReadOnlyLinkedListNode<T, ILinkedListNode<T, ILinkedList<T>>, ILinkedList<T>>.Next => Next;
+
+        ILinkedList<T> IReadOnlyLinkedListNode<T, ILinkedList<T>>.List => Parent;
+
+        IReadOnlyLinkedListNode<T, IReadOnlyLinkedList<T>> IReadOnlyLinkedListNode<T, IReadOnlyLinkedListNode<T, IReadOnlyLinkedList<T>>, IReadOnlyLinkedList<T>>.Previous => Previous;
+
+        IReadOnlyLinkedListNode<T, IReadOnlyLinkedList<T>> IReadOnlyLinkedListNode<T, IReadOnlyLinkedListNode<T, IReadOnlyLinkedList<T>>, IReadOnlyLinkedList<T>>.Next => Next;
+
+        IReadOnlyLinkedList<T> IReadOnlyLinkedListNode<T, IReadOnlyLinkedList<T>>.List => Parent;
+
+        System.Collections.IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
+#endif
 
         private static void ThrowIfNodeAlreadyHasList(in LinkedTreeNode<T> node, in string argumentName)
         {

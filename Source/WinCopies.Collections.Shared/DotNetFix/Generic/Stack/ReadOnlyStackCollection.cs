@@ -145,6 +145,14 @@ int
             bool ISimpleLinkedListBase2.IsSynchronized => InnerStack.IsSynchronized;
 
             bool ISimpleLinkedListBase.HasItems => InnerStack.HasItems;
+
+            TItems ISimpleLinkedList<TItems>.Peek() => ((ISimpleLinkedList<TItems>)InnerStack).Peek();
+
+#if !CS8
+            bool ISimpleLinkedList.TryPeek(out object result) => ((ISimpleLinkedList)InnerStack).TryPeek(out result);
+
+            object ISimpleLinkedList.Peek() => ((ISimpleLinkedList)InnerStack).Peek();
+#endif
 #else
         bool ICollection.IsSynchronized => ((ICollection)InnerStack).IsSynchronized;
 

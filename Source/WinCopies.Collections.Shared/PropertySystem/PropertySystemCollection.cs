@@ -63,8 +63,6 @@ namespace WinCopies.PropertySystem
 
         public ICountableEnumeratorInfo<IProperty> GetEnumerator() => new CountableEnumeratorInfo<IProperty>(GetKeyValuePairEnumerator().SelectConverter(GetValue), () => Count);
 
-        Collections.DotNetFix.Generic.ICountableEnumerator<IProperty> Collections.DotNetFix.Generic.ICountableEnumerable<IProperty>.GetEnumerator() => GetEnumerator();
-
         IEnumeratorInfo2<IProperty> Collections.DotNetFix.Generic.IEnumerable<IProperty, IEnumeratorInfo2<IProperty>>.GetEnumerator() => GetEnumerator();
 
         public IEnumeratorInfo2<IProperty> GetReversedEnumerator() => GetReversedKeyValuePairEnumerator().SelectConverter(GetValue);
@@ -88,6 +86,10 @@ namespace WinCopies.PropertySystem
             [MaybeNullWhen(false)]
 #endif
         out IProperty value) => (value = new Enumerable<KeyValuePair<TPropertyId, IProperty>>(() => GetKeyValuePairEnumerator()).FirstOrDefault(keyValuePair => key == null ? keyValuePair.Key == null : key.Equals(keyValuePair.Key)).Value) != null;
+
+        ICountableEnumeratorInfo<IProperty> Collections.Generic.IEnumerable<IProperty, ICountableEnumeratorInfo<IProperty>>.GetReversedEnumerator() => new CountableEnumeratorInfo<IProperty>(GetReversedEnumerator(), () => Count);
+
+        IEnumerator Collections.Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
 
         public class Enumerator : EnumeratorInfo<KeyValuePair<TPropertyId, IProperty>>
         {

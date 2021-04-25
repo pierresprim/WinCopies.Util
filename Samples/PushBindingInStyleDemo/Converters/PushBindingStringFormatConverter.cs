@@ -46,6 +46,6 @@ namespace PushBindingInStyleDemo.Converters
 
         protected override double Convert(string value, object parameter, CultureInfo culture) => double.Parse(value);
 
-        protected override string ConvertBack(double value, object parameter, CultureInfo culture) => value == null ? null : string.Format(StringFormat, value.ToString());
+        protected override string ConvertBack(double value, object parameter, CultureInfo culture) => string.Format(StringFormat, value.ToString());
     }
 }

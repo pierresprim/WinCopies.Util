@@ -52,6 +52,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\BitmapToImageSourceConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\IconToImageSourceConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\IsNullConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\ToStringConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MarkupExtensions\BooleanMarkupExtension.cs" />
     <Compile Include="..\WinCopies.Util.Desktop.Shared\Data\Converters\IntConversionResultToStringConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\MenuItem.cs" />

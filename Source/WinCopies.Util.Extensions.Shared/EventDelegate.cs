@@ -27,6 +27,14 @@ using WinCopies.Collections.DotNetFix
     ;
 using WinCopies.Util;
 
+#if WinCopies3
+using static WinCopies.Delegates;
+using static WinCopies.Bool;
+#else
+using static WinCopies.Util.Delegates;
+using static WinCopies.Util.Bool;
+#endif
+
 namespace WinCopies
 #if !WinCopies3
 .Util
@@ -34,7 +42,11 @@ namespace WinCopies
 {
     public abstract class ValueManager<T> : DotNetFix.IDisposable
     {
-        private ILinkedList<T> _values;
+        private ILinkedList<T> _values = new WinCopies.Collections.DotNetFix.
+#if WinCopies3
+            Generic.
+#endif
+          LinkedList<T>();
 
         protected ILinkedList<T> Values => this.GetIfNotDisposed(_values);
 
@@ -45,7 +57,7 @@ namespace WinCopies
         public void Remove(in T action)
         {
 #if WinCopies3
-ILinkedListNode
+            ILinkedListNode
 #else
             LinkedListNode
 #endif
@@ -121,6 +133,108 @@ ILinkedListNode
         }
     }
 
+#if WinCopies3
+    public abstract class EventAndQueryDelegate<TIn, TOut> : ValueManager<IQueryDelegateDelegate<TIn, TOut>>
+    {
+        public TOut DefaultValue { get; }
+
+        public EventAndQueryDelegate(in TOut defaultValue) => DefaultValue = defaultValue;
+
+        protected abstract bool Check(in TOut outParam);
+
+        protected abstract bool Merge(in TOut x, in TOut y, out TOut result);
+
+        public TOut RaiseEvent(TIn param)
+        {
+            NullableGeneric<TOut> result = null;
+            bool mergeResult;
+
+            Values.ForEach<IQueryDelegateDelegate<TIn, TOut>>(func =>
+            {
+                result = new NullableGeneric<TOut>(func.FirstAction(param));
+
+                return Check(result.Value);
+            }, func =>
+            {
+                mergeResult = Merge(result.Value, func.OtherAction(param, result.Value), out TOut mergeResultParam);
+
+                result = new NullableGeneric<TOut>(mergeResultParam);
+
+                return mergeResult;
+            });
+
+            return result == null ? DefaultValue : result.Value;
+        }
+    }
+
+    public abstract class EventAndQueryDelegate2<TIn, TOut> : EventAndQueryDelegate<TIn, TOut>
+    {
+        public EventAndQueryDelegate2(in TOut defaultValue) : base(defaultValue) { /* Left empty. */ }
+
+        protected abstract TOut Merge(in TOut x, in TOut y);
+
+        protected sealed override bool Merge(in TOut x, in TOut y, out TOut result)
+        {
+            result = Merge(x, y);
+
+            return Check(result);
+        }
+    }
+
+    public class XORELSE_EventAndQueryDelegate<TIn> : EventAndQueryDelegate<TIn, bool>
+    {
+        public XORELSE_EventAndQueryDelegate(in bool defaultValue) : base(defaultValue) { /* Left empty. */ }
+
+        protected override bool Check(in bool outParam) => true;
+
+        protected override bool Merge(in bool x, in bool y, out bool result)
+        {
+            if (x && y)
+            {
+                result = false;
+
+                return false;
+            }
+
+            result = x ^ y;
+
+            return true;
+        }
+    }
+
+    public class DelegateEventAndQueryDelegate<TIn, TOut> : EventAndQueryDelegate2<TIn, TOut>
+    {
+        protected Predicate<TOut> CheckDelegate { get; }
+
+        protected Func<TOut, TOut, TOut> MergeDelegate { get; }
+
+        public DelegateEventAndQueryDelegate(in TOut defaultValue, in Predicate<TOut> check, in Func<TOut, TOut, TOut> merge) : base(defaultValue)
+        {
+            CheckDelegate = check;
+
+            MergeDelegate = merge;
+        }
+
+        protected sealed override bool Check(in TOut outParam) => CheckDelegate(outParam);
+
+        protected sealed override TOut Merge(in TOut x, in TOut y) => MergeDelegate(x, y);
+    }
+
+    public static class EventAndQueryDelegate<T>
+    {
+        private static DelegateEventAndQueryDelegate<T, bool> GetDelegate(in bool defaultValue, in Predicate<bool> check, in Func<bool, bool, bool> merge) => new DelegateEventAndQueryDelegate<T, bool>(defaultValue, check, merge);
+
+        public static DelegateEventAndQueryDelegate<T, bool> GetAND_Delegate(in bool defaultValue) => GetDelegate(defaultValue, True, And);
+
+        public static DelegateEventAndQueryDelegate<T, bool> GetANDALSO_Delegate(in bool defaultValue) => GetDelegate(defaultValue, Self, And);
+
+        public static DelegateEventAndQueryDelegate<T, bool> GetOR_Delegate(in bool defaultValue) => GetDelegate(defaultValue, True, Or);
+
+        public static DelegateEventAndQueryDelegate<T, bool> GetORELSE_Delegate(in bool defaultValue) => GetDelegate(defaultValue, Reversed, Or);
+
+        public static DelegateEventAndQueryDelegate<T, bool> GetXOR_Delegate(in bool defaultValue) => GetDelegate(defaultValue, True, XOr);
+    }
+#else
     public abstract class EventAndQueryDelegate<TIn, TOut> : ValueManager<IQueryDelegateDelegate<TIn, TOut>>
     {
         protected abstract bool Check(in TOut outParam);
@@ -215,6 +329,7 @@ ILinkedListNode
             return true;
         }
     }
+#endif
 }
 
 #endif

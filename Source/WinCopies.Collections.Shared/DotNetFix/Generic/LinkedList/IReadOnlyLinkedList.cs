@@ -100,9 +100,11 @@ int
     }
 
 #if WinCopies3
-    public interface IReadOnlyEnumerableInfoLinkedList<T> : IReadOnlyLinkedList2<T>, IEnumerableInfo<T>
+    public interface IReadOnlyEnumerableInfoLinkedList<T> : IReadOnlyLinkedList2<T>, Collections.Generic.IEnumerableInfo<T>
     {
-        // Left empty.
+#if CS8
+        System.Collections.IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
+#endif
     }
 #endif
 }

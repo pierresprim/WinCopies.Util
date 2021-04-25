@@ -260,5 +260,10 @@
             <exception cref="T:System.ArgumentNullException">One or more of the given <see cref="T:WinCopies.Func"/>s are <see langword="null"/>.</exception>
             <remarks>See <see cref="M:WinCopies.Extensions.UtilHelpers.GetIf(System.Object@,System.Object@,WinCopies.Collections.Comparison@,WinCopies.Func@,WinCopies.Func@,WinCopies.Func@)"/> for the non-generic version.</remarks>
         </member>
+        <member name="M:WinCopies.SelectorDictionary`2.DisposeUnmanaged">
+            <summary>
+            This method is called by <see cref="M:WinCopies.SelectorDictionary`2.Dispose"/> and by the deconstructor. This overload does nothing and it is not necessary to call this base overload in derived classes.
+            </summary>
+        </member>
     </members>
 </doc>

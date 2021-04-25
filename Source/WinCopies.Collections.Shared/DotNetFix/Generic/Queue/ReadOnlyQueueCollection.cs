@@ -148,6 +148,14 @@ int
             bool ISimpleLinkedListBase2.IsSynchronized => InnerQueue.IsSynchronized;
 
             bool ISimpleLinkedListBase.HasItems => InnerQueue.HasItems;
+
+            TItems ISimpleLinkedList<TItems>.Peek() => ((ISimpleLinkedList<TItems>)InnerQueue).Peek();
+
+#if !CS8
+            bool ISimpleLinkedList.TryPeek(out object result) => InnerQueue.TryPeek(out result);
+
+            object ISimpleLinkedList.Peek() => ((ISimpleLinkedList)InnerQueue).Peek();
+#endif
 #else
         bool ICollection.IsSynchronized => ((ICollection)InnerQueue).IsSynchronized;
 

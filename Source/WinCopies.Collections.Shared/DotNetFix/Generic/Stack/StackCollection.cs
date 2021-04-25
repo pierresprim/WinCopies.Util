@@ -30,7 +30,6 @@ namespace WinCopies.Collections.DotNetFix
     namespace Generic
     {
 #endif
-
         [Serializable]
         public class StackCollection
                 <
@@ -222,7 +221,14 @@ TItems
             T
 #endif
             result) => TryPopItem(out result);
+
+#if WinCopies3 && !CS8
+            bool ISimpleLinkedList.TryPeek(out object result) => InnerStack.TryPeek(out result);
+
+            object ISimpleLinkedList.Peek() => ((ISimpleLinkedList)InnerStack).Peek();
+#endif
         }
+
 #if WinCopies3
         public class StackCollection<T> : StackCollection<IStack<T>, T>
         {
@@ -333,6 +339,15 @@ IUIntCountableEnumerator
             bool ISimpleLinkedListBase<TItems>.TryPeek(out TItems result) => InnerStack.TryPeek(out result);
 
             void ISimpleLinkedListBase2.Clear() => InnerStack.Clear();
+
+#if WinCopies3
+            TItems ISimpleLinkedList<TItems>.Peek() => ((ISimpleLinkedList<TItems>)InnerStack).Peek();
+#if !CS8
+            bool ISimpleLinkedList.TryPeek(out object result) => ((ISimpleLinkedList)InnerStack).TryPeek(out result);
+
+            object ISimpleLinkedList.Peek() => ((ISimpleLinkedList)InnerStack).Peek();
+#endif
+#endif
         }
 
         public class EnumerableStackCollection<T> : EnumerableStackCollection<StackCollection<IEnumerableStack<T>, T>, T>

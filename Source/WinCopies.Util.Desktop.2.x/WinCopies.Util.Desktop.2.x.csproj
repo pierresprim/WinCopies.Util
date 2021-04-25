@@ -12,12 +12,13 @@
     <AssemblyOriginatorKeyFile>WinCopies.Util.Desktop.snk</AssemblyOriginatorKeyFile>
     <DocumentationFile>WinCopies.Util.Desktop.xml</DocumentationFile>
     <PackageTags>WinCopies</PackageTags>
-    <VersionPrefix>2.9</VersionPrefix>
-    <AssemblyVersion>2.9</AssemblyVersion>
-    <FileVersion>2.9</FileVersion>
+    <VersionPrefix>2.10</VersionPrefix>
+    <AssemblyVersion>2.10</AssemblyVersion>
+    <FileVersion>2.10</FileVersion>
     <DefineConstants>WinCopies2;$(DefineConstants)</DefineConstants>
     <RootNamespace>WinCopies.Util.Desktop</RootNamespace>
     <PackageIcon>WinCopies.png</PackageIcon>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
   </PropertyGroup>
 
   <Import Project="..\WinCopies.Util.Desktop.Shared\WinCopies.Util.Desktop.Shared.projitems" Label="Shared" />

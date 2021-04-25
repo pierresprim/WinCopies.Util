@@ -81,32 +81,5 @@ namespace WinCopies.Collections.DotNetFix
             // Left empty.
         }
 #endif
-        public interface ICountableEnumerator<out T> : System.Collections.Generic.IEnumerator<T>, ICountable
-        {
-            // Left empty.
-        }
-
-        public interface ICountableDisposableEnumerator<out T> : ICountableEnumerator<T>, WinCopies.
-#if !WinCopies3
-        Util.
-#endif
-        DotNetFix.IDisposable
-        {
-            // Left empty.
-        }
-
-        public interface IUIntCountableEnumerator<out T> : System.Collections.Generic.IEnumerator<T>, IUIntCountable
-        {
-            // Left empty.
-        }
-
-        public interface IUIntCountableDisposableEnumerator<out T> : IUIntCountableEnumerator<T>, WinCopies.
-#if !WinCopies3
-        Util.
-#endif
-        DotNetFix.IDisposable
-        {
-            // Left empty.
-        }
     }
 }

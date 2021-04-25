@@ -147,4 +147,7 @@
   <data name="Quit" xml:space="preserve">
     <value>_Quit</value>
   </data>
+  <data name="Reset" xml:space="preserve">
+    <value>R_eset</value>
+  </data>
 </root>

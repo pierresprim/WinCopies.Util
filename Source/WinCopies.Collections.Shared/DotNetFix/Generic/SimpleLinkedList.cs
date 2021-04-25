@@ -139,6 +139,24 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
             return false;
         }
+
+#if WinCopies3
+        bool ISimpleLinkedList.TryPeek(out object result)
+        {
+            if (TryPeek(out T _result))
+            {
+                result = _result;
+
+                return true;
+            }
+
+            result = null;
+
+            return false;
+        }
+
+        object ISimpleLinkedList.Peek() => Peek();
+#endif
     }
 
     public interface ISimpleLinkedListNode<T>
@@ -165,17 +183,22 @@ namespace WinCopies.Collections.DotNetFix.Generic
 #endif
 
     public interface ISimpleLinkedList<T> :
-#if !WinCopies3
-        IUIntCountable
+#if WinCopies3
+        ISimpleLinkedListBase2, ISimpleLinkedListBase<T>, ISimpleLinkedList
 #else
-        ISimpleLinkedListBase2, ISimpleLinkedListBase<T>
+        IUIntCountable
 #endif
     {
-#if !WinCopies3
-        T Peek();
-#else
-        // Left empty.
+#if WinCopies3
+#if CS8
+        object ISimpleLinkedList.Peek() => Peek();
+
+        bool ISimpleLinkedList.TryPeek(out object result) => TryPeek(out result);
 #endif
+
+        new
+#endif
+        T Peek();
     }
 
     //public interface ILinkedListNode<T>
@@ -263,11 +286,11 @@ namespace WinCopies.Collections.DotNetFix.Generic
         }
 
 #if WinCopies3
-        #region ISimpleLinkedListNode implementation
+#region ISimpleLinkedListNode implementation
         object ISimpleLinkedListNode.Value => Value;
 
         ISimpleLinkedListNode ISimpleLinkedListNode.Next => Next;
-        #endregion
+#endregion
 #endif
     }
 
@@ -277,6 +300,22 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
 #if WinCopies3
         public abstract bool TryPeek(out T result);
+
+        object ISimpleLinkedList.Peek() => Peek();
+
+        bool ISimpleLinkedList.TryPeek(out object result)
+        {
+            if (TryPeek(out T _result))
+            {
+                result = _result;
+
+                return true;
+            }
+
+            result = null;
+
+            return false;
+        }
 #endif
     }
 

@@ -159,6 +159,19 @@
             <param name="obj">The object or value retrieved by the current iteration.</param>
             <returns><see langword="true"/> to break the loop; otherwise <see langword="false"/>.</returns>
         </member>
+        <member name="T:WinCopies.Predicate">
+            <summary>
+            Delegate for a non-generic predicate.
+            </summary>
+            <param name="value">The value to test</param>
+            <returns><see langword="true"/> if the predicate success, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="T:WinCopies.Func">
+            <summary>
+            Represents a delegate that returns an object.
+            </summary>
+            <returns>Any object.</returns>
+        </member>
         <member name="M:WinCopies.InvalidEnumArgumentException.#ctor">
             <summary>
             Initializes a new instance of the <see cref="T:WinCopies.InvalidEnumArgumentException"/> class.
@@ -282,19 +295,6 @@
             <summary>
             The operation returned True. This value is the same number as <see langword="true"/>.
             </summary>
-        </member>
-        <member name="T:WinCopies.Predicate">
-            <summary>
-            Delegate for a non-generic predicate.
-            </summary>
-            <param name="value">The value to test</param>
-            <returns><see langword="true"/> if the predicate success, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="T:WinCopies.Func">
-            <summary>
-            Represents a delegate that returns an object.
-            </summary>
-            <returns>Any object.</returns>
         </member>
         <member name="M:WinCopies.InvalidArgumentException.#ctor">
             <summary>

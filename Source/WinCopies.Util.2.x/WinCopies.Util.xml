@@ -135,6 +135,19 @@
             <param name="obj">The object or value retrieved by the current iteration.</param>
             <returns><see langword="true"/> to break the loop; otherwise <see langword="false"/>.</returns>
         </member>
+        <member name="T:WinCopies.Util.Predicate">
+            <summary>
+            Delegate for a non-generic predicate.
+            </summary>
+            <param name="value">The value to test</param>
+            <returns><see langword="true"/> if the predicate success, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="T:WinCopies.Util.Func">
+            <summary>
+            Represents a delegate that returns an object.
+            </summary>
+            <returns>Any object.</returns>
+        </member>
         <member name="M:WinCopies.Util.InvalidEnumArgumentException.#ctor">
             <summary>
             Initializes a new instance of the <see cref="T:WinCopies.Util.InvalidEnumArgumentException"/> class.
@@ -258,19 +271,6 @@
             <summary>
             The operation returned True. This value is the same number as <see langword="true"/>.
             </summary>
-        </member>
-        <member name="T:WinCopies.Util.Predicate">
-            <summary>
-            Delegate for a non-generic predicate.
-            </summary>
-            <param name="value">The value to test</param>
-            <returns><see langword="true"/> if the predicate success, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="T:WinCopies.Util.Func">
-            <summary>
-            Represents a delegate that returns an object.
-            </summary>
-            <returns>Any object.</returns>
         </member>
         <member name="M:WinCopies.Util.InvalidArgumentException.#ctor">
             <summary>
@@ -3179,6 +3179,35 @@
             <param name="obj">The object to compare.</param>
             <returns><see langword="true"/> if the current object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
         </member>
+        <member name="M:WinCopies.Collections.TreeNode`1.GetHashCen object.
+            </summary>
+            <param name="obj">Object to compare to the current object.</param>
+            <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.TreeNode`1.System#IEquatable{WinCopies#Util#IReadOnlyValueObject{T}}#Equals(WinCopies.Util.IReadOnlyValueObject{`0})">
+            <summary>
+            Determines whether this object is equal to a given object.
+            </summary>
+            <param name="obj">Object to compare to the current object.</param>
+            <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="P:WinCopies.Collections.TreeNode`1.Parent">
+            <summary>
+            Gets the parent of the current node.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Collections.TreeNode`1.Value">
+            <summary>
+            Gets or sets the value of the object.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Collections.TreeNode`1.Equals(System.Object)">
+            <summary>
+            Determines whether this object is equal to a given object.
+            </summary>
+            <param name="obj">The object to compare.</param>
+            <returns><see langword="true"/> if the current object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
+        </member>
         <member name="M:WinCopies.Collections.TreeNode`1.GetHashCode">
             <summary>
             Returns a hash code for the current object.
@@ -3670,6 +3699,11 @@
             <returns>A value obtained by a <see cref="T:WinCopies.Util.Func"/>, depending on the result of a comparison.</returns>
             <exception cref="T:System.ArgumentNullException">One or more of the given <see cref="T:WinCopies.Util.Func"/>s are <see langword="null"/>.</exception>
             <remarks>See <see cref="M:WinCopies.Extensions.UtilHelpers.GetIf(System.Object@,System.Object@,WinCopies.Collections.Comparison@,WinCopies.Util.Func@,WinCopies.Util.Func@,WinCopies.Util.Func@)"/> for the non-generic version.</remarks>
+        </member>
+        <member name="M:WinCopies.SelectorDictionary`2.DisposeUnmanaged">
+            <summary>
+            This method is called by <see cref="M:WinCopies.SelectorDictionary`2.Dispose"/> and by the deconstructor. This overload does nothing and it is not necessary to call this base overload in derived classes.
+            </summary>
         </member>
     </members>
 </doc>

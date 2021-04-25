@@ -44,30 +44,96 @@ namespace WinCopies.Collections.DotNetFix
         LIFO = 2
     }
 
-#if WinCopies3
-#endif
 #if CS7
 #if WinCopies3
     namespace Generic
     {
 #endif
-        public interface ILinkedListNode<T>
+        public interface IReadOnlyLinkedListNodeBase<out T>
+        {
+            T Value { get; }
+        }
+
+        public interface IReadOnlyLinkedListNode<out TItems, out TList> : IReadOnlyLinkedListNodeBase<TItems> where TList : IReadOnlyLinkedList<TItems>
+        {
+            TList List { get; }
+        }
+
+        public interface IReadOnlyLinkedListNode<out TItems, out TNodes, out TList> : IReadOnlyLinkedListNode<TItems, TList> where TList : IReadOnlyLinkedList<TItems> where TNodes : IReadOnlyLinkedListNode<TItems, TList>
+        {
+            TNodes Previous { get; }
+
+            TNodes Next { get; }
+        }
+
+        public interface IReadOnlyLinkedListNode<T> : IReadOnlyLinkedListNode<T, IReadOnlyLinkedListNode<T, IReadOnlyLinkedList<T>>, IReadOnlyLinkedList<T>>
+        {
+#if CS8
+            IReadOnlyLinkedListNode<T, IReadOnlyLinkedList<T>> IReadOnlyLinkedListNode<T, IReadOnlyLinkedListNode<T, IReadOnlyLinkedList<T>>, IReadOnlyLinkedList<T>>.Previous => Previous;
+
+            IReadOnlyLinkedListNode<T, IReadOnlyLinkedList<T>> IReadOnlyLinkedListNode<T, IReadOnlyLinkedListNode<T, IReadOnlyLinkedList<T>>, IReadOnlyLinkedList<T>>.Next => Next;
+
+            IReadOnlyLinkedList<T> IReadOnlyLinkedListNode<T, IReadOnlyLinkedList<T>>.List => List;
+#else
+            // Left empty.
+#endif
+        }
+
+        public interface
+#if WinCopies3
+            ILinkedListNodeBase<T> : IReadOnlyLinkedListNodeBase<T>
         {
             bool IsReadOnly { get; }
 
-#if WinCopies3
-            IReadOnlyLinkedList
-#else
-ILinkedList
+            T Value { get; set; }
+        }
+
+        public interface ILinkedListNode<TItems, out TList> : ILinkedListNodeBase<TItems>, IReadOnlyLinkedListNode<TItems, TList> where TList : ILinkedList<TItems>
+        {
+            // Left empty.
+        }
+
+        public interface ILinkedListNode<TItems, out TNodes, out TList> : ILinkedListNode<TItems, TList>, IReadOnlyLinkedListNode<TItems, TNodes, TList> where TList : ILinkedList<TItems> where TNodes : ILinkedListNode<TItems, TList>
+        {
+            TNodes Previous { get; }
+
+            TNodes Next { get; }
+
+#if CS8
+            TNodes IReadOnlyLinkedListNode<TItems, TNodes, TList>.Previous => Previous;
+
+            TNodes IReadOnlyLinkedListNode<TItems, TNodes, TList>.Next => Next;
 #endif
-                <T> List
-            { get; }
+        }
+
+        public interface ILinkedListNode<T> : ILinkedListNode<T, ILinkedListNode<T, ILinkedList<T>>, ILinkedList<T>>, IReadOnlyLinkedListNode<T>
+        {
+            new ILinkedList<T> List { get; }
+
+            new ILinkedListNode<T> Previous { get; }
+
+            new ILinkedListNode<T> Next { get; }
+
+#if CS8
+            ILinkedList<T> IReadOnlyLinkedListNode<T, ILinkedList<T>>.List => List;
+
+            ILinkedListNode<T, ILinkedList<T>> ILinkedListNode<T, ILinkedListNode<T, ILinkedList<T>>, ILinkedList<T>>.Previous => Previous;
+
+            ILinkedListNode<T, ILinkedList<T>> ILinkedListNode<T, ILinkedListNode<T, ILinkedList<T>>, ILinkedList<T>>.Next => Next;
+#endif
+#else
+            ILinkedListNode<T>
+        {
+            bool IsReadOnly { get; }
+
+            ILinkedList<T> List { get; }
 
             ILinkedListNode<T> Previous { get; }
 
             ILinkedListNode<T> Next { get; }
 
             T Value { get; }
+#endif
         }
 
         [DebuggerDisplay("Count = {Count}")]
@@ -131,23 +197,41 @@ ILinkedList
             #endregion
 
 #if WinCopies3
-            public class LinkedListNode : ILinkedListNode<T>
+            public class LinkedListNode : ILinkedListNode<T, LinkedListNode, LinkedList<T>>, ILinkedListNode<T>
             {
                 public bool IsReadOnly => false;
 
                 public LinkedList<T> List { get; internal set; }
 
-                IReadOnlyLinkedList<T> ILinkedListNode<T>.List => List;
-
                 public LinkedListNode Previous { get; internal set; }
-
-                ILinkedListNode<T> ILinkedListNode<T>.Previous => Previous;
 
                 public LinkedListNode Next { get; internal set; }
 
+                public T Value { get; set; }
+
+                ILinkedList<T> ILinkedListNode<T>.List => List;
+
+                ILinkedListNode<T> ILinkedListNode<T>.Previous => Previous;
+
                 ILinkedListNode<T> ILinkedListNode<T>.Next => Next;
 
-                public T Value { get; set; }
+#if !CS8
+                ILinkedList<T> IReadOnlyLinkedListNode<T, ILinkedList<T>>.List => List;
+
+                ILinkedListNode<T, ILinkedList<T>> IReadOnlyLinkedListNode<T, ILinkedListNode<T, ILinkedList<T>>, ILinkedList<T>>.Previous => Previous;
+
+                ILinkedListNode<T, ILinkedList<T>> IReadOnlyLinkedListNode<T, ILinkedListNode<T, ILinkedList<T>>, ILinkedList<T>>.Next => Next;
+
+                IReadOnlyLinkedListNode<T, IReadOnlyLinkedList<T>> IReadOnlyLinkedListNode<T, IReadOnlyLinkedListNode<T, IReadOnlyLinkedList<T>>, IReadOnlyLinkedList<T>>.Previous => Previous;
+
+                IReadOnlyLinkedListNode<T, IReadOnlyLinkedList<T>> IReadOnlyLinkedListNode<T, IReadOnlyLinkedListNode<T, IReadOnlyLinkedList<T>>, IReadOnlyLinkedList<T>>.Next => Next;
+
+                IReadOnlyLinkedList<T> IReadOnlyLinkedListNode<T, IReadOnlyLinkedList<T>>.List => List;
+
+                ILinkedListNode<T, ILinkedList<T>> ILinkedListNode<T, ILinkedListNode<T, ILinkedList<T>>, ILinkedList<T>>.Previous => Previous;
+
+                ILinkedListNode<T, ILinkedList<T>> ILinkedListNode<T, ILinkedListNode<T, ILinkedList<T>>, ILinkedList<T>>.Next => Next;
+#endif
 
                 public LinkedListNode(T value) => Value = value;
 
@@ -277,38 +361,34 @@ ILinkedList
             }
 
             #region Fields
-
             private uint _enumeratorsCount = 0;
             private object _syncRoot;
-
             #endregion
 
+            #region Properties
             private uint EnumerableVersion { get; set; } = 0;
 
-            #region Properties
             public LinkedListNode First { get; private set; }
 
-            ILinkedListNode<T>
-#if WinCopies3
-                IReadOnlyLinkedList
-#else
-                ILinkedList
+#if !WinCopies3
+            ILinkedListNode<T> ILinkedList<T>.First => First;
 #endif
-                <T>.First => First;
 
             public T FirstValue => First.Value;
 
             public LinkedListNode Last { get; private set; }
 
-            ILinkedListNode<T>
-#if WinCopies3
-                IReadOnlyLinkedList
-#else
-                ILinkedList
+#if !WinCopies3
+            ILinkedListNode<T> ILinkedList<T>.Last => Last;
 #endif
-                <T>.Last => Last;
 
             public T LastValue => Last.Value;
+
+#if WinCopies3
+            ILinkedListNode<T> IReadOnlyLinkedList<T>.First => First;
+
+            ILinkedListNode<T> IReadOnlyLinkedList<T>.Last => Last;
+#endif
 
             public uint Count { get; private set; }
 
@@ -640,6 +720,8 @@ ILinkedList
             System.Collections.Generic.IEnumerator<ILinkedListNode<T>> ILinkedList<T>.GetNodeEnumerator() => GetNodeEnumerator();
 
             System.Collections.Generic.IEnumerator<ILinkedListNode<T>> ILinkedList<T>.GetReversedNodeEnumerator() => GetReversedNodeEnumerator();
+
+            System.Collections.IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
 #endif
 
 #if !WinCopies3

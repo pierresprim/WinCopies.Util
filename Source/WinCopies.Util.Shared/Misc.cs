@@ -21,8 +21,8 @@ using System;
 namespace WinCopies
 {
 #else
-    namespace WinCopies.Util
-    {
+namespace WinCopies.Util
+{
 #endif
     /// <summary>
     /// This enum is designed as an extension of the <see cref="bool"/> type.
@@ -64,26 +64,34 @@ namespace WinCopies
         OneTrueResult = 1
     }
 
-    /// <summary>
-    /// Delegate for a non-generic predicate.
-    /// </summary>
-    /// <param name="value">The value to test</param>
-    /// <returns><see langword="true"/> if the predicate success, otherwise <see langword="false"/>.</returns>
-    public delegate bool Predicate(object value);
+    public abstract class DisposableValue<T> : System.IDisposable where T :
+#if !WinCopies3
+        WinCopies.Util.
+#endif
+        DotNetFix.IDisposable
+    {
+        protected T Value { get; }
 
-    public delegate T Converter<T>(object obj);
+        protected DisposableValue(T value) => Value = value == null ? throw
+#if WinCopies3
+            ThrowHelper
+#else
+            Util
+#endif
+            .GetArgumentNullException(nameof(value)) : value;
 
-    public delegate void ActionParams(params object[] args);
+        protected virtual void Dispose(in bool disposing)
+        {
+            if (!Value.IsDisposed)
 
-    public delegate void ActionParams<in T>(params T[] args);
+                Value.Dispose();
+        }
 
-    /// <summary>
-    /// Represents a delegate that returns an object.
-    /// </summary>
-    /// <returns>Any object.</returns>
-    public delegate object Func();
+        public void Dispose()
+        {
+            Dispose(true);
 
-    public delegate object FuncParams(params object[] args);
-
-    public delegate TResult FuncParams<in TParams, out TResult>(params TParams[] args);
+            GC.SuppressFinalize(this);
+        }
+    }
 }

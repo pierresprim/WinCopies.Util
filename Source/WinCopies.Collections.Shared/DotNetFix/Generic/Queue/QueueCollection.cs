@@ -314,6 +314,12 @@ TItems
 
             return true;
         }
+
+#if WinCopies3 && !CS8
+            bool ISimpleLinkedList.TryPeek(out object result) => ((ISimpleLinkedList)InnerQueue).TryPeek(out result);
+
+            object ISimpleLinkedList.Peek() => ((ISimpleLinkedList)InnerQueue).Peek();
+#endif
 #endif
         }
 
@@ -426,6 +432,16 @@ TItems
             bool ISimpleLinkedListBase<TItems>.TryPeek(out TItems result) => InnerQueue.TryPeek(out result);
 
             void ISimpleLinkedListBase2.Clear() => InnerQueue.Clear();
+
+#if WinCopies3
+            TItems ISimpleLinkedList<TItems>.Peek() => ((ISimpleLinkedList<TItems>)InnerQueue).Peek();
+
+#if !CS8
+            bool ISimpleLinkedList.TryPeek(out object result) => ((ISimpleLinkedList)InnerQueue).TryPeek(out result);
+
+            object ISimpleLinkedList.Peek() => ((ISimpleLinkedList)InnerQueue).Peek();
+#endif
+#endif
         }
 
         public class EnumerableQueueCollection<T> : EnumerableQueueCollection<QueueCollection<IEnumerableQueue<T>, T>, T>

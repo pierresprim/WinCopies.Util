@@ -142,6 +142,15 @@ namespace WinCopies.Util.Desktop.Resources.Commands.WPF {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to R_eset.
+        /// </summary>
+        public static string Reset {
+            get {
+                return ResourceManager.GetString("Reset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to _Reverse selection.
         /// </summary>
         public static string ReverseSelection {

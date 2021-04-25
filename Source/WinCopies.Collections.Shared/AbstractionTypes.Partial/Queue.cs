@@ -77,6 +77,14 @@ namespace WinCopies.Collections.AbstractionInterop.Generic
 
                 return false;
             }
+
+            TDestination ISimpleLinkedList<TDestination>.Peek() => ((ISimpleLinkedList<TDestination>)InnerQueue).Peek();
+
+#if !CS8
+            bool ISimpleLinkedList.TryPeek(out object result) => InnerQueue.TryPeek(out result);
+
+            object ISimpleLinkedList.Peek() => ((ISimpleLinkedList)InnerQueue).Peek();
+#endif
 #else
             public void Enqueue(TDestination item) => throw GetReadOnlyListOrCollectionException();
 

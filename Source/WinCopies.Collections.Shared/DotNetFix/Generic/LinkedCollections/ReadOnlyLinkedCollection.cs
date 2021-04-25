@@ -41,7 +41,6 @@ namespace WinCopies.Collections.DotNetFix
     namespace Generic
     {
 #endif
-
         [Serializable]
         public class ReadOnlyLinkedCollection<T> : ICollection<T>, System.Collections.Generic.IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection
 #if WinCopies3
@@ -159,6 +158,10 @@ int
             public System.Collections.Generic.IEnumerator<T> GetReversedEnumerator() => InnerList.GetReversedEnumerator();
 
             System.Collections.Generic.IEnumerator<T> Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => ((Collections.Generic.IEnumerable<T>)InnerList).GetReversedEnumerator();
+
+#if !CS8
+            System.Collections.IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
+#endif
 #endif
 
 #if !(CS8 && WinCopies3)

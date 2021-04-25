@@ -6,7 +6,29 @@ The WinCopies® software framework
 CHANGELOG
 =========
 
-### ??/??/???? 2.9
+### ??/??/2021 2.10
+
+- Additions:
+	- Interfaces:
+		- ICountable-like interfaces with the '(u)long' underlying type.
+		- WinCopies.Collections.Generic.IReadOnlyList2\<out T> interface.
+	- Methods:
+		- WinCopies.Util.ThrowHelper.GetOrThrowIfDisposed static method.
+		- WinCopies.Util.DotNetFix.IDisposable.GetOrThrowIfDisposed\<T> default implementation.
+	- Classes:
+		- CustomEnumeratorEnumerable/Provider\<TItems, TEnumerator>
+		- ToStringConverter
+		- SelectorDictionary
+		- WinCopies.Delegates and WinCopies.Bool that are classes with static methods that can be considered as default implementation for some usual delegates.
+	- ApplicationCommands.Reset command.
+
+#### WinCopies.Collections
+
+- Additions:
+	- new linked list (node) related interfaces.
+	- ConditionalEnumerator\<T> and DisposableValue\<T> classes.
+
+### 04/05/2021 2.9
 
 - Add UpdateValue method to WinCopies.Util.Data.ViewModelBase
 - Add UpdateValue\<T> extension method.

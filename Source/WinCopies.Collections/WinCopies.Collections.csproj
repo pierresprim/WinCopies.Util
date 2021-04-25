@@ -8,14 +8,15 @@
     <DocumentationFile>WinCopies.Collections.xml</DocumentationFile>
     <SignAssembly>true</SignAssembly>
     <PackageTags>WinCopies</PackageTags>
-    <VersionPrefix>3.5</VersionPrefix>
+    <VersionPrefix>3.6</VersionPrefix>
     <VersionSuffix>preview</VersionSuffix>
-    <AssemblyVersion>3.5.0.0</AssemblyVersion>
-    <FileVersion>3.5.0.0</FileVersion>
+    <AssemblyVersion>3.6.0.0</AssemblyVersion>
+    <FileVersion>3.6.0.0</FileVersion>
     <RootNamespace>WinCopies.Util</RootNamespace>
     <AssemblyOriginatorKeyFile>WinCopies.Collections.snk</AssemblyOriginatorKeyFile>
     <DefineConstants>WinCopies3;$(DefineConstants)</DefineConstants>
     <PackageIcon>WinCopies.png</PackageIcon>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <Import Project="..\WinCopies.Collections.Shared\WinCopies.Collections.Shared.projitems" Label="Shared" />
