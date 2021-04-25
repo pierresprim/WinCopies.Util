@@ -3046,25 +3046,6 @@
         </member>
         <member name="M:WinCopies.Collections.ArrayBuilder`1.RemoveLast">
             <summary>
-            Removes the node at the end of this <seelue">The value to remove from this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/>.</param>
-            <returns><see langword="true"/> if the element containing value is successfully removed; otherwise, <see langword="false"/>. This method also returns <see langword="false"/> if value was not found in the original <see cref="T:WinCopies.Collections.ArrayBuilder`1"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.ArrayBuilder`1.Remove(System.Collections.Generic.LinkedListNode{`0})">
-            <summary>
-            Removes the specified node from this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/>.
-            </summary>
-            <param name="node">The <see cref="T:System.Collections.Generic.LinkedListNode`1"/> to remove from this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/>.</param>
-            <exception cref="T:System.ArgumentNullException">node is null.</exception>
-            <exception cref="T:System.InvalidOperationException">node is not in the current <see cref="T:WinCopies.Collections.ArrayBuilder`1"/>.</exception>
-        </member>
-        <member name="M:WinCopies.Collections.ArrayBuilder`1.RemoveFirst">
-            <summary>
-            Removes the node at the start of this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/>.
-            </summary>
-            <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.ArrayBuilder`1"/> is empty.</exception>
-        </member>
-        <member name="M:WinCopies.Collections.ArrayBuilder`1.RemoveLast">
-            <summary>
             Removes the node at the end of this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/>.
             </summary>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.ArrayBuilder`1"/> is empty.</exception>
@@ -3170,6 +3151,35 @@
         <member name="M:WinCopies.Collections.TreeNode`1.System#IEquatable{WinCopies#Util#IReadOnlyValueObject}#Equals(WinCopies.Util.IReadOnlyValueObject)">
             <summary>
             Determines whether this object is equal to a given object.
+            </summary>
+            <param name="obj">Object to compare to the current object.</param>
+            <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.TreeNode`1.System#IEquatable{WinCopies#Util#IReadOnlyValueObject{T}}#Equals(WinCopies.Util.IReadOnlyValueObject{`0})">
+            <summary>
+            Determines whether this object is equal to a given object.
+            </summary>
+            <param name="obj">Object to compare to the current object.</param>
+            <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="P:WinCopies.Collections.TreeNode`1.Parent">
+            <summary>
+            Gets the parent of the current node.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Collections.TreeNode`1.Value">
+            <summary>
+            Gets or sets the value of the object.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Collections.TreeNode`1.Equals(System.Object)">
+            <summary>
+            Determines whether this object is equal to a given object.
+            </summary>
+            <param name="obj">The object to compare.</param>
+            <returns><see langword="true"/> if the current object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.TreeNode`1.GetHashCen object.
             </summary>
             <param name="obj">Object to compare to the current object.</param>
             <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
