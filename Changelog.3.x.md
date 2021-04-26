@@ -1,12 +1,12 @@
 WinCopies-framework
 ===================
 
-The WinCopies® software framework
+The WinCopiesÂ® software framework
 
 CHANGELOG
 =========
 
-### ??/??/????
+### 04/26/2021 3.6
 
 #### WinCopies.Collections
 
