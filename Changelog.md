@@ -6,7 +6,7 @@ The WinCopies® software framework
 CHANGELOG
 =========
 
-### ??/??/2021 2.10
+### 04/26/2021 2.10
 
 - Additions:
 	- Interfaces:
