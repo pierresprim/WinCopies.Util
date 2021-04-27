@@ -4,9 +4,13 @@ WinCopies-framework
 The WinCopies® software framework
 
 CHANGELOG
-=========
+---------
 
-### ??/??/????
+### 
+
+### 04/25/2021 3.6-preview
+
+- Bug fixed in LinkedObservableCollection.
 
 #### WinCopies.Collections
 

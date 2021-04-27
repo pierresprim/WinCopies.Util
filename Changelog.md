@@ -4,9 +4,11 @@ WinCopies-framework
 The WinCopies® software framework
 
 CHANGELOG
-=========
+---------
 
-### ??/??/2021 2.10
+### Add new types.
+
+### 04/25/2021 2.10
 
 - Additions:
 	- Interfaces:

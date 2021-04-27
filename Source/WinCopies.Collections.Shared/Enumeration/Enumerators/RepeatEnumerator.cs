@@ -124,9 +124,9 @@ Enumerator<T>, System.Collections.Generic.IEnumerable<T>
         private readonly uint _count;
         private uint _i;
 
-        private TValue GetValueIfNotDisposed<TValue>(in TValue value) => _value == null ? throw GetExceptionForDispose(false) : value;
-
         protected override T CurrentOverride => GetValueIfNotDisposed(_value.Value);
+
+        private TValue GetValueIfNotDisposed<TValue>(in TValue value) => _value == null ? throw GetExceptionForDispose(false) : value;
 
         protected override bool MoveNextOverride()
         {

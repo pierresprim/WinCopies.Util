@@ -307,6 +307,17 @@ namespace WinCopies.Collections.DotNetFix
                 RaiseCollectionChangedEvent(LinkedCollectionChangedAction.Remove, null, null, node);
             }
 
+#if WinCopies3
+            protected override void OnNodeRemoved2(ILinkedListNode<T> node)
+            {
+                base.OnNodeRemoved2(node);
+
+                RaiseCountPropertyChangedEvent();
+
+                RaiseCollectionChangedEvent(LinkedCollectionChangedAction.Remove, null, null, node);
+            }
+#endif
+
             protected override bool RemoveItem(T item)
             {
                 foreach (

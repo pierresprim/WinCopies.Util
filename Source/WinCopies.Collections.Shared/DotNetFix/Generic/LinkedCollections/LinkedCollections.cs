@@ -440,6 +440,8 @@ System.Collections.Generic.IEnumerator<T>
                 return true;
             }
 
+            protected virtual void OnNodeRemoved2(ILinkedListNode<T> node) => OnNodeRemoved(node);
+
             protected virtual ILinkedListNode<T> RemoveItem2(T item)
             {
                 ILinkedListNode<T> node = InnerList.Remove(item);
@@ -448,7 +450,7 @@ System.Collections.Generic.IEnumerator<T>
 
                     return null;
 
-                OnNodeRemoved(node);
+                OnNodeRemoved2(node);
 
                 return node;
             }
