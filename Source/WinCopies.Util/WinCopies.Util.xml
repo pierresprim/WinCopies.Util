@@ -144,6 +144,16 @@
             <param name="y">Second parameter to compare</param>
             <returns><see langword="true"/> if x is equal to y, otherwise <see langword="false"/>.</returns>
         </member>
+        <member name="T:WinCopies.Delegates">
+            <summary>
+            This class contains static methods that can be used as delegates.
+            </summary>
+        </member>
+        <member name="T:WinCopies.Bool">
+            <summary>
+            This class contains static methods that can be used as delegates for <see cref="T:System.Boolean"/> values.
+            </summary>
+        </member>
         <member name="T:WinCopies.LoopIteration">
             <summary>
             This delegate represents the action that is performed for each iteration of a loop.
@@ -321,6 +331,11 @@
             <param name="info">The object that holds the serialized object data.</param>
             <param name="context">The contextual information about the source or destination.</param>
         </member>
+        <member name="T:WinCopies.ThrowHelper">
+            <summary>
+            This class contains some helper methods for exception throwing.
+            </summary>
+        </member>
         <member name="M:WinCopies.ThrowHelper.GetArgumentNullException(System.String@)">
             <summary>
             Returns an <see cref="T:System.ArgumentNullException"/> for a given argument name.
@@ -342,7 +357,6 @@
             </summary>
             <param name="obj">The object to check.</param>
             <param name="argumentName">The argument name for the <see cref="T:System.ArgumentNullException"/> that is thrown.</param>
-            <returns></returns>
         </member>
         <member name="M:WinCopies.ThrowHelper.GetOrThrowIfNull``1(``0@,System.String@)">
             <summary>
@@ -351,7 +365,6 @@
             <typeparam name="T">The type of <paramref name="obj"/>. This must be a class type.</typeparam>
             <param name="obj">The object to check.</param>
             <param name="argumentName">The argument name for the <see cref="T:System.ArgumentNullException"/> that is thrown.</param>
-            <returns></returns>
         </member>
         <member name="M:WinCopies.ThrowHelper.GetExceptionForInvalidType``1(System.String@,System.String@)">
             <summary>

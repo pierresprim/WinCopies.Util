@@ -370,6 +370,12 @@ int
 #endif
                 <T> FindLast(T value) => InnerList.FindLast(value);
 
+#if !CS8 && WinCopies3
+            IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.Find(T value) => Find(value);
+
+            IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.FindLast(T value) => FindLast(value);
+#endif
+
             protected virtual void ClearItems() => InnerList.Clear();
 
             public void Clear() => ClearItems();
@@ -380,46 +386,48 @@ int
 
             public void CopyTo(T[] array, int arrayIndex) => InnerList.CopyTo(array, arrayIndex);
 
-            public
-#if !WinCopies3
-            System.Collections.Generic.LinkedList<T>.Enumerator
-#else
-System.Collections.Generic.IEnumerator<T>
-#endif
-            GetEnumerator() => InnerList.GetEnumerator();
+            System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() =>
 
 #if !WinCopies3
-        System.Collections.Generic.IEnumerator<T> IEnumerable<T>.GetEnumerator() => GetEnumerator();
+            GetEnumerator();
+
+        public System.Collections.Generic.LinkedList<T>.Enumerator GetEnumerator() => InnerList.GetEnumerator();
+#else
+((System.Collections.Generic.IEnumerable<T>)InnerList).GetEnumerator();
 #endif
 
             System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerList).GetEnumerator();
 
-#if !WinCopies3
-        public void GetObjectData(SerializationInfo info, StreamingContext context) => InnerList.GetObjectData(info, context);
-
-        public void OnDeserialization(object sender) => InnerList.OnDeserialization(sender);
-#else
+#if WinCopies3
             public bool SupportsReversedEnumeration => InnerList.SupportsReversedEnumeration;
 
-            public System.Collections.Generic.IEnumerator<T> GetReversedEnumerator() => InnerList.GetReversedEnumerator();
+            public IUIntCountableEnumerator<T> GetEnumerator() => InnerList.GetEnumerator();
 
-            public System.Collections.Generic.IEnumerator<ILinkedListNode<T>> GetNodeEnumerator() => ((System.Collections.Generic.IEnumerable<ILinkedListNode<T>>)InnerList).GetEnumerator();
+            public IUIntCountableEnumerator<T> GetReversedEnumerator() => InnerList.GetReversedEnumerator();
 
-            public System.Collections.Generic.IEnumerator<ILinkedListNode<T>> GetReversedNodeEnumerator() => ((WinCopies.Collections.Generic.IEnumerable<ILinkedListNode<T>>)InnerList).GetReversedEnumerator();
+            public IUIntCountableEnumerator<ILinkedListNode<T>> GetNodeEnumerator() => InnerList.GetNodeEnumerator();
+
+            public IUIntCountableEnumerator<ILinkedListNode<T>> GetReversedNodeEnumerator() => InnerList.GetReversedNodeEnumerator();
+
+            System.Collections.Generic.IEnumerator<T> Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => ((Collections.Generic.IEnumerable<T>)InnerList).GetReversedEnumerator();
 
             System.Collections.Generic.IEnumerator<ILinkedListNode<T>> System.Collections.Generic.IEnumerable<ILinkedListNode<T>>.GetEnumerator() => ((System.Collections.Generic.IEnumerable<ILinkedListNode<T>>)InnerList).GetEnumerator();
 
             System.Collections.Generic.IEnumerator<ILinkedListNode<T>> Collections.Generic.IEnumerable<ILinkedListNode<T>>.GetReversedEnumerator() => ((Collections.Generic.IEnumerable<ILinkedListNode<T>>)InnerList).GetReversedEnumerator();
 
-#if !CS8
-            System.Collections.Generic.IEnumerator<T> Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => ((Collections.Generic.IEnumerable<T>)InnerList).GetReversedEnumerator();
+            protected virtual void OnNodeRemoved(ILinkedListNode<T> node) { /* Left empty. */ }
 
-            System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => ((System.Collections.Generic.IEnumerable<T>)InnerList).GetEnumerator();
+#if !CS8
+            IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.First => First;
+
+            IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.Last => Last;
 
             System.Collections.IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
 #endif
+#else
+        public void GetObjectData(SerializationInfo info, StreamingContext context) => InnerList.GetObjectData(info, context);
 
-            protected virtual void OnNodeRemoved(ILinkedListNode<T> node) { /* Left empty. */ }
+        public void OnDeserialization(object sender) => InnerList.OnDeserialization(sender);
 #endif
 
             protected virtual bool RemoveItem(T item)
@@ -494,8 +502,6 @@ System.Collections.Generic.IEnumerator<T>
 #endif
                 RemoveItem(node);
 #if WinCopies3
-
-                OnNodeRemoved(node);
             }
 #endif
 

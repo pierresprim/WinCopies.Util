@@ -77,11 +77,11 @@ int
             public T LastValue => InnerLinkedCollection.LastValue;
 
 #if WinCopies3
-            public ILinkedListNode<T> Last => InnerLinkedCollection.Last;
-
-            public ILinkedListNode<T> First => InnerLinkedCollection.First;
-
             public bool SupportsReversedEnumeration => InnerLinkedCollection.SupportsReversedEnumeration;
+
+            IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.First => throw GetReadOnlyListOrCollectionException();
+
+            IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.Last => throw GetReadOnlyListOrCollectionException();
 #endif
 
             public event PropertyChangedEventHandler PropertyChanged;
@@ -145,13 +145,13 @@ int
             bool ICollection<T>.Remove(T item) => throw GetReadOnlyListOrCollectionException();
 
 #if WinCopies3
-            public ILinkedListNode<T> Find(T value) => InnerLinkedCollection.Find(value);
+            IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.Find(T value) => throw GetReadOnlyListOrCollectionException();
 
-            public ILinkedListNode<T> FindLast(T value) => InnerLinkedCollection.FindLast(value);
+            IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.FindLast(T value) => throw GetReadOnlyListOrCollectionException();
 
-            public System.Collections.Generic.IEnumerator<T> GetEnumerator() => InnerLinkedCollection.GetEnumerator();
+            public IUIntCountableEnumerator<T> GetEnumerator() => InnerLinkedCollection.GetEnumerator();
 
-            public System.Collections.Generic.IEnumerator<T> GetReversedEnumerator() => InnerLinkedCollection.GetReversedEnumerator();
+            public IUIntCountableEnumerator<T> GetReversedEnumerator() => InnerLinkedCollection.GetReversedEnumerator();
 
 #if !CS8
             System.Collections.Generic.IEnumerator<T> Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => ((Collections.Generic.IEnumerable<T>)InnerLinkedCollection).GetReversedEnumerator();

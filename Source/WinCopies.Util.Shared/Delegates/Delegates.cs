@@ -20,11 +20,17 @@ namespace WinCopies
 .Util
 #endif
 {
+    /// <summary>
+    /// This class contains static methods that can be used as delegates.
+    /// </summary>
     public static class Delegates
     {
         public static T Self<T>(T value) => value;
     }
 
+    /// <summary>
+    /// This class contains static methods that can be used as delegates for <see cref="bool"/> values.
+    /// </summary>
     public static class Bool
     {
         public static bool And(bool x, bool y) => x && y;

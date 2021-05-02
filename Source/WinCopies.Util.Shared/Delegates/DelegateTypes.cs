@@ -23,6 +23,34 @@ namespace WinCopies
 .Util
 #endif
 {
+    public struct ConversionStruct<TIn, TOut>
+    {
+        public Converter<TIn, TOut> Converter { get; }
+
+        public Converter<TOut, TIn> BackConverter { get; }
+
+        public ConversionStruct(in Converter<TIn, TOut> converter, Converter<TOut, TIn> backConverter)
+        {
+            Converter = converter;
+
+            BackConverter = backConverter;
+        }
+    }
+
+    public class Conversion<TIn, TOut>
+    {
+        public Converter<TIn, TOut> Converter { get; }
+
+        public Converter<TOut, TIn> BackConverter { get; }
+
+        public Conversion(in Converter<TIn, TOut> converter, Converter<TOut, TIn> backConverter)
+        {
+            Converter = converter;
+
+            BackConverter = backConverter;
+        }
+    }
+
     /// <summary>
     /// This delegate represents the action that is performed for each iteration of a loop.
     /// </summary>

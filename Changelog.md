@@ -4,9 +4,20 @@ WinCopies-framework
 The WinCopies® software framework
 
 CHANGELOG
-=========
+---------
 
-### 04/26/2021 2.10
+### ??/??/????
+
+- Add new types.
+- LinkedCollection: update GetEnumerator-like methods return types.
+- ReadOnly(Observable)LinkedCollection:
+	- remove First and Last properties;
+	- Get(Reversed)Enumerator return an IUIntCountableEnumerator.
+- Constructors of some (UInt)CountableEnumerator-like classes of the WinCopies.Collections namespace are public.
+- GetOrThrowIfDisposed static method is now available for all versions of the WinCopies and .Net frameworks.
+- Add new static methods.
+
+### 04/25/2021 2.10
 
 - Additions:
 	- Interfaces:

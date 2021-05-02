@@ -60,22 +60,6 @@ namespace WinCopies.Collections.DotNetFix
 
             public
 #if !WinCopies3
-                System.Collections.Generic.LinkedListNode
-#else
-                ILinkedListNode
-#endif
-                <T> Last => InnerList.Last;
-
-            public
-#if !WinCopies3
-                System.Collections.Generic.LinkedListNode
-#else
-                ILinkedListNode
-#endif
-                <T> First => InnerList.First;
-
-            public
-#if !WinCopies3
 int
 #else
                 uint
@@ -102,6 +86,10 @@ int
             public T LastValue => InnerList.LastValue;
 
             public bool SupportsReversedEnumeration => InnerList.SupportsReversedEnumeration;
+
+            IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.First => throw GetReadOnlyListOrCollectionException();
+
+            IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.Last => throw GetReadOnlyListOrCollectionException();
 #endif
 
             bool ICollection<T>.IsReadOnly => true;
@@ -114,23 +102,17 @@ int
 #endif
                 <T> list) => InnerList = list;
 
-            public ReadOnlyLinkedCollection(in LinkedCollection<T> listCollection) : this(listCollection.InnerList) { }
+#if WinCopies3
+            IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.Find(T value) => throw GetReadOnlyListOrCollectionException();
 
-            public
-#if !WinCopies3
-                System.Collections.Generic.LinkedListNode
+            IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.FindLast(T value) => throw GetReadOnlyListOrCollectionException();
 #else
-                ILinkedListNode
-#endif
-                <T> Find(T value) => InnerList.Find(value);
+        public ReadOnlyLinkedCollection(in LinkedCollection<T> listCollection) : this(listCollection.InnerList) { /* Left empty. */ }
 
-            public
-#if !WinCopies3
-                System.Collections.Generic.LinkedListNode
-#else
-                ILinkedListNode
+        public System.Collections.Generic.LinkedListNode<T> Find(T value) => InnerList.Find(value);
+
+        public System.Collections.Generic.LinkedListNode<T> FindLast(T value) => InnerList.FindLast(value);
 #endif
-                <T> FindLast(T value) => InnerList.FindLast(value);
 
             public bool Contains(T item) => InnerList.Contains(item);
 
@@ -144,6 +126,8 @@ int
         public void GetObjectData(SerializationInfo info, StreamingContext context) => InnerList.GetObjectData(info, context);
 
         public void OnDeserialization(object sender) => InnerList.OnDeserialization(sender);
+
+        public System.Collections.Generic.IEnumerator<T> GetEnumerator() => InnerList.GetEnumerator();
 #endif
 
             void ICollection<T>.Add(T item) => throw GetReadOnlyListOrCollectionException();
@@ -152,20 +136,18 @@ int
 
             bool ICollection<T>.Remove(T item) => throw GetReadOnlyListOrCollectionException();
 
-            public System.Collections.Generic.IEnumerator<T> GetEnumerator() => InnerList.GetEnumerator();
-
 #if WinCopies3
-            public System.Collections.Generic.IEnumerator<T> GetReversedEnumerator() => InnerList.GetReversedEnumerator();
+            public IUIntCountableEnumerator<T> GetEnumerator() => InnerList.GetEnumerator();
+
+            public IUIntCountableEnumerator<T> GetReversedEnumerator() => InnerList.GetReversedEnumerator();
 
             System.Collections.Generic.IEnumerator<T> Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => ((Collections.Generic.IEnumerable<T>)InnerList).GetReversedEnumerator();
 
 #if !CS8
+            System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetEnumerator();
+
             System.Collections.IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
 #endif
-#endif
-
-#if !(CS8 && WinCopies3)
-            System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => ((System.Collections.Generic.IEnumerable<T>)InnerList).GetEnumerator();
 #endif
         }
 #if WinCopies3

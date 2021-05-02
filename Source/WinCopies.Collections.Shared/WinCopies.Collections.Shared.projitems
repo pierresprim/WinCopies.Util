@@ -11,7 +11,10 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)AbstractionTypes.Partial\Queue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AbstractionTypes.Partial\Stack.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Abstraction\Misc.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Abstraction\Abstract\Countable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Abstraction\Abstract\List.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Abstraction\ArrayEnumerable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Abstraction\List.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\EnumerableSimpleLinkedList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\EventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\Extensions.cs" />
@@ -19,6 +22,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\ObservableLinkedCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\ReadOnlyLinkedCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\ReadOnlyObservableLinkedCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedList\ILinkedListNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\SimpleLinkedList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedList\ILinkedList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedList\IReadOnlyLinkedList.cs" />
@@ -59,6 +63,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Stack\SynchronizedStack.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerables\CustomEnumeratorEnumerable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerables\DotNetFix\ILongCountableEnumerable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerables\LinkedListEnumerable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerables\ReadOnlyEnumerable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerables\UIntCountableEnumerable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\DotNetFix\ArrayEnumerator.cs" />

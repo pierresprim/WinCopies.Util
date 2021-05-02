@@ -49,98 +49,11 @@ namespace WinCopies.Collections.DotNetFix
     namespace Generic
     {
 #endif
-        public interface IReadOnlyLinkedListNodeBase<out T>
-        {
-            T Value { get; }
-        }
-
-        public interface IReadOnlyLinkedListNode<out TItems, out TList> : IReadOnlyLinkedListNodeBase<TItems> where TList : IReadOnlyLinkedList<TItems>
-        {
-            TList List { get; }
-        }
-
-        public interface IReadOnlyLinkedListNode<out TItems, out TNodes, out TList> : IReadOnlyLinkedListNode<TItems, TList> where TList : IReadOnlyLinkedList<TItems> where TNodes : IReadOnlyLinkedListNode<TItems, TList>
-        {
-            TNodes Previous { get; }
-
-            TNodes Next { get; }
-        }
-
-        public interface IReadOnlyLinkedListNode<T> : IReadOnlyLinkedListNode<T, IReadOnlyLinkedListNode<T, IReadOnlyLinkedList<T>>, IReadOnlyLinkedList<T>>
-        {
-#if CS8
-            IReadOnlyLinkedListNode<T, IReadOnlyLinkedList<T>> IReadOnlyLinkedListNode<T, IReadOnlyLinkedListNode<T, IReadOnlyLinkedList<T>>, IReadOnlyLinkedList<T>>.Previous => Previous;
-
-            IReadOnlyLinkedListNode<T, IReadOnlyLinkedList<T>> IReadOnlyLinkedListNode<T, IReadOnlyLinkedListNode<T, IReadOnlyLinkedList<T>>, IReadOnlyLinkedList<T>>.Next => Next;
-
-            IReadOnlyLinkedList<T> IReadOnlyLinkedListNode<T, IReadOnlyLinkedList<T>>.List => List;
-#else
-            // Left empty.
-#endif
-        }
-
-        public interface
-#if WinCopies3
-            ILinkedListNodeBase<T> : IReadOnlyLinkedListNodeBase<T>
-        {
-            bool IsReadOnly { get; }
-
-            T Value { get; set; }
-        }
-
-        public interface ILinkedListNode<TItems, out TList> : ILinkedListNodeBase<TItems>, IReadOnlyLinkedListNode<TItems, TList> where TList : ILinkedList<TItems>
-        {
-            // Left empty.
-        }
-
-        public interface ILinkedListNode<TItems, out TNodes, out TList> : ILinkedListNode<TItems, TList>, IReadOnlyLinkedListNode<TItems, TNodes, TList> where TList : ILinkedList<TItems> where TNodes : ILinkedListNode<TItems, TList>
-        {
-            TNodes Previous { get; }
-
-            TNodes Next { get; }
-
-#if CS8
-            TNodes IReadOnlyLinkedListNode<TItems, TNodes, TList>.Previous => Previous;
-
-            TNodes IReadOnlyLinkedListNode<TItems, TNodes, TList>.Next => Next;
-#endif
-        }
-
-        public interface ILinkedListNode<T> : ILinkedListNode<T, ILinkedListNode<T, ILinkedList<T>>, ILinkedList<T>>, IReadOnlyLinkedListNode<T>
-        {
-            new ILinkedList<T> List { get; }
-
-            new ILinkedListNode<T> Previous { get; }
-
-            new ILinkedListNode<T> Next { get; }
-
-#if CS8
-            ILinkedList<T> IReadOnlyLinkedListNode<T, ILinkedList<T>>.List => List;
-
-            ILinkedListNode<T, ILinkedList<T>> ILinkedListNode<T, ILinkedListNode<T, ILinkedList<T>>, ILinkedList<T>>.Previous => Previous;
-
-            ILinkedListNode<T, ILinkedList<T>> ILinkedListNode<T, ILinkedListNode<T, ILinkedList<T>>, ILinkedList<T>>.Next => Next;
-#endif
-#else
-            ILinkedListNode<T>
-        {
-            bool IsReadOnly { get; }
-
-            ILinkedList<T> List { get; }
-
-            ILinkedListNode<T> Previous { get; }
-
-            ILinkedListNode<T> Next { get; }
-
-            T Value { get; }
-#endif
-        }
-
         [DebuggerDisplay("Count = {Count}")]
         [Serializable]
         public class LinkedList<T> :
 #if WinCopies3
-            IEnumerableInfoLinkedList<T>, ISortable<T>
+            ILinkedListExtensions<T>, ISortable<T>
 #else
             System.Collections.Generic.LinkedList<T>, ILinkedList2<T>
 #endif
@@ -215,7 +128,13 @@ namespace WinCopies.Collections.DotNetFix
 
                 ILinkedListNode<T> ILinkedListNode<T>.Next => Next;
 
+                IReadOnlyLinkedListNode IReadOnlyLinkedListNode.Previous => Previous;
+
+                IReadOnlyLinkedListNode IReadOnlyLinkedListNode.Next => Next;
+
 #if !CS8
+                object IReadOnlyLinkedListNode.Value => Value;
+
                 ILinkedList<T> IReadOnlyLinkedListNode<T, ILinkedList<T>>.List => List;
 
                 ILinkedListNode<T, ILinkedList<T>> IReadOnlyLinkedListNode<T, ILinkedListNode<T, ILinkedList<T>>, ILinkedList<T>>.Previous => Previous;
@@ -227,10 +146,6 @@ namespace WinCopies.Collections.DotNetFix
                 IReadOnlyLinkedListNode<T, IReadOnlyLinkedList<T>> IReadOnlyLinkedListNode<T, IReadOnlyLinkedListNode<T, IReadOnlyLinkedList<T>>, IReadOnlyLinkedList<T>>.Next => Next;
 
                 IReadOnlyLinkedList<T> IReadOnlyLinkedListNode<T, IReadOnlyLinkedList<T>>.List => List;
-
-                ILinkedListNode<T, ILinkedList<T>> ILinkedListNode<T, ILinkedListNode<T, ILinkedList<T>>, ILinkedList<T>>.Previous => Previous;
-
-                ILinkedListNode<T, ILinkedList<T>> ILinkedListNode<T, ILinkedListNode<T, ILinkedList<T>>, ILinkedList<T>>.Next => Next;
 #endif
 
                 public LinkedListNode(T value) => Value = value;
@@ -243,18 +158,22 @@ namespace WinCopies.Collections.DotNetFix
                 }
             }
 
-            public class Enumerator : WinCopies.Collections.Generic.Enumerator<LinkedListNode>, IUIntCountableEnumeratorInfo<LinkedListNode>
+            public class Enumerator : Enumerator<LinkedListNode>
             {
                 private LinkedList<T> _list;
                 private Action _action;
+                private Func<bool> _moveNext;
                 private LinkedListNode _currentNode;
                 private Action _reset;
-                private bool _first = true;
                 private readonly uint _version;
+
+                protected LinkedList<T> List => GetOrThrowIfDisposed(_list);
 
                 public EnumerationDirection EnumerationDirection { get; }
 
-                public uint Count => _list.Count;
+                public LinkedListNode Start { get; }
+
+                public LinkedListNode End { get; }
 
                 public override bool? IsResetSupported => true;
 
@@ -263,15 +182,19 @@ namespace WinCopies.Collections.DotNetFix
                 /// </summary>
                 protected override LinkedListNode CurrentOverride => _currentNode;
 
-                public Enumerator(LinkedList<T> list, in EnumerationDirection enumerationDirection)
+                public Enumerator(in LinkedList<T> list, in EnumerationDirection enumerationDirection, in LinkedListNode start = null, in LinkedListNode end = null)
                 {
-                    list._enumeratorsCount++;
+                    (list ?? throw GetArgumentNullException(nameof(list)))._enumeratorsCount++;
 
-                    _list = list ?? throw GetArgumentNullException(nameof(list));
+                    _list = list;
 
                     _version = list.EnumerableVersion;
 
                     EnumerationDirection = enumerationDirection;
+
+                    Start = start;
+
+                    End = end;
 
                     switch (enumerationDirection)
                     {
@@ -279,7 +202,7 @@ namespace WinCopies.Collections.DotNetFix
 
                             _action = () => _currentNode = _currentNode.Next;
 
-                            _reset = () => _currentNode = list.First;
+                            _reset = () => _currentNode = Start ?? _list.First;
 
                             break;
 
@@ -287,42 +210,47 @@ namespace WinCopies.Collections.DotNetFix
 
                             _action = () => _currentNode = _currentNode.Previous;
 
-                            _reset = () => _currentNode = list.Last;
+                            _reset = () => _currentNode = Start ?? _list.Last;
 
                             break;
                     }
+
+                    ResetMoveNext();
                 }
 
-                protected override void ResetOverride()
+                protected void ResetMoveNext() => _moveNext = () =>
+                 {
+                     if (_list.First == null)
+
+                         return false;
+
+                     _reset();
+
+                     if (End == null)
+
+                         _moveNext = () =>
+                           {
+                               _action();
+
+                               return _MoveNext();
+                           };
+
+                     _moveNext = () =>
+                     {
+                         if (_currentNode == End)
+
+                             return false;
+
+                         _action();
+
+                         return _MoveNext();
+                     };
+
+                     return true;
+                 };
+
+                private bool _MoveNext()
                 {
-                    base.ResetOverride();
-
-                    ThrowIfVersionHasChanged(_list.EnumerableVersion, _version);
-
-                    _first = true;
-
-                    _reset();
-                }
-
-                protected override bool MoveNextOverride()
-                {
-                    ThrowIfVersionHasChanged(_list.EnumerableVersion, _version);
-
-                    if (_first)
-                    {
-                        _first = false;
-
-                        if (_list.First == null)
-
-                            return false;
-
-                        _reset();
-
-                        return true;
-                    }
-
-                    _action();
-
                     if (_currentNode == null)
                     {
                         ResetCurrent();
@@ -333,6 +261,24 @@ namespace WinCopies.Collections.DotNetFix
                     // The new node has already been updated in the _action delegate.
 
                     return true;
+                }
+
+                protected override void ResetOverride()
+                {
+                    base.ResetOverride();
+
+                    ThrowIfVersionHasChanged(_list.EnumerableVersion, _version);
+
+                    _reset();
+
+                    ResetMoveNext();
+                }
+
+                protected override bool MoveNextOverride()
+                {
+                    ThrowIfVersionHasChanged(_list.EnumerableVersion, _version);
+
+                    return _moveNext();
                 }
 
                 protected override void ResetCurrent() => _currentNode = null;
@@ -360,6 +306,16 @@ namespace WinCopies.Collections.DotNetFix
                 ~Enumerator() => Dispose(false);
             }
 
+            public class UIntCountableEnumeratorInfo : Enumerator, IUIntCountableEnumeratorInfo<LinkedListNode>
+            {
+                public uint Count => List.Count;
+
+                public UIntCountableEnumeratorInfo(in LinkedList<T> list, in EnumerationDirection enumerationDirection) : base(list, enumerationDirection, null, null)
+                {
+                    // Left empty.
+                }
+            }
+
             #region Fields
             private uint _enumeratorsCount = 0;
             private object _syncRoot;
@@ -385,9 +341,9 @@ namespace WinCopies.Collections.DotNetFix
             public T LastValue => Last.Value;
 
 #if WinCopies3
-            ILinkedListNode<T> IReadOnlyLinkedList<T>.First => First;
+            ILinkedListNode<T> ILinkedList<T>.First => First;
 
-            ILinkedListNode<T> IReadOnlyLinkedList<T>.Last => Last;
+            ILinkedListNode<T> ILinkedList<T>.Last => Last;
 #endif
 
             public uint Count { get; private set; }
@@ -651,23 +607,17 @@ namespace WinCopies.Collections.DotNetFix
 
             public LinkedListNode Find(T value) => Find(value, EnumerationDirection.FIFO);
 
-            ILinkedListNode<T>
-#if WinCopies3
-                IReadOnlyLinkedList
-#else
-                ILinkedList
-#endif
-                <T>.Find(T value) => Find(value);
+            ILinkedListNode<T> ILinkedList<T>.Find(T value) => Find(value);
 
             public LinkedListNode FindLast(T value) => Find(value, EnumerationDirection.LIFO);
 
-            ILinkedListNode<T>
-#if WinCopies3
-                IReadOnlyLinkedList
-#else
-                ILinkedList
+            ILinkedListNode<T> ILinkedList<T>.FindLast(T value) => FindLast(value);
+
+#if !CS8
+            IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.Find(T value) => Find(value);
+
+            IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.FindLast(T value) => FindLast(value);
 #endif
-                <T>.FindLast(T value) => FindLast(value);
 
             private LinkedListNode Find(T value, EnumerationDirection enumerationDirection)
             {
@@ -686,17 +636,31 @@ namespace WinCopies.Collections.DotNetFix
 
 
 
-            public IEnumeratorInfo2<T> GetEnumerator(in EnumerationDirection enumerationDirection) => new EnumeratorInfo<T>(GetNodeEnumerator(enumerationDirection).SelectConverter(node => node.Value));
+            public System.Collections.Generic.IEnumerator<T> GetEnumerator(in EnumerationDirection enumerationDirection, in LinkedListNode start = null, in LinkedListNode end = null) => GetNodeEnumerator(enumerationDirection, start, end).SelectConverter(node => node.Value);
 
-            public IEnumeratorInfo2<T> GetEnumerator() => GetEnumerator(EnumerationDirection.FIFO);
+            public System.Collections.Generic.IEnumerator<T> GetEnumerator() => GetEnumerator(EnumerationDirection.FIFO);
 
-            public IEnumeratorInfo2<T> GetReversedEnumerator() => GetEnumerator(EnumerationDirection.LIFO);
+            public System.Collections.Generic.IEnumerator<T> GetReversedEnumerator() => GetEnumerator(EnumerationDirection.LIFO);
 
-            public IEnumeratorInfo2<LinkedListNode> GetNodeEnumerator(in EnumerationDirection enumerationDirection) => new Enumerator(this, enumerationDirection);
+            public System.Collections.Generic.IEnumerator<LinkedListNode> GetNodeEnumerator(in EnumerationDirection enumerationDirection, in LinkedListNode start, LinkedListNode end) => new Enumerator(this, enumerationDirection, start, end);
 
-            public IEnumeratorInfo2<ILinkedListNode<T>> GetNodeEnumerator() => GetNodeEnumerator(EnumerationDirection.FIFO);
+            public IUIntCountableEnumeratorInfo<LinkedListNode> GetNodeEnumerator(in EnumerationDirection enumerationDirection) => new UIntCountableEnumeratorInfo(this, enumerationDirection);
 
-            public IEnumeratorInfo2<ILinkedListNode<T>> GetReversedNodeEnumerator() => GetNodeEnumerator(EnumerationDirection.LIFO);
+            public IUIntCountableEnumeratorInfo<ILinkedListNode<T>> GetNodeEnumerator() => GetNodeEnumerator(EnumerationDirection.FIFO);
+
+            public IUIntCountableEnumeratorInfo<ILinkedListNode<T>> GetReversedNodeEnumerator() => GetNodeEnumerator(EnumerationDirection.LIFO);
+
+            private System.Collections.Generic.IEnumerator<T> _GetEnumerator(in EnumerationDirection enumerationDirection, in ILinkedListNode<T> start, in ILinkedListNode<T> end) => GetEnumerator(enumerationDirection, GetIfTypeOrDefault<LinkedListNode>(start), GetIfTypeOrDefault<LinkedListNode>(end));
+
+            System.Collections.Generic.IEnumerator<T> ILinkedListExtensions<T>.GetEnumerator(ILinkedListNode<T> start, ILinkedListNode<T> end) => _GetEnumerator(EnumerationDirection.FIFO, start, end);
+
+            System.Collections.Generic.IEnumerator<T> ILinkedListExtensions<T>.GetReversedEnumerator(ILinkedListNode<T> start, ILinkedListNode<T> end) => _GetEnumerator(EnumerationDirection.LIFO, start, end);
+
+            private System.Collections.Generic.IEnumerator<ILinkedListNode<T>> _GetNodeEnumerator(in EnumerationDirection enumerationDirection, in ILinkedListNode<T> start, in ILinkedListNode<T> end) => GetNodeEnumerator(enumerationDirection, GetIfTypeOrDefault<LinkedListNode>(start), GetIfTypeOrDefault<LinkedListNode>(end));
+
+            System.Collections.Generic.IEnumerator<ILinkedListNode<T>> ILinkedListExtensions<T>.GetNodeEnumerator(ILinkedListNode<T> start, ILinkedListNode<T> end) => _GetNodeEnumerator(EnumerationDirection.FIFO, start, end);
+
+            System.Collections.Generic.IEnumerator<ILinkedListNode<T>> ILinkedListExtensions<T>.GetReversedNodeEnumerator(ILinkedListNode<T> start, ILinkedListNode<T> end) => _GetNodeEnumerator(EnumerationDirection.LIFO, start, end);
 
             IEnumeratorInfo2<ILinkedListNode<T>> IEnumerable<ILinkedListNode<T>, IEnumeratorInfo2<ILinkedListNode<T>>>.GetEnumerator() => GetNodeEnumerator(EnumerationDirection.FIFO);
 
@@ -706,25 +670,45 @@ namespace WinCopies.Collections.DotNetFix
 
             System.Collections.Generic.IEnumerator<ILinkedListNode<T>> Collections.Generic.IEnumerable<ILinkedListNode<T>>.GetReversedEnumerator() => GetNodeEnumerator(EnumerationDirection.LIFO);
 
-            System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetEnumerator();
-
             System.Collections.Generic.IEnumerator<T> Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => GetReversedEnumerator();
+
+            private IUIntCountableEnumeratorInfo<T> _GetEnumerator() => new UIntCountableEnumeratorInfo<T>(new EnumeratorInfo<T>(GetEnumerator()), () => Count);
+
+            IUIntCountableEnumeratorInfo<T> IEnumerableInfoLinkedList<T>.GetEnumerator() => _GetEnumerator();
+
+            private IUIntCountableEnumeratorInfo<T> _GetReversedEnumerator() => new UIntCountableEnumeratorInfo<T>(new EnumeratorInfo<T>(GetReversedEnumerator()), () => Count);
+
+            IUIntCountableEnumeratorInfo<T> IEnumerableInfoLinkedList<T>.GetReversedEnumerator() => _GetReversedEnumerator();
+
+#if !CS8
+            IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.First => First;
+
+            IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.Last => Last;
+
+            IEnumeratorInfo2<T> IEnumerable<T, IEnumeratorInfo2<T>>.GetEnumerator() => new EnumeratorInfo<T>(GetEnumerator());
+
+            IEnumeratorInfo2<T> Collections.Generic.IEnumerable<T, IEnumeratorInfo2<T>>.GetReversedEnumerator() => new EnumeratorInfo<T>(GetReversedEnumerator());
+
+            System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetEnumerator();
 
             System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-#if !CS8
-            System.Collections.Generic.IEnumerator<T> ILinkedList<T>.GetEnumerator() => GetEnumerator();
-
-            System.Collections.Generic.IEnumerator<T> ILinkedList<T>.GetReversedEnumerator() => GetReversedEnumerator();
-
-            System.Collections.Generic.IEnumerator<ILinkedListNode<T>> ILinkedList<T>.GetNodeEnumerator() => GetNodeEnumerator();
-
-            System.Collections.Generic.IEnumerator<ILinkedListNode<T>> ILinkedList<T>.GetReversedNodeEnumerator() => GetReversedNodeEnumerator();
-
             System.Collections.IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
+
+            IUIntCountableEnumerator<T> ILinkedList<T>.GetEnumerator() => _GetEnumerator();
+
+            IUIntCountableEnumerator<T> ILinkedList<T>.GetReversedEnumerator() => _GetReversedEnumerator();
+
+            IUIntCountableEnumerator<ILinkedListNode<T>> ILinkedList<T>.GetNodeEnumerator() => GetNodeEnumerator(EnumerationDirection.FIFO);
+
+            IUIntCountableEnumerator<ILinkedListNode<T>> ILinkedList<T>.GetReversedNodeEnumerator() => GetNodeEnumerator(EnumerationDirection.LIFO);
+
+            IUIntCountableEnumerator<T> IReadOnlyLinkedList2<T>.GetEnumerator() => _GetEnumerator();
+
+            IUIntCountableEnumerator<T> IReadOnlyLinkedList2<T>.GetReversedEnumerator() => _GetReversedEnumerator();
 #endif
 
-#if !WinCopies3
+#if !(WinCopies3 || CS8)
             System.Collections.Generic.IEnumerator<T> ILinkedList<T>.GetEnumerator() => GetEnumerator();
 #endif
 

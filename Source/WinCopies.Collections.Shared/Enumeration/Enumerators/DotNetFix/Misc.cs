@@ -15,9 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-using System.Collections.Generic;
-using WinCopies.Collections.Generic;
-
 namespace WinCopies.Collections.DotNetFix
 {
 #if WinCopies3
@@ -79,6 +76,37 @@ namespace WinCopies.Collections.DotNetFix
         public interface IDisposableEnumerator<out T> : System.Collections.Generic.IEnumerator<T>, WinCopies.DotNetFix.IDisposable
         {
             // Left empty.
+        }
+
+        public sealed class DisposableEnumerator<T> : IDisposableEnumerator<T>
+        {
+            private System.Collections.Generic.IEnumerator<T> _enumerator;
+
+            private TValue GetOrThrowIfDisposed<TValue>(in TValue value) => WinCopies.ThrowHelper.GetOrThrowIfDisposed(this, value);
+
+            public T Current => GetOrThrowIfDisposed(_enumerator).Current;
+
+            object System.Collections.IEnumerator.Current => Current;
+
+            public bool IsDisposed { get; private set; }
+
+            public DisposableEnumerator(in System.Collections.Generic.IEnumerator<T> enumerator) => _enumerator = enumerator;
+
+            public DisposableEnumerator(in System.Collections.Generic.IEnumerable<T> enumerable) : this(enumerable.GetEnumerator()) { /* Left empty. */ }
+
+            public bool MoveNext() => GetOrThrowIfDisposed(_enumerator).MoveNext();
+
+            public void Reset() => GetOrThrowIfDisposed(_enumerator).Reset();
+
+            public void Dispose()
+            {
+                if (_enumerator != null)
+                {
+                    _enumerator = null;
+
+                    IsDisposed = true;
+                }
+            }
         }
 #endif
     }

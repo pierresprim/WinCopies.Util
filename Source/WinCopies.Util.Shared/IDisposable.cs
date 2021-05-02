@@ -15,10 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if CS9 && WinCopies3
-using static WinCopies.ThrowHelper;
-#endif
-
 namespace WinCopies
 #if !WinCopies3
     .Util
@@ -46,10 +42,6 @@ namespace WinCopies
             /// Gets a value that indicates whether the current object is disposed.
             /// </summary>
             bool IsDisposed { get; }
-
-#if CS9 && WinCopies3
-            T GetOrThrowIfDisposed<T>(in T value) => IsDisposed ? throw GetExceptionForDispose(false) : value;
-#endif
         }
     }
 }
