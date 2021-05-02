@@ -21,7 +21,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using WinCopies.Collections.Generic;
+
 using static WinCopies.Collections.ThrowHelper;
 
 #if !WinCopies3
@@ -58,19 +58,15 @@ ILinkedList
         { get; } // Already was ILinkedList<T> in WinCopies 2.
 
 #if WinCopies3
-        public T LastValue => InnerList.LastValue;
-
-        ILinkedListNode<T> IReadOnlyLinkedList<T>.Last => throw GetReadOnlyListOrCollectionException();
+        public T FirstValue => InnerList.FirstValue;
 #else
-        public System.Collections.Generic.LinkedListNode <T> Last => InnerList.Last;
+        public System.Collections.Generic.LinkedListNode<T> First => InnerList.First;
 #endif
 
 #if WinCopies3
-        public T FirstValue => InnerList.FirstValue;
-
-        ILinkedListNode<T> IReadOnlyLinkedList<T>.First => throw GetReadOnlyListOrCollectionException();
+        public T LastValue => InnerList.LastValue;
 #else
-        public System.Collections.Generic.LinkedListNode<T> First => InnerList.First;
+        public System.Collections.Generic.LinkedListNode<T> Last => InnerList.Last;
 #endif
 
         public
@@ -99,6 +95,14 @@ ILinkedList
 
 #if WinCopies3
         bool ILinkedList2<T>.IsReadOnly => true;
+
+        ILinkedListNode<T> ILinkedList<T>.First => throw GetReadOnlyListOrCollectionException();
+
+        ILinkedListNode<T> ILinkedList<T>.Last => throw GetReadOnlyListOrCollectionException();
+
+        IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.First => throw GetReadOnlyListOrCollectionException();
+
+        IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.Last => throw GetReadOnlyListOrCollectionException();
 #endif
 
         public ReadOnlyLinkedList(
@@ -119,7 +123,7 @@ System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
 #endif
-                <T> Find(T value) => InnerList.Find(value);
+                <T> Find(T value) => throw GetReadOnlyListOrCollectionException();
 
         public
 #if !WinCopies3
@@ -127,16 +131,26 @@ System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
 #endif
-                <T> FindLast(T value) => InnerList.FindLast(value);
+                <T> FindLast(T value) => throw GetReadOnlyListOrCollectionException();
+
+#if WinCopies3
+        ILinkedListNode<T> ILinkedList<T>.Find(T value) => throw GetReadOnlyListOrCollectionException();
+
+        IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.Find(T value) => throw GetReadOnlyListOrCollectionException();
+
+        IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.FindLast(T value) => throw GetReadOnlyListOrCollectionException();
+#endif
 
         public
 #if !WinCopies3
-         System.Collections.Generic.LinkedList<T>.Enumerator GetEnumerator() => InnerList.GetEnumerator();  
+         System.Collections.Generic.LinkedList<T>.Enumerator GetEnumerator() => InnerList.GetEnumerator();
 #endif
 
-            System.Collections.Generic.IEnumerator<T>
-#if !WinCopies3
-System.Collections.Generic.IEnumerable<T>.
+
+#if WinCopies3
+            IUIntCountableEnumerator<T>
+#else
+        System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.
 #endif
                 GetEnumerator() => InnerList.GetEnumerator();
 
@@ -149,27 +163,23 @@ InnerList
                 .GetEnumerator();
 
 #if WinCopies3
-        public System.Collections.Generic.IEnumerator<T> GetReversedEnumerator() => InnerList.GetReversedEnumerator();
+        public IUIntCountableEnumerator<T> GetReversedEnumerator() => InnerList.GetReversedEnumerator();
 
         //System.Collections.Generic.IEnumerator<ILinkedListNode<T>> GetNodeEnumerator() => throw GetReadOnlyListOrCollectionException();
-
-        System.Collections.Generic.IEnumerator<ILinkedListNode<T>> ILinkedList<T>.GetNodeEnumerator() => throw GetReadOnlyListOrCollectionException();
-
-        System.Collections.Generic.IEnumerator<ILinkedListNode<T>> ILinkedList<T>.GetReversedNodeEnumerator() => throw GetReadOnlyListOrCollectionException();
-
-        System.Collections.Generic.IEnumerator<T> ILinkedList<T>.GetEnumerator() => GetEnumerator();
-
-        System.Collections.Generic.IEnumerator<T> ILinkedList<T>.GetReversedEnumerator() => GetReversedEnumerator();
 
         System.Collections.Generic.IEnumerator<ILinkedListNode<T>> System.Collections.Generic.IEnumerable<ILinkedListNode<T>>.GetEnumerator() => throw GetReadOnlyListOrCollectionException();
 
         System.Collections.Generic.IEnumerator<ILinkedListNode<T>> Collections.Generic.IEnumerable<ILinkedListNode<T>>.GetReversedEnumerator() => throw GetReadOnlyListOrCollectionException();
 
+        IUIntCountableEnumerator<ILinkedListNode<T>> ILinkedList<T>.GetNodeEnumerator() => throw GetReadOnlyListOrCollectionException();
+
+        IUIntCountableEnumerator<ILinkedListNode<T>> ILinkedList<T>.GetReversedNodeEnumerator() => throw GetReadOnlyListOrCollectionException();
+
+        System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => throw GetReadOnlyListOrCollectionException();
+
+        System.Collections.Generic.IEnumerator<T> Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => throw GetReadOnlyListOrCollectionException();
+
 #if !CS8
-        System.Collections.Generic.IEnumerator<T> Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => ((Collections.Generic.IEnumerable<T>)InnerList).GetReversedEnumerator();
-
-        System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => ((System.Collections.Generic.IEnumerable<T>)InnerList).GetEnumerator();
-
         System.Collections.IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
 #endif
 #else
@@ -194,13 +204,13 @@ InnerList
 #if WinCopies3
         ILinkedListNode<T> ILinkedList<T>.
 #else
-public System.Collections.Generic.LinkedListNode<T> 
+        public System.Collections.Generic.LinkedListNode<T>
 #endif
                 AddAfter(
 #if WinCopies3
             ILinkedListNode
 #else
-System.Collections.Generic.LinkedListNode                
+System.Collections.Generic.LinkedListNode
 #endif
                 <T> node, T value) => throw GetReadOnlyListOrCollectionException();
 
@@ -217,7 +227,7 @@ System.Collections.Generic.LinkedListNode
 #if WinCopies3
         ILinkedListNode<T> ILinkedList<T>.
 #else
-public System.Collections.Generic.LinkedListNode<T>
+        public System.Collections.Generic.LinkedListNode<T>
 #endif
                  AddBefore(
 #if WinCopies3
@@ -258,7 +268,7 @@ System.Collections.Generic.LinkedListNode
 #if WinCopies3
         void ILinkedList<T>.RemoveLast()
 #else
-            public void RemoveLast() 
+        public void RemoveLast()
 #endif
             => throw GetReadOnlyListOrCollectionException();
 

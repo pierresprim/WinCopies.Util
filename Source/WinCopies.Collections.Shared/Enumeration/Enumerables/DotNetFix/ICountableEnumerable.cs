@@ -111,6 +111,11 @@ namespace WinCopies.Collections.DotNetFix
             // Left empty.
         }
 
+        public interface IArray<T> : IReadOnlyList<T>
+        {
+            new T this[int index] { get; set; }
+        }
+
         public interface IUIntCountableEnumerable
 #if WinCopies3
        <out TItems, out TEnumerator> : DotNetFix.IUIntCountableEnumerable<TEnumerator>, IEnumerable<TItems, TEnumerator> where TEnumerator : IUIntCountableEnumerator<TItems>

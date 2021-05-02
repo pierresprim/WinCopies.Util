@@ -33,6 +33,9 @@ namespace WinCopies
     .Util
 #endif
 {
+    /// <summary>
+    /// This class contains some helper methods for exception throwing.
+    /// </summary>
     public static class ThrowHelper
     {
 #if WinCopies3
@@ -226,9 +229,7 @@ namespace WinCopies
                     (indexArgumentName);
         }
 
-#if !(CS9 && WinCopies3)
         public static T GetOrThrowIfDisposed<T>(in DotNetFix.IDisposable obj, in T value) => (obj ?? throw GetArgumentNullException(nameof(obj))).IsDisposed ? throw GetExceptionForDispose(false) : value;
-#endif
 
 #if !WinCopies3
         public static void ThrowIfEnumeratorNotStartedOrDisposedException(in WinCopies.Collections.IDisposableEnumeratorInfo enumerator)
@@ -536,7 +537,6 @@ namespace WinCopies
         /// </summary>
         /// <param name="obj">The object to check.</param>
         /// <param name="argumentName">The argument name for the <see cref="ArgumentNullException"/> that is thrown.</param>
-        /// <returns></returns>
         public static object GetOrThrowIfNull(in object obj, in string argumentName) => obj ?? throw GetArgumentNullException(argumentName);
 
         /// <summary>
@@ -545,12 +545,27 @@ namespace WinCopies
         /// <typeparam name="T">The type of <paramref name="obj"/>. This must be a class type.</typeparam>
         /// <param name="obj">The object to check.</param>
         /// <param name="argumentName">The argument name for the <see cref="ArgumentNullException"/> that is thrown.</param>
-        /// <returns></returns>
         public static T GetOrThrowIfNull<T>(in T obj, in string argumentName) where T : class => obj ?? throw GetArgumentNullException(argumentName);
 
         public static T TryGetIfTypeOrThrowIfNull<T>(in object obj, in string argumentName) where T : class => GetOrThrowIfNull(obj, argumentName) is T _obj ? _obj : null;
 
         public static T GetIfType<T>(in object obj, in string argumentName) where T : class => TryGetIfTypeOrThrowIfNull<T>(obj, argumentName) ?? throw new ArgumentException($"{argumentName} must be {typeof(T)}");
+
+        public static bool TryGetIfTypeOrDefault<T>(in object obj, out T result)
+        {
+            if (obj is T _obj)
+            {
+                result = _obj;
+
+                return true;
+            }
+
+            result = default;
+
+            return false;
+        }
+
+        public static T GetIfTypeOrDefault<T>(in object obj) => obj is T _obj ? _obj : default;
 
         /// <summary>
         /// Returns an <see cref="ArgumentException"/> for the given object and argument name.

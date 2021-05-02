@@ -6,7 +6,11 @@ The WinCopies® software framework
 CHANGELOG
 ---------
 
-### 
+### 05/02/2021 3.7-preview
+
+- Update ILinkedList-like interfaces.
+- LinkedList implements the new interface ILinkedListExtensions.
+- Constructors of some (UInt)CountableEnumerator-like classes of the WinCopies.Collections.Enumeration namespace are public.
 
 ### 04/25/2021 3.6-preview
 

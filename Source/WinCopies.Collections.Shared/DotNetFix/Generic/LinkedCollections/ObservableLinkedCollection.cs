@@ -276,14 +276,10 @@ namespace WinCopies.Collections.DotNetFix
                 RaiseCollectionChangedEvent(LinkedCollectionChangedAction.Reset, null, null, null);
             }
 
+#if !WinCopies3
             protected override void RemoveFirstItem()
             {
-#if !WinCopies3
-            System.Collections.Generic.LinkedListNode
-#else
-                ILinkedListNode
-#endif
-                <T> node = InnerList.First;
+                System.Collections.Generic.LinkedListNode<T> node = InnerList.First;
 
                 base.RemoveFirstItem();
 
@@ -292,13 +288,7 @@ namespace WinCopies.Collections.DotNetFix
                 RaiseCollectionChangedEvent(LinkedCollectionChangedAction.Remove, null, null, node);
             }
 
-            protected override void RemoveItem(
-#if !WinCopies3
-                System.Collections.Generic.LinkedListNode
-#else
-                ILinkedListNode
-#endif
-                <T> node)
+            protected override void RemoveItem(System.Collections.Generic.LinkedListNode<T> node)
             {
                 base.RemoveItem(node);
 
@@ -307,26 +297,9 @@ namespace WinCopies.Collections.DotNetFix
                 RaiseCollectionChangedEvent(LinkedCollectionChangedAction.Remove, null, null, node);
             }
 
-#if WinCopies3
-            protected override void OnNodeRemoved2(ILinkedListNode<T> node)
-            {
-                base.OnNodeRemoved2(node);
-
-                RaiseCountPropertyChangedEvent();
-
-                RaiseCollectionChangedEvent(LinkedCollectionChangedAction.Remove, null, null, node);
-            }
-#endif
-
             protected override bool RemoveItem(T item)
             {
-                foreach (
-#if !WinCopies3
-                System.Collections.Generic.LinkedListNode
-#else
-                ILinkedListNode
-#endif
-                <T> node in new Generic.LinkedListNodeEnumerator<T>(InnerList))
+                foreach (System.Collections.Generic.LinkedListNode<T> node in new Generic.LinkedListNodeEnumerator<T>(InnerList))
 
                     if (node.Value.Equals(item))
                     {
@@ -344,12 +317,7 @@ namespace WinCopies.Collections.DotNetFix
 
             protected override void RemoveLastItem()
             {
-#if !WinCopies3
-            System.Collections.Generic.LinkedListNode
-#else
-                ILinkedListNode
-#endif
-                <T> node = InnerList.Last;
+                System.Collections.Generic.LinkedListNode<T> node = InnerList.Last;
 
                 base.RemoveLastItem();
 
@@ -357,6 +325,18 @@ namespace WinCopies.Collections.DotNetFix
 
                 RaiseCollectionChangedEvent(LinkedCollectionChangedAction.Remove, null, null, node);
             }
+#endif
+
+#if WinCopies3
+            protected override void OnNodeRemoved(ILinkedListNode<T> node)
+            {
+                base.OnNodeRemoved(node);
+
+                RaiseCountPropertyChangedEvent();
+
+                RaiseCollectionChangedEvent(LinkedCollectionChangedAction.Remove, null, null, node);
+            }
+#endif
         }
 #if WinCopies3
     }

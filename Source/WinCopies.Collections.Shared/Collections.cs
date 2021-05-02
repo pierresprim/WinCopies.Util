@@ -26,21 +26,33 @@ using IDisposable = WinCopies.Util.DotNetFix.IDisposable;
 
 namespace WinCopies.Collections
 {
+    /// <summary>
+    /// Represents a countable item.
+    /// </summary>
     public interface ICountable
     {
         int Count { get; }
     }
 
+    /// <summary>
+    /// Represents a <see cref="uint"/>-countable item.
+    /// </summary>
     public interface IUIntCountable
     {
         uint Count { get; }
     }
 
+    /// <summary>
+    /// Represents a <see cref="long"/>-countable item.
+    /// </summary>
     public interface ILongCountable
     {
         long Count { get; }
     }
 
+    /// <summary>
+    /// Represents a <see cref="ulong"/>-countable item.
+    /// </summary>
     public interface IULongCountable
     {
         ulong Count { get; }

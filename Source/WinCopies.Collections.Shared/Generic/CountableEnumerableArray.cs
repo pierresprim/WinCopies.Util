@@ -39,7 +39,7 @@ namespace WinCopies.Collections
     {
         public abstract class CountableEnumerator<TEnumerator, TCount> : System.Collections.IEnumerator where TEnumerator : IEnumerator
         {
-            private Func<TCount> _func;
+            private readonly Func<TCount> _func;
 
             protected TEnumerator Enumerator { get; }
 
@@ -74,19 +74,19 @@ namespace WinCopies.Collections
 
         public class CountableEnumerator<TEnumerator> : CountableEnumerator<TEnumerator, int>, ICountableEnumerator where TEnumerator : IEnumerator
         {
-            protected internal CountableEnumerator(in TEnumerator enumerator, in Func<int> func) : base(enumerator, func) { /* Left empty. */ }
+            public CountableEnumerator(in TEnumerator enumerator, in Func<int> func) : base(enumerator, func) { /* Left empty. */ }
         }
 
         public class UIntCountableEnumerator<TEnumerator> : CountableEnumerator<TEnumerator, uint>, IUIntCountableEnumerator where TEnumerator : IEnumerator
         {
-            protected internal UIntCountableEnumerator(in TEnumerator enumerator, in Func<uint> func) : base(enumerator, func) { /* Left empty. */ }
+            public UIntCountableEnumerator(in TEnumerator enumerator, in Func<uint> func) : base(enumerator, func) { /* Left empty. */ }
         }
 
         public abstract class CountableEnumerableBase<TEnumerable, TEnumerator> : SystemIEnumerable where TEnumerable : SystemIEnumerable where TEnumerator : IEnumerator
         {
             protected TEnumerable Enumerable { get; }
 
-            protected internal CountableEnumerableBase(in TEnumerable enumerable) => Enumerable = enumerable == null ? throw GetArgumentNullException(nameof(enumerable)) : enumerable;
+            protected CountableEnumerableBase(in TEnumerable enumerable) => Enumerable = enumerable == null ? throw GetArgumentNullException(nameof(enumerable)) : enumerable;
 
             public abstract TEnumerator GetEnumerator();
 
@@ -97,7 +97,7 @@ namespace WinCopies.Collections
         {
             int ICountable.Count => Enumerable.Count;
 
-            protected internal CountableEnumerable(in TEnumerable enumerable) : base(enumerable) { /* Left empty. */ }
+            public CountableEnumerable(in TEnumerable enumerable) : base(enumerable) { /* Left empty. */ }
 
             public override ICountableEnumerator GetEnumerator() => new CountableEnumerator<IEnumerator>(Enumerable.GetEnumerator(), () => Enumerable.Count);
         }
@@ -106,7 +106,7 @@ namespace WinCopies.Collections
         {
             uint IUIntCountable.Count => Enumerable.Count;
 
-            protected internal UIntCountableEnumerable(in TEnumerable enumerable) : base(enumerable) { /* Left empty. */ }
+            public UIntCountableEnumerable(in TEnumerable enumerable) : base(enumerable) { /* Left empty. */ }
 
             public override IUIntCountableEnumerator GetEnumerator() => new UIntCountableEnumerator<IEnumerator>(Enumerable.GetEnumerator(), () => Enumerable.Count);
         }
@@ -119,7 +119,7 @@ namespace WinCopies.Collections
 
                 bool WinCopies.DotNetFix.IDisposable.IsDisposed => Enumerator.IsDisposed;
 
-                protected internal CountableEnumerator(in TEnumerator enumerator, in Func<TCount> func) : base(enumerator, func) { /* Left empty. */ }
+                protected CountableEnumerator(in TEnumerator enumerator, in Func<TCount> func) : base(enumerator, func) { /* Left empty. */ }
 
                 protected virtual void Dispose(in bool disposing)
                 {
@@ -144,7 +144,7 @@ namespace WinCopies.Collections
 
                 public bool IsCompleted { get; private set; }
 
-                protected internal CountableEnumeratorInfo(in TEnumerator enumerator, in Func<TCount> func) : base(enumerator, func) { /* Left empty. */ }
+                protected CountableEnumeratorInfo(in TEnumerator enumerator, in Func<TCount> func) : base(enumerator, func) { /* Left empty. */ }
 
                 private void UpdateStartStatus(in bool newValue)
                 {
@@ -160,22 +160,22 @@ namespace WinCopies.Collections
 
             public class CountableEnumeratorInfo<TEnumerator, TItems> : CountableEnumeratorInfo<TEnumerator, TItems, int>, ICountableEnumeratorInfo<TItems> where TEnumerator : System.Collections.Generic.IEnumerator<TItems>, WinCopies.DotNetFix.IDisposable
             {
-                protected internal CountableEnumeratorInfo(in TEnumerator enumerator, in Func<int> func) : base(enumerator, func) { /* Left empty. */ }
+                public CountableEnumeratorInfo(in TEnumerator enumerator, in Func<int> func) : base(enumerator, func) { /* Left empty. */ }
             }
 
             public class UIntCountableEnumeratorInfo<TEnumerator, TItems> : CountableEnumeratorInfo<TEnumerator, TItems, uint>, IUIntCountableEnumeratorInfo<TItems>, WinCopies.DotNetFix.IDisposable where TEnumerator : System.Collections.Generic.IEnumerator<TItems>, WinCopies.DotNetFix.IDisposable
             {
-                protected internal UIntCountableEnumeratorInfo(in TEnumerator enumerator, in Func<uint> func) : base(enumerator, func) { /* Left empty. */ }
+                public UIntCountableEnumeratorInfo(in TEnumerator enumerator, in Func<uint> func) : base(enumerator, func) { /* Left empty. */ }
             }
 
             public class CountableEnumerator<TEnumerator, TItems> : CountableEnumerator<TEnumerator, TItems, int>, ICountableDisposableEnumerator<TItems> where TEnumerator : System.Collections.Generic.IEnumerator<TItems>, WinCopies.DotNetFix.IDisposable
             {
-                protected internal CountableEnumerator(in TEnumerator enumerator, in Func<int> func) : base(enumerator, func) { /* Left empty. */ }
+                public CountableEnumerator(in TEnumerator enumerator, in Func<int> func) : base(enumerator, func) { /* Left empty. */ }
             }
 
             public class UIntCountableEnumerator<TEnumerator, TItems> : CountableEnumerator<TEnumerator, TItems, uint>, IUIntCountableDisposableEnumerator<TItems> where TEnumerator : System.Collections.Generic.IEnumerator<TItems>, WinCopies.DotNetFix.IDisposable
             {
-                protected internal UIntCountableEnumerator(in TEnumerator enumerator, in Func<uint> func) : base(enumerator, func) { /* Left empty. */ }
+                public UIntCountableEnumerator(in TEnumerator enumerator, in Func<uint> func) : base(enumerator, func) { /* Left empty. */ }
             }
 
             public class DisposableEnumerator<TEnumerator, TItems> : IDisposableEnumerator<TItems> where TEnumerator : System.Collections.Generic.IEnumerator<TItems>
@@ -242,7 +242,7 @@ namespace WinCopies.Collections
 #endif
 #endif
 
-                protected internal CountableEnumerable(in TEnumerable enumerable) : base(enumerable) { /* Left empty. */ }
+                public CountableEnumerable(in TEnumerable enumerable) : base(enumerable) { /* Left empty. */ }
 
                 public override ICountableDisposableEnumerator<TItems> GetEnumerator() => new CountableEnumerator<DisposableEnumerator<System.Collections.Generic.IEnumerator<TItems>, TItems>, TItems>(new DisposableEnumerator<System.Collections.Generic.IEnumerator<TItems>, TItems>(Enumerable.GetEnumerator()), () => Enumerable.Count);
 
@@ -255,7 +255,7 @@ namespace WinCopies.Collections
             {
                 uint IUIntCountable.Count => Enumerable.Count;
 
-                protected internal UIntCountableEnumerable(in TEnumerable enumerable) : base(enumerable) { /* Left empty. */ }
+                public UIntCountableEnumerable(in TEnumerable enumerable) : base(enumerable) { /* Left empty. */ }
 
                 public override IUIntCountableDisposableEnumerator<TItems> GetEnumerator() => new UIntCountableEnumerator<DisposableEnumerator<System.Collections.Generic.IEnumerator<TItems>, TItems>, TItems>(new DisposableEnumerator<System.Collections.Generic.IEnumerator<TItems>, TItems>(Enumerable.GetEnumerator()), () => Enumerable.Count);
 
@@ -268,7 +268,7 @@ namespace WinCopies.Collections
             {
                 public bool SupportsReversedEnumeration => Enumerable.SupportsReversedEnumeration;
 
-                protected internal CountableEnumerableInfoBase(in TEnumerable enumerable) : base(enumerable) { /* Left empty.*/ }
+                protected CountableEnumerableInfoBase(in TEnumerable enumerable) : base(enumerable) { /* Left empty.*/ }
             }
         }
     }

@@ -37,22 +37,25 @@ namespace WinCopies.Collections.DotNetFix
             ICountableEnumerable<T>, ISerializable, IDeserializationCallback
 #endif
     {
-#if !WinCopies3
-        System.Collections.Generic.LinkedListNode
+#if WinCopies3
+        IReadOnlyLinkedListNode
 #else
-        ILinkedListNode
+        System.Collections.Generic.LinkedListNode
+#endif
+                <T> First
+        { get; }
+
+#if WinCopies3
+        IReadOnlyLinkedListNode
+#else
+        System.Collections.Generic.LinkedListNode
 #endif
                 <T> Last
         { get; }
 
-
-#if !WinCopies3
-        System.Collections.Generic.LinkedListNode
-#else
-        ILinkedListNode
+#if WinCopies3
+        new bool SupportsReversedEnumeration { get; }
 #endif
-                <T> First
-        { get; }
 
         new
 #if !WinCopies3
@@ -67,7 +70,7 @@ int
 #if !WinCopies3
         System.Collections.Generic.LinkedListNode
 #else
-        ILinkedListNode
+        IReadOnlyLinkedListNode
 #endif
                 <T> Find(T value);
 
@@ -75,7 +78,7 @@ int
 #if !WinCopies3
         System.Collections.Generic.LinkedListNode
 #else
-        ILinkedListNode
+        IReadOnlyLinkedListNode
 #endif
                 <T> FindLast(T value);
 
@@ -94,7 +97,17 @@ int
 
         T LastValue { get; }
 
-#if !WinCopies3
+#if WinCopies3
+        new IUIntCountableEnumerator<T> GetEnumerator();
+
+        new IUIntCountableEnumerator<T> GetReversedEnumerator();
+
+#if CS8
+        System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetEnumerator();
+
+        System.Collections.Generic.IEnumerator<T> Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => GetReversedEnumerator();
+#endif
+#else
         System.Collections.Generic.IEnumerator<T> GetEnumerator(EnumerationDirection enumerationDirection);
 #endif
     }
@@ -102,9 +115,7 @@ int
 #if WinCopies3
     public interface IReadOnlyEnumerableInfoLinkedList<T> : IReadOnlyLinkedList2<T>, Collections.Generic.IEnumerableInfo<T>
     {
-#if CS8
-        System.Collections.IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
-#endif
+        // Left empty.
     }
 #endif
 }
