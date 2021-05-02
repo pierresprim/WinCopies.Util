@@ -120,6 +120,16 @@
               Looks up a localized string similar to &apos;{0}&apos; is empty or white space..
             </summary>
         </member>
+        <member name="T:WinCopies.Util.Delegates">
+            <summary>
+            This class contains static methods that can be used as delegates.
+            </summary>
+        </member>
+        <member name="T:WinCopies.Util.Bool">
+            <summary>
+            This class contains static methods that can be used as delegates for <see cref="T:System.Boolean"/> values.
+            </summary>
+        </member>
         <member name="T:WinCopies.Util.LoopIteration">
             <summary>
             This delegate represents the action that is performed for each iteration of a loop.
@@ -296,6 +306,11 @@
             </summary>
             <param name="info">The object that holds the serialized object data.</param>
             <param name="context">The contextual information about the source or destination.</param>
+        </member>
+        <member name="T:WinCopies.Util.ThrowHelper">
+            <summary>
+            This class contains some helper methods for exception throwing.
+            </summary>
         </member>
         <member name="M:WinCopies.Util.TypeArgumentException.#ctor">
             <summary>
@@ -2323,7 +2338,15 @@
             </summary>
             <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="!:TryPeek(out T)"/>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.TryPeek(`0@)"/>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.TryPeek(`0@)">
+            <summary>
+            Tries to peek the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> without removing it.
+            </summary>
+            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been retrieved.</returns>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.Peek"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.GetEnumerator">
             <summary>
@@ -2366,7 +2389,15 @@
             </summary>
             <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.StackCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.StackCollection`1"/> is empty.</exception>
-            <seealso cref="!:TryPeek(out T)"/>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.ReadOnlyStackCollection`1.TryPeek(`0@)"/>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.ReadOnlyStackCollection`1.TryPeek(`0@)">
+            <summary>
+            Tries to peek the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.StackCollection`1"/> without removing it.
+            </summary>
+            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.StackCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been retrieved.</returns>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.ReadOnlyStackCollection`1.Peek"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.ReadOnlyStackCollection`1.GetEnumerator">
             <summary>
@@ -3088,6 +3119,26 @@
             <param name="remove">Indicates whether items have to be removed from the current <see cref="T:WinCopies.Collections.ArrayBuilder`1"/> after they has been added to the new list.</param>
             <returns>A <see cref="T:System.Collections.Generic.List`1"/> with the items of this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/>.</returns>
         </member>
+        <member name="T:WinCopies.Collections.ICountable">
+            <summary>
+            Represents a countable item.
+            </summary>
+        </member>
+        <member name="T:WinCopies.Collections.IUIntCountable">
+            <summary>
+            Represents a <see cref="T:System.UInt32"/>-countable item.
+            </summary>
+        </member>
+        <member name="T:WinCopies.Collections.ILongCountable">
+            <summary>
+            Represents a <see cref="T:System.Int64"/>-countable item.
+            </summary>
+        </member>
+        <member name="T:WinCopies.Collections.IULongCountable">
+            <summary>
+            Represents a <see cref="T:System.UInt64"/>-countable item.
+            </summary>
+        </member>
         <member name="P:WinCopies.Collections.Enumerator`1.Current">
             <summary>
             Gets the element in the collection at the current position of the enumerator.
@@ -3151,35 +3202,6 @@
         <member name="M:WinCopies.Collections.TreeNode`1.System#IEquatable{WinCopies#Util#IReadOnlyValueObject}#Equals(WinCopies.Util.IReadOnlyValueObject)">
             <summary>
             Determines whether this object is equal to a given object.
-            </summary>
-            <param name="obj">Object to compare to the current object.</param>
-            <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.TreeNode`1.System#IEquatable{WinCopies#Util#IReadOnlyValueObject{T}}#Equals(WinCopies.Util.IReadOnlyValueObject{`0})">
-            <summary>
-            Determines whether this object is equal to a given object.
-            </summary>
-            <param name="obj">Object to compare to the current object.</param>
-            <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="P:WinCopies.Collections.TreeNode`1.Parent">
-            <summary>
-            Gets the parent of the current node.
-            </summary>
-        </member>
-        <member name="P:WinCopies.Collections.TreeNode`1.Value">
-            <summary>
-            Gets or sets the value of the object.
-            </summary>
-        </member>
-        <member name="M:WinCopies.Collections.TreeNode`1.Equals(System.Object)">
-            <summary>
-            Determines whether this object is equal to a given object.
-            </summary>
-            <param name="obj">The object to compare.</param>
-            <returns><see langword="true"/> if the current object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.TreeNode`1.GetHashCen object.
             </summary>
             <param name="obj">Object to compare to the current object.</param>
             <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>

@@ -1,5 +1,14 @@
 <Project>
   <PropertyGroup>
+    <Product>WinCopies framework</Product>
+    <Authors>Pierre Sprimont</Authors>
+    <RepositoryUrl>https://github.com/pierresprim/WinCopies.Util.git</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+    <PackageReleaseNotes>See https://github.com/pierresprim/WinCopies.Util/blob/master/Changelog.md</PackageReleaseNotes>
+    <Copyright>Copyright © 2021 Pierre Sprimont</Copyright>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <!-- SourceLink related properties https://github.com/dotnet/SourceLink#using-sourcelink -->
     <!-- Optional: Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -11,16 +20,9 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Product>WinCopies framework</Product>
-    <Authors>Pierre Sprimont</Authors>
-    <RepositoryUrl>https://github.com/pierresprim/WinCopies.Util.git</RepositoryUrl>
     <PackageProjectUrl>https://wincopies.com/</PackageProjectUrl>
-    <RepositoryType>Git</RepositoryType>
-    <PackageReleaseNotes>See https://github.com/pierresprim/WinCopies.Util/blob/master/Changelog.md</PackageReleaseNotes>
-    <PackageIcon>WinCopies.ico</PackageIcon>
-    <Copyright>Copyright © 2021 Pierre Sprimont</Copyright>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
 
   <!--Constants-->

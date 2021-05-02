@@ -6,7 +6,7 @@ The WinCopies® software framework
 CHANGELOG
 ---------
 
-### ??/??/????
+### 05/02/2021
 
 - Add new types.
 - LinkedCollection: update GetEnumerator-like methods return types.
