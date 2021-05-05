@@ -6,6 +6,12 @@ The WinCopies® software framework
 CHANGELOG
 ---------
 
+### 05/05/2021
+
+- Bug fixes.
+- Add new types.
+- Add new static methods.
+
 ### 05/02/2021
 
 - Add new types.

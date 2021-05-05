@@ -6,6 +6,15 @@ The WinCopies� software framework
 CHANGELOG
 ---------
 
+### 05/05/2021 3.7.1-preview
+
+- Add indexer to IArrayEnumerable<T>.
+- Remove ILinkedListExtensions. Use the LinkedListEnumerator class instead.
+- Rewrite LinkedList\<T>.LinkedListNode and LinkedList\<T>.UIntCountableEnumeratorInfo.
+- LinkedTreeNode\<T>.Enumerator inherits from Enumerator<ILinkedListNode<LinkedTreeNode<T>>, IEnumeratorInfo2<ILinkedListNode<LinkedTreeNode<T>>>, LinkedTreeNode<T>>.
+- IArray\<T> implements IReadOnlyArray\<T>.
+- Update generic MultiConverterBase class.
+
 ### 05/02/2021 3.7-preview
 
 - Update ILinkedList-like interfaces.

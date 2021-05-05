@@ -52,7 +52,7 @@ namespace WinCopies.Collections.Generic
 
     public class LinkedTreeNode<T> : ILinkedTreeNode<T>
     {
-        public class Enumerator : Enumerator<DotNetFix.Generic.LinkedList<LinkedTreeNode<T>>.LinkedListNode, IEnumeratorInfo2<DotNetFix.Generic.LinkedList<LinkedTreeNode<T>>.LinkedListNode>, LinkedTreeNode<T>>, IUIntCountableEnumeratorInfo<LinkedTreeNode<T>> // LinkedTreeNode<T> does not make checks during enumeration because these checks are performed in the inner LinkedList<LinkedTreeNode<T>>'s enumerator.
+        public class Enumerator : Enumerator<ILinkedListNode<LinkedTreeNode<T>>, IEnumeratorInfo2<ILinkedListNode<LinkedTreeNode<T>>>, LinkedTreeNode<T>>, IUIntCountableEnumeratorInfo<LinkedTreeNode<T>> // LinkedTreeNode<T> does not make checks during enumeration because these checks are performed in the inner LinkedList<LinkedTreeNode<T>>'s enumerator.
         {
             private readonly ILinkedTreeNode<T> _treeNode;
 

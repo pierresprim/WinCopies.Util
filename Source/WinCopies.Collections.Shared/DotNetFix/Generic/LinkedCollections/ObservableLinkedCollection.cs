@@ -19,6 +19,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Linq;
 
 #if !WinCopies3
 using System.Collections.Generic;
@@ -35,47 +36,47 @@ namespace WinCopies.Collections.DotNetFix
     namespace Generic
     {
 #endif
-        [Serializable]
-        public class ObservableLinkedCollection<T> : LinkedCollection<T>, INotifyPropertyChanged, INotifyLinkedCollectionChanged<T>
+    [Serializable]
+    public class ObservableLinkedCollection<T> : LinkedCollection<T>, INotifyPropertyChanged, INotifyLinkedCollectionChanged<T>
 #if WinCopies3
 , ILinkedList3<T>
         {
             private ILinkedListNode<T> _firstNode;
             private ILinkedListNode<T> _lastNode;
 #else
-        {
-            private LinkedListNode<T> _firstNode;
-            private LinkedListNode<T> _lastNode;
+    {
+        private LinkedListNode<T> _firstNode;
+        private LinkedListNode<T> _lastNode;
 #endif
 
-            public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
 
-            public event LinkedCollectionChangedEventHandler<T> CollectionChanged;
+        public event LinkedCollectionChangedEventHandler<T> CollectionChanged;
 
-            public ObservableLinkedCollection() : base() { }
+        public ObservableLinkedCollection() : base() { }
 
-            public ObservableLinkedCollection(in
+        public ObservableLinkedCollection(in
 #if WinCopies3
                 ILinkedList3
 #else
                 LinkedList
 #endif
                 <T> list) : base(list)
-            {
-                _firstNode = list.First;
+        {
+            _firstNode = list.First;
 
-                _lastNode = list.Last;
-            }
+            _lastNode = list.Last;
+        }
 
-            protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
 
-            protected void RaisePropertyChangedEvent(in string propertyName) => OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+        protected void RaisePropertyChangedEvent(in string propertyName) => OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
 
-            protected void RaiseCountPropertyChangedEvent() => OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
+        protected void RaiseCountPropertyChangedEvent() => OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
 
-            protected virtual void OnCollectionChanged(LinkedCollectionChangedEventArgs<T> e) => CollectionChanged?.Invoke(this, e);
+        protected virtual void OnCollectionChanged(LinkedCollectionChangedEventArgs<T> e) => CollectionChanged?.Invoke(this, e);
 
-            protected void RaiseCollectionChangedEvent(in LinkedCollectionChangedAction action, in
+        protected void RaiseCollectionChangedEvent(in LinkedCollectionChangedAction action, in
 #if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
@@ -94,27 +95,27 @@ namespace WinCopies.Collections.DotNetFix
                 ILinkedListNode
 #endif
                 <T> node)
+        {
+            if (First != _firstNode)
             {
-                if (First != _firstNode)
-                {
-                    _firstNode = First;
+                _firstNode = First;
 
-                    RaisePropertyChangedEvent(nameof(First));
+                RaisePropertyChangedEvent(nameof(First));
 
-                    RaisePropertyChangedEvent(nameof(FirstValue));
-                }
-
-                else if (Last != _lastNode)
-                {
-                    _lastNode = Last;
-
-                    RaisePropertyChangedEvent(nameof(Last));
-
-                    RaisePropertyChangedEvent(nameof(LastValue));
-                }
-
-                OnCollectionChanged(new LinkedCollectionChangedEventArgs<T>(action, addedBefore, addedAfter, node));
+                RaisePropertyChangedEvent(nameof(FirstValue));
             }
+
+            else if (Last != _lastNode)
+            {
+                _lastNode = Last;
+
+                RaisePropertyChangedEvent(nameof(Last));
+
+                RaisePropertyChangedEvent(nameof(LastValue));
+            }
+
+            OnCollectionChanged(new LinkedCollectionChangedEventArgs<T>(action, addedBefore, addedAfter, node));
+        }
 
 #if !WinCopies3
         protected override void AddFirstItem(System.Collections.Generic.LinkedListNode<T> node)
@@ -154,14 +155,14 @@ namespace WinCopies.Collections.DotNetFix
         }
 #endif
 
-            protected override
+        protected override
 #if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
 #endif
                 <T> AddFirstItem(T value)
-            {
+        {
 #if !WinCopies3
             System.Collections.Generic.LinkedListNode
 #else
@@ -169,25 +170,25 @@ namespace WinCopies.Collections.DotNetFix
 #endif
                 <T> result = base.AddFirstItem(value);
 
-                RaiseCountPropertyChangedEvent();
+            RaiseCountPropertyChangedEvent();
 
-                RaiseCollectionChangedEvent(LinkedCollectionChangedAction.AddFirst, null, null, result);
+            RaiseCollectionChangedEvent(LinkedCollectionChangedAction.AddFirst, null, null, result);
 
-                return result;
-            }
+            return result;
+        }
 
-            protected override void AddItem(T item)
-            {
-                base.AddItem(item);
+        protected override void AddItem(T item)
+        {
+            base.AddItem(item);
 
-                RaiseCountPropertyChangedEvent();
+            RaiseCountPropertyChangedEvent();
 
-                // Assumming that items are added to the end of the list.
+            // Assumming that items are added to the end of the list.
 
-                RaiseCollectionChangedEvent(LinkedCollectionChangedAction.AddLast, null, null, InnerList.Last);
-            }
+            RaiseCollectionChangedEvent(LinkedCollectionChangedAction.AddLast, null, null, InnerList.Last);
+        }
 
-            protected override
+        protected override
 #if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
@@ -200,7 +201,7 @@ namespace WinCopies.Collections.DotNetFix
                 ILinkedListNode
 #endif
                 <T> node, T value)
-            {
+        {
 
 #if !WinCopies3
             System.Collections.Generic.LinkedListNode
@@ -209,14 +210,14 @@ namespace WinCopies.Collections.DotNetFix
 #endif
                 <T> result = base.AddItemAfter(node, value);
 
-                RaiseCountPropertyChangedEvent();
+            RaiseCountPropertyChangedEvent();
 
-                RaiseCollectionChangedEvent(LinkedCollectionChangedAction.AddAfter, null, node, result);
+            RaiseCollectionChangedEvent(LinkedCollectionChangedAction.AddAfter, null, node, result);
 
-                return result;
-            }
+            return result;
+        }
 
-            protected override
+        protected override
 #if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
@@ -229,7 +230,7 @@ namespace WinCopies.Collections.DotNetFix
                 ILinkedListNode
 #endif
                 <T> node, T value)
-            {
+        {
 
 #if !WinCopies3
             System.Collections.Generic.LinkedListNode
@@ -238,21 +239,21 @@ namespace WinCopies.Collections.DotNetFix
 #endif
                 <T> result = base.AddItemBefore(node, value);
 
-                RaiseCountPropertyChangedEvent();
+            RaiseCountPropertyChangedEvent();
 
-                RaiseCollectionChangedEvent(LinkedCollectionChangedAction.AddBefore, node, null, result);
+            RaiseCollectionChangedEvent(LinkedCollectionChangedAction.AddBefore, node, null, result);
 
-                return result;
-            }
+            return result;
+        }
 
-            protected override
+        protected override
 #if !WinCopies3
                 System.Collections.Generic.LinkedListNode
 #else
                 ILinkedListNode
 #endif
                 <T> AddLastItem(T value)
-            {
+        {
 #if !WinCopies3
             System.Collections.Generic.LinkedListNode
 #else
@@ -260,71 +261,71 @@ namespace WinCopies.Collections.DotNetFix
 #endif
                 <T> result = base.AddLastItem(value);
 
-                RaiseCountPropertyChangedEvent();
+            RaiseCountPropertyChangedEvent();
 
-                RaiseCollectionChangedEvent(LinkedCollectionChangedAction.AddLast, null, null, result);
+            RaiseCollectionChangedEvent(LinkedCollectionChangedAction.AddLast, null, null, result);
 
-                return result;
-            }
+            return result;
+        }
 
-            protected override void ClearItems()
-            {
-                base.ClearItems();
+        protected override void ClearItems()
+        {
+            base.ClearItems();
 
-                RaiseCountPropertyChangedEvent();
+            RaiseCountPropertyChangedEvent();
 
-                RaiseCollectionChangedEvent(LinkedCollectionChangedAction.Reset, null, null, null);
-            }
+            RaiseCollectionChangedEvent(LinkedCollectionChangedAction.Reset, null, null, null);
+        }
 
 #if !WinCopies3
-            protected override void RemoveFirstItem()
-            {
-                System.Collections.Generic.LinkedListNode<T> node = InnerList.First;
+        protected override void RemoveFirstItem()
+        {
+            System.Collections.Generic.LinkedListNode<T> node = InnerList.First;
 
-                base.RemoveFirstItem();
+            base.RemoveFirstItem();
 
-                RaiseCountPropertyChangedEvent();
+            RaiseCountPropertyChangedEvent();
 
-                RaiseCollectionChangedEvent(LinkedCollectionChangedAction.Remove, null, null, node);
-            }
+            RaiseCollectionChangedEvent(LinkedCollectionChangedAction.Remove, null, null, node);
+        }
 
-            protected override void RemoveItem(System.Collections.Generic.LinkedListNode<T> node)
-            {
-                base.RemoveItem(node);
+        protected override void RemoveItem(System.Collections.Generic.LinkedListNode<T> node)
+        {
+            base.RemoveItem(node);
 
-                RaiseCountPropertyChangedEvent();
+            RaiseCountPropertyChangedEvent();
 
-                RaiseCollectionChangedEvent(LinkedCollectionChangedAction.Remove, null, null, node);
-            }
+            RaiseCollectionChangedEvent(LinkedCollectionChangedAction.Remove, null, null, node);
+        }
 
-            protected override bool RemoveItem(T item)
-            {
-                foreach (System.Collections.Generic.LinkedListNode<T> node in new Generic.LinkedListNodeEnumerator<T>(InnerList))
+        protected override bool RemoveItem(T item)
+        {
+            foreach (System.Collections.Generic.LinkedListNode<T> node in new Enumerable<ILinkedListNode<T>>(() => new LinkedListEnumerator<T>(new Abstraction.Generic.LinkedList<T>(InnerList), EnumerationDirection.FIFO, null, null)).Select(node=>((Abstraction.Generic.LinkedListNode<T>)node).InnerNode))
 
-                    if (node.Value.Equals(item))
-                    {
-                        base.RemoveItem(node); // This is a custom internal enumerator designed to do not throw when its underlying collection change.
+                if (node.Value.Equals(item))
+                {
+                    base.RemoveItem(node); // This is a custom internal enumerator designed to do not throw when its underlying collection change.
 
-                        RaiseCountPropertyChangedEvent();
+                    RaiseCountPropertyChangedEvent();
 
-                        RaiseCollectionChangedEvent(LinkedCollectionChangedAction.Remove, null, null, node);
+                    RaiseCollectionChangedEvent(LinkedCollectionChangedAction.Remove, null, null, node);
 
-                        return true;
-                    }
+                    return true;
+                }
 
-                return false;
-            }
+            return false;
+        }
 
-            protected override void RemoveLastItem()
-            {
-                System.Collections.Generic.LinkedListNode<T> node = InnerList.Last;
+        protected override void RemoveLastItem()
+        {
+            System.Collections.Generic.LinkedListNode<T> node = InnerList.Last;
 
-                base.RemoveLastItem();
+            base.RemoveLastItem();
 
-                RaiseCountPropertyChangedEvent();
+            RaiseCountPropertyChangedEvent();
 
-                RaiseCollectionChangedEvent(LinkedCollectionChangedAction.Remove, null, null, node);
-            }
+            RaiseCollectionChangedEvent(LinkedCollectionChangedAction.Remove, null, null, node);
+        }
 #endif
 
 #if WinCopies3
@@ -337,7 +338,7 @@ namespace WinCopies.Collections.DotNetFix
                 RaiseCollectionChangedEvent(LinkedCollectionChangedAction.Remove, null, null, node);
             }
 #endif
-        }
+    }
 #if WinCopies3
     }
 #endif

@@ -45,7 +45,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\ConverterBase\ConverterBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\ConverterBase\ConverterBase2.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\ConverterBase\ConverterBase3.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\EqualsConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\MultiConverterBase\MultiConverterBase2.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\MultiConverterBase\MultiConverterBase3.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\MultiConverterBase\MultiConverterBase4.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\PropertySystemConverters.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\EnumToBooleanConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\EnumToReversedBooleanConverter.cs" />
@@ -55,6 +58,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\IsNullConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\ToStringConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MarkupExtensions\BooleanMarkupExtension.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UtilHelpers.cs" />
     <Compile Include="..\WinCopies.Util.Desktop.Shared\Data\Converters\IntConversionResultToStringConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\MenuItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\MultiConverterBase\MultiConverterBase.cs" />

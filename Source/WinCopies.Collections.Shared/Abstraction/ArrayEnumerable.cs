@@ -32,12 +32,12 @@ namespace WinCopies.Collections.Abstraction.Generic
 
     public interface IArrayEnumerable<T> : IReadOnlyArrayEnumerable<T>, IArray<T>
     {
-        // Left empty.
+        new T this[int index] { get; set; }
     }
 
     public sealed class Enumerator : System.Collections.Generic.IEnumerator<object>
     {
-        private System.Collections.IEnumerator _enumerator;
+        private readonly System.Collections.IEnumerator _enumerator;
 
         object System.Collections.Generic.IEnumerator<object>.Current => _enumerator.Current;
 
@@ -84,13 +84,13 @@ namespace WinCopies.Collections.Abstraction.Generic
             return true;
         }
 
-        public abstract ICountableEnumerator<TDestinationItems> GetEnumerator() ;
+        public abstract ICountableEnumerator<TDestinationItems> GetEnumerator();
 
         System.Collections.Generic.IEnumerator<TDestinationItems> System.Collections.Generic.IEnumerable<TDestinationItems>.GetEnumerator() => GetEnumerator();
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
 
-        ICountableEnumerator Enumeration.DotNetFix.IEnumerable<ICountableEnumerator>.GetEnumerator() => GetEnumerator();
+        ICountableEnumerator WinCopies.Collections.Enumeration.DotNetFix.IEnumerable<ICountableEnumerator>.GetEnumerator() => GetEnumerator();
     }
 
     public abstract class ReadOnlyArrayEnumerableBase2<TSourceItems, TDestinationItems> : ReadOnlyArrayEnumerableBase<TSourceItems, TDestinationItems>, IReadOnlyArrayEnumerable<TDestinationItems>

@@ -23,6 +23,15 @@ namespace WinCopies.Util.Commands
 namespace WinCopies.Commands
 #endif
 {
+    public interface ICommandSource<T> : ICommandSource
+    {
+        new T CommandParameter { get; }
+
+#if CS8
+        object ICommandSource.CommandParameter => CommandParameter;
+#endif
+    }
+
     public static class Commands
     {
         public static RoutedCommand CommonCommand { get; } = new RoutedCommand(nameof(CommonCommand), typeof(Commands));

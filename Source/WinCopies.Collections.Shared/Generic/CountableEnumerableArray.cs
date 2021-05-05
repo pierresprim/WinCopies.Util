@@ -37,13 +37,13 @@ namespace WinCopies.Collections
 #if WinCopies3
     namespace Enumeration
     {
-        public abstract class CountableEnumerator<TEnumerator, TCount> : System.Collections.IEnumerator where TEnumerator : IEnumerator
+        public abstract class CountableEnumerator<TEnumerator, TCount> : System.Collections.IEnumerator where TEnumerator : System.Collections.IEnumerator
         {
             private readonly Func<TCount> _func;
 
             protected TEnumerator Enumerator { get; }
 
-            object IEnumerator.Current => Enumerator.Current;
+            object System.Collections.IEnumerator.Current => Enumerator.Current;
 
             public TCount Count => _func();
 
@@ -72,7 +72,7 @@ namespace WinCopies.Collections
             public void Reset() => Enumerator.Reset();
         }
 
-        public class CountableEnumerator<TEnumerator> : CountableEnumerator<TEnumerator, int>, ICountableEnumerator where TEnumerator : IEnumerator
+        public class CountableEnumerator<TEnumerator> : CountableEnumerator<TEnumerator, int>, ICountableEnumerator where TEnumerator : System.Collections.IEnumerator
         {
             public CountableEnumerator(in TEnumerator enumerator, in Func<int> func) : base(enumerator, func) { /* Left empty. */ }
         }

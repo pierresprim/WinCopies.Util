@@ -219,17 +219,6 @@ System.Collections.Generic.LinkedListNode
         IEnumeratorInfo2<ILinkedListNode<T>> Collections.Generic.IEnumerable<ILinkedListNode<T>, IEnumeratorInfo2<ILinkedListNode<T>>>.GetReversedEnumerator() => GetReversedNodeEnumerator();
 #endif
     }
-
-    public interface ILinkedListExtensions<T> : IEnumerableInfoLinkedList<T>
-    {
-        System.Collections.Generic.IEnumerator<T> GetEnumerator(ILinkedListNode<T> start, ILinkedListNode<T> end);
-
-        System.Collections.Generic.IEnumerator<T> GetReversedEnumerator(ILinkedListNode<T> start, ILinkedListNode<T> end);
-
-        System.Collections.Generic.IEnumerator<ILinkedListNode<T>> GetNodeEnumerator(ILinkedListNode<T> start, ILinkedListNode<T> end);
-
-        System.Collections.Generic.IEnumerator<ILinkedListNode<T>> GetReversedNodeEnumerator(ILinkedListNode<T> start, ILinkedListNode<T> end);
-    }
 #endif
 }
 #endif

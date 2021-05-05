@@ -88,7 +88,7 @@ namespace WinCopies.Collections.DotNetFix
 
             object System.Collections.IEnumerator.Current => Current;
 
-            public bool IsDisposed { get; private set; }
+            public bool IsDisposed => _enumerator == null;
 
             public DisposableEnumerator(in System.Collections.Generic.IEnumerator<T> enumerator) => _enumerator = enumerator;
 
@@ -98,15 +98,7 @@ namespace WinCopies.Collections.DotNetFix
 
             public void Reset() => GetOrThrowIfDisposed(_enumerator).Reset();
 
-            public void Dispose()
-            {
-                if (_enumerator != null)
-                {
-                    _enumerator = null;
-
-                    IsDisposed = true;
-                }
-            }
+            public void Dispose() => _enumerator = null;
         }
 #endif
     }

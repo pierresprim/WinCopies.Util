@@ -294,9 +294,7 @@ System.Collections.IEnumerator, WinCopies.Util.DotNetFix.IDisposable
             _innerEnumerator = null;
         }
     }
-#endif
 
-#if WinCopies3
     namespace Generic
     {
 #endif
@@ -308,9 +306,9 @@ System.Collections.Generic.IEnumerator<T>, WinCopies.Util.DotNetFix.IDisposable
 #endif
         {
 #if !WinCopies3
-            private T _current;
+        private T _current;
 
-            public bool IsDisposed { get; private set; }
+        public bool IsDisposed { get; private set; }
 #endif
 
             /// <summary>
@@ -328,21 +326,39 @@ _enumerationStarted
 #else
                     IsStarted
 #endif
-                    ? CurrentOverride : throw new InvalidOperationException("The enumeration has not been started or has completed.");
+                    ?
+#if WinCopies3
+                CurrentOverride
+#else
+                _current
+#endif
+                : throw new InvalidOperationException("The enumeration has not been started or has completed.");
 #if !WinCopies3
                 protected set => _current = IsDisposed ? throw GetExceptionForDispose(false) : value;
             }
 #endif
 
             /// <summary>
-            /// When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            /// When overridden in a derived class, gets the item in the collection at the current position of the enumerator.
             /// </summary>
-            protected abstract T CurrentOverride { get; }
+#if !WinCopies3
+        [Obsolete("This property is not by this class in WinCopies 2, so it is now virtual. This property is abstract in WinCopies 3.")]
+#endif
+            protected
+#if WinCopies3
+abstract
+#else
+            virtual
+#endif
+T CurrentOverride
+            { get; }
 
             object System.Collections.IEnumerator.Current => Current;
 
 #if !WinCopies3
         private bool _enumerationStarted = false;
+
+        protected TValue GetOrThrowIfDisposed<TValue>(in TValue value) => Util.ThrowHelper.GetOrThrowIfDisposed(this, value);
 
         protected abstract bool MoveNextOverride();
 
@@ -357,7 +373,7 @@ _enumerationStarted
 
             _enumerationStarted = false;
 
-            _current = default;
+            Current = default;
 
             return false;
         }
@@ -373,7 +389,7 @@ _enumerationStarted
 
         protected virtual void ResetOverride()
         {
-            _current = default;
+            Current = default;
 
             _enumerationStarted = false;
         }

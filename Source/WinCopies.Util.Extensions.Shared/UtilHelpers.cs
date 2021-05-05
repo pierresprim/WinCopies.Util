@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections;
+
 using WinCopies.Util;
 
 using static WinCopies.Diagnostics.IfHelpers;

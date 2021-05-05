@@ -33,7 +33,7 @@ namespace WinCopies.PropertySystem
     {
         public override ConversionOptions ConvertOptions => ConverterHelper.ParameterCanBeNull;
 
-        public override ConversionOptions ConvertBackOptions => throw new InvalidOperationException();
+        public override ConversionOptions ConvertBackOptions => throw new NotSupportedException();
 
         public override ConversionWays Direction => ConversionWays.OneWay;
 

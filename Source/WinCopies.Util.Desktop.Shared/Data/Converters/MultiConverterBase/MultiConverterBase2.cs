@@ -15,6 +15,87 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
+#if WinCopies3
+using System;
+using System.Globalization;
+
+using static WinCopies.Util.Data.ConverterHelper;
+
+namespace WinCopies.Util.Data
+{
+    public interface IMultiConverterConverters<TParamIn, TParamOut, TDestinationIn, TDestinationOut>
+    {
+        TParamOut GetDefaultParameter();
+
+        TParamOut ConvertParameter(in TParamIn parameter);
+
+        TDestinationOut GetDefaultDestinationValue();
+
+        TDestinationOut ConvertDestinationValue(in TDestinationIn value);
+    }
+
+    public sealed class MultiConverterConverters<TParam, TDestination> : IMultiConverterConverters<TParam, TParam, TDestination, TDestination>
+    {
+        public TParam GetDefaultParameter() => default;
+
+        public TParam ConvertParameter(in TParam parameter) => parameter;
+
+        public TDestination GetDefaultDestinationValue() => default;
+
+        public TDestination ConvertDestinationValue(in TDestination value) => value;
+    }
+
+    public abstract class MultiConverterBase3<TParamIn, TParamOut, TDestinationIn, TDestinationOut> : MultiConverterBase
+    {
+        public abstract ConversionOptions ConvertOptions { get; }
+
+        public abstract ConversionOptions ConvertBackOptions { get; }
+
+        public abstract ConversionWays Direction { get; }
+
+        protected abstract IMultiConverterConverters<TParamIn, TParamOut, TDestinationIn, TDestinationOut> Converters { get; }
+
+        protected abstract object Convert(object[] values, TParamOut _parameter, CultureInfo culture);
+
+        public sealed override object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (Direction.HasFlag(ConversionWays.OneWay))
+            {
+                Check(values, ConvertOptions.AllowNullValue, nameof(values));
+
+                Check<TParamIn>(parameter, ConvertOptions.AllowNullParameter, nameof(parameter));
+
+                return Convert(values, parameter == null ? Converters.GetDefaultParameter() : Converters.ConvertParameter((TParamIn)parameter), culture);
+            }
+
+            throw new InvalidOperationException("The OneWay conversion direction is not supported.");
+        }
+
+        protected abstract object[] ConvertBack(TDestinationOut _value, TParamOut _parameter, CultureInfo culture);
+
+        public sealed override object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            if (Direction.HasFlag(ConversionWays.OneWayToSource))
+            {
+                Check<TDestinationIn>(value, ConvertOptions.AllowNullValue, nameof(value));
+
+                Check<TParamIn>(parameter, ConvertOptions.AllowNullParameter, nameof(parameter));
+
+                return ConvertBack(value == null ? Converters.GetDefaultDestinationValue() : Converters.ConvertDestinationValue((TDestinationIn)value), parameter == null ? Converters.GetDefaultParameter() : Converters.ConvertParameter((TParamIn)parameter), culture);
+            }
+
+            throw new InvalidOperationException("The OneWayToSource conversion direction is not supported.");
+        }
+    }
+
+    public abstract class MultiConverterBase4<TParamIn, TParamOut, TDestinationIn, TDestinationOut> : MultiConverterBase3<TParamIn, TParamOut, TDestinationIn, TDestinationOut>
+    {
+        protected abstract TDestinationOut ConvertOverride(object[] values, TParamOut _parameter, CultureInfo culture);
+
+        protected sealed override object Convert(object[] values, TParamOut _parameter, CultureInfo culture) => ConvertOverride(values, _parameter, culture);
+    }
+}
+#else
 using System;
 using System.Globalization;
 using System.Windows.Data;
@@ -24,20 +105,12 @@ using WinCopies.Collections.DotNetFix.Generic;
 using WinCopies.Linq;
 
 using static WinCopies.Util.Data.ConverterHelper;
-
-#if WinCopies3
-using WinCopies.Collections.Generic;
-
-using static WinCopies.ThrowHelper;
-#else
 using static WinCopies.Util.Util;
-#endif
 
 namespace WinCopies.Util.Data
 {
     public abstract class MultiConverterBase<TSourceIn, TSourceOut, TParam, TDestination> : MultiConverterBase
     {
-#if !WinCopies3
         public interface IQueue : IUIntCountable
         {
             TSourceOut Dequeue();
@@ -94,7 +167,6 @@ namespace WinCopies.Util.Data
 
             public TSourceOut Dequeue() => _stack.Pop();
         }
-#endif
 
         public abstract ConversionOptions ConvertOptions { get; }
 
@@ -108,11 +180,9 @@ namespace WinCopies.Util.Data
 
         protected abstract bool[] ConvertBack(TDestination value, TParam parameter, CultureInfo culture, out IQueue<TSourceOut> result);
 
-#if !WinCopies3
         public static bool CheckForNullItem(in object value, in bool methodParameter) => !methodParameter && value == null;
 
         private static System.Collections.Generic.IEnumerable<T> To<T>(in System.Collections.IEnumerable enumerable) => enumerable.SelectConverter(value => (T)value);
-#endif
 
         public sealed override object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
@@ -124,17 +194,7 @@ namespace WinCopies.Util.Data
 
                 object convert(in TParam _parameter)
                 {
-                    ArrayBuilder<TSourceOut> arrayBuilder = Convert(
-#if WinCopies3
-                    values?.
-#else
-                    values == null ? null :
-#endif
-                    To<TSourceIn>(
-#if !WinCopies3
-                        values
-#endif
-                    ), _parameter, culture);
+                    ArrayBuilder<TSourceOut> arrayBuilder = Convert(values == null ? null : To<TSourceIn>(values), _parameter, culture);
 
                     try
                     {
@@ -186,3 +246,4 @@ namespace WinCopies.Util.Data
         }
     }
 }
+#endif

@@ -30,6 +30,11 @@
               Looks up a localized string similar to This list or collection is read-only..
             </summary>
         </member>
+        <member name="P:WinCopies.Collections.DotNetFix.Generic.LinkedListEnumerator`1.CurrentOverride">
+            <summary>
+            When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            </summary>
+        </member>
         <member name="P:WinCopies.Collections.DotNetFix.Generic.EnumerableQueue`1.Enumerator.CurrentOverride">
             <summary>
             When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
@@ -349,11 +354,6 @@
             </summary>
             <param name="collection">The <see cref="T:System.Collections.IEnumerable"/> whose elements are copied to the new <see cref="T:System.Collections.Generic.LinkedList`1"/>.</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="collection"/> is <see langword="null"/>.</exception>
-        </member>
-        <member name="P:WinCopies.Collections.DotNetFix.Generic.LinkedList`1.Enumerator.CurrentOverride">
-            <summary>
-            When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
-            </summary>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.Generic.LinkedList`1.OnMove(WinCopies.Collections.DotNetFix.Generic.LinkedList{`0}.LinkedListNode@,System.String@,WinCopies.Collections.DotNetFix.Generic.LinkedList{`0}.LinkedListNode@,System.String@)">
             <summary>
@@ -739,7 +739,7 @@
         </member>
         <member name="P:WinCopies.Collections.Generic.Enumerator`1.CurrentOverride">
             <summary>
-            When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            When overridden in a derived class, gets the item in the collection at the current position of the enumerator.
             </summary>
         </member>
         <member name="P:WinCopies.Collections.Generic.EnumeratorInfo`1.CurrentOverride">

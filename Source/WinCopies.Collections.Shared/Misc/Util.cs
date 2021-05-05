@@ -19,6 +19,8 @@
 
 using System;
 
+using WinCopies.Collections.DotNetFix;
+using WinCopies.Collections.DotNetFix.Generic;
 using WinCopies.Collections.Generic;
 
 using static WinCopies.ThrowHelper;
@@ -30,6 +32,22 @@ namespace WinCopies.Collections
     /// </summary>
     public static class Util
     {
+#if CS7
+        public static System.Collections.Generic.IEnumerator<Collections.DotNetFix.
+#if WinCopies3
+            Generic.
+#endif
+            ILinkedListNode<T>> GetNodeEnumerator<T>(in ILinkedList<T> list, in EnumerationDirection enumerationDirection, in DotNetFix.
+#if WinCopies3
+            Generic.
+#endif
+      ILinkedListNode<T> start, DotNetFix.
+#if WinCopies3
+            Generic.
+#endif
+      ILinkedListNode<T> end) => new LinkedListEnumerator<T>(list, enumerationDirection, start, end);
+#endif
+
         public static System.Collections.Generic.IEnumerable<T> GetEmptyEnumerable<T>() => new WinCopies.Collections.Generic.Enumerable<T>(() => new EmptyEnumerator<T>());
 
         /// <summary>

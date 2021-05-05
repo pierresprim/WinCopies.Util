@@ -44,5 +44,9 @@ namespace WinCopies
         public static bool True(bool value) => true;
 
         public static bool False(bool value) => false;
+
+        public static bool IsTrue(bool? value) => value == true;
+
+        public static bool IsFalse(bool? value) => value == false;
     }
 }

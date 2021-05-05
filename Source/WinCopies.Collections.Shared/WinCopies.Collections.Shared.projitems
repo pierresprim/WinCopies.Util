@@ -9,19 +9,20 @@
     <Import_RootNamespace>WinCopies.Collections.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)AbstractionTypes.Partial\Queue.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)AbstractionTypes.Partial\Stack.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Abstraction\AbstractionTypes.Partial\Queue.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Abstraction\AbstractionTypes.Partial\Stack.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstraction\Abstract\Countable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstraction\Abstract\List.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstraction\ArrayEnumerable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Abstraction\LinkedList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstraction\List.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\EnumerableSimpleLinkedList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\EventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\Extensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\LinkedListNodeEnumerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\ObservableLinkedCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\ReadOnlyLinkedCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\ReadOnlyObservableLinkedCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedList\Enumerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedList\ILinkedListNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\SimpleLinkedList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedList\ILinkedList.cs" />

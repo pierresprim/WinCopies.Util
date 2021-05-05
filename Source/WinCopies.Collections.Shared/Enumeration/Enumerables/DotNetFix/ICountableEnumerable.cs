@@ -111,7 +111,19 @@ namespace WinCopies.Collections.DotNetFix
             // Left empty.
         }
 
+        public interface IReadOnlyArray<out T> : WinCopies.Collections.DotNetFix.
+#if WinCopies3
+        Generic.
+#endif
+        ICountableEnumerable<T>
+        {
+            T this[int index] { get; }
+        }
+
         public interface IArray<T> : IReadOnlyList<T>
+#if WinCopies3
+            , IReadOnlyArray<T>
+#endif
         {
             new T this[int index] { get; set; }
         }
