@@ -19,12 +19,10 @@
 using System;
 using System.Globalization;
 
-using WinCopies.Util.Data;
-
 using static WinCopies.Util.Data.ConverterHelper;
 using static WinCopies.Bool;
 
-namespace WinCopies
+namespace WinCopies.Util.Data
 {
     public class EqualsConverter : MultiConverterBase4<bool, bool, bool, bool>
     {
