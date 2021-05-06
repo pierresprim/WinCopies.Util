@@ -6,6 +6,11 @@ The WinCopies� software framework
 CHANGELOG
 ---------
 
+### 05/06/2021 3.7.2-preview
+
+- Bug fixed in LinkedList.Enumerator.
+- EqualsConverter is in the WinCopies.Util.Data namespace.
+
 ### 05/05/2021 3.7.1-preview
 
 - Add indexer to IArrayEnumerable<T>.

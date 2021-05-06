@@ -167,7 +167,9 @@ namespace WinCopies.Collections.DotNetFix
                 {
                     InnerEnumerator = enumerator ?? throw GetArgumentNullException(nameof(enumerator));
 
-                    (list ?? throw GetArgumentNullException(nameof(list)))._enumeratorsCount++;
+                    List = list ?? throw GetArgumentNullException(nameof(list));
+
+                    list._enumeratorsCount++;
                 }
 
                 protected override bool MoveNextOverride()
