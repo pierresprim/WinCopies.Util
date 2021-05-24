@@ -11,10 +11,10 @@
     <Description>WinCopies framework utilities</Description>
     <Copyright>Copyright © 2021 Pierre Sprimont</Copyright>
     <PackageTags>WinCopies</PackageTags>
-    <VersionPrefix>3.7.1</VersionPrefix>
+    <VersionPrefix>3.8</VersionPrefix>
     <VersionSuffix>preview</VersionSuffix>
-    <AssemblyVersion>3.7.1.0</AssemblyVersion>
-    <FileVersion>3.7.1.0</FileVersion>
+    <AssemblyVersion>3.8.0</AssemblyVersion>
+    <FileVersion>3.8.0</FileVersion>
     <RootNamespace>WinCopies</RootNamespace>
     <DefineConstants>WinCopies3;$(DefineConstants)</DefineConstants>
     <PackageIcon>WinCopies.png</PackageIcon>
