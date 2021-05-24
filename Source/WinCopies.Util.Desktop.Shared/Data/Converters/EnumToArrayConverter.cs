@@ -1,4 +1,4 @@
-﻿/* Copyright © Pierre Sprimont, 2019
+﻿/* Copyright © Pierre Sprimont, 2021
  *
  * This file is part of the WinCopies Framework.
  *
@@ -21,10 +21,10 @@ using System.Windows.Data;
 
 namespace WinCopies.Util.Data
 {
-    [ValueConversion(typeof(object), typeof(string[]), ParameterType = typeof(Type))]
-    public class EnumToStringArrayConverter :
+    [ValueConversion(typeof(object), typeof(Array), ParameterType = typeof(Type))]
+    public class EnumToArrayConverter :
 #if WinCopies3
-        AlwaysConvertibleOneWayConverter<object, Type, string[]>
+        AlwaysConvertibleOneWayConverter<object, Type, Array>
     {
         /// <summary>
         /// <para>Value: ignored.</para>
@@ -32,11 +32,11 @@ namespace WinCopies.Util.Data
         /// </summary>
         public override ConversionOptions ConvertOptions => ConverterHelper.ValueCanBeNull;
 
-        protected override string[] Convert(object value, Type parameter, CultureInfo culture) => parameter.IsEnum ? parameter.GetEnumNames() : null;
+        protected override Array Convert(object value, Type parameter, CultureInfo culture) => parameter.IsEnum ? parameter.GetEnumValues() : null;
 #else
         ConverterBase
     {
-        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture) => parameter is Type t && t.IsEnum ? t.GetEnumNames() : null;
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture) => parameter is Type t && t.IsEnum ? t.GetEnumValues() : null;
 
         public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
 #endif

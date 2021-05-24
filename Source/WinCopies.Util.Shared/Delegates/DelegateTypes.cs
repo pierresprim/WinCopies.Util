@@ -51,6 +51,7 @@ namespace WinCopies
         }
     }
 
+#if !WinCopies3
     /// <summary>
     /// This delegate represents the action that is performed for each iteration of a loop.
     /// </summary>
@@ -65,6 +66,7 @@ namespace WinCopies
     /// <param name="obj">The object or value retrieved by the current iteration.</param>
     /// <returns><see langword="true"/> to break the loop; otherwise <see langword="false"/>.</returns>
     public delegate bool LoopIteration<T>(T obj);
+#endif
 
 #if CS7
     public delegate (bool result, Exception ex) FieldValidateValueCallback(object obj, object value, FieldInfo field, string paramName);
@@ -81,11 +83,15 @@ namespace WinCopies
     /// <summary>
     /// Delegate for a non-generic predicate.
     /// </summary>
-    /// <param name="value">The value to test</param>
+    /// <param name="value">The value to test.</param>
     /// <returns><see langword="true"/> if the predicate success, otherwise <see langword="false"/>.</returns>
     public delegate bool Predicate(object value);
 
-    public delegate T Converter<T>(object obj);
+    public delegate T Converter<
+#if WinCopies3
+        out
+#endif
+        T>(object obj);
 
     public delegate void ActionParams(params object[] args);
 

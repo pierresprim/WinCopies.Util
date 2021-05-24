@@ -6,13 +6,21 @@ The WinCopies® software framework
 CHANGELOG
 ---------
 
-### 05/05/2021
+### 05/24/2021 2.11
+
+- Additions:
+	- New types and static methods.
+	- Update methods to view model base classes.
+	- InterfaceDataTemplateSelector: properties and Ignore subclass. The Ignore subclass is an Attribute that can be used by models and view models.
+- Add default parameters to GetDirectInterfaces method.
+
+### 05/05/2021 2.10.2
 
 - Bug fixes.
 - Add new types.
 - Add new static methods.
 
-### 05/02/2021
+### 05/02/2021 2.10.1
 
 - Add new types.
 - LinkedCollection: update GetEnumerator-like methods return types.

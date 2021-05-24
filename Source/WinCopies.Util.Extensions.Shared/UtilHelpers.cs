@@ -20,6 +20,7 @@
 using System;
 using System.Collections;
 
+using WinCopies.Linq;
 using WinCopies.Util;
 
 using static WinCopies.Diagnostics.IfHelpers;
@@ -32,6 +33,34 @@ namespace WinCopies.Extensions // To avoid name conflicts.
 {
     public static class UtilHelpers
     {
+        public static System.Collections.Generic.IEnumerable<T> GetFieldValues<T>(this Type t, object obj)
+        {
+            Type _t = typeof(T);
+
+            return t.GetFields().WhereSelect(f => f.FieldType.IsAssignableFrom(_t), f => (T)f.GetValue(obj));
+        }
+
+        public static bool ContainsFieldValue<T>(in Type t, in object obj, T value)
+        {
+            Predicate<T> p;
+
+            if (value == null)
+
+                p = _value => _value == null;
+
+            else
+
+                p = _value => value.Equals(_value);
+
+            foreach (T _value in t.GetFieldValues<T>(obj))
+
+                if (p(_value))
+
+                    return true;
+
+            return false;
+        }
+
         /// <summary>
         /// Returns a value obtained by a <see cref="Func"/>, depending on the result of a comparison.
         /// </summary>

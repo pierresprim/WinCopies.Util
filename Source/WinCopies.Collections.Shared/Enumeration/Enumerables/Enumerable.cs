@@ -120,6 +120,16 @@ namespace WinCopies.Collections
     namespace Generic
     {
 #endif
+        public interface IDisposableEnumerable : System.Collections.IEnumerable, System.IDisposable
+        {
+            // Left empty.
+        }
+
+        public interface IDisposableEnumerable<out T> : System.Collections.Generic.IEnumerable<T>, System.IDisposable
+        {
+            // Left empty.
+        }
+
         public abstract class EnumerableBase<TItems, TEnumerator> : System.Collections.Generic.IEnumerable<TItems> where TEnumerator : System.Collections.Generic.IEnumerator<TItems>
         {
             protected Func<TEnumerator> EnumeratorFunc { get; }

@@ -135,9 +135,20 @@ namespace WinCopies
         public System.Collections.Generic.IEnumerable<TOut> Select(System.Collections.Generic.IEnumerable<TIn> items) => IsDisposed ? throw GetExceptionForDispose(false) : items.
 #if WinCopies3
             SelectConverter
-            #else
+#else
             Select
 #endif
             (Stack.Count == 0 ? DefaultSelectorOverride : _Select);
+    }
+
+    public class DefaultNullableValueSelectorDictionary<TIn, TOut> : SelectorDictionary<TIn, TOut> where TOut : class
+    {
+        protected override Converter<TIn, TOut> DefaultSelectorOverride =>
+            #if !WinCopies3
+            Util.
+#endif
+            Delegates
+            
+            .Null<TIn, TOut>;
     }
 }

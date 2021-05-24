@@ -22,5 +22,11 @@ namespace WinCopies.Util.Desktop
     public static class UtilHelpers
     {
         public static DependencyProperty Register<TValue, TOwnerType>(in string propertyName) => DependencyProperty.Register(propertyName, typeof(TValue), typeof(TOwnerType));
+
+        public static DependencyProperty Register<TValue, TOwnerType>(in string propertyName, in PropertyMetadata propertyMetadata) => DependencyProperty.Register(propertyName, typeof(TValue), typeof(TOwnerType), propertyMetadata);
+
+        public static DependencyPropertyKey RegisterReadOnly<TValue, TOwnerType>(in string propertyName, in PropertyMetadata propertyMetadata) => DependencyProperty.RegisterReadOnly(propertyName, typeof(TValue), typeof(TOwnerType), propertyMetadata);
+
+        public static RoutedEvent RegisterRoutedEvent<TEventHandler, TOwnerType>(in string eventName, in RoutingStrategy routingStrategy) => EventManager.RegisterRoutedEvent(eventName, routingStrategy, typeof(TEventHandler), typeof(TOwnerType));
     }
 }

@@ -45,6 +45,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\ConverterBase\ConverterBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\ConverterBase\ConverterBase2.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\ConverterBase\ConverterBase3.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\EnumToArrayConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\EqualsConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\MultiConverterBase\MultiConverterBase2.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\MultiConverterBase\MultiConverterBase3.cs" />

@@ -25,8 +25,6 @@ using System.Runtime.InteropServices;
 
 using WinCopies.Util;
 
-using IComparer = System.Collections.IComparer;
-
 #if !WinCopies3
 using System.ComponentModel;
 
@@ -1032,7 +1030,7 @@ namespace WinCopies
         public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, in object value, params object[] values) => If(comparisonType, comparisonMode, comparison, System.Collections.Generic.EqualityComparer<object>.Default, GetCommonPredicate(), value, values);
 
         /// <summary>
-        /// Performs a comparison by testing a value compared to an array of values using a custom <see cref="IComparer{T}"/> and <see cref="Predicate{T}"/>.
+        /// Performs a comparison by testing a value compared to an array of values using a custom <see cref="System.Collections.IComparer"/> and <see cref="Predicate{T}"/>.
         /// </summary>
         /// <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
         /// <param name="comparisonMode">Whether to perform a binary or a logical comparison.</param>
@@ -1043,10 +1041,10 @@ namespace WinCopies
         /// <param name="predicate">The comparison predicate</param>
         /// <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
         [Obsolete("This method has been replaced by the following method: If(ComparisonType, ComparisonMode, Comparison, IComparer, Predicate, object, params object[])")]
-        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, IComparer comparer, in Predicate<object> predicate, in object value, params object[] values) => If(comparisonType, comparisonMode, comparison, (object x, object y) => comparer.Compare(x, y), predicate, value, values);
+        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, System.Collections.IComparer comparer, in Predicate<object> predicate, in object value, params object[] values) => If(comparisonType, comparisonMode, comparison, (object x, object y) => comparer.Compare(x, y), predicate, value, values);
 
         /// <summary>
-        /// Performs a comparison by testing a value compared to an array of values using a custom <see cref="IComparer"/> and <see cref="Predicate"/>.
+        /// Performs a comparison by testing a value compared to an array of values using a custom <see cref="System.Collections.IComparer"/> and <see cref="Predicate"/>.
         /// </summary>
         /// <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
         /// <param name="comparisonMode">Whether to perform a binary or a logical comparison.</param>
@@ -1056,7 +1054,7 @@ namespace WinCopies
         /// <param name="values">The values to compare.</param>
         /// <param name="predicate">The comparison predicate</param>
         /// <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
-        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, IComparer comparer, in Predicate predicate, in object value, params object[] values) => If(comparisonType, comparisonMode, comparison, (object x, object y) => comparer.Compare(x, y), predicate, value, values);
+        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, System.Collections.IComparer comparer, in Predicate predicate, in object value, params object[] values) => If(comparisonType, comparisonMode, comparison, (object x, object y) => comparer.Compare(x, y), predicate, value, values);
 
         /// <summary>
         /// Performs a comparison by testing a value compared to an array of values using a custom <see cref="Comparison{T}"/> and <see cref="Predicate{T}"/>.
@@ -1139,7 +1137,7 @@ namespace WinCopies
             return IfInternal(comparisonType, comparisonMode, (in object _value, in Func<bool> _predicate) => CheckEqualityComparison(comparison, _value, value, _predicate, comparisonDelegate), new IfValuesEnumerable(values, predicate));
         }
 
-        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, IComparer comparer, in object value, params KeyValuePair<object, Func<bool>>[] values) => If(comparisonType, comparisonMode, comparison, new WinCopies.Collections.Comparison((object x, object y) => comparer.Compare(x, y)), value, values);
+        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, System.Collections.IComparer comparer, in object value, params KeyValuePair<object, Func<bool>>[] values) => If(comparisonType, comparisonMode, comparison, new WinCopies.Collections.Comparison((object x, object y) => comparer.Compare(x, y)), value, values);
 
         [Obsolete("This method has been replaced by the following method: If(ComparisonType, ComparisonMode, Comparison, WinCopies.Collections.Comparison, object, params KeyValuePair<object, Func<bool>>[])")]
         public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, Comparison<object> comparisonDelegate, in object value, params KeyValuePair<object, Func<bool>>[] values) => If(comparisonType, comparisonMode, comparison, new WinCopies.Collections.Comparison((object x, object y) => comparisonDelegate(x, y)), value, values);
@@ -1179,7 +1177,7 @@ namespace WinCopies
         public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, out object key, in object value, params KeyValuePair<object, object>[] values) => If(comparisonType, comparisonMode, comparison, out key, System.Collections.Generic.EqualityComparer<object>.Default, GetCommonPredicate(), value, values);
 
         /// <summary>
-        /// Performs a comparison by testing a value compared to an array of objects or values using a custom <see cref="IComparer{Object}"/> and <see cref="Predicate{Object}"/>.
+        /// Performs a comparison by testing a value compared to an array of objects or values using a custom <see cref="System.Collections.IComparer"/> and <see cref="Predicate{Object}"/>.
         /// </summary>
         /// <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
         /// <param name="comparison">The comparison type</param>
@@ -1189,10 +1187,10 @@ namespace WinCopies
         /// <param name="predicate">The comparison predicate</param>
         /// <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
         [Obsolete("This method has been replaced by the following method: If(ComparisonType, ComparisonMode, Comparison, out object, IComparer, Predicate, object, params KeyValuePair<object, object>[])")]
-        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, out object key, IComparer comparer, in Predicate<object> predicate, in object value, params KeyValuePair<object, object>[] values) => If(comparisonType, comparisonMode, comparison, out key, (object x, object y) => comparer.Compare(x, y), predicate, value, values);
+        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, out object key, System.Collections.IComparer comparer, in Predicate<object> predicate, in object value, params KeyValuePair<object, object>[] values) => If(comparisonType, comparisonMode, comparison, out key, (object x, object y) => comparer.Compare(x, y), predicate, value, values);
 
         /// <summary>
-        /// Performs a comparison by testing a value compared to an array of objects or values using a custom <see cref="IComparer{Object}"/> and <see cref="Predicate{Object}"/>.
+        /// Performs a comparison by testing a value compared to an array of objects or values using a custom <see cref="System.Collections.IComparer"/> and <see cref="Predicate{Object}"/>.
         /// </summary>
         /// <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
         /// <param name="comparison">The comparison type</param>
@@ -1201,7 +1199,7 @@ namespace WinCopies
         /// <param name="values">The values to compare.</param>
         /// <param name="predicate">The comparison predicate</param>
         /// <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
-        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, out object key, IComparer comparer, in Predicate predicate, in object value, params KeyValuePair<object, object>[] values) => If(comparisonType, comparisonMode, comparison, out key, (object x, object y) => comparer.Compare(x, y), predicate, value, values);
+        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, out object key, System.Collections.IComparer comparer, in Predicate predicate, in object value, params KeyValuePair<object, object>[] values) => If(comparisonType, comparisonMode, comparison, out key, (object x, object y) => comparer.Compare(x, y), predicate, value, values);
 
         [Obsolete("This method has been replaced by the following method: If(ComparisonType, ComparisonMode, Comparison, out object, WinCopies.Collections.Comparison, Predicate, object, params KeyValuePair<object, object>[])")]
         public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, out object key, Comparison<object> comparisonDelegate, Predicate<object> predicate, in object value, params KeyValuePair<object, object>[] values) => If(comparisonType, comparisonMode, comparison, out key, new WinCopies.Collections.Comparison((object x, object y) => comparisonDelegate(x, y)), new Predicate(o => predicate(o)), value, values);
@@ -1228,7 +1226,7 @@ namespace WinCopies
             return IfInternal(comparisonType, comparisonMode, (in object _value, in Func<bool> _predicate) => CheckEqualityComparison(comparison, _value, value, _predicate, comparisonDelegate), out key, new IfKeyValuesEnumerable(values, predicate));
         }
 
-        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, out object key, IComparer comparer, in object value, params KeyValuePair<object, KeyValuePair<object, Func<bool>>>[] values) => If(comparisonType, comparisonMode, comparison, out key, new WinCopies.Collections.Comparison((object x, object y) => comparer.Compare(x, y)), value, values);
+        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, out object key, System.Collections.IComparer comparer, in object value, params KeyValuePair<object, KeyValuePair<object, Func<bool>>>[] values) => If(comparisonType, comparisonMode, comparison, out key, new WinCopies.Collections.Comparison((object x, object y) => comparer.Compare(x, y)), value, values);
 
         [Obsolete("This method has been replaced by the following method: If(ComparisonType, ComparisonMode, Comparison, out object, WinCopies.Collections.Comparison, object, params KeyValuePair<object, KeyValuePair<object, Func<bool>>>[])")]
         public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, out object key, Comparison<object> comparisonDelegate, in object value, params KeyValuePair<object, KeyValuePair<object, Func<bool>>>[] values) => If(comparisonType, comparisonMode, comparison, out key, new WinCopies.Collections.Comparison((object x, object y) => comparisonDelegate(x, y)), value, values);

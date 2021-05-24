@@ -36,6 +36,18 @@ namespace WinCopies
 {
     public class InterfaceDataTemplateSelector : DataTemplateSelector
     {
+        [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+        public class Ignore : Attribute
+        {
+            // Left empty.
+        }
+
+        public bool IgnoreGenerics { get; set; } = true;
+
+        public bool DirectTypeOnly { get; set; } = true;
+
+        public bool IgnoreFirstTypesWithoutInterfaces { get; } = true;
+
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
             if (item == null ||
@@ -56,14 +68,8 @@ namespace WinCopies
 
             Type itemType = item.GetType();
 
-#if DEBUG
-            foreach (Type i in itemType.GetDirectInterfaces(true, true))
-
-                Debug.WriteLine(item.GetType().ToString() + " " + i.Name);
-#endif
-
-            return System.Linq.Enumerable.Repeat(itemType, 1).Concat(itemType.GetDirectInterfaces(true, true))
-                    .FirstOrDefault<DataTemplate>(t => containerElement.TryFindResource(new DataTemplateKey(t))) ?? base.SelectTemplate(item, container);
+            return System.Linq.Enumerable.Repeat(itemType, 1).Concat(itemType.GetDirectInterfaces(IgnoreGenerics, DirectTypeOnly, IgnoreFirstTypesWithoutInterfaces, t => t.CustomAttributes.FirstOrDefault(_t => typeof(Ignore).IsAssignableFrom(_t.AttributeType)) == null))
+                .FirstOrDefault<DataTemplate>(t => containerElement.TryFindResource(new DataTemplateKey(t))) ?? base.SelectTemplate(item, container);
         }
     }
 

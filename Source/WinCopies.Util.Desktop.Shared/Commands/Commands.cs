@@ -25,9 +25,17 @@ namespace WinCopies.Commands
 {
     public interface ICommandSource<T> : ICommandSource
     {
+#if WinCopies3
+        new ICommand<T> Command { get; }
+#endif
+
         new T CommandParameter { get; }
 
 #if CS8
+#if WinCopies3
+        ICommand ICommandSource.Command => Command;
+#endif
+
         object ICommandSource.CommandParameter => CommandParameter;
 #endif
     }

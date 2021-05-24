@@ -132,7 +132,7 @@ namespace WinCopies.Extensions // To avoid name conflicts.
             }
         }
 
-        public static System.Collections.Generic.IEnumerable<Type> GetDirectInterfaces(this Type t, bool ignoreGenerics, bool directTypeOnly)
+        public static System.Collections.Generic.IEnumerable<Type> GetDirectInterfaces(this Type t, bool ignoreGenerics, bool directTypeOnly, bool ignoreFirstTypesWithoutInterfaces = true, Predicate<Type> predicate = null)
         {
             var interfaces = new ArrayBuilder<Type>();
             var subInterfaces = new ArrayBuilder<Type>();
@@ -179,9 +179,41 @@ namespace WinCopies.Extensions // To avoid name conflicts.
                 }
             }
 
+            bool _predicate(Type _t) => _t.GetDirectInterfaces(ignoreGenerics, true, false).GetEnumerator().MoveNext();
+
+            Predicate<Type> __predicate;
+
+            if (predicate == null)
+
+                __predicate = _predicate;
+
+            else
+
+                __predicate = _t => predicate(_t) && _predicate(_t);
+
             void addBaseTypesInterfaces(Action<Type> _action)
             {
-                Type _t = t.BaseType;
+                Type _t;
+
+                if (ignoreFirstTypesWithoutInterfaces)
+                {
+                    _t = t;
+
+                    do
+                    {
+                        if (__predicate(_t))
+                        {
+                            _t = _t.BaseType;
+
+                            break;
+                        }
+                    }
+                    while ((_t = _t.BaseType) != null);
+                }
+
+                else
+
+                    _t = t.BaseType;
 
                 while (_t != null)
                 {
@@ -191,38 +223,23 @@ namespace WinCopies.Extensions // To avoid name conflicts.
                 }
             }
 
-            Action action;
-
             if (ignoreGenerics)
+            {
+                addNonGenericInterfaces();
 
                 if (directTypeOnly)
 
-                    action = () =>
-                    {
-                        addNonGenericInterfaces();
-
-                        addBaseTypesInterfaces(addNonGenericSubInterfaces);
-                    };
-
-                else
-
-                    action = addNonGenericInterfaces;
-
-            else if (directTypeOnly)
-
-                action = () =>
-                {
-                    addInterfaces();
-
-                    addBaseTypesInterfaces(addSubInterfaces);
-                };
-
+                    addBaseTypesInterfaces(addNonGenericSubInterfaces);
+            }
 
             else
+            {
+                addInterfaces();
 
-                action = addInterfaces;
+                if (directTypeOnly)
 
-            action();
+                    addBaseTypesInterfaces(addSubInterfaces);
+            }
 
             return ((System.Collections.Generic.IEnumerable<Type>)interfaces).Except(subInterfaces);
         }

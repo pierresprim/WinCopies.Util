@@ -35,6 +35,15 @@ namespace WinCopies.Linq
 {
     public static class Extensions
     {
+        public static System.Collections.Generic.IEnumerable<T> Select<T>(this System.Collections.IEnumerable enumerable, Func<object, T> func)
+        {
+            foreach (object value in enumerable)
+
+                yield return func(value);
+        }
+
+        public static System.Collections.Generic.IEnumerable<TValue> OrderBy<TValue, TKey>(this System.Collections.Generic.IEnumerable<TValue> enumerable, Func<TValue, TKey> func, Comparison<TKey> comparison) => enumerable.OrderBy(func, new Comparer2<TKey>(comparison));
+
         public static T FirstOrDefault<T>(this System.Collections.IEnumerable enumerable, in Func<object, bool> predicate)
         {
             foreach (object item in enumerable)

@@ -58,15 +58,12 @@ namespace WinCopies.Commands
         }
 
         #region ICommand Members
-
         /// <summary>
         /// Checks if the command Execute method can run
         /// </summary>
         /// <param name="parameter">THe command parameter to be passed</param>
         /// <returns>Returns true if the command can execute. By default true is returned so that if the user of SimpleCommand does not specify a CanExecuteCommand delegate the command still executes.</returns>
-        public bool CanExecute(object parameter) => CanExecuteDelegate == null ?
-                true : // if there is no can execute default to true
-             CanExecuteDelegate(parameter);
+        public bool CanExecute(object parameter) => CanExecuteDelegate == null || CanExecuteDelegate(parameter); // if there is no can execute default to true
 
         public event EventHandler CanExecuteChanged
         {
@@ -79,14 +76,43 @@ namespace WinCopies.Commands
         /// </summary>
         /// <param name="parameter">THe command parameter to be passed</param>
         public void Execute(object parameter) => ExecuteDelegate?.Invoke(parameter);
-
         #endregion
+    }
+
+    public interface ICommand<T> : ICommand
+    {
+        /// <summary>
+        /// Defines the method that determines whether the command can execute in its current state.
+        /// </summary>
+        /// <param name="parameter">Data used by the command. If the command does not require data to be passed, this object can be set to null.</param>
+        /// <returns><see langword="true"/> if this command can be executed; otherwise, <see langword="false"/>.</returns>
+        bool CanExecute(T parameter);
+
+        /// <summary>
+        /// Defines the method to be called when the command is invoked.
+        /// </summary>
+        /// <param name="parameter">Data used by the command. If the command does not require data to be passed, this object can be set to null.</param>
+        void Execute(T parameter);
+
+#if CS8
+        bool ICommand.CanExecute(object parameter) => parameter is T _parameter && CanExecute(_parameter);
+
+        void ICommand.Execute(object parameter)
+        {
+            if (parameter is T _parameter)
+
+                Execute(_parameter);
+        }
+#endif
     }
 
     /// <summary>
     /// Provides a base class for WPF commands.
     /// </summary>
     public class DelegateCommand<T> : ICommand
+#if WinCopies3
+        <T>
+#endif
     {
         /// <summary>
         /// Gets or sets the Predicate to execute when the CanExecute of the command gets called
@@ -106,15 +132,12 @@ namespace WinCopies.Commands
         }
 
         #region ICommand Members
-
         /// <summary>
         /// Checks if the command Execute method can run
         /// </summary>
         /// <param name="parameter">THe command parameter to be passed</param>
         /// <returns>Returns true if the command can execute. By default true is returned so that if the user of SimpleCommand does not specify a CanExecuteCommand delegate the command still executes.</returns>
-        public bool CanExecute(T parameter) => CanExecuteDelegate == null ?
-                true : // if there is no can execute default to true
-            CanExecuteDelegate(parameter);
+        public bool CanExecute(T parameter) => CanExecuteDelegate == null || CanExecuteDelegate(parameter); // if there is no can execute default to true
 
         bool ICommand.CanExecute(object parameter) => CanExecute((T)parameter);
 
@@ -131,7 +154,6 @@ namespace WinCopies.Commands
         public void Execute(T parameter) => ExecuteDelegate?.Invoke(parameter);
 
         void ICommand.Execute(object parameter) => Execute((T)parameter);
-
         #endregion
     }
 }

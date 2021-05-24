@@ -25,6 +25,12 @@ namespace WinCopies
     /// </summary>
     public static class Delegates
     {
+        public static object Null(object parameter) => null;
+
+        public static TOut Null<TIn, TOut>(TIn parameter) where TOut : class => null;
+
+        public static T Null<T>(T parameter) where T : class => null;
+
         public static T Self<T>(T value) => value;
     }
 
@@ -41,9 +47,19 @@ namespace WinCopies
 
         public static bool Reversed(bool value) => !value;
 
+#if !WinCopies3
         public static bool True(bool value) => true;
 
         public static bool False(bool value) => false;
+#endif
+
+        public static bool True(object value) => true;
+
+        public static bool False(object value) => false;
+
+        public static bool True<T>(T value) => true;
+
+        public static bool False<T>(T value) => false;
 
         public static bool IsTrue(bool? value) => value == true;
 

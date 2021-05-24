@@ -17,7 +17,6 @@
 
 using System;
 using System.Collections.Specialized;
-using System.IO;
 using System.Threading;
 using System.Windows;
 using System.Windows.Media.Imaging;
@@ -37,7 +36,6 @@ namespace WinCopies
         }
 
         #region File Drop List
-
         public static bool TrySetClipboardOnSuccessHResult(in StringCollection fileDropList)
         {
             try
@@ -82,11 +80,9 @@ namespace WinCopies
 
             return false;
         }
-
         #endregion
 
         #region Text
-
         public static bool TrySetClipboardOnSuccessHResult(in string text)
         {
             try
@@ -178,11 +174,9 @@ namespace WinCopies
 
             return false;
         }
-
         #endregion
 
         #region Audio
-
         public static bool TrySetClipboardOnSuccessHResult(in byte[] audioBytes)
         {
             try
@@ -230,7 +224,7 @@ namespace WinCopies
 
 
 
-        public static bool TrySetClipboardOnSuccessHResult(in Stream audioStream)
+        public static bool TrySetClipboardOnSuccessHResult(in System.IO.Stream audioStream)
         {
             try
             {
@@ -244,7 +238,7 @@ namespace WinCopies
             }
         }
 
-        public static bool TrySetClipboardOnSuccessHResult(in Stream audioStream, in double maxMilliSeconds)
+        public static bool TrySetClipboardOnSuccessHResult(in System.IO.Stream audioStream, in double maxMilliSeconds)
         {
             if (maxMilliSeconds == 0)
 
@@ -261,7 +255,7 @@ namespace WinCopies
             return false;
         }
 
-        public static bool TrySetClipboardOnSuccessHResult(in Stream audioStream, in int sleepTime, in uint tryCount)
+        public static bool TrySetClipboardOnSuccessHResult(in System.IO.Stream audioStream, in int sleepTime, in uint tryCount)
         {
             ThrowOnInvalidSleepTime(sleepTime);
 
@@ -274,11 +268,9 @@ namespace WinCopies
 
             return false;
         }
-
         #endregion
 
         #region Image
-
         public static bool TrySetClipboardOnSuccessHResult(in BitmapSource image)
         {
             try
@@ -323,11 +315,9 @@ namespace WinCopies
 
             return false;
         }
-
         #endregion
 
         #region Data
-
         public static bool TrySetClipboardOnSuccessHResult(in string format, in object data)
         {
             try
@@ -372,11 +362,9 @@ namespace WinCopies
 
             return false;
         }
-
         #endregion
 
         #region Data Object
-
         public static bool TrySetClipboardOnSuccessHResult(in object data)
         {
             try
@@ -468,7 +456,6 @@ namespace WinCopies
 
             return false;
         }
-
         #endregion
     }
 }

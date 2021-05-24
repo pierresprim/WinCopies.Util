@@ -1165,6 +1165,19 @@
             </summary>
             <param name="parameter">THe command parameter to be passed</param>
         </member>
+        <member name="M:WinCopies.Commands.ICommand`1.CanExecute(`0)">
+            <summary>
+            Defines the method that determines whether the command can execute in its current state.
+            </summary>
+            <param name="parameter">Data used by the command. If the command does not require data to be passed, this object can be set to null.</param>
+            <returns><see langword="true"/> if this command can be executed; otherwise, <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Commands.ICommand`1.Execute(`0)">
+            <summary>
+            Defines the method to be called when the command is invoked.
+            </summary>
+            <param name="parameter">Data used by the command. If the command does not require data to be passed, this object can be set to null.</param>
+        </member>
         <member name="T:WinCopies.Commands.DelegateCommand`1">
             <summary>
             Provides a base class for WPF commands.
@@ -1483,6 +1496,12 @@
             </summary>
             <param name="serviceProvider">A service provider helper that can provide services for the markup extension.</param>
             <returns>The object value to set on the property where the extension is applied.</returns>
+        </member>
+        <member name="P:WinCopies.Util.Data.EnumToArrayConverter.ConvertOptions">
+            <summary>
+            <para>Value: ignored.</para>
+            <para>Parameter: cannot be <see langword="null"/>.</para>
+            </summary>
         </member>
         <member name="T:WinCopies.Util.Data.EnumToBooleanConverter">
             <summary>

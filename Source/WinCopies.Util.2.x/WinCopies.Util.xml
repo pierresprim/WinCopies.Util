@@ -149,7 +149,7 @@
             <summary>
             Delegate for a non-generic predicate.
             </summary>
-            <param name="value">The value to test</param>
+            <param name="value">The value to test.</param>
             <returns><see langword="true"/> if the predicate success, otherwise <see langword="false"/>.</returns>
         </member>
         <member name="T:WinCopies.Util.Func">
@@ -1732,7 +1732,7 @@
         </member>
         <member name="M:WinCopies.Util.Util.If(WinCopies.Util.Util.ComparisonType@,WinCopies.Util.Util.ComparisonMode@,WinCopies.Util.Util.Comparison@,System.Collections.IComparer,System.Predicate{System.Object}@,System.Object@,System.Object[])">
             <summary>
-            Performs a comparison by testing a value compared to an array of values using a custom <see cref="T:WinCopies.Collections.IComparer`1"/> and <see cref="T:System.Predicate`1"/>.
+            Performs a comparison by testing a value compared to an array of values using a custom <see cref="T:System.Collections.IComparer"/> and <see cref="T:System.Predicate`1"/>.
             </summary>
             <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
             <param name="comparisonMode">Whether to perform a binary or a logical comparison.</param>
@@ -1784,7 +1784,7 @@
         </member>
         <member name="M:WinCopies.Util.Util.If(WinCopies.Util.Util.ComparisonType@,WinCopies.Util.Util.ComparisonMode@,WinCopies.Util.Util.Comparison@,System.Collections.IEqualityComparer@,System.Predicate{System.Object},System.Object@,System.Object[])">
             <summary>
-            Performs a comparison by testing a value compared to an array of values using a custom <see cref="T:System.Collections.IComparer"/> and <see cref="T:System.Predicate`1"/>.
+            Performs a comparison by testing a value compared to an array of values using a custom <see cref="T:WinCopies.Collections.IComparer"/> and <see cref="T:System.Predicate`1"/>.
             </summary>
             <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
             <param name="comparisonMode">Whether to perform a binary or a logical comparison.</param>
@@ -1797,7 +1797,7 @@
         </member>
         <member name="M:WinCopies.Util.Util.If(WinCopies.Util.Util.ComparisonType@,WinCopies.Util.Util.ComparisonMode@,WinCopies.Util.Util.Comparison@,System.Collections.IEqualityComparer,WinCopies.Util.Predicate@,System.Object@,System.Object[])">
             <summary>
-            Performs a comparison by testing a value compared to an array of values using a custom <see cref="T:System.Collections.IComparer"/> and <see cref="T:WinCopies.Util.Predicate"/>.
+            Performs a comparison by testing a value compared to an array of values using a custom <see cref="T:WinCopies.Collections.IComparer"/> and <see cref="T:WinCopies.Util.Predicate"/>.
             </summary>
             <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
             <param name="comparisonMode">Whether to perform a binary or a logical comparison.</param>
@@ -1833,7 +1833,7 @@
         </member>
         <member name="M:WinCopies.Util.Util.If(WinCopies.Util.Util.ComparisonType@,WinCopies.Util.Util.ComparisonMode@,WinCopies.Util.Util.Comparison@,System.Object@,System.Collections.IComparer,System.Predicate{System.Object}@,System.Object@,System.Collections.Generic.KeyValuePair{System.Object,System.Object}[])">
             <summary>
-            Performs a comparison by testing a value compared to an array of objects or values using a custom <see cref="T:WinCopies.Collections.IComparer`1"/> and <see cref="T:System.Predicate`1"/>.
+            Performs a comparison by testing a value compared to an array of objects or values using a custom <see cref="T:System.Collections.IComparer"/> and <see cref="T:System.Predicate`1"/>.
             </summary>
             <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
             <param name="comparison">The comparison type</param>
@@ -1845,7 +1845,7 @@
         </member>
         <member name="M:WinCopies.Util.Util.If(WinCopies.Util.Util.ComparisonType@,WinCopies.Util.Util.ComparisonMode@,WinCopies.Util.Util.Comparison@,System.Object@,System.Collections.IComparer,WinCopies.Util.Predicate@,System.Object@,System.Collections.Generic.KeyValuePair{System.Object,System.Object}[])">
             <summary>
-            Performs a comparison by testing a value compared to an array of objects or values using a custom <see cref="T:WinCopies.Collections.IComparer`1"/> and <see cref="T:System.Predicate`1"/>.
+            Performs a comparison by testing a value compared to an array of objects or values using a custom <see cref="T:System.Collections.IComparer"/> and <see cref="T:System.Predicate`1"/>.
             </summary>
             <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
             <param name="comparison">The comparison type</param>
@@ -2105,24 +2105,25 @@
             <summary>
             Delegate for a non-generic comparison.
             </summary>
-            <param name="x">First parameter to compare</param>
-            <param name="y">Second parameter to compare</param>
+            <param name="x">First parameter to compare.</param>
+            <param name="y">Second parameter to compare.</param>
             <returns>An <see cref="T:System.Int32"/> which is lesser than 0 if x is lesser than y, 0 if x is equal to y and greater than 0 if x is greater than y.</returns>
         </member>
         <member name="T:WinCopies.Collections.EqualityComparison">
             <summary>
             Delegate for a non-generic equality comparison.
             </summary>
-            <param name="x">First parameter to compare</param>
-            <param name="y">Second parameter to compare</param>
+            <param name="x">First parameter to compare.</param>
+            <param name="y">Second parameter to compare.</param>
             <returns><see langword="true"/> if x is equal to y, otherwise <see langword="false"/>.</returns>
         </member>
         <member name="T:WinCopies.Collections.EqualityComparison`1">
             <summary>
             Delegate for a generic equality comparison.
             </summary>
-            <param name="x">First parameter to compare</param>
-            <param name="y">Second parameter to compare</param>
+            <typeparam name="T">The type of the current delegate parameters.</typeparam>
+            <param name="x">First parameter to compare.</param>
+            <param name="y">Second parameter to compare.</param>
             <returns><see langword="true"/> if x is equal to y, otherwise <see langword="false"/>.</returns>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.Extensions.LinkedCollection`1.AddAfter(System.Collections.Generic.LinkedListNode{`0}@,System.Collections.Generic.LinkedListNode{`0}@)">
@@ -2338,7 +2339,15 @@
             </summary>
             <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="!:TryPeek(out T)"/>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.TryPeek(`0@)"/>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.TryPeek(`0@)">
+            <summary>
+            Tries to peek the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> without removing it.
+            </summary>
+            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been retrieved.</returns>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.Peek"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.GetEnumerator">
             <summary>
@@ -2381,7 +2390,15 @@
             </summary>
             <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.StackCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.StackCollection`1"/> is empty.</exception>
-            <seealso cref="!:TryPeek(out T)"/>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.ReadOnlyStackCollection`1.TryPeek(`0@)"/>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.ReadOnlyStackCollection`1.TryPeek(`0@)">
+            <summary>
+            Tries to peek the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.StackCollection`1"/> without removing it.
+            </summary>
+            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.StackCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been retrieved.</returns>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.ReadOnlyStackCollection`1.Peek"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.ReadOnlyStackCollection`1.GetEnumerator">
             <summary>
@@ -2769,7 +2786,7 @@
             Initializes a new instance of the <see cref="T:System.Collections.Generic.LinkedList`1"/> class that is serializable with the specified <see cref="T:System.Runtime.Serialization.SerializationInfo"/> and <see cref="T:System.Runtime.Serialization.StreamingContext"/>.
             </summary>
             <param name="info">A <see cref="T:System.Runtime.Serialization.SerializationInfo"/> object containing the information required to serialize the <see cref="T:System.Collections.Generic.LinkedList`1"/>.</param>
-            <param name="context">A <see cref="T:System.Runtime.Serialization.StreamingContext"/> object containing the source and destination of the serialized stream associated with the <see cref="T:System.Collections.Generic.LinkedList`1"/>.</param>
+            <param name="context">A <see cref="T:System.Runtime.Serialization.StreamingContext"/> object containing the source and destination of the serialized System.IO.Stream associated with the <see cref="T:System.Collections.Generic.LinkedList`1"/>.</param>
         </member>
         <member name="T:WinCopies.Collections.ArrayBuilder`1">
             <summary>
@@ -3028,7 +3045,7 @@
             Implements the <see cref="T:System.Runtime.Serialization.ISerializable"/> interface and returns the data needed to serialize this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/> instance.
             </summary>
             <param name="info">A <see cref="T:System.Runtime.Serialization.SerializationInfo"/> object that contains the information required to serialize this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/> instance.</param>
-            <param name="context">A <see cref="T:System.Runtime.Serialization.StreamingContext"/> object that contains the source and destination of the serialized stream associated with this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/> instance.</param>
+            <param name="context">A <see cref="T:System.Runtime.Serialization.StreamingContext"/> object that contains the source and destination of the serialized System.IO.Stream associated with this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/> instance.</param>
             <exception cref="T:System.ArgumentNullException">info is null.</exception>
         </member>
         <member name="M:WinCopies.Collections.ArrayBuilder`1.OnDeserialization(System.Object)">
@@ -3377,6 +3394,42 @@
             Throws the exception given by <see cref="M:WinCopies.Collections.ThrowHelper.GetEmptyListOrCollectionException"/> if the <see cref="P:WinCopies.Collections.IUIntCountable.Count"/> property of a given <see cref="T:WinCopies.Collections.IUIntCountable"/> object is equal to 0.
             </summary>
             <param name="obj">The <see cref="T:WinCopies.Collections.IUIntCountable"/> object for which to check the <see cref="P:WinCopies.Collections.IUIntCountable.Count"/> property.</param>
+        </member>
+        <member name="T:WinCopies.StreamCommit">
+            <summary>
+            The <see cref="T:WinCopies.StreamCommit"/> enumeration constants specify the conditions for performing the commit operation in the IStorage::Commit and <see cref="M:System.Runtime.InteropServices.ComTypes.IStream.Seek(System.Int64,System.Int32,System.IntPtr)"/> methods.
+            </summary>
+        </member>
+        <member name="F:WinCopies.StreamCommit.Default">
+            <summary>
+            You can specify this condition with <see cref="F:WinCopies.StreamCommit.Consolidate"/>, or some combination of the other three flags in this list of elements. Use this value to increase the readability of code.
+            </summary>
+        </member>
+        <member name="F:WinCopies.StreamCommit.Overwrite">
+            <summary>
+            <para>The commit operation can overwrite existing data to reduce overall space requirements. This value is not recommended for typical usage because it is not as robust as the default value. In this case, it is possible for the commit operation to fail after the old data is overwritten, but before the new data is completely committed. Then, neither the old version nor the new version of the storage object will be intact.</para>
+            <para>You can use this value in the following cases:</para>
+            <para>The user is willing to risk losing the data.</para>
+            <para>The low-memory save sequence will be used to safely save the storage object to a smaller file.</para>
+            <para>A previous commit returned STG_E_MEDIUMFULL, but overwriting the existing data would provide enough space to commit changes to the storage object.</para>
+            <para>Be aware that the commit operation verifies that adequate space exists before any overwriting occurs. Thus, even with this value specified, if the commit operation fails due to space requirements, the old data is safe. It is possible, however, for data loss to occur with the <see cref="F:WinCopies.StreamCommit.Overwrite"/> value specified if the commit operation fails for any reason other than lack of disk space.</para>
+            </summary>
+        </member>
+        <member name="F:WinCopies.StreamCommit.OnlyIfCurrent">
+            <summary>
+            Prevents multiple users of a storage object from overwriting each other's changes. The commit operation occurs only if there have been no changes to the saved storage object because the user most recently opened it. Thus, the saved version of the storage object is the same version that the user has been editing. If other users have changed the storage object, the commit operation fails and returns the STG_E_NOTCURRENT value. To override this behavior, call the IStorage::Commit or <see cref="M:System.Runtime.InteropServices.ComTypes.IStream.Commit(System.Int32)"/> method again using the <see cref="F:WinCopies.StreamCommit.Default"/> value.
+            </summary>
+        </member>
+        <member name="F:WinCopies.StreamCommit.DangerouslyCommitMerelyToDiskCache">
+            <summary>
+            <para>Commits the changes to a write-behind disk cache, but does not save the cache to the disk. In a write-behind disk cache, the operation that writes to disk actually writes to a disk cache, thus increasing performance. The cache is eventually written to the disk, but usually not until after the write operation has already returned. The performance increase comes at the expense of an increased risk of losing data if a problem occurs before the cache is saved and the data in the cache is lost.</para>
+            <para>If you do not specify this value, then committing changes to root-level storage objects is robust even if a disk cache is used. The two-phase commit process ensures that data is stored on the disk and not just to the disk cache.</para>
+            </summary>
+        </member>
+        <member name="F:WinCopies.StreamCommit.Consolidate">
+            <summary>
+            Windows 2000 and Windows XP: Indicates that a storage should be consolidated after it is committed, resulting in a smaller file on disk. This flag is valid only on the outermost storage object that has been opened in transacted mode. It is not valid for streams. The <see cref="F:WinCopies.StreamCommit.Consolidate"/> flag can be combined with any other <see cref="T:WinCopies.StreamCommit"/> flags.
+            </summary>
         </member>
         <member name="M:WinCopies.Linq.Extensions.AsObjectEnumerable(System.Collections.IEnumerable)">
             <summary>

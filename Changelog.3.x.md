@@ -6,6 +6,14 @@ The WinCopies� software framework
 CHANGELOG
 ---------
 
+### 05/24/2021 3.8-preview
+
+- ILinkedListEnumerable implements WinCopies.DotNetFix.IDisposable
+- Bug fixed in ObservableLinkedCollectionEnumerable<TItems, TList>. The Remove action was not handled.
+- The LoopIteration delegate was removed because it was redundant with Predicate.
+- Add Command property to ICommandSource\<T> and default interface implementation for ICommandSource.
+- Add out modifier to the parameter 'T' of the Converter delegate.
+
 ### 05/06/2021 3.7.2-preview
 
 - Bug fixed in LinkedList.Enumerator.

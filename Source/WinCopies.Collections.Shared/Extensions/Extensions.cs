@@ -2201,7 +2201,13 @@ int
         }
 #endif
 
-        public static void ForEach(this IEnumerableEnumerator enumerator, LoopIteration func)
+        public static void ForEach(this IEnumerableEnumerator enumerator,
+#if WinCopies3
+            Predicate
+#else
+            LoopIteration
+#endif
+            func)
         {
             while (enumerator.MoveNext())
 
@@ -2210,7 +2216,13 @@ int
                     break;
         }
 
-        public static void ForEach<T>(this IEnumerableEnumerator<T> enumerator, LoopIteration<T> func)
+        public static void ForEach<T>(this IEnumerableEnumerator<T> enumerator,
+            #if WinCopies3
+            Predicate
+#else
+            LoopIteration
+#endif
+            <T> func)
         {
             try
             {
@@ -2226,7 +2238,13 @@ int
             }
         }
 
-        public static bool ForEach(this EmptyCheckEnumerator enumerator, LoopIteration func)
+        public static bool ForEach(this EmptyCheckEnumerator enumerator,
+#if WinCopies3
+            Predicate
+#else
+            LoopIteration
+#endif
+           func)
         {
             if (enumerator.HasItems)
             {
@@ -2242,7 +2260,13 @@ int
             return false;
         }
 
-        public static bool ForEach<T>(this EmptyCheckEnumerator<T> enumerator, LoopIteration<T> func)
+        public static bool ForEach<T>(this EmptyCheckEnumerator<T> enumerator,
+#if WinCopies3
+            Predicate
+#else
+            LoopIteration
+#endif
+          <T> func)
         {
             try
             {

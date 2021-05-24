@@ -15,6 +15,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Delegates\DelegateTypes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EnumComparer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\InvalidEnumArgumentException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IStream.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Misc.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Monitors.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Date.cs" />

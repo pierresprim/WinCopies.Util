@@ -96,7 +96,7 @@ namespace WinCopies.Collections.Generic
 #if IncrementableStreamCursor
     public sealed class IncrementableStreamCursor<T> : Enumerator<T>, IIncrementableReadOnlyList<T>, WinCopies.DotNetFix.IDisposable
     {
-        private Stream _stream;
+        private System.IO.Stream _stream;
         private T[] _buffer;
         private int _bufferSize;
         private int _currentIndex;
