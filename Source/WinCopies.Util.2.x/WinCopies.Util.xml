@@ -2786,7 +2786,7 @@
             Initializes a new instance of the <see cref="T:System.Collections.Generic.LinkedList`1"/> class that is serializable with the specified <see cref="T:System.Runtime.Serialization.SerializationInfo"/> and <see cref="T:System.Runtime.Serialization.StreamingContext"/>.
             </summary>
             <param name="info">A <see cref="T:System.Runtime.Serialization.SerializationInfo"/> object containing the information required to serialize the <see cref="T:System.Collections.Generic.LinkedList`1"/>.</param>
-            <param name="context">A <see cref="T:System.Runtime.Serialization.StreamingContext"/> object containing the source and destination of the serialized System.IO.Stream associated with the <see cref="T:System.Collections.Generic.LinkedList`1"/>.</param>
+            <param name="context">A <see cref="T:System.Runtime.Serialization.StreamingContext"/> object containing the source and destination of the serialized stream associated with the <see cref="T:System.Collections.Generic.LinkedList`1"/>.</param>
         </member>
         <member name="T:WinCopies.Collections.ArrayBuilder`1">
             <summary>
@@ -3045,7 +3045,7 @@
             Implements the <see cref="T:System.Runtime.Serialization.ISerializable"/> interface and returns the data needed to serialize this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/> instance.
             </summary>
             <param name="info">A <see cref="T:System.Runtime.Serialization.SerializationInfo"/> object that contains the information required to serialize this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/> instance.</param>
-            <param name="context">A <see cref="T:System.Runtime.Serialization.StreamingContext"/> object that contains the source and destination of the serialized System.IO.Stream associated with this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/> instance.</param>
+            <param name="context">A <see cref="T:System.Runtime.Serialization.StreamingContext"/> object that contains the source and destination of the serialized stream associated with this <see cref="T:WinCopies.Collections.ArrayBuilder`1"/> instance.</param>
             <exception cref="T:System.ArgumentNullException">info is null.</exception>
         </member>
         <member name="M:WinCopies.Collections.ArrayBuilder`1.OnDeserialization(System.Object)">
