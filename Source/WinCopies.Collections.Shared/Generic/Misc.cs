@@ -15,13 +15,14 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
+using System;
 using WinCopies.Collections.DotNetFix;
 using WinCopies.Collections.DotNetFix.Generic;
 
 namespace WinCopies.Collections
 {
 #if WinCopies3
-    public interface IEnumeratorInfo2 : IEnumeratorInfo, WinCopies.Collections.DotNetFix.IDisposableEnumeratorInfo, IDisposableEnumerator
+    public interface IEnumeratorInfo2 : IEnumeratorInfo, DotNetFix.IDisposableEnumeratorInfo, IDisposableEnumerator
     {
         // Left empty.
     }
@@ -49,6 +50,40 @@ namespace WinCopies.Collections
 
     namespace Generic
     {
+        public abstract class DisposableEnumerable<T> : IDisposableEnumerable<T>, WinCopies.
+            #if !WinCopies3
+            Util.
+            #endif
+            DotNetFix.IDisposable
+        {
+            public bool IsDisposed { get; private set; }
+
+            protected abstract System.Collections.Generic.IEnumerator<T> GetEnumeratorOverride();
+
+            public System.Collections.Generic.IEnumerator<T> GetEnumerator() => WinCopies.
+#if !WinCopies3
+                Util.
+#endif
+                ThrowHelper.GetOrThrowIfDisposed(this, GetEnumeratorOverride());
+
+            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
+
+            protected virtual void Dispose(bool disposing) => IsDisposed = true;
+
+            ~DisposableEnumerable() => Dispose(false);
+
+            public void Dispose()
+            {
+                if (IsDisposed)
+
+                    return;
+
+                Dispose(true);
+
+                GC.SuppressFinalize(this);
+            }
+        }
+
         public interface IRecursiveEnumerableProviderEnumerable<out T> : System.Collections.Generic.IEnumerable<T>
         {
             System.Collections.Generic.IEnumerator<IRecursiveEnumerable<T>> GetRecursiveEnumerator();

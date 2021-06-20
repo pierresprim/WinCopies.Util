@@ -61,6 +61,24 @@ namespace WinCopies.Util.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} must be an instance of {1}..
+        /// </summary>
+        public static string ArgumentMustBeAnInstanceOf {
+            get {
+                return ResourceManager.GetString("ArgumentMustBeAnInstanceOf", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} must be a value of the {1} enum and can&apos;t be the {2} value..
+        /// </summary>
+        public static string ArgumentMustBeFromEnumAndNotValue {
+            get {
+                return ResourceManager.GetString("ArgumentMustBeFromEnumAndNotValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The given array has a non-zero lower bound..
         /// </summary>
         public static string ArrayHasNonZeroLowerBound {
@@ -88,6 +106,15 @@ namespace WinCopies.Util.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The collection has changed during enumeration..
+        /// </summary>
+        public static string CollectionChangedDuringEnumeration {
+            get {
+                return ResourceManager.GetString("CollectionChangedDuringEnumeration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The current object or value is disposing..
         /// </summary>
         public static string CurrentObjectIsDisposing {
@@ -106,7 +133,7 @@ namespace WinCopies.Util.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The enumeration is not started or the enumerator is disposed..
+        ///   Looks up a localized string similar to The enumeration has not started or the enumerator is disposed..
         /// </summary>
         public static string EnumeratorIsNotStartedOrDisposed {
             get {
@@ -120,6 +147,15 @@ namespace WinCopies.Util.Resources {
         public static string FieldOrPropertyNotFound {
             get {
                 return ResourceManager.GetString("FieldOrPropertyNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The given type is not supported..
+        /// </summary>
+        public static string GivenTypeIsNotSupported {
+            get {
+                return ResourceManager.GetString("GivenTypeIsNotSupported", resourceCulture);
             }
         }
         
@@ -219,6 +255,15 @@ namespace WinCopies.Util.Resources {
         public static string ReadOnlyCollection {
             get {
                 return ResourceManager.GetString("ReadOnlyCollection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The sequence contains no item or no item matched the given predicate..
+        /// </summary>
+        public static string SequenceContainsNoItemOrNoItemMatchedGivenPredicate {
+            get {
+                return ResourceManager.GetString("SequenceContainsNoItemOrNoItemMatchedGivenPredicate", resourceCulture);
             }
         }
         

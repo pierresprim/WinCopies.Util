@@ -34,6 +34,12 @@ namespace WinCopies.Collections
 {
     public static class ThrowHelper
     {
+        public static InvalidOperationException GetNoItemException() => throw new InvalidOperationException(
+            #if WinCopies3
+            WinCopies.Resources.ExceptionMessages.
+            #endif
+            SequenceContainsNoItemOrNoItemMatchedGivenPredicate);
+
 #if WinCopies3
         public static void ThrowIfNullOrReadOnly(in ISimpleLinkedListBase linkedList, in string argumentName)
         {

@@ -24,11 +24,70 @@ using static WinCopies.Util.Data.ConverterHelper;
 
 namespace WinCopies.Util.Data
 {
-    public class ConversionOptions
+#if WinCopies3
+    public interface IReadOnlyConversionOptions
+    {
+        bool AllowNullValue { get; }
+
+        bool AllowNullParameter { get; }
+    }
+
+    public interface IConversionOptions : IReadOnlyConversionOptions
+    {
+        new bool AllowNullValue { get; set; }
+
+        new bool AllowNullParameter { get; set; }
+
+#if CS8
+        bool IReadOnlyConversionOptions.AllowNullValue => AllowNullValue;
+
+        bool IReadOnlyConversionOptions.AllowNullParameter => AllowNullParameter;
+#endif
+    }
+#endif
+
+    public class
+#if WinCopies3
+        ReadOnlyConversionOptions : IReadOnlyConversionOptions
+#else
+        ConversionOptions
+#endif
     {
         public bool AllowNullValue { get; }
 
         public bool AllowNullParameter { get; }
+
+        public
+#if WinCopies3
+        ReadOnlyConversionOptions
+#else
+        ConversionOptions
+#endif
+            ()
+        { /* Left empty. */ }
+
+        public
+#if WinCopies3
+        ReadOnlyConversionOptions
+#else
+        ConversionOptions
+#endif
+            (in bool allowNullValue, in bool allowNullParameter)
+        {
+            AllowNullValue = allowNullValue;
+
+            AllowNullParameter = allowNullParameter;
+        }
+    }
+
+#if WinCopies3
+    public class ConversionOptions : IConversionOptions
+    {
+        public bool AllowNullValue { get; set; }
+
+        public bool AllowNullParameter { get; set; }
+
+        public ConversionOptions() { /* Left empty. */ }
 
         public ConversionOptions(in bool allowNullValue, in bool allowNullParameter)
         {
@@ -36,7 +95,14 @@ namespace WinCopies.Util.Data
 
             AllowNullParameter = allowNullParameter;
         }
+
+#if !CS8
+        bool IReadOnlyConversionOptions.AllowNullValue => AllowNullValue;
+
+        bool IReadOnlyConversionOptions.AllowNullParameter => AllowNullParameter;
+#endif
     }
+#endif
 
     [Flags]
     public enum ConversionWays : byte
@@ -51,13 +117,13 @@ namespace WinCopies.Util.Data
     public static class ConverterHelper
     {
 #if WinCopies3
-        public static ConversionOptions AllowNull { get; } = new ConversionOptions(true, true);
+        public static ReadOnlyConversionOptions AllowNull { get; } = new ReadOnlyConversionOptions(true, true);
 
-        public static ConversionOptions ValueCanBeNull { get; } = new ConversionOptions(true, false);
+        public static ReadOnlyConversionOptions ValueCanBeNull { get; } = new ReadOnlyConversionOptions(true, false);
 
-        public static ConversionOptions ParameterCanBeNull { get; } = new ConversionOptions(false, true);
+        public static ReadOnlyConversionOptions ParameterCanBeNull { get; } = new ReadOnlyConversionOptions(false, true);
 
-        public static ConversionOptions NotNull { get; } = new ConversionOptions(false, false);
+        public static ReadOnlyConversionOptions NotNull { get; } = new ReadOnlyConversionOptions(false, false);
 #endif
 
         public static bool CheckForNullItem(in object value, in bool methodParameter) => !methodParameter && value == null;
@@ -117,7 +183,14 @@ namespace WinCopies.Util.Data
         internal static InvalidOperationException GetException(in string format) => new InvalidOperationException($"The current converter does not support {format}conversion.");
     }
 
-    public abstract class ConverterBase<TSource, TParam, TDestination> : ConverterBase
+    public abstract class ConverterBase<TSource, TParam, TDestination
+#if WinCopies3
+        , TConversionOptions
+#endif
+        > : ConverterBase
+#if WinCopies3
+where TConversionOptions : IReadOnlyConversionOptions
+#endif
     {
 #if !WinCopies3
         public static ConversionOptions AllowNull { get; } = new ConversionOptions(true, true);
@@ -129,9 +202,22 @@ namespace WinCopies.Util.Data
         public static ConversionOptions NotNull { get; } = new ConversionOptions(false, false);
 #endif
 
-        public abstract ConversionOptions ConvertOptions { get; }
+        public abstract
+#if WinCopies3
+            TConversionOptions
+#else
+            ConversionOptions
+#endif
+            ConvertOptions { get; }
 
-        public abstract ConversionOptions ConvertBackOptions { get; }
+        public abstract
+#if WinCopies3
+            TConversionOptions
+#else
+            ConversionOptions
+#endif
+           ConvertBackOptions
+        { get; }
 
         public abstract ConversionWays Direction { get; }
 

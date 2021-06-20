@@ -31,9 +31,9 @@ namespace WinCopies.Util.Data
 #if WinCopies3
         AlwaysConvertibleTwoWayConverter<bool, object, bool>
     {
-        public override ConversionOptions ConvertOptions => ParameterCanBeNull;
+        public override IReadOnlyConversionOptions ConvertOptions => ParameterCanBeNull;
 
-        public override ConversionOptions ConvertBackOptions => ParameterCanBeNull;
+        public override IReadOnlyConversionOptions ConvertBackOptions => ParameterCanBeNull;
 
         protected override bool Convert(bool value, object parameter, CultureInfo culture) => !value;
 

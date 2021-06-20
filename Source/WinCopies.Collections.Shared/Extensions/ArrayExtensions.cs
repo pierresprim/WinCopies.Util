@@ -16,17 +16,29 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if WinCopies3
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
 
 using static WinCopies.ThrowHelper;
 
+#if CS7
+using WinCopies.Collections.Abstraction.Generic;
+#endif
+
 namespace WinCopies.Collections
 {
     public static class ArrayExtensions
     {
+#if CS7
+        public static void Clear<T>(this IArrayEnumerable<T> array)
+        {
+            ThrowIfNull(array, nameof(array));
+
+            for (int i = 0; i < array.Count; i++)
+
+                array[i] = default;
+        }
 
         /// <summary>
         /// Appends data to the table. Arrays must have only one dimension.
@@ -34,7 +46,7 @@ namespace WinCopies.Collections
         /// <param name="array">The source table.</param>
         /// <param name="arrays">The tables to concatenate.</param>
         /// <returns></returns>
-        public static object[] Append(this Array array, params Array[] arrays) => WinCopies.UtilHelpers.Concatenate((object[])array, arrays);
+        public static object[] Append(this Array array, params Array[] arrays) => UtilHelpers.Concatenate((object[])array, arrays);
 
         public static ArrayList ToList(this object[] array, in int startIndex, in int length)
         {
@@ -173,11 +185,11 @@ namespace WinCopies.Collections
 
             array[y] = temp;
         }
+#endif
 
 
 
         public static System.Collections.Generic.IEnumerable<T> ToEnumerable<T>(this T[] array) => array ?? throw GetArgumentNullException(nameof(array));
     }
 }
-
 #endif

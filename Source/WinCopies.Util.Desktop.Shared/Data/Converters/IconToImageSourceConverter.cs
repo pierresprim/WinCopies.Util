@@ -16,7 +16,6 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if WinCopies3
-
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Data;
@@ -34,14 +33,13 @@ namespace WinCopies.Util.Data
     [ValueConversion(typeof(Icon), typeof(ImageSource))]
     public class IconToImageSourceConverter : AlwaysConvertibleTwoWayConverter<Icon, object, ImageSource>
     {
-        public override ConversionOptions ConvertOptions => ParameterCanBeNull;
+        public override IReadOnlyConversionOptions ConvertOptions => ParameterCanBeNull;
 
-        public override ConversionOptions ConvertBackOptions => ParameterCanBeNull;
+        public override IReadOnlyConversionOptions ConvertBackOptions => ParameterCanBeNull;
 
         protected override ImageSource Convert(Icon value, object parameter, CultureInfo culture) => value.ToImageSource();
 
         protected override Icon ConvertBack(ImageSource value, object parameter, CultureInfo culture) => Icon.FromHandle(((BitmapSource)value).ToBitmap().GetHicon());
     }
 }
-
 #endif

@@ -95,5 +95,32 @@ namespace WinCopies.Desktop.Resources {
                 return ResourceManager.GetString("BackgroundWorkerIsBusy", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The comparison result value returned by the comparison method of the given parameter is not supported..
+        /// </summary>
+        public static string ComparisonResultReturnedByParameterIsNotSupported {
+            get {
+                return ResourceManager.GetString("ComparisonResultReturnedByParameterIsNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The conversion did not succeeded..
+        /// </summary>
+        public static string ConversionDidNotSucceeded {
+            get {
+                return ResourceManager.GetString("ConversionDidNotSucceeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The {0} conversion direction is not supported..
+        /// </summary>
+        public static string ConversionDirectionNotSupported {
+            get {
+                return ResourceManager.GetString("ConversionDirectionNotSupported", resourceCulture);
+            }
+        }
     }
 }

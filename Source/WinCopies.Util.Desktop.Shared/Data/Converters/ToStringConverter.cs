@@ -21,7 +21,13 @@ namespace WinCopies.Util.Data
 {
     public class ToStringConverter : AlwaysConvertibleOneWayConverter<object, string, string>
     {
-        public override ConversionOptions ConvertOptions =>
+        public override
+#if WinCopies3
+            IReadOnlyConversionOptions
+#else
+            ConversionOptions
+#endif
+            ConvertOptions =>
 #if WinCopies3
         ConverterHelper.
 #endif

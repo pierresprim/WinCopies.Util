@@ -20,6 +20,16 @@
               resource lookups using this strongly typed resource class.
             </summary>
         </member>
+        <member name="P:WinCopies.Util.Resources.ExceptionMessages.ArgumentMustBeAnInstanceOf">
+            <summary>
+              Looks up a localized string similar to {0} must be an instance of {1}..
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.Resources.ExceptionMessages.ArgumentMustBeFromEnumAndNotValue">
+            <summary>
+              Looks up a localized string similar to {0} must be a value of the {1} enum and can&apos;t be the {2} value..
+            </summary>
+        </member>
         <member name="P:WinCopies.Util.Resources.ExceptionMessages.ArrayHasNonZeroLowerBound">
             <summary>
               Looks up a localized string similar to The given array has a non-zero lower bound..
@@ -35,6 +45,11 @@
               Looks up a localized string similar to Arrays must have only one dimension..
             </summary>
         </member>
+        <member name="P:WinCopies.Util.Resources.ExceptionMessages.CollectionChangedDuringEnumeration">
+            <summary>
+              Looks up a localized string similar to The collection has changed during enumeration..
+            </summary>
+        </member>
         <member name="P:WinCopies.Util.Resources.ExceptionMessages.CurrentObjectIsDisposing">
             <summary>
               Looks up a localized string similar to The current object or value is disposing..
@@ -47,12 +62,17 @@
         </member>
         <member name="P:WinCopies.Util.Resources.ExceptionMessages.EnumeratorIsNotStartedOrDisposed">
             <summary>
-              Looks up a localized string similar to The enumeration is not started or the enumerator is disposed..
+              Looks up a localized string similar to The enumeration has not started or the enumerator is disposed..
             </summary>
         </member>
         <member name="P:WinCopies.Util.Resources.ExceptionMessages.FieldOrPropertyNotFound">
             <summary>
               Looks up a localized string similar to &apos;{0}&apos; couldn&apos;t be found in &apos;{1}&apos;..
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.Resources.ExceptionMessages.GivenTypeIsNotSupported">
+            <summary>
+              Looks up a localized string similar to The given type is not supported..
             </summary>
         </member>
         <member name="P:WinCopies.Util.Resources.ExceptionMessages.InvalidArgument">
@@ -108,6 +128,11 @@
         <member name="P:WinCopies.Util.Resources.ExceptionMessages.ReadOnlyCollection">
             <summary>
               Looks up a localized string similar to This collection is read-only..
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.Resources.ExceptionMessages.SequenceContainsNoItemOrNoItemMatchedGivenPredicate">
+            <summary>
+              Looks up a localized string similar to The sequence contains no item or no item matched the given predicate..
             </summary>
         </member>
         <member name="P:WinCopies.Util.Resources.ExceptionMessages.StringIsNullEmptyOrWhiteSpace">

@@ -16,9 +16,10 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using System;
-using System.Globalization;
-using WinCopies.Util;
 using System.Collections.Generic;
+using System.Globalization;
+
+using WinCopies.Util;
 
 #if !WinCopies3
 using static WinCopies.Util.Util;
@@ -38,6 +39,8 @@ namespace WinCopies
     /// </summary>
     public static class ThrowHelper
     {
+        public static InvalidEnumArgumentException GetArgumentMustBeFromEnumAndNotValueException(in string argumentName, in string enumName, in Enum value, in Enum forbiddenValue) => new InvalidEnumArgumentException(string.Format(ArgumentMustBeFromEnumAndNotValue, argumentName, enumName, $"{enumName}.{forbiddenValue}"), value);
+
 #if WinCopies3
         #region Enum Throws
         ///// <summary>
@@ -176,15 +179,17 @@ namespace WinCopies
 
         #endregion
 
-        public static ArgumentException GetInvalidTypeArgumentException(in string argumentName) => new ArgumentException("The given type is not supported.", argumentName);
+        public static ArgumentException GetArgumentMustBeAnInstanceOfTypeException(in string argumentName, in string typeName) => new ArgumentException(string.Format(ArgumentMustBeAnInstanceOf, argumentName, typeName));
+
+        public static ArgumentException GetInvalidTypeArgumentException(in string argumentName) => new ArgumentException(GivenTypeIsNotSupported, argumentName);
 
         public static InvalidOperationException GetMoreThanOneOccurencesWereFoundException() => new InvalidOperationException(MoreThanOneOccurencesWereFound);
 
         public static ArgumentException GetOneOrMoreKeyIsNullException() => new ArgumentException(OneOrMoreKeyIsNull);
 
-        public static InvalidOperationException GetEnumeratorNotStartedOrDisposedException() => new InvalidOperationException("The enumeration is not started or the enumerator is disposed.");
+        public static InvalidOperationException GetEnumeratorNotStartedOrDisposedException() => new InvalidOperationException(EnumeratorIsNotStartedOrDisposed);
 
-        public static InvalidOperationException GetVersionHasChangedException() => new InvalidOperationException("The collection has changed during enumeration.");
+        public static InvalidOperationException GetVersionHasChangedException() => new InvalidOperationException(CollectionChangedDuringEnumeration);
 
         public static void ThrowIfVersionHasChanged(int currentVersion, int initialVersion)
         {

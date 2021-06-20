@@ -3847,6 +3847,7 @@ namespace WinCopies
 
             return true;
         }
+
         /// <summary>
         /// Throws an <see cref="InvalidOperationException"/> if the enum value is not in the required enum value range.
         /// </summary>
@@ -4048,7 +4049,7 @@ namespace WinCopies
                 {
                     foreach (T _value in values)
 
-                        if ((Enum)_value == (Enum)value)
+                        if (value.Equals(_value))
 
                             return true;
 
@@ -4057,7 +4058,7 @@ namespace WinCopies
 
                 foreach (T _value in values)
 
-                    if ((Enum)_value == (Enum)value)
+                    if (value.Equals(_value))
 
                         return false;
 

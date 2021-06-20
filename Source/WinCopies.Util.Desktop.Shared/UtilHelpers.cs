@@ -16,6 +16,15 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using System.Windows;
+using System.Windows.Input;
+
+namespace WinCopies.Desktop
+{
+    public static class Delegates
+    {
+        public static void CanExecute(object sender, CanExecuteRoutedEventArgs e) { e.Handled = true; e.CanExecute = true; }
+    }
+}
 
 namespace WinCopies.Util.Desktop
 {

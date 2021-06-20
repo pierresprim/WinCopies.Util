@@ -1,4 +1,4 @@
-﻿/* Copyright © Pierre Sprimont, 2021
+﻿/* Copyright © Pierre Sprimont, 2019
  *
  * This file is part of the WinCopies Framework.
  *
@@ -16,84 +16,31 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if WinCopies3
-using System;
 using System.Globalization;
-using System.Windows.Data;
-
-using WinCopies.Collections.Abstraction.Generic;
-using WinCopies.Linq;
-
-using static WinCopies.Util.Data.ConverterHelper;
 
 namespace WinCopies.Util.Data
 {
-    public abstract class MultiConverterBase<TSource, TParamIn,
-#if WinCopies3
-        TParamOut,
-#endif
-        TDestinationIn
-#if WinCopies3
-        , TDestinationOut
-#endif
-      > : MultiConverterBase3<TParamIn,
-#if WinCopies3
-        TParamOut,
-#endif
-        TDestinationIn
-#if WinCopies3
-        , TDestinationOut
-#endif
-      > where TSource : class
+    public abstract class MultiConverterBase3<TParamIn, TParamOut, TDestinationIn, TDestinationOut, TConversionOptions> : MultiConverterBase2<TParamIn, TDestinationOut, IConverterConverter<TParamIn, TParamOut>, IMultiConverterConverter<TDestinationOut, TDestinationIn>, TConversionOptions> where TConversionOptions : IReadOnlyConversionOptions
     {
-        protected sealed override object Convert(object[] values, TParamOut _parameter, CultureInfo culture)
+        protected abstract bool Convert(object[] values, TParamOut parameter, CultureInfo culture, out TDestinationIn result);
+
+        protected sealed override bool Convert(object[] values, TParamIn _parameter, CultureInfo culture, out TDestinationOut result)
         {
-            Collections.Abstraction.Generic.IArrayEnumerable<TSource> array = Convert(
-#if WinCopies3
-                    values?.
-#else
-                    values == null ? null :
-#endif
-                    To<TSource>(
-#if !WinCopies3
-                        values
-#endif
-                    ), _parameter, culture);
-
-            try
+            if (Convert(values, ParameterConverters.Convert(_parameter), culture, out TDestinationIn _result))
             {
-                return array != null && Convert(array, _parameter, culture, out TDestinationOut _result) ? _result : Binding.DoNothing;
+                result = DestinationConverters.ConvertBack(_result);
+
+                return true;
             }
 
-            finally
-            {
-                for (int i = 0; i < array.Count; i++)
+            result = DestinationConverters.GetDefaultValue<TDestinationOut>();
 
-                    array[i] = null;
-            }
+            return false;
         }
 
-        protected abstract Collections.Abstraction.Generic.IArrayEnumerable<TSource> Convert(System.Collections.Generic.IEnumerable<object> values, TParamOut parameter, CultureInfo culture);
+        protected abstract object[] ConvertBack(TDestinationIn _value, TParamOut _parameter, CultureInfo culture);
 
-        protected abstract bool Convert(Collections.Abstraction.Generic.IArrayEnumerable<TSource> values, TParamOut parameter, CultureInfo culture, out TDestinationOut result);
-
-        protected sealed override object[] ConvertBack(TDestinationOut _value, TParamOut _parameter, CultureInfo culture)
-        {
-            bool[] results = ConvertBack(_value, _parameter, culture, out Collections.Abstraction.Generic.IArrayEnumerable<TSource> _result);
-
-            if (results.Length == _result.Count)
-            {
-                object[] resultArray = new object[results.Length];
-
-                for (int i = 0; i < results.Length; i++)
-
-                    resultArray[i] = results[i] ? _result[i] : Binding.DoNothing;
-            }
-
-            throw new InvalidOperationException("The number of items in _result must be equal to ConvertBack result's.");
-        }
-
-        protected abstract bool[] ConvertBack(TDestinationOut value, TParamOut parameter, CultureInfo culture, out Collections.Abstraction.Generic.IArrayEnumerable<TSource> result);
+        protected sealed override object[] ConvertBack(TDestinationOut _value, TParamIn _parameter, CultureInfo culture) => ConvertBack(DestinationConverters.Convert(_value), ParameterConverters.Convert(_parameter), culture);
     }
 }
-
 #endif

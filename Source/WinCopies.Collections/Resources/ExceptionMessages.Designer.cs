@@ -70,6 +70,15 @@ namespace WinCopies.Collections.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The given node is already contained in another list or tree..
+        /// </summary>
+        public static string NodeIsAlreadyContainedInAnotherListOrTree {
+            get {
+                return ResourceManager.GetString("NodeIsAlreadyContainedInAnotherListOrTree", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This list or collection is read-only..
         /// </summary>
         public static string ReadOnlyListOrCollection {

@@ -404,15 +404,15 @@ namespace WinCopies.Desktop
         /// </summary>
         /// <param name="bitmap">The <see cref="Bitmap"/> to convert.</param>
         /// <returns>The <see cref="ImageSource"/> obtained from the given <see cref="Bitmap"/>.</returns>
-        public static ImageSource ToImageSource(this Bitmap bitmap) => _ToImageSource(bitmap ?? throw GetArgumentNullException(nameof(bitmap)));
+        public static BitmapSource ToImageSource(this Bitmap bitmap) => _ToImageSource(bitmap ?? throw GetArgumentNullException(nameof(bitmap)));
 
-        private static ImageSource _ToImageSource(Bitmap bitmap)
+        private static BitmapSource _ToImageSource(in Bitmap bitmap)
         {
             bitmap.MakeTransparent();
 
             IntPtr hBitmap = bitmap.GetHbitmap();
 
-            ImageSource wpfBitmap = Imaging.CreateBitmapSourceFromHBitmap(
+            BitmapSource wpfBitmap = Imaging.CreateBitmapSourceFromHBitmap(
                 hBitmap,
                 IntPtr.Zero,
                 Int32Rect.Empty,
@@ -443,7 +443,7 @@ namespace WinCopies.Desktop
             //            return wpfBitmap;
         }
 
-        public static ImageSource ToImageSource(this Icon icon) => _ToImageSource((icon ?? throw GetArgumentNullException(nameof(icon))).ToBitmap());
+        public static BitmapSource ToImageSource(this Icon icon) => _ToImageSource((icon ?? throw GetArgumentNullException(nameof(icon))).ToBitmap());
 
         // https://stackoverflow.com/questions/5689674/c-sharp-convert-wpf-image-source-to-a-system-drawing-bitmap
 

@@ -21,6 +21,7 @@ using WinCopies.Util.DotNetFix;
 using static WinCopies.Util.Desktop.Resources.ExceptionMessages;
 #else
 using WinCopies.DotNetFix;
+
 using static WinCopies.Desktop.Resources.ExceptionMessages;
 #endif
 

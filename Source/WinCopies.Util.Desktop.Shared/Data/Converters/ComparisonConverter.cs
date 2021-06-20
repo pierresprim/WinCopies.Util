@@ -38,7 +38,7 @@ namespace WinCopies.Util.Data
 
     public abstract class ComparisonConverterParameter<T> : MarkupExtension
     {
-        public WinCopies.Diagnostics.Comparison ExpectedComparisonResult { get; set; }
+        public Diagnostics.Comparison ExpectedComparisonResult { get; set; }
 
         public T Parameter { get; set; }
 
@@ -54,7 +54,13 @@ namespace WinCopies.Util.Data
 
     public class ComparisonConverter<T> : AlwaysConvertibleOneWayConverter<T, ComparisonConverterParameter<T>, bool>
     {
-        public override ConversionOptions ConvertOptions => ValueCanBeNull;
+        public override
+#if WinCopies3
+            IReadOnlyConversionOptions
+#else
+            ConversionOptions
+#endif
+           ConvertOptions => ValueCanBeNull;
 
 #if !WinCopies3
         public override ConversionOptions ConvertBackOptions => throw new InvalidOperationException();
@@ -114,7 +120,11 @@ namespace WinCopies.Util.Data
                     return parameter.ExpectedComparisonResult == Diagnostics.Comparison.ReferenceEqual;
             }
 
-            throw new InvalidOperationException("The comparison result value returned by the comparison method of the given parameter is not supported.");
+            throw new InvalidOperationException(WinCopies.
+#if !WinCopies3
+                Util.
+#endif
+                Desktop.Resources.ExceptionMessages.ComparisonResultReturnedByParameterIsNotSupported);
         }
 
 #if !WinCopies3

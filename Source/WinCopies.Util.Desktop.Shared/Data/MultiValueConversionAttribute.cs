@@ -21,22 +21,24 @@ namespace WinCopies.Util.Data
 {
     public class MultiValueConversionAttribute : Attribute
     {
+#if !WinCopies3
         public Type[] SourceTypes { get; }
+#endif
 
         public Type TargetType { get; }
 
         public Type ParameterType { get; set; }
 
-        public MultiValueConversionAttribute(Type[] sourceTypes, Type targetType)
-        {
-            SourceTypes = sourceTypes;
+        public MultiValueConversionAttribute(Type targetType) => TargetType = targetType;
 
-            TargetType = targetType;
-        }
+#if !WinCopies3
+        public MultiValueConversionAttribute(Type[] sourceTypes, Type targetType) : this(targetType) => SourceTypes = sourceTypes;
 
         public override object TypeId => this;
+#endif
 
         public override int GetHashCode()
+#if !WinCopies3
         {
             int sourceTypesHashCode = 0;
 
@@ -44,7 +46,13 @@ namespace WinCopies.Util.Data
 
                 sourceTypesHashCode += t.GetHashCode();
 
-            return sourceTypesHashCode + TargetType.GetHashCode();
+            return sourceTypesHashCode +
+#else
+            =>
+#endif
+            TargetType.GetHashCode();
+#if !WinCopies3
         }
+#endif
     }
 }

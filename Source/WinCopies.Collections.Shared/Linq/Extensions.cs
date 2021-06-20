@@ -23,6 +23,8 @@ using System.Linq;
 using WinCopies.Collections;
 using WinCopies.Collections.Generic;
 
+using static WinCopies.Collections.ThrowHelper;
+
 #if !WinCopies3
 using WinCopies.Util;
 
@@ -35,6 +37,350 @@ namespace WinCopies.Linq
 {
     public static class Extensions
     {
+        public static System.Collections.Generic.IEnumerable<TOut> SelectConverterIfNotNull<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, Converter<TIn, TOut> converter) where TOut : class
+        {
+            ThrowIfNull(enumerable, nameof(enumerable));
+
+            TOut value;
+
+            foreach (TIn item in enumerable)
+
+                if ((value = converter(item)) != null)
+
+                    yield return value;
+        }
+
+        public static System.Collections.Generic.IEnumerable<TOut> SelectIfNotNull<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, Func<TIn, TOut> converter) where TOut : class
+        {
+            ThrowIfNull(enumerable, nameof(enumerable));
+
+            TOut value;
+
+            foreach (TIn item in enumerable)
+
+                if ((value = converter(item)) != null)
+
+                    yield return value;
+        }
+
+        public static System.Collections.Generic.IEnumerable<TOut> SelectConverterIfNotNullStruct<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, Converter<TIn, TOut?> converter) where TOut : struct
+        {
+            ThrowIfNull(enumerable, nameof(enumerable));
+
+            TOut? value;
+
+            foreach (TIn item in enumerable)
+
+                if ((value = converter(item)) != null)
+
+                    yield return value.Value;
+        }
+
+        public static System.Collections.Generic.IEnumerable<TOut> SelectIfNotNullStruct<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, Func<TIn, TOut?> converter) where TOut : struct
+        {
+            ThrowIfNull(enumerable, nameof(enumerable));
+
+            TOut? value;
+
+            foreach (TIn item in enumerable)
+
+                if ((value = converter(item)) != null)
+
+                    yield return value.Value;
+        }
+
+        public static T FirstOrValue<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in T value)
+        {
+#if CS7
+            if ((enumerable ?? throw GetArgumentNullException(nameof(enumerable))) is System.Collections.Generic.IReadOnlyList<T> list)
+
+                    return list.Count > 0 ? list[0] : value;
+#endif
+
+            if (enumerable is IList<T> _list)
+
+                return _list.Count > 0 ? _list[0] : value;
+
+            foreach (T _value in enumerable)
+
+                return _value;
+
+            return value;
+        }
+
+        public static T FirstOrValue<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Func<T> func)
+        {
+            ThrowIfNull(enumerable, nameof(enumerable));
+            ThrowIfNull(func, nameof(func));
+
+#if CS7
+            if (enumerable is System.Collections.Generic.IReadOnlyList<T> list)
+
+                return list.Count > 0 ? list[0] : func();
+#endif
+
+            if (enumerable is IList<T> _list)
+
+                return _list.Count > 0 ? _list[0] : func();
+
+            foreach (T _value in enumerable)
+
+                return _value;
+
+            return func();
+        }
+
+        public static bool FirstOrValue<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in T value, out T result)
+        {
+#if CS7
+            if ((enumerable ?? throw GetArgumentNullException(nameof(enumerable))) is System.Collections.Generic.IReadOnlyList<T> list)
+            {
+                if (list.Count > 0)
+                {
+                    result = list[0];
+
+                    return true;
+                }
+
+                result = value;
+
+                return false;
+            }
+#endif
+
+            if (enumerable is IList<T> _list)
+            {
+                if (_list.Count > 0)
+                {
+                    result = _list[0];
+
+                    return true;
+                }
+
+                result = value;
+
+                return false;
+            }
+
+            foreach (T _value in enumerable)
+            {
+                result = _value;
+
+                return true;
+            }
+
+            result = value;
+
+            return false;
+        }
+
+        public static bool FirstOrValue<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Func<T> func, out T result)
+        {
+            ThrowIfNull(enumerable, nameof(enumerable));
+            ThrowIfNull(func, nameof(func));
+
+#if CS7
+            if (enumerable is System.Collections.Generic.IReadOnlyList<T> list)
+            {
+                if (list.Count > 0)
+                {
+                    result = list[0];
+
+                    return true;
+                }
+
+                result = func();
+
+                return false;
+            }
+#endif
+
+            if (enumerable is IList<T> _list)
+            {
+                if (_list.Count > 0)
+                {
+                    result = _list[0];
+
+                    return true;
+                }
+
+                result = func();
+
+                return false;
+            }
+
+            foreach (T _value in enumerable)
+            {
+                result = _value;
+
+                return true;
+            }
+
+            result = func();
+
+            return false;
+        }
+
+        public static T FirstOrDefaultValue<T>(this System.Collections.Generic.IEnumerable<T> enumerable) => enumerable.FirstOrValue(default(T));
+
+        public static bool FirstOrDefaultValue<T>(this System.Collections.Generic.IEnumerable<T> enumerable, out T result) => enumerable.FirstOrValue(default(T), out result);
+
+        public static T FirstValue<T>(this System.Collections.Generic.IEnumerable<T> enumerable) => enumerable.FirstOrValue(() => throw GetNoItemException());
+
+        public static bool FirstValue<T>(this System.Collections.Generic.IEnumerable<T> enumerable, out T result) => enumerable.FirstOrValue(() => throw GetNoItemException(), out result);
+
+        public static T FirstOrValue<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in T value, in Func<T, bool> predicate)
+        {
+            ThrowIfNull(enumerable, nameof(enumerable));
+            ThrowIfNull(predicate, nameof(predicate));
+
+            foreach (T _value in enumerable)
+
+                if (predicate(_value))
+
+                    return _value;
+
+            return value;
+        }
+
+        public static T FirstOrValuePredicate<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in T value, in Predicate<T> predicate)
+        {
+            ThrowIfNull(enumerable, nameof(enumerable));
+            ThrowIfNull(predicate, nameof(predicate));
+
+            foreach (T _value in enumerable)
+
+                if (predicate(_value))
+
+                    return _value;
+
+            return value;
+        }
+
+        public static T FirstOrValue<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Func<T> func, in Func<T, bool> predicate)
+        {
+            ThrowIfNull(enumerable, nameof(enumerable));
+            ThrowIfNull(func, nameof(func));
+            ThrowIfNull(predicate, nameof(predicate));
+
+            foreach (T _value in enumerable)
+
+                if (predicate(_value))
+
+                    return _value;
+
+            return func();
+        }
+
+        public static T FirstOrValuePredicate<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Func<T> func, in Predicate<T> predicate)
+        {
+            ThrowIfNull(enumerable, nameof(enumerable));
+            ThrowIfNull(func, nameof(func));
+            ThrowIfNull(predicate, nameof(predicate));
+
+            foreach (T _value in enumerable)
+
+                if (predicate(_value))
+
+                    return _value;
+
+            return func();
+        }
+
+        public static bool FirstOrValue<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in T value, in Func<T, bool> predicate, out T result)
+        {
+            ThrowIfNull(enumerable, nameof(enumerable));
+            ThrowIfNull(predicate, nameof(predicate));
+
+            foreach (T _value in enumerable)
+
+                if (predicate(_value))
+                {
+                    result = _value;
+
+                    return true;
+                }
+
+            result = value;
+
+            return false;
+        }
+
+        public static bool FirstOrValuePredicate<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in T value, in Predicate<T> predicate, out T result)
+        {
+            ThrowIfNull(enumerable, nameof(enumerable));
+            ThrowIfNull(predicate, nameof(predicate));
+
+            foreach (T _value in enumerable)
+
+                if (predicate(_value))
+                {
+                    result = _value;
+
+                    return true;
+                }
+
+            result = value;
+
+            return false;
+        }
+
+        public static bool FirstOrValue<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Func<T> func, in Func<T, bool> predicate, out T result)
+        {
+            ThrowIfNull(enumerable, nameof(enumerable));
+            ThrowIfNull(func, nameof(func));
+            ThrowIfNull(predicate, nameof(predicate));
+
+            foreach (T _value in enumerable)
+
+                if (predicate(_value))
+                {
+                    result = _value;
+
+                    return true;
+                }
+
+            result = func();
+
+            return false;
+        }
+
+        public static bool FirstOrValuePredicate<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Func<T> func, in Predicate<T> predicate, out T result)
+        {
+            ThrowIfNull(enumerable, nameof(enumerable));
+            ThrowIfNull(func, nameof(func));
+            ThrowIfNull(predicate, nameof(predicate));
+
+            foreach (T _value in enumerable)
+
+                if (predicate(_value))
+                {
+                    result = _value;
+
+                    return true;
+                }
+
+            result = func();
+
+            return false;
+        }
+
+        public static T FirstOrDefaultValue<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Func<T, bool> func) => enumerable.FirstOrValue(default(T), func);
+
+        public static T FirstOrDefaultValuePredicate<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Predicate<T> func) => enumerable.FirstOrValuePredicate(default(T), func);
+
+        public static bool FirstOrDefaultValue<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Func<T, bool> func, out T result) => enumerable.FirstOrValue(default(T), func, out result);
+
+        public static bool FirstOrDefaultValuePredicate<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Predicate<T> func, out T result) => enumerable.FirstOrValuePredicate(default(T), func, out result);
+
+        public static T FirstValue<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Func<T, bool> func) => enumerable.FirstOrValue(() => throw GetNoItemException(), func);
+
+        public static T FirstPredicate<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Predicate<T> func) => enumerable.FirstOrValuePredicate(() => throw GetNoItemException(), func);
+
+        public static bool FirstValue<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Func<T, bool> func, out T result) => enumerable.FirstOrValue(() => throw GetNoItemException(), func, out result);
+
+        public static bool FirstPredicate<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Predicate<T> func, out T result) => enumerable.FirstOrValuePredicate(() => throw GetNoItemException(), func, out result);
+
         public static System.Collections.Generic.IEnumerable<T> Select<T>(this System.Collections.IEnumerable enumerable, Func<object, T> func)
         {
             foreach (object value in enumerable)

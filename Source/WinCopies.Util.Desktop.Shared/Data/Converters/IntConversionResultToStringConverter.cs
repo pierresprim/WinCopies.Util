@@ -30,7 +30,11 @@ namespace WinCopies.Util.Data
 
         public bool ConversionSucceeded { get; private set; }
 
-        public int? Value => ConversionSucceeded ? _value : throw new InvalidOperationException("Conversion did not succeeded.");
+        public int? Value => ConversionSucceeded ? _value : throw new InvalidOperationException(WinCopies.
+            #if !WinCopies3
+            Util.
+            #endif
+            Desktop.Resources.ExceptionMessages.ConversionDidNotSucceeded);
 
         private static IntConversionResult _invalidValue;
 
@@ -50,9 +54,21 @@ namespace WinCopies.Util.Data
 
     public class IntConversionResultToStringConverter : AlwaysConvertibleTwoWayConverter<IntConversionResult, object, string>
     {
-        public override ConversionOptions ConvertOptions => ParameterCanBeNull;
+        public override
+#if WinCopies3
+            IReadOnlyConversionOptions
+#else
+            ConversionOptions
+#endif
+            ConvertOptions => ParameterCanBeNull;
 
-        public override ConversionOptions ConvertBackOptions => AllowNull;
+        public override
+#if WinCopies3
+            IReadOnlyConversionOptions
+#else
+            ConversionOptions
+#endif
+            ConvertBackOptions => AllowNull;
 
         protected override string Convert(IntConversionResult value, object parameter, CultureInfo culture) => value.ToString();
 

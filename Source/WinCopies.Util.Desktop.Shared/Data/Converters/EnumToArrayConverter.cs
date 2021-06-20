@@ -30,7 +30,7 @@ namespace WinCopies.Util.Data
         /// <para>Value: ignored.</para>
         /// <para>Parameter: cannot be <see langword="null"/>.</para>
         /// </summary>
-        public override ConversionOptions ConvertOptions => ConverterHelper.ValueCanBeNull;
+        public override IReadOnlyConversionOptions ConvertOptions => ConverterHelper.ValueCanBeNull;
 
         protected override Array Convert(object value, Type parameter, CultureInfo culture) => parameter.IsEnum ? parameter.GetEnumValues() : null;
 #else

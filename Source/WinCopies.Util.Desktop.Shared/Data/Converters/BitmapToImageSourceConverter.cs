@@ -36,9 +36,9 @@ namespace WinCopies.Util.Data
 #if WinCopies3
         BitmapToImageSourceConverter : AlwaysConvertibleTwoWayConverter<Bitmap, object, ImageSource>
     {
-        public override ConversionOptions ConvertOptions => ParameterCanBeNull;
+        public override IReadOnlyConversionOptions ConvertOptions => ParameterCanBeNull;
 
-        public override ConversionOptions ConvertBackOptions => ParameterCanBeNull;
+        public override IReadOnlyConversionOptions ConvertBackOptions => ParameterCanBeNull;
 
         protected override ImageSource Convert(Bitmap value, object parameter, CultureInfo culture) => value.ToImageSource();
 

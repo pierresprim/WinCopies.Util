@@ -150,10 +150,74 @@ namespace WinCopies.Commands
         /// <summary>
         /// Executes the actual command
         /// </summary>
-        /// <param name="parameter">THe command parameter to be passed</param>
+        /// <param name="parameter">The command parameter to be passed</param>
         public void Execute(T parameter) => ExecuteDelegate?.Invoke(parameter);
 
         void ICommand.Execute(object parameter) => Execute((T)parameter);
         #endregion
+    }
+
+    /// <summary>
+    /// Provides a base class for WPF commands.
+    /// </summary>
+    public class DelegateCommand2 : ICommand
+    {
+        /// <summary>
+        /// Gets or sets the action to be called when the Execute method of the command gets called.
+        /// </summary>
+        public Action ExecuteDelegate { get; set; }
+
+        public event EventHandler CanExecuteChanged
+        {
+            add => CommandManager.RequerySuggested += value;
+            remove => CommandManager.RequerySuggested -= value;
+        }
+
+        public DelegateCommand2(in Action executeDelegate) => ExecuteDelegate = executeDelegate;
+
+        /// <summary>
+        /// Checks if the command Execute method can run.
+        /// </summary>
+        /// <param name="parameter">THe command parameter to be passed.</param>
+        /// <returns>Returns true if the command can execute. By default true is returned so that if the user of SimpleCommand does not specify a CanExecuteCommand delegate the command still executes.</returns>
+        public bool CanExecute(object parameter) => true;
+
+        /// <summary>
+        /// Executes the actual command.
+        /// </summary>
+        /// <param name="parameter">The command parameter to be passed.</param>
+        public void Execute(object parameter) => ExecuteDelegate?.Invoke();
+    }
+
+    /// <summary>
+    /// Provides a base class for WPF commands.
+    /// </summary>
+    public class DelegateCommand3 : ICommand<object>
+    {
+        /// <summary>
+        /// Gets or sets the action to be called when the Execute method of the command gets called.
+        /// </summary>
+        public Action<object> ExecuteDelegate { get; set; }
+
+        public event EventHandler CanExecuteChanged
+        {
+            add => CommandManager.RequerySuggested += value;
+            remove => CommandManager.RequerySuggested -= value;
+        }
+
+        public DelegateCommand3(in Action<object> executeDelegate) => ExecuteDelegate = executeDelegate;
+
+        /// <summary>
+        /// Checks if the command Execute method can run.
+        /// </summary>
+        /// <param name="parameter">THe command parameter to be passed.</param>
+        /// <returns>Returns true if the command can execute. By default true is returned so that if the user of SimpleCommand does not specify a CanExecuteCommand delegate the command still executes.</returns>
+        public bool CanExecute(object parameter) => true;
+
+        /// <summary>
+        /// Executes the actual command.
+        /// </summary>
+        /// <param name="parameter">The command parameter to be passed.</param>
+        public void Execute(object parameter) => ExecuteDelegate?.Invoke(parameter);
     }
 }

@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ArgumentMustBeAnInstanceOf" xml:space="preserve">
+    <value>{0} must be an instance of {1}.</value>
+  </data>
+  <data name="ArgumentMustBeFromEnumAndNotValue" xml:space="preserve">
+    <value>{0} must be a value of the {1} enum and can't be the {2} value.</value>
+  </data>
   <data name="ArrayHasNonZeroLowerBound" xml:space="preserve">
     <value>The given array has a non-zero lower bound.</value>
   </data>
@@ -126,6 +132,9 @@
   <data name="ArrayWithMoreThanOneDimension" xml:space="preserve">
     <value>Arrays must have only one dimension.</value>
   </data>
+  <data name="CollectionChangedDuringEnumeration" xml:space="preserve">
+    <value>The collection has changed during enumeration.</value>
+  </data>
   <data name="CurrentObjectIsDisposing" xml:space="preserve">
     <value>The current object or value is disposing.</value>
   </data>
@@ -133,10 +142,13 @@
     <value>The declaring types of '{0}' and '{1}' do not correspond. The declaring types of '{0}' and '{1}' must correspond for read-only properties when an integrity check is performed.</value>
   </data>
   <data name="EnumeratorIsNotStartedOrDisposed" xml:space="preserve">
-    <value>The enumeration is not started or the enumerator is disposed.</value>
+    <value>The enumeration has not started or the enumerator is disposed.</value>
   </data>
   <data name="FieldOrPropertyNotFound" xml:space="preserve">
     <value>'{0}' couldn't be found in '{1}'.</value>
+  </data>
+  <data name="GivenTypeIsNotSupported" xml:space="preserve">
+    <value>The given type is not supported.</value>
   </data>
   <data name="InvalidArgument" xml:space="preserve">
     <value>The argument passed to parameter {0} is not supported.</value>
@@ -170,6 +182,9 @@
   </data>
   <data name="ReadOnlyCollection" xml:space="preserve">
     <value>This collection is read-only.</value>
+  </data>
+  <data name="SequenceContainsNoItemOrNoItemMatchedGivenPredicate" xml:space="preserve">
+    <value>The sequence contains no item or no item matched the given predicate.</value>
   </data>
   <data name="StringIsNullEmptyOrWhiteSpace" xml:space="preserve">
     <value>The given value is null, empty or white space. The given value is: '{0}'.</value>

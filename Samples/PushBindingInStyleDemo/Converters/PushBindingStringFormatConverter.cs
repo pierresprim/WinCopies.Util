@@ -40,9 +40,9 @@ namespace PushBindingInStyleDemo.Converters
     {
         public string StringFormat { get; set; }
 
-        public override ConversionOptions ConvertOptions => AllowNull;
+        public override IReadOnlyConversionOptions ConvertOptions => AllowNull;
 
-        public override ConversionOptions ConvertBackOptions => AllowNull;
+        public override IReadOnlyConversionOptions ConvertBackOptions => AllowNull;
 
         protected override double Convert(string value, object parameter, CultureInfo culture) => double.Parse(value);
 

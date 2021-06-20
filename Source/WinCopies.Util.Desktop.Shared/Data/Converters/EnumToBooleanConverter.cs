@@ -33,19 +33,19 @@ namespace WinCopies.Util.Data
 #else
     [ValueConversion(typeof(Enum), typeof(bool), ParameterType = typeof(Enum))]
 #endif
-    public class EnumToBooleanConverter : 
+    public class EnumToBooleanConverter :
 #if WinCopies3
-        TwoWayConverterBase <Enum, Enum, bool>
+        TwoWayConverterBase<Enum, Enum, bool>
     {
         /// <summary>
         /// No <see langword="null"/> argument is allowed for value nor parameter.
         /// </summary>
-        public override ConversionOptions ConvertOptions => NotNull;
+        public override IReadOnlyConversionOptions ConvertOptions => NotNull;
 
         /// <summary>
         /// No <see langword="null"/> argument is allowed for value nor parameter.
         /// </summary>
-        public override ConversionOptions ConvertBackOptions => NotNull;
+        public override IReadOnlyConversionOptions ConvertBackOptions => NotNull;
 
         /// <summary>
         /// Checks if an enum value equals a parameter.
@@ -95,6 +95,37 @@ namespace WinCopies.Util.Data
             value.Equals(parameter);
 
         public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => (bool)value ? parameter : Binding.DoNothing;
+#endif
+    }
+
+    /// <summary>
+    /// Data converter for checking whether an enum is not equal to a parameter.
+    /// </summary>
+#if !WinCopies3
+    /// <remarks>This class can also work for numeric types (int, ...)</remarks>
+#else
+    [ValueConversion(typeof(Enum), typeof(bool), ParameterType = typeof(Enum))]
+#endif
+    public class EnumToReversedBooleanConverter :
+#if WinCopies3
+        EnumToBooleanConverter
+    {
+        protected override bool Convert(Enum value, Enum parameter, CultureInfo culture, out bool result)
+        {
+            bool returnValue = base.Convert(value, parameter, culture, out result);
+
+            result = !result;
+
+            return returnValue;
+        }
+
+        protected override bool ConvertBack(bool value, Enum parameter, CultureInfo culture, out Enum result) => base.ConvertBack(!value, parameter, culture, out result);
+#else
+        ConverterBase
+    {
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture) => !value.Equals(parameter);
+
+        public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => !(bool)value ? parameter : Binding.DoNothing;
 #endif
     }
 }

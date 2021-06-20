@@ -25,7 +25,7 @@ using WinCopies.Collections.DotNetFix;
 
 namespace WinCopies.Collections.AbstractionInterop.Generic
 {
-    public static partial class AbstractionTypes<TSource, TDestination> where TSource : TDestination
+    public static partial class AbstractionTypes<TSource, TDestination>
     {
         public class ReadOnlyQueue<TQueue> : IQueue<TDestination> where TQueue : IQueue<TSource>
         {
@@ -78,7 +78,7 @@ namespace WinCopies.Collections.AbstractionInterop.Generic
                 return false;
             }
 
-            TDestination ISimpleLinkedList<TDestination>.Peek() => ((ISimpleLinkedList<TDestination>)InnerQueue).Peek();
+            TDestination ISimpleLinkedList<TDestination>.Peek() => ((ISimpleLinkedList<TSource>)InnerQueue).Peek();
 
 #if !CS8
             bool ISimpleLinkedList.TryPeek(out object result) => InnerQueue.TryPeek(out result);

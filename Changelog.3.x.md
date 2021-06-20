@@ -6,6 +6,20 @@ The WinCopies� software framework
 CHANGELOG
 ---------
 
+### 06/21/2021 3.9-preview
+
+- Add new types and static methods.
+- WinCopies.Collections.DotNetFix.Generic.LinkedList<T>:
+	- AddFirst/Last return type is now WinCopies.Collections.DotNetFix.Generic.LinkedList<T>.LinkedListNode.
+	- Memory leak fixed.
+- WinCopies.Collections.Generic.ILinkedList(Node)Enumerable have moved to WinCopies.Collections.
+- ILinkedListEnumerable:
+	- implements IUIntCountable.
+	- remove LinkedCollectionChangedAction.Remove event handling.
+- Rewrite LinkedTreeNode-related interfaces and classes.
+- Rewrite WPF Converters options, MultiConverters and MultiValueConversionAttribute.
+- Bug fixed in WinCopies.Collections.AbstractionInterop.Generic.AbstractionTypes<TSource, TDestination>.ReadOnlyQueue/Stack<TQueue> implementations of ISimpleLinkedList<TDestination>.Peek() method.
+
 ### 05/24/2021 3.8-preview
 
 - ILinkedListEnumerable implements WinCopies.DotNetFix.IDisposable

@@ -315,7 +315,6 @@ namespace WinCopies
         private void OnProgressChanged(object args) => ProgressChanged?.Invoke(this, args as ProgressChangedEventArgs);
 
 #if !WinCopies3
-
         /// <summary>
         /// Notifies of the progress.
         /// </summary>
@@ -334,9 +333,7 @@ namespace WinCopies
         /// User object.
         /// </param>
         public void ReportProgress(int percentProgress, object userState)
-
 #else
-
         /// <summary>
         /// Notifies of the progress.
         /// </summary>
@@ -355,7 +352,6 @@ namespace WinCopies
         /// User object.
         /// </param>
         public void ReportProgress(int progressPercentage, object userState)
-
 #endif
 
         {
@@ -403,7 +399,6 @@ progressPercentage
         public bool IsDisposed { get; private set; }
 
 #if !WinCopies3
-
         /// <summary>
         /// Releases resources used by the <see cref="BackgroundWorker"/>.
         /// </summary>

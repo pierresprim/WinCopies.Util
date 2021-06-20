@@ -33,8 +33,6 @@ using WinCopies.Collections.DotNetFix.Generic;
 Util.Util;
 
 using WinCopies.Collections;
-
-using static WinCopies.Util.Util;
 #endif
 
 namespace WinCopies.Util.Data

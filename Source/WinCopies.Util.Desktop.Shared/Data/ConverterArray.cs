@@ -223,18 +223,26 @@ namespace WinCopies.Util.Data
         {
             if (parameter is MultiConverterArrayParameter multiConverterArrayParameter)
             {
-                Type[] types = ((MultiValueConversionAttribute)multiConverterArrayParameter.Converter.GetType().GetCustomAttributes(typeof(MultiValueConversionAttribute), true).FirstOrDefault())?.SourceTypes;
+                Type[] types
+#if !WinCopies3
+                    = ((MultiValueConversionAttribute)multiConverterArrayParameter.Converter.GetType().GetCustomAttributes(typeof(MultiValueConversionAttribute), true).FirstOrDefault())?.SourceTypes;
 
                 if (types == null)
                 {
+#else
+                    ;
+#endif
                     types = new Type[targetTypes.Length];
 
                     for (int i = 0; i < targetTypes.Length; i++)
 
                         types[i] = typeof(object);
-                }
+#if !WinCopies3
+              }
+#endif
 
                 object[] values = multiConverterArrayParameter.Converter.ConvertBack(value, types, multiConverterArrayParameter.Parameter, culture);
+
                 for (int i = 0; i < values.Length; i++)
                 {
                     value = values[i];
@@ -251,16 +259,23 @@ namespace WinCopies.Util.Data
 
             if (parameter is MultiConverterArrayMultiParametersParameter multiConverterArrayMultiParametersParameter)
             {
-                Type[] types = ((MultiValueConversionAttribute)multiConverterArrayMultiParametersParameter.Converter.GetType().GetCustomAttributes(typeof(MultiValueConversionAttribute), true).FirstOrDefault())?.SourceTypes;
+                Type[] types
+#if !WinCopies3
+                    = ((MultiValueConversionAttribute)multiConverterArrayMultiParametersParameter.Converter.GetType().GetCustomAttributes(typeof(MultiValueConversionAttribute), true).FirstOrDefault())?.SourceTypes;
 
                 if (types == null)
                 {
+#else
+                    ;
+#endif
                     types = new Type[targetTypes.Length];
 
                     for (int i = 0; i < targetTypes.Length; i++)
 
                         types[i] = typeof(object);
+#if !WinCopies3
                 }
+#endif
 
                 object[] values = multiConverterArrayMultiParametersParameter.Converter.ConvertBack(value, types, multiConverterArrayMultiParametersParameter.Parameter, culture);
 
@@ -271,6 +286,7 @@ namespace WinCopies.Util.Data
                     for (int j = 0; j < multiConverterArrayMultiParametersParameter.Converters.Count; j++)
                     {
                         IValueConverter converter = multiConverterArrayMultiParametersParameter.Converters[j];
+
                         value = converter.ConvertBack(value, ((ValueConversionAttribute)converter.GetType().GetCustomAttributes(typeof(ValueConversionAttribute), true).FirstOrDefault())?.TargetType ?? typeof(object), multiConverterArrayMultiParametersParameter.Parameters[j], culture);
                     }
 

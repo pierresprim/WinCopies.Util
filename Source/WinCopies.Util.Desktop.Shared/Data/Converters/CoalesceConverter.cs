@@ -18,12 +18,66 @@
 using System;
 using System.Globalization;
 
+using static WinCopies.Util.Data.ConverterHelper;
+
 namespace WinCopies.Util.Data
 {
-    public class CoalesceConverter : ConverterBase
+    public class CoalesceConverter : AlwaysConvertibleTwoWayConverter<object, object, object>
     {
-        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture) => value ?? parameter;
+        public override
+#if WinCopies3
+            IReadOnlyConversionOptions
+#else
+            ConversionOptions
+#endif
+            ConvertOptions => AllowNull;
 
-        public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
+        public override
+#if WinCopies3
+            IReadOnlyConversionOptions
+#else
+            ConversionOptions
+#endif
+           ConvertBackOptions => AllowNull;
+
+        protected override object Convert(object value, object parameter, CultureInfo culture) => value ?? parameter;
+
+        protected override object ConvertBack(object value, object parameter, CultureInfo culture) => value ?? parameter;
+    }
+
+    public class CoalesceMultiConverter :
+#if WinCopies3
+        AlwaysConvertibleOneWayMultiConverter<object, object, IReadOnlyConversionOptions>
+#else
+        MultiConverterBase
+#endif
+    {
+#if WinCopies3
+        public override IReadOnlyConversionOptions ConvertOptions => AllowNull;
+#endif
+
+#if WinCopies3
+protected
+#else
+        public
+#endif
+            override object Convert(object[] values,
+#if !WinCopies3
+        Type targetType,
+#endif
+            object parameter, CultureInfo culture)
+        {
+            foreach (object value in values)
+
+                if (value != null)
+
+                    return value;
+
+            return parameter;
+        }
+
+#if !WinCopies3
+        public override object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) => throw new NotSupportedException();
+#endif
     }
 }

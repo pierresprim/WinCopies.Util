@@ -15,7 +15,9 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
+using System.Windows;
 using System.Windows.Input;
+using WinCopies.Util.Data;
 
 #if !WinCopies3
 namespace WinCopies.Util.Commands
@@ -32,9 +34,67 @@ namespace WinCopies.Commands
         new T CommandParameter { get; }
 
 #if CS8
-#if WinCopies3
         ICommand ICommandSource.Command => Command;
+
+        object ICommandSource.CommandParameter => CommandParameter;
 #endif
+    }
+
+    public abstract class CommandSourceBase
+    {
+        public IInputElement CommandTarget { get; set; }
+    }
+
+    public class CommandSource : CommandSourceBase, ICommandSource
+    {
+        public System.Windows.Input.ICommand Command { get; }
+
+        public object CommandParameter { get; set; }
+
+        public CommandSource(in System.Windows.Input.ICommand command) => Command = command;
+    }
+
+    public class CommandSource<T> : CommandSourceBase, ICommandSource<T>
+    {
+        public ICommand<T> Command { get; }
+
+        public T CommandParameter { get; set; }
+
+        public CommandSource(in ICommand<T> command) => Command = command;
+
+#if !CS8
+        System.Windows.Input.ICommand ICommandSource.Command => Command;
+
+        object ICommandSource.CommandParameter => CommandParameter;
+#endif
+    }
+
+    public abstract class CommandSourceViewModelBase<T> : ViewModel<T> where T : CommandSourceBase
+    {
+        public IInputElement CommandTarget { get => ModelGeneric.CommandTarget; set { ModelGeneric.CommandTarget = value; OnPropertyChanged(nameof(CommandTarget)); } }
+
+        public CommandSourceViewModelBase(in T commandSource) : base(commandSource) { /* Left empty. */ }
+    }
+
+    public class CommandSourceViewModel : CommandSourceViewModelBase<CommandSource>, ICommandSource
+    {
+        public System.Windows.Input.ICommand Command => ModelGeneric.Command;
+
+        public object CommandParameter { get => ModelGeneric.CommandParameter; set { ModelGeneric.CommandParameter = value; OnPropertyChanged(nameof(CommandParameter)); } }
+
+        public CommandSourceViewModel(in CommandSource commandSource) : base(commandSource) { /* Left empty. */ }
+    }
+
+    public class CommandSourceViewModel<T> : CommandSourceViewModelBase<CommandSource<T>>, ICommandSource<T>
+    {
+        public ICommand<T> Command => ModelGeneric.Command;
+
+        public T CommandParameter { get => ModelGeneric.CommandParameter; set { ModelGeneric.CommandParameter = value; OnPropertyChanged(nameof(CommandParameter)); } }
+
+        public CommandSourceViewModel(in CommandSource<T> commandSource) : base(commandSource) { /* Left empty. */ }
+
+#if !CS8
+        System.Windows.Input.ICommand ICommandSource.Command => Command;
 
         object ICommandSource.CommandParameter => CommandParameter;
 #endif

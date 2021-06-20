@@ -1,4 +1,4 @@
-﻿/* Copyright © Pierre Sprimont, 2019
+﻿/* Copyright © Pierre Sprimont, 2021
  *
  * This file is part of the WinCopies Framework.
  *
@@ -20,92 +20,25 @@ using System;
 using System.Globalization;
 using System.Windows.Data;
 
+using WinCopies.Collections;
+using WinCopies.Collections.Abstraction.Generic;
 using WinCopies.Collections.DotNetFix.Generic;
 using WinCopies.Collections.Generic;
 using WinCopies.Linq;
 
 namespace WinCopies.Util.Data
 {
-    public abstract class MultiConverterBase<TSourceIn, TSourceOut, TParamIn,
-#if WinCopies3
-        TParamOut,
-#endif
-        TDestinationIn
-#if WinCopies3
-        , TDestinationOut
-#endif
-      > : MultiConverterBase3<TParamIn,
-#if WinCopies3
-        TParamOut,
-#endif
-        TDestinationIn
-#if WinCopies3
-        , TDestinationOut
-#endif
-      >
+    public abstract class MultiConverterBase4<TSourceIn, TSourceOut, TSourceEnumerableIn, TSourceEnumerableOut, TParamIn, TParamOut, TDestinationIn, TDestinationOut, TConversionOptions> : MultiConverterBase3<TParamIn, TParamOut, TDestinationIn, TDestinationOut, TConversionOptions> where TConversionOptions : IReadOnlyConversionOptions
     {
-#if !WinCopies3
-        public interface IQueue : IUIntCountable
+        protected abstract int Count(in TSourceEnumerableOut values);
+
+        protected abstract void Convert(in bool[] conversionsSucceeded, in TSourceEnumerableOut results, in object[] resultArray);
+
+        protected abstract void Clear(in TSourceEnumerableIn values);
+
+        protected sealed override bool Convert(object[] values, TParamOut _parameter, CultureInfo culture, out TDestinationIn result)
         {
-            TSourceOut Dequeue();
-        }
-
-        public sealed class SimpleQueue : IQueue
-        {
-            private readonly IQueue<TSourceOut> _queue = new Collections.DotNetFix.Generic.Queue<TSourceOut>();
-
-            public uint Count => _queue.Count;
-
-            public void Enqueue(in TSourceOut item) => _queue.Enqueue(item);
-
-            public TSourceOut Dequeue() => _queue.Dequeue();
-        }
-
-        public sealed class ArrayQueue : IQueue
-        {
-            private readonly object[] _array;
-            private int _index;
-
-            public uint Count => (uint)(_array.Length - _index);
-
-            public ArrayQueue(in object[] array) => _array = array ?? throw GetArgumentNullException(nameof(array));
-
-            public TSourceOut Dequeue()
-            {
-                var item = (TSourceOut)_array[_index];
-
-                _array[_index++] = null;
-
-                return item;
-            }
-        }
-
-        public sealed class Queue : IQueue
-        {
-            private readonly IQueue<TSourceOut> _queue;
-
-            public uint Count => _queue.Count;
-
-            public Queue(IQueue<TSourceOut> queue) => _queue = queue ?? throw GetArgumentNullException(nameof(queue));
-
-            public TSourceOut Dequeue() => _queue.Dequeue();
-        }
-
-        public sealed class Stack : IQueue
-        {
-            private readonly IStack<TSourceOut> _stack;
-
-            public uint Count => _stack.Count;
-
-            public Stack(IStack<TSourceOut> stack) => _stack = stack ?? throw GetArgumentNullException(nameof(stack));
-
-            public TSourceOut Dequeue() => _stack.Pop();
-        }
-#endif
-
-        protected sealed override object Convert(object[] values, TParamOut _parameter, CultureInfo culture)
-        {
-            ArrayBuilder<TSourceOut> arrayBuilder = Convert(
+            TSourceEnumerableIn array = Convert(
 #if WinCopies3
                     values?.
 #else
@@ -115,51 +48,100 @@ namespace WinCopies.Util.Data
 #if !WinCopies3
                         values
 #endif
-                    ), _parameter, culture);
+                    ), values.Length, _parameter, culture);
 
-            try
-            {
-                return arrayBuilder != null && Convert(arrayBuilder, _parameter, culture, out TDestinationOut _result) ? _result : Binding.DoNothing;
-            }
+            if (array != null)
 
-            finally
-            {
-                arrayBuilder?.Clear();
-            }
+                try
+                {
+                    if (Convert(array, _parameter, culture, out result))
+
+                        return true;
+                }
+
+                finally
+                {
+                    Clear(array);
+                }
+
+            result = DestinationConverters.GetDefaultValue<TDestinationIn>();
+
+            return false;
         }
 
-        protected abstract ArrayBuilder<TSourceOut> Convert(System.Collections.Generic.IEnumerable<TSourceIn> values, TParamOut parameter, CultureInfo culture);
+        protected abstract TSourceEnumerableIn Convert(System.Collections.Generic.IEnumerable<TSourceIn> values, in int valuesCount, TParamOut parameter, CultureInfo culture);
 
-        protected abstract bool Convert(ArrayBuilder<TSourceOut> values, TParamOut parameter, CultureInfo culture, out TDestinationOut result);
+        protected abstract bool Convert(TSourceEnumerableIn values, TParamOut parameter, CultureInfo culture, out TDestinationIn result);
 
-        protected sealed override object[] ConvertBack(TDestinationOut _value, TParamOut _parameter, CultureInfo culture)
+        protected InvalidOperationException GetLengthMismatchException() => new InvalidOperationException("The number of items in _result must be equal to ConvertBack result's.");
+
+        protected sealed override object[] ConvertBack(TDestinationIn _value, TParamOut _parameter, CultureInfo culture)
         {
-            bool[] results = ConvertBack(_value, _parameter, culture, out IQueue<TSourceOut> _result);
+            bool[] results = ConvertBack(_value, _parameter, culture, out TSourceEnumerableOut _result);
 
-            if (results.Length == _result.Count)
+            if (results.Length == Count(_result))
             {
                 object[] resultArray = new object[results.Length];
 
-                for (int i = 0; i < results.Length; i++)
+                Convert(results, _result, resultArray);
 
-                    resultArray[i] = results[i] ? _result.Dequeue() : Binding.DoNothing;
+                return resultArray;
             }
 
-            throw new InvalidOperationException("The number of items in _result must be equal to ConvertBack result's.");
+            throw GetLengthMismatchException();
         }
 
-        protected abstract bool[] ConvertBack(TDestinationOut value, TParamOut parameter, CultureInfo culture, out IQueue<TSourceOut> result);
-
-#if !WinCopies3
-        public static bool CheckForNullItem(in object value, in bool methodParameter) => !methodParameter && value == null;
-        
-        private static System.Collections.Generic.IEnumerable<T> To<T>(in System.Collections.IEnumerable enumerable) => enumerable.SelectConverter(value => (T)value);
-#endif
+        protected abstract bool[] ConvertBack(TDestinationIn value, TParamOut parameter, CultureInfo culture, out TSourceEnumerableOut result);
     }
 
-    public abstract class MultiConverterBase<TSourceIn, TSourceOut, TParam, TDestination> : MultiConverterBase<TSourceIn, TSourceOut, TParam, TParam, TDestination, TDestination>
+    public abstract class MultiConverterBase5<TSourceIn, TSourceOut, TSourceEnumerable, TParamIn, TParamOut, TDestinationIn, TDestinationOut, TConversionOptions> : MultiConverterBase4<TSourceIn, TSourceOut, TSourceEnumerable, TSourceEnumerable, TParamIn, TParamOut, TDestinationIn, TDestinationOut, TConversionOptions> where TConversionOptions : IReadOnlyConversionOptions
     {
-        protected override IMultiConverterConverters<TParam, TParam, TDestination, TDestination> Converters { get; } = new MultiConverterConverters<TParam, TDestination>();
+
+    }
+
+    public abstract class MultiConverterBase6<TSourceIn, TSourceOut, TParamIn, TParamOut, TDestinationIn, TDestinationOut, TConversionOptions> : MultiConverterBase5<TSourceIn, TSourceOut, IArrayEnumerable<TSourceOut>, TParamIn, TParamOut, TDestinationIn, TDestinationOut, TConversionOptions> where TConversionOptions : IReadOnlyConversionOptions
+    {
+        protected sealed override int Count(in IArrayEnumerable<TSourceOut> values) => values.Count;
+
+        protected sealed override void Convert(in bool[] conversionsSucceeded, in IArrayEnumerable<TSourceOut> results, in object[] resultArray)
+        {
+            for (int i = 0; i < conversionsSucceeded.Length; i++)
+
+                resultArray[i] = conversionsSucceeded[i] ? results[i] : Binding.DoNothing;
+        }
+
+        protected sealed override void Clear(in IArrayEnumerable<TSourceOut> values) => values.Clear();
+    }
+
+    public abstract class MultiConverterBase7<TSourceIn, TSourceOut, TParamIn, TParamOut, TDestinationIn, TDestinationOut, TConversionOptions> : MultiConverterBase4<TSourceIn, TSourceOut, ArrayBuilder<TSourceOut>, IQueue<TSourceOut>, TParamIn, TParamOut, TDestinationIn, TDestinationOut, TConversionOptions> where TConversionOptions : IReadOnlyConversionOptions
+    {
+        protected sealed override int Count(in IQueue<TSourceOut> values) => values.Count <= int.MaxValue ? (int)values.Count : throw GetLengthMismatchException();
+
+        protected sealed override void Convert(in bool[] conversionsSucceeded, in IQueue<TSourceOut> results, in object[] resultArray)
+        {
+            int i = 0;
+
+            bool[] _conversionsSucceeded = conversionsSucceeded;
+            IQueue<TSourceOut> _results = results;
+
+            object getValue()
+            {
+                if (_conversionsSucceeded[i])
+
+                    return _results.Dequeue();
+
+                _ = _results.Dequeue();
+
+                return Binding.DoNothing;
+            }
+
+            for (; i < conversionsSucceeded.Length; i++)
+
+                resultArray[i] = getValue();
+        }
+
+        protected sealed override void Clear(in ArrayBuilder<TSourceOut> values) => values.Clear();
     }
 }
+
 #endif

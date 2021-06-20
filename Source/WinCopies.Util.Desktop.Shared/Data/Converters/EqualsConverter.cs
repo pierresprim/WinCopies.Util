@@ -24,25 +24,19 @@ using static WinCopies.Bool;
 
 namespace WinCopies.Util.Data
 {
-    public class EqualsConverter : MultiConverterBase4<bool, bool, bool, bool>
+    public class EqualsConverter : AlwaysConvertibleOneWayMultiConverter<bool?, bool, IReadOnlyConversionOptions>
     {
-        public override ConversionOptions ConvertOptions => ParameterCanBeNull;
+        public override IReadOnlyConversionOptions ConvertOptions => ParameterCanBeNull;
 
-        public override ConversionOptions ConvertBackOptions => AllowNull;
-
-        public override ConversionWays Direction => ConversionWays.OneWay;
-
-        protected override IMultiConverterConverters<bool, bool, bool, bool> Converters => new MultiConverterConverters<bool, bool>();
-
-        protected override bool ConvertOverride(object[] values, bool parameter, CultureInfo culture)
+        protected override bool Convert(object[] values, bool? parameter, CultureInfo culture)
         {
-            if (values == null || values.Length <= 1)
+            if (values.Length <= 1)
 
                 return false;
 
             Func<bool?, bool> func;
 
-            if (parameter is bool _parameter && _parameter) // We check if the parameter of func is true when parameter is true itself and if the parameter of func is false when parameter is false because the loop return false for the first value that is false.
+            if (parameter == true) // We check if the parameter of func is true when parameter is true itself and if the parameter of func is false when parameter is false because the loop return false for the first value that is false.
 
                 func = IsTrue;
 
@@ -60,8 +54,6 @@ namespace WinCopies.Util.Data
 
             return true;
         }
-
-        protected override object[] ConvertBack(bool _value, bool _parameter, CultureInfo culture) => throw new NotSupportedException();
     }
 }
 #endif

@@ -32,6 +32,7 @@ using WinCopies.Linq;
 
 using static WinCopies.Collections.ThrowHelper;
 using static WinCopies.ThrowHelper;
+using static WinCopies.Collections.Resources.ExceptionMessages;
 #endif
 #endif
 
@@ -219,7 +220,7 @@ namespace WinCopies.Collections.DotNetFix
             ILinkedListNode<T> ILinkedList<T>.First => First;
 #endif
 
-            public T FirstValue => First.Value;
+            public T FirstValue => (First ?? throw GetEmptyListOrCollectionException()).Value;
 
             public LinkedListNode Last { get; private set; }
 
@@ -227,7 +228,7 @@ namespace WinCopies.Collections.DotNetFix
             ILinkedListNode<T> ILinkedList<T>.Last => Last;
 #endif
 
-            public T LastValue => Last.Value;
+            public T LastValue => (Last ?? throw GetEmptyListOrCollectionException()).Value;
 
 #if WinCopies3
             ILinkedListNode<T> ILinkedList<T>.First => First;
@@ -274,7 +275,7 @@ namespace WinCopies.Collections.DotNetFix
             {
                 if ((node ?? throw GetArgumentNullException(argumentName)).List != null)
 
-                    throw new ArgumentException("The given node is already contained in another list.");
+                    throw new ArgumentException(NodeIsAlreadyContainedInAnotherListOrTree, argumentName);
             }
 
             private void ThrowIfNotContainedNode(in LinkedListNode node, in string argumentName) => _ThrowIfNotContainedNode(node ?? throw GetArgumentNullException(argumentName), argumentName);
@@ -417,7 +418,7 @@ namespace WinCopies.Collections.DotNetFix
                 Weld(addBefore.Previous, node, addBefore);
             }
 
-            public ILinkedListNode<T> AddFirst(T value)
+            public LinkedListNode AddFirst(in T value)
             {
                 var node = new LinkedListNode(value);
 
@@ -426,14 +427,16 @@ namespace WinCopies.Collections.DotNetFix
                 return node;
             }
 
-            public void AddFirst(LinkedListNode node)
+            ILinkedListNode<T> ILinkedList<T>.AddFirst(T value) => AddFirst(value);
+
+            public void AddFirst(in LinkedListNode node)
             {
                 ThrowIfNodeAlreadyHasList(node, nameof(node));
 
                 _AddFirst(node);
             }
 
-            private void _AddFirst(LinkedListNode node)
+            private void _AddFirst(in LinkedListNode node)
             {
                 if (First != null)
 
@@ -452,7 +455,7 @@ namespace WinCopies.Collections.DotNetFix
                 OnNewItemAdded(node);
             }
 
-            public ILinkedListNode<T> AddLast(T value)
+            public LinkedListNode AddLast(in T value)
             {
                 var node = new LinkedListNode(value);
 
@@ -461,14 +464,16 @@ namespace WinCopies.Collections.DotNetFix
                 return node;
             }
 
-            public void AddLast(LinkedListNode node)
+            ILinkedListNode<T> ILinkedList<T>.AddLast(T value) => AddLast(value);
+
+            public void AddLast(in LinkedListNode node)
             {
                 ThrowIfNodeAlreadyHasList(node, nameof(node));
 
                 _AddLast(node);
             }
 
-            private void _AddLast(LinkedListNode node)
+            private void _AddLast(in LinkedListNode node)
             {
                 if (Last != null)
                 {
@@ -935,6 +940,8 @@ namespace WinCopies.Collections.DotNetFix
                 }
             }
             #endregion
+
+            ~LinkedList() => Clear();
 #endif
         }
 #if WinCopies3

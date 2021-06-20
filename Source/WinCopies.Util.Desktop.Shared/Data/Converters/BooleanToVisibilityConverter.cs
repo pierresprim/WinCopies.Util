@@ -40,9 +40,9 @@ ConverterBase
 #endif
     {
 #if WinCopies3
-        public override ConversionOptions ConvertOptions => ParameterCanBeNull;
+        public override IReadOnlyConversionOptions ConvertOptions => ParameterCanBeNull;
 
-        public override ConversionOptions ConvertBackOptions => ParameterCanBeNull;
+        public override IReadOnlyConversionOptions ConvertBackOptions => ParameterCanBeNull;
 #endif
 
         /// <summary>
@@ -74,7 +74,11 @@ ConverterBase
 
                 // todo:
 
-                throw new ArgumentException("parameter must be a value of the System.Windows.Visibility enum and can't be the System.Windows.Visibility.Visible value.");
+                throw ThrowHelper.GetArgumentMustBeFromEnumAndNotValueException(nameof(parameter), $"{nameof(System)}.{nameof(System.Windows)}.{nameof(Visibility)}", (Visibility)parameter
+#if WinCopies3
+                    .Value
+#endif
+                    , Visibility.Visible);
 
             return (bool)value ? Visibility.Visible : parameter ?? Visibility.Collapsed;
         }
@@ -93,5 +97,31 @@ ConverterBase
         protected override bool ConvertBack(Visibility value, Visibility? parameter, CultureInfo culture) =>
 #endif
             value == Visibility.Visible;
+    }
+
+    [ValueConversion(typeof(bool), typeof(Visibility), ParameterType = typeof(Visibility))]
+    public class ReversedBooleanToVisibilityConverter :
+#if WinCopies3
+        BooleanToVisibilityConverter
+    {
+        protected override Visibility Convert(bool value, Visibility? parameter, CultureInfo culture) => base.Convert(!value, parameter, culture);
+
+        protected override bool ConvertBack(Visibility value, Visibility? parameter, CultureInfo culture) => !base.ConvertBack(value, parameter, culture);
+#else
+ConverterBase
+    {
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (parameter != null && !(parameter is Visibility))
+
+                // todo:
+
+                throw new ArgumentException("parameter must be a value of the System.Windows.Visibility enum.");
+
+            return (bool)value ? parameter ?? Visibility.Collapsed : Visibility.Visible;
+        }
+
+        public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => (Visibility)value == Visibility.Visible;
+#endif
     }
 }

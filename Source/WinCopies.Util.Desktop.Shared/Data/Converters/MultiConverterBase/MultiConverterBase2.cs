@@ -1,4 +1,4 @@
-﻿/* Copyright © Pierre Sprimont, 2019
+﻿/* Copyright © Pierre Sprimont, 2021
  *
  * This file is part of the WinCopies Framework.
  *
@@ -18,44 +18,32 @@
 #if WinCopies3
 using System;
 using System.Globalization;
+using System.Windows.Data;
 
 using static WinCopies.Util.Data.ConverterHelper;
+using static WinCopies.
+#if !WinCopies3
+    Util.
+#endif
+    Desktop.Resources.ExceptionMessages;
 
 namespace WinCopies.Util.Data
 {
-    public interface IMultiConverterConverters<TParamIn, TParamOut, TDestinationIn, TDestinationOut>
+    public abstract class MultiConverterBase2<TParam, TDestination, TParameterConverters, TDestinationConverters, TConversionOptions> : MultiConverterBase where TParameterConverters : IConverterConverter where TDestinationConverters : IConverterConverter where TConversionOptions : IReadOnlyConversionOptions
     {
-        TParamOut GetDefaultParameter();
+        public abstract TConversionOptions ConvertOptions { get; }
 
-        TParamOut ConvertParameter(in TParamIn parameter);
-
-        TDestinationOut GetDefaultDestinationValue();
-
-        TDestinationOut ConvertDestinationValue(in TDestinationIn value);
-    }
-
-    public sealed class MultiConverterConverters<TParam, TDestination> : IMultiConverterConverters<TParam, TParam, TDestination, TDestination>
-    {
-        public TParam GetDefaultParameter() => default;
-
-        public TParam ConvertParameter(in TParam parameter) => parameter;
-
-        public TDestination GetDefaultDestinationValue() => default;
-
-        public TDestination ConvertDestinationValue(in TDestination value) => value;
-    }
-
-    public abstract class MultiConverterBase3<TParamIn, TParamOut, TDestinationIn, TDestinationOut> : MultiConverterBase
-    {
-        public abstract ConversionOptions ConvertOptions { get; }
-
-        public abstract ConversionOptions ConvertBackOptions { get; }
+        public abstract TConversionOptions ConvertBackOptions { get; }
 
         public abstract ConversionWays Direction { get; }
 
-        protected abstract IMultiConverterConverters<TParamIn, TParamOut, TDestinationIn, TDestinationOut> Converters { get; }
+        protected abstract TParameterConverters ParameterConverters { get; }
 
-        protected abstract object Convert(object[] values, TParamOut _parameter, CultureInfo culture);
+        protected abstract TDestinationConverters DestinationConverters { get; }
+
+        protected abstract bool Convert(object[] values, TParam _parameter, CultureInfo culture, out TDestination result);
+
+        protected Exception GetNotSupportedConversionWayException(in ConversionWays conversionWay) => throw new InvalidOperationException(string.Format(ConversionDirectionNotSupported, conversionWay.ToString()));
 
         public sealed override object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
@@ -63,36 +51,100 @@ namespace WinCopies.Util.Data
             {
                 Check(values, ConvertOptions.AllowNullValue, nameof(values));
 
-                Check<TParamIn>(parameter, ConvertOptions.AllowNullParameter, nameof(parameter));
+                Check<TParam>(parameter, ConvertOptions.AllowNullParameter, nameof(parameter));
 
-                return Convert(values, parameter == null ? Converters.GetDefaultParameter() : Converters.ConvertParameter((TParamIn)parameter), culture);
+                return Convert(values, parameter == null ? ParameterConverters.GetDefaultValue<TParam>() : (TParam)parameter, culture, out TDestination result) ? result : Binding.DoNothing;
             }
 
-            throw new InvalidOperationException("The OneWay conversion direction is not supported.");
+            throw GetNotSupportedConversionWayException(ConversionWays.OneWay);
         }
 
-        protected abstract object[] ConvertBack(TDestinationOut _value, TParamOut _parameter, CultureInfo culture);
+        protected abstract object[] ConvertBack(TDestination _value, TParam _parameter, CultureInfo culture);
 
         public sealed override object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             if (Direction.HasFlag(ConversionWays.OneWayToSource))
             {
-                Check<TDestinationIn>(value, ConvertOptions.AllowNullValue, nameof(value));
+                Check<TDestination>(value, ConvertOptions.AllowNullValue, nameof(value));
 
-                Check<TParamIn>(parameter, ConvertOptions.AllowNullParameter, nameof(parameter));
+                Check<TParam>(parameter, ConvertOptions.AllowNullParameter, nameof(parameter));
 
-                return ConvertBack(value == null ? Converters.GetDefaultDestinationValue() : Converters.ConvertDestinationValue((TDestinationIn)value), parameter == null ? Converters.GetDefaultParameter() : Converters.ConvertParameter((TParamIn)parameter), culture);
+                return ConvertBack(value == null ? DestinationConverters.GetDefaultValue<TDestination>() : (TDestination)value, parameter == null ? ParameterConverters.GetDefaultValue<TParam>() : (TParam)parameter, culture);
             }
 
-            throw new InvalidOperationException("The OneWayToSource conversion direction is not supported.");
+            throw GetNotSupportedConversionWayException(ConversionWays.OneWayToSource);
         }
     }
 
-    public abstract class MultiConverterBase4<TParamIn, TParamOut, TDestinationIn, TDestinationOut> : MultiConverterBase3<TParamIn, TParamOut, TDestinationIn, TDestinationOut>
+    public abstract class MultiConverterBase2<TParam, TDestination, TConversionOptions> : MultiConverterBase2<TParam, TDestination, IConverterConverter, IConverterConverter, TConversionOptions> where TConversionOptions : IReadOnlyConversionOptions
     {
-        protected abstract TDestinationOut ConvertOverride(object[] values, TParamOut _parameter, CultureInfo culture);
+        protected override IConverterConverter ParameterConverters => ConverterConverter.Instance;
 
-        protected sealed override object Convert(object[] values, TParamOut _parameter, CultureInfo culture) => ConvertOverride(values, _parameter, culture);
+        protected override IConverterConverter DestinationConverters => null;
+    }
+
+    public abstract class OneWayMultiConverter<TParam, TDestination, TConversionOptions> : MultiConverterBase2<TParam, TDestination, IConverterConverter, IConverterConverter, TConversionOptions> where TConversionOptions : IReadOnlyConversionOptions
+    {
+        protected override IConverterConverter ParameterConverters => ConverterConverter.Instance;
+
+        protected sealed override IConverterConverter DestinationConverters => null;
+
+        public sealed override TConversionOptions ConvertBackOptions => default;
+
+        public sealed override ConversionWays Direction => ConversionWays.OneWay;
+
+        protected sealed override object[] ConvertBack(TDestination _value, TParam _parameter, CultureInfo culture) => null;
+    }
+
+    public abstract class OneWayToSourceMultiConverter<TParam, TDestination, TConversionOptions> : MultiConverterBase2<TParam, TDestination, IConverterConverter, IConverterConverter, TConversionOptions> where TConversionOptions : IReadOnlyConversionOptions
+    {
+        protected override IConverterConverter ParameterConverters => ConverterConverter.Instance;
+
+        protected override IConverterConverter DestinationConverters => ConverterConverter.Instance;
+
+        public sealed override TConversionOptions ConvertOptions => default;
+
+        public sealed override ConversionWays Direction => ConversionWays.OneWayToSource;
+
+        protected sealed override bool Convert(object[] values, TParam _parameter, CultureInfo culture, out TDestination result)
+        {
+            result = DestinationConverters.GetDefaultValue<TDestination>();
+
+            return false;
+        }
+    }
+
+    public abstract class TwoWayMultiConverter<TParam, TDestination, TConversionOptions> : MultiConverterBase2<TParam, TDestination, IConverterConverter, IConverterConverter, TConversionOptions> where TConversionOptions : IReadOnlyConversionOptions
+    {
+        protected override IConverterConverter ParameterConverters => ConverterConverter.Instance;
+
+        protected override IConverterConverter DestinationConverters => ConverterConverter.Instance;
+
+        public sealed override ConversionWays Direction => ConversionWays.TwoWays;
+    }
+
+    public abstract class AlwaysConvertibleOneWayMultiConverter<TParam, TDestination, TConversionOptions> : OneWayMultiConverter<TParam, TDestination, TConversionOptions> where TConversionOptions : IReadOnlyConversionOptions
+    {
+        protected abstract TDestination Convert(object[] values, TParam parameter, CultureInfo culture);
+
+        protected sealed override bool Convert(object[] values, TParam parameter, CultureInfo culture, out TDestination result)
+        {
+            result = Convert(values, parameter, culture);
+
+            return true;
+        }
+    }
+
+    public abstract class AlwaysConvertibleTwoWayMultiConverter<TParam, TDestination, TConversionOptions> : TwoWayMultiConverter<TParam, TDestination, TConversionOptions> where TConversionOptions : IReadOnlyConversionOptions
+    {
+        protected abstract TDestination Convert(object[] values, TParam parameter, CultureInfo culture);
+
+        protected sealed override bool Convert(object[] values, TParam parameter, CultureInfo culture, out TDestination result)
+        {
+            result = Convert(values, parameter, culture);
+
+            return true;
+        }
     }
 }
 #else

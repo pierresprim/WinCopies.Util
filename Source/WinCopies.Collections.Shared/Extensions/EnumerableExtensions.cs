@@ -636,6 +636,23 @@ namespace WinCopies.Collections
 
             return stringBuilder.ToString(0, stringBuilder.Length - 2);
         }
+
+        public static StringBuilder ConcatenateString(this System.Collections.IEnumerable enumerable)
+        {
+            ThrowIfNull(enumerable, nameof(enumerable));
+
+            var sb = new StringBuilder();
+
+            foreach (object value in enumerable)
+
+                if (value != null)
+
+                    _ = sb.Append(value);
+
+            return sb;
+        }
+
+        public static string ConcatenateString2(this System.Collections.IEnumerable enumerable) => enumerable.ConcatenateString().ToString();
     }
 }
 

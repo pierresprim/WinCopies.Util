@@ -18,12 +18,25 @@
 using System;
 using System.Globalization;
 
+using WinCopies.Collections;
+
 namespace WinCopies.Util.Data
 {
-    public class MultiStringConverter : MultiConverterBase
+    [MultiValueConversion(typeof(string), ParameterType = typeof(string))]
+    public class MultiStringConverter :
+#if WinCopies3
+        AlwaysConvertibleOneWayMultiConverter<string, string, IReadOnlyConversionOptions>
+    {
+        public override IReadOnlyConversionOptions ConvertOptions => ConverterHelper.AllowNull;
+
+        protected override string Convert(object[] values, string parameter, CultureInfo culture) => values == null ? parameter : parameter == null ? values.ConcatenateString2() : string.Format(culture, parameter, values);
+    }
+#else
+        MultiConverterBase
     {
         public override object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) => string.Format(culture, (string)parameter, values);
 
         public override object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) => throw new InvalidOperationException();
     }
+#endif
 }

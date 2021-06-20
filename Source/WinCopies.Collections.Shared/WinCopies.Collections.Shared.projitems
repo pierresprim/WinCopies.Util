@@ -9,7 +9,10 @@
     <Import_RootNamespace>WinCopies.Collections.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Abstraction\AbstractionTypes.Partial\AbstractionTypes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Abstraction\AbstractionTypes.Partial\LinkedList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstraction\AbstractionTypes.Partial\Queue.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Abstraction\AbstractionTypes.Partial\ReadOnlyDictionary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstraction\AbstractionTypes.Partial\Stack.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstraction\Abstract\Countable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstraction\Abstract\List.cs" />

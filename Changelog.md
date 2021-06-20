@@ -6,6 +6,11 @@ The WinCopies® software framework
 CHANGELOG
 ---------
 
+### 2.12
+
+- Add new types.
+- ToImageSource methods return type is BitmapSource.
+
 ### 05/24/2021 2.11
 
 - Additions:

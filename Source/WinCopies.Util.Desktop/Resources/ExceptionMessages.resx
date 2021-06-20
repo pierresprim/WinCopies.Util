@@ -129,4 +129,13 @@
   <data name="BackgroundWorkerIsBusy" xml:space="preserve">
     <value>The BackgroundWorker is busy.</value>
   </data>
+  <data name="ComparisonResultReturnedByParameterIsNotSupported" xml:space="preserve">
+    <value>The comparison result value returned by the comparison method of the given parameter is not supported.</value>
+  </data>
+  <data name="ConversionDidNotSucceeded" xml:space="preserve">
+    <value>The conversion did not succeeded.</value>
+  </data>
+  <data name="ConversionDirectionNotSupported" xml:space="preserve">
+    <value>The {0} conversion direction is not supported.</value>
+  </data>
 </root>

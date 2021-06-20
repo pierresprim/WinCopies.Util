@@ -26,7 +26,7 @@ namespace WinCopies.Util.Data
 #if WinCopies3
         AlwaysConvertibleOneWayConverter<object, object, Type>
     {
-        public override ConversionOptions ConvertOptions => ConverterHelper. ParameterCanBeNull;
+        public override IReadOnlyConversionOptions ConvertOptions => ConverterHelper.ParameterCanBeNull;
 
         protected override Type Convert(object value, object parameter, CultureInfo culture) => value.GetType();
 #else

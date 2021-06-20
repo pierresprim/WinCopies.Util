@@ -29,19 +29,27 @@ using WinCopies.Util.Data;
 
 namespace WinCopies.PropertySystem
 {
-    public class PropertyArrayToListConverter : MultiConverterBase<object, IProperty, object, IList<IProperty>>
+    public class PropertyArrayToListConverter : MultiConverterBase7<object, IProperty, object, object, IList<IProperty>, IList<IProperty>, IConversionOptions>
     {
-        public override ConversionOptions ConvertOptions => ConverterHelper.ParameterCanBeNull;
+        public override IConversionOptions ConvertOptions { get; } = new ConversionOptions();
 
-        public override ConversionOptions ConvertBackOptions => throw new NotSupportedException();
+        public override IConversionOptions ConvertBackOptions => throw new NotSupportedException();
 
         public override ConversionWays Direction => ConversionWays.OneWay;
 
-        protected override ArrayBuilder<IProperty> Convert(System.Collections.Generic.IEnumerable<object> values, object parameter, CultureInfo culture)
+        protected override IConverterConverter<object, object> ParameterConverters { get; } = new ConverterConverter<object>();
+
+        protected override IMultiConverterConverter<IList<IProperty>, IList<IProperty>> DestinationConverters { get; } = new MultiConverterConverter<IList<IProperty>>();
+
+        protected override ArrayBuilder<IProperty> Convert(System.Collections.Generic.IEnumerable<object> values, in int valuesCount, object parameter, CultureInfo culture)
         {
+            if (values == null)
+
+                return new ArrayBuilder<IProperty>();
+
             foreach (object value in values)
 
-                if (!(value is System.Collections.Generic.IEnumerable<IProperty>))
+                if (value != null && !(value is System.Collections.Generic.IEnumerable<IProperty>))
 
                     return new ArrayBuilder<IProperty>();
 
@@ -55,15 +63,15 @@ namespace WinCopies.PropertySystem
             return true;
         }
 
-        protected override bool[] ConvertBack(IList<IProperty> value, object parameter, CultureInfo culture, out IQueue<IProperty> result) => throw new InvalidOperationException();
+        protected override bool[] ConvertBack(IList<IProperty> value, object parameter, CultureInfo culture, out IQueue<IProperty> result) => throw new NotSupportedException();
     }
 
     [ValueConversion(typeof(object), typeof(IPropertySystemCollection<ReflectionPropertyId, object>))]
-    public class ObjectToPropertyCollectionConverter : AlwaysConvertibleOneWayConverter<object, object, IPropertySystemCollection<ReflectionPropertyId, object>>
+    public class ObjectToPropertyCollectionConverter : AlwaysConvertibleOneWayConverter<object, object, IPropertySystemCollection<ReflectionPropertyId, object>, IConversionOptions>
     {
-        public override ConversionOptions ConvertOptions => ConverterHelper.ParameterCanBeNull;
+        public override IConversionOptions ConvertOptions { get; } = new ConversionOptions();
 
-        protected override IPropertySystemCollection<ReflectionPropertyId, object> Convert(object value, object parameter, CultureInfo culture) => new ReflectionPropertyCollection(value);
+        protected override IPropertySystemCollection<ReflectionPropertyId, object> Convert(object value, object parameter, CultureInfo culture) => value == null ? null : new ReflectionPropertyCollection(value);
     }
 }
 #endif
