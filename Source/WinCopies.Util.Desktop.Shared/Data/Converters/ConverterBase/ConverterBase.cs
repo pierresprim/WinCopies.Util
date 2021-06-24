@@ -183,14 +183,7 @@ namespace WinCopies.Util.Data
         internal static InvalidOperationException GetException(in string format) => new InvalidOperationException($"The current converter does not support {format}conversion.");
     }
 
-    public abstract class ConverterBase<TSource, TParam, TDestination
-#if WinCopies3
-        , TConversionOptions
-#endif
-        > : ConverterBase
-#if WinCopies3
-where TConversionOptions : IReadOnlyConversionOptions
-#endif
+    public abstract class ConverterBase<TSource, TParam, TDestination> : ConverterBase
     {
 #if !WinCopies3
         public static ConversionOptions AllowNull { get; } = new ConversionOptions(true, true);
@@ -204,15 +197,16 @@ where TConversionOptions : IReadOnlyConversionOptions
 
         public abstract
 #if WinCopies3
-            TConversionOptions
+            IReadOnlyConversionOptions
 #else
             ConversionOptions
 #endif
-            ConvertOptions { get; }
+            ConvertOptions
+        { get; }
 
         public abstract
 #if WinCopies3
-            TConversionOptions
+            IReadOnlyConversionOptions
 #else
             ConversionOptions
 #endif

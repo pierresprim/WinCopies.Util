@@ -16,7 +16,6 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if WinCopies3
-
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -29,11 +28,15 @@ using WinCopies.Util.Data;
 
 namespace WinCopies.PropertySystem
 {
-    public class PropertyArrayToListConverter : MultiConverterBase7<object, IProperty, object, object, IList<IProperty>, IList<IProperty>, IConversionOptions>
+    public class PropertyArrayToListConverter : MultiConverterBase7<object, IProperty, object, object, IList<IProperty>, IList<IProperty>>
     {
-        public override IConversionOptions ConvertOptions { get; } = new ConversionOptions();
+        private IConversionOptions _convertOptions = new ConversionOptions(false, true);
 
-        public override IConversionOptions ConvertBackOptions => throw new NotSupportedException();
+        public override IReadOnlyConversionOptions ConvertOptions => ConvertOptions2;
+
+        public IConversionOptions ConvertOptions2 { get => _convertOptions; set => _convertOptions = value ?? throw ThrowHelper.GetArgumentNullException(nameof(value)); }
+
+        public override IReadOnlyConversionOptions ConvertBackOptions => throw new NotSupportedException();
 
         public override ConversionWays Direction => ConversionWays.OneWay;
 
@@ -67,9 +70,13 @@ namespace WinCopies.PropertySystem
     }
 
     [ValueConversion(typeof(object), typeof(IPropertySystemCollection<ReflectionPropertyId, object>))]
-    public class ObjectToPropertyCollectionConverter : AlwaysConvertibleOneWayConverter<object, object, IPropertySystemCollection<ReflectionPropertyId, object>, IConversionOptions>
+    public class ObjectToPropertyCollectionConverter : AlwaysConvertibleOneWayConverter<object, object, IPropertySystemCollection<ReflectionPropertyId, object>>
     {
-        public override IConversionOptions ConvertOptions { get; } = new ConversionOptions();
+        private IConversionOptions _convertOptions = new ConversionOptions(false, true);
+
+        public override IReadOnlyConversionOptions ConvertOptions => ConvertOptions2;
+
+        public IConversionOptions ConvertOptions2 { get => _convertOptions; set => _convertOptions = value ?? throw ThrowHelper.GetArgumentNullException(nameof(value)); }
 
         protected override IPropertySystemCollection<ReflectionPropertyId, object> Convert(object value, object parameter, CultureInfo culture) => value == null ? null : new ReflectionPropertyCollection(value);
     }

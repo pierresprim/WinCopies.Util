@@ -29,11 +29,11 @@ using static WinCopies.
 
 namespace WinCopies.Util.Data
 {
-    public abstract class MultiConverterBase2<TParam, TDestination, TParameterConverters, TDestinationConverters, TConversionOptions> : MultiConverterBase where TParameterConverters : IConverterConverter where TDestinationConverters : IConverterConverter where TConversionOptions : IReadOnlyConversionOptions
+    public abstract class MultiConverterBase2<TParam, TDestination, TParameterConverters, TDestinationConverters> : MultiConverterBase where TParameterConverters : IConverterConverter where TDestinationConverters : IConverterConverter
     {
-        public abstract TConversionOptions ConvertOptions { get; }
+        public abstract IReadOnlyConversionOptions ConvertOptions { get; }
 
-        public abstract TConversionOptions ConvertBackOptions { get; }
+        public abstract IReadOnlyConversionOptions ConvertBackOptions { get; }
 
         public abstract ConversionWays Direction { get; }
 
@@ -76,33 +76,33 @@ namespace WinCopies.Util.Data
         }
     }
 
-    public abstract class MultiConverterBase2<TParam, TDestination, TConversionOptions> : MultiConverterBase2<TParam, TDestination, IConverterConverter, IConverterConverter, TConversionOptions> where TConversionOptions : IReadOnlyConversionOptions
+    public abstract class MultiConverterBase2<TParam, TDestination> : MultiConverterBase2<TParam, TDestination, IConverterConverter, IConverterConverter>
     {
         protected override IConverterConverter ParameterConverters => ConverterConverter.Instance;
 
         protected override IConverterConverter DestinationConverters => null;
     }
 
-    public abstract class OneWayMultiConverter<TParam, TDestination, TConversionOptions> : MultiConverterBase2<TParam, TDestination, IConverterConverter, IConverterConverter, TConversionOptions> where TConversionOptions : IReadOnlyConversionOptions
+    public abstract class OneWayMultiConverter<TParam, TDestination> : MultiConverterBase2<TParam, TDestination, IConverterConverter, IConverterConverter>
     {
         protected override IConverterConverter ParameterConverters => ConverterConverter.Instance;
 
         protected sealed override IConverterConverter DestinationConverters => null;
 
-        public sealed override TConversionOptions ConvertBackOptions => default;
+        public sealed override IReadOnlyConversionOptions ConvertBackOptions => default;
 
         public sealed override ConversionWays Direction => ConversionWays.OneWay;
 
         protected sealed override object[] ConvertBack(TDestination _value, TParam _parameter, CultureInfo culture) => null;
     }
 
-    public abstract class OneWayToSourceMultiConverter<TParam, TDestination, TConversionOptions> : MultiConverterBase2<TParam, TDestination, IConverterConverter, IConverterConverter, TConversionOptions> where TConversionOptions : IReadOnlyConversionOptions
+    public abstract class OneWayToSourceMultiConverter<TParam, TDestination> : MultiConverterBase2<TParam, TDestination, IConverterConverter, IConverterConverter>
     {
         protected override IConverterConverter ParameterConverters => ConverterConverter.Instance;
 
         protected override IConverterConverter DestinationConverters => ConverterConverter.Instance;
 
-        public sealed override TConversionOptions ConvertOptions => default;
+        public sealed override IReadOnlyConversionOptions ConvertOptions => default;
 
         public sealed override ConversionWays Direction => ConversionWays.OneWayToSource;
 
@@ -114,7 +114,7 @@ namespace WinCopies.Util.Data
         }
     }
 
-    public abstract class TwoWayMultiConverter<TParam, TDestination, TConversionOptions> : MultiConverterBase2<TParam, TDestination, IConverterConverter, IConverterConverter, TConversionOptions> where TConversionOptions : IReadOnlyConversionOptions
+    public abstract class TwoWayMultiConverter<TParam, TDestination> : MultiConverterBase2<TParam, TDestination, IConverterConverter, IConverterConverter>
     {
         protected override IConverterConverter ParameterConverters => ConverterConverter.Instance;
 
@@ -123,7 +123,7 @@ namespace WinCopies.Util.Data
         public sealed override ConversionWays Direction => ConversionWays.TwoWays;
     }
 
-    public abstract class AlwaysConvertibleOneWayMultiConverter<TParam, TDestination, TConversionOptions> : OneWayMultiConverter<TParam, TDestination, TConversionOptions> where TConversionOptions : IReadOnlyConversionOptions
+    public abstract class AlwaysConvertibleOneWayMultiConverter<TParam, TDestination> : OneWayMultiConverter<TParam, TDestination>
     {
         protected abstract TDestination Convert(object[] values, TParam parameter, CultureInfo culture);
 
@@ -135,7 +135,7 @@ namespace WinCopies.Util.Data
         }
     }
 
-    public abstract class AlwaysConvertibleTwoWayMultiConverter<TParam, TDestination, TConversionOptions> : TwoWayMultiConverter<TParam, TDestination, TConversionOptions> where TConversionOptions : IReadOnlyConversionOptions
+    public abstract class AlwaysConvertibleTwoWayMultiConverter<TParam, TDestination> : TwoWayMultiConverter<TParam, TDestination>
     {
         protected abstract TDestination Convert(object[] values, TParam parameter, CultureInfo culture);
 

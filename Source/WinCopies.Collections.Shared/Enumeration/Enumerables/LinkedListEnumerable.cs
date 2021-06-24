@@ -138,7 +138,7 @@ namespace WinCopies.Collections
 #endif
         }
 
-        public interface IObservableLinkedListEnumerable<T> : ILinkedListEnumerable<T>, INotifyLinkedCollectionChanged<T>
+        public interface IObservableLinkedListEnumerable<T> : ILinkedListEnumerable<T>, INotifyLinkedCollectionChanged<T>, INotifyPropertyChanged
         {
 
         }
@@ -148,51 +148,71 @@ namespace WinCopies.Collections
             private ILinkedListNodeEnumerable<TItems> _first;
             private ILinkedListNodeEnumerable<TItems> _current;
             private ILinkedListNodeEnumerable<TItems> _last;
+            private TList _innerList;
 
-            protected TList InnerList { get; private set; }
+            protected TList InnerList => GetValueIfNotDisposed(_innerList);
 
             protected T GetValueIfNotDisposed<T>(in T value) => GetOrThrowIfDisposed(this, value);
 
-            public uint Count => GetValueIfNotDisposed(InnerList.Count);
+            public uint Count => InnerList.Count;
 
-            public ILinkedListNodeEnumerable<TItems> First { get => GetValueIfNotDisposed(_first); set => _first = GetValueIfNotDisposed(InnerList.Equals(value.Node.List) ? value : throw GetInvalidNodeException(nameof(value))); }
+            public ILinkedListNodeEnumerable<TItems> First { get => GetValueIfNotDisposed(_first); set => _first = InnerList.Equals(value.Node.List) ? value : throw GetInvalidNodeException(nameof(value)); }
 
-            public ILinkedListNodeEnumerable<TItems> Current => GetValueIfNotDisposed(_current
+            public ILinkedListNodeEnumerable<TItems> Current
+            {
+                get
+                {
+                    ThrowIfDisposed(this);
+
+                    return _current
 #if CS8
             ??=
 #else
             ?? (_current =
 #endif
-            GetLinkedListNodeEnumerable(InnerList.First)
+            GetLinkedListNodeEnumerable(_innerList.First)
 #if !CS8
             )
 #endif
-            );
+            ;
+                }
+            }
 
-            public ILinkedListNodeEnumerable<TItems> Last { get => GetValueIfNotDisposed(_last); set => _last = GetValueIfNotDisposed(InnerList.Equals(value.Node.List) ? value : throw GetInvalidNodeException(nameof(value))); }
+            public ILinkedListNodeEnumerable<TItems> Last { get => GetValueIfNotDisposed(_last); set => _last = InnerList.Equals(value.Node.List) ? value : throw GetInvalidNodeException(nameof(value)); }
 
             public EnumerationDirection EnumerationDirection { get; }
 
             public bool IsDisposed => InnerList == null;
 
-            private void InnerList_CollectionChanged(object sender, LinkedCollectionChangedEventArgs<TItems> e)
-            {
-                if (e.Action == LinkedCollectionChangedAction.Remove)
-
-                    if (_first.Node == e.Node)
-
-                        _first = null;
-
-                if (_last.Node == e.Node)
-
-                    _last = null;
-            }
-
             public LinkedListEnumerable(in TList list, in ILinkedListNode<TItems> first, in ILinkedListNode<TItems> current, in ILinkedListNode<TItems> last, in EnumerationDirection enumerationDirection)
             {
-                InnerList = list == null ? throw GetArgumentNullException(nameof(list)) : list;
+                _innerList = list == null ? throw GetArgumentNullException(nameof(list)) : list;
 
-                list.CollectionChanged += InnerList_CollectionChanged;
+                list.CollectionChanged += (object sender, LinkedCollectionChangedEventArgs<TItems> e) => 
+            {
+                    switch (e.Action)
+                    {
+                        case LinkedCollectionChangedAction.Remove:
+
+                            if (_first.Node == e.Node)
+
+                                _first = null;
+
+                            if (_last.Node == e.Node)
+
+                                _last = null;
+
+                            break;
+
+                        case LinkedCollectionChangedAction.Reset:
+
+                            _first = null;
+
+                            _last = null;
+
+                            break;
+                    }
+                };
 
                 _first = GetLinkedListNodeEnumerable(first);
 
@@ -224,9 +244,9 @@ namespace WinCopies.Collections
 
             public bool MoveNext() => Move(EnumerationDirection == EnumerationDirection.FIFO ? Current?.Node.Next : Current?.Node.Previous);
 
-            public ILinkedListNode<TItems> Add(TItems value) => GetValueIfNotDisposed(EnumerationDirection == EnumerationDirection.FIFO ? InnerList.AddLast(value) : InnerList.AddFirst(value));
+            public ILinkedListNode<TItems> Add(TItems value) => GetValueIfNotDisposed(EnumerationDirection) == EnumerationDirection.FIFO ? InnerList.AddLast(value) : InnerList.AddFirst(value);
 
-            public void UpdateCurrent(ILinkedListNode<TItems> node) => _current = GetValueIfNotDisposed(GetLinkedListNodeEnumerable(node ?? throw GetArgumentNullException(nameof(node))));
+            public void UpdateCurrent(ILinkedListNode<TItems> node) => _current = GetLinkedListNodeEnumerable(GetValueIfNotDisposed(node ?? throw GetArgumentNullException(nameof(node))));
 
             public static ILinkedListNode<TItems> TryGetNode(in IReadOnlyLinkedListNode node) => node as ILinkedListNode<TItems>;
 
@@ -236,13 +256,13 @@ namespace WinCopies.Collections
 
             void ILinkedListEnumerable.UpdateCurrent(IReadOnlyLinkedListNode node) => UpdateCurrent(GetNode(node, nameof(node)));
 
-            public System.Collections.Generic.IEnumerator<ILinkedListNode<TItems>> GetEnumeratorToCurrent(bool keepCurrent) => GetValueIfNotDisposed(Util.GetNodeEnumerator(InnerList, EnumerationDirection.FIFO, InnerList.First, keepCurrent ? Current.Node : Current.Node.Previous));
+            public System.Collections.Generic.IEnumerator<ILinkedListNode<TItems>> GetEnumeratorToCurrent(bool keepCurrent) => Util.GetNodeEnumerator(InnerList, EnumerationDirection.FIFO, _innerList.First, keepCurrent ? Current.Node : Current.Node.Previous);
 
-            public System.Collections.Generic.IEnumerator<ILinkedListNode<TItems>> GetEnumeratorFromCurrent(bool keepCurrent) => GetValueIfNotDisposed(Util.GetNodeEnumerator(InnerList, EnumerationDirection.FIFO, keepCurrent ? Current.Node : Current.Node.Next, InnerList.Last));
+            public System.Collections.Generic.IEnumerator<ILinkedListNode<TItems>> GetEnumeratorFromCurrent(bool keepCurrent) => Util.GetNodeEnumerator(InnerList, EnumerationDirection.FIFO, keepCurrent ? Current.Node : Current.Node.Next, _innerList.Last);
 
-            public System.Collections.Generic.IEnumerator<TItems> GetEnumerator() => GetValueIfNotDisposed(new Enumerable<ILinkedListNode<TItems>>(() => Util.GetNodeEnumerator(InnerList, EnumerationDirection.FIFO, InnerList.First, InnerList.Last)).Select(node => node.Value).GetEnumerator());
+            public System.Collections.Generic.IEnumerator<TItems> GetEnumerator() => new Enumerable<ILinkedListNode<TItems>>(() => Util.GetNodeEnumerator(InnerList, EnumerationDirection.FIFO, _innerList.First, _innerList.Last)).Select(node => node.Value).GetEnumerator();
 
-            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetValueIfNotDisposed(InnerList).GetNodeEnumerator().SelectConverter(node => GetLinkedListNodeEnumerable(node));
+            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => InnerList.GetNodeEnumerator().SelectConverter(node => GetLinkedListNodeEnumerable(node));
 
             protected virtual void Dispose(bool disposing)
             {
@@ -250,9 +270,7 @@ namespace WinCopies.Collections
                 _last = null;
                 _current = null;
 
-                InnerList.CollectionChanged -= InnerList_CollectionChanged;
-
-                InnerList = default;
+                _innerList = default;
             }
 
             public void Dispose()
@@ -286,13 +304,20 @@ namespace WinCopies.Collections
             public LinkedListEnumerable(in EnumerationDirection enumerationDirection) : this(new ObservableLinkedCollection<T>(), enumerationDirection) { /* Left empty. */ }
         }
 
-        public class ObservableLinkedListEnumerable<TItems, TList> : LinkedListEnumerable<TItems, TList>, IObservableLinkedListEnumerable<TItems> where TList : ILinkedList<TItems>, INotifyLinkedCollectionChanged<TItems>
+        public class ObservableLinkedListEnumerable<TItems, TList> : LinkedListEnumerable<TItems, TList>, IObservableLinkedListEnumerable<TItems> where TList : ILinkedList<TItems>, INotifyLinkedCollectionChanged<TItems>, INotifyPropertyChanged
         {
             event LinkedCollectionChangedEventHandler<TItems> INotifyLinkedCollectionChanged<TItems>.CollectionChanged
             {
                 add => ((TList)InnerList).CollectionChanged += value;
 
                 remove => ((TList)InnerList).CollectionChanged -= value;
+            }
+
+            event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged
+            {
+                add => ((TList)InnerList).PropertyChanged += value;
+
+                remove => ((TList)InnerList).PropertyChanged -= value;
             }
 
             public ObservableLinkedListEnumerable(in TList list, in EnumerationDirection enumerationDirection) : base(list, null, null, null, enumerationDirection) { /* Left empty. */ }
@@ -421,22 +446,54 @@ namespace WinCopies.Collections
 #endif
         }
 
-        public class ObservableLinkedCollectionEnumerable<TItems, TList> : LinkedCollectionEnumerable<TItems>, INotifyPropertyChanged, INotifyLinkedCollectionChanged<TItems>, INotifyCollectionChanged where TList : ILinkedList<TItems>, INotifyLinkedCollectionChanged<TItems>
+        public class ObservableLinkedCollectionEnumerable<TItems, TList> : LinkedCollectionEnumerable<TItems>, INotifyPropertyChanged, INotifyLinkedCollectionChanged<TItems>, INotifyCollectionChanged where TList : ILinkedList<TItems>, INotifyLinkedCollectionChanged<TItems>, INotifyPropertyChanged
         {
             private NotifyCollectionChangedEventHandler _collectionChanged;
+            private PropertyChangedEventHandler _propertyChanged;
 
-            public event PropertyChangedEventHandler PropertyChanged;
+            event LinkedCollectionChangedEventHandler<TItems> INotifyLinkedCollectionChanged<TItems>.CollectionChanged
+            {
+                add => ((INotifyLinkedCollectionChanged<TItems>)InnerList).CollectionChanged += value;
 
-            public ObservableLinkedCollectionEnumerable(in TList list, in EnumerationDirection enumerationDirection) : base(new ObservableLinkedListEnumerable<TItems, TList>(list, enumerationDirection)) => ((IObservableLinkedListEnumerable<TItems>)InnerList).CollectionChanged += ObservableLinkedCollectionEnumerable_CollectionChanged;
+                remove => ((INotifyLinkedCollectionChanged<TItems>)InnerList).CollectionChanged -= value;
+            }
 
-            private void ObservableLinkedCollectionEnumerable_CollectionChanged(object sender, LinkedCollectionChangedEventArgs<TItems> e)
+            event NotifyCollectionChangedEventHandler INotifyCollectionChanged.CollectionChanged
+            {
+                add => _collectionChanged += value;
+
+                remove => _collectionChanged -= value;
+            }
+
+            event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged
+            {
+                add => _propertyChanged += value;
+
+                remove => _propertyChanged -= value;
+            }
+
+            public ObservableLinkedCollectionEnumerable(in TList list, in EnumerationDirection enumerationDirection) : base(new ObservableLinkedListEnumerable<TItems, TList>(list, enumerationDirection))
+            {
+                ((IObservableLinkedListEnumerable<TItems>)InnerList).CollectionChanged += (object sender, LinkedCollectionChangedEventArgs<TItems> e) => OnCollectionChanged(e);
+
+                ((IObservableLinkedListEnumerable<TItems>)InnerList).PropertyChanged += (object sender, PropertyChangedEventArgs e) => OnPropertyChanged(e);
+            }
+
+            protected virtual bool OnCollectionChanged(LinkedCollectionChangedEventArgs<TItems> e)
             {
                 System.Collections.Specialized.NotifyCollectionChangedEventArgs _e = TryGetNotifyCollectionChangedEventArgs(InnerList, e);
 
                 if (_e != null)
+                {
+                    OnCollectionChanged(_e);
 
-                    _collectionChanged?.Invoke(this, _e);
+                    return true;
+                }
+
+                return false;
             }
+
+            protected virtual void OnCollectionChanged(in System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => _collectionChanged?.Invoke(this, e);
 
             public static System.Collections.Specialized.NotifyCollectionChangedEventArgs TryGetNotifyCollectionChangedEventArgs(in ILinkedListEnumerable<TItems> list, in LinkedCollectionChangedEventArgs<TItems> e)
             {
@@ -456,21 +513,9 @@ namespace WinCopies.Collections
                 }
             }
 
-            event LinkedCollectionChangedEventHandler<TItems> INotifyLinkedCollectionChanged<TItems>.CollectionChanged
-            {
-                add => ((INotifyLinkedCollectionChanged<TItems>)InnerList).CollectionChanged += value;
+            protected virtual void OnPropertyChanged(in PropertyChangedEventArgs e) => _propertyChanged?.Invoke(this, e);
 
-                remove => ((INotifyLinkedCollectionChanged<TItems>)InnerList).CollectionChanged -= value;
-            }
-
-            event NotifyCollectionChangedEventHandler INotifyCollectionChanged.CollectionChanged
-            {
-                add => _collectionChanged += value;
-
-                remove => _collectionChanged -= value;
-            }
-
-            protected void OnPropertyChanged(in string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            protected virtual void OnPropertyChanged(in string propertyName) => OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
 
             protected override void OnCurrentUpdated(ILinkedListNode<TItems> node)
             {
@@ -481,9 +526,8 @@ namespace WinCopies.Collections
 
             protected override void Dispose(bool disposing)
             {
-                ((IObservableLinkedListEnumerable<TItems>)InnerList).CollectionChanged -= ObservableLinkedCollectionEnumerable_CollectionChanged;
-
                 _collectionChanged = null;
+                _propertyChanged = null;
 
                 base.Dispose(disposing);
             }

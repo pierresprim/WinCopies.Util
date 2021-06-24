@@ -25,7 +25,7 @@ namespace WinCopies.Util.Data
     [MultiValueConversion(typeof(string), ParameterType = typeof(string))]
     public class MultiStringConverter :
 #if WinCopies3
-        AlwaysConvertibleOneWayMultiConverter<string, string, IReadOnlyConversionOptions>
+        AlwaysConvertibleOneWayMultiConverter<string, string>
     {
         public override IReadOnlyConversionOptions ConvertOptions => ConverterHelper.AllowNull;
 

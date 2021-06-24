@@ -6,6 +6,16 @@ The WinCopies� software framework
 CHANGELOG
 ---------
 
+### 06/24/2021 3.9.1-preview
+
+- IObservableLinkedListEnumerable\<T> implements INotifyPropertyChanged.
+- ObservableLinkedListEnumerable\<TItems, TList> and ObservableLinkedCollectionEnumerable<TItems, TList>: TList must implement INotifyPropertyChanged
+- ObservableLinkedCollectionEnumerable<TItems, TList>:
+	- PropertyChanged event is implemented explicitly.
+	- Add a protected virtual method to raise CollectionChanged event.
+- TConversionOptions type parameter was removed from converters.
+- Add new routed commands.
+
 ### 06/21/2021 3.9-preview
 
 - Add new types and static methods.

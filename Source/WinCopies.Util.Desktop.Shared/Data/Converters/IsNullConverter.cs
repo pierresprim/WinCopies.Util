@@ -35,7 +35,7 @@ namespace WinCopies.Util.Data
         {
             bool result = value is null;
 
-            if (parameter is bool _parameter && _parameter == true)
+            if (parameter)
 
                 result = !result;
 

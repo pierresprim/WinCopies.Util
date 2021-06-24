@@ -36,72 +36,39 @@ namespace WinCopies.Util.Data
 
     public abstract class OneWayConverterBase<TSource, TParam, TDestination
 #if WinCopies3
-        , TConversionOptions
+
 #endif
-          > : ConverterBase<TSource, TParam, TDestination
-#if WinCopies3
-        , TConversionOptions
-#endif
-        >, IOneWayConverter<TSource, TParam, TDestination>
-#if WinCopies3
-        where TConversionOptions : IReadOnlyConversionOptions
-#endif
+          > : ConverterBase<TSource, TParam, TDestination>, IOneWayConverter<TSource, TParam, TDestination>
     {
         public sealed override ConversionWays Direction => ConversionWays.OneWay;
 
         bool IOneWayConverter<TSource, TParam, TDestination>.Convert(TSource value, TParam parameter, CultureInfo culture, out TDestination result) => Convert(value, parameter, culture, out result);
 
 #if WinCopies3
-        public sealed override TConversionOptions ConvertBackOptions => throw GetException(BackConversionExceptionMessageFormat);
+        public sealed override IReadOnlyConversionOptions ConvertBackOptions => throw GetException(BackConversionExceptionMessageFormat);
 
         protected sealed override bool ConvertBack(TDestination value, TParam parameter, CultureInfo culture, out TSource result) => throw GetException(BackConversionExceptionMessageFormat);
-    }
-
-    public abstract class OneWayConverterBase<TSource, TParam, TDestination> : OneWayConverterBase<TSource, TParam, TDestination, IReadOnlyConversionOptions>
-    {
 #endif
     }
 
-    public abstract class OneWayToSourceConverterBase<TSource, TParam, TDestination
-#if WinCopies3
-        , TConversionOptions
-#endif
-        > : ConverterBase<TSource, TParam, TDestination
-#if WinCopies3
-        , TConversionOptions
-#endif
-        >, IOneWayToSourceConverter<TSource, TParam, TDestination>
-#if WinCopies3
-        where TConversionOptions : IReadOnlyConversionOptions
-#endif
+    public abstract class OneWayToSourceConverterBase<TSource, TParam, TDestination> : ConverterBase<TSource, TParam, TDestination>, IOneWayToSourceConverter<TSource, TParam, TDestination>
     {
         public sealed override ConversionWays Direction => ConversionWays.OneWayToSource;
 
         bool IOneWayToSourceConverter<TSource, TParam, TDestination>.ConvertBack(TDestination value, TParam parameter, CultureInfo culture, out TSource result) => ConvertBack(value, parameter, culture, out result);
 
 #if WinCopies3
-        public sealed override TConversionOptions ConvertOptions => throw GetException(string.Empty);
+        public sealed override IReadOnlyConversionOptions ConvertOptions => throw GetException(string.Empty);
 
         protected sealed override bool Convert(TSource value, TParam parameter, CultureInfo culture, out TDestination result) => throw GetException(string.Empty);
-    }
-
-    public abstract class OneWayToSourceConverterBase<TSource, TParam, TDestination> : OneWayToSourceConverterBase<TSource, TParam, TDestination, IReadOnlyConversionOptions>
-    {
 #endif
     }
 
     public abstract class TwoWayConverterBase<TSource, TParam, TDestination
 #if WinCopies3
-        , TConversionOptions
+
 #endif
-        > : ConverterBase<TSource, TParam, TDestination
-#if WinCopies3
-        , TConversionOptions
-#endif
-        >, IValueConverter<TSource, TParam, TDestination>
-#if WinCopies3
-        where TConversionOptions : IReadOnlyConversionOptions
-#endif
+        > : ConverterBase<TSource, TParam, TDestination>, IValueConverter<TSource, TParam, TDestination>
     {
         public sealed override ConversionWays Direction => ConversionWays.TwoWays;
 
@@ -109,11 +76,4 @@ namespace WinCopies.Util.Data
 
         bool IOneWayToSourceConverter<TSource, TParam, TDestination>.ConvertBack(TDestination value, TParam parameter, CultureInfo culture, out TSource result) => ConvertBack(value, parameter, culture, out result);
     }
-
-#if WinCopies3
-    public abstract class TwoWayConverterBase<TSource, TParam, TDestination> : TwoWayConverterBase<TSource, TParam, TDestination, IReadOnlyConversionOptions>
-    {
-
-    }
-#endif
 }

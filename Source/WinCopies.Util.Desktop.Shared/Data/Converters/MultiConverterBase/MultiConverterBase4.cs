@@ -28,7 +28,7 @@ using WinCopies.Linq;
 
 namespace WinCopies.Util.Data
 {
-    public abstract class MultiConverterBase4<TSourceIn, TSourceOut, TSourceEnumerableIn, TSourceEnumerableOut, TParamIn, TParamOut, TDestinationIn, TDestinationOut, TConversionOptions> : MultiConverterBase3<TParamIn, TParamOut, TDestinationIn, TDestinationOut, TConversionOptions> where TConversionOptions : IReadOnlyConversionOptions
+    public abstract class MultiConverterBase4<TSourceIn, TSourceOut, TSourceEnumerableIn, TSourceEnumerableOut, TParamIn, TParamOut, TDestinationIn, TDestinationOut> : MultiConverterBase3<TParamIn, TParamOut, TDestinationIn, TDestinationOut>
     {
         protected abstract int Count(in TSourceEnumerableOut values);
 
@@ -94,12 +94,12 @@ namespace WinCopies.Util.Data
         protected abstract bool[] ConvertBack(TDestinationIn value, TParamOut parameter, CultureInfo culture, out TSourceEnumerableOut result);
     }
 
-    public abstract class MultiConverterBase5<TSourceIn, TSourceOut, TSourceEnumerable, TParamIn, TParamOut, TDestinationIn, TDestinationOut, TConversionOptions> : MultiConverterBase4<TSourceIn, TSourceOut, TSourceEnumerable, TSourceEnumerable, TParamIn, TParamOut, TDestinationIn, TDestinationOut, TConversionOptions> where TConversionOptions : IReadOnlyConversionOptions
+    public abstract class MultiConverterBase5<TSourceIn, TSourceOut, TSourceEnumerable, TParamIn, TParamOut, TDestinationIn, TDestinationOut> : MultiConverterBase4<TSourceIn, TSourceOut, TSourceEnumerable, TSourceEnumerable, TParamIn, TParamOut, TDestinationIn, TDestinationOut>
     {
 
     }
 
-    public abstract class MultiConverterBase6<TSourceIn, TSourceOut, TParamIn, TParamOut, TDestinationIn, TDestinationOut, TConversionOptions> : MultiConverterBase5<TSourceIn, TSourceOut, IArrayEnumerable<TSourceOut>, TParamIn, TParamOut, TDestinationIn, TDestinationOut, TConversionOptions> where TConversionOptions : IReadOnlyConversionOptions
+    public abstract class MultiConverterBase6<TSourceIn, TSourceOut, TParamIn, TParamOut, TDestinationIn, TDestinationOut> : MultiConverterBase5<TSourceIn, TSourceOut, IArrayEnumerable<TSourceOut>, TParamIn, TParamOut, TDestinationIn, TDestinationOut>
     {
         protected sealed override int Count(in IArrayEnumerable<TSourceOut> values) => values.Count;
 
@@ -113,7 +113,7 @@ namespace WinCopies.Util.Data
         protected sealed override void Clear(in IArrayEnumerable<TSourceOut> values) => values.Clear();
     }
 
-    public abstract class MultiConverterBase7<TSourceIn, TSourceOut, TParamIn, TParamOut, TDestinationIn, TDestinationOut, TConversionOptions> : MultiConverterBase4<TSourceIn, TSourceOut, ArrayBuilder<TSourceOut>, IQueue<TSourceOut>, TParamIn, TParamOut, TDestinationIn, TDestinationOut, TConversionOptions> where TConversionOptions : IReadOnlyConversionOptions
+    public abstract class MultiConverterBase7<TSourceIn, TSourceOut, TParamIn, TParamOut, TDestinationIn, TDestinationOut> : MultiConverterBase4<TSourceIn, TSourceOut, ArrayBuilder<TSourceOut>, IQueue<TSourceOut>, TParamIn, TParamOut, TDestinationIn, TDestinationOut>
     {
         protected sealed override int Count(in IQueue<TSourceOut> values) => values.Count <= int.MaxValue ? (int)values.Count : throw GetLengthMismatchException();
 

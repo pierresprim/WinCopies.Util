@@ -47,7 +47,7 @@ namespace WinCopies.Util.Data
 
     public class CoalesceMultiConverter :
 #if WinCopies3
-        AlwaysConvertibleOneWayMultiConverter<object, object, IReadOnlyConversionOptions>
+        AlwaysConvertibleOneWayMultiConverter<object, object>
 #else
         MultiConverterBase
 #endif

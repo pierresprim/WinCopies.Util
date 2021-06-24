@@ -24,7 +24,7 @@ using static WinCopies.Bool;
 
 namespace WinCopies.Util.Data
 {
-    public class EqualsConverter : AlwaysConvertibleOneWayMultiConverter<bool?, bool, IReadOnlyConversionOptions>
+    public class EqualsConverter : AlwaysConvertibleOneWayMultiConverter<bool?, bool>
     {
         public override IReadOnlyConversionOptions ConvertOptions => ParameterCanBeNull;
 

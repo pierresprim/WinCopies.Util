@@ -20,7 +20,7 @@ using System.Globalization;
 
 namespace WinCopies.Util.Data
 {
-    public abstract class MultiConverterBase3<TParamIn, TParamOut, TDestinationIn, TDestinationOut, TConversionOptions> : MultiConverterBase2<TParamIn, TDestinationOut, IConverterConverter<TParamIn, TParamOut>, IMultiConverterConverter<TDestinationOut, TDestinationIn>, TConversionOptions> where TConversionOptions : IReadOnlyConversionOptions
+    public abstract class MultiConverterBase3<TParamIn, TParamOut, TDestinationIn, TDestinationOut> : MultiConverterBase2<TParamIn, TDestinationOut, IConverterConverter<TParamIn, TParamOut>, IMultiConverterConverter<TDestinationOut, TDestinationIn>>
     {
         protected abstract bool Convert(object[] values, TParamOut parameter, CultureInfo culture, out TDestinationIn result);
 
