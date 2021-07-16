@@ -9,6 +9,7 @@ CHANGELOG
 ### ???? 3.10-preview
 
 - Add optional parameter 'startIndex' to ArrayEnumerator<T> constructor.
+- Update RecursiveEnumerator to let the user choose how to add items.
 
 ### 06/24/2021 3.9.1-preview
 
