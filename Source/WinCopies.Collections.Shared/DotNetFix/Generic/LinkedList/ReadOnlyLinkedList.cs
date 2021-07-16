@@ -107,7 +107,7 @@ ILinkedList
 
         public ReadOnlyLinkedList(
 #if WinCopies3
-            IReadOnlyLinkedList2
+            in IReadOnlyLinkedList2
 #else
             ILinkedList
 #endif
@@ -117,40 +117,27 @@ ILinkedList
 
         public void CopyTo(T[] array, int index) => InnerList.CopyTo(array, index);
 
-        public
-#if !WinCopies3
-System.Collections.Generic.LinkedListNode
-#else
-                ILinkedListNode
-#endif
-                <T> Find(T value) => throw GetReadOnlyListOrCollectionException();
-
-        public
-#if !WinCopies3
-System.Collections.Generic.LinkedListNode
-#else
-                ILinkedListNode
-#endif
-                <T> FindLast(T value) => throw GetReadOnlyListOrCollectionException();
-
 #if WinCopies3
         ILinkedListNode<T> ILinkedList<T>.Find(T value) => throw GetReadOnlyListOrCollectionException();
+
+        ILinkedListNode<T> ILinkedList<T>.FindLast(T value) => throw GetReadOnlyListOrCollectionException();
 
         IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.Find(T value) => throw GetReadOnlyListOrCollectionException();
 
         IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.FindLast(T value) => throw GetReadOnlyListOrCollectionException();
+#else
+        public System.Collections.Generic.LinkedListNode<T> Find(T value) => throw GetReadOnlyListOrCollectionException();
+
+        public System.Collections.Generic.LinkedListNode<T> FindLast(T value) => throw GetReadOnlyListOrCollectionException();
 #endif
 
         public
 #if !WinCopies3
          System.Collections.Generic.LinkedList<T>.Enumerator GetEnumerator() => InnerList.GetEnumerator();
-#endif
 
-
-#if WinCopies3
-            IUIntCountableEnumerator<T>
+         System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.
 #else
-        System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.
+            IUIntCountableEnumerator<T>
 #endif
                 GetEnumerator() => InnerList.GetEnumerator();
 

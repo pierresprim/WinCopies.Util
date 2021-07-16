@@ -31,8 +31,8 @@ namespace WinCopies.Collections.DotNetFix.Generic
             System.Collections.Generic.
 #endif
             IReadOnlyList<T> _array;
-        private int _currentIndex = -1;
-        private readonly bool _reverse;
+        private int _currentIndex;
+        private readonly int _startIndex;
         private Func<bool> _condition;
         private Action _moveNext;
 
@@ -50,24 +50,31 @@ namespace WinCopies.Collections.DotNetFix.Generic
 #if CS7
             System.Collections.Generic.
 #endif
-            IReadOnlyList<T> array, in bool reverse = false)
+            IReadOnlyList<T> array, in bool reverse = false, in int? startIndex = null)
         {
             _array = array ?? throw GetArgumentNullException(nameof(array));
 
-            ResetCurrent();
+            if (startIndex.HasValue && (startIndex.Value < 0 || startIndex.Value >= array.Count))
 
-            if ((_reverse = reverse))
+                throw new ArgumentOutOfRangeException(nameof(startIndex), startIndex, $"The given index is less than zero or greater than or equal to {nameof(array.Count)}.");
+
+            if (reverse)
             {
+                _startIndex = startIndex.HasValue ? startIndex.Value + 1 : _array.Count;
                 _condition = () => _currentIndex >= 0;
                 _moveNext = () => _currentIndex--;
             }
 
             else
             {
+                _startIndex = startIndex.HasValue ? startIndex.Value - 1 : -1;
                 _condition = () => _currentIndex < _array.Count;
                 _moveNext = () => _currentIndex++;
             }
+
+            ResetCurrent();
         }
+
         protected override T CurrentOverride => _array[_currentIndex];
 
         public override bool? IsResetSupported => true;
@@ -79,7 +86,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
             return _condition();
         }
 
-        protected override void ResetCurrent() => _currentIndex = _reverse ? _array.Count : -1;
+        protected override void ResetCurrent() => _currentIndex = _startIndex;
 
         protected override void DisposeManaged()
         {

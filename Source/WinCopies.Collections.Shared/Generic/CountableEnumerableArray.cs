@@ -280,7 +280,9 @@ namespace Generic
 #endif
     public interface IReadOnlyList : ICountableEnumerable
     {
+#if !(WinCopies3 && CS7)
         object this[int index] { get; }
+#endif
     }
 #if !WinCopies3
 }
@@ -345,7 +347,7 @@ namespace Generic
 
             public T this[int index] => Array[index];
 
-#if WinCopies3
+#if WinCopies3 && !CS7
             object IReadOnlyList.this[int index] => this[index];
 #endif
 

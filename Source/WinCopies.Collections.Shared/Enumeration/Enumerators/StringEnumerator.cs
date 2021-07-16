@@ -37,7 +37,7 @@ namespace WinCopies.Collections
         private int _currentIndex = -1;
         private Func<bool> _func;
 
-        protected StringCollection StringCollection { get; }
+        protected System.Collections.Specialized.StringCollection StringCollection { get; }
 
         public EnumerationDirection EnumerationDirection { get; }
 
@@ -45,7 +45,7 @@ namespace WinCopies.Collections
         public override bool? IsResetSupported => true;
 #endif
 
-        public StringEnumerator(in StringCollection stringCollection, in EnumerationDirection enumerationDirection)
+        public StringEnumerator(in System.Collections.Specialized.StringCollection stringCollection, in EnumerationDirection enumerationDirection)
         {
             StringCollection = stringCollection ?? throw GetArgumentNullException(nameof(stringCollection));
 
@@ -61,7 +61,7 @@ namespace WinCopies.Collections
 
                 case EnumerationDirection.LIFO:
 
-                    _currentIndex = StringCollection.Count;
+                    _currentIndex = stringCollection.Count;
 
                     _func = () => --_currentIndex > -1;
 

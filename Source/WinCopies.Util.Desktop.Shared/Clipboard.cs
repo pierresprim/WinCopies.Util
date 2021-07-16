@@ -36,7 +36,7 @@ namespace WinCopies
         }
 
         #region File Drop List
-        public static bool TrySetClipboardOnSuccessHResult(in StringCollection fileDropList)
+        public static bool TrySetClipboardOnSuccessHResult(in System.Collections.Specialized.StringCollection fileDropList)
         {
             try
             {
@@ -50,7 +50,7 @@ namespace WinCopies
             }
         }
 
-        public static bool TrySetClipboardOnSuccessHResult(in StringCollection fileDropList, in double maxMilliSeconds)
+        public static bool TrySetClipboardOnSuccessHResult(in System.Collections.Specialized.StringCollection fileDropList, in double maxMilliSeconds)
         {
             if (maxMilliSeconds == 0)
 
@@ -67,7 +67,7 @@ namespace WinCopies
             return false;
         }
 
-        public static bool TrySetClipboardOnSuccessHResult(in StringCollection fileDropList, in int sleepTime, in uint tryCount)
+        public static bool TrySetClipboardOnSuccessHResult(in System.Collections.Specialized.StringCollection fileDropList, in int sleepTime, in uint tryCount)
         {
             ThrowOnInvalidSleepTime(sleepTime);
 

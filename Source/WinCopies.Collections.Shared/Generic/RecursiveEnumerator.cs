@@ -44,10 +44,10 @@ IStackBase
 bool _completed = false;
 #else
             T _current;
-            
-            /// <summary>
-            /// When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
-            /// </summary>
+
+        /// <summary>
+        /// When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+        /// </summary>
         protected override T CurrentOverride => _current;
 
         public override bool? IsResetSupported => null;

@@ -1,10 +1,14 @@
 WinCopies-framework
 ===================
 
-The WinCopies� software framework
+The WinCopies® software framework
 
 CHANGELOG
 ---------
+
+### ???? 3.10-preview
+
+- Add optional parameter 'startIndex' to ArrayEnumerator<T> constructor.
 
 ### 06/24/2021 3.9.1-preview
 
