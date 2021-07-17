@@ -6,7 +6,7 @@ The WinCopies® software framework
 CHANGELOG
 ---------
 
-### ???? 3.10-preview
+### 07/17/2021 3.10-preview
 
 - Add optional parameter 'startIndex' to ArrayEnumerator<T> constructor.
 - Update RecursiveEnumerator to let the user choose how to add items.

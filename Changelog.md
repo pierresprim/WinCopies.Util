@@ -6,7 +6,7 @@ The WinCopies® software framework
 CHANGELOG
 ---------
 
-### ???? 2.13
+### 07/17/2021 2.13
 
 - Add new types.
 

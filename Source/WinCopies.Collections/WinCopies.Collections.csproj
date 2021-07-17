@@ -8,10 +8,10 @@
     <DocumentationFile>WinCopies.Collections.xml</DocumentationFile>
     <SignAssembly>true</SignAssembly>
     <PackageTags>WinCopies</PackageTags>
-    <VersionPrefix>3.9.1</VersionPrefix>
+    <VersionPrefix>3.10</VersionPrefix>
     <VersionSuffix>preview</VersionSuffix>
-    <AssemblyVersion>3.9.1</AssemblyVersion>
-    <FileVersion>3.9.1</FileVersion>
+    <AssemblyVersion>3.10</AssemblyVersion>
+    <FileVersion>3.10</FileVersion>
     <RootNamespace>WinCopies.Collections</RootNamespace>
     <AssemblyOriginatorKeyFile>WinCopies.Collections.snk</AssemblyOriginatorKeyFile>
     <DefineConstants>WinCopies3;$(DefineConstants)</DefineConstants>
