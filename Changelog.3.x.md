@@ -10,6 +10,8 @@ CHANGELOG
 
 - Add optional parameter 'startIndex' to ArrayEnumerator<T> constructor.
 - Update RecursiveEnumerator to let the user choose how to add items.
+- Some enumerables and enumerators and types and methods that implement these features which previously had IEnumeratorInfo2 as generic type constraint, generic type parameter or return type now work with IEnumeratorInfo instead of IEnumeratorInfo2 because of compatibility issues.
+- IReadOnlyList indexer has been removed from versions for .Net for CS 7 and newer.
 
 ### 06/24/2021 3.9.1-preview
 

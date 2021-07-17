@@ -542,9 +542,9 @@ namespace WinCopies.Collections.DotNetFix
 
             public IUIntCountableEnumeratorInfo<ILinkedListNode<T>> GetReversedNodeEnumerator() => GetNodeEnumerator(EnumerationDirection.LIFO);
 
-            IEnumeratorInfo2<ILinkedListNode<T>> IEnumerable<ILinkedListNode<T>, IEnumeratorInfo2<ILinkedListNode<T>>>.GetEnumerator() => GetNodeEnumerator(EnumerationDirection.FIFO);
+            IEnumeratorInfo<ILinkedListNode<T>> IEnumerable<ILinkedListNode<T>, IEnumeratorInfo<ILinkedListNode<T>>>.GetEnumerator() => GetNodeEnumerator(EnumerationDirection.FIFO);
 
-            IEnumeratorInfo2<ILinkedListNode<T>> Collections.Generic.IEnumerable<ILinkedListNode<T>, IEnumeratorInfo2<ILinkedListNode<T>>>.GetReversedEnumerator() => GetNodeEnumerator(EnumerationDirection.LIFO);
+            IEnumeratorInfo<ILinkedListNode<T>> Collections.Generic.IEnumerable<ILinkedListNode<T>, IEnumeratorInfo<ILinkedListNode<T>>>.GetReversedEnumerator() => GetNodeEnumerator(EnumerationDirection.LIFO);
 
             System.Collections.Generic.IEnumerator<ILinkedListNode<T>> System.Collections.Generic.IEnumerable<ILinkedListNode<T>>.GetEnumerator() => GetNodeEnumerator(EnumerationDirection.FIFO);
 
@@ -565,9 +565,9 @@ namespace WinCopies.Collections.DotNetFix
 
             IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.Last => Last;
 
-            IEnumeratorInfo2<T> IEnumerable<T, IEnumeratorInfo2<T>>.GetEnumerator() => new EnumeratorInfo<T>(GetEnumerator());
+            IEnumeratorInfo<T> IEnumerable<T, IEnumeratorInfo<T>>.GetEnumerator() => new EnumeratorInfo<T>(GetEnumerator());
 
-            IEnumeratorInfo2<T> Collections.Generic.IEnumerable<T, IEnumeratorInfo2<T>>.GetReversedEnumerator() => new EnumeratorInfo<T>(GetReversedEnumerator());
+            IEnumeratorInfo<T> Collections.Generic.IEnumerable<T, IEnumeratorInfo<T>>.GetReversedEnumerator() => new EnumeratorInfo<T>(GetReversedEnumerator());
 
             System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetEnumerator();
 

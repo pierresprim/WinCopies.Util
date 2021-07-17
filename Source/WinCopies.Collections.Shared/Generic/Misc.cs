@@ -51,9 +51,9 @@ namespace WinCopies.Collections
     namespace Generic
     {
         public abstract class DisposableEnumerable<T> : IDisposableEnumerable<T>, WinCopies.
-            #if !WinCopies3
+#if !WinCopies3
             Util.
-            #endif
+#endif
             DotNetFix.IDisposable
         {
             public bool IsDisposed { get; private set; }
@@ -95,27 +95,18 @@ namespace WinCopies.Collections
         }
 
         public interface IEnumeratorInfo<out T> : System.Collections.Generic.IEnumerator<T>, IEnumeratorInfo
-#if WinCopies3
-        , WinCopies.DotNetFix.IDisposable
-#endif
         {
             // Left empty.
         }
 
 #if !WinCopies3
-    public interface IDisposableEnumeratorInfo<out T> : IEnumeratorInfo<T>, IDisposableEnumeratorInfo
-    {
-        // Left empty.
-    }
+        public interface IDisposableEnumeratorInfo<out T> : IEnumeratorInfo<T>, IDisposableEnumeratorInfo
+        {
+            // Left empty.
+        }
 #endif
 
-        public interface ICountableEnumeratorInfo<out T> :
-#if WinCopies3
-        IEnumeratorInfo2
-#else
-IEnumeratorInfo
-#endif
-        <T>, ICountableEnumerator<T>
+        public interface ICountableEnumeratorInfo<out T> : IEnumeratorInfo<T>, ICountableEnumerator<T>
         {
             // Left empty.
         }
@@ -130,13 +121,7 @@ IEnumeratorInfo
             // Left empty.
         }
 
-        public interface IUIntCountableEnumeratorInfo<out T> :
-#if WinCopies3
-        IEnumeratorInfo2
-#else
-IEnumeratorInfo
-#endif
-        <T>, IUIntCountableEnumerator<T>
+        public interface IUIntCountableEnumeratorInfo<out T> : IEnumeratorInfo<T>, IUIntCountableEnumerator<T>
         {
             // Left empty.
         }

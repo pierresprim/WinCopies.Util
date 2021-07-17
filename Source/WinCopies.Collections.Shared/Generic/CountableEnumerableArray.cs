@@ -113,20 +113,13 @@ namespace WinCopies.Collections
 
         namespace Generic
         {
-            public abstract class CountableEnumerator<TEnumerator, TItems, TCount> : WinCopies.Collections.Enumeration.CountableEnumerator<TEnumerator, TCount>, System.Collections.Generic.IEnumerator<TItems>, WinCopies.DotNetFix.IDisposable where TEnumerator : System.Collections.Generic.IEnumerator<TItems>, WinCopies.DotNetFix.IDisposable
+            public abstract class CountableEnumerator<TEnumerator, TItems, TCount> : WinCopies.Collections.Enumeration.CountableEnumerator<TEnumerator, TCount>, System.Collections.Generic.IEnumerator<TItems> where TEnumerator : System.Collections.Generic.IEnumerator<TItems>
             {
                 TItems System.Collections.Generic.IEnumerator<TItems>.Current => Enumerator.Current;
 
-                bool WinCopies.DotNetFix.IDisposable.IsDisposed => Enumerator.IsDisposed;
-
                 protected CountableEnumerator(in TEnumerator enumerator, in Func<TCount> func) : base(enumerator, func) { /* Left empty. */ }
 
-                protected virtual void Dispose(in bool disposing)
-                {
-                    if (!Enumerator.IsDisposed)
-
-                        Enumerator.Dispose();
-                }
+                protected virtual void Dispose(in bool disposing) => Enumerator.Dispose();
 
                 public void Dispose()
                 {
@@ -136,7 +129,7 @@ namespace WinCopies.Collections
                 }
             }
 
-            public abstract class CountableEnumeratorInfo<TEnumerator, TItems, TCount> : CountableEnumerator<TEnumerator, TItems, TCount>, IEnumeratorInfo2<TItems>, WinCopies.DotNetFix.IDisposable where TEnumerator : System.Collections.Generic.IEnumerator<TItems>, WinCopies.DotNetFix.IDisposable
+            public abstract class CountableEnumeratorInfo<TEnumerator, TItems, TCount> : CountableEnumerator<TEnumerator, TItems, TCount>, IEnumeratorInfo<TItems> where TEnumerator : System.Collections.Generic.IEnumerator<TItems>
             {
                 public bool? IsResetSupported => null;
 
@@ -158,22 +151,22 @@ namespace WinCopies.Collections
                 protected override void OnEnumerationCompleted() => UpdateStartStatus(false);
             }
 
-            public class CountableEnumeratorInfo<TEnumerator, TItems> : CountableEnumeratorInfo<TEnumerator, TItems, int>, ICountableEnumeratorInfo<TItems> where TEnumerator : System.Collections.Generic.IEnumerator<TItems>, WinCopies.DotNetFix.IDisposable
+            public class CountableEnumeratorInfo<TEnumerator, TItems> : CountableEnumeratorInfo<TEnumerator, TItems, int>, ICountableEnumeratorInfo<TItems> where TEnumerator : System.Collections.Generic.IEnumerator<TItems>
             {
                 public CountableEnumeratorInfo(in TEnumerator enumerator, in Func<int> func) : base(enumerator, func) { /* Left empty. */ }
             }
 
-            public class UIntCountableEnumeratorInfo<TEnumerator, TItems> : CountableEnumeratorInfo<TEnumerator, TItems, uint>, IUIntCountableEnumeratorInfo<TItems>, WinCopies.DotNetFix.IDisposable where TEnumerator : System.Collections.Generic.IEnumerator<TItems>, WinCopies.DotNetFix.IDisposable
+            public class UIntCountableEnumeratorInfo<TEnumerator, TItems> : CountableEnumeratorInfo<TEnumerator, TItems, uint>, IUIntCountableEnumeratorInfo<TItems> where TEnumerator : System.Collections.Generic.IEnumerator<TItems>
             {
                 public UIntCountableEnumeratorInfo(in TEnumerator enumerator, in Func<uint> func) : base(enumerator, func) { /* Left empty. */ }
             }
 
-            public class CountableEnumerator<TEnumerator, TItems> : CountableEnumerator<TEnumerator, TItems, int>, ICountableDisposableEnumerator<TItems> where TEnumerator : System.Collections.Generic.IEnumerator<TItems>, WinCopies.DotNetFix.IDisposable
+            public class CountableEnumerator<TEnumerator, TItems> : CountableEnumerator<TEnumerator, TItems, int>, ICountableEnumerator<TItems> where TEnumerator : System.Collections.Generic.IEnumerator<TItems>
             {
                 public CountableEnumerator(in TEnumerator enumerator, in Func<int> func) : base(enumerator, func) { /* Left empty. */ }
             }
 
-            public class UIntCountableEnumerator<TEnumerator, TItems> : CountableEnumerator<TEnumerator, TItems, uint>, IUIntCountableDisposableEnumerator<TItems> where TEnumerator : System.Collections.Generic.IEnumerator<TItems>, WinCopies.DotNetFix.IDisposable
+            public class UIntCountableEnumerator<TEnumerator, TItems> : CountableEnumerator<TEnumerator, TItems, uint>, IUIntCountableEnumerator<TItems> where TEnumerator : System.Collections.Generic.IEnumerator<TItems>
             {
                 public UIntCountableEnumerator(in TEnumerator enumerator, in Func<uint> func) : base(enumerator, func) { /* Left empty. */ }
             }
@@ -228,14 +221,14 @@ namespace WinCopies.Collections
                 }
             }
 
-            public class CountableEnumerable<TEnumerable, TItems> : CountableEnumerableBase<TEnumerable, ICountableDisposableEnumerator<TItems>>, ICountableDisposableEnumerable<TItems> where TEnumerable : ICountable, System.Collections.Generic.IEnumerable<TItems>
+            public class CountableEnumerable<TEnumerable, TItems> : CountableEnumerableBase<TEnumerable, ICountableEnumerator<TItems>>, Collections.DotNetFix.Generic.ICountableEnumerable<TItems> where TEnumerable : ICountable, System.Collections.Generic.IEnumerable<TItems>
             {
 #if !CS8
                 int ICountable.Count => Enumerable.Count;
 #endif
 
 #if CS7
-                int ICountableEnumerable<TItems, ICountableDisposableEnumerator<TItems>>.Count => Enumerable.Count;
+                int ICountableEnumerable<TItems, ICountableEnumerator<TItems>>.Count => Enumerable.Count;
 
 #if !CS8
                 int System.Collections.Generic.IReadOnlyCollection<TItems>.Count => Enumerable.Count;
@@ -244,20 +237,20 @@ namespace WinCopies.Collections
 
                 public CountableEnumerable(in TEnumerable enumerable) : base(enumerable) { /* Left empty. */ }
 
-                public override ICountableDisposableEnumerator<TItems> GetEnumerator() => new CountableEnumerator<DisposableEnumerator<System.Collections.Generic.IEnumerator<TItems>, TItems>, TItems>(new DisposableEnumerator<System.Collections.Generic.IEnumerator<TItems>, TItems>(Enumerable.GetEnumerator()), () => Enumerable.Count);
+                public override ICountableEnumerator<TItems> GetEnumerator() => new CountableEnumerator<DisposableEnumerator<System.Collections.Generic.IEnumerator<TItems>, TItems>, TItems>(new DisposableEnumerator<System.Collections.Generic.IEnumerator<TItems>, TItems>(Enumerable.GetEnumerator()), () => Enumerable.Count);
 
 #if !CS8
                 System.Collections.Generic.IEnumerator<TItems> System.Collections.Generic.IEnumerable<TItems>.GetEnumerator() => GetEnumerator();
 #endif
             }
 
-            public class UIntCountableEnumerable<TEnumerable, TItems> : CountableEnumerableBase<TEnumerable, IUIntCountableDisposableEnumerator<TItems>>, IUIntCountableDisposableEnumerable<TItems> where TEnumerable : IUIntCountable, System.Collections.Generic.IEnumerable<TItems>
+            public class UIntCountableEnumerable<TEnumerable, TItems> : CountableEnumerableBase<TEnumerable, IUIntCountableEnumerator<TItems>>, Collections.DotNetFix.Generic.IUIntCountableEnumerable<TItems> where TEnumerable : IUIntCountable, System.Collections.Generic.IEnumerable<TItems>
             {
                 uint IUIntCountable.Count => Enumerable.Count;
 
                 public UIntCountableEnumerable(in TEnumerable enumerable) : base(enumerable) { /* Left empty. */ }
 
-                public override IUIntCountableDisposableEnumerator<TItems> GetEnumerator() => new UIntCountableEnumerator<DisposableEnumerator<System.Collections.Generic.IEnumerator<TItems>, TItems>, TItems>(new DisposableEnumerator<System.Collections.Generic.IEnumerator<TItems>, TItems>(Enumerable.GetEnumerator()), () => Enumerable.Count);
+                public override IUIntCountableEnumerator<TItems> GetEnumerator() => new UIntCountableEnumerator<DisposableEnumerator<System.Collections.Generic.IEnumerator<TItems>, TItems>, TItems>(new DisposableEnumerator<System.Collections.Generic.IEnumerator<TItems>, TItems>(Enumerable.GetEnumerator()), () => Enumerable.Count);
 
 #if !CS8
                 System.Collections.Generic.IEnumerator<TItems> System.Collections.Generic.IEnumerable<TItems>.GetEnumerator() => GetEnumerator();

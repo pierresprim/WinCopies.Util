@@ -33,15 +33,15 @@ namespace WinCopies.Collections.Generic
             #region IEnumerableInfo implementation
             public bool SupportsReversedEnumeration => true;
 
-            public IEnumeratorInfo2<T> GetEnumerator(EnumerationDirection enumerationDirection) => new Enumerator(this, enumerationDirection);
+            public IEnumeratorInfo<T> GetEnumerator(EnumerationDirection enumerationDirection) => new Enumerator(this, enumerationDirection);
 
-            public IEnumeratorInfo2<T> GetEnumerator() => GetEnumerator(EnumerationDirection.FIFO);
+            public IEnumeratorInfo<T> GetEnumerator() => GetEnumerator(EnumerationDirection.FIFO);
 
             System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetEnumerator();
 
             System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
 
-            public IEnumeratorInfo2<T> GetReversedEnumerator() => GetEnumerator(EnumerationDirection.LIFO);
+            public IEnumeratorInfo<T> GetReversedEnumerator() => GetEnumerator(EnumerationDirection.LIFO);
 
             System.Collections.Generic.IEnumerator<T> WinCopies.Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => GetReversedEnumerator();
 

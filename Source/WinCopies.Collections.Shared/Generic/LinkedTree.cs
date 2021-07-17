@@ -94,7 +94,7 @@ namespace WinCopies.Collections.Generic
 
     public class LinkedTreeNode<T> : IEnumerableInfoLinkedTreeNode<T>
     {
-        public class Enumerator : Enumerator<ILinkedListNode<LinkedTreeNode<T>>, IEnumeratorInfo2<ILinkedListNode<LinkedTreeNode<T>>>, LinkedTreeNode<T>>, IUIntCountableEnumeratorInfo<LinkedTreeNode<T>> // LinkedTreeNode<T> does not make checks during enumeration because these checks are performed in the inner LinkedList<LinkedTreeNode<T>>'s enumerator.
+        public class Enumerator : Enumerator<ILinkedListNode<LinkedTreeNode<T>>, IEnumeratorInfo<ILinkedListNode<LinkedTreeNode<T>>>, LinkedTreeNode<T>>, IUIntCountableEnumeratorInfo<LinkedTreeNode<T>> // LinkedTreeNode<T> does not make checks during enumeration because these checks are performed in the inner LinkedList<LinkedTreeNode<T>>'s enumerator.
         {
             private readonly ILinkedTreeNode<T> _treeNode;
 
@@ -536,9 +536,9 @@ namespace WinCopies.Collections.Generic
 
         IUIntCountableEnumerator<ILinkedListNode<T>> ILinkedList<T>.GetReversedNodeEnumerator() => GetReversedNodeEnumerator();
 
-        IEnumeratorInfo2<ILinkedTreeNode<T>> DotNetFix.Generic.IEnumerable<ILinkedTreeNode<T>, IEnumeratorInfo2<ILinkedTreeNode<T>>>.GetEnumerator() => GetNodeEnumerator();
+        IEnumeratorInfo<ILinkedTreeNode<T>> DotNetFix.Generic.IEnumerable<ILinkedTreeNode<T>, IEnumeratorInfo<ILinkedTreeNode<T>>>.GetEnumerator() => GetNodeEnumerator();
 
-        IEnumeratorInfo2<ILinkedTreeNode<T>> IEnumerable<ILinkedTreeNode<T>, IEnumeratorInfo2<ILinkedTreeNode<T>>>.GetReversedEnumerator() => GetReversedNodeEnumerator();
+        IEnumeratorInfo<ILinkedTreeNode<T>> IEnumerable<ILinkedTreeNode<T>, IEnumeratorInfo<ILinkedTreeNode<T>>>.GetReversedEnumerator() => GetReversedNodeEnumerator();
 
         System.Collections.IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
 
@@ -549,9 +549,9 @@ namespace WinCopies.Collections.Generic
 
         IUIntCountableEnumerator<T> ILinkedList<T>.GetEnumerator() => GetEnumerator();
 
-        IEnumeratorInfo2<ILinkedListNode<T>> IEnumerable<ILinkedListNode<T>, IEnumeratorInfo2<ILinkedListNode<T>>>.GetReversedEnumerator() => GetReversedNodeEnumerator();
+        IEnumeratorInfo<ILinkedListNode<T>> IEnumerable<ILinkedListNode<T>, IEnumeratorInfo<ILinkedListNode<T>>>.GetReversedEnumerator() => GetReversedNodeEnumerator();
 
-        IEnumeratorInfo2<ILinkedListNode<T>> DotNetFix.Generic.IEnumerable<ILinkedListNode<T>, IEnumeratorInfo2<ILinkedListNode<T>>>.GetEnumerator() => GetNodeEnumerator();
+        IEnumeratorInfo<ILinkedListNode<T>> DotNetFix.Generic.IEnumerable<ILinkedListNode<T>, IEnumeratorInfo<ILinkedListNode<T>>>.GetEnumerator() => GetNodeEnumerator();
 
         IUIntCountableEnumerator<T> ILinkedList<T>.GetReversedEnumerator() => GetReversedEnumerator();
 
@@ -559,9 +559,9 @@ namespace WinCopies.Collections.Generic
 
         IUIntCountableEnumerator<T> IReadOnlyLinkedList2<T>.GetReversedEnumerator() => GetReversedEnumerator();
 
-        IEnumeratorInfo2<T> IEnumerable<T, IEnumeratorInfo2<T>>.GetReversedEnumerator() => GetReversedEnumerator();
+        IEnumeratorInfo<T> IEnumerable<T, IEnumeratorInfo<T>>.GetReversedEnumerator() => GetReversedEnumerator();
 
-        IEnumeratorInfo2<T> DotNetFix.Generic.IEnumerable<T, IEnumeratorInfo2<T>>.GetEnumerator() => GetEnumerator();
+        IEnumeratorInfo<T> DotNetFix.Generic.IEnumerable<T, IEnumeratorInfo<T>>.GetEnumerator() => GetEnumerator();
 
         System.Collections.Generic.IEnumerator<ILinkedTreeNode<T>> System.Collections.Generic.IEnumerable<ILinkedTreeNode<T>>.GetEnumerator() => GetNodeEnumerator();
 

@@ -192,14 +192,6 @@
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> is empty.</exception>
             <seealso cref="!:TryPeek(out T)"/>
         </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`2.TryPeek(`1@)">
-            <summary>
-            Tries to peek the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> without removing it.
-            </summary>
-            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
-            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been retrieved.</returns>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`2.Peek"/>
-        </member>
         <member name="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyEnumerableQueueCollection`2.Contains(`1)">
             <summary>
             Determines whether an element is in the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.
@@ -241,14 +233,6 @@
             <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.StackCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.Generic.StackCollection`1"/> is empty.</exception>
             <seealso cref="!:TryPeek(out T)"/>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyStackCollection`2.TryPeek(`1@)">
-            <summary>
-            Tries to peek the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.StackCollection`1"/> without removing it.
-            </summary>
-            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.StackCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
-            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been retrieved.</returns>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyStackCollection`2.Peek"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyEnumerableStackCollection`2.Contains(`1)">
             <summary>
@@ -704,10 +688,10 @@
             Returns a reversed enumerator for the current collection.
             </summary>
             <returns>A reversed enumerator for the current collection.</returns>
-            <exception cref="T:System.InvalidOperationException"><see cref="!:IEnumerable&lt;T&gt;.SupportsReversedEnumeration"/> is set to <see langword="false"/>.</exception>
+            <exception cref="T:System.InvalidOperationException"><see cref="P:WinCopies.Collections.Enumeration.IEnumerable.SupportsReversedEnumeration"/> is set to <see langword="false"/>.</exception>
             <seealso cref="M:WinCopies.Collections.Generic.IEnumerable`1.GetReversedEnumerator"/>
         </member>
-        <member name="M:WinCopies.Collections.Generic.EnumerableInfo`1.#ctor(System.Func{WinCopies.Collections.Generic.IEnumeratorInfo2{`0}}@,System.Func{WinCopies.Collections.Generic.IEnumeratorInfo2{`0}}@)">
+        <member name="M:WinCopies.Collections.Generic.EnumerableInfo`1.#ctor(System.Func{WinCopies.Collections.Generic.IEnumeratorInfo{`0}}@,System.Func{WinCopies.Collections.Generic.IEnumeratorInfo{`0}}@)">
             <summary>
             Initializes a new instance of the <see cref="T:WinCopies.Collections.Generic.EnumerableInfo`1"/> class.
             </summary>
@@ -833,7 +817,7 @@
             When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
             </summary>
         </member>
-        <member name="P:WinCopies.Collections.Generic.RecursiveEnumerator`1.CurrentOverride">
+        <member name="P:WinCopies.Collections.Generic.RecursiveEnumeratorAbstract`1.CurrentOverride">
             <summary>
             When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
             </summary>

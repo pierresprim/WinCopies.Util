@@ -198,9 +198,9 @@ System.Collections.Generic.LinkedListNode
         new IUIntCountableEnumeratorInfo<ILinkedListNode<T>> GetReversedNodeEnumerator();
 
 #if CS8
-        IEnumeratorInfo2<T> IEnumerable<T, IEnumeratorInfo2<T>>.GetEnumerator() => new EnumeratorInfo<T>(GetEnumerator());
+        IEnumeratorInfo<T> IEnumerable<T, IEnumeratorInfo<T>>.GetEnumerator() => new EnumeratorInfo<T>(GetEnumerator());
 
-        IEnumeratorInfo2<T> Collections.Generic.IEnumerable<T, IEnumeratorInfo2<T>>.GetReversedEnumerator() => new EnumeratorInfo<T>(GetReversedEnumerator());
+        IEnumeratorInfo<T> Collections.Generic.IEnumerable<T, IEnumeratorInfo<T>>.GetReversedEnumerator() => new EnumeratorInfo<T>(GetReversedEnumerator());
 
         System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
@@ -212,11 +212,11 @@ System.Collections.Generic.LinkedListNode
 
         IUIntCountableEnumerator<ILinkedListNode<T>> ILinkedList<T>.GetReversedNodeEnumerator() => GetReversedNodeEnumerator();
 
-        IEnumeratorInfo2<ILinkedListNode<T>> IEnumerable<ILinkedListNode<T>, IEnumeratorInfo2<ILinkedListNode<T>>>.GetEnumerator() => GetNodeEnumerator();
+        IEnumeratorInfo<ILinkedListNode<T>> IEnumerable<ILinkedListNode<T>, IEnumeratorInfo<ILinkedListNode<T>>>.GetEnumerator() => GetNodeEnumerator();
 
         System.Collections.IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
 
-        IEnumeratorInfo2<ILinkedListNode<T>> Collections.Generic.IEnumerable<ILinkedListNode<T>, IEnumeratorInfo2<ILinkedListNode<T>>>.GetReversedEnumerator() => GetReversedNodeEnumerator();
+        IEnumeratorInfo<ILinkedListNode<T>> Collections.Generic.IEnumerable<ILinkedListNode<T>, IEnumeratorInfo<ILinkedListNode<T>>>.GetReversedEnumerator() => GetReversedNodeEnumerator();
 #endif
     }
 #endif

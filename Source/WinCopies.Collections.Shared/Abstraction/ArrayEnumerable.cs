@@ -69,7 +69,9 @@ namespace WinCopies.Collections.Abstraction.Generic
 
         public int Count => Array.Length;
 
+#if !(WinCopies3 && CS7)
         object IReadOnlyList.this[int index] => Array[index];
+#endif
 
         public ReadOnlyArrayEnumerableBase(in TSourceItems[] array) => Array = array;
 

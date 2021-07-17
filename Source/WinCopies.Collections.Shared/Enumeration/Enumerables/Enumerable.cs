@@ -156,7 +156,7 @@ namespace WinCopies.Collections
         }
 
 #if WinCopies3
-        public abstract class EnumerableInfoBase<TItems, TEnumerator> : EnumerableBase<TItems, TEnumerator>, IEnumerableInfo<TItems> where TEnumerator : IEnumeratorInfo2<TItems>
+        public abstract class EnumerableInfoBase<TItems, TEnumerator> : EnumerableBase<TItems, TEnumerator>, IEnumerableInfo<TItems> where TEnumerator : IEnumeratorInfo<TItems>
         {
             protected Func<TEnumerator> ReversedEnumeratorFunc { get; }
 
@@ -174,20 +174,20 @@ namespace WinCopies.Collections
             /// Returns a reversed enumerator for the current collection.
             /// </summary>
             /// <returns>A reversed enumerator for the current collection.</returns>
-            /// <exception cref="InvalidOperationException"><see cref="IEnumerable{T}.SupportsReversedEnumeration"/> is set to <see langword="false"/>.</exception>
+            /// <exception cref="InvalidOperationException"><see cref="Enumeration.IEnumerable.SupportsReversedEnumeration"/> is set to <see langword="false"/>.</exception>
             /// <seealso cref="IEnumerable{T}.GetReversedEnumerator"/>
             public TEnumerator GetReversedEnumerator() => (ReversedEnumeratorFunc ?? throw new InvalidOperationException("The current enumerable does not support reversed enumeration."))();
 
-            IEnumeratorInfo2<TItems> WinCopies.Collections.DotNetFix.Generic.IEnumerable<TItems, IEnumeratorInfo2<TItems>>.GetEnumerator() => EnumeratorFunc();
+            IEnumeratorInfo<TItems> WinCopies.Collections.DotNetFix.Generic.IEnumerable<TItems, IEnumeratorInfo<TItems>>.GetEnumerator() => EnumeratorFunc();
 
             System.Collections.Generic.IEnumerator<TItems> IEnumerable<TItems>.GetReversedEnumerator() => GetReversedEnumerator(); // We call this method and not the delegate directly because we have to make a null-check.
 
-            IEnumeratorInfo2<TItems> IEnumerable<TItems, IEnumeratorInfo2<TItems>>.GetReversedEnumerator() => GetReversedEnumerator();
+            IEnumeratorInfo<TItems> IEnumerable<TItems, IEnumeratorInfo<TItems>>.GetReversedEnumerator() => GetReversedEnumerator();
 
             IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
         }
 
-        public sealed class EnumerableInfo<T> : EnumerableInfoBase<T, IEnumeratorInfo2<T>>
+        public sealed class EnumerableInfo<T> : EnumerableInfoBase<T, IEnumeratorInfo<T>>
         {
             /// <summary>
             /// Initializes a new instance of the <see cref="EnumerableInfo{T}"/> class.
@@ -195,7 +195,7 @@ namespace WinCopies.Collections
             /// <param name="enumeratorFunc">The func that provides the enumerators.</param>
             /// <param name="reversedEnumeratorFunc">The func that provides the reversed enumerators. This parameter can be null.</param>
             /// <exception cref="ArgumentNullException"><paramref name="enumeratorFunc"/> is null.</exception>
-            public EnumerableInfo(in Func<IEnumeratorInfo2<T>> enumeratorFunc, in Func<IEnumeratorInfo2<T>> reversedEnumeratorFunc) : base(enumeratorFunc, reversedEnumeratorFunc)
+            public EnumerableInfo(in Func<IEnumeratorInfo<T>> enumeratorFunc, in Func<IEnumeratorInfo<T>> reversedEnumeratorFunc) : base(enumeratorFunc, reversedEnumeratorFunc)
             {
                 // Left empty.
             }
@@ -251,12 +251,12 @@ namespace WinCopies.Collections
 #endif
         }
 
-        public interface IEnumerableInfo<out TItems, out TEnumerator> : IEnumerable<TItems, TEnumerator> where TEnumerator : IEnumeratorInfo2<TItems>
+        public interface IEnumerableInfo<out TItems, out TEnumerator> : IEnumerable<TItems, TEnumerator> where TEnumerator : IEnumeratorInfo<TItems>
         {
             // Left empty.
         }
 
-        public interface IEnumerableInfo<out T> : IEnumerableInfo<T, IEnumeratorInfo2<T>>
+        public interface IEnumerableInfo<out T> : IEnumerableInfo<T, IEnumeratorInfo<T>>
         {
             // Left empty.
         }

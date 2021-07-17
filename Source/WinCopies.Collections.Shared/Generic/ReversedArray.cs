@@ -40,7 +40,9 @@ namespace WinCopies.Collections.Generic
 
         TItems System.Collections.Generic.IReadOnlyList<TItems>.this[int index] => this[index];
 
+#if !(WinCopies3 && CS7)
         object IReadOnlyList.this[int index] => this[index];
+#endif
 
         protected ReversedReadOnlyList(in TList list)
         {

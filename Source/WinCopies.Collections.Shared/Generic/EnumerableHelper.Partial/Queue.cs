@@ -55,13 +55,13 @@ namespace WinCopies.Collections.Generic
         {
             public bool SupportsReversedEnumeration => Enumerable.SupportsReversedEnumeration;
 
-            public IEnumeratorInfo2<T> GetEnumerator() => Enumerable.GetEnumerator();
+            public IEnumeratorInfo<T> GetEnumerator() => Enumerable.GetEnumerator();
 
             System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => ((System.Collections.Generic.IEnumerable<T>)Enumerable).GetEnumerator();
 
             System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)Enumerable).GetEnumerator();
 
-            public IEnumeratorInfo2<T> GetReversedEnumerator() => Enumerable.GetReversedEnumerator();
+            public IEnumeratorInfo<T> GetReversedEnumerator() => Enumerable.GetReversedEnumerator();
 
             System.Collections.Generic.IEnumerator<T> IEnumerable<T>.GetReversedEnumerator() => ((IEnumerable<T>)Enumerable).GetReversedEnumerator();
 

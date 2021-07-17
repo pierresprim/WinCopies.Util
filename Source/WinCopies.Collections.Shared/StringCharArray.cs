@@ -34,7 +34,9 @@ namespace WinCopies.Collections
 
         public bool SupportsReversedEnumeration => true;
 
+#if !(WinCopies3 && CS7)
         object IReadOnlyList.this[int index] => this[index];
+#endif
 
         public StringCharArray(in string s) => _s = s;
 

@@ -585,7 +585,7 @@ T CurrentOverride
         }
 
 #if WinCopies3
-        public abstract class ExtensionEnumerator<TItems, TEnumerator> : WinCopies.Collections.DotNetFix.IDisposableEnumeratorInfo, IEnumeratorBase, IDisposableEnumerator<TItems>, IDisposableEnumeratorInfo, IEnumeratorInfo2<TItems> where TEnumerator : IEnumeratorInfo2<TItems>
+        public abstract class ExtensionEnumerator<TItems, TEnumerator> : WinCopies.Collections.DotNetFix.IDisposableEnumeratorInfo, IEnumeratorBase, IDisposableEnumerator<TItems>, IDisposableEnumeratorInfo, IEnumeratorInfo2<TItems> where TEnumerator : IEnumeratorInfo<TItems>
         {
             protected TEnumerator InnerEnumerator { get; }
 
@@ -635,7 +635,7 @@ T CurrentOverride
             }
         }
 
-        public abstract class CountableEnumeratorInfoBase<TItems, TEnumerator> : ExtensionEnumerator<TItems, TEnumerator>, ICountableEnumeratorInfo<TItems> where TEnumerator : IEnumeratorInfo2<TItems>
+        public abstract class CountableEnumeratorInfoBase<TItems, TEnumerator> : ExtensionEnumerator<TItems, TEnumerator>, ICountableEnumeratorInfo<TItems> where TEnumerator : IEnumeratorInfo<TItems>
         {
             private Func<int> _countableFunc;
 
@@ -653,15 +653,15 @@ T CurrentOverride
             }
         }
 
-        public sealed class CountableEnumeratorInfo<T> : CountableEnumeratorInfoBase<T, IEnumeratorInfo2<T>>
+        public sealed class CountableEnumeratorInfo<T> : CountableEnumeratorInfoBase<T, IEnumeratorInfo<T>>
         {
-            public CountableEnumeratorInfo(in IEnumeratorInfo2<T> enumerator, in Func<int> countableFunc) : base(enumerator, countableFunc)
+            public CountableEnumeratorInfo(in IEnumeratorInfo<T> enumerator, in Func<int> countableFunc) : base(enumerator, countableFunc)
             {
                 // Left empty.
             }
         }
 
-        public abstract class UIntCountableEnumeratorInfoBase<TItems, TEnumerator> : ExtensionEnumerator<TItems, TEnumerator>, IUIntCountableEnumeratorInfo<TItems> where TEnumerator : IEnumeratorInfo2<TItems>
+        public abstract class UIntCountableEnumeratorInfoBase<TItems, TEnumerator> : ExtensionEnumerator<TItems, TEnumerator>, IUIntCountableEnumeratorInfo<TItems> where TEnumerator : IEnumeratorInfo<TItems>
         {
             private Func<uint> _countableFunc;
 
@@ -679,9 +679,9 @@ T CurrentOverride
             }
         }
 
-        public sealed class UIntCountableEnumeratorInfo<T> : UIntCountableEnumeratorInfoBase<T, IEnumeratorInfo2<T>>
+        public sealed class UIntCountableEnumeratorInfo<T> : UIntCountableEnumeratorInfoBase<T, IEnumeratorInfo<T>>
         {
-            public UIntCountableEnumeratorInfo(in IEnumeratorInfo2<T> enumerator, in Func<uint> countableFunc) : base(enumerator, countableFunc)
+            public UIntCountableEnumeratorInfo(in IEnumeratorInfo<T> enumerator, in Func<uint> countableFunc) : base(enumerator, countableFunc)
             {
                 // Left empty.
             }

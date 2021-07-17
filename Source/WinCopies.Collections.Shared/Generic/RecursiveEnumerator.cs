@@ -56,7 +56,13 @@ namespace WinCopies.Collections.Generic
     }
 #endif
 
-    public abstract class RecursiveEnumeratorAbstract<T> : Enumerator<IRecursiveEnumerable<T>, T>
+    public
+#if WinCopies3
+    abstract class RecursiveEnumeratorAbstract
+#else
+    class RecursiveEnumerator
+#endif
+        <T> : Enumerator<IRecursiveEnumerable<T>, T>
     {
         protected
 #if !WinCopies3
@@ -102,7 +108,13 @@ bool _completed = false;
         protected override void ResetCurrent() => _current = default;
 #endif
 
-        public RecursiveEnumeratorAbstract(in System.Collections.Generic.IEnumerable<IRecursiveEnumerable<T>> enumerable,
+        public
+#if WinCopies3
+            RecursiveEnumeratorAbstract
+#else
+            RecursiveEnumerator
+#endif
+            (in System.Collections.Generic.IEnumerable<IRecursiveEnumerable<T>> enumerable,
 #if WinCopies3
              in RecursiveEnumerationOrder enumerationOrder,
 #endif
@@ -141,7 +153,13 @@ bool _completed = false;
 #endif
         }
 
-        public RecursiveEnumeratorAbstract(in System.Collections.Generic.IEnumerable<IRecursiveEnumerable<T>> enumerable
+        public
+#if WinCopies3
+            RecursiveEnumeratorAbstract
+#else
+            RecursiveEnumerator
+#endif
+            (in System.Collections.Generic.IEnumerable<IRecursiveEnumerable<T>> enumerable
 #if WinCopies3
             , in RecursiveEnumerationOrder enumerationOrder
 #endif
@@ -149,12 +167,24 @@ bool _completed = false;
 #if WinCopies3
                 , enumerationOrder
 #endif
-                , new DotNetFix.Generic.Stack<RecursiveEnumeratorStruct<T>>())
+                , new DotNetFix.Generic.Stack<
+#if WinCopies3
+                    RecursiveEnumeratorStruct<T>
+#else
+                    System.Collections.Generic.IEnumerator<IRecursiveEnumerable<T>>
+#endif
+                    >())
         {
             // Left empty.
         }
 
-        public RecursiveEnumeratorAbstract(IRecursiveEnumerableProviderEnumerable<T> enumerable
+        public
+#if WinCopies3
+            RecursiveEnumeratorAbstract
+#else
+            RecursiveEnumerator
+#endif
+            (IRecursiveEnumerableProviderEnumerable<T> enumerable
 #if WinCopies3
             , in RecursiveEnumerationOrder enumerationOrder
 #endif
@@ -164,12 +194,30 @@ bool _completed = false;
 #else
             System.Collections.Generic.IEnumerator<IRecursiveEnumerable<T>>
 #endif
-            > stack) : this(new Enumerable<IRecursiveEnumerable<T>>(() => (enumerable ?? throw GetArgumentNullException(nameof(enumerable))).GetRecursiveEnumerator()), enumerationOrder, stack)
+            > stack) : this(new Enumerable<IRecursiveEnumerable<T>>(() => (enumerable ?? throw GetArgumentNullException(nameof(enumerable))).GetRecursiveEnumerator())
+#if WinCopies3
+, enumerationOrder
+#endif
+                , stack)
         {
             // Left empty.
         }
 
-        public RecursiveEnumeratorAbstract(in IRecursiveEnumerableProviderEnumerable<T> enumerable, in RecursiveEnumerationOrder enumerationOrder) : this(enumerable, enumerationOrder, new DotNetFix.Generic.Stack<
+        public
+#if WinCopies3
+RecursiveEnumeratorAbstract
+#else
+            RecursiveEnumerator
+#endif
+            (in IRecursiveEnumerableProviderEnumerable<T> enumerable
+#if WinCopies3
+            , in RecursiveEnumerationOrder enumerationOrder
+#endif
+            ) : this(enumerable
+#if WinCopies3
+                , enumerationOrder
+#endif
+                , new DotNetFix.Generic.Stack<
 #if WinCopies3
             RecursiveEnumeratorStruct<T>
 #else
@@ -180,7 +228,9 @@ bool _completed = false;
             // Left empty.
         }
 
+#if WinCopies3
         protected abstract bool AddAsDuplicate(T value);
+#endif
 
         protected virtual void OnCurrentAlreadyParsed() { /* Left empty. */ }
 
@@ -203,23 +253,30 @@ enumerator;
 #endif
                 push(in IRecursiveEnumerable<T> enumerable)
             {
-                enumerator = _getEnumeratorStructDelegate(enumerable);
+                enumerator =
+#if WinCopies3
+_getEnumeratorStructDelegate(enumerable);
+#else
+                    enumerable.GetRecursiveEnumerator();
+#endif
 
                 InnerStack.Push(enumerator);
 
+#if WinCopies3
                 if (EnumerationOrder.HasFlag(RecursiveEnumerationOrder.ParentThenChildren))
                 {
-#if !WinCopies3
-                    Current
-#else
                     _current
+#else
+                Current
 #endif
                     = enumerable.Value;
 
-                    return true;
+#if WinCopies3
+                return true;
                 }
 
                 return false;
+#endif
             }
 
             while (true)
@@ -234,11 +291,21 @@ enumerator;
                 {
                     if (InnerEnumerator.MoveNext())
                     {
-                        if (push(InnerEnumerator.Current))
+#if WinCopies3
+                        if (
+#endif
+                        push(InnerEnumerator.Current)
+#if WinCopies3
+                            )
+#else
+                            ;
+#endif
 
-                            return true;
+                        return true;
 
+#if WinCopies3
                         continue;
+#endif
                     }
 
 #if !WinCopies3
@@ -256,24 +323,38 @@ enumerator;
 #endif
                     MoveNext())
                 {
-                    if (push(enumerator.
+#if WinCopies3
+                    if (
+#endif
+                    push(enumerator.
 #if WinCopies3
                     Enumerator.
 #endif
-                Current))
+                Current)
+#if WinCopies3
+                        )
+#else
+                        ;
+#endif
 
-                        return true;
+                    return true;
 
-                    else
-
-                        continue;
+#if WinCopies3
+                    continue;
+#endif
                 }
 
                 else
+#if WinCopies3
                 {
-                    enumerator = InnerStack.Pop();
+                    enumerator 
+#else
+                    _
+#endif
+                        = InnerStack.Pop();
 
-                    T getCurrent() => ((RecursiveEnumeratorStruct2<T>)enumerator).Value;
+#if WinCopies3
+                T getCurrent() => ((RecursiveEnumeratorStruct2<T>)enumerator).Value;
 
                     void addCurrent() => _current = getCurrent();
 
@@ -299,6 +380,7 @@ enumerator;
                         return true;
                     }
                 }
+#endif
             }
         }
 
@@ -314,57 +396,32 @@ DisposeManaged()
         {
             base.DisposeManaged();
 #endif
-            InnerStack = null;
+                InnerStack = null;
 
+#if WinCopies3
             _getEnumeratorStructDelegate = null;
+#endif
 
             // _enumerateFunc = null;
         }
     }
 
+#if WinCopies3
     public class RecursiveEnumerator<T> : RecursiveEnumeratorAbstract<T>
     {
         public RecursiveEnumerator(in System.Collections.Generic.IEnumerable<IRecursiveEnumerable<T>> enumerable,
-#if WinCopies3
              in RecursiveEnumerationOrder enumerationOrder,
-#endif
-             in IStack<
-#if WinCopies3
-            RecursiveEnumeratorStruct<T>
-#else
-            System.Collections.Generic.IEnumerator<IRecursiveEnumerable<T>>
-#endif
-            > stack) : base(enumerable, enumerationOrder, stack) { /* Left empty. */ }
+             in IStack<RecursiveEnumeratorStruct<T>> stack) : base(enumerable, enumerationOrder, stack) { /* Left empty. */ }
 
-        public RecursiveEnumerator(in System.Collections.Generic.IEnumerable<IRecursiveEnumerable<T>> enumerable
-#if WinCopies3
-            , in RecursiveEnumerationOrder enumerationOrder
-#endif
-            ) : base(enumerable
-#if WinCopies3
-                , enumerationOrder
-#endif
-                )
-        { /* Left empty. */ }
+        public RecursiveEnumerator(in System.Collections.Generic.IEnumerable<IRecursiveEnumerable<T>> enumerable, in RecursiveEnumerationOrder enumerationOrder) : base(enumerable, enumerationOrder) { /* Left empty. */ }
 
-        public RecursiveEnumerator(IRecursiveEnumerableProviderEnumerable<T> enumerable
-#if WinCopies3
-            , in RecursiveEnumerationOrder enumerationOrder
-#endif
-            , in IStack<
-#if WinCopies3
-            RecursiveEnumeratorStruct<T>
-#else
-            System.Collections.Generic.IEnumerator<IRecursiveEnumerable<T>>
-#endif
-            > stack) : base(enumerable, enumerationOrder, stack) { /* Left empty. */ }
+        public RecursiveEnumerator(IRecursiveEnumerableProviderEnumerable<T> enumerable, in RecursiveEnumerationOrder enumerationOrder, in IStack<RecursiveEnumeratorStruct<T>> stack) : base(enumerable, enumerationOrder, stack) { /* Left empty. */ }
 
-        public RecursiveEnumerator(in IRecursiveEnumerableProviderEnumerable<T> enumerable, in RecursiveEnumerationOrder enumerationOrder)
-            : base(enumerable, enumerationOrder)
-        { /* Left empty. */ }
+        public RecursiveEnumerator(in IRecursiveEnumerableProviderEnumerable<T> enumerable, in RecursiveEnumerationOrder enumerationOrder) : base(enumerable, enumerationOrder) { /* Left empty. */ }
 
         protected override bool AddAsDuplicate(T value) => true;
     }
+#endif
 }
 
 #endif
