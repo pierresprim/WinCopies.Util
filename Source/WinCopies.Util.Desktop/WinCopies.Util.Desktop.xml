@@ -1886,7 +1886,7 @@
         </member>
         <member name="M:WinCopies.Util.Data.ViewModelBase.Update(System.String,System.String,System.Object,System.Type,System.Boolean)">
             <summary>
-            Sets a value for a property. If succeeds, then call the <see cref="M:WinCopies.Util.Data.ViewModelBase.OnPropertyChanged(System.String,System.Object,System.Object)"/> method to raise the <see cref="E:WinCopies.Util.Data.ViewModelBase.PropertyChanged"/> event.
+            Sets a value for a property. If succeeds, then call the <see cref="!:OnPropertyChanged(string, object, object)"/> method to raise the <see cref="E:WinCopies.Util.Data.ViewModelBase.PropertyChanged"/> event.
             </summary>// See the Remarks section.
             <param name="propertyName">The name of the property for which to set a new value</param>
             <param name="fieldName">The name of the field to store the new value. This has to be the field that is called by the property accessors (get and set).</param>
@@ -1894,17 +1894,17 @@
             <param name="declaringType">The declaring type of both the property and its associated field</param>
             <param name="performIntegrityCheck">Whether to throw when the property is not settable or declaring types of the property and the setter method do not correspond</param>
         </member>
-        <member name="M:WinCopies.Util.Data.ViewModelBase.OnPropertyChanged(System.String,System.Object,System.Object)">
+        <member name="M:WinCopies.Util.Data.ViewModelBase.OnPropertyChanged(System.String@,System.Object@,System.Object@)">
             <summary>
             Raises the <see cref="E:WinCopies.Util.Data.ViewModelBase.PropertyChanged"/> event.
             </summary>
-            <param name="propertyName">The name of the property for which to set a new value</param>
+            <param name="propertyName">The name of the property for which to set a new value.</param>
             <param name="oldValue">The old value of the property. This parameter is ignored by default. You can override this method and use the <see cref="T:WinCopies.Util.Data.PropertyChangedEventArgs"/> if you want for the <see cref="E:WinCopies.Util.Data.ViewModelBase.PropertyChanged"/> event to notify for this value.</param>
             <param name="newValue">The new value of the property. This parameter is ignored by default. You can override this method and use the <see cref="T:WinCopies.Util.Data.PropertyChangedEventArgs"/> if you want for the <see cref="E:WinCopies.Util.Data.ViewModelBase.PropertyChanged"/> event to notify for this value.</param>
         </member>
         <member name="M:WinCopies.Util.Data.ViewModelBase.Update(System.String,System.Object,System.Type,System.Boolean)">
             <summary>
-            Sets a value for a property. If succeeds, then call the <see cref="M:WinCopies.Util.Data.ViewModelBase.OnPropertyChanged(System.String,System.Object,System.Object)"/> method to raise the <see cref="E:WinCopies.Util.Data.ViewModelBase.PropertyChanged"/> event.
+            Sets a value for a property. If succeeds, then call the <see cref="!:OnPropertyChanged(string, object, object)"/> method to raise the <see cref="E:WinCopies.Util.Data.ViewModelBase.PropertyChanged"/> event.
             </summary>
             <param name="propertyName">The name of the property for which to set a new value</param>
             <param name="newValue">The value to set in the property</param>

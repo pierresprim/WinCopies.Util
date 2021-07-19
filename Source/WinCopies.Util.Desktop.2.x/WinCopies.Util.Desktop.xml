@@ -1762,7 +1762,7 @@
             <summary>
             Raises the <see cref="E:WinCopies.Util.Data.ViewModelBase.PropertyChanged"/> event.
             </summary>
-            <param name="propertyName">The name of the property for which to set a new value</param>
+            <param name="propertyName">The name of the property for which to set a new value.</param>
             <param name="oldValue">The old value of the property. This parameter is ignored by default. You can override this method and use the <see cref="T:WinCopies.Util.Data.PropertyChangedEventArgs"/> if you want for the <see cref="E:WinCopies.Util.Data.ViewModelBase.PropertyChanged"/> event to notify for this value.</param>
             <param name="newValue">The new value of the property. This parameter is ignored by default. You can override this method and use the <see cref="T:WinCopies.Util.Data.PropertyChangedEventArgs"/> if you want for the <see cref="E:WinCopies.Util.Data.ViewModelBase.PropertyChanged"/> event to notify for this value.</param>
         </member>
