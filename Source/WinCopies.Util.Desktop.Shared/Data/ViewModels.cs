@@ -60,38 +60,88 @@ namespace WinCopies.Util.Data
         {
             (bool propertyChanged, object oldValue) = performIntegrityCheck ? this.SetProperty(propertyName, fieldName, newValue, declaringType) : ((INotifyPropertyChanged)this).SetField(fieldName, newValue, declaringType);
 
-            if (propertyChanged) OnPropertyChanged(propertyName, oldValue, newValue);
+            if (propertyChanged)
+
+                OnPropertyChanged(propertyName, oldValue, newValue);
         }
 
         protected virtual void Update<T>(string propertyName, string fieldName, object newValue, bool performIntegrityCheck = true) => Update(propertyName, fieldName, newValue, typeof(T), performIntegrityCheck);
 
-        protected virtual void UpdateValue<T>(ref T value, in T newValue, PropertyChangedEventArgs propertyChangedEventArgs) =>
+        protected virtual void UpdateValue<T>(ref T value,
+#if !WinCopies3
+in
+#endif
+            T newValue, System.ComponentModel.PropertyChangedEventArgs propertyChangedEventArgs)
 #if WinCopies3
+        {
+            T _value = value;
+
             UtilHelpers
 #else
-            Util
+            => Util
 #endif
-            .UpdateValue(ref value, newValue, () => OnPropertyChanged(propertyChangedEventArgs));
-
-        protected virtual void UpdateValue<T>(ref T value, in T newValue, string propertyName) =>
+            .UpdateValue(ref value, newValue, () => OnPropertyChanged(propertyChangedEventArgs
 #if WinCopies3
-            UtilHelpers
-#else
-            Util
+            , _value, newValue
 #endif
-            .UpdateValue(ref value, newValue, () => OnPropertyChanged(propertyName));
+            ));
+#if WinCopies3
+        }
+#endif
 
+        protected virtual void UpdateValue<T>(ref T value, in T newValue,
+#if WinCopies3
+            in
+#endif
+            string propertyName) =>
+#if !WinCopies3
+        Util.
+#endif
+            UpdateValue(ref value, newValue,
+#if WinCopies3
+                new System.ComponentModel.PropertyChangedEventArgs(propertyName)
+#else
+        () => OnPropertyChanged(propertyName)
+#endif
+                );
+
+#if !WinCopies3
         protected virtual void OnPropertyChanged(string propertyName) => OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+#endif
 
-        protected virtual void OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
+        protected virtual void OnPropertyChanged(
+#if WinCopies3
+            in
+#endif
+            System.ComponentModel.PropertyChangedEventArgs e
+#if WinCopies3
+            , in object oldValue, in object newValue
+#endif
+            ) => PropertyChanged?.Invoke(this, e);
 
         /// <summary>
         /// Raises the <see cref="PropertyChanged"/> event.
         /// </summary>
-        /// <param name="propertyName">The name of the property for which to set a new value</param>
+        /// <param name="propertyName">The name of the property for which to set a new value.</param>
         /// <param name="oldValue">The old value of the property. This parameter is ignored by default. You can override this method and use the <see cref="PropertyChangedEventArgs"/> if you want for the <see cref="PropertyChanged"/> event to notify for this value.</param>
         /// <param name="newValue">The new value of the property. This parameter is ignored by default. You can override this method and use the <see cref="PropertyChangedEventArgs"/> if you want for the <see cref="PropertyChanged"/> event to notify for this value.</param>
-        protected virtual void OnPropertyChanged(string propertyName, object oldValue, object newValue) => PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+        protected virtual void OnPropertyChanged(
+#if WinCopies3
+            in
+#endif
+         string propertyName,
+#if WinCopies3
+            in
+#endif
+         object oldValue,
+#if WinCopies3
+            in
+#endif
+         object newValue) => OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs(propertyName)
+#if WinCopies3
+             , oldValue, newValue
+#endif
+             );
 
         /// <summary>
         /// Sets a value for a property. If succeeds, then call the <see cref="OnPropertyChanged(string, object, object)"/> method to raise the <see cref="PropertyChanged"/> event.
@@ -555,7 +605,7 @@ override object Model => ModelGeneric;
             ThrowIfNull(array, nameof(array));
         }
 
-        private static void CopyTo( IEnumerable enumerable, in Array array, in int arrayIndex, in int count)
+        private static void CopyTo(IEnumerable enumerable, in Array array, in int arrayIndex, in int count)
         {
             ThrowOnInvalidCopyToArrayParameters(enumerable, array);
             ThrowOnInvalidCopyToArrayOperation(array, arrayIndex, count, nameof(array), nameof(arrayIndex));

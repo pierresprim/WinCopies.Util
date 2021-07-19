@@ -6,6 +6,10 @@ The WinCopies® software framework
 CHANGELOG
 ---------
 
+### 07/19/2021 2.13.1
+
+- Stack/QueueCollection: bug fixed in GetEnumerator methods.
+
 ### 07/17/2021 2.13
 
 - Add new types.
@@ -56,7 +60,7 @@ CHANGELOG
 		- WinCopies.Delegates and WinCopies.Bool that are classes with static methods that can be considered as default implementation for some usual delegates.
 	- ApplicationCommands.Reset command.
 
-#### WinCopies.Collections
+#### WinCopies.Util
 
 - Additions:
 	- new linked list (node) related interfaces.

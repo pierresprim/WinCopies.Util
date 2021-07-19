@@ -6,6 +6,10 @@ The WinCopies® software framework
 CHANGELOG
 ---------
 
+### 07/19/2021 3.10.1-preview
+
+- ViewModelBase: some parameters were added to update helper methods and OnPropertyChanged(in System.ComponentModel.PropertyChangedEventArgs e, in object oldValue, in object newValue) is called by all other update helper methods.
+
 ### 07/17/2021 3.10-preview
 
 - Add optional parameter 'startIndex' to ArrayEnumerator<T> constructor.

@@ -163,7 +163,7 @@ TItems
 
         public System.Collections.Generic.IEnumerator<T> GetEnumerator() => InnerStack.GetEnumerator();
 
-        System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerStack).GetEnumerator();
+        System.Collections.IEnumerator IEnumerable.GetEnumerator() => InnerStack.GetEnumerator();
 #endif
 
             public bool TryPeek(out
@@ -300,9 +300,9 @@ IUIntCountableEnumerator
 #endif
                 <TItems> GetEnumerator() => InnerStack.InnerStack.GetEnumerator();
 
-            System.Collections.Generic.IEnumerator<TItems> System.Collections.Generic.IEnumerable<TItems>.GetEnumerator() => ((System.Collections.Generic.IEnumerable<TItems>)InnerStack.InnerStack).GetEnumerator();
+            System.Collections.Generic.IEnumerator<TItems> System.Collections.Generic.IEnumerable<TItems>.GetEnumerator() => InnerStack.InnerStack.GetEnumerator();
 
-            System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerStack.InnerStack).GetEnumerator();
+            System.Collections.IEnumerator IEnumerable.GetEnumerator() => InnerStack.InnerStack.GetEnumerator();
 
             void ICollection.CopyTo(Array array, int index) => InnerStack.InnerStack.CopyTo(array, index);
 

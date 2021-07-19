@@ -11,9 +11,9 @@
     <Description>WinCopies framework utilities</Description>
     <Copyright>Copyright © 2021 Pierre Sprimont</Copyright>
     <PackageTags>WinCopies</PackageTags>
-    <VersionPrefix>2.13</VersionPrefix>
-    <AssemblyVersion>2.13.0</AssemblyVersion>
-    <FileVersion>2.13.0</FileVersion>
+    <VersionPrefix>2.13.1</VersionPrefix>
+    <AssemblyVersion>2.13.1</AssemblyVersion>
+    <FileVersion>2.13.1</FileVersion>
     <DefineConstants>WinCopies2;$(DefineConstants)</DefineConstants>
     <RootNamespace>WinCopies.Util</RootNamespace>
     <PackageIcon>WinCopies.png</PackageIcon>

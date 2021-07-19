@@ -216,7 +216,7 @@ TItems
         /// <returns>An <see cref="System.Collections.Generic.IEnumerator{T}"/> for the <see cref="QueueCollection{T}"/>.</returns>
         public System.Collections.Generic.IEnumerator<T> GetEnumerator() => InnerQueue.GetEnumerator();
 
-        System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerQueue).GetEnumerator();
+        System.Collections.IEnumerator IEnumerable.GetEnumerator() => InnerQueue.GetEnumerator();
 
         void ICollection.CopyTo(Array array, int index) => ((ICollection)InnerQueue).CopyTo(array, index);
 
@@ -393,9 +393,9 @@ TItems
 #endif
                 <TItems> GetEnumerator() => InnerQueue.InnerQueue.GetEnumerator();
 
-            System.Collections.Generic.IEnumerator<TItems> System.Collections.Generic.IEnumerable<TItems>.GetEnumerator() => ((IEnumerable<TItems>)InnerQueue.InnerQueue).GetEnumerator();
+            System.Collections.Generic.IEnumerator<TItems> System.Collections.Generic.IEnumerable<TItems>.GetEnumerator() => InnerQueue.InnerQueue.GetEnumerator();
 
-            System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerQueue.InnerQueue).GetEnumerator();
+            System.Collections.IEnumerator IEnumerable.GetEnumerator() => InnerQueue.InnerQueue.GetEnumerator();
 
             void ICollection.CopyTo(Array array, int index) => InnerQueue.InnerQueue.CopyTo(array, index);
 
