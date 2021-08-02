@@ -3283,7 +3283,6 @@
             <param name="index">The index of the item.</param>
             <returns>The item at the given index.</returns>
             <exception cref="T:System.IndexOutOfRangeException">The given index is lesser than 0 or greater than <see cref="P:WinCopies.Collections.TreeNode`1.Count"/>.</exception>
-            <seealso cref="!:SetItem(in TreeNode&lt;T&gt;)"/>
         </member>
         <member name="P:WinCopies.Collections.TreeNode`1.Count">
             <summary>
@@ -3759,6 +3758,23 @@
             Returns a value obtained by a <see cref="T:WinCopies.Util.Func"/>, depending on the result of a comparison.
             </summary>
             <param name="x">The value to compare to <paramref name="y"/>.</param>
+            <param name="y">The value to compare to <paramref name="x"/>.</param>
+            <param name="comparison">The comparison delegate.</param>
+            <param name="lower">The <see cref="T:WinCopies.Util.Func"/> that provides the value for <paramref name="x"/> is lower than <paramref name="y"/>.</param>
+            <param name="equals">The <see cref="T:WinCopies.Util.Func"/> that provides the value for <paramref name="x"/> is equal to <paramref name="y"/>.</param>
+            <param name="greater">The <see cref="T:WinCopies.Util.Func"/> that provides the value for <paramref name="x"/> is greater than <paramref name="y"/>.</param>
+            <returns>A value obtained by a <see cref="T:WinCopies.Util.Func"/>, depending on the result of a comparison.</returns>
+            <exception cref="T:System.ArgumentNullException">One or more of the given <see cref="T:WinCopies.Util.Func"/>s are <see langword="null"/>.</exception>
+            <remarks>See <see cref="M:WinCopies.Extensions.UtilHelpers.GetIf(System.Object@,System.Object@,WinCopies.Collections.Comparison@,WinCopies.Util.Func@,WinCopies.Util.Func@,WinCopies.Util.Func@)"/> for the non-generic version.</remarks>
+        </member>
+        <member name="M:WinCopies.SelectorDictionary`2.DisposeUnmanaged">
+            <summary>
+            This method is called by <see cref="M:WinCopies.SelectorDictionary`2.Dispose"/> and by the deconstructor. This overload does nothing and it is not necessary to call this base overload in derived classes.
+            </summary>
+        </member>
+    </members>
+</doc>
+me="x">The value to compare to <paramref name="y"/>.</param>
             <param name="y">The value to compare to <paramref name="x"/>.</param>
             <param name="comparison">The comparison delegate.</param>
             <param name="lower">The <see cref="T:WinCopies.Util.Func"/> that provides the value for <paramref name="x"/> is lower than <paramref name="y"/>.</param>

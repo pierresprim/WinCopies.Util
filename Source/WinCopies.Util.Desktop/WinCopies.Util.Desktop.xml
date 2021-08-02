@@ -822,23 +822,6 @@
             </summary>
             <param name="parameter">The command parameter to be passed.</param>
         </member>
-        <member name="F:WinCopies.Commands.EventArgsHandler`1.LastEventArgsProperty">
-            <summary>
-            LastEventArgs dependency property
-            </summary>
-        </member>
-        <member name="M:WinCopies.Commands.EventArgsHandler`1.GetLastEventArgs(System.Windows.DependencyObject)">
-            <summary>
-            Gets the last EventArgs
-            </summary>
-            <param name="d">The <see cref="T:System.Windows.DependencyObject"/> from which one get the EventArgs</param>
-            <returns>The last EventArgs of the specified <see cref="T:System.Windows.DependencyObject"/></returns>
-        </member>
-        <member name="M:WinCopies.Commands.EventArgsHandler`1.OnEventHandlerChanged(System.Windows.DependencyObject,System.Windows.DependencyPropertyChangedEventArgs)">
-            <summary>
-            Handles changes to the HandleEventHandler property.
-            </summary>
-        </member>
         <member name="T:WinCopies.Commands.EventHandlerGenerator">
             <summary>
             Generates delegates according to the specified signature on runtime
@@ -989,12 +972,6 @@
             <param name="serviceProvider">A service provider helper that can provide services for the markup extension.</param>
             <returns>The object value to set on the property where the extension is applied.</returns>
         </member>
-        <member name="P:WinCopies.Util.Data.EnumToArrayConverter.ConvertOptions">
-            <summary>
-            <para>Value: ignored.</para>
-            <para>Parameter: cannot be <see langword="null"/>.</para>
-            </summary>
-        </member>
         <member name="T:WinCopies.Util.Data.EnumToBooleanConverter">
             <summary>
             Data converter for checking whether an enum equals a parameter.
@@ -1023,12 +1000,6 @@
         <member name="T:WinCopies.Util.Data.EnumToReversedBooleanConverter">
             <summary>
             Data converter for checking whether an enum is not equal to a parameter.
-            </summary>
-        </member>
-        <member name="P:WinCopies.Util.Data.EnumToStringArrayConverter.ConvertOptions">
-            <summary>
-            <para>Value: ignored.</para>
-            <para>Parameter: cannot be <see langword="null"/>.</para>
             </summary>
         </member>
         <member name="T:WinCopies.Util.Data.IsNullConverter">

@@ -218,7 +218,9 @@ IStream
 
         public bool IsDisposed => _stream == null;
 
+#if WinCopies3
         ulong ICountableStream.Length => (ulong)InnerStream.Length;
+#endif
 
         public Stream(in System.IO.Stream stream) => _stream = stream;
 
