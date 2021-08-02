@@ -78,38 +78,38 @@ namespace WinCopies
     namespace Util // To avoid name conflicts.
     {
 #endif
-    /// <summary>
-    /// Provides some static extension methods.
-    /// </summary>
-    public static class Extensions
-    {
-        public static bool HasFlag(this byte value, in byte flag) => (value & flag) == flag;
+        /// <summary>
+        /// Provides some static extension methods.
+        /// </summary>
+        public static class Extensions
+        {
+            public static bool HasFlag(this byte value, in byte flag) => (value & flag) == flag;
 
-        public static bool HasFlag(this sbyte value, in sbyte flag) => (value & flag) == flag;
+            public static bool HasFlag(this sbyte value, in sbyte flag) => (value & flag) == flag;
 
-        public static bool HasFlag(this short value, in short flag) => (value & flag) == flag;
+            public static bool HasFlag(this short value, in short flag) => (value & flag) == flag;
 
-        public static bool HasFlag(this ushort value, in ushort flag) => (value & flag) == flag;
+            public static bool HasFlag(this ushort value, in ushort flag) => (value & flag) == flag;
 
-        public static bool HasFlag(this int value, in int flag) => (value & flag) == flag;
+            public static bool HasFlag(this int value, in int flag) => (value & flag) == flag;
 
-        public static bool HasFlag(this uint value, in uint flag) => (value & flag) == flag;
+            public static bool HasFlag(this uint value, in uint flag) => (value & flag) == flag;
 
-        public static bool HasFlag(this long value, in long flag) => (value & flag) == flag;
+            public static bool HasFlag(this long value, in long flag) => (value & flag) == flag;
 
-        public static bool HasFlag(this ulong value, in ulong flag) => (value & flag) == flag;
+            public static bool HasFlag(this ulong value, in ulong flag) => (value & flag) == flag;
 
 #if !CS5
-        internal static Type _GetEnumUnderlyingType(this Type type)
-        {
-            var fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            internal static Type _GetEnumUnderlyingType(this Type type)
+            {
+                var fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
-            return fields.Length > 0 ? fields[0].FieldType : null;
-        }
+                return fields.Length > 0 ? fields[0].FieldType : null;
+            }
 
-        public static Type GetEnumUnderlyingType(this Type type) => type.IsEnum ? type._GetEnumUnderlyingType() : null;
+            public static Type GetEnumUnderlyingType(this Type type) => type.IsEnum ? type._GetEnumUnderlyingType() : null;
 
-        public static Type GetEnumUnderlyingType<T>(this T value) where T : Enum =>
+            public static Type GetEnumUnderlyingType<T>(this T value) where T : Enum =>
 #if WinCopies3
             UtilHelpers
 #else
@@ -117,37 +117,70 @@ namespace WinCopies
 #endif
             .GetEnumUnderlyingType<T>();
 
-        public static bool HasFlag<T>(this T value, in T flag) where T : Enum
-        {
-            if (value == null)
+            public static bool HasFlag<T>(this T value, in T flag) where T : Enum
+            {
+                if (value == null)
 
-                throw GetArgumentNullException(nameof(value));
+                    throw GetArgumentNullException(nameof(value));
 
-            if (flag == null)
+                if (flag == null)
 
-                throw GetArgumentNullException(nameof(flag));
+                    throw GetArgumentNullException(nameof(flag));
 
-            if (typeof(T).GetCustomAttributes(false).FirstOrDefault(a => a is FlagsAttribute) == null)
+                if (typeof(T).GetCustomAttributes(false).FirstOrDefault(a => a is FlagsAttribute) == null)
 
-                return false;
+                    return false;
 
-            object _value = value.GetNumValue();
+                object _value = value.GetNumValue();
 
-            return _value is int
-                ? ((int)_value).HasFlag((int)flag.GetNumValue())
-                : _value is uint
-                ? ((uint)_value).HasFlag((uint)flag.GetNumValue())
-                : _value is short
-                ? ((short)_value).HasFlag((short)flag.GetNumValue())
-                : _value is short
-                ? ((ushort)_value).HasFlag((ushort)flag.GetNumValue())
-                : _value is long
-                ? ((long)_value).HasFlag((long)flag.GetNumValue())
-                : _value is ulong
-                ? ((ulong)_value).HasFlag((ulong)flag.GetNumValue())
-                : _value is byte ? ((byte)_value).HasFlag((byte)flag.GetNumValue()) : ((sbyte)_value).HasFlag((sbyte)flag.GetNumValue());
-        }
+                return _value is int
+                    ? ((int)_value).HasFlag((int)flag.GetNumValue())
+                    : _value is uint
+                    ? ((uint)_value).HasFlag((uint)flag.GetNumValue())
+                    : _value is short
+                    ? ((short)_value).HasFlag((short)flag.GetNumValue())
+                    : _value is short
+                    ? ((ushort)_value).HasFlag((ushort)flag.GetNumValue())
+                    : _value is long
+                    ? ((long)_value).HasFlag((long)flag.GetNumValue())
+                    : _value is ulong
+                    ? ((ulong)_value).HasFlag((ulong)flag.GetNumValue())
+                    : _value is byte ? ((byte)_value).HasFlag((byte)flag.GetNumValue()) : ((sbyte)_value).HasFlag((sbyte)flag.GetNumValue());
+            }
 #endif
+
+            public static string Truncate(this string s, in int index, in string replace) => s == null ? throw GetArgumentNullException(nameof(s)) : index.Between(0, s.Length, true, false) ? $"{s.Remove(index)}{replace}" : throw new ArgumentOutOfRangeException(nameof(index));
+
+            public static string Truncate2(this string s, in int index, in string replace) => s.Truncate(index - Etcetera.Length, replace);
+
+            public static string Truncate(this string s, in int index) => s.Truncate2(index, Etcetera);
+
+#if CS6
+            public static List<T> ToList<T>(this System.Collections.Generic.IReadOnlyList<T> list)
+            {
+                var _list = new List<T>(list.Count);
+
+                for (int i = 0; i < list.Count; i++)
+
+                    _list.Add(list[i]);
+
+                return _list;
+            }
+#endif
+
+            public static System.Collections.Generic.IEnumerable<T> ToEnumerable<T>(this System.Collections.Generic.IEnumerable<T> enumerable)
+            {
+                foreach (T item in enumerable)
+
+                    yield return item;
+            }
+
+            public static System.Collections.Generic.IEnumerable<TDestination> ToEnumerable<TSource, TDestination>(this System.Collections.Generic.IEnumerable<TSource> enumerable) where TSource : TDestination
+            {
+                foreach (TSource item in enumerable)
+
+                    yield return item;
+            }
 
 #if !WinCopies3
         private static void ThrowOnInvalidCopyToArrayParameters(in IEnumerable enumerable, in Array array)
@@ -220,357 +253,357 @@ namespace WinCopies
         public static T[] RemoveRangeIfContains<T>(this ICollection<T> collection, params T[] values) => collection.RemoveRangeIfContains((System.Collections.Generic.IEnumerable<T>)values);
 #endif
 #endif
-        public static bool ForEachANDALSO<T>(this System.Collections.Generic.IEnumerable<T> enumerable, Predicate<T> predicate)
-        {
-            foreach (T item in enumerable)
-
-                if (!predicate(item))
-
-                    return false;
-
-            return true;
-        }
-
-        public static bool ForEachAND<T>(this System.Collections.Generic.IEnumerable<T> enumerable, Predicate<T> predicate)
-        {
-            bool result = true;
-
-            foreach (T item in enumerable)
-
-                result &= predicate(item);
-
-            return result;
-        }
-
-        public static bool ForEachORELSE<T>(this System.Collections.Generic.IEnumerable<T> enumerable, Predicate<T> predicate)
-        {
-            foreach (T item in enumerable)
-
-                if (predicate(item))
-
-                    return true;
-
-            return false;
-        }
-
-        public static bool ForEachOR<T>(this System.Collections.Generic.IEnumerable<T> enumerable, Predicate<T> predicate)
-        {
-            bool result = false;
-
-            foreach (T item in enumerable)
-
-                result |= predicate(item);
-
-            return result;
-        }
-
-        public static bool ForEachXORELSE<T>(this System.Collections.Generic.IEnumerable<T> enumerable, Predicate<T> predicate)
-        {
-            bool result = false;
-
-            enumerable.ForEach(item => result = predicate(item), item =>
+            public static bool ForEachANDALSO<T>(this System.Collections.Generic.IEnumerable<T> enumerable, Predicate<T> predicate)
             {
-                if (predicate(item))
+                foreach (T item in enumerable)
 
-                    if (result)
+                    if (!predicate(item))
 
-                        return (result = false);
-
-                    else
-
-                        result = true;
+                        return false;
 
                 return true;
-            });
+            }
 
-            return result;
-        }
-
-        public static bool ForEachXOR<T>(this System.Collections.Generic.IEnumerable<T> enumerable, Predicate<T> predicate)
-        {
-            bool result = false;
-
-            Action<T> action = item =>
+            public static bool ForEachAND<T>(this System.Collections.Generic.IEnumerable<T> enumerable, Predicate<T> predicate)
             {
-                if (predicate(item))
+                bool result = true;
 
-                    if (result)
+                foreach (T item in enumerable)
+
+                    result &= predicate(item);
+
+                return result;
+            }
+
+            public static bool ForEachORELSE<T>(this System.Collections.Generic.IEnumerable<T> enumerable, Predicate<T> predicate)
+            {
+                foreach (T item in enumerable)
+
+                    if (predicate(item))
+
+                        return true;
+
+                return false;
+            }
+
+            public static bool ForEachOR<T>(this System.Collections.Generic.IEnumerable<T> enumerable, Predicate<T> predicate)
+            {
+                bool result = false;
+
+                foreach (T item in enumerable)
+
+                    result |= predicate(item);
+
+                return result;
+            }
+
+            public static bool ForEachXORELSE<T>(this System.Collections.Generic.IEnumerable<T> enumerable, Predicate<T> predicate)
+            {
+                bool result = false;
+
+                enumerable.ForEach(item => result = predicate(item), item =>
+                {
+                    if (predicate(item))
+
+                        if (result)
+
+                            return (result = false);
+
+                        else
+
+                            result = true;
+
+                    return true;
+                });
+
+                return result;
+            }
+
+            public static bool ForEachXOR<T>(this System.Collections.Generic.IEnumerable<T> enumerable, Predicate<T> predicate)
+            {
+                bool result = false;
+
+                Action<T> action = item =>
+                {
+                    if (predicate(item))
+
+                        if (result)
+                        {
+                            result = false;
+
+                            action = _item => predicate(_item);
+                        }
+
+                        else
+
+                            result = true;
+                };
+
+                enumerable.ForEach(item => result = predicate(item), action);
+
+                return result;
+            }
+
+            public static void ForEach<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Predicate<T> firstAction, Predicate<T> otherAction)
+            {
+                System.Collections.Generic.IEnumerator<T> enumerator = enumerable.GetEnumerator();
+
+                try
+                {
+                    if (enumerator.MoveNext())
+
+                        if (firstAction(enumerator.Current))
+
+                            while (enumerator.MoveNext() && otherAction(enumerator.Current))
+                            {
+                                // Left empty.
+                            }
+                }
+
+                finally
+                {
+                    enumerator.Dispose();
+                }
+            }
+
+            public static void ForEach<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Action<T> firstAction, Predicate<T> otherAction)
+            {
+                System.Collections.Generic.IEnumerator<T> enumerator = enumerable.GetEnumerator();
+
+                try
+                {
+                    if (enumerator.MoveNext())
                     {
-                        result = false;
-
-                        action = _item => predicate(_item);
-                    }
-
-                    else
-
-                        result = true;
-            };
-
-            enumerable.ForEach(item => result = predicate(item), action);
-
-            return result;
-        }
-
-        public static void ForEach<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Predicate<T> firstAction, Predicate<T> otherAction)
-        {
-            System.Collections.Generic.IEnumerator<T> enumerator = enumerable.GetEnumerator();
-
-            try
-            {
-                if (enumerator.MoveNext())
-
-                    if (firstAction(enumerator.Current))
+                        firstAction(enumerator.Current);
 
                         while (enumerator.MoveNext() && otherAction(enumerator.Current))
                         {
                             // Left empty.
                         }
-            }
-
-            finally
-            {
-                enumerator.Dispose();
-            }
-        }
-
-        public static void ForEach<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Action<T> firstAction, Predicate<T> otherAction)
-        {
-            System.Collections.Generic.IEnumerator<T> enumerator = enumerable.GetEnumerator();
-
-            try
-            {
-                if (enumerator.MoveNext())
-                {
-                    firstAction(enumerator.Current);
-
-                    while (enumerator.MoveNext() && otherAction(enumerator.Current))
-                    {
-                        // Left empty.
                     }
                 }
-            }
 
-            finally
-            {
-                enumerator.Dispose();
-            }
-        }
-
-        public static void ForEach<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Action<T> firstAction, Action<T> otherAction)
-        {
-            System.Collections.Generic.IEnumerator<T> enumerator = enumerable.GetEnumerator();
-
-            try
-            {
-                if (enumerator.MoveNext())
+                finally
                 {
-                    firstAction(enumerator.Current);
-
-                    while (enumerator.MoveNext())
-
-                        otherAction(enumerator.Current);
+                    enumerator.Dispose();
                 }
             }
 
-            finally
+            public static void ForEach<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Action<T> firstAction, Action<T> otherAction)
             {
-                enumerator.Dispose();
+                System.Collections.Generic.IEnumerator<T> enumerator = enumerable.GetEnumerator();
+
+                try
+                {
+                    if (enumerator.MoveNext())
+                    {
+                        firstAction(enumerator.Current);
+
+                        while (enumerator.MoveNext())
+
+                            otherAction(enumerator.Current);
+                    }
+                }
+
+                finally
+                {
+                    enumerator.Dispose();
+                }
             }
-        }
 
-        public static T GetIfNotDisposed<T>(this DotNetFix.IDisposable obj, in T value) => obj.IsDisposed ? throw GetExceptionForDispose(false) : value;
+            public static T GetIfNotDisposed<T>(this DotNetFix.IDisposable obj, in T value) => obj.IsDisposed ? throw GetExceptionForDispose(false) : value;
 
-        public static T GetIfNotDisposedOrDisposing<T>(this IDisposable obj, in T value) => obj.IsDisposed ? throw GetExceptionForDispose(false) : obj.IsDisposing ? throw GetExceptionForDispose(true) : value;
+            public static T GetIfNotDisposedOrDisposing<T>(this IDisposable obj, in T value) => obj.IsDisposed ? throw GetExceptionForDispose(false) : obj.IsDisposing ? throw GetExceptionForDispose(true) : value;
 
-        public static object GetFromLast(this Array array, int indexation) => (array ?? throw GetArgumentNullException(nameof(array))).Length > indexation ? array.GetValue(array.Length - 1 - indexation) : throw new ArgumentOutOfRangeException(nameof(indexation), indexation, $"{nameof(indexation)} must be less than or equal to {nameof(array)}'s length.");
+            public static object GetFromLast(this Array array, int indexation) => (array ?? throw GetArgumentNullException(nameof(array))).Length > indexation ? array.GetValue(array.Length - 1 - indexation) : throw new ArgumentOutOfRangeException(nameof(indexation), indexation, $"{nameof(indexation)} must be less than or equal to {nameof(array)}'s length.");
 
-        public static object GetLast(this Array array) => array.GetFromLast(0);
+            public static object GetLast(this Array array) => array.GetFromLast(0);
 
-        public static T GetFromLast<T>(this T[] array, int indexation) => (array ?? throw GetArgumentNullException(nameof(array))).Length > indexation ? array[array.Length - 1 - indexation] : throw new ArgumentOutOfRangeException(nameof(indexation), indexation, $"{nameof(indexation)} must be less than or equal to {nameof(array)}'s length.");
+            public static T GetFromLast<T>(this T[] array, int indexation) => (array ?? throw GetArgumentNullException(nameof(array))).Length > indexation ? array[array.Length - 1 - indexation] : throw new ArgumentOutOfRangeException(nameof(indexation), indexation, $"{nameof(indexation)} must be less than or equal to {nameof(array)}'s length.");
 
-        public static T GetLast<T>(this T[] array) => array.GetFromLast(0);
+            public static T GetLast<T>(this T[] array) => array.GetFromLast(0);
 
-        public static Result ToResultEnum(this bool? value) => value.HasValue ? value.Value.ToResultEnum() : Result.None;
+            public static Result ToResultEnum(this bool? value) => value.HasValue ? value.Value.ToResultEnum() : Result.None;
 
-        public static Result ToResultEnum(this bool value) => value ? Result.True : Result.False;
+            public static Result ToResultEnum(this bool value) => value ? Result.True : Result.False;
 
-        public static XOrResult ToXOrResult(this bool value) => value ? XOrResult.OneTrueResult : XOrResult.NoTrueResult;
+            public static XOrResult ToXOrResult(this bool value) => value ? XOrResult.OneTrueResult : XOrResult.NoTrueResult;
 
-        public static bool ToBool(this bool? value) => value.HasValue && value.Value;
+            public static bool ToBool(this bool? value) => value.HasValue && value.Value;
 
-        public static bool ToBoolIgnoreNull(this bool? value) => value ?? true;
-
+            public static bool ToBoolIgnoreNull(this bool? value) => value ?? true;
 
 
-        public static bool AndAlso(this bool? value, bool other) => ToBool(value) && other;
 
-        public static bool AndAlso(this bool? value, Func<bool> other) => ToBool(value) && other();
+            public static bool AndAlso(this bool? value, bool other) => ToBool(value) && other;
 
-        public static bool AndAlso(this bool? value, bool? other) => ToBool(value) && ToBool(other);
+            public static bool AndAlso(this bool? value, Func<bool> other) => ToBool(value) && other();
 
-        public static bool AndAlso(this bool? value, Func<bool?> other) => ToBool(value) && ToBool(other());
+            public static bool AndAlso(this bool? value, bool? other) => ToBool(value) && ToBool(other);
 
-        public static bool AndAlsoIgnoreNull(this bool? value, bool other) => value.HasValue ? value.Value && other : other;
+            public static bool AndAlso(this bool? value, Func<bool?> other) => ToBool(value) && ToBool(other());
 
-        public static bool AndAlsoIgnoreNull(this bool? value, Func<bool> other) => value.HasValue ? value.Value && other() : other();
+            public static bool AndAlsoIgnoreNull(this bool? value, bool other) => value.HasValue ? value.Value && other : other;
 
-        public static bool AndAlsoIgnoreNull(this bool? value, bool? other) => value.HasValue
-            ? other.HasValue
-                ? value.AndAlsoIgnoreNull(other.Value)
-                : value.Value
-            : other ?? false;
+            public static bool AndAlsoIgnoreNull(this bool? value, Func<bool> other) => value.HasValue ? value.Value && other() : other();
 
-        public static bool AndAlsoIgnoreNull(this bool? value, Func<bool?> other)
-        {
-            bool? _other = other();
-
-            return value.HasValue
-                ? _other.HasValue
-                    ? value.AndAlsoIgnoreNull(_other.Value)
+            public static bool AndAlsoIgnoreNull(this bool? value, bool? other) => value.HasValue
+                ? other.HasValue
+                    ? value.AndAlsoIgnoreNull(other.Value)
                     : value.Value
-                : _other ?? false;
-        }
+                : other ?? false;
+
+            public static bool AndAlsoIgnoreNull(this bool? value, Func<bool?> other)
+            {
+                bool? _other = other();
+
+                return value.HasValue
+                    ? _other.HasValue
+                        ? value.AndAlsoIgnoreNull(_other.Value)
+                        : value.Value
+                    : _other ?? false;
+            }
 
 
 
-        public static bool OrElse(this bool? value, bool other) => value.HasValue && (value.Value || other);
+            public static bool OrElse(this bool? value, bool other) => value.HasValue && (value.Value || other);
 
-        public static bool OrElse(this bool? value, Func<bool> other) => value.HasValue && (value.Value || other());
+            public static bool OrElse(this bool? value, Func<bool> other) => value.HasValue && (value.Value || other());
 
-        public static bool OrElse(this bool? value, bool? other) => value.HasValue && other.HasValue && (value.Value || other.Value);
+            public static bool OrElse(this bool? value, bool? other) => value.HasValue && other.HasValue && (value.Value || other.Value);
 
-        public static bool OrElse(this bool? value, Func<bool?> other)
-        {
-            bool? _other = other();
+            public static bool OrElse(this bool? value, Func<bool?> other)
+            {
+                bool? _other = other();
 
-            return value.HasValue && _other.HasValue && (value.Value || _other.Value);
-        }
+                return value.HasValue && _other.HasValue && (value.Value || _other.Value);
+            }
 
-        public static bool OrElseIgnoreNull(this bool? value, bool other) => value.HasValue ? value.Value || other : other;
+            public static bool OrElseIgnoreNull(this bool? value, bool other) => value.HasValue ? value.Value || other : other;
 
-        public static bool OrElseIgnoreNull(this bool? value, Func<bool> other) => value.HasValue ? value.Value || other() : other();
+            public static bool OrElseIgnoreNull(this bool? value, Func<bool> other) => value.HasValue ? value.Value || other() : other();
 
-        public static bool OrElseIgnoreValue(this bool? value, bool? other) => value.HasValue
-            ? other.HasValue
-                ? value.Value || other.Value
-                : value.Value
-            : other ?? false;
-
-        public static bool OrElseIgnoreValue(this bool? value, Func<bool?> other)
-        {
-            bool? _other = other();
-
-            return value.HasValue
-                ? _other.HasValue
-                    ? value.Value || _other.Value
+            public static bool OrElseIgnoreValue(this bool? value, bool? other) => value.HasValue
+                ? other.HasValue
+                    ? value.Value || other.Value
                     : value.Value
-                : _other ?? false;
-        }
+                : other ?? false;
+
+            public static bool OrElseIgnoreValue(this bool? value, Func<bool?> other)
+            {
+                bool? _other = other();
+
+                return value.HasValue
+                    ? _other.HasValue
+                        ? value.Value || _other.Value
+                        : value.Value
+                    : _other ?? false;
+            }
 
 
 
-        public static bool XOr(this bool? value, bool other) => value.HasValue && (value.Value ^ other);
+            public static bool XOr(this bool? value, bool other) => value.HasValue && (value.Value ^ other);
 
-        public static bool XOr(this bool? value, Func<bool> other) => value.HasValue && (value.Value ^ other());
+            public static bool XOr(this bool? value, Func<bool> other) => value.HasValue && (value.Value ^ other());
 
-        public static bool XOr(this bool? value, bool? other) => value.HasValue && other.HasValue && (value.Value ^ other.Value);
+            public static bool XOr(this bool? value, bool? other) => value.HasValue && other.HasValue && (value.Value ^ other.Value);
 
-        public static bool XOr(this bool? value, Func<bool?> other)
-        {
-            bool? _other = other();
+            public static bool XOr(this bool? value, Func<bool?> other)
+            {
+                bool? _other = other();
 
-            return value.HasValue && _other.HasValue && (value.Value ^ _other.Value);
-        }
+                return value.HasValue && _other.HasValue && (value.Value ^ _other.Value);
+            }
 
-        public static bool XOrIgnoreNull(this bool? value, bool other) => value.HasValue ? value.Value ^ other : other;
+            public static bool XOrIgnoreNull(this bool? value, bool other) => value.HasValue ? value.Value ^ other : other;
 
-        public static bool XOrIgnoreNull(this bool? value, Func<bool> other) => value.HasValue ? value.Value ^ other() : other();
+            public static bool XOrIgnoreNull(this bool? value, Func<bool> other) => value.HasValue ? value.Value ^ other() : other();
 
-        public static bool XOrIgnoreValue(this bool? value, bool? other) => value.HasValue
-            ? other.HasValue
-                ? value.Value ^ other.Value
-                : value.Value
-            : other ?? false;
+            public static bool XOrIgnoreValue(this bool? value, bool? other) => value.HasValue
+                ? other.HasValue
+                    ? value.Value ^ other.Value
+                    : value.Value
+                : other ?? false;
 
-        public static bool XOrIgnoreValue(this bool? value, Func<bool?> other)
-        {
-            bool? _other = other();
+            public static bool XOrIgnoreValue(this bool? value, Func<bool?> other)
+            {
+                bool? _other = other();
 
-            return value.HasValue
-             ? _other.HasValue
-                 ? value.Value ^ _other.Value
-                 : value.Value
-             : _other ?? false;
-        }
+                return value.HasValue
+                 ? _other.HasValue
+                     ? value.Value ^ _other.Value
+                     : value.Value
+                 : _other ?? false;
+            }
 
 
 
-        public static XOrResult GetXOrResult(this bool? value, bool other) => ToBool(value)
-            ? other
-                ? XOrResult.MoreThanOneTrueResult
-                : XOrResult.OneTrueResult
-            : other
-                ? XOrResult.OneTrueResult
-            : XOrResult.NoTrueResult;
-
-        public static XOrResult GetXOrResult(this bool? value, Func<bool> other) => ToBool(value)
-            ? other()
-                ? XOrResult.MoreThanOneTrueResult
-                : XOrResult.OneTrueResult
-            : other()
-                ? XOrResult.OneTrueResult
-            : XOrResult.NoTrueResult;
-
-        public static XOrResult GetXOrResult(this bool? value, bool? other) => ToBool(value)
-            ? ToBool(other)
-                ? XOrResult.MoreThanOneTrueResult
-                : XOrResult.OneTrueResult
-            : ToBool(other)
-                ? XOrResult.OneTrueResult
+            public static XOrResult GetXOrResult(this bool? value, bool other) => ToBool(value)
+                ? other
+                    ? XOrResult.MoreThanOneTrueResult
+                    : XOrResult.OneTrueResult
+                : other
+                    ? XOrResult.OneTrueResult
                 : XOrResult.NoTrueResult;
 
-        public static XOrResult GetXOrResult(this bool? value, Func<bool?> other) => ToBool(value)
-            ? ToBool(other())
-                ? XOrResult.MoreThanOneTrueResult
-                : XOrResult.OneTrueResult
-            : ToBool(other())
-                ? XOrResult.OneTrueResult
+            public static XOrResult GetXOrResult(this bool? value, Func<bool> other) => ToBool(value)
+                ? other()
+                    ? XOrResult.MoreThanOneTrueResult
+                    : XOrResult.OneTrueResult
+                : other()
+                    ? XOrResult.OneTrueResult
                 : XOrResult.NoTrueResult;
 
-        public static XOrResult GetXOrResultIgnoreNull(this bool? value, bool other) => ToBool(value)
-            ? other
-                ? XOrResult.MoreThanOneTrueResult
-                : XOrResult.OneTrueResult
-            : other
-                ? XOrResult.OneTrueResult
-                : XOrResult.NoTrueResult;
+            public static XOrResult GetXOrResult(this bool? value, bool? other) => ToBool(value)
+                ? ToBool(other)
+                    ? XOrResult.MoreThanOneTrueResult
+                    : XOrResult.OneTrueResult
+                : ToBool(other)
+                    ? XOrResult.OneTrueResult
+                    : XOrResult.NoTrueResult;
 
-        public static XOrResult GetXOrResultIgnoreNull(this bool? value, Func<bool> other) => ToBool(value)
-            ? other()
-                ? XOrResult.MoreThanOneTrueResult
-                : XOrResult.OneTrueResult
-            : other()
-                ? XOrResult.OneTrueResult
-                : XOrResult.NoTrueResult;
+            public static XOrResult GetXOrResult(this bool? value, Func<bool?> other) => ToBool(value)
+                ? ToBool(other())
+                    ? XOrResult.MoreThanOneTrueResult
+                    : XOrResult.OneTrueResult
+                : ToBool(other())
+                    ? XOrResult.OneTrueResult
+                    : XOrResult.NoTrueResult;
 
-        public static XOrResult GetXOrResultIgnoreValue(this bool? value, bool? other) => ToBool(value)
-            ? ToBool(other)
-                ? XOrResult.MoreThanOneTrueResult
-                : XOrResult.OneTrueResult
-            : ToBool(other)
-                ? XOrResult.OneTrueResult
-                : XOrResult.NoTrueResult;
+            public static XOrResult GetXOrResultIgnoreNull(this bool? value, bool other) => ToBool(value)
+                ? other
+                    ? XOrResult.MoreThanOneTrueResult
+                    : XOrResult.OneTrueResult
+                : other
+                    ? XOrResult.OneTrueResult
+                    : XOrResult.NoTrueResult;
 
-        public static XOrResult GetXOrResultIgnoreValue(this bool? value, Func<bool?> other) => ToBool(value)
-            ? ToBool(other())
-                ? XOrResult.MoreThanOneTrueResult
-                : XOrResult.OneTrueResult
-            : ToBool(other())
-                ? XOrResult.OneTrueResult
-                : XOrResult.NoTrueResult;
+            public static XOrResult GetXOrResultIgnoreNull(this bool? value, Func<bool> other) => ToBool(value)
+                ? other()
+                    ? XOrResult.MoreThanOneTrueResult
+                    : XOrResult.OneTrueResult
+                : other()
+                    ? XOrResult.OneTrueResult
+                    : XOrResult.NoTrueResult;
+
+            public static XOrResult GetXOrResultIgnoreValue(this bool? value, bool? other) => ToBool(value)
+                ? ToBool(other)
+                    ? XOrResult.MoreThanOneTrueResult
+                    : XOrResult.OneTrueResult
+                : ToBool(other)
+                    ? XOrResult.OneTrueResult
+                    : XOrResult.NoTrueResult;
+
+            public static XOrResult GetXOrResultIgnoreValue(this bool? value, Func<bool?> other) => ToBool(value)
+                ? ToBool(other())
+                    ? XOrResult.MoreThanOneTrueResult
+                    : XOrResult.OneTrueResult
+                : ToBool(other())
+                    ? XOrResult.OneTrueResult
+                    : XOrResult.NoTrueResult;
 
 #if !WinCopies3
-        #region Enumerables extension methods
+            #region Enumerables extension methods
 
         // todo:
 
@@ -722,7 +755,7 @@ namespace WinCopies
 
         // todo: Add-, Insert-, Remove-If(Not)Contains methods: add parameters like the Contains methods
 
-        #region Add(Range)IfNotContains methods
+            #region Add(Range)IfNotContains methods
 
         /// <summary>
         /// Tries to add a value to an <see cref="IList"/> if it does not contain it already.
@@ -774,9 +807,9 @@ namespace WinCopies
         public static T[] AddRangeIfNotContains<T>(this ICollection<T> collection, params T[] values) => collection.AddRangeIfNotContains((System.Collections.Generic.IEnumerable<T>)values);
 #endif
 
-        #endregion
+            #endregion
 
-        #region Insert(Range)IfNotContains methods
+            #region Insert(Range)IfNotContains methods
 
         /// <summary>
         /// Inserts a value at the specified index in a given collection if the value does not already exists in the collection.
@@ -811,9 +844,9 @@ namespace WinCopies
         public static T[] InsertRangeIfNotContains<T>(this System.Collections.Generic.IList<T> collection, in int index, params T[] values) => collection.InsertRangeIfNotContains(index, (System.Collections.Generic.IEnumerable<T>)values);
 #endif
 
-        #endregion
+            #endregion
 
-        #region Remove(Range)IfContains methods
+            #region Remove(Range)IfContains methods
 
         public static bool RemoveIfContains(this IList collection, in object value)
         {
@@ -835,9 +868,9 @@ namespace WinCopies
         public static T[] RemoveRangeIfContains<T>(this IList<T> collection, params T[] values) => collection.RemoveRangeIfContains((System.Collections.Generic.IEnumerable<T>)values);
 #endif
 
-        #endregion
+            #endregion
 
-        #region AddRange methods
+            #region AddRange methods
 
         public static void AddRange(this IList collection, params object[] values) => collection.AddRange((IEnumerable)values);
 
@@ -1140,7 +1173,7 @@ namespace WinCopies
 
                 collection.AddRangeBefore(node.Next, array);
         }
-        #endregion
+            #endregion
 
 #if CS7
         public static ArrayList ToList(this IEnumerable array) => array.ToList(0);
@@ -1382,11 +1415,11 @@ namespace WinCopies
         }
 #endif
 
-        #region Contains methods
+            #region Contains methods
 
-        #region Non generic methods
+            #region Non generic methods
 
-        #region ContainsOneValue overloads
+            #region ContainsOneValue overloads
 
         public static bool ContainsOneValue(this IEnumerable array, in EqualityComparison comparison, out bool containsMoreThanOneValue, in object[] values)
         {
@@ -1481,9 +1514,9 @@ namespace WinCopies
 
             return ContainsOneValue(array, (object value, object _value) => equalityComparer.Equals(value, _value), out containsMoreThanOneValue, values);
         }
-        #endregion
+            #endregion
 
-        #region ContainsOneOrMoreValues with notification whether contains more than one values overloads
+            #region ContainsOneOrMoreValues with notification whether contains more than one values overloads
 
         public static bool ContainsOneOrMoreValues(IEnumerable array, in EqualityComparison comparison, out bool containsMoreThanOneValue, object[] values)
         {
@@ -1565,9 +1598,9 @@ namespace WinCopies
 
             return ContainsOneOrMoreValues(array, (object value, object _value) => equalityComparer.Equals(value, _value), out containsMoreThanOneValue, values);
         }
-        #endregion
+            #endregion
 
-        #region ContainsOneOrMoreValues without notification whether contains more than one values overloads
+            #region ContainsOneOrMoreValues without notification whether contains more than one values overloads
 
         public static bool ContainsOneOrMoreValues(IEnumerable array, in Func<object, object, bool> comparison, object[] values)
         {
@@ -1633,9 +1666,9 @@ namespace WinCopies
 
             return ContainsOneOrMoreValues(array, (object value, object _value) => equalityComparer.Equals(value, _value), values);
         }
-        #endregion
+            #endregion
 
-        #region Contains array overloads
+            #region Contains array overloads
 
         public static bool Contains(IEnumerable array, in EqualityComparison comparison, object[] values)
         {
@@ -1713,13 +1746,13 @@ namespace WinCopies
 
             return Contains(array, (object value, object _value) => equalityComparer.Equals(value, _value), values);
         }
-        #endregion
+            #endregion
 
-        #endregion
+            #endregion
 
-        #region Generic methods
+            #region Generic methods
 
-        #region ContainsOneValue overloads
+            #region ContainsOneValue overloads
 
         public static bool ContainsOneValue<T>(System.Collections.Generic.IEnumerable<T> array, in EqualityComparison<T> comparison, out bool containsMoreThanOneValue, in T[] values)
         {
@@ -1800,9 +1833,9 @@ namespace WinCopies
 
             return ContainsOneValue(array, (T value, T _value) => equalityComparer.Equals(value, _value), out containsMoreThanOneValue, values); ;
         }
-        #endregion
+            #endregion
 
-        #region ContainsOneOrMoreValues with notification whether contains more than one values overloads
+            #region ContainsOneOrMoreValues with notification whether contains more than one values overloads
 
         public static bool ContainsOneOrMoreValues<T>(System.Collections.Generic.IEnumerable<T> array, in EqualityComparison<T> comparison, out bool containsMoreThanOneValue, in T[] values)
         {
@@ -1884,9 +1917,9 @@ namespace WinCopies
 
             return ContainsOneOrMoreValues(array, (T value, T _value) => equalityComparer.Equals(value, _value), out containsMoreThanOneValue, values);
         }
-        #endregion
+            #endregion
 
-        #region ContainsOneOrMoreValues without notification whether contains more than one values overloads
+            #region ContainsOneOrMoreValues without notification whether contains more than one values overloads
 
         public static bool ContainsOneOrMoreValues<T>(System.Collections.Generic.IEnumerable<T> array, in EqualityComparison<T> comparison, in T[] values)
         {
@@ -1952,9 +1985,9 @@ namespace WinCopies
 
             return ContainsOneOrMoreValues(array, (T value, T _value) => equalityComparer.Equals(value, _value), values);
         }
-        #endregion
+            #endregion
 
-        #region Contains array overloads
+            #region Contains array overloads
 
         public static bool Contains<T>(System.Collections.Generic.IEnumerable<T> array, in EqualityComparison<T> comparison, in T[] values)
         {
@@ -2032,11 +2065,11 @@ namespace WinCopies
 
             return Contains(array, (T value, T _value) => equalityComparer.Equals(value, _value), values);
         }
-        #endregion
+            #endregion
 
-        #endregion
+            #endregion
 
-        #endregion
+            #endregion
 
         public static string ToString(this IEnumerable array, in bool parseSubEnumerables, in bool parseStrings = false)
         {
@@ -2477,325 +2510,325 @@ namespace WinCopies
             return false;
         }
 
-        #endregion
+            #endregion
 #endif
 
-        public static void CopyTo(this BitArray source, in BitArray array, in int startIndex)
-        {
-            ThrowIfNull(source, nameof(source));
-            ThrowIfNull(array, nameof(array));
+            public static void CopyTo(this BitArray source, in BitArray array, in int startIndex)
+            {
+                ThrowIfNull(source, nameof(source));
+                ThrowIfNull(array, nameof(array));
 
-            if (array.Length > source.Length)
+                if (array.Length > source.Length)
 
-                throw new ArgumentOutOfRangeException(nameof(array));
+                    throw new ArgumentOutOfRangeException(nameof(array));
 
-            if (startIndex < 0 || startIndex + array.Length > source.Length)
+                if (startIndex < 0 || startIndex + array.Length > source.Length)
 
-                throw new IndexOutOfRangeException($"{nameof(startIndex)} is out of range.");
+                    throw new IndexOutOfRangeException($"{nameof(startIndex)} is out of range.");
 
-            for (int i = 0; i < source.Length; i++)
+                for (int i = 0; i < source.Length; i++)
 
-                array[startIndex + i] = source[i];
-        }
+                    array[startIndex + i] = source[i];
+            }
 
-        public static void SetMultipleBits(this BitArray array, in byte[] bytes, in int startIndex)
-        {
-            long length = bytes.Length * 8;
+            public static void SetMultipleBits(this BitArray array, in byte[] bytes, in int startIndex)
+            {
+                long length = bytes.Length * 8;
 
-            if (length > array.Length)
+                if (length > array.Length)
 
-                throw new ArgumentOutOfRangeException(nameof(bytes));
+                    throw new ArgumentOutOfRangeException(nameof(bytes));
 
-            if (startIndex < 0 || startIndex + length > array.Length)
+                if (startIndex < 0 || startIndex + length > array.Length)
 
-                throw new IndexOutOfRangeException($"{nameof(startIndex)} is out of range.");
+                    throw new IndexOutOfRangeException($"{nameof(startIndex)} is out of range.");
 
-            new BitArray(bytes).CopyTo(array, startIndex);
-        }
+                new BitArray(bytes).CopyTo(array, startIndex);
+            }
 
-        public static void SetMultipleBits(this BitArray array, in BitArray bits, in int startIndex)
-        {
-            if (bits.Length > array.Length)
+            public static void SetMultipleBits(this BitArray array, in BitArray bits, in int startIndex)
+            {
+                if (bits.Length > array.Length)
 
-                throw new ArgumentOutOfRangeException(nameof(bits));
+                    throw new ArgumentOutOfRangeException(nameof(bits));
 
-            if (startIndex < 0 || startIndex + bits.Length > array.Length)
+                if (startIndex < 0 || startIndex + bits.Length > array.Length)
 
-                throw new IndexOutOfRangeException($"{nameof(startIndex)} is out of range.");
+                    throw new IndexOutOfRangeException($"{nameof(startIndex)} is out of range.");
 
-            new BitArray(bits).CopyTo(array, startIndex);
-        }
+                new BitArray(bits).CopyTo(array, startIndex);
+            }
 
-        public static bool And<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Predicate<T> predicate)
-        {
-            ThrowIfNull(enumerable, nameof(enumerable));
-            ThrowIfNull(predicate, nameof(predicate));
+            public static bool And<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Predicate<T> predicate)
+            {
+                ThrowIfNull(enumerable, nameof(enumerable));
+                ThrowIfNull(predicate, nameof(predicate));
 
-            foreach (T item in enumerable)
+                foreach (T item in enumerable)
 
-                if (!predicate(item))
-
-                    return false;
-
-            return true;
-        }
-
-        public static bool Or<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Predicate<T> predicate)
-        {
-            ThrowIfNull(enumerable, nameof(enumerable));
-            ThrowIfNull(predicate, nameof(predicate));
-
-            foreach (T item in enumerable)
-
-                if (predicate(item))
-
-                    return true;
-
-            return false;
-        }
-
-        public static bool XOr<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Predicate<T> predicate)
-        {
-            ThrowIfNull(enumerable, nameof(enumerable));
-            ThrowIfNull(predicate, nameof(predicate));
-
-            bool found = false;
-
-            foreach (T item in enumerable)
-
-                if (predicate(item))
-                {
-                    if (found)
+                    if (!predicate(item))
 
                         return false;
 
-                    found = true;
-                }
-
-            return found;
-        }
-
-        public static XOrResult XOrAsXOrResult<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Predicate<T> predicate)
-        {
-            ThrowIfNull(enumerable, nameof(enumerable));
-            ThrowIfNull(predicate, nameof(predicate));
-
-            bool found = false;
-
-            foreach (T item in enumerable)
-
-                if (predicate(item))
-                {
-                    if (found)
-
-                        return XOrResult.MoreThanOneTrueResult;
-
-                    found = true;
-                }
-
-            return found.ToXOrResult();
-        }
-
-        private static Predicate<Type> GetIsCheckPredicate(in object obj, in bool typeEquality)
-        {
-            Type objType = obj.GetType();
-
-            if (typeEquality)
-
-                return t => objType == t;
-
-            else
-
-                return t => t.IsAssignableFrom(objType);
-        }
-
-        /// <summary>
-        /// Checks if the current object is assignable from at least one type of a given <see cref="Type"/> array.
-        /// </summary>
-        /// <param name="obj">The object from which check the type</param>
-        /// <param name="typeEquality"><see langword="true"/> to preserve type equality, regardless of the type inheritance, otherwise <see langword="false"/></param>
-        /// <param name="types">The types to compare</param>
-        /// <returns><see langword="true"/> if the current object is assignable from at least one of the given types, otherwise <see langword="false"/>.</returns>
-        public static bool Is(this object obj, in bool typeEquality, params Type[] types)
-        {
-            ThrowIfNull(obj, nameof(obj));
-            ThrowIfNull(types, nameof(types));
-
-            return types.Or(GetIsCheckPredicate(obj, typeEquality));
-        }
-
-        public static bool IsAND(this object obj, params Type[] types)
-        {
-            ThrowIfNull(obj, nameof(obj));
-            ThrowIfNull(types, nameof(types));
-
-            return types.And(GetIsCheckPredicate(obj, false));
-        }
-
-        public static bool IsXOR(this object obj, params Type[] types)
-        {
-            ThrowIfNull(obj, nameof(obj));
-            ThrowIfNull(types, nameof(types));
-
-            return types.XOr(GetIsCheckPredicate(obj, false));
-        }
-
-        public static bool IsType(this Type t, in System.Collections.Generic.IEnumerable<Type> types)
-        {
-            ThrowIfNull(t, nameof(t));
-            ThrowIfNull(types, nameof(types));
-
-            return types.Or(item => t == item);
-        }
-
-        public static bool IsType(this Type t, params Type[] types) => IsType(t, (System.Collections.Generic.IEnumerable<Type>)types);
-
-        public static bool IsAssignableFrom<T>(this Type t)
-        {
-            ThrowIfNull(t, nameof(t));
-
-            Type from = typeof(T);
-
-            if (from == t)
-
                 return true;
+            }
 
-            if (t.IsInterface)
+            public static bool Or<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Predicate<T> predicate)
+            {
+                ThrowIfNull(enumerable, nameof(enumerable));
+                ThrowIfNull(predicate, nameof(predicate));
 
-                return t.IsType(from.GetInterfaces());
+                foreach (T item in enumerable)
 
-            if (from.IsInterface)
+                    if (predicate(item))
+
+                        return true;
 
                 return false;
+            }
 
-            from = from.BaseType;
-
-            while (from != null)
+            public static bool XOr<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Predicate<T> predicate)
             {
+                ThrowIfNull(enumerable, nameof(enumerable));
+                ThrowIfNull(predicate, nameof(predicate));
+
+                bool found = false;
+
+                foreach (T item in enumerable)
+
+                    if (predicate(item))
+                    {
+                        if (found)
+
+                            return false;
+
+                        found = true;
+                    }
+
+                return found;
+            }
+
+            public static XOrResult XOrAsXOrResult<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Predicate<T> predicate)
+            {
+                ThrowIfNull(enumerable, nameof(enumerable));
+                ThrowIfNull(predicate, nameof(predicate));
+
+                bool found = false;
+
+                foreach (T item in enumerable)
+
+                    if (predicate(item))
+                    {
+                        if (found)
+
+                            return XOrResult.MoreThanOneTrueResult;
+
+                        found = true;
+                    }
+
+                return found.ToXOrResult();
+            }
+
+            private static Predicate<Type> GetIsCheckPredicate(in object obj, in bool typeEquality)
+            {
+                Type objType = obj.GetType();
+
+                if (typeEquality)
+
+                    return t => objType == t;
+
+                else
+
+                    return t => t.IsAssignableFrom(objType);
+            }
+
+            /// <summary>
+            /// Checks if the current object is assignable from at least one type of a given <see cref="Type"/> array.
+            /// </summary>
+            /// <param name="obj">The object from which check the type</param>
+            /// <param name="typeEquality"><see langword="true"/> to preserve type equality, regardless of the type inheritance, otherwise <see langword="false"/></param>
+            /// <param name="types">The types to compare</param>
+            /// <returns><see langword="true"/> if the current object is assignable from at least one of the given types, otherwise <see langword="false"/>.</returns>
+            public static bool Is(this object obj, in bool typeEquality, params Type[] types)
+            {
+                ThrowIfNull(obj, nameof(obj));
+                ThrowIfNull(types, nameof(types));
+
+                return types.Or(GetIsCheckPredicate(obj, typeEquality));
+            }
+
+            public static bool IsAND(this object obj, params Type[] types)
+            {
+                ThrowIfNull(obj, nameof(obj));
+                ThrowIfNull(types, nameof(types));
+
+                return types.And(GetIsCheckPredicate(obj, false));
+            }
+
+            public static bool IsXOR(this object obj, params Type[] types)
+            {
+                ThrowIfNull(obj, nameof(obj));
+                ThrowIfNull(types, nameof(types));
+
+                return types.XOr(GetIsCheckPredicate(obj, false));
+            }
+
+            public static bool IsType(this Type t, in System.Collections.Generic.IEnumerable<Type> types)
+            {
+                ThrowIfNull(t, nameof(t));
+                ThrowIfNull(types, nameof(types));
+
+                return types.Or(item => t == item);
+            }
+
+            public static bool IsType(this Type t, params Type[] types) => IsType(t, (System.Collections.Generic.IEnumerable<Type>)types);
+
+            public static bool IsAssignableFrom<T>(this Type t)
+            {
+                ThrowIfNull(t, nameof(t));
+
+                Type from = typeof(T);
+
                 if (from == t)
 
                     return true;
 
+                if (t.IsInterface)
+
+                    return t.IsType(from.GetInterfaces());
+
+                if (from.IsInterface)
+
+                    return false;
+
                 from = from.BaseType;
-            }
 
-            return false;
-        }
-
-        public static bool IsAssignableFrom(this Type t, in System.Collections.Generic.IEnumerable<Type> enumerable)
-        {
-            ThrowIfNull(t, nameof(t));
-
-            return (enumerable ?? throw GetArgumentNullException(nameof(enumerable))).Or(_t => t.IsAssignableFrom(_t));
-        }
-
-        public static bool IsAssignableFromAND(this Type t, in System.Collections.Generic.IEnumerable<Type> enumerable)
-        {
-            ThrowIfNull(t, nameof(t));
-
-            return (enumerable ?? throw GetArgumentNullException(nameof(enumerable))).And(_t => t.IsAssignableFrom(_t));
-        }
-
-        public static bool IsAssignableFromXOr(this Type t, in System.Collections.Generic.IEnumerable<Type> enumerable)
-        {
-            ThrowIfNull(t, nameof(t));
-
-            return (enumerable ?? throw GetArgumentNullException(nameof(enumerable))).XOr(_t => t.IsAssignableFrom(_t));
-        }
-
-        public static IEnumerable<TKey> GetKeys<TKey, TValue>(this KeyValuePair<TKey, TValue>[] array)
-        {
-            ThrowIfNull(array, nameof(array));
-
-            foreach (KeyValuePair<TKey, TValue> value in array)
-
-                yield return value.Key;
-        }
-
-        public static IEnumerable<TValue> GetValues<TKey, TValue>(this KeyValuePair<TKey, TValue>[] array)
-        {
-            ThrowIfNull(array, nameof(array));
-
-            foreach (KeyValuePair<TKey, TValue> value in array)
-
-                yield return value.Value;
-        }
-
-        public static bool CheckIntegrity<TKey, TValue>(this KeyValuePair<TKey, TValue>[] array)
-        {
-#if CS8
-                static
-#endif
-
-            bool predicateByVal(TKey keyA, TKey keyB) => Equals(keyA, keyB);
-
-#if CS8
-                static
-#endif
-
-            bool predicateByRef(TKey keyA, TKey keyB) => ReferenceEquals(keyA, keyB);
-
-            Func<TKey, TKey, bool> predicate = typeof(TKey).IsClass ? predicateByRef : (Func<TKey, TKey, bool>)predicateByVal;
-
-            IEnumerable<TKey> keys = array.GetKeys();
-
-            IEnumerable<TKey> _keys = array.GetKeys();
-
-            bool foundOneOccurrence = false;
-
-            foreach (TKey key in keys)
-            {
-                if (key == null)
-
-                    throw GetOneOrMoreKeyIsNullException();
-
-                foreach (TKey _key in _keys)
+                while (from != null)
                 {
-                    if (predicate(key, _key))
+                    if (from == t)
 
-                        if (foundOneOccurrence)
+                        return true;
 
-                            return false;
-
-                        else
-
-                            foundOneOccurrence = true;
+                    from = from.BaseType;
                 }
 
-                foundOneOccurrence = false;
+                return false;
             }
 
-            return true;
-        }
+            public static bool IsAssignableFrom(this Type t, in System.Collections.Generic.IEnumerable<Type> enumerable)
+            {
+                ThrowIfNull(t, nameof(t));
 
-        public static bool CheckPropertySetIntegrity(Type propertyObjectType, in string propertyName, out string methodName, in int skipFrames, in BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet)
-        {
-            ThrowIfNull(propertyObjectType, nameof(propertyObjectType));
+                return (enumerable ?? throw GetArgumentNullException(nameof(enumerable))).Or(_t => t.IsAssignableFrom(_t));
+            }
 
-            PropertyInfo property = propertyObjectType.GetProperty(propertyName, bindingFlags) ?? throw GetFieldOrPropertyNotFoundException(propertyName, propertyObjectType);
+            public static bool IsAssignableFromAND(this Type t, in System.Collections.Generic.IEnumerable<Type> enumerable)
+            {
+                ThrowIfNull(t, nameof(t));
 
-            MethodBase method = new StackFrame(skipFrames).GetMethod();
+                return (enumerable ?? throw GetArgumentNullException(nameof(enumerable))).And(_t => t.IsAssignableFrom(_t));
+            }
 
-            methodName = method.Name;
+            public static bool IsAssignableFromXOr(this Type t, in System.Collections.Generic.IEnumerable<Type> enumerable)
+            {
+                ThrowIfNull(t, nameof(t));
 
-            //#if DEBUG 
+                return (enumerable ?? throw GetArgumentNullException(nameof(enumerable))).XOr(_t => t.IsAssignableFrom(_t));
+            }
 
-            //            Debug.WriteLine("Property: " + property.Name + ", " + property.DeclaringType);
+            public static IEnumerable<TKey> GetKeys<TKey, TValue>(this KeyValuePair<TKey, TValue>[] array)
+            {
+                ThrowIfNull(array, nameof(array));
 
-            //            Debug.WriteLine("Method: " + method.Name + ", " + method.DeclaringType);
+                foreach (KeyValuePair<TKey, TValue> value in array)
 
-            //#endif 
+                    yield return value.Key;
+            }
 
-            // todo: tuple and check DeclaringTypeNotCorrespond throws
+            public static IEnumerable<TValue> GetValues<TKey, TValue>(this KeyValuePair<TKey, TValue>[] array)
+            {
+                ThrowIfNull(array, nameof(array));
 
-            return (property.CanWrite && property.GetSetMethod() != null) || property.DeclaringType == method.DeclaringType;
-        }
+                foreach (KeyValuePair<TKey, TValue> value in array)
 
-        internal static FieldInfo GetField(in string fieldName, in Type objectType, in BindingFlags bindingFlags) => objectType.GetField(fieldName, bindingFlags) ?? throw GetFieldOrPropertyNotFoundException(fieldName, objectType);
+                    yield return value.Value;
+            }
 
-        internal static PropertyInfo GetProperty(in string propertyName, in Type objectType, in BindingFlags bindingFlags) => objectType.GetProperty(propertyName, bindingFlags) ?? throw GetFieldOrPropertyNotFoundException(propertyName, objectType);
+            public static bool CheckIntegrity<TKey, TValue>(this KeyValuePair<TKey, TValue>[] array)
+            {
+#if CS8
+                static
+#endif
 
-        // todo: use attributes
+                bool predicateByVal(TKey keyA, TKey keyB) => Equals(keyA, keyB);
+
+#if CS8
+                static
+#endif
+
+                bool predicateByRef(TKey keyA, TKey keyB) => ReferenceEquals(keyA, keyB);
+
+                Func<TKey, TKey, bool> predicate = typeof(TKey).IsClass ? predicateByRef : (Func<TKey, TKey, bool>)predicateByVal;
+
+                IEnumerable<TKey> keys = array.GetKeys();
+
+                IEnumerable<TKey> _keys = array.GetKeys();
+
+                bool foundOneOccurrence = false;
+
+                foreach (TKey key in keys)
+                {
+                    if (key == null)
+
+                        throw GetOneOrMoreKeyIsNullException();
+
+                    foreach (TKey _key in _keys)
+                    {
+                        if (predicate(key, _key))
+
+                            if (foundOneOccurrence)
+
+                                return false;
+
+                            else
+
+                                foundOneOccurrence = true;
+                    }
+
+                    foundOneOccurrence = false;
+                }
+
+                return true;
+            }
+
+            public static bool CheckPropertySetIntegrity(Type propertyObjectType, in string propertyName, out string methodName, in int skipFrames, in BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet)
+            {
+                ThrowIfNull(propertyObjectType, nameof(propertyObjectType));
+
+                PropertyInfo property = propertyObjectType.GetProperty(propertyName, bindingFlags) ?? throw GetFieldOrPropertyNotFoundException(propertyName, propertyObjectType);
+
+                MethodBase method = new StackFrame(skipFrames).GetMethod();
+
+                methodName = method.Name;
+
+                //#if DEBUG 
+
+                //            Debug.WriteLine("Property: " + property.Name + ", " + property.DeclaringType);
+
+                //            Debug.WriteLine("Method: " + method.Name + ", " + method.DeclaringType);
+
+                //#endif 
+
+                // todo: tuple and check DeclaringTypeNotCorrespond throws
+
+                return (property.CanWrite && property.GetSetMethod() != null) || property.DeclaringType == method.DeclaringType;
+            }
+
+            internal static FieldInfo GetField(in string fieldName, in Type objectType, in BindingFlags bindingFlags) => objectType.GetField(fieldName, bindingFlags) ?? throw GetFieldOrPropertyNotFoundException(fieldName, objectType);
+
+            internal static PropertyInfo GetProperty(in string propertyName, in Type objectType, in BindingFlags bindingFlags) => objectType.GetProperty(propertyName, bindingFlags) ?? throw GetFieldOrPropertyNotFoundException(propertyName, objectType);
+
+            // todo: use attributes
 
 #if CS7
 #if !WinCopies3
@@ -3753,25 +3786,25 @@ namespace WinCopies
         public static object GetNumValue(this Enum @enum, in string enumName) => @enum.GetNumValue();
 #endif
 
-        // todo: IFormatProvider
+            // todo: IFormatProvider
 
-        /// <summary>
-        /// Gets the numeric value for an enum.
-        /// </summary>
-        /// <param name="enum">The enum for which get the corresponding numeric value.</param>
-        /// <returns>The numeric value corresponding to this enum, in the given enum type underlying type.</returns>
-        public static object GetNumValue(this Enum @enum) => Convert.ChangeType(@enum, Enum.GetUnderlyingType(@enum.GetType()));
+            /// <summary>
+            /// Gets the numeric value for an enum.
+            /// </summary>
+            /// <param name="enum">The enum for which get the corresponding numeric value.</param>
+            /// <returns>The numeric value corresponding to this enum, in the given enum type underlying type.</returns>
+            public static object GetNumValue(this Enum @enum) => Convert.ChangeType(@enum, Enum.GetUnderlyingType(@enum.GetType()));
 
-        /// <summary>
-        /// Gets the numeric value for an enum.
-        /// </summary>
-        /// <param name="enum">The enum for which get the corresponding numeric value.</param>
-        /// <returns>The numeric value corresponding to this enum, in the given enum type underlying type.</returns>
-        public static object GetNumValue<T>(this T @enum) where T : Enum => Convert.ChangeType(@enum, Enum.GetUnderlyingType(typeof(T)));
+            /// <summary>
+            /// Gets the numeric value for an enum.
+            /// </summary>
+            /// <param name="enum">The enum for which get the corresponding numeric value.</param>
+            /// <returns>The numeric value corresponding to this enum, in the given enum type underlying type.</returns>
+            public static object GetNumValue<T>(this T @enum) where T : Enum => Convert.ChangeType(@enum, Enum.GetUnderlyingType(typeof(T)));
 
-        // public static object GetNumValue(this Enum @enum) => GetNumValue(@enum, @enum.ToString());
+            // public static object GetNumValue(this Enum @enum) => GetNumValue(@enum, @enum.ToString());
 
-        // todo : to test if Math.Log(Convert.ToInt64(flagsEnum), 2) == 'SomeInt64'; (no float, double ...) would be faster.
+            // todo : to test if Math.Log(Convert.ToInt64(flagsEnum), 2) == 'SomeInt64'; (no float, double ...) would be faster.
 
 #if CS6
             ///// <summary>
@@ -4116,128 +4149,128 @@ namespace WinCopies
         }
 #endif
 
-        public static bool IsValidEnumValue<T>(this T value, in bool valuesAreExpected, params T[] values) where T : Enum
-        {
-            ThrowIfNull(values, nameof(values));
-
-            if (valuesAreExpected)
+            public static bool IsValidEnumValue<T>(this T value, in bool valuesAreExpected, params T[] values) where T : Enum
             {
+                ThrowIfNull(values, nameof(values));
+
+                if (valuesAreExpected)
+                {
+                    foreach (T _value in values)
+
+                        if (value.Equals(_value))
+
+                            return true;
+
+                    return false;
+                }
+
                 foreach (T _value in values)
 
                     if (value.Equals(_value))
 
-                        return true;
+                        return false;
 
-                return false;
+                return true;
             }
 
-            foreach (T _value in values)
+            /// <summary>
+            /// Checks if a number is between two given numbers.
+            /// </summary>
+            /// <param name="b">The number to check.</param>
+            /// <param name="x">The left operand.</param>
+            /// <param name="y">The right operand.</param>
+            /// <returns><see langword="true"/> if <paramref name="b"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
+            public static bool Between(this sbyte b, in sbyte x, in sbyte y) => b >= x && b <= y;
 
-                if (value.Equals(_value))
+            /// <summary>
+            /// Checks if a number is between two given numbers.
+            /// </summary>
+            /// <param name="b">The number to check.</param>
+            /// <param name="x">The left operand.</param>
+            /// <param name="y">The right operand.</param>
+            /// <returns><see langword="true"/> if <paramref name="b"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
+            public static bool Between(this byte b, in byte x, in byte y) => b >= x && b <= y;
 
-                    return false;
+            /// <summary>
+            /// Checks if a number is between two given numbers.
+            /// </summary>
+            /// <param name="s">The number to check.</param>
+            /// <param name="x">The left operand.</param>
+            /// <param name="y">The right operand.</param>
+            /// <returns><see langword="true"/> if <paramref name="s"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
+            public static bool Between(this short s, in short x, in short y) => s >= x && s <= y;
 
-            return true;
-        }
+            /// <summary>
+            /// Checks if a number is between two given numbers.
+            /// </summary>
+            /// <param name="s">The number to check.</param>
+            /// <param name="x">The left operand.</param>
+            /// <param name="y">The right operand.</param>
+            /// <returns><see langword="true"/> if <paramref name="s"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
+            public static bool Between(this ushort s, in ushort x, in ushort y) => s >= x && s <= y;
 
-        /// <summary>
-        /// Checks if a number is between two given numbers.
-        /// </summary>
-        /// <param name="b">The number to check.</param>
-        /// <param name="x">The left operand.</param>
-        /// <param name="y">The right operand.</param>
-        /// <returns><see langword="true"/> if <paramref name="b"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        public static bool Between(this sbyte b, in sbyte x, in sbyte y) => b >= x && b <= y;
+            /// <summary>
+            /// Checks if a number is between two given numbers.
+            /// </summary>
+            /// <param name="i">The number to check.</param>
+            /// <param name="x">The left operand.</param>
+            /// <param name="y">The right operand.</param>
+            /// <returns><see langword="true"/> if <paramref name="i"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
+            public static bool Between(this int i, in int x, in int y) => i >= x && i <= y;
 
-        /// <summary>
-        /// Checks if a number is between two given numbers.
-        /// </summary>
-        /// <param name="b">The number to check.</param>
-        /// <param name="x">The left operand.</param>
-        /// <param name="y">The right operand.</param>
-        /// <returns><see langword="true"/> if <paramref name="b"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        public static bool Between(this byte b, in byte x, in byte y) => b >= x && b <= y;
+            /// <summary>
+            /// Checks if a number is between two given numbers.
+            /// </summary>
+            /// <param name="i">The number to check.</param>
+            /// <param name="x">The left operand.</param>
+            /// <param name="y">The right operand.</param>
+            /// <returns><see langword="true"/> if <paramref name="i"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
+            public static bool Between(this uint i, in uint x, in uint y) => i >= x && i <= y;
 
-        /// <summary>
-        /// Checks if a number is between two given numbers.
-        /// </summary>
-        /// <param name="s">The number to check.</param>
-        /// <param name="x">The left operand.</param>
-        /// <param name="y">The right operand.</param>
-        /// <returns><see langword="true"/> if <paramref name="s"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        public static bool Between(this short s, in short x, in short y) => s >= x && s <= y;
+            /// <summary>
+            /// Checks if a number is between two given numbers.
+            /// </summary>
+            /// <param name="l">The number to check.</param>
+            /// <param name="x">The left operand.</param>
+            /// <param name="y">The right operand.</param>
+            /// <returns><see langword="true"/> if <paramref name="l"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
+            public static bool Between(this long l, in long x, in long y) => l >= x && l <= y;
 
-        /// <summary>
-        /// Checks if a number is between two given numbers.
-        /// </summary>
-        /// <param name="s">The number to check.</param>
-        /// <param name="x">The left operand.</param>
-        /// <param name="y">The right operand.</param>
-        /// <returns><see langword="true"/> if <paramref name="s"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        public static bool Between(this ushort s, in ushort x, in ushort y) => s >= x && s <= y;
+            /// <summary>
+            /// Checks if a number is between two given numbers.
+            /// </summary>
+            /// <param name="l">The number to check.</param>
+            /// <param name="x">The left operand.</param>
+            /// <param name="y">The right operand.</param>
+            /// <returns><see langword="true"/> if <paramref name="l"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
+            public static bool Between(this ulong l, in ulong x, in ulong y) => l >= x && l <= y;
 
-        /// <summary>
-        /// Checks if a number is between two given numbers.
-        /// </summary>
-        /// <param name="i">The number to check.</param>
-        /// <param name="x">The left operand.</param>
-        /// <param name="y">The right operand.</param>
-        /// <returns><see langword="true"/> if <paramref name="i"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        public static bool Between(this int i, in int x, in int y) => i >= x && i <= y;
+            /// <summary>
+            /// Checks if a number is between two given numbers.
+            /// </summary>
+            /// <param name="f">The number to check.</param>
+            /// <param name="x">The left operand.</param>
+            /// <param name="y">The right operand.</param>
+            /// <returns><see langword="true"/> if <paramref name="f"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
+            public static bool Between(this float f, in float x, in float y) => f >= x && f <= y;
 
-        /// <summary>
-        /// Checks if a number is between two given numbers.
-        /// </summary>
-        /// <param name="i">The number to check.</param>
-        /// <param name="x">The left operand.</param>
-        /// <param name="y">The right operand.</param>
-        /// <returns><see langword="true"/> if <paramref name="i"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        public static bool Between(this uint i, in uint x, in uint y) => i >= x && i <= y;
+            /// <summary>
+            /// Checks if a number is between two given numbers.
+            /// </summary>
+            /// <param name="d">The number to check.</param>
+            /// <param name="x">The left operand.</param>
+            /// <param name="y">The right operand.</param>
+            /// <returns><see langword="true"/> if <paramref name="d"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
+            public static bool Between(this double d, in double x, in double y) => d >= x && d <= y;
 
-        /// <summary>
-        /// Checks if a number is between two given numbers.
-        /// </summary>
-        /// <param name="l">The number to check.</param>
-        /// <param name="x">The left operand.</param>
-        /// <param name="y">The right operand.</param>
-        /// <returns><see langword="true"/> if <paramref name="l"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        public static bool Between(this long l, in long x, in long y) => l >= x && l <= y;
-
-        /// <summary>
-        /// Checks if a number is between two given numbers.
-        /// </summary>
-        /// <param name="l">The number to check.</param>
-        /// <param name="x">The left operand.</param>
-        /// <param name="y">The right operand.</param>
-        /// <returns><see langword="true"/> if <paramref name="l"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        public static bool Between(this ulong l, in ulong x, in ulong y) => l >= x && l <= y;
-
-        /// <summary>
-        /// Checks if a number is between two given numbers.
-        /// </summary>
-        /// <param name="f">The number to check.</param>
-        /// <param name="x">The left operand.</param>
-        /// <param name="y">The right operand.</param>
-        /// <returns><see langword="true"/> if <paramref name="f"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        public static bool Between(this float f, in float x, in float y) => f >= x && f <= y;
-
-        /// <summary>
-        /// Checks if a number is between two given numbers.
-        /// </summary>
-        /// <param name="d">The number to check.</param>
-        /// <param name="x">The left operand.</param>
-        /// <param name="y">The right operand.</param>
-        /// <returns><see langword="true"/> if <paramref name="d"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        public static bool Between(this double d, in double x, in double y) => d >= x && d <= y;
-
-        /// <summary>
-        /// Checks if a number is between two given numbers.
-        /// </summary>
-        /// <param name="d">The number to check.</param>
-        /// <param name="x">The left operand.</param>
-        /// <param name="y">The right operand.</param>
-        /// <returns><see langword="true"/> if <paramref name="d"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        public static bool Between(this decimal d, in decimal x, in decimal y) => d >= x && d <= y;
+            /// <summary>
+            /// Checks if a number is between two given numbers.
+            /// </summary>
+            /// <param name="d">The number to check.</param>
+            /// <param name="x">The left operand.</param>
+            /// <param name="y">The right operand.</param>
+            /// <returns><see langword="true"/> if <paramref name="d"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
+            public static bool Between(this decimal d, in decimal x, in decimal y) => d >= x && d <= y;
 
 #if !WinCopies3
         public static void ForEach(this IEnumerableEnumerator enumerator, LoopIteration func)
@@ -4305,41 +4338,87 @@ namespace WinCopies
         }
 #endif
 
-        public static void SplitValues<T, U, TContainer>(this System.Collections.Generic.IEnumerable<T> enumerable, in bool skipEmptyEnumerables, IValueSplitFactory<T, U, TContainer> splitFactory, params T[] separators) where T : struct where U : System.Collections.Generic.IEnumerable<T>
-        {
-            ThrowIfNull(enumerable, nameof(enumerable));
-            ThrowIfNull(splitFactory, nameof(splitFactory));
-            // ThrowIfNull(enumerableNullableValueEntryCallback, nameof(enumerableNullableValueEntryCallback));
-            ThrowIfNull(separators, nameof(separators));
-
-            if (separators.Length == 0)
-
-                throw new ArgumentException($"{nameof(separators)} does not contain values.");
-
-            Predicate<T> predicate;
-
-            if (separators.Length == 1)
-
-                predicate = value => /*value != null && */ value.Equals(separators[0]);
-
-            else
-
-                predicate = value => separators.Contains(value);
-
-            System.Collections.Generic.IEnumerator<T> enumerator = enumerable.GetEnumerator();
-
-            enumerable = null;
-
-            void subAddAndAdd(in T value)
+            public static void SplitValues<T, U, TContainer>(this System.Collections.Generic.IEnumerable<T> enumerable, in bool skipEmptyEnumerables, IValueSplitFactory<T, U, TContainer> splitFactory, params T[] separators) where T : struct where U : System.Collections.Generic.IEnumerable<T>
             {
-                splitFactory.SubAdd(value);
+                ThrowIfNull(enumerable, nameof(enumerable));
+                ThrowIfNull(splitFactory, nameof(splitFactory));
+                // ThrowIfNull(enumerableNullableValueEntryCallback, nameof(enumerableNullableValueEntryCallback));
+                ThrowIfNull(separators, nameof(separators));
 
-                splitFactory.Add(splitFactory.GetEnumerable());
-            }
+                if (separators.Length == 0)
 
-            if (skipEmptyEnumerables)
-            {
-                if (enumerator.MoveNext())
+                    throw new ArgumentException($"{nameof(separators)} does not contain values.");
+
+                Predicate<T> predicate;
+
+                if (separators.Length == 1)
+
+                    predicate = value => /*value != null && */ value.Equals(separators[0]);
+
+                else
+
+                    predicate = value => separators.Contains(value);
+
+                System.Collections.Generic.IEnumerator<T> enumerator = enumerable.GetEnumerator();
+
+                enumerable = null;
+
+                void subAddAndAdd(in T value)
+                {
+                    splitFactory.SubAdd(value);
+
+                    splitFactory.Add(splitFactory.GetEnumerable());
+                }
+
+                if (skipEmptyEnumerables)
+                {
+                    if (enumerator.MoveNext())
+                    {
+                        T? value = enumerator.Current;
+
+                        if (enumerator.MoveNext()) // There are more than one value.
+                        {
+                            value = null;
+
+                            void tryAdd()
+                            {
+                                if (predicate(enumerator.Current) && splitFactory.SubCount > 0)
+                                {
+                                    splitFactory.Add(splitFactory.GetEnumerable());
+
+                                    splitFactory.SubClear();
+                                }
+
+                                else
+
+                                    splitFactory.SubAdd(enumerator.Current);
+                            }
+
+                            tryAdd();
+
+                            while (enumerator.MoveNext())
+
+                                tryAdd();
+                        }
+
+                        else // There is one value.
+                        {
+                            if (predicate(value.Value))
+
+                                return;
+
+                            else
+
+                                subAddAndAdd(enumerator.Current);
+                        }
+                    }
+
+                    else // There is no value.
+
+                        return;
+                }
+
+                else if (enumerator.MoveNext())
                 {
                     T? value = enumerator.Current;
 
@@ -4349,11 +4428,13 @@ namespace WinCopies
 
                         void tryAdd()
                         {
-                            if (predicate(enumerator.Current) && splitFactory.SubCount > 0)
+                            if (predicate(enumerator.Current))
                             {
                                 splitFactory.Add(splitFactory.GetEnumerable());
 
-                                splitFactory.SubClear();
+                                if (splitFactory.SubCount > 0)
+
+                                    splitFactory.SubClear();
                             }
 
                             else
@@ -4372,7 +4453,7 @@ namespace WinCopies
                     {
                         if (predicate(value.Value))
 
-                            return;
+                            splitFactory.Add(splitFactory.GetEnumerable());
 
                         else
 
@@ -4382,56 +4463,8 @@ namespace WinCopies
 
                 else // There is no value.
 
-                    return;
+                    splitFactory.Add(splitFactory.GetEnumerable());
             }
-
-            else if (enumerator.MoveNext())
-            {
-                T? value = enumerator.Current;
-
-                if (enumerator.MoveNext()) // There are more than one value.
-                {
-                    value = null;
-
-                    void tryAdd()
-                    {
-                        if (predicate(enumerator.Current))
-                        {
-                            splitFactory.Add(splitFactory.GetEnumerable());
-
-                            if (splitFactory.SubCount > 0)
-
-                                splitFactory.SubClear();
-                        }
-
-                        else
-
-                            splitFactory.SubAdd(enumerator.Current);
-                    }
-
-                    tryAdd();
-
-                    while (enumerator.MoveNext())
-
-                        tryAdd();
-                }
-
-                else // There is one value.
-                {
-                    if (predicate(value.Value))
-
-                        splitFactory.Add(splitFactory.GetEnumerable());
-
-                    else
-
-                        subAddAndAdd(enumerator.Current);
-                }
-            }
-
-            else // There is no value.
-
-                splitFactory.Add(splitFactory.GetEnumerable());
-        }
 
 #if !WinCopies3
         public static void SplitReferences<T, U, V, TContainer>(this System.Collections.Generic.IEnumerable<T> enumerable, in bool skipEmptyEnumerables, IRefSplitFactory<T, U, V, TContainer> splitFactory, params T[] separators) where T : class where U : INullableRefEntry<T> where V : IEnumerable<U>
@@ -4578,8 +4611,8 @@ namespace WinCopies
 
         public static System.Collections.Generic.IEnumerable<T> Join<T>(this IEnumerable<System.Collections.Generic.IEnumerable<T>> enumerable, bool keepEmptyEnumerables, params T[] join) => new Enumerable<T>(() => new JoinEnumerator<T>(enumerable, keepEmptyEnumerables, join));
 
-        #region String extension methods
-        #region Split
+            #region String extension methods
+            #region Split
 #if CS5
         private static void Split(this string s, in bool skipEmptyValues, in StringBuilder stringBuilder, in Action<string> action, params char[] separators)
         {
@@ -4740,7 +4773,7 @@ namespace WinCopies
             return list;
         }
 #endif
-        #endregion
+            #endregion
 
         public static string Join(this IEnumerable<string> enumerable, in bool keepEmptyValues, params char[] join) => Join(enumerable, keepEmptyValues, new string(join));
 
@@ -4938,7 +4971,7 @@ namespace WinCopies
             return stringBuilder.ToString().Normalize(System.Text.NormalizationForm.FormC);
         }
 
-        #endregion
+            #endregion
 
         internal static void ThrowIfDisposedInternal(this WinCopies.Util.DotNetFix.IDisposable obj, in string objectName)
         {
@@ -4978,96 +5011,96 @@ namespace WinCopies
         }
 #endif
 
-        public static string Repeat(this char c, in int length) => c.Repeat(null, null, length);
+            public static string Repeat(this char c, in int length) => c.Repeat(null, null, length);
 
-        public static string Repeat(this char c, in char left, in char right, in int length) => c.Repeat(left, right, length);
+            public static string Repeat(this char c, in char left, in char right, in int length) => c.Repeat(left, right, length);
 
-        private static string Repeat(this char c, in char? left, in char? right, in int length)
-        {
-            var sb = new StringBuilder();
-
-            Action action;
-
-            if (left.HasValue)
-
+            private static string Repeat(this char c, in char? left, in char? right, in int length)
             {
+                var sb = new StringBuilder();
 
-                char _left = left.Value;
+                Action action;
 
-                if (right.HasValue)
+                if (left.HasValue)
+
+                {
+
+                    char _left = left.Value;
+
+                    if (right.HasValue)
+
+                    {
+                        char _right = right.Value;
+
+                        action = () => { _ = sb.Append(_left); _ = sb.Append(c); _ = sb.Append(_right); };
+                    }
+
+                    else
+
+                        action = () => { _ = sb.Append(_left); _ = sb.Append(c); };
+
+                }
+
+                else if (right.HasValue)
 
                 {
                     char _right = right.Value;
 
-                    action = () => { _ = sb.Append(_left); _ = sb.Append(c); _ = sb.Append(_right); };
+                    action = () => { _ = sb.Append(c); _ = sb.Append(_right); };
                 }
 
                 else
 
-                    action = () => { _ = sb.Append(_left); _ = sb.Append(c); };
+                    action = () => sb.Append(c);
 
+                for (int i = 0; i < length; i++)
+
+                    action();
+
+                return sb.ToString();
             }
 
-            else if (right.HasValue)
+            public static string Repeat(this string s, in int length) => s.Repeat(null, null, length);
 
+            public static string Repeat(this string s, string left, string right, in int length)
             {
-                char _right = right.Value;
+                var sb = new StringBuilder();
 
-                action = () => { _ = sb.Append(c); _ = sb.Append(_right); };
-            }
+                Action action;
 
-            else
+                if (left != null)
 
-                action = () => sb.Append(c);
+                {
 
-            for (int i = 0; i < length; i++)
+                    if (right == null)
 
-                action();
+                        action = () => { _ = sb.Append(left); _ = sb.Append(s); };
 
-            return sb.ToString();
-        }
+                    else
 
-        public static string Repeat(this string s, in int length) => s.Repeat(null, null, length);
+                        action = () => { _ = sb.Append(left); _ = sb.Append(s); _ = sb.Append(right); };
 
-        public static string Repeat(this string s, string left, string right, in int length)
-        {
-            var sb = new StringBuilder();
+                }
 
-            Action action;
+                else if (right != null)
 
-            if (left != null)
-
-            {
-
-                if (right == null)
-
-                    action = () => { _ = sb.Append(left); _ = sb.Append(s); };
+                    action = () => { _ = sb.Append(s); _ = sb.Append(right); };
 
                 else
 
-                    action = () => { _ = sb.Append(left); _ = sb.Append(s); _ = sb.Append(right); };
+                    action = () => sb.Append(s);
 
+                for (int i = 0; i < length; i++)
+
+                    action();
+
+                return sb.ToString();
             }
-
-            else if (right != null)
-
-                action = () => { _ = sb.Append(s); _ = sb.Append(right); };
-
-            else
-
-                action = () => sb.Append(s);
-
-            for (int i = 0; i < length; i++)
-
-                action();
-
-            return sb.ToString();
-        }
 
 #if !WinCopies3
         public static System.Collections.Generic.IEnumerable<T> ToEnumerable<T>(this T[] array) => array ?? throw GetArgumentNullException(nameof(array));
 #endif
-    }
+        }
 #if WinCopies3
     }
 #endif

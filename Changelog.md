@@ -8,7 +8,7 @@ CHANGELOG
 
 ### 08/02/2021 2.14
 
-- Add default delegate implementations.
+- Add default delegate implementations, types and static and extension methods.
 
 ### 07/19/2021 2.13.1
 

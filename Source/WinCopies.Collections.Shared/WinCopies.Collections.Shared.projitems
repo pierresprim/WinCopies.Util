@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Abstraction\AbstractionTypes.Partial\LinkedList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstraction\AbstractionTypes.Partial\Queue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstraction\AbstractionTypes.Partial\ReadOnlyDictionary.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Abstraction\AbstractionTypes.Partial\ReadOnlyList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstraction\AbstractionTypes.Partial\Stack.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstraction\Abstract\Countable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstraction\Abstract\List.cs" />
@@ -113,6 +114,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Generic\EnumerableHelper.Partial\Stack.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\LinkedCollections.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\LinkedTree.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generic\LoopEnumerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\Misc.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\ITreeNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\ReadOnlyArray.cs" />

@@ -25,7 +25,12 @@ using System.Runtime.InteropServices;
 
 using WinCopies.Util;
 
-#if !WinCopies3
+#if WinCopies3
+using static WinCopies.ThrowHelper;
+
+namespace WinCopies
+{
+#else
 using System.ComponentModel;
 
 using WinCopies.Collections;
@@ -41,13 +46,8 @@ using IfComp = WinCopies.Util.Util.Comparison;
 
 namespace WinCopies.Util
 {
-#else
-using static WinCopies.ThrowHelper;
-
-namespace WinCopies
-{
 #endif
-    public sealed class NullableGeneric<T>
+public sealed class NullableGeneric<T>
     {
         public T Value { get; }
 
@@ -82,6 +82,51 @@ namespace WinCopies
 
         public const BindingFlags DefaultBindingFlagsForPropertySet = BindingFlags.Public | BindingFlags.NonPublic |
                          BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly;
+
+        public static void Reverse<T>(ref T x, ref T y)
+        {
+            T z = x;
+
+            x = y;
+
+            y = z;
+        }
+
+        public static void Reverse<T>(in T x, in T y, in Action<T> setX, in Action<T> setY)
+        {
+            setX(y);
+
+            setY(x);
+        }
+
+        public static bool UpdateValue<T>(ref T value, T newValue, Action<T, T> action)
+        {
+            T _value = value;
+
+            return UpdateValue(ref value, newValue, () => action(_value, newValue));
+        }
+
+        public const string Etcetera = "...";
+
+        private static bool _TruncateIfLonger(ref string s, in int index, in FuncIn2<string, int, string> func)
+        {
+            if ((s ?? throw GetArgumentNullException(nameof(s))).Length > index)
+            {
+                s = func(s, index);
+
+                return true;
+            }
+
+            return false;
+        }
+
+        private static bool _TruncateIfLonger(ref string s, int index, string replace, FuncIn2<string, int, string, string> func) => _TruncateIfLonger(ref s, index, (string _s, in int _index) => func(_s, _index, replace));
+
+        public static bool TruncateIfLonger(ref string s, int index, string replace) => _TruncateIfLonger(ref s, index, replace, Extensions.Truncate);
+
+        public static bool TruncateIfLonger2(ref string s, in int index, in string replace) => _TruncateIfLonger(ref s, index, replace, Extensions.Truncate2);
+
+        public static bool TruncateIfLonger(ref string s, in int index) => _TruncateIfLonger(ref s, index, Extensions.Truncate);
 
 #if !CS5
         public static Type GetEnumUnderlyingType<T>() where T : Enum => typeof(T)._GetEnumUnderlyingType();

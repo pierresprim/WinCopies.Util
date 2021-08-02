@@ -1040,30 +1040,6 @@
             <param name="index">The index of the item.</param>
             <returns>The item at the given index.</returns>
             <exception cref="T:System.IndexOutOfRangeException">The given index is lesser than 0 or greater than <see cref="P:WinCopies.Collections.TreeNode`1.Count"/>.</exception>
-            <seealso cref="!:SetItem(in TreeNode&lt;T&gt;)"/>
-        </member>
-        <member name="P:WinCopies.Collections.TreeNode`1.Count">
-            <summary>
-            Gets the number of items that this <see cref="T:WinCopies.Collections.TreeNode`1"/> directly contains.
-            </summary>
-        </member>
-        <member name="P:WinCopies.Collections.TreeNode`1.IsFixedSize">
-            <summary>
-            Gets a value that indicates whether this <see cref="T:WinCopies.Collections.TreeNode`1"/> is fixed-ns.Generic.IList{WinCopies.Collections.TreeNode{`0}}@)">
-            <summary>
-            Initializes a new instance of the <see cref="T:WinCopies.Collections.TreeNode`1"/> class using a custom value and inner <see cref="T:System.Collections.Generic.IList`1"/>.
-            </summary>
-            <param name="value">The value of the new <see cref="T:WinCopies.Collections.TreeNode`1"/>.</param>
-            <param name="items">A custom inner <see cref="T:System.Collections.Generic.IList`1"/>.</param>
-        </member>
-        <member name="P:WinCopies.Collections.TreeNode`1.Item(System.Int32)">
-            <summary>
-            Gets or sets the item at the specified index in this <see cref="T:WinCopies.Collections.TreeNode`1"/>.
-            </summary>
-            <param name="index">The index of the item.</param>
-            <returns>The item at the given index.</returns>
-            <exception cref="T:System.IndexOutOfRangeException">The given index is lesser than 0 or greater than <see cref="P:WinCopies.Collections.TreeNode`1.Count"/>.</exception>
-            <seealso cref="!:SetItem(in TreeNode&lt;T&gt;)"/>
         </member>
         <member name="P:WinCopies.Collections.TreeNode`1.Count">
             <summary>
@@ -1253,7 +1229,23 @@
         </member>
         <member name="M:WinCopies.Collections.Extensions.AddRangeLast``1(System.Collections.Generic.LinkedList{``0},``0[])">
             <summary>
-            Add multiple values at the end of a <see cref="T:System.Ct the end of a <see cref="T:System.Collections.Generic.LinkedList`1"/>.
+            Add multiple values at the end of a <see cref="T:System.Collections.Generic.LinkedList`1"/>. For better performance, use the <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> class.
+            </summary>
+            <param name="collection">The <see cref="T:System.Collections.Generic.LinkedList`1"/> into which add the values.</param>
+            <param name="values">The values to add to a <see cref="T:System.Collections.Generic.LinkedList`1"/></param>
+            <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.Extensions.AddRangeLast``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.IEnumerable{``0}@)">
+            <summary>
+            Add multiple values at the end of a <see cref="T:System.Collections.Generic.LinkedList`1"/>. For better performance, use the <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> class.
+            </summary>
+            <param name="collection">The <see cref="T:System.Collections.Generic.LinkedList`1"/> into which add the values.</param>
+            <param name="array">The values to add to a <see cref="T:System.Collections.Generic.LinkedList`1"/></param>
+            <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.Extensions.AddRangeLast``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.LinkedListNode{``0}[])">
+            <summary>
+            Add multiple <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s at the end of a <see cref="T:System.Collections.Generic.LinkedList`1"/>.
             </summary>
             <param name="collection">The <see cref="T:System.Collections.Generic.LinkedList`1"/> into which add the values.</param>
             <param name="nodes">The <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s to add to a <see cref="T:System.Collections.Generic.LinkedList`1"/></param>
@@ -1835,24 +1827,6 @@
             <param name="enumerable">The <see cref="T:System.Collections.IEnumerable"/> in which to look for the last item of the given type.</param>
             <returns>The last item, if any, from <typeparamref name="T"/> in <paramref name="enumerable"/> or the default value for <typeparamref name="T"/> if none value was found.</returns>
             <seealso cref="M:WinCopies.Linq.Extensions.FirstOrDefault``1(System.Collections.IEnumerable)"/>
-            <seealso cref="M:WinCopies.Linq.Extensions.PredicateFirstOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
-            <seealso cref="M:WinCopies.Linq.Extensions.LastOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
-        </member>
-        <member name="M:WinCopies.Linq.Extensions.LastOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)">
-            <summary>
-            Returns the last item, if any, from <typeparamref name="T"/> and that validates a given predicate in a given <see cref="T:System.Collections.IEnumerable"/>.
-            </summary>
-            <typeparam name="T">The type of the item to return.</typeparam>
-            <param name="enumerable">The <see cref="T:System.Collections.IEnumerable"/> in which to look for the last item of the given type.</param>
-            <param name="predicate">The predicate to validate.</param>
-            <returns>The last item, if any, from <typeparamref name="T"/> in <paramref name="enumerable"/> or the default value for <typeparamref name="T"/> if none value was found.</returns>
-            <seealso cref="M:WinCopies.Linq.Extensions.PredicateFirstOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
-            <seealso cref="M:WinCopies.Linq.Extensions.FirstOrDefault``1(System.Collections.IEnumerable)"/>
-            <seealso cref="M:WinCopies.Linq.Extensions.LastOrDefault``1(System.Collections.IEnumerable)"/>
-        </member>
-    </members>
-</doc>
-ref="M:WinCopies.Linq.Extensions.FirstOrDefault``1(System.Collections.IEnumerable)"/>
             <seealso cref="M:WinCopies.Linq.Extensions.PredicateFirstOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
             <seealso cref="M:WinCopies.Linq.Extensions.LastOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
         </member>

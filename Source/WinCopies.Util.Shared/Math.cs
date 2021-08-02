@@ -15,10 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if !WinCopies3
-namespace WinCopies.Util
-#else
+using System;
+
 namespace WinCopies
+#if !WinCopies3
+.Util
 #endif
 {
     public static class Math
@@ -391,6 +392,174 @@ namespace WinCopies
                 return (byte)(left * right);
 
             return null;
+        }
+    }
+
+    public static class MathExtensions
+    {
+        public static bool Between(this byte i, byte x, byte y, in bool bx, bool by)
+        {
+            bool between(in Func<bool> func) => func() && by ? i <= y : i < y;
+
+            return between(bx ?
+#if !CS9
+                (Func<bool>)(
+#endif
+                () => x <= i
+#if !CS9
+                )
+#endif
+                : () => x < i);
+        }
+
+        public static bool Between(this sbyte i, sbyte x, sbyte y, in bool bx, bool by)
+        {
+            bool between(in Func<bool> func) => func() && by ? i <= y : i < y;
+
+            return between(bx ?
+#if !CS9
+                (Func<bool>)(
+#endif
+                () => x <= i
+#if !CS9
+                )
+#endif
+                : () => x < i);
+        }
+
+        public static bool Between(this short i, short x, short y, in bool bx, bool by)
+        {
+            bool between(in Func<bool> func) => func() && by ? i <= y : i < y;
+
+            return between(bx ?
+#if !CS9
+                (Func<bool>)(
+#endif
+                () => x <= i
+#if !CS9
+                )
+#endif
+                : () => x < i);
+        }
+
+        public static bool Between(this ushort i, ushort x, ushort y, in bool bx, bool by)
+        {
+            bool between(in Func<bool> func) => func() && by ? i <= y : i < y;
+
+            return between(bx ?
+#if !CS9
+                (Func<bool>)(
+#endif
+                () => x <= i
+#if !CS9
+                )
+#endif
+                : () => x < i);
+        }
+
+        public static bool Between(this int i, int x, int y, in bool bx, bool by)
+        {
+            bool between(in Func<bool> func) => func() && by ? i <= y : i < y;
+
+            return between(bx ?
+#if !CS9
+                (Func<bool>)(
+#endif
+                () => x <= i
+#if !CS9
+                )
+#endif
+                : () => x < i);
+        }
+
+        public static bool Between(this uint i, uint x, uint y, in bool bx, bool by)
+        {
+            bool between(in Func<bool> func) => func() && by ? i <= y : i < y;
+
+            return between(bx ?
+#if !CS9
+                (Func<bool>)(
+#endif
+                () => x <= i
+#if !CS9
+                )
+#endif
+                : () => x < i);
+        }
+
+        public static bool Between(this long i, long x, long y, in bool bx, bool by)
+        {
+            bool between(in Func<bool> func) => func() && by ? i <= y : i < y;
+
+            return between(bx ?
+#if !CS9
+                (Func<bool>)(
+#endif
+                () => x <= i
+#if !CS9
+                )
+#endif
+                : () => x < i);
+        }
+
+        public static bool Between(this ulong i, ulong x, ulong y, in bool bx, bool by)
+        {
+            bool between(in Func<bool> func) => func() && by ? i <= y : i < y;
+
+            return between(bx ?
+#if !CS9
+                (Func<bool>)(
+#endif
+                () => x <= i
+#if !CS9
+                )
+#endif
+                : () => x < i);
+        }
+
+        public static bool Between(this float i, float x, float y, in bool bx, bool by)
+        {
+            bool between(in Func<bool> func) => func() && by ? i <= y : i < y;
+
+            return between(bx ?
+#if !CS9
+                (Func<bool>)(
+#endif
+                () => x <= i
+#if !CS9
+                )
+#endif
+                : () => x < i);
+        }
+
+        public static bool Between(this double i, double x, double y, in bool bx, bool by)
+        {
+            bool between(in Func<bool> func) => func() && by ? i <= y : i < y;
+
+            return between(bx ?
+#if !CS9
+                (Func<bool>)(
+#endif
+                () => x <= i
+#if !CS9
+                )
+#endif
+                : () => x < i);
+        }
+
+        public static bool Between(this decimal i, decimal x, decimal y, in bool bx, bool by)
+        {
+            bool between(in Func<bool> func) => func() && by ? i <= y : i < y;
+
+            return between(bx ?
+#if !CS9
+                (Func<bool>)(
+#endif
+                () => x <= i
+#if !CS9
+                )
+#endif
+                : () => x < i);
         }
     }
 }

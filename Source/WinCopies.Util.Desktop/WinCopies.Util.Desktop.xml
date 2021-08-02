@@ -822,6 +822,23 @@
             </summary>
             <param name="parameter">The command parameter to be passed.</param>
         </member>
+        <member name="F:WinCopies.Commands.EventArgsHandler`1.LastEventArgsProperty">
+            <summary>
+            LastEventArgs dependency property
+            </summary>
+        </member>
+        <member name="M:WinCopies.Commands.EventArgsHandler`1.GetLastEventArgs(System.Windows.DependencyObject)">
+            <summary>
+            Gets the last EventArgs
+            </summary>
+            <param name="d">The <see cref="T:System.Windows.DependencyObject"/> from which one get the EventArgs</param>
+            <returns>The last EventArgs of the specified <see cref="T:System.Windows.DependencyObject"/></returns>
+        </member>
+        <member name="M:WinCopies.Commands.EventArgsHandler`1.OnEventHandlerChanged(System.Windows.DependencyObject,System.Windows.DependencyPropertyChangedEventArgs)">
+            <summary>
+            Handles changes to the HandleEventHandler property.
+            </summary>
+        </member>
         <member name="T:WinCopies.Commands.EventHandlerGenerator">
             <summary>
             Generates delegates according to the specified signature on runtime
