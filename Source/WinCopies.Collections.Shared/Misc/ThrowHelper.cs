@@ -35,9 +35,9 @@ namespace WinCopies.Collections
     public static class ThrowHelper
     {
         public static InvalidOperationException GetNoItemException() => throw new InvalidOperationException(
-            #if WinCopies3
+#if WinCopies3
             WinCopies.Resources.ExceptionMessages.
-            #endif
+#endif
             SequenceContainsNoItemOrNoItemMatchedGivenPredicate);
 
 #if WinCopies3

@@ -298,7 +298,11 @@ namespace Generic
         }
 #endif
 
-        public interface IReadOnlyList<out T> : DotNetFix.
+        public interface IReadOnlyList<
+#if CS5
+            out
+#endif
+            T> : DotNetFix.
 #if WinCopies3
             Generic.
 #endif
@@ -326,7 +330,11 @@ namespace Generic
         }
 
 #if !(WinCopies3 || CS7)
-        public interface IReadOnlyList2<out T> : IReadOnlyList<T>
+        public interface IReadOnlyList2<
+#if CS5
+            out
+#endif
+            T> : IReadOnlyList<T>
         {
             T this[int index] { get; }
         }

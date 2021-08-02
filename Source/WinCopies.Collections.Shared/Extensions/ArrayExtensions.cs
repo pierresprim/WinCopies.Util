@@ -22,15 +22,12 @@ using System.Collections.Generic;
 
 using static WinCopies.ThrowHelper;
 
-#if CS7
 using WinCopies.Collections.Abstraction.Generic;
-#endif
 
 namespace WinCopies.Collections
 {
     public static class ArrayExtensions
     {
-#if CS7
         public static void Clear<T>(this IArrayEnumerable<T> array)
         {
             ThrowIfNull(array, nameof(array));
@@ -185,7 +182,6 @@ namespace WinCopies.Collections
 
             array[y] = temp;
         }
-#endif
 
 
 

@@ -113,6 +113,7 @@ namespace WinCopies.Util.Data
         protected sealed override void Clear(in IArrayEnumerable<TSourceOut> values) => values.Clear();
     }
 
+#if CS7
     public abstract class MultiConverterBase7<TSourceIn, TSourceOut, TParamIn, TParamOut, TDestinationIn, TDestinationOut> : MultiConverterBase4<TSourceIn, TSourceOut, ArrayBuilder<TSourceOut>, IQueue<TSourceOut>, TParamIn, TParamOut, TDestinationIn, TDestinationOut>
     {
         protected sealed override int Count(in IQueue<TSourceOut> values) => values.Count <= int.MaxValue ? (int)values.Count : throw GetLengthMismatchException();
@@ -142,6 +143,7 @@ namespace WinCopies.Util.Data
 
         protected sealed override void Clear(in ArrayBuilder<TSourceOut> values) => values.Clear();
     }
+#endif
 }
 
 #endif

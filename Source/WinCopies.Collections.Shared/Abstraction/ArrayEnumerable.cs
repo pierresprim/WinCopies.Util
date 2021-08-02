@@ -15,13 +15,13 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if WinCopies3 && CS7
+#if WinCopies3
 
 using System;
+
 using WinCopies.Collections.DotNetFix;
 using WinCopies.Collections.DotNetFix.Generic;
 using WinCopies.Collections.Generic;
-using WinCopies.Linq;
 
 namespace WinCopies.Collections.Abstraction.Generic
 {

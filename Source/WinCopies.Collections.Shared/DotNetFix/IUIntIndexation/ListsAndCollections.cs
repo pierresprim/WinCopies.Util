@@ -121,7 +121,11 @@ IEnumerable
     }
 
 #if !WinCopies3
-    public interface IReadOnlyUIntIndexedCollection<out T> : System.Collections.Generic.IEnumerable<T>, IEnumerable
+    public interface IReadOnlyUIntIndexedCollection<
+#if CS5
+            out
+#endif
+            T> : System.Collections.Generic.IEnumerable<T>, IEnumerable
     {
         uint Count { get; }
     }
@@ -163,7 +167,11 @@ in
                  T item);
         }
 
-        public interface IReadOnlyUIntIndexedList<out T> :
+        public interface IReadOnlyUIntIndexedList<
+#if CS5
+            out
+#endif
+            T> :
 #if !WinCopies3
             IReadOnlyUIntIndexedCollection<T>, System.Collections.Generic.IEnumerable<T>, IEnumerable
 #else

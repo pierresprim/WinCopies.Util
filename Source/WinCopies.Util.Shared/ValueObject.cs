@@ -28,7 +28,13 @@ namespace WinCopies
     /// <summary>
     /// Represents a value container. See the <see cref="IValueObject{T}"/> for a generic version of this class.
     /// </summary>
-    public interface IValueObject : IReadOnlyValueObject, System.IDisposable
+    public interface IValueObject : IReadOnlyValueObject,
+#if WinCopies3
+        WinCopies.DotNetFix
+#else
+        System
+#endif
+        .IDisposable
     {
         new object Value { get; set; }
     }

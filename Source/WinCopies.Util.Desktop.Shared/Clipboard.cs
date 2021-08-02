@@ -36,6 +36,7 @@ namespace WinCopies
         }
 
         #region File Drop List
+#if CS6
         public static bool TrySetClipboardOnSuccessHResult(in System.Collections.Specialized.StringCollection fileDropList)
         {
             try
@@ -44,7 +45,7 @@ namespace WinCopies
 
                 return true;
             }
-            catch (Exception ex) when (ex.HResult>=0)
+            catch (Exception ex) when (ex.HResult >= 0)
             {
                 return false;
             }
@@ -80,9 +81,11 @@ namespace WinCopies
 
             return false;
         }
+#endif
         #endregion
 
         #region Text
+#if CS6
         public static bool TrySetClipboardOnSuccessHResult(in string text)
         {
             try
@@ -91,7 +94,7 @@ namespace WinCopies
 
                 return true;
             }
-            catch (Exception ex) when (ex.HResult>=0)
+            catch (Exception ex) when (ex.HResult >= 0)
             {
                 return false;
             }
@@ -138,7 +141,8 @@ namespace WinCopies
 
                 return true;
             }
-            catch (Exception ex) when (ex.HResult>=0)
+
+            catch (Exception ex) when (ex.HResult >= 0)
             {
                 return false;
             }
@@ -174,9 +178,11 @@ namespace WinCopies
 
             return false;
         }
+#endif
         #endregion
 
         #region Audio
+#if CS6
         public static bool TrySetClipboardOnSuccessHResult(in byte[] audioBytes)
         {
             try
@@ -185,7 +191,7 @@ namespace WinCopies
 
                 return true;
             }
-            catch (Exception ex) when (ex.HResult>=0)
+            catch (Exception ex) when (ex.HResult >= 0)
             {
                 return false;
             }
@@ -232,7 +238,7 @@ namespace WinCopies
 
                 return true;
             }
-            catch (Exception ex) when (ex.HResult>=0)
+            catch (Exception ex) when (ex.HResult >= 0)
             {
                 return false;
             }
@@ -268,9 +274,11 @@ namespace WinCopies
 
             return false;
         }
+#endif
         #endregion
 
         #region Image
+#if CS6
         public static bool TrySetClipboardOnSuccessHResult(in BitmapSource image)
         {
             try
@@ -279,7 +287,7 @@ namespace WinCopies
 
                 return true;
             }
-            catch (Exception ex) when (ex.HResult>=0)
+            catch (Exception ex) when (ex.HResult >= 0)
             {
                 return false;
             }
@@ -315,9 +323,11 @@ namespace WinCopies
 
             return false;
         }
+#endif
         #endregion
 
         #region Data
+#if CS6
         public static bool TrySetClipboardOnSuccessHResult(in string format, in object data)
         {
             try
@@ -326,7 +336,7 @@ namespace WinCopies
 
                 return true;
             }
-            catch (Exception ex) when (ex.HResult>=0)
+            catch (Exception ex) when (ex.HResult >= 0)
             {
                 return false;
             }
@@ -362,9 +372,11 @@ namespace WinCopies
 
             return false;
         }
+#endif
         #endregion
 
         #region Data Object
+#if CS6
         public static bool TrySetClipboardOnSuccessHResult(in object data)
         {
             try
@@ -373,7 +385,7 @@ namespace WinCopies
 
                 return true;
             }
-            catch (Exception ex) when (ex.HResult>=0)
+            catch (Exception ex) when (ex.HResult >= 0)
             {
                 return false;
             }
@@ -420,13 +432,13 @@ namespace WinCopies
 
                 return true;
             }
-            catch (Exception ex) when (ex.HResult>=0)
+            catch (Exception ex) when (ex.HResult >= 0)
             {
                 return false;
             }
         }
 
-        public static bool TrySetClipboardOnSuccessHResult(in object data, in bool copy,  in double maxMilliSeconds)
+        public static bool TrySetClipboardOnSuccessHResult(in object data, in bool copy, in double maxMilliSeconds)
         {
             if (maxMilliSeconds == 0)
 
@@ -436,26 +448,27 @@ namespace WinCopies
 
             do
 
-                if (TrySetClipboardOnSuccessHResult(data, copy )) return true;
+                if (TrySetClipboardOnSuccessHResult(data, copy)) return true;
 
             while ((DateTime.Now - start).TotalMilliseconds < maxMilliSeconds);
 
             return false;
         }
 
-        public static bool TrySetClipboardOnSuccessHResult(in object data, in bool copy,  in int sleepTime, in uint tryCount)
+        public static bool TrySetClipboardOnSuccessHResult(in object data, in bool copy, in int sleepTime, in uint tryCount)
         {
             ThrowOnInvalidSleepTime(sleepTime);
 
             for (uint i = 0; i < tryCount; i++)
             {
-                if (TrySetClipboardOnSuccessHResult(data, copy )) return true;
+                if (TrySetClipboardOnSuccessHResult(data, copy)) return true;
 
                 Thread.Sleep(sleepTime);
             }
 
             return false;
         }
+#endif
         #endregion
     }
 }

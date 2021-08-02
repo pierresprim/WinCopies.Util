@@ -167,6 +167,7 @@ namespace WinCopies.Desktop
 #endif
             Resources.ExceptionMessages.FieldOrPropertyNotFound, propertyName, objectType));
 
+#if CS7
         /// <summary>
         /// Sets a value to a property if the new value is different.
         /// </summary>
@@ -188,13 +189,22 @@ namespace WinCopies.Desktop
         /// <exception cref="InvalidOperationException">The declaring types of the given property and field name doesn't correspond. OR The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
         /// <exception cref="ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
         /// <exception cref="Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="ArgumentException"/> otherwise.</exception>
-        public static (bool propertyChanged, object oldValue) SetBackgroundWorkerProperty(this System.ComponentModel.BackgroundWorker obj, string propertyName, string fieldName, object newValue, Type declaringType, bool throwIfBusy, bool throwIfReadOnly = true, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, string paramName = null, bool setOnlyIfNotNull = false, bool throwIfNull = false, FieldValidateValueCallback validateValueCallback = null, bool throwIfValidationFails = false, FieldValueChangedCallback valueChangedCallback = null) => obj.IsBusy
+        public static
+#if CS7
+            (bool propertyChanged, object oldValue)
+#else
+            ValueTuple<bool, object>
+#endif
+             SetBackgroundWorkerProperty(this System.ComponentModel.BackgroundWorker obj, string propertyName, string fieldName, object newValue, Type declaringType, bool throwIfBusy, bool throwIfReadOnly = true, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, string paramName = null, bool setOnlyIfNotNull = false, bool throwIfNull = false, FieldValidateValueCallback validateValueCallback = null, bool throwIfValidationFails = false, FieldValueChangedCallback valueChangedCallback = null) => obj.IsBusy
                 ? throwIfBusy ? throw new InvalidOperationException(WinCopies.
 #if !WinCopies3
                     Util.
 #endif
-                    Desktop.Resources.ExceptionMessages.BackgroundWorkerIsBusy) : (false, GetField(fieldName, declaringType, bindingFlags).GetValue(obj))
-                : obj.SetProperty(propertyName, fieldName, newValue, declaringType, throwIfReadOnly, bindingFlags, paramName, setOnlyIfNotNull, throwIfNull, validateValueCallback, throwIfValidationFails, valueChangedCallback);
+                    Desktop.Resources.ExceptionMessages.BackgroundWorkerIsBusy) :
+#if !CS7
+            new ValueTuple<bool, object>
+#endif
+                (false, GetField(fieldName, declaringType, bindingFlags).GetValue(obj)) : obj.SetProperty(propertyName, fieldName, newValue, declaringType, throwIfReadOnly, bindingFlags, paramName, setOnlyIfNotNull, throwIfNull, validateValueCallback, throwIfValidationFails, valueChangedCallback);
 
         /// <summary>
         /// Sets a value to a property if the new value is different.
@@ -216,12 +226,26 @@ namespace WinCopies.Desktop
         /// <exception cref="InvalidOperationException">The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
         /// <exception cref="ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
         /// <exception cref="Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="ArgumentException"/> otherwise.</exception>
-        public static (bool propertyChanged, object oldValue) SetBackgroundWorkerProperty(this System.ComponentModel.BackgroundWorker obj, string propertyName, object newValue, Type declaringType, bool throwIfBusy, bool throwIfReadOnly = true, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, string paramName = null, bool setOnlyIfNotNull = false, bool throwIfNull = false, PropertyValidateValueCallback validateValueCallback = null, bool throwIfValidationFails = false, PropertyValueChangedCallback valueChangedCallback = null) => obj.IsBusy
+        public static
+#if CS7
+            (bool propertyChanged, object oldValue)
+#else
+            ValueTuple<bool, object>
+#endif
+             SetBackgroundWorkerProperty(this System.ComponentModel.BackgroundWorker obj, string propertyName, object newValue, Type declaringType, bool throwIfBusy, bool throwIfReadOnly = true, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, string paramName = null, bool setOnlyIfNotNull = false, bool throwIfNull = false, PropertyValidateValueCallback validateValueCallback = null, bool throwIfValidationFails = false, PropertyValueChangedCallback valueChangedCallback = null) => obj.IsBusy
                 ? throwIfBusy ? throw new InvalidOperationException(WinCopies.
 #if !WinCopies3
                     Util.
 #endif
-                    Desktop.Resources.ExceptionMessages.BackgroundWorkerIsBusy) : (false, GetProperty(propertyName, declaringType, bindingFlags).GetValue(obj))
+                    Desktop.Resources.ExceptionMessages.BackgroundWorkerIsBusy) :
+#if !CS7
+            new ValueTuple<bool, object>
+#endif
+            (false, GetProperty(propertyName, declaringType, bindingFlags).GetValue(obj
+#if !CS7
+                , null
+#endif
+                ))
                 : obj.SetProperty(propertyName, newValue, declaringType, throwIfReadOnly, bindingFlags, paramName, setOnlyIfNotNull, throwIfNull, validateValueCallback, throwIfValidationFails, valueChangedCallback);
 
         /// <summary>
@@ -245,12 +269,22 @@ namespace WinCopies.Desktop
         /// <exception cref="InvalidOperationException">The declaring types of the given property and field name doesn't correspond.</exception>
         /// <exception cref="ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
         /// <exception cref="Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="ArgumentException"/> otherwise.</exception>
-        public static (bool propertyChanged, object oldValue) SetBackgroundWorkerProperty(this IBackgroundWorker obj, string propertyName, string fieldName, object newValue, Type declaringType, bool throwIfBusy, bool throwIfReadOnly = true, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, string paramName = null, bool setOnlyIfNotNull = false, bool throwIfNull = false, FieldValidateValueCallback validateValueCallback = null, bool throwIfValidationFails = false, FieldValueChangedCallback valueChangedCallback = null) => obj.IsBusy
+        public static
+#if CS7
+            (bool propertyChanged, object oldValue)
+#else
+            ValueTuple<bool, object>
+#endif
+             SetBackgroundWorkerProperty(this IBackgroundWorker obj, string propertyName, string fieldName, object newValue, Type declaringType, bool throwIfBusy, bool throwIfReadOnly = true, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, string paramName = null, bool setOnlyIfNotNull = false, bool throwIfNull = false, FieldValidateValueCallback validateValueCallback = null, bool throwIfValidationFails = false, FieldValueChangedCallback valueChangedCallback = null) => obj.IsBusy
                 ? throwIfBusy ? throw new InvalidOperationException(WinCopies.
 #if !WinCopies3
                     Util.
 #endif
-                    Desktop.Resources.ExceptionMessages.BackgroundWorkerIsBusy) : (false, GetField(fieldName, declaringType, bindingFlags).GetValue(obj))
+                    Desktop.Resources.ExceptionMessages.BackgroundWorkerIsBusy) :
+#if !CS7
+            new ValueTuple<bool, object>
+#endif
+            (false, GetField(fieldName, declaringType, bindingFlags).GetValue(obj))
                 : obj.SetProperty(propertyName, fieldName, newValue, declaringType, throwIfReadOnly, bindingFlags, paramName, setOnlyIfNotNull, throwIfNull, validateValueCallback, throwIfValidationFails, valueChangedCallback);
 
         /// <summary>
@@ -273,12 +307,26 @@ namespace WinCopies.Desktop
         /// <exception cref="InvalidOperationException">The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
         /// <exception cref="ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
         /// <exception cref="Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="ArgumentException"/> otherwise.</exception>
-        public static (bool propertyChanged, object oldValue) SetBackgroundWorkerProperty(this IBackgroundWorker obj, string propertyName, object newValue, Type declaringType, bool throwIfBusy, bool throwIfReadOnly = true, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, string paramName = null, bool setOnlyIfNotNull = false, bool throwIfNull = false, PropertyValidateValueCallback validateValueCallback = null, bool throwIfValidationFails = false, PropertyValueChangedCallback valueChangedCallback = null) => obj.IsBusy
+        public static
+#if CS7
+            (bool propertyChanged, object oldValue)
+#else
+            ValueTuple<bool, object>
+#endif
+             SetBackgroundWorkerProperty(this IBackgroundWorker obj, string propertyName, object newValue, Type declaringType, bool throwIfBusy, bool throwIfReadOnly = true, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, string paramName = null, bool setOnlyIfNotNull = false, bool throwIfNull = false, PropertyValidateValueCallback validateValueCallback = null, bool throwIfValidationFails = false, PropertyValueChangedCallback valueChangedCallback = null) => obj.IsBusy
                 ? throwIfBusy ? throw new InvalidOperationException(WinCopies.
 #if !WinCopies3
                     Util.
 #endif
-                    Desktop.Resources.ExceptionMessages.BackgroundWorkerIsBusy) : (false, GetProperty(propertyName, declaringType, bindingFlags).GetValue(obj))
+                    Desktop.Resources.ExceptionMessages.BackgroundWorkerIsBusy) :
+#if !CS7
+            new ValueTuple<bool, object>
+#endif
+            (false, GetProperty(propertyName, declaringType, bindingFlags).GetValue(obj
+#if !CS7
+                , null
+#endif
+                ))
                 : obj.SetProperty(propertyName, newValue, declaringType, throwIfReadOnly, bindingFlags, paramName, setOnlyIfNotNull, throwIfNull, validateValueCallback, throwIfValidationFails, valueChangedCallback);
 
         /// <summary>
@@ -302,12 +350,22 @@ namespace WinCopies.Desktop
         /// <exception cref="InvalidOperationException">The declaring types of the given property and field name doesn't correspond. OR The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
         /// <exception cref="ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
         /// <exception cref="Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="ArgumentException"/> otherwise.</exception>
-        public static (bool propertyChanged, IDisposable oldValue) DisposeAndSetBackgroundWorkerProperty(this System.ComponentModel.BackgroundWorker obj, string propertyName, string fieldName, IDisposable newValue, Type declaringType, bool throwIfBusy, bool throwIfReadOnly = true, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, string paramName = null, bool setOnlyIfNotNull = false, bool throwIfNull = false, FieldValidateValueCallback validateValueCallback = null, bool throwIfValidationFails = false, FieldValueChangedCallback valueChangedCallback = null) => obj.IsBusy
+        public static
+#if CS7
+            (bool propertyChanged, IDisposable oldValue)
+#else
+            ValueTuple<bool, IDisposable>
+#endif
+             DisposeAndSetBackgroundWorkerProperty(this System.ComponentModel.BackgroundWorker obj, string propertyName, string fieldName, IDisposable newValue, Type declaringType, bool throwIfBusy, bool throwIfReadOnly = true, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, string paramName = null, bool setOnlyIfNotNull = false, bool throwIfNull = false, FieldValidateValueCallback validateValueCallback = null, bool throwIfValidationFails = false, FieldValueChangedCallback valueChangedCallback = null) => obj.IsBusy
                 ? throwIfBusy ? throw new InvalidOperationException(WinCopies.
 #if !WinCopies3
                     Util.
 #endif
-                    Desktop.Resources.ExceptionMessages.BackgroundWorkerIsBusy) : (false, (IDisposable)GetField(fieldName, declaringType, bindingFlags).GetValue(obj))
+                    Desktop.Resources.ExceptionMessages.BackgroundWorkerIsBusy) :
+#if !CS7
+            new ValueTuple<bool, IDisposable>
+#endif
+            (false, (IDisposable)GetField(fieldName, declaringType, bindingFlags).GetValue(obj))
                 : obj.DisposeAndSetProperty(propertyName, fieldName, newValue, declaringType, throwIfReadOnly, bindingFlags, paramName, setOnlyIfNotNull, throwIfNull, validateValueCallback, throwIfValidationFails, valueChangedCallback);
 
         /// <summary>
@@ -330,12 +388,26 @@ namespace WinCopies.Desktop
         /// <exception cref="InvalidOperationException">The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
         /// <exception cref="ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
         /// <exception cref="Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="ArgumentException"/> otherwise.</exception>
-        public static (bool propertyChanged, IDisposable oldValue) DisposeAndSetBackgroundWorkerProperty(this System.ComponentModel.BackgroundWorker obj, string propertyName, IDisposable newValue, Type declaringType, bool throwIfBusy, bool throwIfReadOnly = true, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, string paramName = null, bool setOnlyIfNotNull = false, bool throwIfNull = false, PropertyValidateValueCallback validateValueCallback = null, bool throwIfValidationFails = false, PropertyValueChangedCallback valueChangedCallback = null) => obj.IsBusy
+        public static
+#if CS7
+            (bool propertyChanged, IDisposable oldValue)
+#else
+            ValueTuple<bool, IDisposable>
+#endif
+            DisposeAndSetBackgroundWorkerProperty(this System.ComponentModel.BackgroundWorker obj, string propertyName, IDisposable newValue, Type declaringType, bool throwIfBusy, bool throwIfReadOnly = true, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, string paramName = null, bool setOnlyIfNotNull = false, bool throwIfNull = false, PropertyValidateValueCallback validateValueCallback = null, bool throwIfValidationFails = false, PropertyValueChangedCallback valueChangedCallback = null) => obj.IsBusy
                 ? throwIfBusy ? throw new InvalidOperationException(WinCopies.
 #if !WinCopies3
                     Util.
 #endif
-                    Desktop.Resources.ExceptionMessages.BackgroundWorkerIsBusy) : (false, (IDisposable)GetProperty(propertyName, declaringType, bindingFlags).GetValue(obj))
+                    Desktop.Resources.ExceptionMessages.BackgroundWorkerIsBusy) :
+#if !CS7
+            new ValueTuple<bool, IDisposable>
+#endif
+            (false, (IDisposable)GetProperty(propertyName, declaringType, bindingFlags).GetValue(obj
+#if !CS7
+                , null
+#endif
+                ))
                 : obj.DisposeAndSetProperty(propertyName, newValue, declaringType, throwIfReadOnly, bindingFlags, paramName, setOnlyIfNotNull, throwIfNull, validateValueCallback, throwIfValidationFails, valueChangedCallback);
 
         /// <summary>
@@ -359,12 +431,22 @@ namespace WinCopies.Desktop
         /// <exception cref="InvalidOperationException">The declaring types of the given property and field name doesn't correspond.</exception>
         /// <exception cref="ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
         /// <exception cref="Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="ArgumentException"/> otherwise.</exception>
-        public static (bool propertyChanged, IDisposable oldValue) DisposeAndSetBackgroundWorkerProperty(this IBackgroundWorker obj, string propertyName, string fieldName, IDisposable newValue, Type declaringType, bool throwIfBusy, bool throwIfReadOnly = true, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, string paramName = null, bool setOnlyIfNotNull = false, bool throwIfNull = false, FieldValidateValueCallback validateValueCallback = null, bool throwIfValidationFails = false, FieldValueChangedCallback valueChangedCallback = null) => obj.IsBusy
+        public static
+#if CS7
+            (bool propertyChanged, IDisposable oldValue)
+#else
+            ValueTuple<bool, IDisposable>
+#endif
+             DisposeAndSetBackgroundWorkerProperty(this IBackgroundWorker obj, string propertyName, string fieldName, IDisposable newValue, Type declaringType, bool throwIfBusy, bool throwIfReadOnly = true, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, string paramName = null, bool setOnlyIfNotNull = false, bool throwIfNull = false, FieldValidateValueCallback validateValueCallback = null, bool throwIfValidationFails = false, FieldValueChangedCallback valueChangedCallback = null) => obj.IsBusy
                 ? throwIfBusy ? throw new InvalidOperationException(WinCopies.
 #if !WinCopies3
                     Util.
 #endif
-                    Desktop.Resources.ExceptionMessages.BackgroundWorkerIsBusy) : (false, (IDisposable)GetField(fieldName, declaringType, bindingFlags).GetValue(obj))
+                    Desktop.Resources.ExceptionMessages.BackgroundWorkerIsBusy) :
+#if !CS7
+            new ValueTuple<bool, IDisposable>
+#endif
+            (false, (IDisposable)GetField(fieldName, declaringType, bindingFlags).GetValue(obj))
                 : obj.DisposeAndSetProperty(propertyName, fieldName, newValue, declaringType, throwIfReadOnly, bindingFlags, paramName, setOnlyIfNotNull, throwIfNull, validateValueCallback, throwIfValidationFails, valueChangedCallback);
 
         /// <summary>
@@ -387,13 +469,28 @@ namespace WinCopies.Desktop
         /// <exception cref="InvalidOperationException">The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
         /// <exception cref="ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
         /// <exception cref="Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="ArgumentException"/> otherwise.</exception>
-        public static (bool propertyChanged, IDisposable oldValue) DisposeAndSetBackgroundWorkerProperty(this IBackgroundWorker obj, string propertyName, IDisposable newValue, Type declaringType, bool throwIfBusy, bool throwIfReadOnly = true, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, string paramName = null, bool setOnlyIfNotNull = false, bool throwIfNull = false, PropertyValidateValueCallback validateValueCallback = null, bool throwIfValidationFails = false, PropertyValueChangedCallback valueChangedCallback = null) => obj.IsBusy
+        public static
+#if CS7
+            (bool propertyChanged, IDisposable oldValue)
+#else
+            ValueTuple<bool, IDisposable>
+#endif
+             DisposeAndSetBackgroundWorkerProperty(this IBackgroundWorker obj, string propertyName, IDisposable newValue, Type declaringType, bool throwIfBusy, bool throwIfReadOnly = true, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, string paramName = null, bool setOnlyIfNotNull = false, bool throwIfNull = false, PropertyValidateValueCallback validateValueCallback = null, bool throwIfValidationFails = false, PropertyValueChangedCallback valueChangedCallback = null) => obj.IsBusy
                 ? throwIfBusy ? throw new InvalidOperationException(WinCopies.
 #if !WinCopies3
                     Util.
 #endif
-                    Desktop.Resources.ExceptionMessages.BackgroundWorkerIsBusy) : (false, (IDisposable)GetProperty(propertyName, declaringType, bindingFlags).GetValue(obj))
+                    Desktop.Resources.ExceptionMessages.BackgroundWorkerIsBusy) :
+#if !CS7
+            new ValueTuple<bool, IDisposable>
+#endif
+            (false, (IDisposable)GetProperty(propertyName, declaringType, bindingFlags).GetValue(obj
+#if !CS7
+                , null
+#endif
+                ))
                 : obj.DisposeAndSetProperty(propertyName, newValue, declaringType, throwIfReadOnly, bindingFlags, paramName, setOnlyIfNotNull, throwIfNull, validateValueCallback, throwIfValidationFails, valueChangedCallback);
+#endif
 
         [DllImport("gdi32.dll", CharSet = CharSet.Auto)]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -577,11 +674,11 @@ namespace WinCopies.Desktop
             return false;
         }
 
-        public static bool TryPauseAsync(this IPausableBackgroundWorker backgroundWorker, object stateInfo )
+        public static bool TryPauseAsync(this IPausableBackgroundWorker backgroundWorker, object stateInfo)
         {
             if ((backgroundWorker ?? throw GetArgumentNullException(nameof(backgroundWorker))).WorkerSupportsPausing)
             {
-                backgroundWorker.PauseAsync(stateInfo );
+                backgroundWorker.PauseAsync(stateInfo);
 
                 return true;
             }
@@ -601,11 +698,11 @@ namespace WinCopies.Desktop
             return false;
         }
 
-        public static bool TryPause(this IPausableBackgroundWorker backgroundWorker, object stateInfo )
+        public static bool TryPause(this IPausableBackgroundWorker backgroundWorker, object stateInfo)
         {
             if ((backgroundWorker ?? throw GetArgumentNullException(nameof(backgroundWorker))).WorkerSupportsPausing)
             {
-                backgroundWorker.Pause(stateInfo ); 
+                backgroundWorker.Pause(stateInfo);
 
                 return true;
             }
@@ -615,6 +712,7 @@ namespace WinCopies.Desktop
 
 #endif
 
+#if CS7
         /// <summary>
         /// Tries to report progress for a given <see cref="IBackgroundWorker"/>.
         /// </summary>
@@ -677,6 +775,7 @@ namespace WinCopies.Desktop
 
             return false;
         }
+#endif
 
 
 
@@ -719,6 +818,7 @@ namespace WinCopies.Desktop
             return false;
         }
 
+#if CS7
         public static bool TryCancelAsync(this BackgroundWorker backgroundWorker)
         {
             if ((backgroundWorker ?? throw GetArgumentNullException(nameof(backgroundWorker))).WorkerSupportsCancellation)
@@ -766,9 +866,9 @@ namespace WinCopies.Desktop
 
             return false;
         }
+#endif
 
-#if WinCopies3
-
+#if WinCopies3 && CS7
         public static bool TryPauseAsync(this PausableBackgroundWorker backgroundWorker)
         {
             if ((backgroundWorker ?? throw GetArgumentNullException(nameof(backgroundWorker))).WorkerSupportsPausing)
@@ -780,7 +880,6 @@ namespace WinCopies.Desktop
 
             return false;
         }
-
 #endif
     }
 }

@@ -48,7 +48,11 @@ namespace WinCopies.Collections
         }
 #endif
 
-        public interface IEnumerable<out TItems, out TEnumerator> :
+        public interface IEnumerable<
+#if CS5
+            out
+#endif
+             TItems, out TEnumerator> :
 #if !CS8
             System.Collections.Generic.
 #endif
@@ -125,7 +129,11 @@ namespace WinCopies.Collections
             // Left empty.
         }
 
-        public interface IDisposableEnumerable<out T> : System.Collections.Generic.IEnumerable<T>, System.IDisposable
+        public interface IDisposableEnumerable<
+#if CS5
+            out
+#endif
+             T> : System.Collections.Generic.IEnumerable<T>, System.IDisposable
         {
             // Left empty.
         }
@@ -210,7 +218,11 @@ namespace WinCopies.Collections
         /// A collection that can be enumerated.
         /// </summary>
         /// <typeparam name="T">The item type of the collection.</typeparam>
-        public interface IEnumerable<out T> :
+        public interface IEnumerable<
+#if CS5
+            out
+#endif
+             T> :
 #if CS8
             WinCopies.Collections.DotNetFix
 #else
@@ -242,7 +254,11 @@ namespace WinCopies.Collections
             System.Collections.Generic.IEnumerator<T> GetReversedEnumerator();
         }
 
-        public interface IEnumerable<out TItems, out TEnumerator> : DotNetFix.Generic.IEnumerable<TItems, TEnumerator>, IEnumerable<TItems> where TEnumerator : System.Collections.Generic.IEnumerator<TItems>
+        public interface IEnumerable<
+#if CS5
+            out
+#endif
+             TItems, out TEnumerator> : DotNetFix.Generic.IEnumerable<TItems, TEnumerator>, IEnumerable<TItems> where TEnumerator : System.Collections.Generic.IEnumerator<TItems>
         {
             new TEnumerator GetReversedEnumerator();
 
@@ -251,12 +267,20 @@ namespace WinCopies.Collections
 #endif
         }
 
-        public interface IEnumerableInfo<out TItems, out TEnumerator> : IEnumerable<TItems, TEnumerator> where TEnumerator : IEnumeratorInfo<TItems>
+        public interface IEnumerableInfo<
+#if CS5
+            out
+#endif
+             TItems, out TEnumerator> : IEnumerable<TItems, TEnumerator> where TEnumerator : IEnumeratorInfo<TItems>
         {
             // Left empty.
         }
 
-        public interface IEnumerableInfo<out T> : IEnumerableInfo<T, IEnumeratorInfo<T>>
+        public interface IEnumerableInfo<
+#if CS5
+            out
+#endif
+             T> : IEnumerableInfo<T, IEnumeratorInfo<T>>
         {
             // Left empty.
         }

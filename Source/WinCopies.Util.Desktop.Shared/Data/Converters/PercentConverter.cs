@@ -24,12 +24,12 @@ namespace WinCopies.Util.Data
     {
         public override object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-#if CS7
+#if CS8
+            parameter ??= 100;
+#else
             if (parameter == null)
                 
                 parameter = 100;
-#else
-            parameter ??= 100;
 #endif
 
             return (int)values[0] / (int)values[1] * (int)parameter;

@@ -47,7 +47,11 @@ namespace WinCopies.Collections.DotNetFix
 
     namespace Generic
     {
-        public interface ILongCountableEnumerator<out T> : System.Collections.Generic.IEnumerator<T>,
+        public interface ILongCountableEnumerator<
+#if CS5
+            out
+#endif
+            T> : System.Collections.Generic.IEnumerator<T>,
 #if WinCopies3
             ILongCountableEnumerator
 #else
@@ -57,7 +61,11 @@ namespace WinCopies.Collections.DotNetFix
             // Left empty.
         }
 
-        public interface ILongCountableDisposableEnumerator<out T> : ILongCountableEnumerator<T>,
+        public interface ILongCountableDisposableEnumerator<
+#if CS5
+            out
+#endif
+             T> : ILongCountableEnumerator<T>,
 #if WinCopies3
             ILongCountableDisposableEnumerator
 #else
@@ -67,7 +75,11 @@ namespace WinCopies.Collections.DotNetFix
             // Left empty.
         }
 
-        public interface IULongCountableEnumerator<out T> : System.Collections.Generic.IEnumerator<T>,
+        public interface IULongCountableEnumerator<
+#if CS5
+            out
+#endif
+            T> : System.Collections.Generic.IEnumerator<T>,
 #if WinCopies3
             IULongCountableEnumerator
 #else
@@ -77,7 +89,11 @@ namespace WinCopies.Collections.DotNetFix
             // Left empty.
         }
 
-        public interface IULongCountableDisposableEnumerator<out T> : IULongCountableEnumerator<T>,
+        public interface IULongCountableDisposableEnumerator<
+#if CS5
+            out
+#endif
+             T> : IULongCountableEnumerator<T>,
 #if WinCopies3
             IULongCountableDisposableEnumerator
 #else

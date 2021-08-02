@@ -16,7 +16,6 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if CS7
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -205,7 +204,7 @@ namespace WinCopies.Collections
             OnUpdate();
         }
 
-            #region AddRange methods
+#region AddRange methods
 
         /// <summary>
         /// Add multiple values at the top of this <see cref="ArrayBuilder{T}"/>.
@@ -415,7 +414,7 @@ namespace WinCopies.Collections
         /// <param name="array">The values to add to this <see cref="ArrayBuilder{T}"/></param>
         public void AddRangeAfter(in System.Collections.Generic.LinkedListNode<T> node, in IEnumerable<System.Collections.Generic.LinkedListNode<T>> array) { if (node.Next == null) AddRangeLast(array); else AddRangeBefore(node.Next, array); }
 
-            #endregion
+#endregion
 
         /// <summary>
         /// Removes all nodes from this <see cref="ArrayBuilder{T}"/>.
@@ -918,5 +917,4 @@ InnerList
     }
 #endif
 }
-
 #endif

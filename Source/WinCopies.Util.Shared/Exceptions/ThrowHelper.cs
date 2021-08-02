@@ -43,6 +43,7 @@ namespace WinCopies
 
 #if WinCopies3
         #region Enum Throws
+#if CS6
         ///// <summary>
         ///// Throws an <see cref="InvalidEnumArgumentException"/> if the enum value is not in the required enum value range. See the Remarks section.
         ///// </summary>
@@ -72,6 +73,7 @@ namespace WinCopies
 
                 throw new InvalidEnumArgumentException(argumentName, @enum);
         }
+#endif
 
         public static void ThrowIfInvalidEnumValue(in Enum value, in bool valuesAreExpected, in string argumentName, params Enum[] values)
         {
@@ -500,6 +502,7 @@ namespace WinCopies
 
         public static InvalidOperationException GetNullEmptyOrWhiteSpaceStringException(in string value) => new InvalidOperationException(GetNullEmptyOrWhiteSpaceStringFormattedExceptionMessage(value));
 
+#if CS5
         public static void ThrowIfNullEmptyOrWhiteSpace(in string value)
         {
             if (IsNullEmptyOrWhiteSpace(value))
@@ -507,14 +510,15 @@ namespace WinCopies
                 throw GetNullEmptyOrWhiteSpaceStringException(value);
         }
 
-        public static ArgumentException GetNullEmptyOrWhiteSpaceStringException(in string value, in string argumentName) => new ArgumentException(value, argumentName);
-
         public static void ThrowIfNullEmptyOrWhiteSpace(in string value, in string argumentName)
         {
             if (IsNullEmptyOrWhiteSpace(value))
 
                 throw GetNullEmptyOrWhiteSpaceStringException(GetNullEmptyOrWhiteSpaceStringFormattedExceptionMessage(value), argumentName);
         }
+#endif
+
+        public static ArgumentException GetNullEmptyOrWhiteSpaceStringException(in string value, in string argumentName) => new ArgumentException(value, argumentName);
         #endregion
 
         /// <summary>

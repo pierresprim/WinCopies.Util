@@ -66,13 +66,21 @@ namespace WinCopies.Collections.DotNetFix
 #endif
     public interface ILongCountableEnumerable
 #if WinCopies3
-        <out TItems, out TEnumerator> : DotNetFix.ILongCountableEnumerable<TEnumerator>, IEnumerable<TItems, TEnumerator>
+        <
+#if CS5
+            out
+#endif
+             TItems, out TEnumerator> : DotNetFix.ILongCountableEnumerable<TEnumerator>, IEnumerable<TItems, TEnumerator>
 #if CS7
 , System.Collections.Generic.IReadOnlyCollection<TItems>
 #endif
              where TEnumerator : ILongCountableEnumerator<TItems>
 #else
-        <out T> : System.Collections.Generic.IEnumerable<T>, ILongCountableEnumerable
+        <
+#if CS5
+            out
+#endif
+            T> : System.Collections.Generic.IEnumerable<T>, ILongCountableEnumerable
 #endif
     {
 #if WinCopies3
@@ -95,17 +103,29 @@ namespace WinCopies.Collections.DotNetFix
 #endif
         }
 
-        public interface ILongCountableEnumerable<out T> : ILongCountableEnumerable<T, ILongCountableEnumerator<T>>
+        public interface ILongCountableEnumerable<
+#if CS5
+            out
+#endif
+             T> : ILongCountableEnumerable<T, ILongCountableEnumerator<T>>
         {
             // Left empty.
         }
 
-        public interface ILongCountableDisposableEnumerable<out TItems, out TEnumerator> : ILongCountableEnumerable<TItems, TEnumerator> where TEnumerator : ILongCountableEnumerator<TItems>, WinCopies.DotNetFix.IDisposable
+        public interface ILongCountableDisposableEnumerable<
+#if CS5
+            out
+#endif
+             TItems, out TEnumerator> : ILongCountableEnumerable<TItems, TEnumerator> where TEnumerator : ILongCountableEnumerator<TItems>, WinCopies.DotNetFix.IDisposable
         {
             // Left empty.
         }
 
-        public interface ILongCountableDisposableEnumerable<out T> : ILongCountableDisposableEnumerable<T, ILongCountableDisposableEnumerator<T>>
+        public interface ILongCountableDisposableEnumerable<
+#if CS5
+            out
+#endif
+             T> : ILongCountableDisposableEnumerable<T, ILongCountableDisposableEnumerator<T>>
         {
 #endif
         // Left empty.
@@ -113,9 +133,17 @@ namespace WinCopies.Collections.DotNetFix
 
     public interface IULongCountableEnumerable
 #if WinCopies3
-       <out TItems, out TEnumerator> : DotNetFix.IULongCountableEnumerable<TEnumerator>, IEnumerable<TItems, TEnumerator> where TEnumerator : IULongCountableEnumerator<TItems>
+       <
+#if CS5
+            out
+#endif
+             TItems, out TEnumerator> : DotNetFix.IULongCountableEnumerable<TEnumerator>, IEnumerable<TItems, TEnumerator> where TEnumerator : IULongCountableEnumerator<TItems>
 #else
-<out T> : System.Collections.Generic.IEnumerable<T>, IULongCountableEnumerable
+<
+#if CS5
+            out
+#endif
+            T> : System.Collections.Generic.IEnumerable<T>, IULongCountableEnumerable
 #endif
     {
 #if WinCopies3
@@ -130,17 +158,29 @@ namespace WinCopies.Collections.DotNetFix
 #endif
         }
 
-        public interface IULongCountableEnumerable<out T> : IULongCountableEnumerable<T, IULongCountableEnumerator<T>>
+        public interface IULongCountableEnumerable<
+#if CS5
+            out
+#endif
+             T> : IULongCountableEnumerable<T, IULongCountableEnumerator<T>>
         {
             // Left empty.
         }
 
-        public interface IULongCountableDisposableEnumerable<out TItems, out TEnumerator> : IULongCountableEnumerable<TItems, TEnumerator> where TEnumerator : IULongCountableEnumerator<TItems>, WinCopies.DotNetFix.IDisposable
+        public interface IULongCountableDisposableEnumerable<
+#if CS5
+            out
+#endif
+             TItems, out TEnumerator> : IULongCountableEnumerable<TItems, TEnumerator> where TEnumerator : IULongCountableEnumerator<TItems>, WinCopies.DotNetFix.IDisposable
         {
             // Left empty.
         }
 
-        public interface IULongCountableDisposableEnumerable<out T> : IULongCountableDisposableEnumerable<T, IULongCountableDisposableEnumerator<T>>
+        public interface IULongCountableDisposableEnumerable<
+#if CS5
+            out
+#endif
+             T> : IULongCountableDisposableEnumerable<T, IULongCountableDisposableEnumerator<T>>
         {
 #endif
         // Left empty.

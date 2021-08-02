@@ -15,6 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
+#if !WinCopies3
+
 using System;
 
 namespace WinCopies.Util.Data
@@ -37,20 +39,61 @@ namespace WinCopies.Util.Data
     [Obsolete("This interface has been replaced by the ICheckBoxModel interface of the WinCopies.GUI.Models assembly, and will be removed in later versions.")]
     public interface ICheckableObject<T> : ICheckableObject, IValueObject<T> { }
 
-    /// <summary>
-    /// Provides an object that defines a value that can be checked and notifies of the checked status or value change. For example, this class can be used in a view for items that can be selected.
-    /// </summary>
-    [Obsolete("This class has been replaced by the CheckBoxModel class of the WinCopies.GUI.Models assembly, and will be removed in later versions.")]
-    public class CheckableObject : ViewModelBase, ICheckableObject
+    public abstract class CheckableObjectBase : ViewModelBase, System.IDisposable
     {
-        public bool IsReadOnly => false;
+        private bool _isChecked = false;
 
-        private readonly bool _isChecked = false;
+        public bool IsReadOnly => false;
 
         /// <summary>
         /// Gets or sets a value that indicates whether the object is checked.
         /// </summary>
-        public bool IsChecked { get => _isChecked; set => Update(nameof(IsChecked), nameof(_isChecked), value, typeof(CheckableObject)); }
+        public bool IsChecked { get => _isChecked; set => UpdateValue(ref _isChecked, value, nameof(IsChecked)); }
+
+        public CheckableObjectBase() { }
+
+        public CheckableObjectBase(in bool isChecked) => _isChecked = isChecked;
+
+        #region IDisposable Support
+        public bool IsDisposed { get; private protected set; }
+
+        protected abstract void Dispose(bool disposing);
+
+        public void Dispose()
+        {
+            Dispose(true);
+
+            GC.SuppressFinalize(this);
+        }
+
+        ~CheckableObjectBase() => Dispose(false);
+        #endregion
+    }
+
+    /// <summary>
+    /// Provides an object that defines a value that can be checked and notifies of the checked status or value change. For example, this class can be used in a view for items that can be selected.
+    /// </summary>
+    [Obsolete("This class has been replaced by the CheckBoxModel class of the WinCopies.GUI.Models assembly, and will be removed in later versions.")]
+    public class CheckableObject : CheckableObjectBase, ICheckableObject
+    {
+        private object _value;
+
+        /// <summary>
+        /// Gets or sets the value of the object.
+        /// </summary>
+        public object Value { get => _value; set => UpdateValue(ref _value, value, nameof(Value)); }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CheckableObject"/> class.
+        /// </summary>
+        public CheckableObject() { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CheckableObject"/> class using custom values.
+        /// </summary>
+        /// <param name="isChecked">A value that indicates if this object is checked by default.</param>
+        /// <param name="value">The value of the object.</param>
+        public CheckableObject(bool isChecked, object value) : base(isChecked) => _value = value;
 
         /// <summary>
         /// Determines whether this object is equal to a given object.
@@ -72,40 +115,13 @@ namespace WinCopies.Util.Data
         /// <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
         public bool Equals(IReadOnlyValueObject obj) => new ValueObjectEqualityComparer().Equals(this, obj);
 
-        private readonly object _value;
-
-        /// <summary>
-        /// Gets or sets the value of the object.
-        /// </summary>
-        public object Value { get => _value; set => Update(nameof(Value), nameof(_value), value, typeof(CheckableObject)); }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CheckableObject"/> class.
-        /// </summary>
-        public CheckableObject() { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CheckableObject"/> class using custom values.
-        /// </summary>
-        /// <param name="isChecked">A value that indicates if this object is checked by default.</param>
-        /// <param name="value">The value of the object.</param>
-        public CheckableObject(bool isChecked, object value)
-        {
-            _value = value;
-
-            _isChecked = isChecked;
-        }
-
-        #region IDisposable Support
-        private bool disposedValue = false;
-
         /// <summary>
         /// Removes the unmanaged resources and the managed resources if needed. If you override this method, you should call this implementation of this method in your override implementation to avoid unexpected results when using this object laater.
         /// </summary>
         /// <param name="disposing"><see langword="true"/> to dispose managed resources, otherwise <see langword="false"/>.</param>
-        protected virtual void Dispose(bool disposing)
+        protected override void Dispose(bool disposing)
         {
-            if (disposedValue)
+            if (IsDisposed)
 
                 return;
 
@@ -113,18 +129,8 @@ namespace WinCopies.Util.Data
 
                 _value.Dispose();
 
-            disposedValue = true;
+            IsDisposed = true;
         }
-
-        ~CheckableObject() => Dispose(false);
-
-        public void Dispose()
-        {
-            Dispose(true);
-
-            GC.SuppressFinalize(this);
-        }
-        #endregion
     }
 
     /// <summary>
@@ -132,16 +138,37 @@ namespace WinCopies.Util.Data
     /// </summary>
     /// <typeparam name="T">The type of the value of this object.</typeparam>
     [Obsolete("This class has been replaced by the CheckBoxModel class of the WinCopies.GUI.Models assembly, and will be removed in later versions.")]
-    public class CheckableObject<T> : ViewModelBase, ICheckableObject<T>
+    public class CheckableObject<T> : CheckableObject, ICheckableObject<T>
     {
-        public bool IsReadOnly => false;
-
-        private readonly bool _isChecked = false;
+        private T _value;
 
         /// <summary>
-        /// Gets or sets a value that indicates whether the object is checked.
+        /// Gets or sets the value of the object.
         /// </summary>
-        public bool IsChecked { get => _isChecked; set => Update(nameof(IsChecked), nameof(_isChecked), value, typeof(CheckableObject<T>)); }
+        public T Value { get => _value; set => UpdateValue(ref _value, value, nameof(Value)); }
+
+        object IReadOnlyValueObject.Value => _value;
+
+        object
+#if !WinCopies3
+            WinCopies.Util.IValueObject
+#else
+            WinCopies.IValueObject
+#endif
+            .Value
+        { get => _value; set => Value = value is T _value ? _value : throw new ArgumentException("Invalid type.", nameof(value)); }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CheckableObject{T}"/> class.
+        /// </summary>
+        public CheckableObject() { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CheckableObject{T}"/> class using custom values.
+        /// </summary>
+        /// <param name="isChecked">A value that indicates if this object is checked by default.</param>
+        /// <param name="value">The value of the object.</param>
+        public CheckableObject(bool isChecked, T value) : base(isChecked, value) => _value = value;
 
         /// <summary>
         /// Determines whether this object is equal to a given object.
@@ -183,51 +210,13 @@ namespace WinCopies.Util.Data
 #endif
             obj) => new ValueObjectEqualityComparer<T>().Equals(this, obj);
 
-        private readonly T _value;
-
-        /// <summary>
-        /// Gets or sets the value of the object.
-        /// </summary>
-        public T Value { get => _value; set => Update(nameof(Value), nameof(_value), value, typeof(CheckableObject)); }
-
-        object IReadOnlyValueObject.Value => _value;
-
-        object
-#if !WinCopies3
-            WinCopies.Util.IValueObject
-#else
-            WinCopies.IValueObject
-#endif
-            .Value
-        { get => _value; set => Value = value is T _value ? _value : throw new ArgumentException("Invalid type.", nameof(value)); }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CheckableObject{T}"/> class.
-        /// </summary>
-        public CheckableObject() { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CheckableObject{T}"/> class using custom values.
-        /// </summary>
-        /// <param name="isChecked">A value that indicates if this object is checked by default.</param>
-        /// <param name="value">The value of the object.</param>
-        public CheckableObject(bool isChecked, T value)
-        {
-            _value = value;
-
-            _isChecked = isChecked;
-        }
-
-        #region IDisposable Support
-        private bool disposedValue = false;
-
         /// <summary>
         /// Removes the unmanaged resources and the managed resources if needed. If you override this method, you should call this implementation of this method in your override implementation to avoid unexpected results when using this object laater.
         /// </summary>
         /// <param name="disposing"><see langword="true"/> to dispose managed resources, otherwise <see langword="false"/>.</param>
-        protected virtual void Dispose(bool disposing)
+        protected override void Dispose(bool disposing)
         {
-            if (disposedValue)
+            if (IsDisposed)
 
                 return;
 
@@ -235,18 +224,8 @@ namespace WinCopies.Util.Data
 
                 _value.Dispose();
 
-            disposedValue = true;
+            IsDisposed = true;
         }
-
-        ~CheckableObject() => Dispose(false);
-
-        public void Dispose()
-        {
-            Dispose(true);
-
-            GC.SuppressFinalize(this);
-        }
-        #endregion
 
         //private void SetProperty(string propertyName, string fieldName, object newValue)
 
@@ -287,3 +266,5 @@ namespace WinCopies.Util.Data
         //}
     }
 }
+
+#endif

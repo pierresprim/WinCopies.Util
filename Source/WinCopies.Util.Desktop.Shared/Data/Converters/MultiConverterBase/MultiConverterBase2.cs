@@ -147,7 +147,7 @@ namespace WinCopies.Util.Data
         }
     }
 }
-#else
+#elif CS7
 using System;
 using System.Globalization;
 using System.Windows.Data;

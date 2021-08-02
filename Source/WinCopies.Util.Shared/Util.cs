@@ -33,9 +33,11 @@ using WinCopies.Util.Resources;
 
 using static WinCopies.Util.ThrowHelper;
 
+#if CS6
 using IfCT = WinCopies.Util.Util.ComparisonType;
 using IfCM = WinCopies.Util.Util.ComparisonMode;
 using IfComp = WinCopies.Util.Util.Comparison;
+#endif
 
 namespace WinCopies.Util
 {
@@ -80,6 +82,10 @@ namespace WinCopies
 
         public const BindingFlags DefaultBindingFlagsForPropertySet = BindingFlags.Public | BindingFlags.NonPublic |
                          BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly;
+
+#if !CS5
+        public static Type GetEnumUnderlyingType<T>() where T : Enum => typeof(T)._GetEnumUnderlyingType();
+#endif
 
         public static bool For(in Func<bool> loopCondition, in Func<bool> action, in Action postIterationAction)
         {
@@ -166,6 +172,7 @@ namespace WinCopies
         public static Predicate<T> GetCommonPredicate<T>() => (T value) => true;
 
 #if !WinCopies3
+#if CS6
         [Obsolete("This method has been replaced by the WinCopies.Util.Extensions.ThrowIfInvalidEnumValue(params Enum[] values) method.")]
         public static void ThrowOnNotValidEnumValue(params Enum[] values) => ThrowIfInvalidEnumValue(values);
 
@@ -186,6 +193,7 @@ namespace WinCopies
 
                 value.ThrowIfNotValidEnumValue(argumentName);
         }
+#endif
 
         [Obsolete("This method has been replaced by the WinCopies.Util.Extensions.ThrowIfInvalidEnumValue(this Enum, bool, params Enum[]) method.")]
         public static void ThrowOnEnumNotValidEnumValue(in Enum value, params Enum[] values) => value.ThrowIfInvalidEnumValue(false, values);
@@ -208,17 +216,15 @@ namespace WinCopies
         public static bool IsFlagsEnum<T>() where T : Enum => typeof(T).GetCustomAttribute<FlagsAttribute>() is object;
 #endif
 
-        // public static KeyValuePair<TKey, Func<bool>>[] GetIfKeyValuePairPredicateArray<TKey>(params KeyValuePair<TKey, Func<bool>>[] keyValuePairs) => keyValuePairs;
+// public static KeyValuePair<TKey, Func<bool>>[] GetIfKeyValuePairPredicateArray<TKey>(params KeyValuePair<TKey, Func<bool>>[] keyValuePairs) => keyValuePairs;
 
-#if !WinCopies3
-
-        #region 'If' methods
-
+#if !WinCopies3 && CS6
+#region 'If' methods
         public static KeyValuePair<TKey, TValue> GetKeyValuePair<TKey, TValue>(in TKey key, in TValue value) => new KeyValuePair<TKey, TValue>(key, value);
 
         public static KeyValuePair<TKey, Func<bool>> GetIfKeyValuePairPredicate<TKey>(in TKey key, in Func<bool> predicate) => new KeyValuePair<TKey, Func<bool>>(key, predicate);
 
-        #region Enums
+#region Enums
 
         /// <summary>
         /// Comparison types for the If functions.
@@ -298,10 +304,10 @@ namespace WinCopies
             ReferenceEqual = 6
         }
 
-        #endregion
+#endregion
 
-        #region 'Throw' methods
-
+#region 'Throw' methods
+#if CS6
         private static void ThrowOnInvalidIfMethodArg(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison)
         {
             ThrowIfInvalidEnumValue(comparisonType, comparisonMode, comparison);
@@ -343,10 +349,10 @@ namespace WinCopies
 
             if (comparison == IfComp.ReferenceEqual && !typeof(T).IsClass) throw new InvalidOperationException("ReferenceEqual comparison is only valid with class types.");
         }
+#endif
+#endregion
 
-        #endregion
-
-        #region 'Check comparison' methods
+#region 'Check comparison' methods
 
         private static bool CheckIfComparison(in IfComp comparison, in Func<bool> predicateResult, in int result)
         {
@@ -418,19 +424,19 @@ namespace WinCopies
                     return comparisonDelegate(value, valueToCompare);
 
                 case IfComp.NotEqual:
-            
+
                     return !predicateResult() || !comparisonDelegate(value, valueToCompare);
 
 #pragma warning disable IDE0002
 
                 case IfComp.ReferenceEqual:
-            
+
                     return object.ReferenceEquals(value, valueToCompare);
 
 #pragma warning restore IDE0002
 
                 default:
-            
+
                     return false;
 
             }
@@ -463,23 +469,23 @@ namespace WinCopies
             switch (comparison)
             {
                 case IfComp.Equal:
-            
+
                     return comparisonDelegate(value, valueToCompare);
 
                 case IfComp.NotEqual:
-            
+
                     return !predicateResult() || !comparisonDelegate(value, valueToCompare);
 
 #pragma warning disable IDE0002
 
                 case IfComp.ReferenceEqual:
-            
+
                     return object.ReferenceEquals(value, valueToCompare);
 
 #pragma warning restore IDE0002
 
                 default:
-            
+
                     return false;
             }
 #endif
@@ -489,9 +495,9 @@ namespace WinCopies
 
         private delegate bool CheckIfComparisonDelegate<T>(in T value, in Func<bool> predicate);
 
-        #endregion
+#endregion
 
-        #region Enumerables
+#region Enumerables
 
         private interface IIfValuesEnumerable
         {
@@ -666,7 +672,7 @@ namespace WinCopies
             public KeyValuePair<TKey, KeyValuePair<TValue, Func<bool>>> GetValue(in int index) => Array[index];
         }
 
-        #endregion
+#endregion
 
         private static bool IfInternal(in IfCT comparisonType, in IfCM comparisonMode, CheckIfComparisonDelegate comparisonDelegate, in IIfValuesEnumerable values)
         {
@@ -1014,9 +1020,9 @@ namespace WinCopies
             }
         }
 
-        #region Non generic methods
+#region Non generic methods
 
-        #region Comparisons without key notification
+#region Comparisons without key notification
 
         /// <summary>
         /// Performs a comparison by testing a value compared to an array of values.
@@ -1162,9 +1168,9 @@ namespace WinCopies
             return IfInternal(comparisonType, comparisonMode, (in object _value, in Func<bool> _predicate) => CheckEqualityComparison(comparison, _value, value, _predicate, comparisonDelegate), new IfKeyValuePairEnumerable(values));
         }
 
-        #endregion
+#endregion
 
-        #region Comparisons with key notification
+#region Comparisons with key notification
 
         /// <summary>
         /// Performs a comparison by testing a value compared to an array of objects or values.
@@ -1249,13 +1255,13 @@ namespace WinCopies
             return IfInternal(comparisonType, comparisonMode, (in object _value, in Func<bool> _predicate) => CheckEqualityComparison(comparison, _value, value, _predicate, comparisonDelegate), out key, new IfKeyKeyValuePairEnumerable(values));
         }
 
-        #endregion
+#endregion
 
-        #endregion
+#endregion
 
-        #region Generic methods
+#region Generic methods
 
-        #region Comparisons without key notification
+#region Comparisons without key notification
 
         /// <summary>
         /// Performs a comparison by testing a value compared to an array of objects or values.
@@ -1318,10 +1324,9 @@ namespace WinCopies
             return IfInternal(comparisonType, comparisonMode, (in T _value, in Func<bool> _predicate) => CheckEqualityComparison(comparison, _value, value, _predicate, comparisonDelegate), new IfKeyValuePairEnumerable<T>(values));
         }
 
-        #endregion
+#endregion
 
-        #region Comparisons with key notification
-
+#region Comparisons with key notification
         /// <summary>
         /// Performs a comparison by testing a value compared to an array of objects or values.
         /// </summary>
@@ -1379,18 +1384,16 @@ namespace WinCopies
 
             return IfInternal(comparisonType, comparisonMode, (in TValue _value, in Func<bool> _predicate) => CheckEqualityComparison(comparison, _value, value, _predicate, comparisonDelegate), out key, new IfKeyKeyValuePairEnumerable<TKey, TValue>(values));
         }
-
-        #endregion
-
-        #endregion
-
-        #endregion
-
+#endregion
+#endregion
+#endregion
 #endif
 
+#if CS5
         public static bool IsNullEmptyOrWhiteSpace(in string value) => string.IsNullOrEmpty(value) || string.IsNullOrWhiteSpace(value);
+#endif
 
-#if !WinCopies3
+#if !WinCopies3 && CS5
         public static void ThrowIfNullEmptyOrWhiteSpace(in string value)
         {
             if (IsNullEmptyOrWhiteSpace(value))
@@ -1457,7 +1460,6 @@ namespace WinCopies
         }
 
 #if !WinCopies3
-
         /// <summary>
         /// Concatenates multiple arrays from a same item type using the <see cref="Array.LongLength"/> length property. Arrays must have only one dimension.
         /// </summary>
@@ -1498,7 +1500,6 @@ namespace WinCopies
 
             return newArray;
         }
-
 #endif
 
         /// <summary>
@@ -1611,7 +1612,6 @@ where T : Enum
         }
 
 #if !WinCopies3
-
         /// <summary>
         /// Returns an <see cref="ArgumentNullException"/> for a given argument name.
         /// </summary>

@@ -131,6 +131,7 @@ namespace WinCopies.Util.Desktop
         [Obsolete("Use the ThrowIfBackgroundWorkerDoesNotSupportPausing method instead.")]
         public static void ThrowBackgroundWorkerDoesNotSupportPausingException() => throw GetBackgroundWorkerDoesNotSupportPausingException();
 
+#if CS7
         /// <summary>
         /// Throws the exception returned by the <see cref="GetBackgroundWorkerDoesNotSupportPausingException"/> method.
         /// </summary>
@@ -140,5 +141,6 @@ namespace WinCopies.Util.Desktop
 
                 throw GetBackgroundWorkerDoesNotSupportPausingException();
         }
+#endif
     }
 }

@@ -25,6 +25,7 @@
  *
  * For more information, please refer to <http://unlicense.org> */
 
+#if CS6
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -92,12 +93,12 @@ namespace WinCopies.Commands
 
             else
             {
-#if CS7
+#if CS8
+                dico ??= new Dictionary<object, Dictionary<string, Delegate>>();
+#else
                 if (dico == null)
 
                     dico = new Dictionary<object, Dictionary<string, Delegate>>();
-#else
-                dico ??= new Dictionary<object, Dictionary<string, Delegate>>();
 #endif
 
                 if (d is Control control)
@@ -140,7 +141,7 @@ namespace WinCopies.Commands
 
             if (a is DependencyObject c && b is EventArgs d)
 
-                SetLastEventArgs(c as DependencyObject, d);
+                SetLastEventArgs(c, d);
         }
 
         protected override Freezable CreateInstanceCore() => throw new NotImplementedException();
@@ -155,3 +156,4 @@ namespace WinCopies.Commands
 
     public class EventArgsHandler : EventArgsHandler<EventArgs> { }
 }
+#endif

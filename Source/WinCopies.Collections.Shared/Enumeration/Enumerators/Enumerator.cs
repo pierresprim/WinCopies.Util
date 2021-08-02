@@ -414,7 +414,11 @@ T CurrentOverride
         }
 
 #if WinCopies3
-        public interface IEnumeratorInfo2<out T> : IEnumeratorInfo<T>, WinCopies.Collections.DotNetFix.IDisposableEnumeratorInfo, IDisposableEnumerator<T>, IDisposableEnumeratorInfo
+        public interface IEnumeratorInfo2<
+#if CS5
+            out
+#endif
+             T> : IEnumeratorInfo<T>, WinCopies.Collections.DotNetFix.IDisposableEnumeratorInfo, IDisposableEnumerator<T>, IDisposableEnumeratorInfo
         {
             // Left empty.
         }

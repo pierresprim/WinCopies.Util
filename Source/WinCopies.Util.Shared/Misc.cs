@@ -17,13 +17,11 @@
 
 using System;
 
-#if WinCopies3
 namespace WinCopies
-{
-#else
-namespace WinCopies.Util
-{
+#if !WinCopies3
+    .Util
 #endif
+{
     /// <summary>
     /// This enum is designed as an extension of the <see cref="bool"/> type.
     /// </summary>

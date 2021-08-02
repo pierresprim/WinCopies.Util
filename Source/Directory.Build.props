@@ -32,35 +32,43 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework.TrimEnd(`0123456789.`))'=='netcoreapp'">
-    <DefineConstants>CS6;CS7;CS8;NETCORE;$(DefineConstants)</DefineConstants>
+    <DefineConstants>CS4;CS5;CS6;CS7;CS8;NETCORE;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework.TrimEnd(`-windows`))'=='net5.0'">
-    <DefineConstants>CS6;CS7;CS8;CS9;$(DefineConstants)</DefineConstants>
+    <DefineConstants>CS4;CS5;CS6;CS7;CS8;CS9;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework.TrimEnd(`0123456789-windows`))' == 'net5.'">
     <DefineConstants>NET5;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(TargetFramework)'=='net35'">
+    <DefineConstants>CS4;$(DefineConstants)</DefineConstants>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(TargetFramework)'=='net40'">
-    <DefineConstants>CS6;$(DefineConstants)</DefineConstants>
+    <DefineConstants>CS4;CS5;$(DefineConstants)</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)'=='net45'">
+    <DefineConstants>CS4;CS5;CS6;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)'=='net472'">
-    <DefineConstants>CS6;CS7;$(DefineConstants)</DefineConstants>
+    <DefineConstants>CS4;CS5;CS6;CS7;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)'=='net48'">
-    <DefineConstants>CS6;CS7;$(DefineConstants)</DefineConstants>
+    <DefineConstants>CS4;CS5;CS6;CS7;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
-    <DefineConstants>CS6;CS7;$(DefineConstants)</DefineConstants>
+    <DefineConstants>CS4;CS5;CS6;CS7;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.1'">
-    <DefineConstants>CS6;CS7;CS8;$(DefineConstants)</DefineConstants>
+    <DefineConstants>CS4;CS5;CS6;CS7;CS8;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework.TrimEnd(`0123456789.`))' == 'netstandard'">

@@ -6,6 +6,10 @@ The WinCopies® software framework
 CHANGELOG
 ---------
 
+### 08/02/2021 3.11-preview
+
+- Update ViewModels.
+
 ### 07/19/2021 3.10.1-preview
 
 - ViewModelBase: some parameters were added to update helper methods and OnPropertyChanged(in System.ComponentModel.PropertyChangedEventArgs e, in object oldValue, in object newValue) is called by all other update helper methods.

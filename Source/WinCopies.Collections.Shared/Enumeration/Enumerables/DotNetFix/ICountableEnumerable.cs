@@ -64,17 +64,25 @@ namespace WinCopies.Collections.DotNetFix
     namespace Generic
     {
 #endif
-        public interface ICountableEnumerable
+    public interface ICountableEnumerable
 #if WinCopies3
-        <out TItems, out TEnumerator> : DotNetFix.ICountableEnumerable<TEnumerator>, IEnumerable<TItems, TEnumerator>
+        <
+#if CS5
+            out
+#endif
+             TItems, out TEnumerator> : DotNetFix.ICountableEnumerable<TEnumerator>, IEnumerable<TItems, TEnumerator>
 #if CS7
 , System.Collections.Generic.IReadOnlyCollection<TItems>
 #endif
              where TEnumerator : ICountableEnumerator<TItems>
 #else
-        <out T> : System.Collections.Generic.IEnumerable<T>, ICountableEnumerable
+        <
+#if CS5
+            out
 #endif
-        {
+            T> : System.Collections.Generic.IEnumerable<T>, ICountableEnumerable
+#endif
+    {
 #if WinCopies3
 #if CS7
             new int Count { get; }
@@ -95,46 +103,70 @@ namespace WinCopies.Collections.DotNetFix
 #endif
         }
 
-        public interface ICountableEnumerable<out T> : ICountableEnumerable<T, ICountableEnumerator<T>>
+        public interface ICountableEnumerable<
+#if CS5
+            out
+#endif
+             T> : ICountableEnumerable<T, ICountableEnumerator<T>>
         {
             // Left empty.
         }
 
-        public interface ICountableDisposableEnumerable<out TItems, out TEnumerator> : ICountableEnumerable<TItems, TEnumerator> where TEnumerator : ICountableEnumerator<TItems>, WinCopies.DotNetFix.IDisposable
+        public interface ICountableDisposableEnumerable<
+#if CS5
+            out
+#endif
+             TItems, out TEnumerator> : ICountableEnumerable<TItems, TEnumerator> where TEnumerator : ICountableEnumerator<TItems>, WinCopies.DotNetFix.IDisposable
         {
             // Left empty.
         }
 
-        public interface ICountableDisposableEnumerable<out T> : ICountableDisposableEnumerable<T, ICountableDisposableEnumerator<T>>
+        public interface ICountableDisposableEnumerable<
+#if CS5
+            out
+#endif
+             T> : ICountableDisposableEnumerable<T, ICountableDisposableEnumerator<T>>
         {
 #endif
-            // Left empty.
-        }
+        // Left empty.
+    }
 
-        public interface IReadOnlyArray<out T> : WinCopies.Collections.DotNetFix.
+    public interface IReadOnlyArray<
+#if CS5
+            out
+#endif
+            T> : WinCopies.Collections.DotNetFix.
 #if WinCopies3
         Generic.
 #endif
         ICountableEnumerable<T>
-        {
-            T this[int index] { get; }
-        }
+    {
+        T this[int index] { get; }
+    }
 
-        public interface IArray<T> : IReadOnlyList<T>
+    public interface IArray<T> : IReadOnlyList<T>
 #if WinCopies3
             , IReadOnlyArray<T>
 #endif
-        {
-            new T this[int index] { get; set; }
-        }
+    {
+        new T this[int index] { get; set; }
+    }
 
-        public interface IUIntCountableEnumerable
+    public interface IUIntCountableEnumerable
 #if WinCopies3
-       <out TItems, out TEnumerator> : DotNetFix.IUIntCountableEnumerable<TEnumerator>, IEnumerable<TItems, TEnumerator> where TEnumerator : IUIntCountableEnumerator<TItems>
-#else
-<out T> : System.Collections.Generic.IEnumerable<T>, IUIntCountableEnumerable
+       <
+#if CS5
+            out
 #endif
-        {
+             TItems, out TEnumerator> : DotNetFix.IUIntCountableEnumerable<TEnumerator>, IEnumerable<TItems, TEnumerator> where TEnumerator : IUIntCountableEnumerator<TItems>
+#else
+<
+#if CS5
+            out
+#endif
+            T> : System.Collections.Generic.IEnumerable<T>, IUIntCountableEnumerable
+#endif
+    {
 #if WinCopies3
             new TEnumerator GetEnumerator();
 
@@ -147,29 +179,49 @@ namespace WinCopies.Collections.DotNetFix
 #endif
         }
 
-        public interface IUIntCountableEnumerable<out T> : IUIntCountableEnumerable<T, IUIntCountableEnumerator<T>>
+        public interface IUIntCountableEnumerable<
+#if CS5
+            out
+#endif
+             T> : IUIntCountableEnumerable<T, IUIntCountableEnumerator<T>>
         {
             // Left empty.
         }
 
-        public interface IUIntCountableDisposableEnumerable<out TItems, out TEnumerator> : IUIntCountableEnumerable<TItems, TEnumerator> where TEnumerator : IUIntCountableEnumerator<TItems>, WinCopies.DotNetFix.IDisposable
+        public interface IUIntCountableDisposableEnumerable<
+#if CS5
+            out
+#endif
+             TItems, out TEnumerator> : IUIntCountableEnumerable<TItems, TEnumerator> where TEnumerator : IUIntCountableEnumerator<TItems>, WinCopies.DotNetFix.IDisposable
         {
             // Left empty.
         }
 
-        public interface IUIntCountableDisposableEnumerable<out T> : IUIntCountableDisposableEnumerable<T, IUIntCountableDisposableEnumerator<T>>
+        public interface IUIntCountableDisposableEnumerable<
+#if CS5
+            out
+#endif
+             T> : IUIntCountableDisposableEnumerable<T, IUIntCountableDisposableEnumerator<T>>
         {
 #endif
-            // Left empty.
-        }
+        // Left empty.
+    }
 
 #if WinCopies3
-        public interface ICountableEnumerableInfo<out T> : ICountableEnumerable<T, ICountableEnumeratorInfo<T>>, IEnumerableInfo<T, ICountableEnumeratorInfo<T>>
+        public interface ICountableEnumerableInfo<
+#if CS5
+            out
+#endif
+             T> : ICountableEnumerable<T, ICountableEnumeratorInfo<T>>, IEnumerableInfo<T, ICountableEnumeratorInfo<T>>
         {
             // Left empty.
         }
 
-        public interface IUIntCountableEnumerableInfo<out T> : IUIntCountableEnumerable<T, IUIntCountableEnumeratorInfo<T>>, IEnumerableInfo<T, IUIntCountableEnumeratorInfo<T>>
+        public interface IUIntCountableEnumerableInfo<
+#if CS5
+            out
+#endif
+             T> : IUIntCountableEnumerable<T, IUIntCountableEnumeratorInfo<T>>, IEnumerableInfo<T, IUIntCountableEnumeratorInfo<T>>
         {
             // Left empty.
         }

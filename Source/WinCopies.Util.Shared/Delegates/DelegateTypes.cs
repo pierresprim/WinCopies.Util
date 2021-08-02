@@ -68,15 +68,43 @@ namespace WinCopies
     public delegate bool LoopIteration<T>(T obj);
 #endif
 
+    public delegate
 #if CS7
-    public delegate (bool result, Exception ex) FieldValidateValueCallback(object obj, object value, FieldInfo field, string paramName);
+        (
+#else
+        ValueTuple<
 #endif
+        bool
+#if CS7
+            result
+#endif
+            , Exception
+#if CS7
+            ex)
+#else
+            >
+#endif
+            FieldValidateValueCallback(object obj, object value, FieldInfo field, string paramName);
 
     public delegate void FieldValueChangedCallback(object obj, object value, FieldInfo field, string paramName);
 
+    public delegate
 #if CS7
-    public delegate (bool result, Exception ex) PropertyValidateValueCallback(object obj, object value, PropertyInfo property, string paramName);
+        (
+#else
+        ValueTuple<
 #endif
+        bool
+#if CS7
+            result
+#endif
+            , Exception
+#if CS7
+            ex)
+#else
+            >
+#endif
+       PropertyValidateValueCallback(object obj, object value, PropertyInfo property, string paramName);
 
     public delegate void PropertyValueChangedCallback(object obj, object value, PropertyInfo property, string paramName);
 

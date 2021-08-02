@@ -15,7 +15,9 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
+#if CS7
 using Microsoft.Xaml.Behaviors;
+
 using System;
 using System.Reactive.Linq;
 using System.Windows;
@@ -80,3 +82,4 @@ namespace WinCopies.Commands
         protected override void Invoke(object parameter) => Command?.Execute(CommandParameter);
     }
 }
+#endif

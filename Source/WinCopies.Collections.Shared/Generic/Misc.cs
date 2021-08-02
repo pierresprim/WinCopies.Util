@@ -84,34 +84,58 @@ namespace WinCopies.Collections
             }
         }
 
-        public interface IRecursiveEnumerableProviderEnumerable<out T> : System.Collections.Generic.IEnumerable<T>
+        public interface IRecursiveEnumerableProviderEnumerable<
+#if CS5
+            out
+#endif
+             T> : System.Collections.Generic.IEnumerable<T>
         {
             System.Collections.Generic.IEnumerator<IRecursiveEnumerable<T>> GetRecursiveEnumerator();
         }
 
-        public interface IRecursiveEnumerable<out T> : IRecursiveEnumerableProviderEnumerable<T>
+        public interface IRecursiveEnumerable<
+#if CS5
+            out
+#endif
+             T> : IRecursiveEnumerableProviderEnumerable<T>
         {
             T Value { get; }
         }
 
-        public interface IEnumeratorInfo<out T> : System.Collections.Generic.IEnumerator<T>, IEnumeratorInfo
+        public interface IEnumeratorInfo<
+#if CS5
+            out
+#endif
+            T> : System.Collections.Generic.IEnumerator<T>, IEnumeratorInfo
         {
             // Left empty.
         }
 
 #if !WinCopies3
-        public interface IDisposableEnumeratorInfo<out T> : IEnumeratorInfo<T>, IDisposableEnumeratorInfo
+        public interface IDisposableEnumeratorInfo<
+#if CS5
+            out
+#endif
+             T> : IEnumeratorInfo<T>, IDisposableEnumeratorInfo
         {
             // Left empty.
         }
 #endif
 
-        public interface ICountableEnumeratorInfo<out T> : IEnumeratorInfo<T>, ICountableEnumerator<T>
+        public interface ICountableEnumeratorInfo<
+#if CS5
+            out
+#endif
+             T> : IEnumeratorInfo<T>, ICountableEnumerator<T>
         {
             // Left empty.
         }
 
-        public interface ICountableDisposableEnumeratorInfo<out T> : ICountableDisposableEnumerator<T>, ICountableEnumeratorInfo<T>
+        public interface ICountableDisposableEnumeratorInfo<
+#if CS5
+            out
+#endif
+             T> : ICountableDisposableEnumerator<T>, ICountableEnumeratorInfo<T>
 #if !WinCopies3
 , IDisposableEnumeratorInfo<T>
 #else
@@ -121,12 +145,20 @@ namespace WinCopies.Collections
             // Left empty.
         }
 
-        public interface IUIntCountableEnumeratorInfo<out T> : IEnumeratorInfo<T>, IUIntCountableEnumerator<T>
+        public interface IUIntCountableEnumeratorInfo<
+#if CS5
+            out
+#endif
+             T> : IEnumeratorInfo<T>, IUIntCountableEnumerator<T>
         {
             // Left empty.
         }
 
-        public interface IUIntCountableDisposableEnumeratorInfo<out T> : IUIntCountableDisposableEnumerator<T>, IUIntCountableEnumeratorInfo<T>
+        public interface IUIntCountableDisposableEnumeratorInfo<
+#if CS5
+            out
+#endif
+             T> : IUIntCountableDisposableEnumerator<T>, IUIntCountableEnumeratorInfo<T>
 #if !WinCopies3
 , IDisposableEnumeratorInfo<T>
 #else

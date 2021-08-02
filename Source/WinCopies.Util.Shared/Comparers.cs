@@ -50,7 +50,11 @@ namespace WinCopies.Collections
         /// <returns><see langword="true"/> if x is equal to y, otherwise <see langword="false"/>.</returns>
         public delegate bool EqualityComparison<in T>(T x, T y);
 
-        public interface IComparer<in T> : System.Collections.Generic.IComparer<T>
+        public interface IComparer<
+#if CS5
+            in
+#endif
+            T> : System.Collections.Generic.IComparer<T>
         {
             SortingType SortingType { get; set; }
         }
@@ -74,17 +78,21 @@ namespace WinCopies.Collections
             protected Comparison<T> Comparison { get; }
 
             public Comparer2(Comparison<T> comparison) => Comparison = comparison ?? throw
-            #if WinCopies3
+#if WinCopies3
             ThrowHelper
 #else
             Util.Util
-            #endif
+#endif
             .GetArgumentNullException(nameof(comparison));
 
             protected override int CompareOverride(T x, T y) => Comparison(x, y);
         }
 
-        public interface IEqualityComparer<in T> : System.Collections.Generic.IEqualityComparer<T>
+        public interface IEqualityComparer<
+#if CS5
+            in
+#endif
+            T> : System.Collections.Generic.IEqualityComparer<T>
         {
             bool Equals(
 #if CS8

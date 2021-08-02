@@ -17,6 +17,7 @@
 
 using System;
 using System.IO;
+using System.Runtime.InteropServices.ComTypes;
 
 using static WinCopies.
 #if WinCopies3
@@ -95,16 +96,41 @@ namespace WinCopies
         void Flush();
     }
 
-    public class NativeStream : IStream
+    public interface ICountableStream : IStream
+    {
+        ulong Length { get; }
+    }
+
+    public class NativeStream :
+#if WinCopies3
+        ICountableStream
+#else
+        IStream
+#endif
     {
         private System.Runtime.InteropServices.ComTypes.IStream _stream;
         private ulong _position;
 
-        protected System.Runtime.InteropServices.ComTypes.IStream InnerStream => _stream ?? throw GetExceptionForDispose(false);
+#if WinCopies3
+        public
+#else
+        protected
+#endif
+            System.Runtime.InteropServices.ComTypes.IStream InnerStream => _stream ?? throw GetExceptionForDispose(false);
 
         public ulong Position { get => IsDisposed ? throw GetExceptionForDispose(false) : _position; private set => _position = IsDisposed ? throw GetExceptionForDispose(false) : value; }
 
         public bool IsDisposed => InnerStream == null;
+
+        public ulong Length
+        {
+            get
+            {
+                InnerStream.Stat(out STATSTG stat, 1);
+
+                return (ulong)stat.cbSize;
+            }
+        }
 
         public NativeStream(in System.Runtime.InteropServices.ComTypes.IStream stream) => _stream = stream ?? throw GetArgumentNullException(nameof(stream));
 
@@ -172,25 +198,39 @@ namespace WinCopies
         ~NativeStream() => Dispose(false);
     }
 
-    public class Stream : IStream
+    public class Stream :
+#if WinCopies3
+        ICountableStream
+#else
+IStream
+#endif
     {
         private System.IO.Stream _stream;
 
-        ulong IStream.Position => (ulong)_stream.Position;
+#if WinCopies3
+        public
+#else
+        protected
+#endif
+            System.IO.Stream InnerStream => _stream ?? throw GetExceptionForDispose(false);
+
+        ulong IStream.Position => (ulong)InnerStream.Position;
 
         public bool IsDisposed => _stream == null;
 
+        ulong ICountableStream.Length => (ulong)InnerStream.Length;
+
         public Stream(in System.IO.Stream stream) => _stream = stream;
 
-        void IStream.Flush() => _stream.Flush();
+        void IStream.Flush() => InnerStream.Flush();
 
-        int IStream.Read(byte[] bytes, int length) => _stream.Read(bytes, 0, length);
+        int IStream.Read(byte[] bytes, int length) => InnerStream.Read(bytes, 0, length);
 
-        void IStream.Seek(long move, SeekOrigin origin) => _stream.Seek(move, origin);
+        void IStream.Seek(long move, SeekOrigin origin) => InnerStream.Seek(move, origin);
 
         int IStream.Write(byte[] bytes, int cb)
         {
-            _stream.Write(bytes, 0, cb);
+            InnerStream.Write(bytes, 0, cb);
 
             return cb;
         }
@@ -199,9 +239,9 @@ namespace WinCopies
         {
             if (disposing)
             {
-                _stream.Flush();
+                InnerStream.Flush();
 
-                _stream.Dispose();
+                InnerStream.Dispose();
 
                 _stream = null;
             }

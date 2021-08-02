@@ -76,7 +76,10 @@ namespace WinCopies.Collections
     /// </remarks>
     [Obsolete("This class has been moved to the WinCopies.Collections.DotNetFix namespace. This implementation is still here temporarily only.")]
     [Serializable]
-    public class ObservableCollection<T> : System.Collections.ObjectModel.ObservableCollection<T>, IObservableCollection<T>, INotifyCollectionChanging
+    public class ObservableCollection<T> : System.Collections.ObjectModel.ObservableCollection<T>, INotifyCollectionChanging
+#if CS7
+, IObservableCollection<T>
+#endif
     {
         public virtual event NotifyCollectionChangingEventHandler CollectionChanging;
 

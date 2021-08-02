@@ -16,7 +16,6 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if CS7
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -33,7 +32,6 @@ using static WinCopies.ThrowHelper;
 
 namespace WinCopies.Collections
 {
-
     // todo: make non-generic
 
     ///// <summary>
@@ -54,6 +52,8 @@ namespace WinCopies.Collections
 #endif
         .IValueObject, ITreeNode<T>, ICollection<TreeNode<T>>, System.Collections.Generic.IList<TreeNode<T>>, ICollection, System.Collections.IList, IReadOnlyCollection<TreeNode<T>>, System.Collections.Generic.IReadOnlyList<TreeNode<T>>, IReadOnlyCollection<T>, System.Collections.Generic.IReadOnlyList<T>
     {
+        private T _value;
+
         /// <summary>
         /// Gets a value that indicates whether this <see cref="TreeNode{T}"/> is read-only. This value is always <see langword="false"/> for this class.
         /// </summary>
@@ -78,20 +78,18 @@ namespace WinCopies.Collections
         /// </summary>
         public IReadOnlyTreeNode Parent { get; internal set; }
 
-        private T _value;
-
         /// <summary>
         /// Gets or sets the value of the object.
         /// </summary>
-        public T Value { get => _value; set => SeT(value); }
+        public T Value { get => _value; set => SetValue(value); }
 
-        private void SeT(T newValue) => _value = newValue;
+        private void SetValue(in T newValue) => _value = newValue;
 
         object IValueObject.Value { get => Value; set => Value = (T)value; }
 
         object IReadOnlyValueObject.Value => Value;
 
-        // protected TreeNode() { }
+        //protected TreeNode() { }
 
         ///// <summary>
         ///// Initializes a new instance of the <see cref="TreeNode{T}"/> class.
@@ -121,7 +119,7 @@ namespace WinCopies.Collections
         public override string ToString() => Value?.ToString() ?? base.ToString();
 
         #region IDisposable Support
-        private bool disposedValue = false;
+        public bool IsDisposed { get; private set; }
 
         /// <summary>
         /// Removes the unmanaged resources and the managed resources if needed. If you override this method, you should call this implementation of this method in your override implementation to avoid unexpected results when using this object laater.
@@ -129,37 +127,36 @@ namespace WinCopies.Collections
         /// <param name="disposing"><see langword="true"/> to dispose managed resources, otherwise <see langword="false"/>.</param>
         protected virtual void Dispose(bool disposing)
         {
-
-            if (disposedValue)
+#if !WinCopies3
+            if (IsDisposed)
 
                 return;
+#endif
 
             if (Value is System.IDisposable _value)
 
                 _value.Dispose();
 
-            this.Parent = null;
+            Parent = null;
 
             Clear();
 
-            disposedValue = true;
-
+            IsDisposed = true;
         }
 
-        ~TreeNode()
-        {
-
-            Dispose(false);
-
-        }
+        ~TreeNode() => Dispose(false);
 
         public void Dispose()
         {
+#if WinCopies3
+            if (IsDisposed)
+
+                return;
+#endif
 
             Dispose(true);
 
             GC.SuppressFinalize(this);
-
         }
         #endregion
 
@@ -178,20 +175,36 @@ namespace WinCopies.Collections
 
         public TreeNode() : this(value: default) { }
 
-        public TreeNode(System.Collections.Generic.IList<TreeNode<T>> items) : this(default, items) { }
+        public TreeNode(
+#if WinCopies3
+            in
+#endif
+            System.Collections.Generic.IList<TreeNode<T>> items) : this(default, items) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TreeNode{T}"/> class using a custom value.
         /// </summary>
         /// <param name="value">The value of the new <see cref="TreeNode{T}"/>.</param>
-        public TreeNode(T value) : this(value, new List<TreeNode<T>>()) { }
+        public TreeNode(
+#if WinCopies3
+            in
+#endif
+            T value) : this(value, new List<TreeNode<T>>()) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TreeNode{T}"/> class using a custom value and inner <see cref="IList{T}"/>.
         /// </summary>
         /// <param name="value">The value of the new <see cref="TreeNode{T}"/>.</param>
         /// <param name="items">A custom inner <see cref="IList{T}"/>.</param>
-        public TreeNode(T value, System.Collections.Generic.IList<TreeNode<T>> items)
+        public TreeNode(
+#if WinCopies3
+            in
+#endif
+            T value,
+#if WinCopies3
+            in
+#endif
+            System.Collections.Generic.IList<TreeNode<T>> items)
         {
             ThrowIfNull(items, nameof(items));
 
@@ -213,7 +226,6 @@ namespace WinCopies.Collections
         /// <param name="index">The index of the item.</param>
         /// <returns>The item at the given index.</returns>
         /// <exception cref="IndexOutOfRangeException">The given index is lesser than 0 or greater than <see cref="Count"/>.</exception>
-        /// <seealso cref="SetItem(in TreeNode{T})"/>
         public TreeNode<T> this[int index] { get => Items[index]; set => SetItem(index, value); }
 
         ITreeNode<T> System.Collections.Generic.IReadOnlyList<ITreeNode<T>>.this[int index] => this[index];

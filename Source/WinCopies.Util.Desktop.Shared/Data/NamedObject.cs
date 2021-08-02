@@ -35,19 +35,103 @@ namespace WinCopies.Util.Data
     /// </summary>
     public interface INamedObject<T> : INamedObject, IValueObject<T> { }
 
-    /// <summary>
-    /// Provides an object that defines a value with an associated name and notifies of the name or value change.
-    /// </summary>
-    public class NamedObject : ViewModelBase, INamedObject
+    public abstract class NamedObjectBase : ViewModelBase,
+#if WinCopies3
+        WinCopies.DotNetFix
+#else
+        System
+#endif
+        .IDisposable
     {
-        public bool IsReadOnly => false;
+        private string _name = null;
 
-        private readonly string _name = null;
+        public bool IsReadOnly => false;
 
         /// <summary>
         /// Gets or sets the name of the object.
         /// </summary>
-        public string Name { get => _name; set => Update(nameof(Name), nameof(_name), value, typeof(NamedObject)); }
+        public string Name { get => _name; set => UpdateValue(ref _name, value, nameof(Name)); }
+
+        public NamedObjectBase() { /* Left empty. */ }
+
+        public NamedObjectBase(in string name) => _name = name;
+
+        #region IDisposable Support
+        public bool IsDisposed
+        {
+            get; private
+#if !WinCopies3
+                protected
+#endif
+                set;
+        }
+
+        /// <summary>
+        /// Removes the unmanaged resources and the managed resources if needed. If you override this method, you should call this implementation of this method in your override implementation to avoid unexpected results when using this object laater.
+        /// </summary>
+        /// <param name="disposing"><see langword="true"/> to dispose managed resources, otherwise <see langword="false"/>.</param>
+        protected
+#if !WinCopies3
+            abstract
+#endif
+            void Dispose(bool disposing)
+#if WinCopies3
+        {
+            DisposeOverride(disposing);
+
+            IsDisposed = true;
+        }
+
+        protected abstract void DisposeOverride(in bool disposing)
+#endif
+            ;
+
+        public void Dispose()
+        {
+#if WinCopies3
+            if (IsDisposed)
+
+                return;
+#endif
+
+            Dispose(true);
+
+            GC.SuppressFinalize(this);
+        }
+
+        ~NamedObjectBase() => Dispose(false);
+        #endregion
+    }
+
+    /// <summary>
+    /// Provides an object that defines a value with an associated name and notifies of the name or value change.
+    /// </summary>
+    public class NamedObject : NamedObjectBase, INamedObject
+    {
+        private object _value;
+
+        /// <summary>
+        /// Gets or sets the value of the object.
+        /// </summary>
+        public object Value { get => _value; set => UpdateValue(ref _value, value, nameof(Value)); }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NamedObject"/> class.
+        /// </summary>
+        public NamedObject() { /* Left empty. */ }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NamedObject"/> class using custom values.
+        /// </summary>
+        public NamedObject(
+#if WinCopies3
+in
+#endif
+            string name,
+#if WinCopies3
+in
+#endif
+            object value) : base(name) => _value = value;
 
         /// <summary>
         /// Determines whether this object is equal to a given object.
@@ -71,77 +155,73 @@ namespace WinCopies.Util.Data
 #endif
             IReadOnlyValueObject obj) => new ValueObjectEqualityComparer().Equals(this, obj);
 
-        private readonly object _value;
-
-        /// <summary>
-        /// Gets or sets the value of the object.
-        /// </summary>
-        public object Value { get => _value; set => Update(nameof(Value), nameof(_value), value, typeof(NamedObject)); }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="NamedObject"/> class.
-        /// </summary>
-        public NamedObject() { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="NamedObject"/> class using custom values.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="value"></param>
-        public NamedObject(string name, object value)
+        protected override void
+#if WinCopies3
+            DisposeOverride
+#else
+            Dispose
+#endif
+            (
+#if WinCopies3
+in
+#endif
+            bool disposing)
         {
-            _name = name;
-
-            _value = value;
-        }
-
-        #region IDisposable Support
-
-        private bool disposedValue = false;
-
-        /// <summary>
-        /// Removes the unmanaged resources and the managed resources if needed. If you override this method, you should call this implementation of this method in your override implementation to avoid unexpected results when using this object laater.
-        /// </summary>
-        /// <param name="disposing"><see langword="true"/> to dispose managed resources, otherwise <see langword="false"/>.</param>
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposedValue)
+#if !WinCopies3
+            if (IsDisposed)
 
                 return;
+#endif
 
             if (Value is System.IDisposable _value)
 
                 _value.Dispose();
 
-            disposedValue = true;
+#if !WinCopies3
+            IsDisposed = true;
+#endif
         }
-
-        ~NamedObject() => Dispose(false);
-
-        public void Dispose()
-        {
-            Dispose(true);
-
-            GC.SuppressFinalize(this);
-        }
-
-        #endregion
     }
 
     /// <summary>
     /// Provides an object that defines a generic value with an associated name and notifies of the name or value change.
     /// </summary>
     /// <typeparam name="T">The type of the value of this object.</typeparam>
-    public class NamedObject<T> : ViewModelBase, INamedObject<T>
+    public class NamedObject<T> : NamedObjectBase, INamedObject<T>
     {
-        public bool IsReadOnly => false;
-
-        private readonly string _name = null;
+        private T _value;
 
         /// <summary>
-        /// Gets or sets the name of the object.
+        /// Gets or sets the value of the object.
         /// </summary>
-        public string Name { get => _name; set => Update(nameof(Name), nameof(_name), value, typeof(NamedObject<T>)); }
+        public T Value { get => _value; set => UpdateValue(ref _value, value, nameof(Value)); }
+
+        object IReadOnlyValueObject.Value => _value;
+
+        object WinCopies.
+#if !WinCopies3
+            Util.
+#endif
+            IValueObject.Value
+        { get => _value; set => Value = value is T _value ? _value : throw new ArgumentException("Invalid type.", nameof(value)); }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NamedObject{T}"/> class.
+        /// </summary>
+        public NamedObject() { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NamedObject{T}"/> class using custom values.
+        /// </summary>
+        public NamedObject(
+#if WinCopies3
+            in
+#endif
+            string name,
+#if WinCopies3
+            in
+#endif
+            T value) : base(name) => _value = value;
 
         /// <summary>
         /// Determines whether this object is equal to a given object.
@@ -149,10 +229,10 @@ namespace WinCopies.Util.Data
         /// <param name="obj">Object to compare to the current object.</param>
         /// <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
         public bool Equals(WinCopies.
-            #if !WinCopies3
+#if !WinCopies3
             Util.
 #endif
-            IValueObject obj) => new ValueObjectEqualityComparer().Equals(this, obj);
+            IReadOnlyValueObject obj) => new ValueObjectEqualityComparer().Equals(this, obj);
 
         /// <summary>
         /// Determines whether this object is equal to a given object.
@@ -174,81 +254,38 @@ namespace WinCopies.Util.Data
 #if !WinCopies3
             Util.
 #endif
-            IReadOnlyValueObject obj) => new ValueObjectEqualityComparer().Equals(this, obj);
-
-        /// <summary>
-        /// Determines whether this object is equal to a given object.
-        /// </summary>
-        /// <param name="obj">Object to compare to the current object.</param>
-        /// <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
-        public bool Equals(WinCopies.
-#if !WinCopies3
-            Util.
-#endif
             IReadOnlyValueObject<T> obj) => new ValueObjectEqualityComparer().Equals(this, obj);
-
-        private readonly T _value;
-
-        /// <summary>
-        /// Gets or sets the value of the object.
-        /// </summary>
-        public T Value { get => _value; set => Update(nameof(Value), nameof(_value), value, typeof(NamedObject)); }
-
-        object IReadOnlyValueObject.Value => _value;
-
-        object WinCopies.
-#if !WinCopies3
-            Util.
-#endif
-            IValueObject.Value
-        { get => _value; set => Value = value is T _value ? _value : throw new ArgumentException("Invalid type.", nameof(value)); }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="NamedObject{T}"/> class.
-        /// </summary>
-        public NamedObject() { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="NamedObject{T}"/> class using custom values.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="value"></param>
-        public NamedObject(string name, T value)
-        {
-            _value = value;
-
-            _name = name;
-        }
-
-#region IDisposable Support
-        private bool disposedValue = false;
 
         /// <summary>
         /// Removes the unmanaged resources and the managed resources if needed. If you override this method, you should call this implementation of this method in your override implementation to avoid unexpected results when using this object laater.
         /// </summary>
         /// <param name="disposing"><see langword="true"/> to dispose managed resources, otherwise <see langword="false"/>.</param>
-        protected virtual void Dispose(bool disposing)
+        protected override void
+#if WinCopies3
+            DisposeOverride
+#else
+            Dispose
+#endif
+            (
+#if WinCopies3
+in
+#endif
+           bool disposing)
         {
-            if (disposedValue)
+#if !WinCopies3
+            if (IsDisposed)
 
                 return;
+#endif
 
             if (Value is System.IDisposable _value)
 
                 _value.Dispose();
 
-            disposedValue = true;
+#if !WinCopies3
+            IsDisposed = true;
+#endif
         }
-
-        ~NamedObject() => Dispose(false);
-
-        public void Dispose()
-        {
-            Dispose(true);
-
-            GC.SuppressFinalize(this);
-        }
-#endregion
     }
 
 }

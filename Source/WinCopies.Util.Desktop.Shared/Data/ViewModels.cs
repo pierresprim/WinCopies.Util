@@ -47,6 +47,7 @@ namespace WinCopies.Util.Data
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
+#if CS7
         /// <summary>
         /// Sets a value for a property. If succeeds, then call the <see cref="OnPropertyChanged(string, object, object)"/> method to raise the <see cref="PropertyChanged"/> event.
         /// </summary>// See the Remarks section.
@@ -66,6 +67,7 @@ namespace WinCopies.Util.Data
         }
 
         protected virtual void Update<T>(string propertyName, string fieldName, object newValue, bool performIntegrityCheck = true) => Update(propertyName, fieldName, newValue, typeof(T), performIntegrityCheck);
+#endif
 
         protected virtual void UpdateValue<T>(ref T value,
 #if !WinCopies3
@@ -105,8 +107,11 @@ in
 #endif
                 );
 
-#if !WinCopies3
-        protected virtual void OnPropertyChanged(string propertyName) => OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+        protected virtual void
+#if WinCopies3
+        OnPropertyChanged(in System.ComponentModel.PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
+#else
+        OnPropertyChanged(string propertyName) => OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs(propertyName));
 #endif
 
         protected virtual void OnPropertyChanged(
@@ -117,7 +122,7 @@ in
 #if WinCopies3
             , in object oldValue, in object newValue
 #endif
-            ) => PropertyChanged?.Invoke(this, e);
+            ) => OnPropertyChanged(e);
 
         /// <summary>
         /// Raises the <see cref="PropertyChanged"/> event.
@@ -143,6 +148,7 @@ in
 #endif
              );
 
+#if CS7
         /// <summary>
         /// Sets a value for a property. If succeeds, then call the <see cref="OnPropertyChanged(string, object, object)"/> method to raise the <see cref="PropertyChanged"/> event.
         /// </summary>
@@ -158,6 +164,7 @@ in
         }
 
         protected virtual void Update<T>(string propertyName, object newValue, bool performIntegrityCheck = true) => Update(propertyName, newValue, typeof(T), performIntegrityCheck);
+#endif
 
         /// <summary>
         /// Returns the current instance of this class as the value of the target property for this markup extension.
@@ -176,7 +183,14 @@ in
 
     public abstract class ViewModelAbstract : MarkupExtension, INotifyPropertyChanged
     {
-#if CS7
+#if CS8
+        public object GetModelFromPropertyChangeScope(PropertyChangeScope propertyChangeScope) => propertyChangeScope switch
+        {
+            PropertyChangeScope.Model => Model,
+            PropertyChangeScope.ViewModel => this,
+            _ => throw new InvalidEnumArgumentException(nameof(propertyChangeScope), propertyChangeScope),
+        };
+#else
         public object GetModelFromPropertyChangeScope(PropertyChangeScope propertyChangeScope)
         {
             switch (propertyChangeScope)
@@ -194,13 +208,6 @@ in
                     throw new InvalidEnumArgumentException(nameof(propertyChangeScope), propertyChangeScope);
             }
         }
-#else
-        public object GetModelFromPropertyChangeScope(PropertyChangeScope propertyChangeScope) => propertyChangeScope switch
-        {
-            PropertyChangeScope.Model => Model,
-            PropertyChangeScope.ViewModel => this,
-            _ => throw new InvalidEnumArgumentException(nameof(propertyChangeScope), propertyChangeScope),
-        };
 #endif
 
         /// <summary>
@@ -213,6 +220,7 @@ in
         /// </summary>
         protected abstract object Model { get; }
 
+#if CS7
         /// <summary>
         /// Sets a value for a property. If succeeds, then call the <see cref="OnPropertyChanged(string, object, object)"/> method to raise the <see cref="PropertyChanged"/> event.
         /// </summary>// See the Remarks section.
@@ -248,6 +256,7 @@ in
         }
 
         protected virtual void Update<T>(string propertyName, object newValue, PropertyChangeScope propertyChangeScope = PropertyChangeScope.Model) => Update(propertyName, newValue, typeof(T), propertyChangeScope);
+#endif
 
         protected virtual void OnPropertyChanged(string propertyName) => OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs(propertyName));
 
@@ -261,6 +270,7 @@ in
 
         protected virtual void OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
 
+#if CS7
         /// <summary>
         /// Sets a value for a property. If succeeds, then call the <see cref="OnPropertyChanged(string, object, object)"/> method to raise the <see cref="PropertyChanged"/> event.
         /// </summary>
@@ -276,6 +286,7 @@ in
         }
 
         protected virtual void UpdateAutoProperty<T>(string propertyName, object newValue, bool performIntegrityCheck = true) => UpdateAutoProperty(propertyName, newValue, typeof(T), performIntegrityCheck);
+#endif
 
         /// <summary>
         /// Returns the current instance of this class as the value of the target property for this markup extension.
@@ -330,12 +341,14 @@ override object Model => ModelGeneric;
     /// <summary>
     /// Provides a base class for view models.
     /// </summary>
-    public class CollectionViewModel<T> : MarkupExtension, IObservableCollection<T>
+    public class CollectionViewModel<T> : MarkupExtension
+#if CS7
+, IObservableCollection<T>
+#endif
     {
         private CountMonitor _monitor = new CountMonitor();
 
         #region Properties
-
         protected Collection<T> Collection { get; }
 
         /// <summary>
@@ -351,9 +364,9 @@ override object Model => ModelGeneric;
         /// <exception cref="System.ArgumentOutOfRangeException"><paramref name="index"/> is less than zero. -or- <paramref name="index"/> is equal to or greater than <see cref="Count"/>.</exception>
         public T this[int index] { get => Collection[index]; set => SetItem(index, value); }
 
-        object IList.this[int index] { get => this[index]; set => this[index] = (T)value; }
-
         #region Interface implementations
+#if CS7
+        object IList.this[int index] { get => this[index]; set => this[index] = (T)value; }
 
         bool ICollection<T>.IsReadOnly => ((ICollection<T>)Collection).IsReadOnly;
 
@@ -364,13 +377,11 @@ override object Model => ModelGeneric;
         bool IList.IsReadOnly => ((IList)Collection).IsReadOnly;
 
         bool IList.IsFixedSize => ((IList)Collection).IsFixedSize;
-
+#endif
         #endregion
-
         #endregion
 
         #region Events
-
         /// <summary>
         /// Occurs when a property value changes.
         /// </summary>
@@ -381,21 +392,20 @@ override object Model => ModelGeneric;
         /// </summary>
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
+#if CS7
         event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged { add => PropertyChanged += value; remove => PropertyChanged -= value; }
-
-        #endregion
+#endif
+#endregion
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CollectionViewModel{T}"/> class.
         /// </summary>
         public CollectionViewModel(Collection<T> collection) => Collection = collection ?? throw GetArgumentNullException(nameof(collection));
 
-        #region Methods
+#region Methods
+#region Protected Methods
 
-        #region Protected Methods
-
-        #region 'On-' Methods
-
+#region 'On-' Methods
         protected void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
 
         protected void OnCollectionChanged(System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -416,11 +426,9 @@ override object Model => ModelGeneric;
         protected void OnCollectionChanged(NotifyCollectionChangedAction action, object item, int newIndex, int oldIndex) => OnCollectionChanged(new System.Collections.Specialized.NotifyCollectionChangedEventArgs(action, item, newIndex, oldIndex));
 
         protected void OnCollectionReset() => OnCollectionChanged(new System.Collections.Specialized.NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+#endregion
 
-        #endregion
-
-        #region Reentrancy Checks
-
+#region Reentrancy Checks
         /// <summary>
         /// Checks for reentrant attempts to change this collection.
         /// </summary>
@@ -446,11 +454,9 @@ override object Model => ModelGeneric;
 
             return _monitor;
         }
+#endregion
 
-        #endregion
-
-        #region Collection Update Methods
-
+#region Collection Update Methods
         protected void AddOrInsert(int index, T item)
         {
             if (index == Collection.Count)
@@ -553,13 +559,10 @@ override object Model => ModelGeneric;
 
             OnCollectionReset();
         }
+#endregion
+#endregion
 
-        #endregion
-
-        #endregion
-
-        #region Public Methods
-
+#region Public Methods
         public override object ProvideValue(IServiceProvider serviceProvider) => this;
 
         /// <summary>
@@ -569,8 +572,6 @@ override object Model => ModelGeneric;
         /// <returns>The zero-based index of the first occurrence of <paramref name="item"/> within the entire <see cref="CollectionViewModel{T}"/>, if found; otherwise, -1.</returns>
         public int IndexOf(T item) => Collection.IndexOf(item);
 
-        int IList.IndexOf(object value) => value is T _value ? IndexOf(_value) : -1;
-
         /// <summary>
         /// Determines whether an element is in the <see cref="CollectionViewModel{T}"/>.
         /// </summary>
@@ -578,15 +579,11 @@ override object Model => ModelGeneric;
         /// <returns><see langword="true"/> if <paramref name="item"/> is found in the <see cref="CollectionViewModel{T}"/>; otherwise, <see langword="false"/>.</returns>
         public bool Contains(T item) => Collection.Contains(item);
 
-        bool IList.Contains(object value) => value is T _value && Contains(_value);
-
         /// <summary>
         /// Returns an enumerator that iterates through the System.Collections.ObjectModel.Collection`1.
         /// </summary>
         /// <returns>An <see cref="System.Collections.Generic.IEnumerator{T}"/> for the <see cref="CollectionViewModel{T}"/>.</returns>
         public System.Collections.Generic.IEnumerator<T> GetEnumerator() => Collection.GetEnumerator();
-
-        System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         /// <summary>
         /// Copies the entire <see cref="CollectionViewModel{T}"/> to a compatible one-dimensional <see cref="Array"/>, starting at the specified index of the target array.
@@ -618,17 +615,18 @@ override object Model => ModelGeneric;
         }
 #endif
 
+#if CS7
+        bool IList.Contains(object value) => value is T _value && Contains(_value);
+
+        int IList.IndexOf(object value) => value is T _value ? IndexOf(_value) : -1;
+
+        System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
         void ICollection.CopyTo(Array array, int index) =>
 #if WinCopies3
             WinCopies.Collections.EnumerableExtensions.
 #endif
             CopyTo(this, array, index, Count);
-
-        /// <summary>
-        /// Adds an object to the end of the <see cref="CollectionViewModel{T}"/>.
-        /// </summary>
-        /// <param name="item">The object to be added to the end of the <see cref="CollectionViewModel{T}"/>. The value can be null for reference types.</param>
-        public void Add(T item) => InsertItem(Count, item);
 
         int IList.Add(object value)
         {
@@ -642,6 +640,17 @@ override object Model => ModelGeneric;
             return -1;
         }
 
+        void IList.Remove(object value) => Remove((T)value);
+
+        void IList.Insert(int index, object value) => Insert(index, (T)value);
+#endif
+
+        /// <summary>
+        /// Adds an object to the end of the <see cref="CollectionViewModel{T}"/>.
+        /// </summary>
+        /// <param name="item">The object to be added to the end of the <see cref="CollectionViewModel{T}"/>. The value can be null for reference types.</param>
+        public void Add(T item) => InsertItem(Count, item);
+
         /// <summary>
         /// Inserts an element into the <see cref="CollectionViewModel{T}"/> at the specified index.
         /// </summary>
@@ -649,8 +658,6 @@ override object Model => ModelGeneric;
         /// <param name="item">The object to insert. The value can be null for reference types.</param>
         /// <exception cref="System.ArgumentOutOfRangeException"><paramref name="index"/> is less than zero. -or- <paramref name="index"/> is greater than <see cref="Count"/>.</exception>
         public void Insert(int index, T item) => InsertItem(index, item);
-
-        void IList.Insert(int index, object value) => Insert(index, (T)value);
 
         /// <summary>
         /// Moves the item at the specified index to a new location in the collection.
@@ -685,15 +692,11 @@ override object Model => ModelGeneric;
             return false;
         }
 
-        void IList.Remove(object value) => Remove((T)value);
-
         /// <summary>
         /// Removes all elements from the <see cref="CollectionViewModel{T}"/>.
         /// </summary>
         public void Clear() => ClearItems();
-
-        #endregion
-
-        #endregion
+#endregion
+#endregion
     }
 }

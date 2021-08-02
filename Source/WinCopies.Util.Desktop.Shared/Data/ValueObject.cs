@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if !WinCopies3
+#if !WinCopies3 && CS7
 
 using System;
 using System.ComponentModel;
@@ -93,7 +93,11 @@ WinCopies.Util.IValueObject
         /// Initilizes a new instance of the <see cref="ValueObject"/> class with the specified value.
         /// </summary>
         /// <param name="value"></param>
-        public ValueObject(object value) => _value = value;
+        public ValueObject(
+#if WinCopies3
+in
+#endif
+object value) => _value = value;
 
         /// <summary>
         /// Sets a value for a property. If succeeds, then call the <see cref="OnPropertyChanged(string, object, object)"/> method to raise the <see cref="PropertyChanged"/> event.
@@ -120,8 +124,7 @@ WinCopies.Util.IValueObject
         /// <param name="newValue">The new value of the property. This parameter is ignored by default. You can override this method and use the <see cref="PropertyChangedEventArgs"/> if you want for the <see cref="PropertyChanged"/> event to notify for this value.</param>
         protected virtual void OnPropertyChanged(string propertyName, object oldValue, object newValue) => PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
 
-        #region IDisposable Support
-
+#region IDisposable Support
         private bool disposedValue = false;
 
         /// <summary>
@@ -149,8 +152,7 @@ WinCopies.Util.IValueObject
 
             GC.SuppressFinalize(this);
         }
-
-        #endregion
+#endregion
     }
 
     /// <summary>
@@ -221,13 +223,17 @@ WinCopies.Util.IValueObject<T>
         /// <summary>
         /// Initializes a new instance of the <see cref="ValueObject"/> class.
         /// </summary>
-        public ValueObject() { }
+        public ValueObject() { /* Left empty. */ }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ValueObject"/> class using a custom value.
         /// </summary>
         /// <param name="value">The value with which to initialize this object.</param>
-        public ValueObject(T value) => _value = value;
+        public ValueObject(
+#if WinCopies3
+in
+#endif
+T value) => _value = value;
 
         /// <summary>
         /// Sets a value for a property. If succeeds, then call the <see cref="OnPropertyChanged(string, object, object)"/> method to raise the <see cref="PropertyChanged"/> event.
@@ -255,8 +261,7 @@ WinCopies.Util.IValueObject<T>
         /// <param name="newValue">The new value of the property. This parameter is ignored by default. You can override this method and use the <see cref="PropertyChangedEventArgs"/> if you want for the <see cref="PropertyChanged"/> event to notify for this value.</param>
         protected virtual void OnPropertyChanged(string propertyName, object oldValue, object newValue) => PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
 
-        #region IDisposable Support
-
+#region IDisposable Support
         private bool disposedValue = false;
 
         /// <summary>
@@ -284,8 +289,7 @@ WinCopies.Util.IValueObject<T>
 
             GC.SuppressFinalize(this);
         }
-
-        #endregion
+#endregion
     }
 }
 

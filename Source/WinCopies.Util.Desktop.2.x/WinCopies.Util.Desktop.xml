@@ -1167,29 +1167,15 @@
             Provides an object that defines a value that can be checked and notifies of the checked status or value change. For example, this interface can be used in a view for items that can be selected.
             </summary>
         </member>
-        <member name="T:WinCopies.Util.Data.CheckableObject">
-            <summary>
-            Provides an object that defines a value that can be checked and notifies of the checked status or value change. For example, this class can be used in a view for items that can be selected.
-            </summary>
-        </member>
-        <member name="P:WinCopies.Util.Data.CheckableObject.IsChecked">
+        <member name="P:WinCopies.Util.Data.CheckableObjectBase.IsChecked">
             <summary>
             Gets or sets a value that indicates whether the object is checked.
             </summary>
         </member>
-        <member name="M:WinCopies.Util.Data.CheckableObject.Equals(WinCopies.Util.IValueObject)">
+        <member name="T:WinCopies.Util.Data.CheckableObject">
             <summary>
-            Determines whether this object is equal to a given object.
+            Provides an object that defines a value that can be checked and notifies of the checked status or value change. For example, this class can be used in a view for items that can be selected.
             </summary>
-            <param name="obj">Object to compare to the current object.</param>
-            <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Util.Data.CheckableObject.Equals(WinCopies.Util.IReadOnlyValueObject)">
-            <summary>
-            Determines whether this object is equal to a given object.
-            </summary>
-            <param name="obj">Object to compare to the current object.</param>
-            <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
         </member>
         <member name="P:WinCopies.Util.Data.CheckableObject.Value">
             <summary>
@@ -1208,6 +1194,20 @@
             <param name="isChecked">A value that indicates if this object is checked by default.</param>
             <param name="value">The value of the object.</param>
         </member>
+        <member name="M:WinCopies.Util.Data.CheckableObject.Equals(WinCopies.Util.IValueObject)">
+            <summary>
+            Determines whether this object is equal to a given object.
+            </summary>
+            <param name="obj">Object to compare to the current object.</param>
+            <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Util.Data.CheckableObject.Equals(WinCopies.Util.IReadOnlyValueObject)">
+            <summary>
+            Determines whether this object is equal to a given object.
+            </summary>
+            <param name="obj">Object to compare to the current object.</param>
+            <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
+        </member>
         <member name="M:WinCopies.Util.Data.CheckableObject.Dispose(System.Boolean)">
             <summary>
             Removes the unmanaged resources and the managed resources if needed. If you override this method, you should call this implementation of this method in your override implementation to avoid unexpected results when using this object laater.
@@ -1220,10 +1220,22 @@
             </summary>
             <typeparam name="T">The type of the value of this object.</typeparam>
         </member>
-        <member name="P:WinCopies.Util.Data.CheckableObject`1.IsChecked">
+        <member name="P:WinCopies.Util.Data.CheckableObject`1.Value">
             <summary>
-            Gets or sets a value that indicates whether the object is checked.
+            Gets or sets the value of the object.
             </summary>
+        </member>
+        <member name="M:WinCopies.Util.Data.CheckableObject`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Util.Data.CheckableObject`1"/> class.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.Data.CheckableObject`1.#ctor(System.Boolean,`0)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Util.Data.CheckableObject`1"/> class using custom values.
+            </summary>
+            <param name="isChecked">A value that indicates if this object is checked by default.</param>
+            <param name="value">The value of the object.</param>
         </member>
         <member name="M:WinCopies.Util.Data.CheckableObject`1.Equals(WinCopies.Util.IValueObject)">
             <summary>
@@ -1252,23 +1264,6 @@
             </summary>
             <param name="obj">Object to compare to the current object.</param>
             <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="P:WinCopies.Util.Data.CheckableObject`1.Value">
-            <summary>
-            Gets or sets the value of the object.
-            </summary>
-        </member>
-        <member name="M:WinCopies.Util.Data.CheckableObject`1.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:WinCopies.Util.Data.CheckableObject`1"/> class.
-            </summary>
-        </member>
-        <member name="M:WinCopies.Util.Data.CheckableObject`1.#ctor(System.Boolean,`0)">
-            <summary>
-            Initializes a new instance of the <see cref="T:WinCopies.Util.Data.CheckableObject`1"/> class using custom values.
-            </summary>
-            <param name="isChecked">A value that indicates if this object is checked by default.</param>
-            <param name="value">The value of the object.</param>
         </member>
         <member name="M:WinCopies.Util.Data.CheckableObject`1.Dispose(System.Boolean)">
             <summary>
@@ -1329,34 +1324,39 @@
             Determines whether an object is null. You can set to <see langword="true"/> the parameter of the <see cref="T:System.Windows.Data.Binding"/> that will use this converter to get a reversed <see cref="T:System.Boolean"/>.
             </summary>
         </member>
-        <member name="P:WinCopies.Util.Data.MenuItem.Header">
-            <summary>
-            Gets or sets a value that represents the header of this item.
-            </summary>
-        </member>
-        <member name="P:WinCopies.Util.Data.MenuItem.Command">
+        <member name="P:WinCopies.Util.Data.MenuItemBase.Command">
             <summary>
             Gets or sets the <see cref="T:System.Windows.Input.ICommand"/> that represents the action to do when the user clicks on the menu item.
             </summary>
         </member>
-        <member name="P:WinCopies.Util.Data.MenuItem.CommandParameter">
+        <member name="P:WinCopies.Util.Data.MenuItemBase.CommandParameter">
             <summary>
-            Gets or sets the command parameter for the <see cref="P:WinCopies.Util.Data.MenuItem.Command"/> property value.
+            Gets or sets the command parameter for the <see cref="P:WinCopies.Util.Data.MenuItemBase.Command"/> property value.
             </summary>
         </member>
-        <member name="P:WinCopies.Util.Data.MenuItem.CommandTarget">
+        <member name="P:WinCopies.Util.Data.MenuItemBase.CommandTarget">
             <summary>
             Gets or sets the command target for this menu item.
             </summary>
         </member>
-        <member name="P:WinCopies.Util.Data.MenuItem.IsCheckable">
+        <member name="P:WinCopies.Util.Data.MenuItemBase.IsCheckable">
             <summary>
             Gets or sets a value that indicates whether the menu item can be checked.
             </summary>
         </member>
-        <member name="P:WinCopies.Util.Data.MenuItem.IsChecked">
+        <member name="P:WinCopies.Util.Data.MenuItemBase.IsChecked">
             <summary>
             Gets or sets a value that indicates whether the menu item is checked.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.Data.MenuItemBase.IsSeparator">
+            <summary>
+            Gets a value that indicates whether this <see cref="T:WinCopies.Util.Data.MenuItem"/> represents a separator.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.Data.MenuItem.Header">
+            <summary>
+            Gets or sets a value that represents the header of this item.
             </summary>
         </member>
         <member name="P:WinCopies.Util.Data.MenuItem.Items">
@@ -1364,44 +1364,14 @@
             Gets or sets the items of this menu item.
             </summary>
         </member>
-        <member name="P:WinCopies.Util.Data.MenuItem.IsSeparator">
-            <summary>
-            Gets a value that indicates whether this <see cref="T:WinCopies.Util.Data.MenuItem"/> represents a separator.
-            </summary>
-        </member>
         <member name="P:WinCopies.Util.Data.MenuItem`2.Header">
             <summary>
             Gets or sets a value that represents the header of this item.
             </summary>
         </member>
-        <member name="P:WinCopies.Util.Data.MenuItem`2.Command">
-            <summary>
-            Gets or sets the <see cref="T:System.Windows.Input.ICommand"/> that represents the action to do when user click on this menu item.
-            </summary>
-        </member>
-        <member name="P:WinCopies.Util.Data.MenuItem`2.CommandParameter">
-            <summary>
-            Gets or sets the command parameter for the <see cref="P:WinCopies.Util.Data.MenuItem`2.CommandParameter"/> property.
-            </summary>
-        </member>
-        <member name="P:WinCopies.Util.Data.MenuItem`2.IsCheckable">
-            <summary>
-            Gets or sets a value that indicates whether this menu item can be checked.
-            </summary>
-        </member>
-        <member name="P:WinCopies.Util.Data.MenuItem`2.IsChecked">
-            <summary>
-            Gets or sets a value that indicates whether this menu item is checked.
-            </summary>
-        </member>
         <member name="P:WinCopies.Util.Data.MenuItem`2.Items">
             <summary>
             Gets or sets the items of this menu item.
-            </summary>
-        </member>
-        <member name="P:WinCopies.Util.Data.MenuItem`2.IsSeparator">
-            <summary>
-            Gets a value that indicates whether this <see cref="T:WinCopies.Util.Data.MenuItem"/> represents a separator.
             </summary>
         </member>
         <member name="T:WinCopies.Util.Data.MultiConverterBase">
@@ -1451,14 +1421,35 @@
             Provides an object that defines a value with an associated name and notifies of the name or value change.
             </summary>
         </member>
+        <member name="P:WinCopies.Util.Data.NamedObjectBase.Name">
+            <summary>
+            Gets or sets the name of the object.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.Data.NamedObjectBase.Dispose(System.Boolean)">
+            <summary>
+            Removes the unmanaged resources and the managed resources if needed. If you override this method, you should call this implementation of this method in your override implementation to avoid unexpected results when using this object laater.
+            </summary>
+            <param name="disposing"><see langword="true"/> to dispose managed resources, otherwise <see langword="false"/>.</param>
+        </member>
         <member name="T:WinCopies.Util.Data.NamedObject">
             <summary>
             Provides an object that defines a value with an associated name and notifies of the name or value change.
             </summary>
         </member>
-        <member name="P:WinCopies.Util.Data.NamedObject.Name">
+        <member name="P:WinCopies.Util.Data.NamedObject.Value">
             <summary>
-            Gets or sets the name of the object.
+            Gets or sets the value of the object.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.Data.NamedObject.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Util.Data.NamedObject"/> class.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.Data.NamedObject.#ctor(System.String,System.Object)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Util.Data.NamedObject"/> class using custom values.
             </summary>
         </member>
         <member name="M:WinCopies.Util.Data.NamedObject.Equals(WinCopies.Util.IValueObject)">
@@ -1475,67 +1466,11 @@
             <param name="obj">Object to compare to the current object.</param>
             <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="P:WinCopies.Util.Data.NamedObject.Value">
-            <summary>
-            Gets or sets the value of the object.
-            </summary>
-        </member>
-        <member name="M:WinCopies.Util.Data.NamedObject.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:WinCopies.Util.Data.NamedObject"/> class.
-            </summary>
-        </member>
-        <member name="M:WinCopies.Util.Data.NamedObject.#ctor(System.String,System.Object)">
-            <summary>
-            Initializes a new instance of the <see cref="T:WinCopies.Util.Data.NamedObject"/> class using custom values.
-            </summary>
-            <param name="name"></param>
-            <param name="value"></param>
-        </member>
-        <member name="M:WinCopies.Util.Data.NamedObject.Dispose(System.Boolean)">
-            <summary>
-            Removes the unmanaged resources and the managed resources if needed. If you override this method, you should call this implementation of this method in your override implementation to avoid unexpected results when using this object laater.
-            </summary>
-            <param name="disposing"><see langword="true"/> to dispose managed resources, otherwise <see langword="false"/>.</param>
-        </member>
         <member name="T:WinCopies.Util.Data.NamedObject`1">
             <summary>
             Provides an object that defines a generic value with an associated name and notifies of the name or value change.
             </summary>
             <typeparam name="T">The type of the value of this object.</typeparam>
-        </member>
-        <member name="P:WinCopies.Util.Data.NamedObject`1.Name">
-            <summary>
-            Gets or sets the name of the object.
-            </summary>
-        </member>
-        <member name="M:WinCopies.Util.Data.NamedObject`1.Equals(WinCopies.Util.IValueObject)">
-            <summary>
-            Determines whether this object is equal to a given object.
-            </summary>
-            <param name="obj">Object to compare to the current object.</param>
-            <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Util.Data.NamedObject`1.Equals(WinCopies.Util.IValueObject{`0})">
-            <summary>
-            Determines whether this object is equal to a given object.
-            </summary>
-            <param name="obj">Object to compare to the current object.</param>
-            <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Util.Data.NamedObject`1.Equals(WinCopies.Util.IReadOnlyValueObject)">
-            <summary>
-            Determines whether this object is equal to a given object.
-            </summary>
-            <param name="obj">Object to compare to the current object.</param>
-            <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Util.Data.NamedObject`1.Equals(WinCopies.Util.IReadOnlyValueObject{`0})">
-            <summary>
-            Determines whether this object is equal to a given object.
-            </summary>
-            <param name="obj">Object to compare to the current object.</param>
-            <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
         </member>
         <member name="P:WinCopies.Util.Data.NamedObject`1.Value">
             <summary>
@@ -1551,8 +1486,27 @@
             <summary>
             Initializes a new instance of the <see cref="T:WinCopies.Util.Data.NamedObject`1"/> class using custom values.
             </summary>
-            <param name="name"></param>
-            <param name="value"></param>
+        </member>
+        <member name="M:WinCopies.Util.Data.NamedObject`1.Equals(WinCopies.Util.IReadOnlyValueObject)">
+            <summary>
+            Determines whether this object is equal to a given object.
+            </summary>
+            <param name="obj">Object to compare to the current object.</param>
+            <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Util.Data.NamedObject`1.Equals(WinCopies.Util.IValueObject{`0})">
+            <summary>
+            Determines whether this object is equal to a given object.
+            </summary>
+            <param name="obj">Object to compare to the current object.</param>
+            <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Util.Data.NamedObject`1.Equals(WinCopies.Util.IReadOnlyValueObject{`0})">
+            <summary>
+            Determines whether this object is equal to a given object.
+            </summary>
+            <param name="obj">Object to compare to the current object.</param>
+            <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
         </member>
         <member name="M:WinCopies.Util.Data.NamedObject`1.Dispose(System.Boolean)">
             <summary>

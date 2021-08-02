@@ -52,13 +52,13 @@ namespace WinCopies.Collections.DotNetFix
             System.Collections.Generic.LinkedList<T>, ILinkedList2<T>
 #endif
         {
-            #region Properties
+#region Properties
             public bool IsReadOnly => false;
 
             public bool SupportsReversedEnumeration => true;
-            #endregion
+#endregion
 
-            #region Constructors
+#region Constructors
 
             /// <summary>
             /// Initializes a new instance of the <see cref="System.Collections.Generic.LinkedList{T}"/> class that is empty.
@@ -101,7 +101,7 @@ namespace WinCopies.Collections.DotNetFix
             // Left empty.
         }
 #endif
-            #endregion
+#endregion
 
 #if WinCopies3
             public class LinkedListNode : ILinkedListNode<T, LinkedListNode, LinkedList<T>>, ILinkedListNode<T>
@@ -207,13 +207,13 @@ namespace WinCopies.Collections.DotNetFix
                 }
             }
 
-            #region Fields
+#region Fields
             private uint _enumeratorsCount = 0;
             private object _syncRoot;
             private uint _enumerableVersion = 0;
-            #endregion
+#endregion
 
-            #region Properties
+#region Properties
             public LinkedListNode First { get; private set; }
 
 #if !WinCopies3
@@ -257,9 +257,9 @@ namespace WinCopies.Collections.DotNetFix
                     return _syncRoot;
                 }
             }
-            #endregion
+#endregion
 
-            #region Methods
+#region Methods
             private void IncrementEnumeratorsCount() => _enumeratorsCount++;
 
             private void DecrementEnumeratorsCount()
@@ -717,7 +717,7 @@ namespace WinCopies.Collections.DotNetFix
             }
 
             public void CopyTo(Array array, int index) => EnumerableExtensions.CopyTo(this, array, index, Count);
-            #endregion
+#endregion
 
             protected bool OnNodeCoupleAction(in ILinkedListNode<T> x, in string xArgumentName, in ILinkedListNode<T> y, in string yArgumentName, in Func<LinkedListNode, LinkedListNode, bool> func)
             {
@@ -888,7 +888,7 @@ namespace WinCopies.Collections.DotNetFix
                 return true;
             }
 
-            #region ISortable implementation
+#region ISortable implementation
             public void Sort() => Sort(System.Collections.Generic.Comparer<T>.Default.Compare);
 
             void ISortable.Sort(Comparison comparison) => Sort((T x, T y) => comparison(x, y));
@@ -939,7 +939,7 @@ namespace WinCopies.Collections.DotNetFix
                     }
                 }
             }
-            #endregion
+#endregion
 
             ~LinkedList() => Clear();
 #endif

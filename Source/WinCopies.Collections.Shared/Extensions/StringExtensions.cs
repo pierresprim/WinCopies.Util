@@ -16,7 +16,6 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if WinCopies3
-
 using System;
 using System.Diagnostics;
 using System.Globalization;
@@ -32,7 +31,7 @@ namespace WinCopies.Collections
     public static class StringExtensions
     {
         #region Split
-
+#if CS5
         private static void Split(this string s, in bool skipEmptyValues, in StringBuilder stringBuilder, in Action<string> action, params char[] separators)
         {
             ThrowIfNull(s, nameof(s));
@@ -209,8 +208,8 @@ namespace WinCopies.Collections
             Split(s, splitEmptyValues, stringBuilder, _s => list.AddLast(_s), separators);
         }
 #endif
-
-        #endregion
+#endif
+#endregion
 
         public static string Join(this System.Collections.Generic.IEnumerable<string> enumerable, in bool keepEmptyValues, params char[] join) => Join(enumerable, keepEmptyValues, new string(join));
 
@@ -474,5 +473,4 @@ namespace WinCopies.Collections
         }
     }
 }
-
 #endif

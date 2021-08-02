@@ -6,6 +6,10 @@ The WinCopies® software framework
 CHANGELOG
 ---------
 
+### 08/02/2021 2.14
+
+- Add default delegate implementations.
+
 ### 07/19/2021 2.13.1
 
 - Stack/QueueCollection: bug fixed in GetEnumerator methods.

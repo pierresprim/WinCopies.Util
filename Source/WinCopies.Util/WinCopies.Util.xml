@@ -219,71 +219,38 @@
             <param name="validateValueCallback">The callback used to validate the given value. You can leave this parameter to null if you don't want to perform validation.</param>
             <param name="throwIfValidationFails">Whether to throw if the validation of <paramref name="validateValueCallback"/> fails.</param>
             <param name="valueChangedCallback">The callback used to perform actions after the property is set. You can leave this parameter to null if you don't want to perform actions after the property is set.</param>
-            <returns>A <see cref="T:System.Boolean"/> value that indicates whether the setting succeeded and the old value of the given property (or <see langword="null"/> if thearam>
-            <returns><see langword="true"/> if x is equal to y, otherwise <see langword="false"/>.</returns>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether the setting succeeded and the old value of the given property (or <see langword="null"/> if the property does not contain any value nor reference).</returns>
+            <exception cref="T:System.InvalidOperationException">The declaring types of the given property and field name doesn't correspond. OR The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
+            <exception cref="T:System.ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
+            <exception cref="T:System.Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="T:System.ArgumentException"/> otherwise.</exception>
         </member>
-        <member name="T:WinCopies.Collections.Generic.EqualityComparison`1">
+        <member name="M:WinCopies.Util.Extensions.DisposeAndSetProperty(System.Object,System.String,WinCopies.IDisposable,System.Type,System.Boolean@,System.Reflection.BindingFlags,System.String,System.Boolean@,System.Boolean@,WinCopies.PropertyValidateValueCallback,System.Boolean@,WinCopies.PropertyValueChangedCallback)">
             <summary>
-            Delegate for a generic equality comparison.
+            Disposes an old value of a property then sets a new value to the given property if the new value is different.
             </summary>
-            <typeparam name="T">The type of the current delegate parameters.</typeparam>
-            <param name="x">First parameter to compare.</param>
-            <param name="y">Second parameter to compare.</param>
-            <returns><see langword="true"/> if x is equal to y, otherwise <see langword="false"/>.</returns>
+            <param name="obj">The object in which to set the property.</param>
+            <param name="propertyName">The name of the given property.</param>
+            <param name="newValue">The value to set.</param>
+            <param name="declaringType">The actual declaring type of the property.</param>
+            <param name="throwIfReadOnly">Whether to throw if the given property is read-only.</param>
+            <param name="bindingFlags">The <see cref="T:System.Reflection.BindingFlags"/> used to get the property.</param>
+            <param name="paramName">The parameter from which the value was passed to this method.</param>
+            <param name="setOnlyIfNotNull">Whether to set only if the given value is not null.</param>
+            <param name="throwIfNull">Whether to throw if the given value is null.</param>
+            <param name="validateValueCallback">The callback used to validate the given value. You can leave this parameter to null if you don't want to perform validation.</param>
+            <param name="throwIfValidationFails">Whether to throw if the validation of <paramref name="validateValueCallback"/> fails.</param>
+            <param name="valueChangedCallback">The callback used to perform actions after the property is set. You can leave this parameter to null if you don't want to perform actions after the property is set.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether the setting succeeded and the old value of the given property (or <see langword="null"/> if the property does not contain any value nor reference).</returns>
+            <exception cref="T:System.InvalidOperationException">The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
+            <exception cref="T:System.ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
+            <exception cref="T:System.Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="T:System.ArgumentException"/> otherwise.</exception>
         </member>
-        <member name="T:WinCopies.Delegates">
+        <member name="M:WinCopies.Util.Extensions.GetNumValue(System.Enum)">
             <summary>
-            This class contains static methods that can be used as delegates.
+            Gets the numeric value for an enum.
             </summary>
-        </member>
-        <member name="T:WinCopies.Bool">
-            <summary>
-            This class contains static methods that can be used as delegates for <see cref="T:System.Boolean"/> values.
-            </summary>
-        </member>
-        <member name="T:WinCopies.Predicate">
-            <summary>
-            Delegate for a non-generic predicate.
-            </summary>
-            <param name="value">The value to test.</param>
-            <returns><see langword="true"/> if the predicate success, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="T:WinCopies.Func">
-            <summary>
-            Represents a delegate that returns an object.
-            </summary>
-            <returns>Any object.</returns>
-        </member>
-        <member name="M:WinCopies.InvalidEnumArgumentException.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:WinCopies.InvalidEnumArgumentException"/> class.
-            </summary>
-        </member>
-        <member name="M:WinCopies.InvalidEnumArgumentException.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:WinCopies.InvalidEnumArgumentException"/> class with a specified error message.
-            </summary>
-            <param name="message">The message that describes the error.</param>
-        </member>
-        <member name="M:WinCopies.InvalidEnumArgumentException.#ctor(System.String,System.Exception)">
-            <summary>
-            Initializes a new instance of the System.Exception class with a specified error message and a reference to the inner exception that is the cause of this exception.
-            </summary>
-            <param name="message">The error message that explains the reason for the exception.</param>
-            <param name="innerException">The exception that is the cause of the current exception, or a <see langword="null"/> reference (<see langword="Nothing"/> in Visual Basic) if no inner exception is specified.</param>
-        </member>
-        <member name="M:WinCopies.InvalidEnumArgumentException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-            <summary>
-            Initializes a new instance of the <see cref="T:WinCopies.InvalidEnumArgumentException"/> class with serialized data.
-            </summary>
-            <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
-            <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.</param>
-            <exception cref="T:System.ArgumentNullException">info is null.</exception>
-            <exception cref="T:System.Runtime.Serialization.SerializationException">The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0).</exception>
-        </member>
-        <member name="M:WinCopies.InvalidEnumArgumentException.#ctor(System.String,System.Int32,System.Type)">
-            <summary>
-            Initializes a new instancrlying type.</returns>
+            <param name="enum">The enum for which get the corresponding numeric value.</param>
+            <returns>The numeric value corresponding to this enum, in the given enum type underlying type.</returns>
         </member>
         <member name="M:WinCopies.Util.Extensions.GetNumValue``1(``0)">
             <summary>

@@ -68,12 +68,20 @@ namespace WinCopies.Collections.DotNetFix
     namespace Generic
     {
 #if WinCopies3
-        public interface IEnumerator<out T> : System.Collections.Generic.IEnumerator<T>, IEnumeratorBase
+        public interface IEnumerator<
+#if CS5
+            out
+#endif
+             T> : System.Collections.Generic.IEnumerator<T>, IEnumeratorBase
         {
             // Left empty.
         }
 
-        public interface IDisposableEnumerator<out T> : System.Collections.Generic.IEnumerator<T>, WinCopies.DotNetFix.IDisposable
+        public interface IDisposableEnumerator<
+#if CS5
+            out
+#endif
+             T> : System.Collections.Generic.IEnumerator<T>, WinCopies.DotNetFix.IDisposable
         {
             // Left empty.
         }
