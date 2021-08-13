@@ -24,7 +24,7 @@ using WinCopies.Collections.Generic;
 
 namespace WinCopies.Collections
 {
-    public class StringCharArray : ICountableEnumerableInfo<char>, IReadOnlyList<char>
+    public class StringCharArray : ICountableEnumerableInfo<char>, Generic.IReadOnlyList<char>
     {
         private readonly string _s;
 
@@ -50,7 +50,7 @@ namespace WinCopies.Collections
 
         System.Collections.Generic.IEnumerator<char> Generic.IEnumerable<char>.GetReversedEnumerator() => GetReversedEnumerator();
 
-        ICountableEnumerator<char> IReadOnlyList<char>.GetEnumerator() => GetEnumerator();
+        ICountableEnumerator<char> Generic.IReadOnlyList<char>.GetEnumerator() => GetEnumerator();
 
         private CountableEnumeratorInfo<char> _GetReversedEnumerator() => new
 #if !CS9

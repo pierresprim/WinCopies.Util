@@ -11,14 +11,15 @@
     <Description>WinCopies framework utilities</Description>
     <Copyright>Copyright © 2021 Pierre Sprimont</Copyright>
     <PackageTags>WinCopies</PackageTags>
-    <VersionPrefix>2.14</VersionPrefix>
-    <AssemblyVersion>2.14</AssemblyVersion>
-    <FileVersion>2.14</FileVersion>
+    <VersionPrefix>2.15</VersionPrefix>
+    <AssemblyVersion>2.15</AssemblyVersion>
+    <FileVersion>2.15</FileVersion>
     <DefineConstants>WinCopies2;$(DefineConstants)</DefineConstants>
     <RootNamespace>WinCopies.Util</RootNamespace>
     <PackageIcon>WinCopies.png</PackageIcon>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
 
   <Import Project="..\WinCopies.Util.Shared\WinCopies.Util.Shared.projitems" Label="Shared" />

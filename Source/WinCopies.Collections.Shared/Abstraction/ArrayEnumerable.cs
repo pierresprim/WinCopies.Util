@@ -25,7 +25,7 @@ using WinCopies.Collections.Generic;
 
 namespace WinCopies.Collections.Abstraction.Generic
 {
-    public interface IReadOnlyArrayEnumerable<T> : IReadOnlyList<T>
+    public interface IReadOnlyArrayEnumerable<T> : Collections.Generic.IReadOnlyList<T>
     {
         bool Check();
     }

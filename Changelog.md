@@ -13,6 +13,7 @@ CHANGELOG
 	- commands.
 	- static methods.
 	- TOut FuncOut<TParam, out TOut>(out TParam param) delegate.
+	- WinCopies.Util.IO.Path class.
 
 ### 08/02/2021 2.14
 

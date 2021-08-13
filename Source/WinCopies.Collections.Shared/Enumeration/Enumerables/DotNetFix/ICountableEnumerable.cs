@@ -144,7 +144,7 @@ namespace WinCopies.Collections.DotNetFix
         T this[int index] { get; }
     }
 
-    public interface IArray<T> : IReadOnlyList<T>
+    public interface IArray<T> : Collections.Generic.IReadOnlyList<T>
 #if WinCopies3
             , IReadOnlyArray<T>
 #endif

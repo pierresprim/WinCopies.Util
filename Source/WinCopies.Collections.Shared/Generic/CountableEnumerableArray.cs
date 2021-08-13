@@ -257,7 +257,7 @@ namespace WinCopies.Collections
 #endif
             }
 
-            public abstract class CountableEnumerableInfoBase<TEnumerable, TEnumerator, TItems> : CountableEnumerableBase<TEnumerable, TEnumerator> where TEnumerable : ICountable, Collections.DotNetFix.Generic.IEnumerable<TItems, TEnumerator>, IEnumerableInfo<TEnumerator> where TEnumerator : IEnumerator<TItems>, IEnumeratorInfo2<TItems>
+            public abstract class CountableEnumerableInfoBase<TEnumerable, TEnumerator, TItems> : CountableEnumerableBase<TEnumerable, TEnumerator> where TEnumerable : ICountable, Collections.DotNetFix.Generic.IEnumerable<TItems, TEnumerator>, IEnumerableInfo<TEnumerator> where TEnumerator : Collections.DotNetFix.Generic.IEnumerator<TItems>, IEnumeratorInfo2<TItems>
             {
                 public bool SupportsReversedEnumeration => Enumerable.SupportsReversedEnumeration;
 

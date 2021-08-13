@@ -22,28 +22,26 @@ using System.Collections.Generic;
 namespace WinCopies.Collections
 {
 #if !WinCopies3
-namespace Generic
-{
+    namespace Generic
+    {
 #endif
-    public interface ILoopEnumerator
-    {
-        object Current { get; }
+        public interface ILoopEnumerator
+        {
+            object Current { get; }
 
-        void MovePrevious();
+            void MovePrevious();
 
-        void MoveNext();
-    }
+            void MoveNext();
+        }
 
-    public interface IReadOnlyListLoopEnumerator : ILoopEnumerator
-    {
-        int CurrentIndex { get; }
-    }
+        public interface IReadOnlyListLoopEnumerator : ILoopEnumerator
+        {
+            int CurrentIndex { get; }
+        }
 
 #if WinCopies3
     namespace Generic
     {
-#else
-    }
 #endif
         public interface ILoopEnumerator<T> : ILoopEnumerator
         {
@@ -95,8 +93,6 @@ namespace Generic
 
             public EnumLoopEnumerator() : base(GetList()) { /* Left empty. */ }
         }
-#if WinCopies3
     }
-#endif
 }
 #endif

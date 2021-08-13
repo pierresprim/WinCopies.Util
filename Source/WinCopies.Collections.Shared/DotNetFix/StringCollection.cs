@@ -25,7 +25,7 @@ namespace WinCopies.Collections.DotNetFix
 {
     public class StringCollection : WinCopies.Collections.Generic.IReadOnlyList<string>
     {
-        private System.Collections.Specialized.StringCollection _sc;
+        private readonly System.Collections.Specialized.StringCollection _sc;
 
 #if CS7
         string System.Collections.Generic.IReadOnlyList<string>.this[int index] => _sc[index];
@@ -33,7 +33,7 @@ namespace WinCopies.Collections.DotNetFix
         int System.Collections.Generic.IReadOnlyCollection<string>.Count => _sc.Count;
 
 #if WinCopies3
-        int IReadOnlyList<string>.Count => _sc.Count;
+        int WinCopies.Collections.Generic.IReadOnlyList<string>.Count => _sc.Count;
 
         int ICountableEnumerable<string, Generic.ICountableEnumerator<string>>.Count => _sc.Count;
 #else
@@ -56,7 +56,7 @@ namespace WinCopies.Collections.DotNetFix
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
 
 #if WinCopies3
-        ICountableEnumerator<string> IReadOnlyList<string>.GetEnumerator() => GetCountableEnumerator();
+        ICountableEnumerator<string> WinCopies.Collections.Generic.IReadOnlyList<string>.GetEnumerator() => GetCountableEnumerator();
 
         ICountableEnumerator<string> ICountableEnumerable<string, ICountableEnumerator<string>>.GetEnumerator() => GetCountableEnumerator();
 

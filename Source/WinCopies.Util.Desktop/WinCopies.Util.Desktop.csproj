@@ -12,14 +12,15 @@
     <AssemblyOriginatorKeyFile>WinCopies.Util.Desktop.snk</AssemblyOriginatorKeyFile>
     <DocumentationFile>WinCopies.Util.Desktop.xml</DocumentationFile>
     <PackageTags>WinCopies</PackageTags>
-    <VersionPrefix>3.11</VersionPrefix>
+    <VersionPrefix>3.12</VersionPrefix>
     <VersionSuffix>preview</VersionSuffix>
-    <AssemblyVersion>3.11.0</AssemblyVersion>
-    <FileVersion>3.11.0</FileVersion>
+    <AssemblyVersion>3.12.0</AssemblyVersion>
+    <FileVersion>3.12.0</FileVersion>
     <RootNamespace>WinCopies.Desktop</RootNamespace>
     <DefineConstants>WinCopies3;$(DefineConstants)</DefineConstants>
     <PackageIcon>WinCopies.png</PackageIcon>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
 
   <Import Project="..\WinCopies.Util.Desktop.Shared\WinCopies.Util.Desktop.Shared.projitems" Label="Shared" />

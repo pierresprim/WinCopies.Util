@@ -35,7 +35,7 @@ namespace WinCopies.Collections.Abstraction.Generic
         public ReadOnlyList(System.Collections.Generic.IReadOnlyList<TSource> innerList, Converter<TSource, TDestination> selector) : base(innerList, selector) { /* Left empty. */ }
     }
 
-    public class List<TSource, TDestination> : ReadOnlyList<IList<TSource>, TSource, TDestination>, System.Collections.Generic.IList<TDestination>
+    public class List<TSource, TDestination> : ReadOnlyList<Abstract.IList<TSource>, TSource, TDestination>, System.Collections.Generic.IList<TDestination>
     {
         protected Converter<TDestination, TSource> ReversedSelector { get; }
 
@@ -43,7 +43,7 @@ namespace WinCopies.Collections.Abstraction.Generic
 
         public bool IsReadOnly => InnerEnumerable.IsReadOnly;
 
-        public List(IList<TSource> innerList, Converter<TSource, TDestination> selector, Converter<TDestination, TSource> reversedSelector) : base(innerList, selector) => ReversedSelector = reversedSelector;
+        public List(Abstract.IList<TSource> innerList, Converter<TSource, TDestination> selector, Converter<TDestination, TSource> reversedSelector) : base(innerList, selector) => ReversedSelector = reversedSelector;
 
         public void Add(TDestination item) => InnerEnumerable.Add(ReversedSelector(item));
 

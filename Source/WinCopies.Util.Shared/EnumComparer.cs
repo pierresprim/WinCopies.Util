@@ -102,7 +102,11 @@ namespace WinCopies.Collections
         public override int Compare(Enum x, Enum y) => x.CompareTo(y);
     }
 
-    public class CustomizableSortingTypeEnumComparer : EnumComparer, IComparer<Enum>
+    public class CustomizableSortingTypeEnumComparer : EnumComparer, WinCopies.Collections.
+        #if WinCopies3
+        Generic.
+#endif
+        IComparer<Enum>
     {
         public SortingType SortingType { get; set; }
 

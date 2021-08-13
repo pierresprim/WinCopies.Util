@@ -35,11 +35,11 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework.TrimEnd(`0123456789-windows`))' == 'net6.'">
-    <DefineConstants>CS4;CS5;CS6;CS7;CS8;CS9;NET5;NET6;$(DefineConstants)</DefineConstants>
+    <DefineConstants>CS4;CS5;CS6;CS7;CS8;CS9;CS10;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework.TrimEnd(`0123456789-windows`))' == 'net5.'">
-    <DefineConstants>CS4;CS5;CS6;CS7;CS8;CS9;NET5;$(DefineConstants)</DefineConstants>
+    <DefineConstants>CS4;CS5;CS6;CS7;CS8;CS9;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)'=='net35'">
@@ -99,9 +99,6 @@
   <!--End Source Control-->
 
   <ItemGroup>
-    <None Include="..\..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
+    <None Include="..\..\LICENSE" Pack="true" PackagePath="" />
   </ItemGroup>
 </Project>
