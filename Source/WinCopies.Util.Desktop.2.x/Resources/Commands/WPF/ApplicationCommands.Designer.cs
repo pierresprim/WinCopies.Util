@@ -19,7 +19,7 @@ namespace WinCopies.Util.Desktop.Resources.Commands.WPF {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class ApplicationCommands {
@@ -97,11 +97,29 @@ namespace WinCopies.Util.Desktop.Resources.Commands.WPF {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Delete _permanently.
+        /// </summary>
+        public static string DeletePermanently {
+            get {
+                return ResourceManager.GetString("DeletePermanently", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to _Deselect all.
         /// </summary>
         public static string DeselectAll {
             get {
                 return ResourceManager.GetString("DeselectAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Empt_y.
+        /// </summary>
+        public static string Empty {
+            get {
+                return ResourceManager.GetString("Empty", resourceCulture);
             }
         }
         

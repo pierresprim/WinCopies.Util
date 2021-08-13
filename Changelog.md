@@ -6,6 +6,14 @@ The WinCopies® software framework
 CHANGELOG
 ---------
 
+### 08/13/2021 2.15
+
+- Add:
+	- support for .Net 3.5, 4.0, 4.5 and 6.0.
+	- commands.
+	- static methods.
+	- TOut FuncOut<TParam, out TOut>(out TParam param) delegate.
+
 ### 08/02/2021 2.14
 
 - Add default delegate implementations, types and static and extension methods.

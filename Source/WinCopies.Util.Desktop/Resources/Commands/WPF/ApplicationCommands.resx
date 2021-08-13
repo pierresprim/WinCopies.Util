@@ -150,4 +150,10 @@
   <data name="Reset" xml:space="preserve">
     <value>R_eset</value>
   </data>
+  <data name="Empty" xml:space="preserve">
+    <value>Empt_y</value>
+  </data>
+  <data name="DeletePermanently" xml:space="preserve">
+    <value>Delete _permanently</value>
+  </data>
 </root>

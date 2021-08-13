@@ -40,6 +40,14 @@ namespace WinCopies
         public static T NullIn<T>(in T parameter) where T : class => null;
 
         public static T SelfIn<T>(in T value) => value;
+
+        public static TOut Convert<TIn, TOut>(TIn value) where TOut : TIn => (TOut)value;
+
+        public static TOut ConvertIn<TIn, TOut>(in TIn value) where TOut : TIn => (TOut)value;
+
+        public static TOut ConvertBack<TIn, TOut>(TIn value) where TIn : TOut => value;
+
+        public static TOut ConvertBackIn<TIn, TOut>(in TIn value) where TIn : TOut => value;
     }
 
     /// <summary>

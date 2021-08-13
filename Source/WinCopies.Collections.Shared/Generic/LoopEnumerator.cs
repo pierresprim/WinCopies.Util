@@ -19,8 +19,12 @@
 using System;
 using System.Collections.Generic;
 
-namespace WinCopies.Collections.Generic
+namespace WinCopies.Collections
 {
+#if !WinCopies3
+namespace Generic
+{
+#endif
     public interface ILoopEnumerator
     {
         object Current { get; }
@@ -30,59 +34,69 @@ namespace WinCopies.Collections.Generic
         void MoveNext();
     }
 
-    public interface ILoopEnumerator<T> : ILoopEnumerator
-    {
-        new T Current { get; }
-    }
-
     public interface IReadOnlyListLoopEnumerator : ILoopEnumerator
     {
         int CurrentIndex { get; }
     }
 
-    public class ListLoopEnumerator<T> : IReadOnlyListLoopEnumerator, ILoopEnumerator<T>
+#if WinCopies3
+    namespace Generic
     {
-        protected
+#else
+    }
+#endif
+        public interface ILoopEnumerator<T> : ILoopEnumerator
+        {
+            new T Current { get; }
+        }
+
+        public class ListLoopEnumerator<T> : IReadOnlyListLoopEnumerator, ILoopEnumerator<T>
+        {
+            protected
 #if CS6
             System.Collections.Generic.
 #else
             
 #endif
-            IReadOnlyList<T> InnerArray { get; }
+            IReadOnlyList<T> InnerArray
+            { get; }
 
-        public T Current => InnerArray[CurrentIndex];
+            public T Current => InnerArray[CurrentIndex];
 
-        object ILoopEnumerator.Current => Current;
+            object ILoopEnumerator.Current => Current;
 
-        public int CurrentIndex { get; protected set; }
+            public int CurrentIndex { get; protected set; }
 
-        public ListLoopEnumerator(in System.Collections.Generic.IReadOnlyList<T> array) => InnerArray = array;
+            public ListLoopEnumerator(in System.Collections.Generic.IReadOnlyList<T> array) => InnerArray = array;
 
-        public void MovePrevious() => CurrentIndex = (CurrentIndex == 0 ? InnerArray.Count : CurrentIndex) - 1;
+            public void MovePrevious() => CurrentIndex = (CurrentIndex == 0 ? InnerArray.Count : CurrentIndex) - 1;
 
-        public void MoveNext() => CurrentIndex = CurrentIndex == InnerArray.Count - 1 ? 0 : CurrentIndex + 1;
-    }
-
-    public class EnumLoopEnumerator<T> : ListLoopEnumerator<T>, ILoopEnumerator<string>, IReadOnlyListLoopEnumerator where T : Enum
-    {
-        string ILoopEnumerator<string>.Current => Current.ToString();
-
-        public static System.Collections.Generic.IReadOnlyList<T> GetList()
-        {
-            Array values = typeof(T).GetEnumValues();
-
-            var list = new List<T>(values.Length);
-
-            foreach (object value in values)
-
-                list.Add((T)value);
-
-            list.Sort();
-
-            return list.AsReadOnly();
+            public void MoveNext() => CurrentIndex = CurrentIndex == InnerArray.Count - 1 ? 0 : CurrentIndex + 1;
         }
 
-        public EnumLoopEnumerator() : base(GetList()) { /* Left empty. */ }
+        public class EnumLoopEnumerator<T> : ListLoopEnumerator<T>, ILoopEnumerator<string>, IReadOnlyListLoopEnumerator where T : Enum
+        {
+            string ILoopEnumerator<string>.Current => Current.ToString();
+
+            public static System.Collections.Generic.IReadOnlyList<T> GetList()
+            {
+                Array values = typeof(T).GetEnumValues();
+
+                var list = new List<T>(values.Length);
+
+                foreach (object value in values)
+
+                    list.Add((T)value);
+
+                list.Sort();
+
+                return list.AsReadOnly();
+            }
+
+            public EnumLoopEnumerator() : base(GetList()) { /* Left empty. */ }
+        }
+#if WinCopies3
     }
+#endif
 }
 #endif

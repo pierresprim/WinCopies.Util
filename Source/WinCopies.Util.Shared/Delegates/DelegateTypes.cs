@@ -172,6 +172,7 @@ namespace WinCopies
     public delegate TOut FuncIn2<in T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, out TOut>(T1 value1, in T2 value2, in T3 value3, in T4 value4, in T5 value5, in T6 value6, in T7 value7, in T8 value8, in T9 value9, in T10 value10, in T11 value11, in T12 value12, in T13 value13, in T14 value14, in T15 value15);
     public delegate TOut FuncIn2<in T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, out TOut>(T1 value1, in T2 value2, in T3 value3, in T4 value4, in T5 value5, in T6 value6, in T7 value7, in T8 value8, in T9 value9, in T10 value10, in T11 value11, in T12 value12, in T13 value13, in T14 value14, in T15 value15, in T16 value16);
 
+    public delegate TOut FuncOut<TParam, out TOut>(out TParam param);
     public delegate TOut FuncOut<in T1, T2, out TOut>(T1 p1, out T2 p2);
     public delegate TOut FuncOut<in T1, in T2, T3, out TOut>(T1 p1, T2 p2, out T3 p3);
     public delegate TOut FuncOut<in T1, in T2, in T3, T4, out TOut>(T1 p1, T2 p2, T3 p3, out T4 p4);

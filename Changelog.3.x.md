@@ -6,6 +6,10 @@ The WinCopies® software framework
 CHANGELOG
 ---------
 
+### 08/13/2021 3.12-preview
+
+- Move I(ReadOnlyList)LoopEnumerator to WinCopies.Collections namespace.
+
 ### 08/02/2021 3.11-preview
 
 - Update ViewModels.

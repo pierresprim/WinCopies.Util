@@ -47,7 +47,7 @@ using IfComp = WinCopies.Util.Util.Comparison;
 namespace WinCopies.Util
 {
 #endif
-public sealed class NullableGeneric<T>
+    public sealed class NullableGeneric<T>
     {
         public T Value { get; }
 
@@ -83,6 +83,26 @@ public sealed class NullableGeneric<T>
         public const BindingFlags DefaultBindingFlagsForPropertySet = BindingFlags.Public | BindingFlags.NonPublic |
                          BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly;
 
+        public static T GetValue<T>(Func<T> func) => func == null ? default : func();
+        public static TResult GetValue<TParam, TResult>(in Func<TParam, TResult> func, in TParam param) => func == null ? default : func(param);
+        public static TResult GetValue<T1, T2, TResult>(in Func<T1, T2, TResult> func, in T1 param1, in T2 param2) => func == null ? default : func(param1, param2);
+        public static TResult GetValue<T1, T2, T3, TResult>(in Func<T1, T2, T3, TResult> func, in T1 param1, in T2 param2, in T3 param3) => func == null ? default : func(param1, param2, param3);
+        public static TResult GetValue<T1, T2, T3, T4, TResult>(in Func<T1, T2, T3, T4, TResult> func, in T1 param1, in T2 param2, in T3 param3, in T4 param4) => func == null ? default : func(param1, param2, param3, param4);
+#if CS5
+        public static TResult GetValue<T1, T2, T3, T4, T5, TResult>(in Func<T1, T2, T3, T4, T5, TResult> func, in T1 param1, in T2 param2, in T3 param3, in T4 param4, in T5 param5) => func == null ? default : func(param1, param2, param3, param4, param5);
+        public static TResult GetValue<T1, T2, T3, T4, T5, T6, TResult>(in Func<T1, T2, T3, T4, T5, T6, TResult> func, in T1 param1, in T2 param2, in T3 param3, in T4 param4, in T5 param5, in T6 param6) => func == null ? default : func(param1, param2, param3, param4, param5, param6);
+        public static TResult GetValue<T1, T2, T3, T4, T5, T6, T7, TResult>(in Func<T1, T2, T3, T4, T5, T6, T7, TResult> func, in T1 param1, in T2 param2, in T3 param3, in T4 param4, in T5 param5, in T6 param6, in T7 param7) => func == null ? default : func(param1, param2, param3, param4, param5, param6, param7);
+        public static TResult GetValue<T1, T2, T3, T4, T5, T6, T7, T8, TResult>(in Func<T1, T2, T3, T4, T5, T6, T7, T8, TResult> func, in T1 param1, in T2 param2, in T3 param3, in T4 param4, in T5 param5, in T6 param6, in T7 param7, in T8 param8) => func == null ? default : func(param1, param2, param3, param4, param5, param6, param7, param8);
+        public static TResult GetValue<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult>(in Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult> func, in T1 param1, in T2 param2, in T3 param3, in T4 param4, in T5 param5, in T6 param6, in T7 param7, in T8 param8, in T9 param9) => func == null ? default : func(param1, param2, param3, param4, param5, param6, param7, param8, param9);
+        public static TResult GetValue<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult>(in Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult> func, in T1 param1, in T2 param2, in T3 param3, in T4 param4, in T5 param5, in T6 param6, in T7 param7, in T8 param8, in T9 param9, in T10 param10) => func == null ? default : func(param1, param2, param3, param4, param5, param6, param7, param8, param9, param10);
+        public static TResult GetValue<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TResult>(in Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TResult> func, in T1 param1, in T2 param2, in T3 param3, in T4 param4, in T5 param5, in T6 param6, in T7 param7, in T8 param8, in T9 param9, in T10 param10, in T11 param11) => func == null ? default : func(param1, param2, param3, param4, param5, param6, param7, param8, param9, param10, param11);
+        public static TResult GetValue<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TResult>(in Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TResult> func, in T1 param1, in T2 param2, in T3 param3, in T4 param4, in T5 param5, in T6 param6, in T7 param7, in T8 param8, in T9 param9, in T10 param10, in T11 param11, in T12 param12) => func == null ? default : func(param1, param2, param3, param4, param5, param6, param7, param8, param9, param10, param11, param12);
+        public static TResult GetValue<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TResult>(in Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TResult> func, in T1 param1, in T2 param2, in T3 param3, in T4 param4, in T5 param5, in T6 param6, in T7 param7, in T8 param8, in T9 param9, in T10 param10, in T11 param11, in T12 param12, in T13 param13) => func == null ? default : func(param1, param2, param3, param4, param5, param6, param7, param8, param9, param10, param11, param12, param13);
+        public static TResult GetValue<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TResult>(in Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TResult> func, in T1 param1, in T2 param2, in T3 param3, in T4 param4, in T5 param5, in T6 param6, in T7 param7, in T8 param8, in T9 param9, in T10 param10, in T11 param11, in T12 param12, in T13 param13, in T14 param14) => func == null ? default : func(param1, param2, param3, param4, param5, param6, param7, param8, param9, param10, param11, param12, param13, param14);
+        public static TResult GetValue<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult>(in Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult> func, in T1 param1, in T2 param2, in T3 param3, in T4 param4, in T5 param5, in T6 param6, in T7 param7, in T8 param8, in T9 param9, in T10 param10, in T11 param11, in T12 param12, in T13 param13, in T14 param14, in T15 param15) => func == null ? default : func(param1, param2, param3, param4, param5, param6, param7, param8, param9, param10, param11, param12, param13, param14, param15);
+        public static TResult GetValue<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, TResult>(in Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, TResult> func, in T1 param1, in T2 param2, in T3 param3, in T4 param4, in T5 param5, in T6 param6, in T7 param7, in T8 param8, in T9 param9, in T10 param10, in T11 param11, in T12 param12, in T13 param13, in T14 param14, in T15 param15, in T16 param16) => func == null ? default : func(param1, param2, param3, param4, param5, param6, param7, param8, param9, param10, param11, param12, param13, param14, param15, param16);
+#endif
+
         public static void Reverse<T>(ref T x, ref T y)
         {
             T z = x;
@@ -94,9 +114,23 @@ public sealed class NullableGeneric<T>
 
         public static void Reverse<T>(in T x, in T y, in Action<T> setX, in Action<T> setY)
         {
+            ThrowIfNull(setX, nameof(setX));
+            ThrowIfNull(setY, nameof(setY));
+
             setX(y);
 
             setY(x);
+        }
+
+        public static bool UpdateValue<T>(ref T value, in T newValue)
+        {
+            if (object.Equals(value, newValue))
+
+                return false;
+
+            value = newValue;
+
+            return true;
         }
 
         public static bool UpdateValue<T>(ref T value, T newValue, Action<T, T> action)
@@ -181,10 +215,8 @@ public sealed class NullableGeneric<T>
 
         public static bool UpdateValue<T>(ref T value, in T newValue, in Action action)
         {
-            if (!Equals(value, newValue))
+            if (UpdateValue(ref value, newValue))
             {
-                value = newValue;
-
                 action();
 
                 return true;
@@ -261,15 +293,15 @@ public sealed class NullableGeneric<T>
         public static bool IsFlagsEnum<T>() where T : Enum => typeof(T).GetCustomAttribute<FlagsAttribute>() is object;
 #endif
 
-// public static KeyValuePair<TKey, Func<bool>>[] GetIfKeyValuePairPredicateArray<TKey>(params KeyValuePair<TKey, Func<bool>>[] keyValuePairs) => keyValuePairs;
+        // public static KeyValuePair<TKey, Func<bool>>[] GetIfKeyValuePairPredicateArray<TKey>(params KeyValuePair<TKey, Func<bool>>[] keyValuePairs) => keyValuePairs;
 
 #if !WinCopies3 && CS6
-#region 'If' methods
+        #region 'If' methods
         public static KeyValuePair<TKey, TValue> GetKeyValuePair<TKey, TValue>(in TKey key, in TValue value) => new KeyValuePair<TKey, TValue>(key, value);
 
         public static KeyValuePair<TKey, Func<bool>> GetIfKeyValuePairPredicate<TKey>(in TKey key, in Func<bool> predicate) => new KeyValuePair<TKey, Func<bool>>(key, predicate);
 
-#region Enums
+        #region Enums
 
         /// <summary>
         /// Comparison types for the If functions.
@@ -349,9 +381,9 @@ public sealed class NullableGeneric<T>
             ReferenceEqual = 6
         }
 
-#endregion
+        #endregion
 
-#region 'Throw' methods
+        #region 'Throw' methods
 #if CS6
         private static void ThrowOnInvalidIfMethodArg(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison)
         {
@@ -395,9 +427,9 @@ public sealed class NullableGeneric<T>
             if (comparison == IfComp.ReferenceEqual && !typeof(T).IsClass) throw new InvalidOperationException("ReferenceEqual comparison is only valid with class types.");
         }
 #endif
-#endregion
+        #endregion
 
-#region 'Check comparison' methods
+        #region 'Check comparison' methods
 
         private static bool CheckIfComparison(in IfComp comparison, in Func<bool> predicateResult, in int result)
         {
@@ -540,9 +572,9 @@ public sealed class NullableGeneric<T>
 
         private delegate bool CheckIfComparisonDelegate<T>(in T value, in Func<bool> predicate);
 
-#endregion
+        #endregion
 
-#region Enumerables
+        #region Enumerables
 
         private interface IIfValuesEnumerable
         {
@@ -717,7 +749,7 @@ public sealed class NullableGeneric<T>
             public KeyValuePair<TKey, KeyValuePair<TValue, Func<bool>>> GetValue(in int index) => Array[index];
         }
 
-#endregion
+        #endregion
 
         private static bool IfInternal(in IfCT comparisonType, in IfCM comparisonMode, CheckIfComparisonDelegate comparisonDelegate, in IIfValuesEnumerable values)
         {
@@ -1065,9 +1097,9 @@ public sealed class NullableGeneric<T>
             }
         }
 
-#region Non generic methods
+        #region Non generic methods
 
-#region Comparisons without key notification
+        #region Comparisons without key notification
 
         /// <summary>
         /// Performs a comparison by testing a value compared to an array of values.
@@ -1213,9 +1245,9 @@ public sealed class NullableGeneric<T>
             return IfInternal(comparisonType, comparisonMode, (in object _value, in Func<bool> _predicate) => CheckEqualityComparison(comparison, _value, value, _predicate, comparisonDelegate), new IfKeyValuePairEnumerable(values));
         }
 
-#endregion
+        #endregion
 
-#region Comparisons with key notification
+        #region Comparisons with key notification
 
         /// <summary>
         /// Performs a comparison by testing a value compared to an array of objects or values.
@@ -1300,13 +1332,13 @@ public sealed class NullableGeneric<T>
             return IfInternal(comparisonType, comparisonMode, (in object _value, in Func<bool> _predicate) => CheckEqualityComparison(comparison, _value, value, _predicate, comparisonDelegate), out key, new IfKeyKeyValuePairEnumerable(values));
         }
 
-#endregion
+        #endregion
 
-#endregion
+        #endregion
 
-#region Generic methods
+        #region Generic methods
 
-#region Comparisons without key notification
+        #region Comparisons without key notification
 
         /// <summary>
         /// Performs a comparison by testing a value compared to an array of objects or values.
@@ -1369,9 +1401,9 @@ public sealed class NullableGeneric<T>
             return IfInternal(comparisonType, comparisonMode, (in T _value, in Func<bool> _predicate) => CheckEqualityComparison(comparison, _value, value, _predicate, comparisonDelegate), new IfKeyValuePairEnumerable<T>(values));
         }
 
-#endregion
+        #endregion
 
-#region Comparisons with key notification
+        #region Comparisons with key notification
         /// <summary>
         /// Performs a comparison by testing a value compared to an array of objects or values.
         /// </summary>
@@ -1429,9 +1461,9 @@ public sealed class NullableGeneric<T>
 
             return IfInternal(comparisonType, comparisonMode, (in TValue _value, in Func<bool> _predicate) => CheckEqualityComparison(comparison, _value, value, _predicate, comparisonDelegate), out key, new IfKeyKeyValuePairEnumerable<TKey, TValue>(values));
         }
-#endregion
-#endregion
-#endregion
+        #endregion
+        #endregion
+        #endregion
 #endif
 
 #if CS5

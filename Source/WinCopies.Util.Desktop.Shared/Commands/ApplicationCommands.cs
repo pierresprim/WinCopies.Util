@@ -34,7 +34,7 @@ namespace WinCopies.Commands
         /// Gets the <b>NewTab</b> command.
         /// </summary>
         public static RoutedUICommand NewTab { get; } = new RoutedUICommand(WinCopies.
-            #if !WinCopies3
+#if !WinCopies3
             Util.
 #endif
             Desktop.Resources.Commands.WPF.ApplicationCommands.NewTab, nameof(NewTab), typeof(ApplicationCommands), new InputGestureCollection() { new KeyGesture(Key.T, ModifierKeys.Control) });
@@ -118,5 +118,17 @@ namespace WinCopies.Commands
             Util.
 #endif
             Desktop.Resources.Commands.WPF.ApplicationCommands.Reset, nameof(Reset), typeof(ApplicationCommands));
+
+        public static RoutedUICommand Empty { get; } = new RoutedUICommand(WinCopies.
+#if !WinCopies3
+            Util.
+#endif
+            Desktop.Resources.Commands.WPF.ApplicationCommands.Empty, nameof(Empty), typeof(ApplicationCommands));
+
+        public static RoutedUICommand DeletePermanently { get; } = new RoutedUICommand(WinCopies.
+#if !WinCopies3
+            Util.
+#endif
+            Desktop.Resources.Commands.WPF.ApplicationCommands.DeletePermanently, nameof(DeletePermanently), typeof(ApplicationCommands), new InputGestureCollection() { new System.Windows.Input.KeyGesture(Key.Delete, ModifierKeys.Alt) });
     }
 }
