@@ -22,6 +22,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using WinCopies.Collections.DotNetFix.Generic;
+
 using static WinCopies.Collections.ThrowHelper;
 
 namespace WinCopies.Collections.DotNetFix
