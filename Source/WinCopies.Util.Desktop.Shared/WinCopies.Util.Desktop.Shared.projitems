@@ -32,6 +32,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Commands\ExecutionStrategy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Commands\FileSystemCommands.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Commands\KeyCommandHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\NavigationCommands.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Commands\ProcessCommands.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Commands\TextCommands.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataTemplateSelectors.cs" />

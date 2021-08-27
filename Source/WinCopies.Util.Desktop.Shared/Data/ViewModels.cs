@@ -57,19 +57,41 @@ namespace WinCopies.Util.Data
         /// <param name="declaringType">The declaring type of both the property and its associated field</param>
         /// <param name="performIntegrityCheck">Whether to throw when the property is not settable or declaring types of the property and the setter method do not correspond</param>
         // /// <remarks>To use this method, you need to work with the WinCopies Framework Property changed notification pattern. See the website of the WinCopies Framework for more details.</remarks>
-        protected virtual void Update(string propertyName, string fieldName, object newValue, Type declaringType, bool performIntegrityCheck = true)
+        protected virtual
+#if WinCopies3
+            bool
+#else
+            void
+#endif
+            Update(string propertyName, string fieldName, object newValue, Type declaringType, bool performIntegrityCheck = true)
         {
             (bool propertyChanged, object oldValue) = performIntegrityCheck ? this.SetProperty(propertyName, fieldName, newValue, declaringType) : ((INotifyPropertyChanged)this).SetField(fieldName, newValue, declaringType);
 
             if (propertyChanged)
 
                 OnPropertyChanged(propertyName, oldValue, newValue);
+
+#if WinCopies3
+            return propertyChanged;
+#endif
         }
 
-        protected virtual void Update<T>(string propertyName, string fieldName, object newValue, bool performIntegrityCheck = true) => Update(propertyName, fieldName, newValue, typeof(T), performIntegrityCheck);
+        protected virtual
+#if WinCopies3
+            bool
+#else
+            void
+#endif
+           Update<T>(string propertyName, string fieldName, object newValue, bool performIntegrityCheck = true) => Update(propertyName, fieldName, newValue, typeof(T), performIntegrityCheck);
 #endif
 
-        protected virtual void UpdateValue<T>(ref T value,
+        protected virtual
+#if WinCopies3
+            bool
+#else
+            void
+#endif
+           UpdateValue<T>(ref T value,
 #if !WinCopies3
 in
 #endif
@@ -78,7 +100,7 @@ in
         {
             T _value = value;
 
-            UtilHelpers
+            return UtilHelpers
 #else
             => Util
 #endif
@@ -91,7 +113,13 @@ in
         }
 #endif
 
-        protected virtual void UpdateValue<T>(ref T value, in T newValue,
+        protected virtual
+#if WinCopies3
+            bool
+#else
+            void
+#endif
+           UpdateValue<T>(ref T value, in T newValue,
 #if WinCopies3
             in
 #endif
@@ -156,14 +184,30 @@ in
         /// <param name="newValue">The value to set in the property</param>
         /// <param name="declaringType">The declaring type of both the property and its associated field</param>
         /// <param name="performIntegrityCheck">Whether to throw when the property is not settable</param>
-        protected virtual void Update(string propertyName, object newValue, Type declaringType, bool performIntegrityCheck = true)
+        protected virtual
+#if WinCopies3
+            bool
+#else
+            void
+#endif
+           Update(string propertyName, object newValue, Type declaringType, bool performIntegrityCheck = true)
         {
             (bool propertyChanged, object oldValue) = this.SetProperty(propertyName, newValue, declaringType);
 
             if (propertyChanged) OnPropertyChanged(propertyName, oldValue, newValue);
+
+#if WinCopies3
+            return propertyChanged;
+#endif
         }
 
-        protected virtual void Update<T>(string propertyName, object newValue, bool performIntegrityCheck = true) => Update(propertyName, newValue, typeof(T), performIntegrityCheck);
+        protected virtual
+#if WinCopies3
+            bool
+#else
+            void
+#endif
+           Update<T>(string propertyName, object newValue, bool performIntegrityCheck = true) => Update(propertyName, newValue, typeof(T), performIntegrityCheck);
 #endif
 
         /// <summary>
@@ -183,15 +227,15 @@ in
 
     public abstract class ViewModelAbstract : MarkupExtension, INotifyPropertyChanged
     {
-#if CS8
-        public object GetModelFromPropertyChangeScope(PropertyChangeScope propertyChangeScope) => propertyChangeScope switch
-        {
-            PropertyChangeScope.Model => Model,
-            PropertyChangeScope.ViewModel => this,
-            _ => throw new InvalidEnumArgumentException(nameof(propertyChangeScope), propertyChangeScope),
-        };
-#else
         public object GetModelFromPropertyChangeScope(PropertyChangeScope propertyChangeScope)
+#if CS8
+            => propertyChangeScope switch
+            {
+                PropertyChangeScope.Model => Model,
+                PropertyChangeScope.ViewModel => this,
+                _ => throw new InvalidEnumArgumentException(nameof(propertyChangeScope), propertyChangeScope),
+            };
+#else
         {
             switch (propertyChangeScope)
             {
@@ -231,14 +275,30 @@ in
         /// <param name="performIntegrityCheck">Whether to throw when the property is not settable or declaring types of the property and the setter method do not correspond</param>
         /// <param name="propertyChangeScope">Whether to reflect on the <see cref="Model"/> object or on the current view model. This value is set to <see cref="PropertyChangeScope.ViewModel"/> by default for this method.</param>
         // /// <remarks>To use this method, you need to work with the WinCopies Framework Property changed notification pattern. See the website of the WinCopies Framework for more details.</remarks>
-        protected virtual void Update(string propertyName, string fieldName, object newValue, Type declaringType, bool performIntegrityCheck = true, PropertyChangeScope propertyChangeScope = PropertyChangeScope.ViewModel)
+        protected virtual
+#if WinCopies3
+            bool
+#else
+            void
+#endif
+            Update(string propertyName, string fieldName, object newValue, Type declaringType, bool performIntegrityCheck = true, PropertyChangeScope propertyChangeScope = PropertyChangeScope.ViewModel)
         {
             (bool propertyChanged, object oldValue) = performIntegrityCheck ? GetModelFromPropertyChangeScope(propertyChangeScope).SetProperty(propertyName, fieldName, newValue, declaringType) : ((INotifyPropertyChanged)this).SetField(fieldName, newValue, declaringType);
 
             if (propertyChanged) OnPropertyChanged(propertyName, oldValue, newValue);
+
+#if WinCopies3
+            return propertyChanged;
+#endif
         }
 
-        protected virtual void Update<T>(string propertyName, string fieldName, object newValue, bool performIntegrityCheck = true, PropertyChangeScope propertyChangeScope = PropertyChangeScope.ViewModel) => Update(propertyName, fieldName, newValue, typeof(T), performIntegrityCheck, propertyChangeScope);
+        protected virtual
+#if WinCopies3
+            bool
+#else
+            void
+#endif
+             Update<T>(string propertyName, string fieldName, object newValue, bool performIntegrityCheck = true, PropertyChangeScope propertyChangeScope = PropertyChangeScope.ViewModel) => Update(propertyName, fieldName, newValue, typeof(T), performIntegrityCheck, propertyChangeScope);
 
         /// <summary>
         /// Sets a value for a property. If succeeds, then call the <see cref="OnPropertyChanged(string, object, object)"/> method to raise the <see cref="PropertyChanged"/> event.
@@ -248,14 +308,30 @@ in
         /// <param name="declaringType">The declaring type of both the property and its associated field</param>
         /// <param name="propertyChangeScope">Whether to reflect on the <see cref="Model"/> object or on the current view model. This value is set to <see cref="PropertyChangeScope.Model"/> by default for this method.</param>
         // /// <remarks>To use this method, you need to work with the WinCopies Framework Property changed notification pattern. See the website of the WinCopies Framework for more details.</remarks>
-        protected virtual void Update(string propertyName, object newValue, Type declaringType, PropertyChangeScope propertyChangeScope = PropertyChangeScope.Model)
+        protected virtual
+#if WinCopies3
+            bool
+#else
+            void
+#endif
+             Update(string propertyName, object newValue, Type declaringType, PropertyChangeScope propertyChangeScope = PropertyChangeScope.Model)
         {
             (bool propertyChanged, object oldValue) = GetModelFromPropertyChangeScope(propertyChangeScope).SetProperty(propertyName, newValue, declaringType);
 
             if (propertyChanged) OnPropertyChanged(propertyName, oldValue, newValue);
+
+#if WinCopies3
+            return propertyChanged;
+#endif
         }
 
-        protected virtual void Update<T>(string propertyName, object newValue, PropertyChangeScope propertyChangeScope = PropertyChangeScope.Model) => Update(propertyName, newValue, typeof(T), propertyChangeScope);
+        protected virtual
+#if WinCopies3
+            bool
+#else
+            void
+#endif
+             Update<T>(string propertyName, object newValue, PropertyChangeScope propertyChangeScope = PropertyChangeScope.Model) => Update(propertyName, newValue, typeof(T), propertyChangeScope);
 #endif
 
         protected virtual void OnPropertyChanged(string propertyName) => OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs(propertyName));
@@ -278,14 +354,30 @@ in
         /// <param name="newValue">The value to set in the property</param>
         /// <param name="declaringType">The declaring type of both the property and its associated field</param>
         /// <param name="performIntegrityCheck">Whether to throw when the property is not settable</param>
-        protected virtual void UpdateAutoProperty(string propertyName, object newValue, Type declaringType, bool performIntegrityCheck = true)
+        protected virtual
+#if WinCopies3
+            bool
+#else
+            void
+#endif
+             UpdateAutoProperty(string propertyName, object newValue, Type declaringType, bool performIntegrityCheck = true)
         {
             (bool propertyChanged, object oldValue) = this.SetProperty(propertyName, newValue, declaringType, performIntegrityCheck);
 
             if (propertyChanged) OnPropertyChanged(propertyName, oldValue, newValue);
+
+#if WinCopies3
+            return propertyChanged;
+#endif
         }
 
-        protected virtual void UpdateAutoProperty<T>(string propertyName, object newValue, bool performIntegrityCheck = true) => UpdateAutoProperty(propertyName, newValue, typeof(T), performIntegrityCheck);
+        protected virtual
+#if WinCopies3
+            bool
+#else
+            void
+#endif
+             UpdateAutoProperty<T>(string propertyName, object newValue, bool performIntegrityCheck = true) => UpdateAutoProperty(propertyName, newValue, typeof(T), performIntegrityCheck);
 #endif
 
         /// <summary>
@@ -395,17 +487,17 @@ override object Model => ModelGeneric;
 #if CS7
         event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged { add => PropertyChanged += value; remove => PropertyChanged -= value; }
 #endif
-#endregion
+        #endregion
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CollectionViewModel{T}"/> class.
         /// </summary>
         public CollectionViewModel(Collection<T> collection) => Collection = collection ?? throw GetArgumentNullException(nameof(collection));
 
-#region Methods
-#region Protected Methods
+        #region Methods
+        #region Protected Methods
 
-#region 'On-' Methods
+        #region 'On-' Methods
         protected void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
 
         protected void OnCollectionChanged(System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -426,9 +518,9 @@ override object Model => ModelGeneric;
         protected void OnCollectionChanged(NotifyCollectionChangedAction action, object item, int newIndex, int oldIndex) => OnCollectionChanged(new System.Collections.Specialized.NotifyCollectionChangedEventArgs(action, item, newIndex, oldIndex));
 
         protected void OnCollectionReset() => OnCollectionChanged(new System.Collections.Specialized.NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-#endregion
+        #endregion
 
-#region Reentrancy Checks
+        #region Reentrancy Checks
         /// <summary>
         /// Checks for reentrant attempts to change this collection.
         /// </summary>
@@ -454,9 +546,9 @@ override object Model => ModelGeneric;
 
             return _monitor;
         }
-#endregion
+        #endregion
 
-#region Collection Update Methods
+        #region Collection Update Methods
         protected void AddOrInsert(int index, T item)
         {
             if (index == Collection.Count)
@@ -559,10 +651,10 @@ override object Model => ModelGeneric;
 
             OnCollectionReset();
         }
-#endregion
-#endregion
+        #endregion
+        #endregion
 
-#region Public Methods
+        #region Public Methods
         public override object ProvideValue(IServiceProvider serviceProvider) => this;
 
         /// <summary>
@@ -696,7 +788,7 @@ override object Model => ModelGeneric;
         /// Removes all elements from the <see cref="CollectionViewModel{T}"/>.
         /// </summary>
         public void Clear() => ClearItems();
-#endregion
-#endregion
+        #endregion
+        #endregion
     }
 }

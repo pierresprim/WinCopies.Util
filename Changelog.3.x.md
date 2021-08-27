@@ -6,6 +6,11 @@ The WinCopies® software framework
 CHANGELOG
 ---------
 
+### 08/27/2021 3.13-preview
+
+ - Re-design EnumerableQueue/StackCollection
+ - Change view models return type from 'void' to 'bool'.
+
 ### 08/13/2021 3.12-preview
 
 - Move I(ReadOnlyList)LoopEnumerator to WinCopies.Collections namespace.

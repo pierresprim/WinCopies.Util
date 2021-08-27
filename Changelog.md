@@ -6,6 +6,11 @@ The WinCopies® software framework
 CHANGELOG
 ---------
 
+### 08/27/2021 2.15.1
+
+- Bug fixed in MathExtensions.Between methods.
+- Add NavigationCommands type.
+
 ### 08/13/2021 2.15
 
 - Add:
