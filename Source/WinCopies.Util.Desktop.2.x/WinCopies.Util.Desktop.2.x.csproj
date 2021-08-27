@@ -12,9 +12,9 @@
     <AssemblyOriginatorKeyFile>WinCopies.Util.Desktop.snk</AssemblyOriginatorKeyFile>
     <DocumentationFile>WinCopies.Util.Desktop.xml</DocumentationFile>
     <PackageTags>WinCopies</PackageTags>
-    <VersionPrefix>2.15</VersionPrefix>
-    <AssemblyVersion>2.15</AssemblyVersion>
-    <FileVersion>2.15</FileVersion>
+    <VersionPrefix>2.15.1</VersionPrefix>
+    <AssemblyVersion>2.15.1</AssemblyVersion>
+    <FileVersion>2.15.1</FileVersion>
     <DefineConstants>WinCopies2;$(DefineConstants)</DefineConstants>
     <RootNamespace>WinCopies.Util.Desktop</RootNamespace>
     <PackageIcon>WinCopies.png</PackageIcon>
