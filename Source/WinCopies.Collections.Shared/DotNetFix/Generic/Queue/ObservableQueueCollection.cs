@@ -182,9 +182,9 @@ where TQueue : IQueue<TItems>
 #if WinCopies3
         public class ObservableQueueCollection<T> : ObservableQueueCollection<IQueue<T>, T>
         {
-            public ObservableQueueCollection() : this(new Queue<T>()) { }
+            public ObservableQueueCollection(in IQueue<T> queue) : base(queue) { /* Left empty. */ }
 
-            public ObservableQueueCollection(in IQueue<T> queue) : base(queue) { }
+            public ObservableQueueCollection() : this(new Queue<T>()) { /* Left empty. */ }
         }
     }
 #endif

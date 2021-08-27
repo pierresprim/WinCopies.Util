@@ -28,6 +28,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\ReadOnlyObservableLinkedCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedList\Enumerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedList\ILinkedListNode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\Queue\EnumerableQueueCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\SimpleLinkedList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedList\ILinkedList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedList\IReadOnlyLinkedList.cs" />
@@ -40,6 +41,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\Queue\ReadOnlyQueue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\Queue\ReadOnlyQueueCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\Stack\EnumerableStack.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\Stack\EnumerableStackCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\Stack\ObservableStackCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\Stack\ReadOnlyObservableStackCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\Stack\ReadOnlyStack.cs" />
