@@ -221,4 +221,21 @@ namespace WinCopies
     public delegate void ActionIn<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>(in T1 p1, in T2 p2, in T3 p3, in T4 p4, in T5 p5, in T6 p6, in T7 p7, in T8 p8, in T9 p9, in T10 p10, in T11 p11, in T12 p12, in T13 p13, in T14 p14);
     public delegate void ActionIn<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>(in T1 p1, in T2 p2, in T3 p3, in T4 p4, in T5 p5, in T6 p6, in T7 p7, in T8 p8, in T9 p9, in T10 p10, in T11 p11, in T12 p12, in T13 p13, in T14 p14, in T15 p15);
     public delegate void ActionIn<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16>(in T1 p1, in T2 p2, in T3 p3, in T4 p4, in T5 p5, in T6 p6, in T7 p7, in T8 p8, in T9 p9, in T10 p10, in T11 p11, in T12 p12, in T13 p13, in T14 p14, in T15 p15, in T16 p16);
+
+    public delegate void ActionRef<T>(ref T parameter);
+    public delegate void ActionRef<T1, T2>(ref T1 p1, ref T2 p2);
+    public delegate void ActionRef<T1, T2, T3>(ref T1 p1, ref T2 p2, ref T3 p3);
+    public delegate void ActionRef<T1, T2, T3, T4>(ref T1 p1, ref T2 p2, ref T3 p3, ref T4 p4);
+    public delegate void ActionRef<T1, T2, T3, T4, T5>(ref T1 p1, ref T2 p2, ref T3 p3, ref T4 p4, ref T5 p5);
+    public delegate void ActionRef<T1, T2, T3, T4, T5, T6>(ref T1 p1, ref T2 p2, ref T3 p3, ref T4 p4, ref T5 p5, ref T6 p6);
+    public delegate void ActionRef<T1, T2, T3, T4, T5, T6, T7>(ref T1 p1, ref T2 p2, ref T3 p3, ref T4 p4, ref T5 p5, ref T6 p6, ref T7 p7);
+    public delegate void ActionRef<T1, T2, T3, T4, T5, T6, T7, T8>(ref T1 p1, ref T2 p2, ref T3 p3, ref T4 p4, ref T5 p5, ref T6 p6, ref T7 p7, ref T8 p8);
+    public delegate void ActionRef<T1, T2, T3, T4, T5, T6, T7, T8, T9>(ref T1 p1, ref T2 p2, ref T3 p3, ref T4 p4, ref T5 p5, ref T6 p6, ref T7 p7, ref T8 p8, ref T9 p9);
+    public delegate void ActionRef<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(ref T1 p1, ref T2 p2, ref T3 p3, ref T4 p4, ref T5 p5, ref T6 p6, ref T7 p7, ref T8 p8, ref T9 p9, ref T10 p10);
+    public delegate void ActionRef<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>(ref T1 p1, ref T2 p2, ref T3 p3, ref T4 p4, ref T5 p5, ref T6 p6, ref T7 p7, ref T8 p8, ref T9 p9, ref T10 p10, ref T11 p11);
+    public delegate void ActionRef<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>(ref T1 p1, ref T2 p2, ref T3 p3, ref T4 p4, ref T5 p5, ref T6 p6, ref T7 p7, ref T8 p8, ref T9 p9, ref T10 p10, ref T11 p11, ref T12 p12);
+    public delegate void ActionRef<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>(ref T1 p1, ref T2 p2, ref T3 p3, ref T4 p4, ref T5 p5, ref T6 p6, ref T7 p7, ref T8 p8, ref T9 p9, ref T10 p10, ref T11 p11, ref T12 p12, ref T13 p13);
+    public delegate void ActionRef<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>(ref T1 p1, ref T2 p2, ref T3 p3, ref T4 p4, ref T5 p5, ref T6 p6, ref T7 p7, ref T8 p8, ref T9 p9, ref T10 p10, ref T11 p11, ref T12 p12, ref T13 p13, ref T14 p14);
+    public delegate void ActionRef<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>(ref T1 p1, ref T2 p2, ref T3 p3, ref T4 p4, ref T5 p5, ref T6 p6, ref T7 p7, ref T8 p8, ref T9 p9, ref T10 p10, ref T11 p11, ref T12 p12, ref T13 p13, ref T14 p14, ref T15 p15);
+    public delegate void ActionRef<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16>(ref T1 p1, ref T2 p2, ref T3 p3, ref T4 p4, ref T5 p5, ref T6 p6, ref T7 p7, ref T8 p8, ref T9 p9, ref T10 p10, ref T11 p11, ref T12 p12, ref T13 p13, ref T14 p14, ref T15 p15, ref T16 p16);
 }

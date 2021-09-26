@@ -25,21 +25,25 @@ namespace WinCopies
     /// </summary>
     public static class Delegates
     {
-        public static object Null(object parameter) => null;
+        public static void EmptyVoid(object parameter) { }
 
-        public static TOut Null<TIn, TOut>(TIn parameter) where TOut : class => null;
+        public static void EmptyVoid<T>(T parameter) { }
+
+        public static object Null(object parameter) => null;
 
         public static T Null<T>(T parameter) where T : class => null;
 
+        public static TOut Null<TIn, TOut>(TIn parameter) where TOut : class => null;
+
         public static T Self<T>(T value) => value;
+
+        public static T SelfIn<T>(in T value) => value;
 
         public static object NullIn(in object parameter) => null;
 
-        public static TOut NullIn<TIn, TOut>(in TIn parameter) where TOut : class => null;
-
         public static T NullIn<T>(in T parameter) where T : class => null;
 
-        public static T SelfIn<T>(in T value) => value;
+        public static TOut NullIn<TIn, TOut>(in TIn parameter) where TOut : class => null;
 
         public static TOut Convert<TIn, TOut>(TIn value) where TOut : TIn => (TOut)value;
 

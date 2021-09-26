@@ -83,6 +83,86 @@ namespace WinCopies.Util
         public const BindingFlags DefaultBindingFlagsForPropertySet = BindingFlags.Public | BindingFlags.NonPublic |
                          BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly;
 
+        public static void Lambda<T>(Action<Action> action, ActionRef<T> actionRef, ref T value)
+        {
+            T _value = value;
+
+            action(() => actionRef(ref _value));
+
+            value = _value;
+        }
+
+        public static void Lambda<T>(Action<Action, T> action, ActionRef<T> actionRef, ref T value)
+        {
+            T _value = value;
+
+            action(() => actionRef(ref _value), value);
+
+            value = _value;
+        }
+
+        public static void Lambda<T>(ActionIn<Action> action, ActionRef<T> actionRef, ref T value)
+        {
+            T _value = value;
+
+            action(() => actionRef(ref _value));
+
+            value = _value;
+        }
+
+        public static void Lambda<T>(ActionIn<Action, T> action, ActionRef<T> actionRef, ref T value)
+        {
+            T _value = value;
+
+            action(() => actionRef(ref _value), value);
+
+            value = _value;
+        }
+
+        public static void Lambda<T1, T2>(Action<Action, T1> action, ActionRef<T1, T2> actionRef, ref T1 value1, ref T2 value2)
+        {
+            T1 _value1 = value1;
+            T2 _value2 = value2;
+
+            action(() => actionRef(ref _value1, ref _value2), value1);
+
+            value2 = _value2;
+            value1 = _value1;
+        }
+
+        public static void Lambda<T1, T2>(Action<Action, T1, T2> action, ActionRef<T1, T2> actionRef, ref T1 value1, ref T2 value2)
+        {
+            T1 _value1 = value1;
+            T2 _value2 = value2;
+
+            action(() => actionRef(ref _value1, ref _value2), value1, value2);
+
+            value2 = _value2;
+            value1 = _value1;
+        }
+
+        public static void Lambda<T1, T2>(ActionIn<Action, T1> action, ActionRef<T1, T2> actionRef, ref T1 value1, ref T2 value2)
+        {
+            T1 _value1 = value1;
+            T2 _value2 = value2;
+
+            action(() => actionRef(ref _value1, ref _value2), value1);
+
+            value2 = _value2;
+            value1 = _value1;
+        }
+
+        public static void Lambda<T1, T2>(ActionIn<Action, T1, T2> action, ActionRef<T1, T2> actionRef, ref T1 value1, ref T2 value2)
+        {
+            T1 _value1 = value1;
+            T2 _value2 = value2;
+
+            action(() => actionRef(ref _value1, ref _value2), value1, value2);
+
+            value2 = _value2;
+            value1 = _value1;
+        }
+
         public static T GetValue<T>(Func<T> func) => func == null ? default : func();
         public static TResult GetValue<TParam, TResult>(in Func<TParam, TResult> func, in TParam param) => func == null ? default : func(param);
         public static TResult GetValue<T1, T2, TResult>(in Func<T1, T2, TResult> func, in T1 param1, in T2 param2) => func == null ? default : func(param1, param2);

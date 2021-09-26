@@ -6,6 +6,10 @@ The WinCopies® software framework
 CHANGELOG
 ---------
 
+### 09/26/2021 3.14-preview
+
+- Re-design Action/SelectorDictionary.
+
 ### 08/27/2021 3.13-preview
 
  - Re-design EnumerableQueue/StackCollection

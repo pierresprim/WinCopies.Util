@@ -6,6 +6,14 @@ The WinCopies® software framework
 CHANGELOG
 ---------
 
+### 09/26/2021 2.16
+
+- Add new:
+	- commands
+	- delegates
+	- extension and static methods.
+	- default delegate implementation.
+
 ### 08/27/2021 2.15.1
 
 - Bug fixed in MathExtensions.Between methods.

@@ -66,6 +66,12 @@ namespace WinCopies.Commands
 #endif
             Desktop.Resources.Commands.WPF.ApplicationCommands.CloseTab, nameof(CloseTab), typeof(ApplicationCommands), new InputGestureCollection() { new KeyGesture(Key.W, ModifierKeys.Control) });
 
+        public static RoutedUICommand CloseTabsToTheLeftOrRight { get; } = new
+#if !CS9
+            RoutedUICommand
+#endif
+            (Desktop.Resources.Commands.WPF.ApplicationCommands.CloseTabsToTheLeftOrRight, nameof(CloseTabsToTheLeftOrRight), typeof(ApplicationCommands));
+
         public static RoutedUICommand CloseOtherTabs { get; } = new RoutedUICommand(
 #if !WinCopies3
             WinCopies.Util.

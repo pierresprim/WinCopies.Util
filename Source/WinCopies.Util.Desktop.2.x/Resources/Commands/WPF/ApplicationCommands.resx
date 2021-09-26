@@ -156,4 +156,7 @@
   <data name="DeletePermanently" xml:space="preserve">
     <value>Delete _permanently</value>
   </data>
+  <data name="CloseTabsToTheLeftOrRight" xml:space="preserve">
+    <value>Closes tabs to the left or right of the current tab.</value>
+  </data>
 </root>

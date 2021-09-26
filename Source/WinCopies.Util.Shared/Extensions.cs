@@ -99,6 +99,20 @@ namespace WinCopies
 
             public static bool HasFlag(this ulong value, in ulong flag) => (value & flag) == flag;
 
+            public static void ForEach<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Action<T> action)
+            {
+                foreach (T item in enumerable)
+
+                    action(item);
+            }
+
+            public static void ForEach<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in ActionIn<T> action)
+            {
+                foreach (T item in enumerable)
+
+                    action(item);
+            }
+
 #if !CS5
             internal static Type _GetEnumUnderlyingType(this Type type)
             {

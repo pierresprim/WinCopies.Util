@@ -88,6 +88,15 @@ namespace WinCopies.Desktop.Resources.Commands.WPF {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Closes tabs to the left or right of the current tab..
+        /// </summary>
+        public static string CloseTabsToTheLeftOrRight {
+            get {
+                return ResourceManager.GetString("CloseTabsToTheLeftOrRight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to _Close window.
         /// </summary>
         public static string CloseWindow {
