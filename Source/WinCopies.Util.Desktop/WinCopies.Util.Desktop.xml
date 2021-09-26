@@ -35,6 +35,11 @@
               Looks up a localized string similar to _Close tab.
             </summary>
         </member>
+        <member name="P:WinCopies.Desktop.Resources.Commands.WPF.ApplicationCommands.CloseTabsToTheLeftOrRight">
+            <summary>
+              Looks up a localized string similar to Closes tabs to the left or right of the current tab..
+            </summary>
+        </member>
         <member name="P:WinCopies.Desktop.Resources.Commands.WPF.ApplicationCommands.CloseWindow">
             <summary>
               Looks up a localized string similar to _Close window.

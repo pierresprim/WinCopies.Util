@@ -12,10 +12,10 @@
     <AssemblyOriginatorKeyFile>WinCopies.Util.Desktop.snk</AssemblyOriginatorKeyFile>
     <DocumentationFile>WinCopies.Util.Desktop.xml</DocumentationFile>
     <PackageTags>WinCopies</PackageTags>
-    <VersionPrefix>3.13</VersionPrefix>
+    <VersionPrefix>3.14</VersionPrefix>
     <VersionSuffix>preview</VersionSuffix>
-    <AssemblyVersion>3.13.0</AssemblyVersion>
-    <FileVersion>3.13.0</FileVersion>
+    <AssemblyVersion>3.14</AssemblyVersion>
+    <FileVersion>3.14</FileVersion>
     <RootNamespace>WinCopies.Desktop</RootNamespace>
     <DefineConstants>WinCopies3;$(DefineConstants)</DefineConstants>
     <PackageIcon>WinCopies.png</PackageIcon>
