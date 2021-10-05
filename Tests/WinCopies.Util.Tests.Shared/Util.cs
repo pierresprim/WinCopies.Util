@@ -16,7 +16,10 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace WinCopies.Util.Tests
 {
@@ -153,6 +156,39 @@ WinCopies.UtilHelpers
             testEnumFlags = TestEnumFlags.Value1 | TestEnumFlags.Value2 | TestEnumFlags.Value3 | TestEnumFlags.Value4;
 
             Assert.IsTrue(testEnumFlags.HasMultipleFlags());
+        }
+
+        [TestMethod]
+        public async Task TryWaitWhile()
+        {
+            bool b = true;
+
+            int i = 0;
+
+            var t = new Thread(() =>
+            {
+                while (i < 10)
+
+                    Thread.Sleep(100);
+
+                b = false;
+            });
+
+            t.Start();
+
+            await WinCopies.
+#if WinCopies3
+    UtilHelpers
+#else
+    Util.Util
+#endif
+                .TryWaitWhile((ref bool cancel) =>
+                {
+                    i++;
+                    return b;
+                }).ConfigureAwait(false);
+
+            Assert.IsFalse(b);
         }
     }
 }

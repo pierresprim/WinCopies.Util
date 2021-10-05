@@ -1724,42 +1724,30 @@
             <param name="cultureInfo">The culture to use in this rule.</param>
             <returns>A <see cref="T:System.Windows.Controls.ValidationResult"/> object.</returns>
         </member>
-        <member name="T:WinCopies.Util.Data.ViewModelBase">
-            <summary>
-            Provides a base class for direct view models.
-            </summary>
-        </member>
-        <member name="E:WinCopies.Util.Data.ViewModelBase.PropertyChanged">
+        <member name="E:WinCopies.Util.Data.ViewModelRoot.PropertyChanged">
             <summary>
             Occurs when a property value changes.
             </summary>
         </member>
-        <member name="M:WinCopies.Util.Data.ViewModelBase.Update(System.String,System.String,System.Object,System.Type,System.Boolean)">
+        <member name="M:WinCopies.Util.Data.ViewModelRoot.OnPropertyChanged(System.String@,System.Object@,System.Object@)">
             <summary>
-            Sets a value for a property. If succeeds, then call the <see cref="!:OnPropertyChanged(string, object, object)"/> method to raise the <see cref="E:WinCopies.Util.Data.ViewModelBase.PropertyChanged"/> event.
-            </summary>// See the Remarks section.
-            <param name="propertyName">The name of the property for which to set a new value</param>
-            <param name="fieldName">The name of the field to store the new value. This has to be the field that is called by the property accessors (get and set).</param>
-            <param name="newValue">The value to set in the property</param>
-            <param name="declaringType">The declaring type of both the property and its associated field</param>
-            <param name="performIntegrityCheck">Whether to throw when the property is not settable or declaring types of the property and the setter method do not correspond</param>
-        </member>
-        <member name="M:WinCopies.Util.Data.ViewModelBase.OnPropertyChanged(System.String@,System.Object@,System.Object@)">
-            <summary>
-            Raises the <see cref="E:WinCopies.Util.Data.ViewModelBase.PropertyChanged"/> event.
+            Raises the <see cref="E:WinCopies.Util.Data.ViewModelRoot.PropertyChanged"/> event.
             </summary>
             <param name="propertyName">The name of the property for which to set a new value.</param>
-            <param name="oldValue">The old value of the property. This parameter is ignored by default. You can override this method and use the <see cref="T:WinCopies.Util.Data.PropertyChangedEventArgs"/> if you want for the <see cref="E:WinCopies.Util.Data.ViewModelBase.PropertyChanged"/> event to notify for this value.</param>
-            <param name="newValue">The new value of the property. This parameter is ignored by default. You can override this method and use the <see cref="T:WinCopies.Util.Data.PropertyChangedEventArgs"/> if you want for the <see cref="E:WinCopies.Util.Data.ViewModelBase.PropertyChanged"/> event to notify for this value.</param>
+            <param name="oldValue">The old value of the property. This parameter is ignored by default. You can override this method and use the <see cref="T:WinCopies.Util.Data.PropertyChangedEventArgs"/> if you want for the <see cref="E:WinCopies.Util.Data.ViewModelRoot.PropertyChanged"/> event to notify for this value.</param>
+            <param name="newValue">The new value of the property. This parameter is ignored by default. You can override this method and use the <see cref="T:WinCopies.Util.Data.PropertyChangedEventArgs"/> if you want for the <see cref="E:WinCopies.Util.Data.ViewModelRoot.PropertyChanged"/> event to notify for this value.</param>
         </member>
-        <member name="M:WinCopies.Util.Data.ViewModelBase.Update(System.String,System.Object,System.Type,System.Boolean)">
+        <member name="M:WinCopies.Util.Data.ViewModelRoot.ProvideValue(System.IServiceProvider)">
             <summary>
-            Sets a value for a property. If succeeds, then call the <see cref="!:OnPropertyChanged(string, object, object)"/> method to raise the <see cref="E:WinCopies.Util.Data.ViewModelBase.PropertyChanged"/> event.
+            Returns the current instance of this class as the value of the target property for this markup extension.
             </summary>
-            <param name="propertyName">The name of the property for which to set a new value</param>
-            <param name="newValue">The value to set in the property</param>
-            <param name="declaringType">The declaring type of both the property and its associated field</param>
-            <param name="performIntegrityCheck">Whether to throw when the property is not settable</param>
+            <param name="serviceProvider">A service provider helper that can provide services for the markup extension.</param>
+            <returns>The object value to set on the property where the extension is applied.</returns>
+        </member>
+        <member name="T:WinCopies.Util.Data.ViewModelBase">
+            <summary>
+            Provides a base class for direct view models.
+            </summary>
         </member>
         <member name="M:WinCopies.Util.Data.ViewModelBase.ProvideValue(System.IServiceProvider)">
             <summary>
@@ -1768,10 +1756,24 @@
             <param name="serviceProvider">A service provider helper that can provide services for the markup extension.</param>
             <returns>The object value to set on the property where the extension is applied.</returns>
         </member>
-        <member name="E:WinCopies.Util.Data.ViewModelAbstract.PropertyChanged">
+        <member name="M:WinCopies.Util.Data.ViewModelBase.Update(System.String,System.String,System.Object,System.Type,System.Boolean)">
             <summary>
-            Occurs when a property value changes.
+            Sets a value for a property. If succeeds, then call the <see cref="!:OnPropertyChanged(string, object, object)"/> method to raise the <see cref="!:PropertyChanged"/> event.
+            </summary>// See the Remarks section.
+            <param name="propertyName">The name of the property for which to set a new value</param>
+            <param name="fieldName">The name of the field to store the new value. This has to be the field that is called by the property accessors (get and set).</param>
+            <param name="newValue">The value to set in the property</param>
+            <param name="declaringType">The declaring type of both the property and its associated field</param>
+            <param name="performIntegrityCheck">Whether to throw when the property is not settable or declaring types of the property and the setter method do not correspond</param>
+        </member>
+        <member name="M:WinCopies.Util.Data.ViewModelBase.Update(System.String,System.Object,System.Type,System.Boolean)">
+            <summary>
+            Sets a value for a property. If succeeds, then call the <see cref="!:OnPropertyChanged(string, object, object)"/> method to raise the <see cref="!:PropertyChanged"/> event.
             </summary>
+            <param name="propertyName">The name of the property for which to set a new value</param>
+            <param name="newValue">The value to set in the property</param>
+            <param name="declaringType">The declaring type of both the property and its associated field</param>
+            <param name="performIntegrityCheck">Whether to throw when the property is not settable</param>
         </member>
         <member name="P:WinCopies.Util.Data.ViewModelAbstract.Model">
             <summary>
@@ -1780,7 +1782,7 @@
         </member>
         <member name="M:WinCopies.Util.Data.ViewModelAbstract.Update(System.String,System.String,System.Object,System.Type,System.Boolean,WinCopies.Util.Data.PropertyChangeScope)">
             <summary>
-            Sets a value for a property. If succeeds, then call the <see cref="M:WinCopies.Util.Data.ViewModelAbstract.OnPropertyChanged(System.String,System.Object,System.Object)"/> method to raise the <see cref="E:WinCopies.Util.Data.ViewModelAbstract.PropertyChanged"/> event.
+            Sets a value for a property. If succeeds, then call the <see cref="!:OnPropertyChanged(string, object, object)"/> method to raise the <see cref="!:PropertyChanged"/> event.
             </summary>// See the Remarks section.
             <param name="propertyName">The name of the property for which to set a new value</param>
             <param name="fieldName">The name of the field to store the new value. This has to be the field that is called by the property accessors (get and set).</param>
@@ -1791,36 +1793,21 @@
         </member>
         <member name="M:WinCopies.Util.Data.ViewModelAbstract.Update(System.String,System.Object,System.Type,WinCopies.Util.Data.PropertyChangeScope)">
             <summary>
-            Sets a value for a property. If succeeds, then call the <see cref="M:WinCopies.Util.Data.ViewModelAbstract.OnPropertyChanged(System.String,System.Object,System.Object)"/> method to raise the <see cref="E:WinCopies.Util.Data.ViewModelAbstract.PropertyChanged"/> event.
+            Sets a value for a property. If succeeds, then call the <see cref="!:OnPropertyChanged(string, object, object)"/> method to raise the <see cref="!:PropertyChanged"/> event.
             </summary>// See the Remarks section.
             <param name="propertyName">The name of the property for which to set a new value</param>
             <param name="newValue">The value to set in the property</param>
             <param name="declaringType">The declaring type of both the property and its associated field</param>
             <param name="propertyChangeScope">Whether to reflect on the <see cref="P:WinCopies.Util.Data.ViewModelAbstract.Model"/> object or on the current view model. This value is set to <see cref="F:WinCopies.Util.Data.PropertyChangeScope.Model"/> by default for this method.</param>
         </member>
-        <member name="M:WinCopies.Util.Data.ViewModelAbstract.OnPropertyChanged(System.String,System.Object,System.Object)">
-            <summary>
-            Raises the <see cref="E:WinCopies.Util.Data.ViewModelAbstract.PropertyChanged"/> event.
-            </summary>
-            <param name="propertyName">The name of the property for which to set a new value</param>
-            <param name="oldValue">The old value of the property. This parameter is ignored by default. You can override this method and use the <see cref="T:WinCopies.Util.Data.PropertyChangedEventArgs"/> if you want for the <see cref="E:WinCopies.Util.Data.ViewModelAbstract.PropertyChanged"/> event to notify for this value.</param>
-            <param name="newValue">The new value of the property. This parameter is ignored by default. You can override this method and use the <see cref="T:WinCopies.Util.Data.PropertyChangedEventArgs"/> if you want for the <see cref="E:WinCopies.Util.Data.ViewModelAbstract.PropertyChanged"/> event to notify for this value.</param>
-        </member>
         <member name="M:WinCopies.Util.Data.ViewModelAbstract.UpdateAutoProperty(System.String,System.Object,System.Type,System.Boolean)">
             <summary>
-            Sets a value for a property. If succeeds, then call the <see cref="M:WinCopies.Util.Data.ViewModelAbstract.OnPropertyChanged(System.String,System.Object,System.Object)"/> method to raise the <see cref="E:WinCopies.Util.Data.ViewModelAbstract.PropertyChanged"/> event.
+            Sets a value for a property. If succeeds, then call the <see cref="!:OnPropertyChanged(string, object, object)"/> method to raise the <see cref="!:PropertyChanged"/> event.
             </summary>
             <param name="propertyName">The name of the property for which to set a new value</param>
             <param name="newValue">The value to set in the property</param>
             <param name="declaringType">The declaring type of both the property and its associated field</param>
             <param name="performIntegrityCheck">Whether to throw when the property is not settable</param>
-        </member>
-        <member name="M:WinCopies.Util.Data.ViewModelAbstract.ProvideValue(System.IServiceProvider)">
-            <summary>
-            Returns the current instance of this class as the value of the target property for this markup extension.
-            </summary>
-            <param name="serviceProvider">A service provider helper that can provide services for the markup extension.</param>
-            <returns>The object value to set on the property where the extension is applied.</returns>
         </member>
         <member name="T:WinCopies.Util.Data.ViewModel">
             <summary>
@@ -1866,11 +1853,6 @@
             <param name="index">The zero-based index of the element to get or set.</param>
             <returns>The element at the specified index.</returns>
             <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="index"/> is less than zero. -or- <paramref name="index"/> is equal to or greater than <see cref="P:WinCopies.Util.Data.CollectionViewModel`1.Count"/>.</exception>
-        </member>
-        <member name="E:WinCopies.Util.Data.CollectionViewModel`1.PropertyChanged">
-            <summary>
-            Occurs when a property value changes.
-            </summary>
         </member>
         <member name="E:WinCopies.Util.Data.CollectionViewModel`1.CollectionChanged">
             <summary>

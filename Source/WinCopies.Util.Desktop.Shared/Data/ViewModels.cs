@@ -37,53 +37,12 @@ using WinCopies.Collections;
 
 namespace WinCopies.Util.Data
 {
-    /// <summary>
-    /// Provides a base class for direct view models.
-    /// </summary>
-    public abstract class ViewModelBase : MarkupExtension, INotifyPropertyChanged
+    public abstract class ViewModelRoot : MarkupExtension, INotifyPropertyChanged
     {
         /// <summary>
         /// Occurs when a property value changes.
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
-
-#if CS7
-        /// <summary>
-        /// Sets a value for a property. If succeeds, then call the <see cref="OnPropertyChanged(string, object, object)"/> method to raise the <see cref="PropertyChanged"/> event.
-        /// </summary>// See the Remarks section.
-        /// <param name="propertyName">The name of the property for which to set a new value</param>
-        /// <param name="fieldName">The name of the field to store the new value. This has to be the field that is called by the property accessors (get and set).</param>
-        /// <param name="newValue">The value to set in the property</param>
-        /// <param name="declaringType">The declaring type of both the property and its associated field</param>
-        /// <param name="performIntegrityCheck">Whether to throw when the property is not settable or declaring types of the property and the setter method do not correspond</param>
-        // /// <remarks>To use this method, you need to work with the WinCopies Framework Property changed notification pattern. See the website of the WinCopies Framework for more details.</remarks>
-        protected virtual
-#if WinCopies3
-            bool
-#else
-            void
-#endif
-            Update(string propertyName, string fieldName, object newValue, Type declaringType, bool performIntegrityCheck = true)
-        {
-            (bool propertyChanged, object oldValue) = performIntegrityCheck ? this.SetProperty(propertyName, fieldName, newValue, declaringType) : ((INotifyPropertyChanged)this).SetField(fieldName, newValue, declaringType);
-
-            if (propertyChanged)
-
-                OnPropertyChanged(propertyName, oldValue, newValue);
-
-#if WinCopies3
-            return propertyChanged;
-#endif
-        }
-
-        protected virtual
-#if WinCopies3
-            bool
-#else
-            void
-#endif
-           Update<T>(string propertyName, string fieldName, object newValue, bool performIntegrityCheck = true) => Update(propertyName, fieldName, newValue, typeof(T), performIntegrityCheck);
-#endif
 
         protected virtual
 #if WinCopies3
@@ -135,12 +94,13 @@ in
 #endif
                 );
 
-        protected virtual void
+        protected virtual void OnPropertyChanged(in System.ComponentModel.PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
+
+        protected virtual void OnPropertyChanged(
 #if WinCopies3
-        OnPropertyChanged(in System.ComponentModel.PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
-#else
-        OnPropertyChanged(string propertyName) => OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            in
 #endif
+            string propertyName) => OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs(propertyName));
 
         protected virtual void OnPropertyChanged(
 #if WinCopies3
@@ -176,6 +136,121 @@ in
 #endif
              );
 
+        /// <summary>
+        /// Returns the current instance of this class as the value of the target property for this markup extension.
+        /// </summary>
+        /// <param name="serviceProvider">A service provider helper that can provide services for the markup extension.</param>
+        /// <returns>The object value to set on the property where the extension is applied.</returns>
+        public override object ProvideValue(IServiceProvider serviceProvider) => this;
+    }
+
+    /// <summary>
+    /// Provides a base class for direct view models.
+    /// </summary>
+    public abstract class ViewModelBase :
+#if WinCopies3
+        ViewModelRoot
+#else
+        MarkupExtension, INotifyPropertyChanged
+#endif
+    {
+#if !WinCopies3
+
+#if CS7
+        /// <summary>
+        /// Sets a value for a property. If succeeds, then call the <see cref="OnPropertyChanged(string, object, object)"/> method to raise the <see cref="PropertyChanged"/> event.
+        /// </summary>// See the Remarks section.
+        /// <param name="propertyName">The name of the property for which to set a new value</param>
+        /// <param name="fieldName">The name of the field to store the new value. This has to be the field that is called by the property accessors (get and set).</param>
+        /// <param name="newValue">The value to set in the property</param>
+        /// <param name="declaringType">The declaring type of both the property and its associated field</param>
+        /// <param name="performIntegrityCheck">Whether to throw when the property is not settable or declaring types of the property and the setter method do not correspond</param>
+        // /// <remarks>To use this method, you need to work with the WinCopies Framework Property changed notification pattern. See the website of the WinCopies Framework for more details.</remarks>
+        protected virtual
+#if WinCopies3
+            bool
+#else
+            void
+#endif
+            Update(string propertyName, string fieldName, object newValue, Type declaringType, bool performIntegrityCheck = true)
+        {
+            (bool propertyChanged, object oldValue) = performIntegrityCheck ? this.SetProperty(propertyName, fieldName, newValue, declaringType) : ((INotifyPropertyChanged)this).SetField(fieldName, newValue, declaringType);
+
+            if (propertyChanged)
+
+                OnPropertyChanged(propertyName, oldValue, newValue);
+
+#if WinCopies3
+            return propertyChanged;
+#endif
+        }
+
+        protected virtual
+#if WinCopies3
+            bool
+#else
+            void
+#endif
+           Update<T>(string propertyName, string fieldName, object newValue, bool performIntegrityCheck = true) => Update(propertyName, fieldName, newValue, typeof(T), performIntegrityCheck);
+#endif
+
+        protected virtual
+#if WinCopies3
+            bool
+#else
+            void
+#endif
+#endif
+
+#if !WinCopies3
+        protected virtual void OnPropertyChanged(string propertyName) => OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+#endif
+
+        /// <summary>
+        /// Returns the current instance of this class as the value of the target property for this markup extension.
+        /// </summary>
+        /// <param name="serviceProvider">A service provider helper that can provide services for the markup extension.</param>
+        /// <returns>The object value to set on the property where the extension is applied.</returns>
+        public override object ProvideValue(IServiceProvider serviceProvider) => this;
+
+#if CS7
+        /// <summary>
+        /// Sets a value for a property. If succeeds, then call the <see cref="OnPropertyChanged(string, object, object)"/> method to raise the <see cref="PropertyChanged"/> event.
+        /// </summary>// See the Remarks section.
+        /// <param name="propertyName">The name of the property for which to set a new value</param>
+        /// <param name="fieldName">The name of the field to store the new value. This has to be the field that is called by the property accessors (get and set).</param>
+        /// <param name="newValue">The value to set in the property</param>
+        /// <param name="declaringType">The declaring type of both the property and its associated field</param>
+        /// <param name="performIntegrityCheck">Whether to throw when the property is not settable or declaring types of the property and the setter method do not correspond</param>
+        // /// <remarks>To use this method, you need to work with the WinCopies Framework Property changed notification pattern. See the website of the WinCopies Framework for more details.</remarks>
+        protected virtual
+#if WinCopies3
+            bool
+#else
+            void
+#endif
+            Update(string propertyName, string fieldName, object newValue, Type declaringType, bool performIntegrityCheck = true)
+        {
+            (bool propertyChanged, object oldValue) = performIntegrityCheck ? this.SetProperty(propertyName, fieldName, newValue, declaringType) : ((INotifyPropertyChanged)this).SetField(fieldName, newValue, declaringType);
+
+            if (propertyChanged)
+
+                OnPropertyChanged(propertyName, oldValue, newValue);
+
+#if WinCopies3
+            return propertyChanged;
+#endif
+        }
+
+        protected virtual
+#if WinCopies3
+            bool
+#else
+            void
+#endif
+           Update<T>(string propertyName, string fieldName, object newValue, bool performIntegrityCheck = true) => Update(propertyName, fieldName, newValue, typeof(T), performIntegrityCheck);
+#endif
+
 #if CS7
         /// <summary>
         /// Sets a value for a property. If succeeds, then call the <see cref="OnPropertyChanged(string, object, object)"/> method to raise the <see cref="PropertyChanged"/> event.
@@ -209,13 +284,6 @@ in
 #endif
            Update<T>(string propertyName, object newValue, bool performIntegrityCheck = true) => Update(propertyName, newValue, typeof(T), performIntegrityCheck);
 #endif
-
-        /// <summary>
-        /// Returns the current instance of this class as the value of the target property for this markup extension.
-        /// </summary>
-        /// <param name="serviceProvider">A service provider helper that can provide services for the markup extension.</param>
-        /// <returns>The object value to set on the property where the extension is applied.</returns>
-        public override object ProvideValue(IServiceProvider serviceProvider) => this;
     }
 
     public enum PropertyChangeScope
@@ -225,7 +293,13 @@ in
         ViewModel = 1
     }
 
-    public abstract class ViewModelAbstract : MarkupExtension, INotifyPropertyChanged
+    public abstract class ViewModelAbstract :
+#if WinCopies3
+        ViewModelRoot
+#else
+        MarkupExtension, INotifyPropertyChanged
+#endif
+
     {
         public object GetModelFromPropertyChangeScope(PropertyChangeScope propertyChangeScope)
 #if CS8
@@ -254,10 +328,12 @@ in
         }
 #endif
 
+#if !WinCopies3
         /// <summary>
         /// Occurs when a property value changes.
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
+#endif
 
         /// <summary>
         /// The model for this instance of view model.
@@ -334,6 +410,8 @@ in
              Update<T>(string propertyName, object newValue, PropertyChangeScope propertyChangeScope = PropertyChangeScope.Model) => Update(propertyName, newValue, typeof(T), propertyChangeScope);
 #endif
 
+#if !WinCopies3
+
         protected virtual void OnPropertyChanged(string propertyName) => OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs(propertyName));
 
         /// <summary>
@@ -345,6 +423,7 @@ in
         protected virtual void OnPropertyChanged(string propertyName, object oldValue, object newValue) => PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
 
         protected virtual void OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
+#endif
 
 #if CS7
         /// <summary>
@@ -380,12 +459,15 @@ in
              UpdateAutoProperty<T>(string propertyName, object newValue, bool performIntegrityCheck = true) => UpdateAutoProperty(propertyName, newValue, typeof(T), performIntegrityCheck);
 #endif
 
+#if !WinCopies3
+
         /// <summary>
         /// Returns the current instance of this class as the value of the target property for this markup extension.
         /// </summary>
         /// <param name="serviceProvider">A service provider helper that can provide services for the markup extension.</param>
         /// <returns>The object value to set on the property where the extension is applied.</returns>
         public override object ProvideValue(IServiceProvider serviceProvider) => this;
+#endif
     }
 
     /// <summary>
@@ -416,7 +498,7 @@ in
 #if WinCopies3
             sealed
 #endif
-override object Model => ModelGeneric;
+            override object Model => ModelGeneric;
 
         /// <summary>
         /// The model for this instance of view model.
@@ -433,12 +515,21 @@ override object Model => ModelGeneric;
     /// <summary>
     /// Provides a base class for view models.
     /// </summary>
-    public class CollectionViewModel<T> : MarkupExtension
+    public class CollectionViewModel<T> :
+#if WinCopies3
+        ViewModelRoot
+#else
+        MarkupExtension
+#endif
 #if CS7
 , IObservableCollection<T>
 #endif
     {
-        private CountMonitor _monitor = new CountMonitor();
+        private readonly CountMonitor _monitor = new
+#if !CS9
+            CountMonitor
+#endif
+            ();
 
         #region Properties
         protected Collection<T> Collection { get; }
@@ -470,14 +561,16 @@ override object Model => ModelGeneric;
 
         bool IList.IsFixedSize => ((IList)Collection).IsFixedSize;
 #endif
-        #endregion
-        #endregion
+#endregion
+#endregion
 
-        #region Events
+#region Events
+#if !WinCopies3
         /// <summary>
         /// Occurs when a property value changes.
         /// </summary>
         protected event PropertyChangedEventHandler PropertyChanged;
+#endif
 
         /// <summary>
         /// Occurs when an item is added, removed, changed, moved, or the entire list is refreshed.
@@ -487,7 +580,7 @@ override object Model => ModelGeneric;
 #if CS7
         event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged { add => PropertyChanged += value; remove => PropertyChanged -= value; }
 #endif
-        #endregion
+#endregion
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CollectionViewModel{T}"/> class.
@@ -495,10 +588,11 @@ override object Model => ModelGeneric;
         public CollectionViewModel(Collection<T> collection) => Collection = collection ?? throw GetArgumentNullException(nameof(collection));
 
         #region Methods
-        #region Protected Methods
-
-        #region 'On-' Methods
+#region Protected Methods
+#region 'On-' Methods
+#if !WinCopies3
         protected void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+#endif
 
         protected void OnCollectionChanged(System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
@@ -518,9 +612,9 @@ override object Model => ModelGeneric;
         protected void OnCollectionChanged(NotifyCollectionChangedAction action, object item, int newIndex, int oldIndex) => OnCollectionChanged(new System.Collections.Specialized.NotifyCollectionChangedEventArgs(action, item, newIndex, oldIndex));
 
         protected void OnCollectionReset() => OnCollectionChanged(new System.Collections.Specialized.NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-        #endregion
+#endregion
 
-        #region Reentrancy Checks
+#region Reentrancy Checks
         /// <summary>
         /// Checks for reentrant attempts to change this collection.
         /// </summary>
@@ -546,9 +640,9 @@ override object Model => ModelGeneric;
 
             return _monitor;
         }
-        #endregion
+#endregion
 
-        #region Collection Update Methods
+#region Collection Update Methods
         protected void AddOrInsert(int index, T item)
         {
             if (index == Collection.Count)
@@ -652,10 +746,12 @@ override object Model => ModelGeneric;
             OnCollectionReset();
         }
         #endregion
-        #endregion
+#endregion
 
-        #region Public Methods
+#region Public Methods
+#if !WinCopies3
         public override object ProvideValue(IServiceProvider serviceProvider) => this;
+#endif
 
         /// <summary>
         /// Searches for the specified object and returns the zero-based index of the first occurrence within the entire <see cref="CollectionViewModel{T}"/>.
@@ -788,7 +884,7 @@ override object Model => ModelGeneric;
         /// Removes all elements from the <see cref="CollectionViewModel{T}"/>.
         /// </summary>
         public void Clear() => ClearItems();
-        #endregion
-        #endregion
+#endregion
+#endregion
     }
 }

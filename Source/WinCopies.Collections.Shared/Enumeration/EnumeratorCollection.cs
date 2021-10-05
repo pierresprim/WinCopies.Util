@@ -23,8 +23,6 @@ using System.Collections.ObjectModel;
 
 namespace WinCopies.Collections
 {
-    // todo: to linked list?
-
     public class EnumeratorCollection : Collection<System.Collections.IEnumerator>
     {
         public int EnumerableVersion { get; private set; }
@@ -42,7 +40,7 @@ namespace WinCopies.Collections
 
         protected override void RemoveItem(int index)
         {
-            RemoveItem(index);
+            base.RemoveItem(index);
 
             if (Count == 0)
 

@@ -25,16 +25,16 @@ namespace WinCopies.Util.Tests
     interface _IB : _IA
     { }
 
-    interface _IC:_IB
+    interface _IC : _IB
     { }
 
     class _A : _IA
     { }
 
-    class _B : _A,_IB
+    class _B : _A, _IB
     { }
 
-    class _C :_B,_IC
+    class _C : _B, _IC
     { }
 
     [TestClass]
@@ -79,12 +79,12 @@ namespace WinCopies.Util.Tests
             Assert.IsTrue(typeof(_IA).IsAssignableFrom<_B>());
             Assert.IsTrue(typeof(_IA).IsAssignableFrom<_C>());
 
-            Assert.IsTrue(typeof(_IB).IsAssignableFrom<_A>());
+            Assert.IsFalse(typeof(_IB).IsAssignableFrom<_A>());
             Assert.IsTrue(typeof(_IB).IsAssignableFrom<_B>());
             Assert.IsTrue(typeof(_IB).IsAssignableFrom<_C>());
 
-            Assert.IsTrue(typeof(_IC).IsAssignableFrom<_A>());
-            Assert.IsTrue(typeof(_IC).IsAssignableFrom<_B>());
+            Assert.IsFalse(typeof(_IC).IsAssignableFrom<_A>());
+            Assert.IsFalse(typeof(_IC).IsAssignableFrom<_B>());
             Assert.IsTrue(typeof(_IC).IsAssignableFrom<_C>());
 
 

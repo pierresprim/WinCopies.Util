@@ -6,6 +6,10 @@ The WinCopies® software framework
 CHANGELOG
 ---------
 
+### 3.15-preview
+
+- Re-design view model base classes.
+
 ### 09/26/2021 3.14-preview
 
 - Re-design Action/SelectorDictionary.

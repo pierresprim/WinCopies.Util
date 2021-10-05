@@ -6,6 +6,11 @@ The WinCopies® software framework
 CHANGELOG
 ---------
 
+### 2.17
+
+- Add new types and methods.
+- Bug fixed in WinCopies.Collections.EnumeratorCollection: infinite recursion when removing an enumerator.
+
 ### 09/26/2021 2.16
 
 - Add new:

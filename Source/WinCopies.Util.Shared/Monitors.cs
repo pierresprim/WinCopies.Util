@@ -43,6 +43,30 @@ namespace WinCopies
         public void Dispose() => _dispose();
     }
 
+    public sealed class ActionMonitor2 : IMonitor
+    {
+        private readonly Action _enter;
+        private readonly Action _dispose;
+
+        public bool IsBusy { get; private set; }
+
+        public ActionMonitor2(Action enter, Action dispose)
+        {
+            _enter = () => { IsBusy = true; (enter ?? throw GetArgumentNullException(nameof(enter)))(); };
+
+            _dispose = dispose ?? throw GetArgumentNullException(nameof(dispose));
+        }
+
+        public void Enter() => _enter();
+
+        public void Dispose()
+        {
+            _dispose();
+
+            IsBusy = false;
+        }
+    }
+
     public sealed class CountMonitor : IMonitor
     {
         private uint _count = 0;
