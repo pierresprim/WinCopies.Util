@@ -174,9 +174,7 @@ bool _completed = false;
                     System.Collections.Generic.IEnumerator<IRecursiveEnumerable<T>>
 #endif
                     >())
-        {
-            // Left empty.
-        }
+        { /* Left empty. */ }
 
         public
 #if WinCopies3
@@ -199,13 +197,11 @@ bool _completed = false;
 , enumerationOrder
 #endif
                 , stack)
-        {
-            // Left empty.
-        }
+        { /* Left empty. */ }
 
         public
 #if WinCopies3
-RecursiveEnumeratorAbstract
+            RecursiveEnumeratorAbstract
 #else
             RecursiveEnumerator
 #endif
@@ -224,9 +220,7 @@ RecursiveEnumeratorAbstract
             System.Collections.Generic.IEnumerator<IRecursiveEnumerable<T>>
 #endif
             >())
-        {
-            // Left empty.
-        }
+        { /* Left empty. */ }
 
 #if WinCopies3
         protected abstract bool AddAsDuplicate(T value);
@@ -267,12 +261,12 @@ _getEnumeratorStructDelegate(enumerable);
                 {
                     _current
 #else
-                Current
+                    Current
 #endif
                     = enumerable.Value;
 
 #if WinCopies3
-                return true;
+                    return true;
                 }
 
                 return false;
@@ -301,7 +295,7 @@ _getEnumeratorStructDelegate(enumerable);
                             ;
 #endif
 
-                        return true;
+                            return true;
 
 #if WinCopies3
                         continue;
@@ -337,7 +331,7 @@ _getEnumeratorStructDelegate(enumerable);
                         ;
 #endif
 
-                    return true;
+                        return true;
 
 #if WinCopies3
                     continue;
@@ -347,14 +341,14 @@ _getEnumeratorStructDelegate(enumerable);
                 else
 #if WinCopies3
                 {
-                    enumerator 
+                    enumerator
 #else
                     _
 #endif
                         = InnerStack.Pop();
 
 #if WinCopies3
-                T getCurrent() => ((RecursiveEnumeratorStruct2<T>)enumerator).Value;
+                    T getCurrent() => ((RecursiveEnumeratorStruct2<T>)enumerator).Value;
 
                     void addCurrent() => _current = getCurrent();
 
@@ -396,7 +390,7 @@ DisposeManaged()
         {
             base.DisposeManaged();
 #endif
-                InnerStack = null;
+            InnerStack = null;
 
 #if WinCopies3
             _getEnumeratorStructDelegate = null;

@@ -16,7 +16,6 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if WinCopies3
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -603,27 +602,24 @@ namespace WinCopies.Collections
 
         private static void ToString(this IEnumerable array, ref StringBuilder stringBuilder, in bool parseSubEnumerables, in bool parseStrings = false)
         {
-            _ = stringBuilder.Append("{");
+            _ = stringBuilder.Append('{');
 
             System.Collections.IEnumerator enumerator = array.GetEnumerator();
 
             bool atLeastOneLoop = false;
 
             if (enumerator.MoveNext())
-
             {
-
                 atLeastOneLoop = true;
 
                 Append(enumerator.Current, ref stringBuilder, parseStrings, parseSubEnumerables);
-
             }
 
             while (enumerator.MoveNext())
 
                 Append(enumerator.Current, ref stringBuilder, parseStrings, parseSubEnumerables);
 
-            _ = atLeastOneLoop ? stringBuilder.Insert(stringBuilder.Length - 2, "}") : stringBuilder.Append("}");
+            _ = atLeastOneLoop ? stringBuilder.Insert(stringBuilder.Length - 2, "}") : stringBuilder.Append('}');
         }
 
         public static string ToString(this IEnumerable array, in bool parseSubEnumerables, in bool parseStrings = false)
@@ -655,5 +651,4 @@ namespace WinCopies.Collections
         public static string ConcatenateString2(this System.Collections.IEnumerable enumerable) => enumerable.ConcatenateString().ToString();
     }
 }
-
 #endif

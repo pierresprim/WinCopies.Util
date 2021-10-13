@@ -508,7 +508,7 @@ namespace WinCopies.Linq
         /// <exception cref="InvalidCastException">An item could not be converted.</exception>
         /// <seealso cref="As{T}(System.Collections.IEnumerable)"/>
         public static System.Collections.Generic.IEnumerable<T> To<T>(this System.Collections.IEnumerable enumerable) => enumerable.SelectConverter(value => (T)value);
-
+        
         public static
 #if !WinCopies3
 System.Collections.Generic.IEnumerable
