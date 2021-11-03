@@ -15,11 +15,26 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
+using System;
+
+using static WinCopies.
+#if WinCopies3
+    ThrowHelper;
+#else
+    Util.Util;
+#endif
+
 namespace WinCopies
 #if !WinCopies3
 .Util
 #endif
 {
+    public delegate bool PredicateIn<T>(in T value);
+
+    public delegate bool PredicateOut<TIn, TOut>(TIn param, out TOut result);
+
+    public delegate bool PredicateInOut<TIn, TOut>(in TIn param, out TOut result);
+
     /// <summary>
     /// This class contains static methods that can be used as delegates.
     /// </summary>
@@ -108,5 +123,13 @@ namespace WinCopies
         public static bool IsTrueIn(in bool? value) => value == true;
 
         public static bool IsFalseIn(in bool? value) => value == false;
+
+        public static bool GetReversedBoolFunc(in Func<bool> func) => !GetOrThrowIfNull(func, nameof(func))();
+
+        public static bool GetReversedBoolFunc<T>(in FuncOut<T, bool> func, out T result) => !GetOrThrowIfNull(func, nameof(func))(out result);
+
+        public static bool GetReversedBoolFunc<T>(in Predicate<T> func, in T param) => !GetOrThrowIfNull(func, nameof(func))(param);
+
+        public static bool GetReversedBoolFunc<TPredicateParam, TOut>(in PredicateOut<TPredicateParam, TOut> func, in TPredicateParam param, out TOut result) => !GetOrThrowIfNull(func, nameof(func))(param, out result);
     }
 }

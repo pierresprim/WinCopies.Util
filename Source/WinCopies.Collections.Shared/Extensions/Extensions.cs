@@ -16,7 +16,6 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if WinCopies3
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -33,6 +32,12 @@ namespace WinCopies.Collections
 {
     public static class Extensions
     {
+#if !CS5
+        public static T First<T>(this WinCopies.Collections.Generic.IReadOnlyList<T> list) => list[0];
+
+        public static T Last<T>(this WinCopies.Collections.Generic.IReadOnlyList<T> list) => list[list.Count - 1];
+#endif
+
 #if CS7
         public static ReadOnlyQueueCollection<T> ToReadOnlyQueue<T>(this object[] array)
         {

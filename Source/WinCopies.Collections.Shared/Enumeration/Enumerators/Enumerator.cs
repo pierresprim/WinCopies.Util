@@ -17,8 +17,10 @@
 
 using System;
 using System.Collections.Generic;
+
 using WinCopies.Collections.DotNetFix;
 using WinCopies.Collections.DotNetFix.Generic;
+
 using static WinCopies.
 #if !WinCopies3
     Util.Util;
@@ -84,7 +86,14 @@ namespace WinCopies.Collections
             // Left empty.
         }
 
-        protected virtual void ResetOverride() => OnResetOrDisposed();
+        protected virtual void ResetOverride()
+        {
+            ResetOverride2();
+
+            OnResetOrDisposed();
+        }
+
+        protected abstract void ResetOverride2();
 
         protected virtual void OnResetOrDisposed()
         {
@@ -99,11 +108,7 @@ namespace WinCopies.Collections
         {
             ThrowIfDisposed();
 
-            if (IsResetSupported == false)
-
-                throw new InvalidOperationException("The current enumerator does not support resetting.");
-
-            if (IsStarted)
+            if (IsResetSupported == false ? throw new InvalidOperationException("The current enumerator does not support resetting.") : IsStarted)
 
                 ResetOverride();
         }
@@ -280,12 +285,7 @@ System.Collections.IEnumerator, WinCopies.Util.DotNetFix.IDisposable
         /// <summary>
         /// Calls the <see cref="System.Collections.IEnumerator.Reset"/> method on <see cref="Enumerator"/>.
         /// </summary>
-        protected override void ResetOverride()
-        {
-            base.ResetOverride();
-
-            _innerEnumerator.Reset();
-        }
+        protected override void ResetOverride2() => _innerEnumerator.Reset();
 
         protected override void DisposeManaged()
         {
@@ -442,12 +442,7 @@ T CurrentOverride
 
             protected override bool MoveNextOverride() => InnerEnumerator.MoveNext();
 
-            protected override void ResetOverride()
-            {
-                base.ResetOverride();
-
-                _innerEnumerator.Reset();
-            }
+            protected override void ResetOverride2() => _innerEnumerator.Reset();
 
             protected override void DisposeManaged()
             {

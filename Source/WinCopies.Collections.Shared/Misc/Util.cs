@@ -32,6 +32,21 @@ namespace WinCopies.Collections
     /// </summary>
     public static class Util
     {
+        private static bool _HasItems<T>(in System.Collections.Generic.IEnumerable<T> enumerable)
+        {
+            bool result;
+
+            using (var enumerator = new EmptyCheckEnumerator(enumerable.GetEnumerator()))
+
+                result = enumerator.HasItems;
+
+            return result;
+        }
+
+        public static bool TryGetHasItems<T>(in System.Collections.Generic.IEnumerable<T> enumerable) => enumerable == null ? false : _HasItems(enumerable);
+
+        public static bool HasItems<T>(in System.Collections.Generic.IEnumerable<T> enumerable) => _HasItems(enumerable ?? throw GetArgumentNullException(nameof(enumerable)));
+
 #if CS7
         public static System.Collections.Generic.IEnumerator<Collections.DotNetFix.
 #if WinCopies3

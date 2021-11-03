@@ -12,6 +12,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)CheckedUInt64.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Commands.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Comparers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Regex.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)StringExtensions.cs" />
+    <Compile Include="..\WinCopies.Util.Shared\Delegates\ActionDelegates.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Delegates\Delegates.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Delegates\DelegateTypes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EnumComparer.cs" />

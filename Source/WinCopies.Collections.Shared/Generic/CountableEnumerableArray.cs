@@ -295,6 +295,8 @@ namespace Generic
             public UIntCountableEnumerator(ICountableEnumeratorInfo<T> enumerator) : base(enumerator) { /* Left empty. */ }
 
             protected override bool MoveNextOverride() => InnerEnumerator.MoveNext();
+
+            protected override void ResetOverride2() { /* Left empty. */ }
         }
 #endif
 

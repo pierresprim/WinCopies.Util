@@ -15,9 +15,18 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
+using System;
 using System.Windows;
 using System.Windows.Input;
+
 using WinCopies.Util.Data;
+
+using static WinCopies.
+#if WinCopies3
+    ThrowHelper;
+#else
+    Util.Util;
+#endif
 
 #if !WinCopies3
 namespace WinCopies.Util.Commands
@@ -108,5 +117,113 @@ namespace WinCopies.Commands
         /// A static <see cref="System.Windows.Input.CanExecuteRoutedEventHandler"/> that sets the <see cref="CanExecuteRoutedEventArgs.CanExecute"/> to true. This handler can be used for commands that can always be executed.
         /// </summary>
         public static CanExecuteRoutedEventHandler CanExecuteRoutedEventHandler { get; } = (object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = true;
+
+        public static void OnRoutedCommandExecuted(in ExecutedRoutedEventArgs e) => e.Handled = true;
+
+        private static void _RunActionOrThrowIfNull(in EventArgs e, in string eventArgsParamName, in Action action2)
+        {
+            ThrowIfNull(e, eventArgsParamName);
+
+            action2();
+        }
+
+        private static void RunActionOrThrowIfNull(in Action action1, in string actionParamName, in EventArgs e, in string eventArgsParamName, in Action action2)
+        {
+            ThrowIfNull(action1, actionParamName);
+
+            _RunActionOrThrowIfNull(e, eventArgsParamName, action2);
+        }
+
+        private static void RunActionOrThrowIfNull<T>(Action<T> action1, in string actionParamName, T parameter, in EventArgs e, in string eventArgsParamName, in Action action2)
+        {
+            ThrowIfNull(action1, actionParamName);
+
+            _RunActionOrThrowIfNull(e, eventArgsParamName, () => action1(parameter));
+        }
+
+        private static void RunActionOrThrowIfNull<T>(ActionIn<T> action1, in string actionParamName, T parameter, in EventArgs e, in string eventArgsParamName, in Action action2)
+        {
+            ThrowIfNull(action1, actionParamName);
+
+            _RunActionOrThrowIfNull(e, eventArgsParamName, () => action1(parameter));
+        }
+
+        public static void TryExecuteRoutedCommand(Action action, ExecutedRoutedEventArgs e) => RunActionOrThrowIfNull(action, nameof(action), e, nameof(e), () =>
+            {
+                try
+                {
+                    action();
+                }
+
+                finally
+                {
+                    OnRoutedCommandExecuted(e);
+                }
+            });
+
+        public static void ExecuteRoutedCommand(Action action, ExecutedRoutedEventArgs e) => RunActionOrThrowIfNull(action, nameof(action), e, nameof(e), () =>
+      {
+          action();
+
+          OnRoutedCommandExecuted(e);
+      });
+
+        public static void TryExecuteRoutedCommand<T>(Action<T> action, T parameter, ExecutedRoutedEventArgs e) => RunActionOrThrowIfNull(action, nameof(action), parameter, e, nameof(e), () =>
+     {
+         try
+         {
+             action(parameter);
+         }
+
+         finally
+         {
+             OnRoutedCommandExecuted(e);
+         }
+     });
+
+        public static void ExecuteRoutedCommand<T>(Action<T> action, T parameter, ExecutedRoutedEventArgs e) => RunActionOrThrowIfNull(action, nameof(action), parameter, e, nameof(e), () =>
+     {
+         action(parameter);
+
+         OnRoutedCommandExecuted(e);
+     });
+
+        public static void TryExecuteRoutedCommand<T>(ActionIn<T> action, T parameter, ExecutedRoutedEventArgs e) => RunActionOrThrowIfNull(action, nameof(action), parameter, e, nameof(e), () =>
+     {
+         try
+         {
+             action(parameter);
+         }
+
+         finally
+         {
+             OnRoutedCommandExecuted(e);
+         }
+     });
+
+        public static void ExecuteRoutedCommand<T>(ActionIn<T> action, T parameter, ExecutedRoutedEventArgs e) => RunActionOrThrowIfNull(action, nameof(action), parameter, e, nameof(e), () =>
+     {
+         action(parameter);
+
+         OnRoutedCommandExecuted(e);
+     });
+
+        public static void CanRunCommand(Action<CanExecuteRoutedEventArgs> action, CanExecuteRoutedEventArgs e)
+        {
+            e.Handled = true;
+
+            action(e);
+        }
+
+        public static void CanRunCommand(in bool value, in CanExecuteRoutedEventArgs e) => e.CanExecute = value;
+
+        public static void CanRunCommand(in Func<bool> func, in CanExecuteRoutedEventArgs e) => CanRunCommand(func(), e);
+
+        public static void RunCommand(in Action<ExecutedRoutedEventArgs> action, in ExecutedRoutedEventArgs e)
+        {
+            e.Handled = true;
+
+            action(e);
+        }
     }
 }

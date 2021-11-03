@@ -6,11 +6,15 @@ The WinCopies® software framework
 CHANGELOG
 ---------
 
+### 11/03/2021 3.16-preview
+
+- EnumeratorInfoBase has a new abstract method (ResetOverride2).
+
 ### 3.15-preview
 
 - Re-design view model base classes.
 
-### 09/26/2021 3.14-preview
+### 3.14-preview
 
 - Re-design Action/SelectorDictionary.
 

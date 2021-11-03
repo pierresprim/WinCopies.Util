@@ -30,41 +30,59 @@ namespace WinCopies.Commands
     /// </summary>
     public static class ApplicationCommands
     {
+        private static RoutedUICommand GetCommand(in string text, in string name) => new
+#if !CS9
+            RoutedUICommand
+#endif
+            (text, name, typeof(ApplicationCommands));
+
+        private static RoutedUICommand GetCommand(in string text, in string name, in InputGestureCollection inputGestures) => new
+#if !CS9
+            RoutedUICommand
+#endif
+            (text, name, typeof(ApplicationCommands), inputGestures);
+
+        public static RoutedUICommand OpenOrLaunch { get; } = GetCommand("Open selected items.", nameof(OpenOrLaunch));
+
+        public static RoutedUICommand OpenInNewTab { get; } = GetCommand("Open in new tab", nameof(OpenInNewTab));
+
+        public static RoutedUICommand OpenInNewWindow { get; } = GetCommand("Open in new window", nameof(OpenInNewWindow));
+
         /// <summary>
         /// Gets the <b>NewTab</b> command.
         /// </summary>
-        public static RoutedUICommand NewTab { get; } = new RoutedUICommand(
+        public static RoutedUICommand NewTab { get; } = GetCommand(
 #if !WinCopies3
             WinCopies.Util.
 #endif
-            Desktop.Resources.Commands.WPF.ApplicationCommands.NewTab, nameof(NewTab), typeof(ApplicationCommands), new InputGestureCollection() { new KeyGesture(Key.T, ModifierKeys.Control) });
+            Desktop.Resources.Commands.WPF.ApplicationCommands.NewTab, nameof(NewTab), new InputGestureCollection() { new KeyGesture(Key.T, ModifierKeys.Control) });
 
         /// <summary>
         /// Gets the <b>NewWindow</b> command.
         /// </summary>
-        public static RoutedUICommand NewWindow { get; } = new RoutedUICommand(
+        public static RoutedUICommand NewWindow { get; } = GetCommand(
 #if !WinCopies3
             WinCopies.Util.
 #endif
-            Desktop.Resources.Commands.WPF.ApplicationCommands.NewWindow, nameof(NewWindow), typeof(ApplicationCommands), new InputGestureCollection() { new KeyGesture(Key.W, ModifierKeys.Alt) });
+            Desktop.Resources.Commands.WPF.ApplicationCommands.NewWindow, nameof(NewWindow), new InputGestureCollection() { new KeyGesture(Key.W, ModifierKeys.Alt) });
 
         /// <summary>
         /// Gets the <b>NewWindowInNewInstance</b> command.
         /// </summary>
-        public static RoutedUICommand NewWindowInNewInstance { get; } = new RoutedUICommand(
+        public static RoutedUICommand NewWindowInNewInstance { get; } = GetCommand(
 #if !WinCopies3
             WinCopies.Util.
 #endif
-            Desktop.Resources.Commands.WPF.ApplicationCommands.NewWindowInNewInstance, nameof(NewWindowInNewInstance), typeof(ApplicationCommands), new InputGestureCollection() { new KeyGesture(Key.W, ModifierKeys.Control | ModifierKeys.Shift) });
+            Desktop.Resources.Commands.WPF.ApplicationCommands.NewWindowInNewInstance, nameof(NewWindowInNewInstance), new InputGestureCollection() { new KeyGesture(Key.W, ModifierKeys.Control | ModifierKeys.Shift) });
 
         /// <summary>
         /// Gets the <b>CloseTab</b> command.
         /// </summary>
-        public static RoutedUICommand CloseTab { get; } = new RoutedUICommand(
+        public static RoutedUICommand CloseTab { get; } = GetCommand(
 #if !WinCopies3
             WinCopies.Util.
 #endif
-            Desktop.Resources.Commands.WPF.ApplicationCommands.CloseTab, nameof(CloseTab), typeof(ApplicationCommands), new InputGestureCollection() { new KeyGesture(Key.W, ModifierKeys.Control) });
+            Desktop.Resources.Commands.WPF.ApplicationCommands.CloseTab, nameof(CloseTab), new InputGestureCollection() { new KeyGesture(Key.W, ModifierKeys.Control) });
 
         public static RoutedUICommand CloseTabsToTheLeftOrRight { get; } = new
 #if !CS9
@@ -72,69 +90,69 @@ namespace WinCopies.Commands
 #endif
             (Desktop.Resources.Commands.WPF.ApplicationCommands.CloseTabsToTheLeftOrRight, nameof(CloseTabsToTheLeftOrRight), typeof(ApplicationCommands));
 
-        public static RoutedUICommand CloseOtherTabs { get; } = new RoutedUICommand(
+        public static RoutedUICommand CloseOtherTabs { get; } = GetCommand(
 #if !WinCopies3
             WinCopies.Util.
 #endif
-            Desktop.Resources.Commands.WPF.ApplicationCommands.CloseOtherTabs, nameof(CloseOtherTabs), typeof(ApplicationCommands), new InputGestureCollection() { new KeyGesture(Key.W, ModifierKeys.Control | ModifierKeys.Alt) });
+            Desktop.Resources.Commands.WPF.ApplicationCommands.CloseOtherTabs, nameof(CloseOtherTabs), new InputGestureCollection() { new KeyGesture(Key.W, ModifierKeys.Control | ModifierKeys.Alt) });
 
         /// <summary>
         /// Gets the <b>CloseAllTabs</b> command.
         /// </summary>
-        public static RoutedUICommand CloseAllTabs { get; } = new RoutedUICommand(
+        public static RoutedUICommand CloseAllTabs { get; } = GetCommand(
 #if !WinCopies3
             WinCopies.Util.
 #endif
-            Desktop.Resources.Commands.WPF.ApplicationCommands.CloseAllTabs, nameof(CloseAllTabs), typeof(ApplicationCommands), new InputGestureCollection() { new KeyGesture(Key.W, ModifierKeys.Control | ModifierKeys.Shift) });
+            Desktop.Resources.Commands.WPF.ApplicationCommands.CloseAllTabs, nameof(CloseAllTabs), new InputGestureCollection() { new KeyGesture(Key.W, ModifierKeys.Control | ModifierKeys.Shift) });
 
 #if !WinCopies3
         /// <summary>
         /// Gets the <b>CloseWindow</b> command.
         /// </summary>
         [Obsolete("This command is obsolete and will be removed in later versions. Please use the System.Windows.Input.ApplicationCommands.Close command instead.")]
-        public static RoutedUICommand CloseWindow { get; } = new RoutedUICommand(Desktop.Resources.Commands.WPF.ApplicationCommands.CloseWindow, nameof(CloseWindow), typeof(ApplicationCommands), new InputGestureCollection() { new KeyGesture(Key.F4, ModifierKeys.Alt) });
+        public static RoutedUICommand CloseWindow { get; } = GetCommand(Desktop.Resources.Commands.WPF.ApplicationCommands.CloseWindow, nameof(CloseWindow), new InputGestureCollection() { new KeyGesture(Key.F4, ModifierKeys.Alt) });
 #endif
 
-        public static RoutedUICommand Quit { get; } = new RoutedUICommand(
+        public static RoutedUICommand Quit { get; } = GetCommand(
 #if !WinCopies3
             WinCopies.Util.
 #endif
-            Desktop.Resources.Commands.WPF.ApplicationCommands.Quit, nameof(Quit), typeof(ApplicationCommands), new InputGestureCollection() { new KeyGesture(Key.Q, ModifierKeys.Control) });
+            Desktop.Resources.Commands.WPF.ApplicationCommands.Quit, nameof(Quit), new InputGestureCollection() { new KeyGesture(Key.Q, ModifierKeys.Control) });
 
         /// <summary>
         /// Gets the <b>DeselectAll</b> command.
         /// </summary>
-        public static RoutedUICommand DeselectAll { get; } = new RoutedUICommand(
+        public static RoutedUICommand DeselectAll { get; } = GetCommand(
 #if !WinCopies3
             WinCopies.Util.
 #endif
-            Desktop.Resources.Commands.WPF.ApplicationCommands.DeselectAll, nameof(DeselectAll), typeof(ApplicationCommands));
+            Desktop.Resources.Commands.WPF.ApplicationCommands.DeselectAll, nameof(DeselectAll));
 
         /// <summary>
         /// Gets the <b>ReverseSelection</b> command.
         /// </summary>
-        public static RoutedUICommand ReverseSelection { get; } = new RoutedUICommand(
+        public static RoutedUICommand ReverseSelection { get; } = GetCommand(
 #if !WinCopies3
             WinCopies.Util.
 #endif
-            Desktop.Resources.Commands.WPF.ApplicationCommands.ReverseSelection, nameof(ReverseSelection), typeof(ApplicationCommands));
+            Desktop.Resources.Commands.WPF.ApplicationCommands.ReverseSelection, nameof(ReverseSelection));
 
-        public static RoutedUICommand Reset { get; } = new RoutedUICommand(
+        public static RoutedUICommand Reset { get; } = GetCommand(
 #if !WinCopies3
             WinCopies.Util.
 #endif
-            Desktop.Resources.Commands.WPF.ApplicationCommands.Reset, nameof(Reset), typeof(ApplicationCommands));
+            Desktop.Resources.Commands.WPF.ApplicationCommands.Reset, nameof(Reset));
 
-        public static RoutedUICommand Empty { get; } = new RoutedUICommand(
+        public static RoutedUICommand Empty { get; } = GetCommand(
 #if !WinCopies3
             WinCopies.Util.
 #endif
-            Desktop.Resources.Commands.WPF.ApplicationCommands.Empty, nameof(Empty), typeof(ApplicationCommands));
+            Desktop.Resources.Commands.WPF.ApplicationCommands.Empty, nameof(Empty));
 
-        public static RoutedUICommand DeletePermanently { get; } = new RoutedUICommand(
+        public static RoutedUICommand DeletePermanently { get; } = GetCommand(
 #if !WinCopies3
             WinCopies.Util.
 #endif
-            Desktop.Resources.Commands.WPF.ApplicationCommands.DeletePermanently, nameof(DeletePermanently), typeof(ApplicationCommands), new InputGestureCollection() { new System.Windows.Input.KeyGesture(Key.Delete, ModifierKeys.Alt) });
+            Desktop.Resources.Commands.WPF.ApplicationCommands.DeletePermanently, nameof(DeletePermanently), new InputGestureCollection() { new KeyGesture(Key.Delete, ModifierKeys.Alt) });
     }
 }

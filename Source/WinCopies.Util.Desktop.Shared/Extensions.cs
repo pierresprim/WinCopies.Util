@@ -43,6 +43,12 @@ namespace WinCopies.Desktop
 {
     public static class Extensions
     {
+        public static void Add(this CommandBindingCollection commandBindings, in System.Windows.Input.ICommand command, in ExecutedRoutedEventHandler executed, in CanExecuteRoutedEventHandler canExecute) => commandBindings.Add(command, executed, canExecute);
+
+        public static void Add(this CommandBindingCollection commandBindings, in System.Windows.Input.ICommand command, Action _delegate) => commandBindings.Add(new CommandBinding(command, (object sender, ExecutedRoutedEventArgs e) => _delegate(), (object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = true));
+
+        public static void AddCommandBinding(this UIElement obj, in System.Windows.Input.ICommand command, Action _delegate) => obj.CommandBindings.Add(command, _delegate);
+
         public static void Execute(this ICommand command, object commandParameter, IInputElement commandTarget)
         {
             if (command is RoutedCommand _command)
