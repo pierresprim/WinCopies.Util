@@ -92,18 +92,11 @@ bool _completed = false;
 
         public override bool? IsResetSupported => null;
 
-#if WinCopies3
         private FuncIn<IRecursiveEnumerable<T>, RecursiveEnumeratorStruct<T>> _getEnumeratorStructDelegate;
 
         public RecursiveEnumerationOrder EnumerationOrder { get; }
-#endif
 
-        protected override void ResetOverride()
-        {
-            base.ResetOverride();
-
-            InnerStack.Clear();
-        }
+        protected override void ResetOverride2() => InnerStack.Clear();
 
         protected override void ResetCurrent() => _current = default;
 #endif

@@ -16,7 +16,6 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if WinCopies3
-
 using System;
 
 using WinCopies.Collections.DotNetFix;
@@ -85,12 +84,7 @@ namespace WinCopies.Collections.Generic
 
                 protected override void ResetCurrent() => _current = null;
 
-                protected override void ResetOverride()
-                {
-                    base.ResetOverride();
-
-                    ResetMoveNext();
-                }
+                protected override void ResetOverride2() => ResetMoveNext();
 
                 protected override void DisposeManaged()
                 {
@@ -106,5 +100,4 @@ namespace WinCopies.Collections.Generic
         }
     }
 }
-
 #endif

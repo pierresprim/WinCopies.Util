@@ -196,11 +196,19 @@ ILinkedListNode
                 return true;
             }
 
-            protected override void ResetOverride()
-            {
-                base.ResetOverride();
+            protected override void
+#if WinCopies3
+                ResetOverride2
+#else
+                ResetOverride
+#endif
+                ()
+        {
+#if !WinCopies3
+            base.ResetOverride();
+#endif
 
-                _reset();
+            _reset();
 
                 ResetMoveNext();
 

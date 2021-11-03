@@ -79,14 +79,16 @@ IEnumerable<T, ConditionalEnumerator<T>>
             if (disposing)
             {
 #endif
-                _value = null;
-                _condition = null;
+            _value = null;
+            _condition = null;
 #if !WinCopies3
             }
 #endif
         }
 
 #if WinCopies3
+        protected override void ResetOverride2() { /* Left empty. */ }
+
         private ConditionalEnumerator<T> GetEnumerator() => GetValueIfNotDisposed(this);
 
         ConditionalEnumerator<T> DotNetFix.Generic.IEnumerable<T, ConditionalEnumerator<T>>.GetEnumerator() => GetEnumerator();
@@ -234,13 +236,19 @@ Enumerator<T>, System.Collections.Generic.IEnumerable<T>
         }
 #endif
 
-        protected override void ResetOverride()
+        protected override void
+#if WinCopies3
+            ResetOverride2
+#else
+            ResetOverride
+#endif
+            ()
         {
-            base.ResetOverride();
-
 #if WinCopies3
             GetValueIfNotDisposed(_condition).Reset();
 #else
+            base.ResetOverride();
+
             _i = _value == null ? throw GetExceptionForDispose(false) : 0u;
 #endif
         }

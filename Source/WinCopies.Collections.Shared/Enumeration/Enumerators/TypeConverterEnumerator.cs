@@ -27,6 +27,8 @@ namespace WinCopies.Collections.Generic
 
 #if WinCopies3
         public override bool? IsResetSupported => null;
+
+        protected override void ResetOverride2() { /* Left empty. */ }
 #endif
 
         public TypeConverterEnumerator(in System.Collections.IEnumerator enumerator) => InnerEnumerator = enumerator;

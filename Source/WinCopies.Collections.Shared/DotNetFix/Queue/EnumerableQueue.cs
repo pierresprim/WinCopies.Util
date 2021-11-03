@@ -106,21 +106,17 @@ namespace WinCopies.Collections.DotNetFix
         [Serializable]
 #endif
         public sealed class Enumerator :
-#if !WinCopies3
-            IEnumerator, Util.DotNetFix.IDisposable
-#else
+#if WinCopies3
             WinCopies.Collections.Enumerator
+#else
+            IEnumerator, Util.DotNetFix.IDisposable
 #endif
         {
             private EnumerableQueue _queue;
             private ISimpleLinkedListNode _currentNode;
             private readonly uint _version;
 
-#if !WinCopies3
-            public object Current => IsDisposed ? throw GetExceptionForDispose(false) : _currentNode.Value;
-
-            public bool IsDisposed { get; private set; }
-#else
+#if WinCopies3
             private bool _first = true;
 
             /// <summary>
@@ -129,6 +125,10 @@ namespace WinCopies.Collections.DotNetFix
             protected override object CurrentOverride => _currentNode.Value;
 
             public override bool? IsResetSupported => true;
+#else
+            public object Current => IsDisposed ? throw GetExceptionForDispose(false) : _currentNode.Value;
+
+            public bool IsDisposed { get; private set; }
 #endif
 
             /// <summary>
@@ -141,10 +141,10 @@ namespace WinCopies.Collections.DotNetFix
 
                 _version = queue.EnumerableVersion;
 
-#if !WinCopies3
-                Reset();
-#else
+#if WinCopies3
                 ResetOverride();
+#else
+                Reset();
 #endif
             }
 
@@ -155,10 +155,8 @@ namespace WinCopies.Collections.DotNetFix
 
                     throw GetExceptionForDispose(false);
 #else
-            protected override void ResetOverride()
+            protected override void ResetOverride2()
             {
-                base.ResetOverride();
-
                 ThrowIfVersionHasChanged(_queue.EnumerableVersion, _version);
 
                 _first = true;

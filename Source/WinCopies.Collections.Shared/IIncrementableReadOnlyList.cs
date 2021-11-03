@@ -76,6 +76,8 @@ namespace WinCopies.Collections.Generic
 
         protected override void ResetCurrent() => _currentIndex = -1;
 
+        protected override void ResetOverride2() { /* Left empty. */ }
+
         protected override void DisposeManaged()
         {
             base.DisposeManaged();

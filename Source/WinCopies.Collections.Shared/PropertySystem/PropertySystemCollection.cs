@@ -16,7 +16,6 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if WinCopies3 && CS7
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -135,12 +134,7 @@ namespace WinCopies.PropertySystem
 
             protected override bool MoveNextOverride() => _moveNext();
 
-            protected override void ResetOverride()
-            {
-                base.ResetOverride();
-
-                ResetMoveNext();
-            }
+            protected override void ResetOverride2() => ResetMoveNext();
 
             protected override void ResetCurrent() => _index = -1;
 
@@ -154,5 +148,4 @@ namespace WinCopies.PropertySystem
         }
     }
 }
-
 #endif

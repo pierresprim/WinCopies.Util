@@ -165,9 +165,17 @@ Current
                 return false;
             }
 
-            protected override void ResetOverride()
+            protected override void
+#if WinCopies3
+                ResetOverride2
+#else
+                ResetOverride
+#endif
+                ()
             {
+#if !WinCopies3
                 base.ResetOverride();
+#endif
 
                 _joinEnumerator.Reset();
 

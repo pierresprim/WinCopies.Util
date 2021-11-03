@@ -88,6 +88,8 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
         protected override void ResetCurrent() => _currentIndex = _startIndex;
 
+        protected override void ResetOverride2() { /* Left empty. */ }
+
         protected override void DisposeManaged()
         {
             _array = null;

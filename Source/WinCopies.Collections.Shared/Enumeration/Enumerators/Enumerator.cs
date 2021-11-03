@@ -533,16 +533,14 @@ T CurrentOverride
 
             protected
 #if !WinCopies3
-                virtual
+                virtual void ResetOverride
 #else
-                override
+                override void ResetOverride2
 #endif
-                void ResetOverride()
-            {
+            ()
+        {
 #if !WinCopies3
             _current = default;
-#else
-                base.ResetOverride();
 #endif
                 InnerEnumerator.Reset();
             }

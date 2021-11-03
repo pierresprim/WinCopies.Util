@@ -143,10 +143,8 @@ WinCopies.Collections.Generic.Enumerator<T>, IUIntCountableEnumerator<T>
 
                     throw GetExceptionForDispose(false);
 #else
-            protected override void ResetOverride()
+            protected override void ResetOverride2()
             {
-                base.ResetOverride();
-
 #endif
                 ThrowIfVersionHasChanged(_stack.EnumerableVersion, _version);
 

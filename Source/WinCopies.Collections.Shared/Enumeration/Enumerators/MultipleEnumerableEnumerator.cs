@@ -59,12 +59,7 @@ namespace WinCopies.Collections.Generic
 
         protected virtual void ResetMoveNext() => _moveNext = _MoveNext;
 
-        protected override void ResetOverride()
-        {
-            base.ResetOverride();
-
-            ResetMoveNext();
-        }
+        protected override void ResetOverride2() => ResetMoveNext();
 
         protected override void DisposeManaged()
         {

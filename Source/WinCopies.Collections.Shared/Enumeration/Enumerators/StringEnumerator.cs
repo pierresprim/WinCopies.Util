@@ -78,7 +78,9 @@ namespace WinCopies.Collections
         protected override bool MoveNextOverride() => _func();
 
 #if WinCopies3
-        protected override void ResetCurrent() => 
+        protected override void ResetOverride2() { /* Left empty. */ }
+
+        protected override void ResetCurrent() =>
 #else
         protected override void ResetOverride()
         {

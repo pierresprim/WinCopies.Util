@@ -149,10 +149,8 @@ WinCopies.Collections.Enumerator
 
                     throw GetExceptionForDispose(false);
 #else
-            protected override void ResetOverride()
+            protected override void ResetOverride2()
             {
-                base.ResetOverride();
-
                 ThrowIfVersionHasChanged(_stack.EnumerableVersion, _version);
 #endif
 

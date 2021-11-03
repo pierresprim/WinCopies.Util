@@ -180,10 +180,8 @@ namespace WinCopies.Collections.DotNetFix
                     return InnerEnumerator.MoveNext();
                 }
 
-                protected override void ResetOverride()
+                protected override void ResetOverride2()
                 {
-                    base.ResetOverride();
-
                     ThrowIfVersionHasChanged(List._enumerableVersion, _version);
 
                     InnerEnumerator.Reset();
