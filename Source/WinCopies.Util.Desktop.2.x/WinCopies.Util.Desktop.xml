@@ -302,6 +302,263 @@
             Throws the exception returned by the <see cref="M:WinCopies.Util.Desktop.ThrowHelper.GetBackgroundWorkerDoesNotSupportPausingException"/> method.
             </summary>
         </member>
+        <member name="M:WinCopies.Util.Desktop.ThrowHelper.ThrowIfBackgroundWorkerDoesNotSupportPausing(WinCopies.Util.DotNetFix.PausableBackgroundWorker@)">
+            <summary>
+            Throws the exception returned by the <see cref="M:WinCopies.Util.Desktop.ThrowHelper.GetBackgroundWorkerDoesNotSupportPausingException"/> method.
+            </summary>
+        </member>
+        <member name="T:WinCopies.Util.BackgroundWorker">
+            <summary>
+            Represents a BackgroundWorker that runs in a MTA thread by default and automatically stops on background when reports progress.
+            </summary>
+        </member>
+        <member name="E:WinCopies.Util.BackgroundWorker.DoWork">
+            <summary>
+            <para>This event is called when the background thread starts. Put your background working code here.</para>
+            <para>The event handler is running in the background thread.</para>
+            </summary>
+        </member>
+        <member name="E:WinCopies.Util.BackgroundWorker.ProgressChanged">
+            <summary>
+            <para>This event is called when the background thread reports progress.</para>
+            <para>The event handler is running in the main thread.</para>
+            </summary>
+        </member>
+        <member name="E:WinCopies.Util.BackgroundWorker.RunWorkerCompleted">
+            <summary>
+            <para>This event is called when the background thread has finished working.</para>
+            <para>The event handler is running in the background thread.</para>
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.BackgroundWorker.IsCancelled">
+            <summary>
+            Gets a value that indicates whether the working has been cancelled.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.BackgroundWorker.CancellationPending">
+            <summary>
+            Gets a value that indicates whether the thread must try to cancel before finished the background tasks.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.BackgroundWorker.IsBusy">
+            <summary>
+            Gets a value that indicates whether the thread is busy.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.BackgroundWorker.WorkerReportsProgress">
+            <summary>
+            Gets or sets a value that indicates whether the thread can notify of the progress.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.BackgroundWorker.WorkerSupportsCancellation">
+            <summary>
+            Gets or sets a value that indicates whether the thread supports the cancellation.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.BackgroundWorker.Progress">
+            <summary>
+            Gets the current progress of the current <see cref="T:WinCopies.Util.BackgroundWorker"/> in percent.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.BackgroundWorker.ApartmentState">
+            <summary>
+            Gets the <see cref="T:System.Threading.ApartmentState"/> of this thread.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.BackgroundWorker.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Util.BackgroundWorker"/> class.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.BackgroundWorker.#ctor(System.Threading.ApartmentState)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Util.BackgroundWorker"/> class with a given <see cref="T:System.Threading.ApartmentState"/>.
+            </summary>
+            <param name="apartmentState">
+            The <see cref="T:System.Threading.ApartmentState"/> in which to initialize the thread.
+            </param>
+        </member>
+        <member name="M:WinCopies.Util.BackgroundWorker.Reset(System.Boolean)">
+            <summary>
+            Re-initializes the local variables.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.BackgroundWorker.RunWorkerAsync">
+            <summary>
+            Starts the working.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.BackgroundWorker.RunWorkerAsync(System.Object)">
+            <summary>
+            Starts the working with a custom parameter.
+            </summary>
+            <param name="argument">
+            Argument given for the working.
+            </param>
+        </member>
+        <member name="M:WinCopies.Util.BackgroundWorker.ThreadStart(System.ComponentModel.DoWorkEventArgs)">
+            <summary>
+            Entry point of the thread.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.BackgroundWorker.ThreadCompleted(System.Object)">
+            <summary>
+            The method that is called when the thread has finished.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.BackgroundWorker.CancelAsync(System.Object)">
+            <summary>
+            Cancels the working asynchronously with a custom cancellation info.
+            </summary>
+            <param name="stateInfo">A custom cancellation info.</param>
+        </member>
+        <member name="M:WinCopies.Util.BackgroundWorker.Cancel(System.Object)">
+            <summary>
+            Cancels the working using a custom cancellation info.
+            </summary>
+            <param name="stateInfo">A custom cancellation info.</param>
+        </member>
+        <member name="M:WinCopies.Util.BackgroundWorker.CancelAsync">
+            <summary>
+            Cancels the working asynchronously.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.BackgroundWorker.Cancel">
+            <summary>
+            Cancels the working.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.BackgroundWorker.OnProgressChanged(System.Object)">
+            <summary>
+            Delegate for progress reportting.
+            </summary>
+            <param name="args">
+            Event argument.
+            </param>
+        </member>
+        <member name="M:WinCopies.Util.BackgroundWorker.ReportProgress(System.Int32)">
+            <summary>
+            Notifies of the progress.
+            </summary>
+            <param name="percentProgress">
+            Progress percentage.
+            </param>
+        </member>
+        <member name="M:WinCopies.Util.BackgroundWorker.ReportProgress(System.Int32,System.Object)">
+            <summary>
+            Notifies of the progress.
+            </summary>
+            <param name="percentProgress">
+            Progress percentage.
+            </param>
+            <param name="userState">
+            User object.
+            </param>
+        </member>
+        <member name="M:WinCopies.Util.BackgroundWorker.Suspend">
+            <summary>
+            Suspends the current thread.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.BackgroundWorker.Resume">
+            <summary>
+            Resumes the current thread.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.BackgroundWorker.IsDisposed">
+            <summary>
+            Gets a value that indicates whether the current <see cref="T:WinCopies.Util.BackgroundWorker"/> is disposed.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.BackgroundWorker.Dispose">
+            <summary>
+            Releases resources used by the <see cref="T:WinCopies.Util.BackgroundWorker"/>.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Util.BackgroundWorker"/> is busy and does not support cancellation.</exception>
+        </member>
+        <member name="M:WinCopies.Util.BackgroundWorker.Dispose(System.Boolean)">
+            <summary>
+            Releases the unmanaged resources used by the <see cref="T:WinCopies.Util.BackgroundWorker"/> and optionally releases the managed resources.
+            </summary>
+            <param name="disposing"><see langword="true"/> to release both managed and unmanaged resources; <see langword="false"/> to release only unmanaged resources.</param>
+            <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Util.BackgroundWorker"/> is busy and does not support cancellation.</exception>
+        </member>
+        <member name="T:WinCopies.Util.DotNetFix.IBackgroundWorker">
+            <summary>
+            Executes an operation on a separate thread.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.DotNetFix.IBackgroundWorker.WorkerSupportsCancellation">
+            <summary>
+            Gets or sets a value indicating whether the background worker supports asynchronous cancellation.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">When setting: The background worker is busy.</exception>
+        </member>
+        <member name="P:WinCopies.Util.DotNetFix.IBackgroundWorker.WorkerReportsProgress">
+            <summary>
+            Gets or sets a value indicating whether the background worker can report progress updates.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">When setting: The background worker is busy.</exception>
+        </member>
+        <member name="P:WinCopies.Util.DotNetFix.IBackgroundWorker.IsBusy">
+            <summary>
+            Gets a value indicating whether the background worker is running an asynchronous operation.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.DotNetFix.IBackgroundWorker.CancellationPending">
+            <summary>
+            Gets a value indicating whether the application has requested cancellation of a background operation.
+            </summary>
+        </member>
+        <member name="E:WinCopies.Util.DotNetFix.IBackgroundWorker.DoWork">
+            <summary>
+            Occurs when <see cref="M:WinCopies.Util.DotNetFix.IBackgroundWorker.RunWorkerAsync"/> is called.
+            </summary>
+        </member>
+        <member name="E:WinCopies.Util.DotNetFix.IBackgroundWorker.ProgressChanged">
+            <summary>
+            Occurs when <see cref="M:WinCopies.Util.DotNetFix.IBackgroundWorker.ReportProgress(System.Int32)"/> is called.
+            </summary>
+        </member>
+        <member name="E:WinCopies.Util.DotNetFix.IBackgroundWorker.RunWorkerCompleted">
+            <summary>
+            Occurs when the background operation has completed, has been canceled, or has raised an exception.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.DotNetFix.IBackgroundWorker.CancelAsync">
+            <summary>
+            Requests cancellation of a pending background operation.
+            </summary>
+            <exception cref="T:System.InvalidOperationException"><see cref="P:WinCopies.Util.DotNetFix.IBackgroundWorker.WorkerSupportsCancellation"/> is <see langword="false"/>.</exception>
+        </member>
+        <member name="M:WinCopies.Util.DotNetFix.IBackgroundWorker.ReportProgress(System.Int32)">
+            <summary>
+            Raises the <see cref="E:WinCopies.Util.DotNetFix.IBackgroundWorker.ProgressChanged"/> event.
+            </summary>
+            <param name="percentProgress">The percentage, from 0 to 100, of the background operation that is complete.</param>
+            <exception cref="T:System.InvalidOperationException">The <see cref="P:WinCopies.Util.DotNetFix.IBackgroundWorker.WorkerReportsProgress"/> property is set to <see langword="false"/>.</exception>
+        </member>
+        <member name="M:WinCopies.Util.DotNetFix.IBackgroundWorker.ReportProgress(System.Int32,System.Object)">
+            <summary>
+            Raises the <see cref="E:WinCopies.Util.DotNetFix.IBackgroundWorker.ProgressChanged"/> event.
+            </summary>
+            <param name="percentProgress">The percentage, from 0 to 100, of the background operation that is complete.</param>
+            <param name="userState">The state object passed to <see cref="M:WinCopies.Util.DotNetFix.IBackgroundWorker.RunWorkerAsync(System.Object)"/>.</param>
+            <exception cref="T:System.InvalidOperationException">The <see cref="P:WinCopies.Util.DotNetFix.IBackgroundWorker.WorkerReportsProgress"/> property is set to <see langword="false"/>.</exception>
+        </member>
+        <member name="M:WinCopies.Util.DotNetFix.IBackgroundWorker.RunWorkerAsync(System.Object)">
+            <summary>
+            Starts execution of a background operation.
+            </summary>
+            <param name="argument">A parameter for use by the background operation to be executed in the <see cref="E:WinCopies.Util.DotNetFix.IBackgroundWorker.DoWork"/> event handler.</param>
+            <exception cref="T:System.InvalidOperationException"><see cref="P:WinCopies.Util.DotNetFix.IBackgroundWorker.IsBusy"/> is <see langword="true"/>.</exception>
+        </member>
+        <member name="M:WinCopies.Util.DotNetFix.IBackgroundWorker.RunWorkerAsync">
+            <summary>
+            Starts execution of a background operation.
+            </summary>
+            <exception cref="T:System.InvalidOperationException"><see cref="P:WinCopies.Util.DotNetFix.IBackgroundWorker.IsBusy"/> is <see langword="true"/>.</exception>
+        </member>
         <member name="T:WinCopies.Util.Commands.ApplicationCommands">
             <summary>
             Provides some standard commands for application commands.
@@ -774,6 +1031,23 @@
             Executes the actual command.
             </summary>
             <param name="parameter">The command parameter to be passed.</param>
+        </member>
+        <member name="F:WinCopies.Util.Commands.EventArgsHandler`1.LastEventArgsProperty">
+            <summary>
+            LastEventArgs dependency property
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.Commands.EventArgsHandler`1.GetLastEventArgs(System.Windows.DependencyObject)">
+            <summary>
+            Gets the last EventArgs
+            </summary>
+            <param name="d">The <see cref="T:System.Windows.DependencyObject"/> from which one get the EventArgs</param>
+            <returns>The last EventArgs of the specified <see cref="T:System.Windows.DependencyObject"/></returns>
+        </member>
+        <member name="M:WinCopies.Util.Commands.EventArgsHandler`1.OnEventHandlerChanged(System.Windows.DependencyObject,System.Windows.DependencyPropertyChangedEventArgs)">
+            <summary>
+            Handles changes to the HandleEventHandler property.
+            </summary>
         </member>
         <member name="T:WinCopies.Util.Commands.EventHandlerGenerator">
             <summary>
@@ -1293,6 +1567,166 @@
             <param name="cultureInfo">The culture to use in this rule.</param>
             <returns>A <see cref="T:System.Windows.Controls.ValidationResult"/> object.</returns>
         </member>
+        <member name="T:WinCopies.Util.Data.IValueObject">
+            <summary>
+            Provides an object that defines a value and notifies of the value change.
+            </summary>
+        </member>
+        <member name="T:WinCopies.Util.Data.IValueObject`1">
+            <summary>
+            Provides an object that defines a value and notifies of the value change.
+            </summary>
+        </member>
+        <member name="T:WinCopies.Util.Data.ValueObject">
+            <summary>
+            Provides an object that defines a value and notifies of the value change.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.Data.ValueObject.IsReadOnly">
+            <summary>
+            Gets a value that indicates whether this object is read-only.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.Data.ValueObject.Value">
+            <summary>
+            Gets or sets the value of the object.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.Data.ValueObject.Equals(WinCopies.Util.IValueObject)">
+            <summary>
+            Determines whether this object is equal to a given object.
+            </summary>
+            <param name="obj">Object to compare to the current object.</param>
+            <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="E:WinCopies.Util.Data.ValueObject.PropertyChanged">
+            <summary>
+            Occurs when a property value changes.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.Data.ValueObject.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Util.Data.ValueObject"/> class.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.Data.ValueObject.#ctor(System.Object)">
+            <summary>
+            Initilizes a new instance of the <see cref="T:WinCopies.Util.Data.ValueObject"/> class with the specified value.
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:WinCopies.Util.Data.ValueObject.OnPropertyChanged(System.String,System.String,System.Object,System.Type)">
+            <summary>
+            Sets a value for a property. If succeeds, then call the <see cref="M:WinCopies.Util.Data.ValueObject.OnPropertyChanged(System.String,System.Object,System.Object)"/> method to raise the <see cref="E:WinCopies.Util.Data.ValueObject.PropertyChanged"/> event.
+            </summary>// See the Remarks section.
+            <param name="propertyName">The name of the property for which set a new value</param>
+            <param name="fieldName">The name of the field to store the new value. This must the field that is called by the property accessors (get and set).</param>
+            <param name="newValue">The value to set in the property</param>
+            <param name="declaringType">The declaring type of both the property and its associated field</param>
+        </member>
+        <member name="M:WinCopies.Util.Data.ValueObject.OnPropertyChanged(System.String,System.Object,System.Object)">
+            <summary>
+            Raises the <see cref="E:WinCopies.Util.Data.ValueObject.PropertyChanged"/> event.
+            </summary>
+            <param name="propertyName">The name of the property for which set a new value</param>
+            <param name="oldValue">The old value of the property. This parameter is ignored by default. You can override this method and use the <see cref="T:WinCopies.Util.Data.PropertyChangedEventArgs"/> if you want for the <see cref="E:WinCopies.Util.Data.ValueObject.PropertyChanged"/> event to notify for this value.</param>
+            <param name="newValue">The new value of the property. This parameter is ignored by default. You can override this method and use the <see cref="T:WinCopies.Util.Data.PropertyChangedEventArgs"/> if you want for the <see cref="E:WinCopies.Util.Data.ValueObject.PropertyChanged"/> event to notify for this value.</param>
+        </member>
+        <member name="M:WinCopies.Util.Data.ValueObject.Dispose(System.Boolean)">
+            <summary>
+            Removes the unmanaged resources and the managed resources if needed. If you override this method, you should call this implementation of this method in your override implementation to avoid unexpected results when using this object later.
+            </summary>
+            <param name="disposing"><see langword="true"/> to dispose managed resources, otherwise <see langword="false"/>.</param>
+        </member>
+        <member name="T:WinCopies.Util.Data.ValueObject`1">
+            <summary>
+            Provides an object that defines a generic value and notifies of the value change.
+            </summary>
+            <typeparam name="T">The type of the value of this object.</typeparam>
+        </member>
+        <member name="P:WinCopies.Util.Data.ValueObject`1.IsReadOnly">
+            <summary>
+            Gets a value that indicates whether this object is read-only.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.Data.ValueObject`1.Value">
+            <summary>
+            Gets or sets the value of the object.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.Data.ValueObject`1.Equals(WinCopies.Util.IValueObject)">
+            <summary>
+            Determines whether this object is equal to a given object.
+            </summary>
+            <param name="obj">Object to compare to the current object.</param>
+            <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Util.Data.ValueObject`1.Equals(WinCopies.Util.IValueObject{`0})">
+            <summary>
+            Determines whether this object is equal to a given object.
+            </summary>
+            <param name="obj">Object to compare to the current object.</param>
+            <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="E:WinCopies.Util.Data.ValueObject`1.PropertyChanged">
+            <summary>
+            Occurs when a property value changes.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.Data.ValueObject`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Util.Data.ValueObject"/> class.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.Data.ValueObject`1.#ctor(`0)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Util.Data.ValueObject"/> class using a custom value.
+            </summary>
+            <param name="value">The value with which to initialize this object.</param>
+        </member>
+        <member name="M:WinCopies.Util.Data.ValueObject`1.OnPropertyChanged(System.String,System.String,System.Object,System.Type)">
+            <summary>
+            Sets a value for a property. If succeeds, then call the <see cref="M:WinCopies.Util.Data.ValueObject`1.OnPropertyChanged(System.String,System.Object,System.Object)"/> method to raise the <see cref="E:WinCopies.Util.Data.ValueObject`1.PropertyChanged"/> event.
+            </summary>// See the Remarks section.
+            <param name="propertyName">The name of the property for which set a new value</param>
+            <param name="fieldName">The name of the field to store the new value. This must the field that is called by the property accessors (get and set).</param>
+            <param name="newValue">The value to set in the property</param>
+            <param name="declaringType">The declaring type of both the property and its associated field</param>
+        </member>
+        <member name="M:WinCopies.Util.Data.ValueObject`1.OnPropertyChanged(System.String,System.Object,System.Object)">
+            <summary>
+            Raises the <see cref="E:WinCopies.Util.Data.ValueObject`1.PropertyChanged"/> event.
+            </summary>
+            <param name="propertyName">The name of the property for which set a new value</param>
+            <param name="oldValue">The old value of the property. This parameter is ignored by default. You can override this method and use the <see cref="T:WinCopies.Util.Data.PropertyChangedEventArgs"/> if you want for the <see cref="E:WinCopies.Util.Data.ValueObject`1.PropertyChanged"/> event to notify for this value.</param>
+            <param name="newValue">The new value of the property. This parameter is ignored by default. You can override this method and use the <see cref="T:WinCopies.Util.Data.PropertyChangedEventArgs"/> if you want for the <see cref="E:WinCopies.Util.Data.ValueObject`1.PropertyChanged"/> event to notify for this value.</param>
+        </member>
+        <member name="M:WinCopies.Util.Data.ValueObject`1.Dispose(System.Boolean)">
+            <summary>
+            Removes the unmanaged resources and the managed resources if needed. If you override this method, you should call this implementation of this method in your override implementation to avoid unexpected results when using this object laater.
+            </summary>
+            <param name="disposing"><see langword="true"/> to dispose managed resources, otherwise <see langword="false"/>.</param>
+        </member>
+        <member name="E:WinCopies.Util.Data.ViewModelRoot.PropertyChanged">
+            <summary>
+            Occurs when a property value changes.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.Data.ViewModelRoot.OnPropertyChanged(System.String,System.Object,System.Object)">
+            <summary>
+            Raises the <see cref="E:WinCopies.Util.Data.ViewModelRoot.PropertyChanged"/> event.
+            </summary>
+            <param name="propertyName">The name of the property for which to set a new value.</param>
+            <param name="oldValue">The old value of the property. This parameter is ignored by default. You can override this method and use the <see cref="T:WinCopies.Util.Data.PropertyChangedEventArgs"/> if you want for the <see cref="E:WinCopies.Util.Data.ViewModelRoot.PropertyChanged"/> event to notify for this value.</param>
+            <param name="newValue">The new value of the property. This parameter is ignored by default. You can override this method and use the <see cref="T:WinCopies.Util.Data.PropertyChangedEventArgs"/> if you want for the <see cref="E:WinCopies.Util.Data.ViewModelRoot.PropertyChanged"/> event to notify for this value.</param>
+        </member>
+        <member name="M:WinCopies.Util.Data.ViewModelRoot.ProvideValue(System.IServiceProvider)">
+            <summary>
+            Returns the current instance of this class as the value of the target property for this markup extension.
+            </summary>
+            <param name="serviceProvider">A service provider helper that can provide services for the markup extension.</param>
+            <returns>The object value to set on the property where the extension is applied.</returns>
+        </member>
         <member name="T:WinCopies.Util.Data.ViewModelBase">
             <summary>
             Provides a base class for direct view models.
@@ -1303,6 +1737,16 @@
             Occurs when a property value changes.
             </summary>
         </member>
+        <member name="M:WinCopies.Util.Data.ViewModelBase.Update(System.String,System.String,System.Object,System.Type,System.Boolean)">
+            <summary>
+            Sets a value for a property. If succeeds, then call the <see cref="M:WinCopies.Util.Data.ViewModelBase.OnPropertyChanged(System.String,System.Object,System.Object)"/> method to raise the <see cref="E:WinCopies.Util.Data.ViewModelBase.PropertyChanged"/> event.
+            </summary>// See the Remarks section.
+            <param name="propertyName">The name of the property for which to set a new value</param>
+            <param name="fieldName">The name of the field to store the new value. This has to be the field that is called by the property accessors (get and set).</param>
+            <param name="newValue">The value to set in the property</param>
+            <param name="declaringType">The declaring type of both the property and its associated field</param>
+            <param name="performIntegrityCheck">Whether to throw when the property is not settable or declaring types of the property and the setter method do not correspond</param>
+        </member>
         <member name="M:WinCopies.Util.Data.ViewModelBase.OnPropertyChanged(System.String,System.Object,System.Object)">
             <summary>
             Raises the <see cref="E:WinCopies.Util.Data.ViewModelBase.PropertyChanged"/> event.
@@ -1310,6 +1754,15 @@
             <param name="propertyName">The name of the property for which to set a new value.</param>
             <param name="oldValue">The old value of the property. This parameter is ignored by default. You can override this method and use the <see cref="T:WinCopies.Util.Data.PropertyChangedEventArgs"/> if you want for the <see cref="E:WinCopies.Util.Data.ViewModelBase.PropertyChanged"/> event to notify for this value.</param>
             <param name="newValue">The new value of the property. This parameter is ignored by default. You can override this method and use the <see cref="T:WinCopies.Util.Data.PropertyChangedEventArgs"/> if you want for the <see cref="E:WinCopies.Util.Data.ViewModelBase.PropertyChanged"/> event to notify for this value.</param>
+        </member>
+        <member name="M:WinCopies.Util.Data.ViewModelBase.Update(System.String,System.Object,System.Type,System.Boolean)">
+            <summary>
+            Sets a value for a property. If succeeds, then call the <see cref="M:WinCopies.Util.Data.ViewModelBase.OnPropertyChanged(System.String,System.Object,System.Object)"/> method to raise the <see cref="E:WinCopies.Util.Data.ViewModelBase.PropertyChanged"/> event.
+            </summary>
+            <param name="propertyName">The name of the property for which to set a new value</param>
+            <param name="newValue">The value to set in the property</param>
+            <param name="declaringType">The declaring type of both the property and its associated field</param>
+            <param name="performIntegrityCheck">Whether to throw when the property is not settable</param>
         </member>
         <member name="M:WinCopies.Util.Data.ViewModelBase.ProvideValue(System.IServiceProvider)">
             <summary>
@@ -1328,6 +1781,26 @@
             The model for this instance of view model.
             </summary>
         </member>
+        <member name="M:WinCopies.Util.Data.ViewModelAbstract.Update(System.String,System.String,System.Object,System.Type,System.Boolean,WinCopies.Util.Data.PropertyChangeScope)">
+            <summary>
+            Sets a value for a property. If succeeds, then call the <see cref="M:WinCopies.Util.Data.ViewModelAbstract.OnPropertyChanged(System.String,System.Object,System.Object)"/> method to raise the <see cref="E:WinCopies.Util.Data.ViewModelAbstract.PropertyChanged"/> event.
+            </summary>// See the Remarks section.
+            <param name="propertyName">The name of the property for which to set a new value</param>
+            <param name="fieldName">The name of the field to store the new value. This has to be the field that is called by the property accessors (get and set).</param>
+            <param name="newValue">The value to set in the property</param>
+            <param name="declaringType">The declaring type of both the property and its associated field</param>
+            <param name="performIntegrityCheck">Whether to throw when the property is not settable or declaring types of the property and the setter method do not correspond</param>
+            <param name="propertyChangeScope">Whether to reflect on the <see cref="P:WinCopies.Util.Data.ViewModelAbstract.Model"/> object or on the current view model. This value is set to <see cref="F:WinCopies.Util.Data.PropertyChangeScope.ViewModel"/> by default for this method.</param>
+        </member>
+        <member name="M:WinCopies.Util.Data.ViewModelAbstract.Update(System.String,System.Object,System.Type,WinCopies.Util.Data.PropertyChangeScope)">
+            <summary>
+            Sets a value for a property. If succeeds, then call the <see cref="M:WinCopies.Util.Data.ViewModelAbstract.OnPropertyChanged(System.String,System.Object,System.Object)"/> method to raise the <see cref="E:WinCopies.Util.Data.ViewModelAbstract.PropertyChanged"/> event.
+            </summary>// See the Remarks section.
+            <param name="propertyName">The name of the property for which to set a new value</param>
+            <param name="newValue">The value to set in the property</param>
+            <param name="declaringType">The declaring type of both the property and its associated field</param>
+            <param name="propertyChangeScope">Whether to reflect on the <see cref="P:WinCopies.Util.Data.ViewModelAbstract.Model"/> object or on the current view model. This value is set to <see cref="F:WinCopies.Util.Data.PropertyChangeScope.Model"/> by default for this method.</param>
+        </member>
         <member name="M:WinCopies.Util.Data.ViewModelAbstract.OnPropertyChanged(System.String,System.Object,System.Object)">
             <summary>
             Raises the <see cref="E:WinCopies.Util.Data.ViewModelAbstract.PropertyChanged"/> event.
@@ -1335,6 +1808,15 @@
             <param name="propertyName">The name of the property for which to set a new value</param>
             <param name="oldValue">The old value of the property. This parameter is ignored by default. You can override this method and use the <see cref="T:WinCopies.Util.Data.PropertyChangedEventArgs"/> if you want for the <see cref="E:WinCopies.Util.Data.ViewModelAbstract.PropertyChanged"/> event to notify for this value.</param>
             <param name="newValue">The new value of the property. This parameter is ignored by default. You can override this method and use the <see cref="T:WinCopies.Util.Data.PropertyChangedEventArgs"/> if you want for the <see cref="E:WinCopies.Util.Data.ViewModelAbstract.PropertyChanged"/> event to notify for this value.</param>
+        </member>
+        <member name="M:WinCopies.Util.Data.ViewModelAbstract.UpdateAutoProperty(System.String,System.Object,System.Type,System.Boolean)">
+            <summary>
+            Sets a value for a property. If succeeds, then call the <see cref="M:WinCopies.Util.Data.ViewModelAbstract.OnPropertyChanged(System.String,System.Object,System.Object)"/> method to raise the <see cref="E:WinCopies.Util.Data.ViewModelAbstract.PropertyChanged"/> event.
+            </summary>
+            <param name="propertyName">The name of the property for which to set a new value</param>
+            <param name="newValue">The value to set in the property</param>
+            <param name="declaringType">The declaring type of both the property and its associated field</param>
+            <param name="performIntegrityCheck">Whether to throw when the property is not settable</param>
         </member>
         <member name="M:WinCopies.Util.Data.ViewModelAbstract.ProvideValue(System.IServiceProvider)">
             <summary>
@@ -1564,6 +2046,186 @@
             <param name="typeEquality">Indicates whether to check for the exact type equality. <see langword="true"/> to only search for objects with same type than the given type, <see langword="false"/> to search for all objects of type for which the given type is assignable from.</param>
             <returns>The first object that was found, if any, otherwise null.</returns>
         </member>
+        <member name="M:WinCopies.Util.Extensions.SetBackgroundWorkerProperty(System.ComponentModel.BackgroundWorker,System.String,System.String,System.Object,System.Type,System.Boolean,System.Boolean,System.Reflection.BindingFlags,System.String,System.Boolean,System.Boolean,WinCopies.Util.FieldValidateValueCallback,System.Boolean,WinCopies.Util.FieldValueChangedCallback)">
+            <summary>
+            Sets a value to a property if the new value is different.
+            </summary>
+            <param name="obj">The object in which to set the property.</param>
+            <param name="propertyName">The name of the given property.</param>
+            <param name="fieldName">The field related to the property.</param>
+            <param name="newValue">The value to set.</param>
+            <param name="declaringType">The actual declaring type of the property.</param>
+            <param name="throwIfBusy">Whether to throw if <paramref name="obj"/> is busy.</param>
+            <param name="throwIfReadOnly">Whether to throw if the given property is read-only.</param>
+            <param name="bindingFlags">The <see cref="T:System.Reflection.BindingFlags"/> used to get the property.</param>
+            <param name="paramName">The parameter from which the value was passed to this method.</param>
+            <param name="setOnlyIfNotNull">Whether to set only if the given value is not null.</param>
+            <param name="throwIfNull">Whether to throw if the given value is null.</param>
+            <param name="validateValueCallback">The callback used to validate the given value. You can leave this parameter to null if you don't want to perform validation.</param>
+            <param name="throwIfValidationFails">Whether to throw if the validation of <paramref name="validateValueCallback"/> fails.</param>
+            <param name="valueChangedCallback">The callback used to perform actions after the property is set. You can leave this parameter to null if you don't want to perform actions after the property is set.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether the setting succeeded and the old value of the given property (or <see langword="null"/> if the property does not contain any value nor reference).</returns>
+            <exception cref="T:System.InvalidOperationException">The declaring types of the given property and field name doesn't correspond. OR The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
+            <exception cref="T:System.ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
+            <exception cref="T:System.Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="T:System.ArgumentException"/> otherwise.</exception>
+        </member>
+        <member name="M:WinCopies.Util.Extensions.SetBackgroundWorkerProperty(System.ComponentModel.BackgroundWorker,System.String,System.Object,System.Type,System.Boolean,System.Boolean,System.Reflection.BindingFlags,System.String,System.Boolean,System.Boolean,WinCopies.Util.PropertyValidateValueCallback,System.Boolean,WinCopies.Util.PropertyValueChangedCallback)">
+            <summary>
+            Sets a value to a property if the new value is different.
+            </summary>
+            <param name="obj">The object in which to set the property.</param>
+            <param name="propertyName">The name of the given property.</param>
+            <param name="newValue">The value to set.</param>
+            <param name="declaringType">The actual declaring type of the property.</param>
+            <param name="throwIfBusy">Whether to throw if <paramref name="obj"/> is busy.</param>
+            <param name="throwIfReadOnly">Whether to throw if the given property is read-only.</param>
+            <param name="bindingFlags">The <see cref="T:System.Reflection.BindingFlags"/> used to get the property.</param>
+            <param name="paramName">The parameter from which the value was passed to this method.</param>
+            <param name="setOnlyIfNotNull">Whether to set only if the given value is not null.</param>
+            <param name="throwIfNull">Whether to throw if the given value is null.</param>
+            <param name="validateValueCallback">The callback used to validate the given value. You can leave this parameter to null if you don't want to perform validation.</param>
+            <param name="throwIfValidationFails">Whether to throw if the validation of <paramref name="validateValueCallback"/> fails.</param>
+            <param name="valueChangedCallback">The callback used to perform actions after the property is set. You can leave this parameter to null if you don't want to perform actions after the property is set.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether the setting succeeded and the old value of the given property (or <see langword="null"/> if the property does not contain any value nor reference).</returns>
+            <exception cref="T:System.InvalidOperationException">The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
+            <exception cref="T:System.ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
+            <exception cref="T:System.Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="T:System.ArgumentException"/> otherwise.</exception>
+        </member>
+        <member name="M:WinCopies.Util.Extensions.SetBackgroundWorkerProperty(WinCopies.Util.IBackgroundWorker,System.String,System.String,System.Object,System.Type,System.Boolean,System.Boolean,System.Reflection.BindingFlags,System.String,System.Boolean,System.Boolean,WinCopies.Util.FieldValidateValueCallback,System.Boolean,WinCopies.Util.FieldValueChangedCallback)">
+            <summary>
+            Sets a value to a property if the new value is different.
+            </summary>
+            <param name="obj">The object in which to set the property.</param>
+            <param name="propertyName">The name of the given property.</param>
+            <param name="fieldName">The field related to the property.</param>
+            <param name="newValue">The value to set.</param>
+            <param name="declaringType">The actual declaring type of the property.</param>
+            <param name="throwIfBusy">Whether to throw if <paramref name="obj"/> is busy.</param>
+            <param name="throwIfReadOnly">Whether to throw if the given property is read-only.</param>
+            <param name="bindingFlags">The <see cref="T:System.Reflection.BindingFlags"/> used to get the property.</param>
+            <param name="paramName">The parameter from which the value was passed to this method.</param>
+            <param name="setOnlyIfNotNull">Whether to set only if the given value is not null.</param>
+            <param name="throwIfNull">Whether to throw if the given value is null.</param>
+            <param name="validateValueCallback">The callback used to validate the given value. You can leave this parameter to null if you don't want to perform validation.</param>
+            <param name="throwIfValidationFails">Whether to throw if the validation of <paramref name="validateValueCallback"/> fails.</param>
+            <param name="valueChangedCallback">The callback used to perform actions after the property is set. You can leave this parameter to null if you don't want to perform actions after the property is set.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether the setting succeeded and the old value of the given property (or <see langword="null"/> if the property does not contain any value nor reference).</returns>
+            <exception cref="T:System.InvalidOperationException">The declaring types of the given property and field name doesn't correspond.</exception>
+            <exception cref="T:System.ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
+            <exception cref="T:System.Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="T:System.ArgumentException"/> otherwise.</exception>
+        </member>
+        <member name="M:WinCopies.Util.Extensions.SetBackgroundWorkerProperty(WinCopies.Util.IBackgroundWorker,System.String,System.Object,System.Type,System.Boolean,System.Boolean,System.Reflection.BindingFlags,System.String,System.Boolean,System.Boolean,WinCopies.Util.PropertyValidateValueCallback,System.Boolean,WinCopies.Util.PropertyValueChangedCallback)">
+            <summary>
+            Sets a value to a property if the new value is different.
+            </summary>
+            <param name="obj">The object in which to set the property.</param>
+            <param name="propertyName">The name of the given property.</param>
+            <param name="newValue">The value to set.</param>
+            <param name="declaringType">The actual declaring type of the property.</param>
+            <param name="throwIfBusy">Whether to throw if <paramref name="obj"/> is busy.</param>
+            <param name="throwIfReadOnly">Whether to throw if the given property is read-only.</param>
+            <param name="bindingFlags">The <see cref="T:System.Reflection.BindingFlags"/> used to get the property.</param>
+            <param name="paramName">The parameter from which the value was passed to this method.</param>
+            <param name="setOnlyIfNotNull">Whether to set only if the given value is not null.</param>
+            <param name="throwIfNull">Whether to throw if the given value is null.</param>
+            <param name="validateValueCallback">The callback used to validate the given value. You can leave this parameter to null if you don't want to perform validation.</param>
+            <param name="throwIfValidationFails">Whether to throw if the validation of <paramref name="validateValueCallback"/> fails.</param>
+            <param name="valueChangedCallback">The callback used to perform actions after the property is set. You can leave this parameter to null if you don't want to perform actions after the property is set.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether the setting succeeded and the old value of the given property (or <see langword="null"/> if the property does not contain any value nor reference).</returns>
+            <exception cref="T:System.InvalidOperationException">The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
+            <exception cref="T:System.ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
+            <exception cref="T:System.Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="T:System.ArgumentException"/> otherwise.</exception>
+        </member>
+        <member name="M:WinCopies.Util.Extensions.DisposeAndSetBackgroundWorkerProperty(System.ComponentModel.BackgroundWorker,System.String,System.String,WinCopies.Util.IDisposable,System.Type,System.Boolean,System.Boolean,System.Reflection.BindingFlags,System.String,System.Boolean,System.Boolean,WinCopies.Util.FieldValidateValueCallback,System.Boolean,WinCopies.Util.FieldValueChangedCallback)">
+            <summary>
+            Disposes an old value of a property then sets a new value to the given property if the new value is different.
+            </summary>
+            <param name="obj">The object in which to set the property.</param>
+            <param name="propertyName">The name of the given property.</param>
+            <param name="fieldName">The field related to the property.</param>
+            <param name="newValue">The value to set.</param>
+            <param name="declaringType">The actual declaring type of the property.</param>
+            <param name="throwIfBusy">Whether to throw if <paramref name="obj"/> is busy.</param>
+            <param name="throwIfReadOnly">Whether to throw if the given property is read-only.</param>
+            <param name="bindingFlags">The <see cref="T:System.Reflection.BindingFlags"/> used to get the property.</param>
+            <param name="paramName">The parameter from which the value was passed to this method.</param>
+            <param name="setOnlyIfNotNull">Whether to set only if the given value is not null.</param>
+            <param name="throwIfNull">Whether to throw if the given value is null.</param>
+            <param name="validateValueCallback">The callback used to validate the given value. You can leave this parameter to null if you don't want to perform validation.</param>
+            <param name="throwIfValidationFails">Whether to throw if the validation of <paramref name="validateValueCallback"/> fails.</param>
+            <param name="valueChangedCallback">The callback used to perform actions after the property is set. You can leave this parameter to null if you don't want to perform actions after the property is set.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether the setting succeeded and the old value of the given property (or <see langword="null"/> if the property does not contain any value nor reference).</returns>
+            <exception cref="T:System.InvalidOperationException">The declaring types of the given property and field name doesn't correspond. OR The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
+            <exception cref="T:System.ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
+            <exception cref="T:System.Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="T:System.ArgumentException"/> otherwise.</exception>
+        </member>
+        <member name="M:WinCopies.Util.Extensions.DisposeAndSetBackgroundWorkerProperty(System.ComponentModel.BackgroundWorker,System.String,WinCopies.Util.IDisposable,System.Type,System.Boolean,System.Boolean,System.Reflection.BindingFlags,System.String,System.Boolean,System.Boolean,WinCopies.Util.PropertyValidateValueCallback,System.Boolean,WinCopies.Util.PropertyValueChangedCallback)">
+            <summary>
+            Disposes an old value of a property then sets a new value to the given property if the new value is different.
+            </summary>
+            <param name="obj">The object in which to set the property.</param>
+            <param name="propertyName">The name of the given property.</param>
+            <param name="newValue">The value to set.</param>
+            <param name="declaringType">The actual declaring type of the property.</param>
+            <param name="throwIfBusy">Whether to throw if <paramref name="obj"/> is busy.</param>
+            <param name="throwIfReadOnly">Whether to throw if the given property is read-only.</param>
+            <param name="bindingFlags">The <see cref="T:System.Reflection.BindingFlags"/> used to get the property.</param>
+            <param name="paramName">The parameter from which the value was passed to this method.</param>
+            <param name="setOnlyIfNotNull">Whether to set only if the given value is not null.</param>
+            <param name="throwIfNull">Whether to throw if the given value is null.</param>
+            <param name="validateValueCallback">The callback used to validate the given value. You can leave this parameter to null if you don't want to perform validation.</param>
+            <param name="throwIfValidationFails">Whether to throw if the validation of <paramref name="validateValueCallback"/> fails.</param>
+            <param name="valueChangedCallback">The callback used to perform actions after the property is set. You can leave this parameter to null if you don't want to perform actions after the property is set.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether the setting succeeded and the old value of the given property (or <see langword="null"/> if the property does not contain any value nor reference).</returns>
+            <exception cref="T:System.InvalidOperationException">The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
+            <exception cref="T:System.ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
+            <exception cref="T:System.Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="T:System.ArgumentException"/> otherwise.</exception>
+        </member>
+        <member name="M:WinCopies.Util.Extensions.DisposeAndSetBackgroundWorkerProperty(WinCopies.Util.IBackgroundWorker,System.String,System.String,WinCopies.Util.IDisposable,System.Type,System.Boolean,System.Boolean,System.Reflection.BindingFlags,System.String,System.Boolean,System.Boolean,WinCopies.Util.FieldValidateValueCallback,System.Boolean,WinCopies.Util.FieldValueChangedCallback)">
+            <summary>
+            Disposes an old value of a property then sets a new value to the given property if the new value is different.
+            </summary>
+            <param name="obj">The object in which to set the property.</param>
+            <param name="propertyName">The name of the given property.</param>
+            <param name="fieldName">The field related to the property.</param>
+            <param name="newValue">The value to set.</param>
+            <param name="declaringType">The actual declaring type of the property.</param>
+            <param name="throwIfBusy">Whether to throw if <paramref name="obj"/> is busy.</param>
+            <param name="throwIfReadOnly">Whether to throw if the given property is read-only.</param>
+            <param name="bindingFlags">The <see cref="T:System.Reflection.BindingFlags"/> used to get the property.</param>
+            <param name="paramName">The parameter from which the value was passed to this method.</param>
+            <param name="setOnlyIfNotNull">Whether to set only if the given value is not null.</param>
+            <param name="throwIfNull">Whether to throw if the given value is null.</param>
+            <param name="validateValueCallback">The callback used to validate the given value. You can leave this parameter to null if you don't want to perform validation.</param>
+            <param name="throwIfValidationFails">Whether to throw if the validation of <paramref name="validateValueCallback"/> fails.</param>
+            <param name="valueChangedCallback">The callback used to perform actions after the property is set. You can leave this parameter to null if you don't want to perform actions after the property is set.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether the setting succeeded and the old value of the given property (or <see langword="null"/> if the property does not contain any value nor reference).</returns>
+            <exception cref="T:System.InvalidOperationException">The declaring types of the given property and field name doesn't correspond.</exception>
+            <exception cref="T:System.ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
+            <exception cref="T:System.Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="T:System.ArgumentException"/> otherwise.</exception>
+        </member>
+        <member name="M:WinCopies.Util.Extensions.DisposeAndSetBackgroundWorkerProperty(WinCopies.Util.IBackgroundWorker,System.String,WinCopies.Util.IDisposable,System.Type,System.Boolean,System.Boolean,System.Reflection.BindingFlags,System.String,System.Boolean,System.Boolean,WinCopies.Util.PropertyValidateValueCallback,System.Boolean,WinCopies.Util.PropertyValueChangedCallback)">
+            <summary>
+            Disposes an old value of a property then sets a new value to the given property if the new value is different.
+            </summary>
+            <param name="obj">The object in which to set the property.</param>
+            <param name="propertyName">The name of the given property.</param>
+            <param name="newValue">The value to set.</param>
+            <param name="declaringType">The actual declaring type of the property.</param>
+            <param name="throwIfBusy">Whether to throw if <paramref name="obj"/> is busy.</param>
+            <param name="throwIfReadOnly">Whether to throw if the given property is read-only.</param>
+            <param name="bindingFlags">The <see cref="T:System.Reflection.BindingFlags"/> used to get the property.</param>
+            <param name="paramName">The parameter from which the value was passed to this method.</param>
+            <param name="setOnlyIfNotNull">Whether to set only if the given value is not null.</param>
+            <param name="throwIfNull">Whether to throw if the given value is null.</param>
+            <param name="validateValueCallback">The callback used to validate the given value. You can leave this parameter to null if you don't want to perform validation.</param>
+            <param name="throwIfValidationFails">Whether to throw if the validation of <paramref name="validateValueCallback"/> fails.</param>
+            <param name="valueChangedCallback">The callback used to perform actions after the property is set. You can leave this parameter to null if you don't want to perform actions after the property is set.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether the setting succeeded and the old value of the given property (or <see langword="null"/> if the property does not contain any value nor reference).</returns>
+            <exception cref="T:System.InvalidOperationException">The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
+            <exception cref="T:System.ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
+            <exception cref="T:System.Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="T:System.ArgumentException"/> otherwise.</exception>
+        </member>
         <member name="M:WinCopies.Util.Extensions.ToImageSource(System.Drawing.Bitmap)">
             <summary>
             Converts a <see cref="T:System.Drawing.Bitmap"/> to an <see cref="T:System.Windows.Media.ImageSource"/>.
@@ -1581,6 +2243,25 @@
             <exception cref="T:System.ArgumentNullException"><paramref name="backgroundWorker"/> is <see langword="null"/>.</exception>
         </member>
         <member name="M:WinCopies.Util.Extensions.TryReportProgress(WinCopies.Util.IBackgroundWorker,System.Int32,System.Object)">
+            <summary>
+            Tries to report progress for a given <see cref="T:WinCopies.Util.IBackgroundWorker"/>.
+            </summary>
+            <param name="backgroundWorker">The <see cref="T:WinCopies.Util.IBackgroundWorker"/> for which to report the progress.</param>
+            <param name="progressPercentage">The progress percentage of <paramref name="backgroundWorker"/>.</param>
+            <param name="userState">An object to pass to the <see cref="E:WinCopies.Util.IBackgroundWorker.ProgressChanged"/> event handler of <paramref name="backgroundWorker"/>.</param>
+            <returns><see langword="true"/> if <see cref="P:WinCopies.Util.IBackgroundWorker.WorkerReportsProgress"/> is <see langword="true"/> for <paramref name="backgroundWorker"/>; otherwise <see langword="false"/>.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="backgroundWorker"/> is <see langword="null"/>.</exception>
+        </member>
+        <member name="M:WinCopies.Util.Extensions.TryReportProgress(WinCopies.Util.DotNetFix.IBackgroundWorker,System.Int32)">
+            <summary>
+            Tries to report progress for a given <see cref="T:WinCopies.Util.IBackgroundWorker"/>.
+            </summary>
+            <param name="backgroundWorker">The <see cref="T:WinCopies.Util.IBackgroundWorker"/> for which to report the progress.</param>
+            <param name="progressPercentage">The progress percentage of <paramref name="backgroundWorker"/>.</param>
+            <returns><see langword="true"/> if <see cref="P:WinCopies.Util.IBackgroundWorker.WorkerReportsProgress"/> is <see langword="true"/> for <paramref name="backgroundWorker"/>; otherwise <see langword="false"/>.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="backgroundWorker"/> is <see langword="null"/>.</exception>
+        </member>
+        <member name="M:WinCopies.Util.Extensions.TryReportProgress(WinCopies.Util.DotNetFix.IBackgroundWorker,System.Int32,System.Object)">
             <summary>
             Tries to report progress for a given <see cref="T:WinCopies.Util.IBackgroundWorker"/>.
             </summary>

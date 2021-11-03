@@ -856,7 +856,7 @@
             </summary>
             <returns>A value indicating whether a value has been retrieved.</returns>
         </member>
-        <member name="M:WinCopies.Collections.EnumeratorInfo.ResetOverride">
+        <member name="M:WinCopies.Collections.EnumeratorInfo.ResetOverride2">
             <summary>
             Calls the <see cref="M:System.Collections.IEnumerator.Reset"/> method on <see cref="T:WinCopies.Collections.Enumerator"/>.
             </summary>
