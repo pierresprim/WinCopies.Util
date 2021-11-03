@@ -12,6 +12,7 @@ CHANGELOG
 - Bug fixed in WinCopies.Collections.EnumeratorCollection: infinite recursion when removing an enumerator.
 - New static and extension methods.
 - New delegates.
+- .Net 4.0 and 4.5 are no longer supported by the packages of this project.
 
 ### 09/26/2021 2.16
 

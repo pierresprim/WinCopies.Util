@@ -1,11 +1,20 @@
 ﻿using System;
 using System.Text;
+
 using WinCopies.Util;
+
+using static WinCopies.
+#if WinCopies3
+    ThrowHelper;
+#else
+    Util.Util;
+#endif
 
 namespace WinCopies
 {
     public static class StringExtensions
     {
+#if CS5
 #if !CS8
         public static StringBuilder AppendJoin(this StringBuilder stringBuilder, in string s, in System.Collections.Generic.IEnumerable<string> values)
         {
@@ -44,7 +53,7 @@ namespace WinCopies
 
         public static string Format(this string value, in char except, in Func<string, string> func)
         {
-            string[] split = (value ?? throw ThrowHelper.GetArgumentNullException(nameof(value))).Split(except);
+            string[] split = (value ?? throw GetArgumentNullException(nameof(value))).Split(except);
 
             for (int i = 0; i < split.Length; i++)
 
@@ -54,5 +63,6 @@ namespace WinCopies
 
             return result.AppendJoin(except, split).ToString();
         }
+#endif
     }
 }

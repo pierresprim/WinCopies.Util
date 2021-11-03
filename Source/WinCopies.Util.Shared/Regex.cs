@@ -1,4 +1,5 @@
-﻿using static WinCopies.
+﻿#if CS5
+using static WinCopies.
 #if WinCopies3
     UtilHelpers;
 #else
@@ -20,3 +21,4 @@ namespace WinCopies
         public static string FromLikeStatement(in string filter) => FromPattern(filter, LikeStatementChar, LikeSnippet);
     }
 }
+#endif
