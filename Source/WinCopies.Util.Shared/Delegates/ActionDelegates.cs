@@ -30,7 +30,10 @@ using static WinCopies.
     Util.Util;
 #endif
 
-namespace WinCopies.Util.Shared.Delegates
+namespace WinCopies
+#if !WinCopies3
+    .Util.Shared.Delegates
+#endif
 {
     public static class ActionDelegates
     {

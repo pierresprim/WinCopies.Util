@@ -6,6 +6,10 @@ The WinCopies® software framework
 CHANGELOG
 ---------
 
+### ???? ????
+
+- Move WinCopies.Util.Shared.Delegates.ActionDelegates to WinCopies namespace.
+
 ### 11/03/2021 3.16-preview
 
 - EnumeratorInfoBase has a new abstract method (ResetOverride2).
