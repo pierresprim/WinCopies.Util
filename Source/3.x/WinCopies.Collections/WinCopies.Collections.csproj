@@ -1,0 +1,52 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<PackageId>WinCopies.Collections</PackageId>
+		<AssemblyName>WinCopies.Collections</AssemblyName>
+		<Title>WinCopies.Collections</Title>
+		<TargetFrameworks>net35;net472;net48;netcoreapp3.0;netcoreapp3.1;net5.0;net6.0;netstandard2.0;netstandard2.1</TargetFrameworks>
+		<DocumentationFile>WinCopies.Collections.xml</DocumentationFile>
+		<SignAssembly>true</SignAssembly>
+		<PackageTags>WinCopies</PackageTags>
+		<VersionPrefix>3.16</VersionPrefix>
+		<VersionSuffix>preview</VersionSuffix>
+		<AssemblyVersion>3.16.0</AssemblyVersion>
+		<FileVersion>3.16</FileVersion>
+		<RootNamespace>WinCopies.Collections</RootNamespace>
+		<AssemblyOriginatorKeyFile>WinCopies.Collections.snk</AssemblyOriginatorKeyFile>
+		<DefineConstants>WinCopies3;$(DefineConstants)</DefineConstants>
+		<PackageIcon>WinCopies.png</PackageIcon>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+	</PropertyGroup>
+
+	<Import Project="..\WinCopies.Collections.Shared\WinCopies.Collections.Shared.projitems" Label="Shared" />
+
+	<ItemGroup>
+		<None Include="..\WinCopies.png">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+		<None Include="..\.editorconfig" Link=".editorconfig" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\WinCopies.Util\WinCopies.Util.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="Resources\ExceptionMessages.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>ExceptionMessages.resx</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Update="Resources\ExceptionMessages.resx">
+			<Generator>PublicResXFileCodeGenerator</Generator>
+			<LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+	</ItemGroup>
+
+</Project>

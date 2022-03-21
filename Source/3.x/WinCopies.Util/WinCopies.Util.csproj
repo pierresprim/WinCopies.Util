@@ -1,0 +1,51 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net35;net472;net48;netcoreapp3.0;netcoreapp3.1;net5.0;net6.0;netstandard2.0;netstandard2.1</TargetFrameworks>
+		<PackageId>WinCopies.Util</PackageId>
+		<AssemblyName>WinCopies.Util</AssemblyName>
+		<Title>WinCopies.Util</Title>
+		<DocumentationFile>WinCopies.Util.xml</DocumentationFile>
+		<SignAssembly>true</SignAssembly>
+		<AssemblyOriginatorKeyFile>WinCopies.Util.snk</AssemblyOriginatorKeyFile>
+		<Description>WinCopies framework utilities</Description>
+		<Copyright>Copyright © 2021 Pierre Sprimont</Copyright>
+		<PackageTags>WinCopies</PackageTags>
+		<VersionPrefix>3.16</VersionPrefix>
+		<VersionSuffix>preview</VersionSuffix>
+		<AssemblyVersion>3.16.0</AssemblyVersion>
+		<FileVersion>3.16</FileVersion>
+		<RootNamespace>WinCopies</RootNamespace>
+		<DefineConstants>WinCopies3;$(DefineConstants)</DefineConstants>
+		<PackageIcon>WinCopies.png</PackageIcon>
+		<EnableNETAnalyzers>true</EnableNETAnalyzers>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+	</PropertyGroup>
+
+	<Import Project="..\WinCopies.Util.Shared\WinCopies.Util.Shared.projitems" Label="Shared" />
+
+	<ItemGroup>
+		<None Include="..\.editorconfig" Link=".editorconfig" />
+		<None Include="..\WinCopies.png">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="Resources\ExceptionMessages.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>ExceptionMessages.resx</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Update="Resources\ExceptionMessages.resx">
+			<Generator>PublicResXFileCodeGenerator</Generator>
+			<LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+	</ItemGroup>
+
+</Project>

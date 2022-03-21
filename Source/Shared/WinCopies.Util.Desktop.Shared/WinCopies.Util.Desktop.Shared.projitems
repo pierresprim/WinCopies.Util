@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>02122768-dc6a-467c-a5f5-ae5bf2669308</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>WinCopies.Util.Desktop.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)BackgroundWorker.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Collections\INotifyCollectionChanging.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Collections\NotifyCollectionChangedEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Collections\ObservableCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Collections\ObservableTreeNode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Collections\Old.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Collections\ReadOnlyObservableCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Collections\ReadOnlyObservableTreeNode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\ApplicationCommands.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\BehaviorBinding.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\CommandAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\CommandBehavior.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\CommandBehaviorBinding.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\CommandBehaviorCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\CommandModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\Commands.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\DelegateCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\DialogCommands.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\EventArgsHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\EventHandlerGenerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\ExecutionStrategy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\FileSystemCommands.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\KeyCommandHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\NavigationCommands.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\NotificationIconCommands.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\ProcessCommands.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\TextCommands.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataTemplateSelectors.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Binding\FreezableBinding.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Binding\PushBinding.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Binding\PushBindingCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Binding\PushBindingManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\ActionToCommandConverters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\CheckableObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\CoalesceConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\ConverterArray.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\ComparisonConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\ConverterBase\ConverterBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\ConverterBase\ConverterBase2.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\ConverterBase\ConverterBase3.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\EnumToArrayConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\EqualsConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\MultiConverterBase\Misc.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\MultiConverterBase\MultiConverterBase2.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\MultiConverterBase\MultiConverterBase3.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\MultiConverterBase\MultiConverterBase4.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\PropertySystemConverters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\EnumToBooleanConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\EnumToStringArrayConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\BitmapToImageSourceConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\IconToImageSourceConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\IsNullConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\SimpleLinkedListConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\ToStringConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MarkupExtensions\BooleanMarkupExtension.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UtilHelpers.cs" />
+    <Compile Include="..\WinCopies.Util.Desktop.Shared\Data\Converters\IntConversionResultToStringConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\MenuItem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\MultiConverterBase\MultiConverterBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\MultiStringConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\MultiValueConversionAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\NamedObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\ObjectToTypeConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\PercentConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\PropertyChangedEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\ReverseBooleanConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Validation\IntRangeRule.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Validation\ValidationRule.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\ValueChangedEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\ValueObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\ViewModels.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\VisibilityToBooleanConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\VisibilityToReversedBooleanConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IBackgroundWorker.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MarkupExtensions\MergedStylesMarkupExtension.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Resources.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RoutedEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ThrowHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Clipboard.cs" />
+  </ItemGroup>
+</Project>
