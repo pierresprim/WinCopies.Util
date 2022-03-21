@@ -6,10 +6,8 @@
 		<AssemblyName>WinCopies.Util</AssemblyName>
 		<Title>WinCopies.Util</Title>
 		<DocumentationFile>WinCopies.Util.xml</DocumentationFile>
-		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>WinCopies.Util.snk</AssemblyOriginatorKeyFile>
 		<Description>WinCopies framework utilities</Description>
-		<Copyright>Copyright © 2021 Pierre Sprimont</Copyright>
 		<PackageTags>WinCopies</PackageTags>
 		<VersionPrefix>3.16</VersionPrefix>
 		<VersionSuffix>preview</VersionSuffix>
@@ -17,21 +15,10 @@
 		<FileVersion>3.16</FileVersion>
 		<RootNamespace>WinCopies</RootNamespace>
 		<DefineConstants>WinCopies3;$(DefineConstants)</DefineConstants>
-		<PackageIcon>WinCopies.png</PackageIcon>
-		<EnableNETAnalyzers>true</EnableNETAnalyzers>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 	</PropertyGroup>
 
-	<Import Project="..\WinCopies.Util.Shared\WinCopies.Util.Shared.projitems" Label="Shared" />
-
-	<ItemGroup>
-		<None Include="..\.editorconfig" Link=".editorconfig" />
-		<None Include="..\WinCopies.png">
-			<Pack>True</Pack>
-			<PackagePath></PackagePath>
-		</None>
-	</ItemGroup>
+	<Import Project="..\..\Shared\WinCopies.Util.Shared\WinCopies.Util.Shared.projitems" Label="Shared" />
 
 	<ItemGroup>
 		<Compile Update="Resources\ExceptionMessages.Designer.cs">

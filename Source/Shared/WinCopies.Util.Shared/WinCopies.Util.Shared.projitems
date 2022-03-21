@@ -14,7 +14,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Comparers.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Regex.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StringExtensions.cs" />
-    <Compile Include="..\WinCopies.Util.Shared\Delegates\ActionDelegates.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Delegates\ActionDelegates.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Delegates\Delegates.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Delegates\DelegateTypes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EnumComparer.cs" />
@@ -38,7 +38,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)SingleInstance.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StringComparer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SucceededEventArgs.cs" />
-    <Compile Include="..\WinCopies.Util.Shared\ValueTuple.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ValueTuple.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ValueObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ValueProvider.cs" />

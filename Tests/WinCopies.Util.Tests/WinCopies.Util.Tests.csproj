@@ -15,10 +15,6 @@
     <PackageReference Include="coverlet.collector" Version="1.2.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Source\WinCopies.Util\WinCopies.Util.csproj" />
-  </ItemGroup>
-
   <Import Project="..\WinCopies.Util.Tests.Shared\WinCopies.Util.Tests.Shared.projitems" Label="Shared" />
 
 </Project>

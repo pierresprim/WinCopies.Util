@@ -28,8 +28,4 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Source\WinCopies.Util.Desktop\WinCopies.Util.Desktop.csproj" />
-  </ItemGroup>
-
 </Project>

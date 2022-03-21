@@ -23,8 +23,8 @@ using WinCopies.Util.Resources;
 
 namespace WinCopies.Util
 #else
-
 using WinCopies.Resources;
+
 namespace WinCopies
 #endif
 {

@@ -26,9 +26,4 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Source\WinCopies.Util.Desktop\WinCopies.Util.Desktop.csproj" />
-    <ProjectReference Include="..\..\Source\WinCopies.Util\WinCopies.Util.csproj" />
-  </ItemGroup>
-
 </Project>

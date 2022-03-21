@@ -31,10 +31,6 @@
     <PackageReference Include="coverlet.collector" Version="1.2.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Source\WinCopies.Collections\WinCopies.Collections.csproj" />
-  </ItemGroup>
-
   <Import Project="..\WinCopies.Collections.Tests.Shared\WinCopies.Collections.Tests.Shared.projitems" Label="Shared" />
 
 </Project>

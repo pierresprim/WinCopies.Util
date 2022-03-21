@@ -482,7 +482,12 @@ namespace WinCopies.Collections.DotNetFix
 
 
 
-            private LinkedListNode Find(T value, EnumerationDirection enumerationDirection) => new Enumerable<ILinkedListNode<T>>(() => GetNodeEnumerator(enumerationDirection)).FirstOrDefault(value == null ? (node => node.Value == null) : (node => value.Equals(node.Value))) as LinkedListNode;
+            private LinkedListNode Find(T value, EnumerationDirection enumerationDirection) => new Enumerable<ILinkedListNode<T>>(() => GetNodeEnumerator(enumerationDirection)).FirstOrDefault(value == null ?
+
+#if !CS9
+                (Func<ILinkedListNode<T>, bool>)
+#endif
+                (node => node.Value == null) : (node => value.Equals(node.Value))) as LinkedListNode;
 
             public LinkedListNode Find(T value) => Find(value, EnumerationDirection.FIFO);
 
@@ -671,7 +676,11 @@ namespace WinCopies.Collections.DotNetFix
 
             public bool Contains(T item)
             {
-                Predicate<T> predicate = item == null ? (_item => _item == null) : (_item => item.Equals(_item));
+                Predicate<T> predicate = item == null ?
+#if !CS9
+                    (Predicate<T>)
+#endif
+                    (_item => _item == null) : (_item => item.Equals(_item));
 
                 LinkedListNode node = First;
 
