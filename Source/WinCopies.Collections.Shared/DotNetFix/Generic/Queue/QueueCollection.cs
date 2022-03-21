@@ -45,7 +45,7 @@ namespace WinCopies.Collections.DotNetFix
 #if WinCopies3
         IQueue<TItems>, IUIntCountable
 #else
-        IEnumerableQueue<T>, IReadOnlyCollection<
+        IEnumerableQueue<T>, System.Collections.Generic.IReadOnlyCollection<
 #if WinCopies3
 TItems
 #else

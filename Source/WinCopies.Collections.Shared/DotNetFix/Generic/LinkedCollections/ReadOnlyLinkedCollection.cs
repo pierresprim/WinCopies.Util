@@ -21,6 +21,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
+using WinCopies.Util;
+
 using static WinCopies
 #if !WinCopies3
     .Util.Util;
@@ -28,7 +30,6 @@ using static WinCopies
 using System.Runtime.Serialization;
 
 using WinCopies.Collections.Generic;
-using WinCopies.Util;
 #else
     .ThrowHelper;
 #endif
@@ -42,7 +43,7 @@ namespace WinCopies.Collections.DotNetFix
     {
 #endif
         [Serializable]
-        public class ReadOnlyLinkedCollection<T> : ICollection<T>, System.Collections.Generic.IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection
+        public class ReadOnlyLinkedCollection<T> : System.Collections.Generic.ICollection<T>, System.Collections.Generic.IEnumerable<T>, IEnumerable, System.Collections.Generic.IReadOnlyCollection<T>, ICollection
 #if WinCopies3
 , IReadOnlyLinkedList2<T>
 #else
@@ -66,19 +67,19 @@ int
 #endif
                 Count => InnerList.Count;
 
+            int System.Collections.Generic.ICollection<T>.Count => (int)Count;
+
 #if WinCopies3
             int ICollection.Count => (int)Count;
 
-            int ICollection<T>.Count => (int)Count;
-
-            int IReadOnlyCollection<T>.Count => (int)Count;
+            int System.Collections.Generic.IReadOnlyCollection<T>.Count => (int)Count;
 #endif
 
             public bool IsReadOnly => true;
 
-            bool ICollection.IsSynchronized => ((ICollection)InnerList).IsSynchronized;
+            bool ICollection.IsSynchronized => InnerList.IsSynchronized;
 
-            object ICollection.SyncRoot => ((ICollection)InnerList).SyncRoot;
+            object ICollection.SyncRoot => InnerList.SyncRoot;
 
 #if WinCopies3
             public T FirstValue => InnerList.FirstValue;
@@ -92,8 +93,6 @@ int
             IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.Last => throw GetReadOnlyListOrCollectionException();
 #endif
 
-            bool ICollection<T>.IsReadOnly => true;
-
             public ReadOnlyLinkedCollection(in
 #if !WinCopies3
                 System.Collections.Generic.LinkedList
@@ -106,29 +105,19 @@ int
             IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.Find(T value) => throw GetReadOnlyListOrCollectionException();
 
             IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.FindLast(T value) => throw GetReadOnlyListOrCollectionException();
+#endif
+
+            public void CopyTo(Array array, int index) => InnerList.CopyTo(array, index);
+
+            public void CopyTo(
+#if WinCopies3
+            T
 #else
-        public ReadOnlyLinkedCollection(in LinkedCollection<T> listCollection) : this(listCollection.InnerList) { /* Left empty. */ }
-
-        public System.Collections.Generic.LinkedListNode<T> Find(T value) => InnerList.Find(value);
-
-        public System.Collections.Generic.LinkedListNode<T> FindLast(T value) => InnerList.FindLast(value);
+            T
 #endif
+           [] array, int arrayIndex) => InnerList.CopyTo(array, arrayIndex);
 
-            public bool Contains(T item) => InnerList.Contains(item);
-
-            public void CopyTo(Array array, int index) => ((ICollection)InnerList).CopyTo(array, index);
-
-            public void CopyTo(T[] array, int arrayIndex) => InnerList.CopyTo(array, arrayIndex);
-
-            System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerList).GetEnumerator();
-
-#if !WinCopies3
-        public void GetObjectData(SerializationInfo info, StreamingContext context) => InnerList.GetObjectData(info, context);
-
-        public void OnDeserialization(object sender) => InnerList.OnDeserialization(sender);
-
-        public System.Collections.Generic.IEnumerator<T> GetEnumerator() => InnerList.GetEnumerator();
-#endif
+            System.Collections.IEnumerator IEnumerable.GetEnumerator() => InnerList.AsOfType<IEnumerable>().GetEnumerator();
 
             void ICollection<T>.Add(T item) => throw GetReadOnlyListOrCollectionException();
 
@@ -136,23 +125,37 @@ int
 
             bool ICollection<T>.Remove(T item) => throw GetReadOnlyListOrCollectionException();
 
+            public bool Contains(T item) => InnerList.Contains(item);
+
 #if WinCopies3
             public IUIntCountableEnumerator<T> GetEnumerator() => InnerList.GetEnumerator();
 
             public IUIntCountableEnumerator<T> GetReversedEnumerator() => InnerList.GetReversedEnumerator();
 
-            System.Collections.Generic.IEnumerator<T> Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => ((Collections.Generic.IEnumerable<T>)InnerList).GetReversedEnumerator();
+            System.Collections.Generic.IEnumerator<T> Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => InnerList.AsOfType<Collections.Generic.IEnumerable<T>>().GetReversedEnumerator();
 
 #if !CS8
             System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetEnumerator();
 
             System.Collections.IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
 #endif
+#else
+        public ReadOnlyLinkedCollection(in LinkedCollection<T> listCollection) : this(listCollection.InnerList) { /* Left empty. */ }
+
+        public System.Collections.Generic.LinkedListNode<T> Find(T value) => InnerList.Find(value);
+
+        public System.Collections.Generic.LinkedListNode<T> FindLast(T value) => InnerList.FindLast(value);
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context) => InnerList.GetObjectData(info, context);
+
+        public void OnDeserialization(object sender) => InnerList.OnDeserialization(sender);
+
+        public System.Collections.Generic.IEnumerator<T> GetEnumerator() => InnerList.GetEnumerator();
 #endif
         }
+
 #if WinCopies3
     }
 #endif
 }
-
 #endif

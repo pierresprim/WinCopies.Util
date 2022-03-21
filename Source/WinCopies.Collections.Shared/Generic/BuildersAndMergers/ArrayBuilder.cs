@@ -80,7 +80,7 @@ namespace WinCopies.Collections
         /// <returns>The number of nodes actually contained in this <see cref="ArrayBuilder{T}"/>.</returns>
         public int Count => InnerList.Count;
 
-        bool ICollection<T>.IsReadOnly => false;
+        bool System.Collections.Generic.ICollection<T>.IsReadOnly => false;
 
         object ICollection.SyncRoot => ((ICollection)InnerList).SyncRoot;
 
@@ -204,7 +204,7 @@ namespace WinCopies.Collections
             OnUpdate();
         }
 
-#region AddRange methods
+            #region AddRange methods
 
         /// <summary>
         /// Add multiple values at the top of this <see cref="ArrayBuilder{T}"/>.
@@ -414,7 +414,7 @@ namespace WinCopies.Collections
         /// <param name="array">The values to add to this <see cref="ArrayBuilder{T}"/></param>
         public void AddRangeAfter(in System.Collections.Generic.LinkedListNode<T> node, in IEnumerable<System.Collections.Generic.LinkedListNode<T>> array) { if (node.Next == null) AddRangeLast(array); else AddRangeBefore(node.Next, array); }
 
-#endregion
+            #endregion
 
         /// <summary>
         /// Removes all nodes from this <see cref="ArrayBuilder{T}"/>.
@@ -540,9 +540,9 @@ namespace WinCopies.Collections
 
         System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => ((System.Collections.Generic.IEnumerable<T>)InnerList).GetEnumerator();
 
-        System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerList).GetEnumerator();
+        System.Collections.IEnumerator IEnumerable.GetEnumerator() => InnerList.GetEnumerator();
 
-        void ICollection<T>.Add(T item) => ((ICollection<T>)InnerList).Add(item);
+        void System.Collections.Generic.ICollection<T>.Add(T item) => InnerList.AsOfType<System.Collections.Generic.ICollection<T>>().Add(item);
 
         void ICollection.CopyTo(Array array, int index) => ((ICollection)InnerList).CopyTo(array, index);
 #endif

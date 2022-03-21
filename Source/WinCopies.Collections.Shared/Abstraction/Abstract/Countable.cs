@@ -26,7 +26,7 @@ using WinCopies.Linq;
 
 namespace WinCopies.Collections.Abstraction.Generic.Abstract
 {
-    public abstract class Countable<TEnumerable, TItems> : ICountable where TEnumerable : IReadOnlyCollection<TItems>
+    public abstract class Countable<TEnumerable, TItems> : ICountable where TEnumerable : System.Collections.Generic.IReadOnlyCollection<TItems>
     {
         protected TEnumerable InnerEnumerable { get; }
 
@@ -35,7 +35,7 @@ namespace WinCopies.Collections.Abstraction.Generic.Abstract
         protected Countable(TEnumerable enumerable) => InnerEnumerable = enumerable;
     }
 
-    public abstract class CountableEnumerable<TEnumerable, TSourceItems, TDestinationItems> : Countable<TEnumerable, TSourceItems>, ICountableEnumerable<TDestinationItems> where TEnumerable : IReadOnlyCollection<TSourceItems>
+    public abstract class CountableEnumerable<TEnumerable, TSourceItems, TDestinationItems> : Countable<TEnumerable, TSourceItems>, ICountableEnumerable<TDestinationItems> where TEnumerable : System.Collections.Generic.IReadOnlyCollection<TSourceItems>
     {
         protected CountableEnumerable(TEnumerable enumerable) : base(enumerable) { /* Left empty. */ }
 
@@ -46,14 +46,14 @@ namespace WinCopies.Collections.Abstraction.Generic.Abstract
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
     }
 
-    public abstract class CountableEnumerable<TEnumerable, TItems> : CountableEnumerable<TEnumerable, TItems, TItems> where TEnumerable : IReadOnlyCollection<TItems>
+    public abstract class CountableEnumerable<TEnumerable, TItems> : CountableEnumerable<TEnumerable, TItems, TItems> where TEnumerable : System.Collections.Generic.IReadOnlyCollection<TItems>
     {
         protected CountableEnumerable(TEnumerable enumerable) : base(enumerable) { /* Left empty. */ }
 
         public override ICountableEnumerator<TItems> GetEnumerator() => new CountableEnumeratorInfo<TItems>(new EnumeratorInfo<TItems>(this), () => Count);
     }
 
-    public abstract class CountableEnumerableSelector<TEnumerable, TSourceItems, TDestinationItems> : CountableEnumerable<TEnumerable, TSourceItems, TDestinationItems> where TEnumerable : IReadOnlyCollection<TSourceItems>
+    public abstract class CountableEnumerableSelector<TEnumerable, TSourceItems, TDestinationItems> : CountableEnumerable<TEnumerable, TSourceItems, TDestinationItems> where TEnumerable : System.Collections.Generic.IReadOnlyCollection<TSourceItems>
     {
         protected Converter<TSourceItems, TDestinationItems> Selector { get; }
 

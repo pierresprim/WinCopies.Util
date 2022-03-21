@@ -16,36 +16,35 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if WinCopies3 && CS7
-
 using System.Collections.Generic;
 
 using WinCopies.Collections.DotNetFix.Generic;
 
-using static WinCopies.ThrowHelper    ;
+using static WinCopies.ThrowHelper;
 
 namespace WinCopies.Collections.Generic
 {
     public class DictionaryMerger<TKey, TValue> : ArrayMerger<KeyValuePair<TKey, TValue>>
     {
-        public Dictionary<TKey,TValue> ToDictionary(in bool remove = false)
+        public Dictionary<TKey, TValue> ToDictionary(in bool remove = false)
         {
             ValidateRealCount();
 
-            var dic = new Dictionary<TKey, TValue>((int)  Count);
+            var dic = new Dictionary<TKey, TValue>((int)Count);
 
             ToDictionaryPrivate(dic, remove);
 
             return dic;
         }
 
-        public void ToDictionary(in IDictionary<TKey, TValue> dic, in bool remove = false)
+        public void ToDictionary(in System.Collections.Generic.IDictionary<TKey, TValue> dic, in bool remove = false)
         {
             ValidateRealCount();
 
             ToDictionaryPrivate(dic ?? throw GetArgumentNullException(nameof(dic)), remove);
         }
 
-        private void ToDictionaryPrivate(in IDictionary<TKey, TValue> dic, in bool remove)
+        private void ToDictionaryPrivate(in System.Collections.Generic.IDictionary<TKey, TValue> dic, in bool remove)
         {
             if (remove)
 

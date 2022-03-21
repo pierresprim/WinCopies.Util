@@ -676,7 +676,7 @@ in
 #if CS7
         object IList.this[int index] { get => this[index]; set => this[index] = (T)value; }
 
-        bool ICollection<T>.IsReadOnly => ((ICollection<T>)Collection).IsReadOnly;
+        bool System.Collections.Generic.ICollection<T>.IsReadOnly => ((System.Collections.Generic.ICollection<T>)Collection).IsReadOnly;
 
         bool ICollection.IsSynchronized => ((ICollection)Collection).IsSynchronized;
 
@@ -686,10 +686,10 @@ in
 
         bool IList.IsFixedSize => ((IList)Collection).IsFixedSize;
 #endif
-#endregion
-#endregion
+        #endregion
+        #endregion
 
-#region Events
+        #region Events
 #if !WinCopies3
         /// <summary>
         /// Occurs when a property value changes.

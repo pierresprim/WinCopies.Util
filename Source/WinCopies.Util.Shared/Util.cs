@@ -71,7 +71,7 @@ namespace WinCopies.Util
         public NullableReference(T value) => Value = value;
     }
 
-        public delegate bool TaskAwaiterPredicate(ref bool cancel);
+    public delegate bool TaskAwaiterPredicate(ref bool cancel);
 
     /// <summary>
     /// Provides some static helper methods.
@@ -163,6 +163,8 @@ namespace WinCopies.Util
                 throw new TimeoutException();
         }
 #endif
+
+        public static string GetName<T>() => typeof(T).Name;
 
         public static void Lambda<T>(Action<Action> action, ActionRef<T> actionRef, ref T value)
         {
@@ -457,12 +459,12 @@ namespace WinCopies.Util
         // public static KeyValuePair<TKey, Func<bool>>[] GetIfKeyValuePairPredicateArray<TKey>(params KeyValuePair<TKey, Func<bool>>[] keyValuePairs) => keyValuePairs;
 
 #if !WinCopies3 && CS6
-#region 'If' methods
+        #region 'If' methods
         public static KeyValuePair<TKey, TValue> GetKeyValuePair<TKey, TValue>(in TKey key, in TValue value) => new KeyValuePair<TKey, TValue>(key, value);
 
         public static KeyValuePair<TKey, Func<bool>> GetIfKeyValuePairPredicate<TKey>(in TKey key, in Func<bool> predicate) => new KeyValuePair<TKey, Func<bool>>(key, predicate);
 
-#region Enums
+        #region Enums
 
         /// <summary>
         /// Comparison types for the If functions.
@@ -542,9 +544,9 @@ namespace WinCopies.Util
             ReferenceEqual = 6
         }
 
-#endregion
+        #endregion
 
-#region 'Throw' methods
+        #region 'Throw' methods
 #if CS6
         private static void ThrowOnInvalidIfMethodArg(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison)
         {
@@ -588,9 +590,9 @@ namespace WinCopies.Util
             if (comparison == IfComp.ReferenceEqual && !typeof(T).IsClass) throw new InvalidOperationException("ReferenceEqual comparison is only valid with class types.");
         }
 #endif
-#endregion
+        #endregion
 
-#region 'Check comparison' methods
+        #region 'Check comparison' methods
 
         private static bool CheckIfComparison(in IfComp comparison, in Func<bool> predicateResult, in int result)
         {
@@ -733,9 +735,9 @@ namespace WinCopies.Util
 
         private delegate bool CheckIfComparisonDelegate<T>(in T value, in Func<bool> predicate);
 
-#endregion
+        #endregion
 
-#region Enumerables
+        #region Enumerables
 
         private interface IIfValuesEnumerable
         {
@@ -910,7 +912,7 @@ namespace WinCopies.Util
             public KeyValuePair<TKey, KeyValuePair<TValue, Func<bool>>> GetValue(in int index) => Array[index];
         }
 
-#endregion
+        #endregion
 
         private static bool IfInternal(in IfCT comparisonType, in IfCM comparisonMode, CheckIfComparisonDelegate comparisonDelegate, in IIfValuesEnumerable values)
         {
@@ -1258,9 +1260,9 @@ namespace WinCopies.Util
             }
         }
 
-#region Non generic methods
+        #region Non generic methods
 
-#region Comparisons without key notification
+        #region Comparisons without key notification
 
         /// <summary>
         /// Performs a comparison by testing a value compared to an array of values.
@@ -1406,9 +1408,9 @@ namespace WinCopies.Util
             return IfInternal(comparisonType, comparisonMode, (in object _value, in Func<bool> _predicate) => CheckEqualityComparison(comparison, _value, value, _predicate, comparisonDelegate), new IfKeyValuePairEnumerable(values));
         }
 
-#endregion
+        #endregion
 
-#region Comparisons with key notification
+        #region Comparisons with key notification
 
         /// <summary>
         /// Performs a comparison by testing a value compared to an array of objects or values.
@@ -1493,13 +1495,13 @@ namespace WinCopies.Util
             return IfInternal(comparisonType, comparisonMode, (in object _value, in Func<bool> _predicate) => CheckEqualityComparison(comparison, _value, value, _predicate, comparisonDelegate), out key, new IfKeyKeyValuePairEnumerable(values));
         }
 
-#endregion
+        #endregion
 
-#endregion
+        #endregion
 
-#region Generic methods
+        #region Generic methods
 
-#region Comparisons without key notification
+        #region Comparisons without key notification
 
         /// <summary>
         /// Performs a comparison by testing a value compared to an array of objects or values.
@@ -1562,9 +1564,9 @@ namespace WinCopies.Util
             return IfInternal(comparisonType, comparisonMode, (in T _value, in Func<bool> _predicate) => CheckEqualityComparison(comparison, _value, value, _predicate, comparisonDelegate), new IfKeyValuePairEnumerable<T>(values));
         }
 
-#endregion
+        #endregion
 
-#region Comparisons with key notification
+        #region Comparisons with key notification
         /// <summary>
         /// Performs a comparison by testing a value compared to an array of objects or values.
         /// </summary>
@@ -1622,9 +1624,9 @@ namespace WinCopies.Util
 
             return IfInternal(comparisonType, comparisonMode, (in TValue _value, in Func<bool> _predicate) => CheckEqualityComparison(comparison, _value, value, _predicate, comparisonDelegate), out key, new IfKeyKeyValuePairEnumerable<TKey, TValue>(values));
         }
-#endregion
-#endregion
-#endregion
+        #endregion
+        #endregion
+        #endregion
 #endif
 
 #if CS5

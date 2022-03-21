@@ -34,7 +34,7 @@ namespace WinCopies.Collections.AbstractionInterop.Generic
 
             IEnumerable<TDestination> IReadOnlyDictionary<TDestinationKey, TDestination>.Values => InnerDictionary.Values.Select<TSource, TDestination>(item => item);
 
-            int IReadOnlyCollection<KeyValuePair<TDestinationKey, TDestination>>.Count => InnerDictionary.Count;
+            int System.Collections.Generic.IReadOnlyCollection<KeyValuePair<TDestinationKey, TDestination>>.Count => InnerDictionary.Count;
 
             public ReadOnlyDictionary(in TDictionary dictionary) => InnerDictionary = dictionary;
 

@@ -35,13 +35,15 @@ namespace WinCopies.Collections.DotNetFix
     public interface ILinkedList<T> :
         // TODO:
 #if WinCopies3
-        IReadOnlyLinkedList2<T>, Collections.Generic.IEnumerable<ILinkedListNode<T>>,
+        IReadOnlyLinkedList2<T>, Collections.Generic.IEnumerable<ILinkedListNode<T>>, IUIntCollection<T>,
 #else
         ISerializable, IDeserializationCallback, System.Collections.Generic.IEnumerable<T>,
 #endif
-        ICollection<T>, ICollection
+        System.Collections.Generic.ICollection<T>, ICollection
     {
 #if WinCopies3
+        new bool IsReadOnly { get; }
+
         ILinkedListNode<T> First { get; }
 
         ILinkedListNode<T> Last { get; }
@@ -49,6 +51,18 @@ namespace WinCopies.Collections.DotNetFix
         ILinkedListNode<T> Find(T value);
 
         ILinkedListNode<T> FindLast(T value);
+
+        IUIntCountableEnumerable<ILinkedListNode<T>> AsNodeEnumerable();
+
+        new void Add(T item);
+
+        new bool Remove(T item);
+
+        new void Clear();
+
+        new bool Contains(T item);
+
+        new void CopyTo(T[] array, int arrayIndex);
 
         new IUIntCountableEnumerator<T> GetEnumerator();
 
@@ -59,6 +73,30 @@ namespace WinCopies.Collections.DotNetFix
         IUIntCountableEnumerator<ILinkedListNode<T>> GetReversedNodeEnumerator();
 
 #if CS8
+        bool ICollectionBase<T>.IsReadOnly => IsReadOnly;
+
+        void ICollectionBase<T>.Add(T item) => Add(item);
+
+        bool ICollectionBase<T>.Remove(T item) => Remove(item);
+
+        bool System.Collections.Generic.ICollection<T>.IsReadOnly => IsReadOnly;
+
+        void System.Collections.Generic.ICollection<T>.Add(T item) => Add(item);
+
+        bool System.Collections.Generic.ICollection<T>.Remove(T item) => Remove(item);
+
+        void System.Collections.Generic.ICollection<T>.Clear() => Clear();
+
+        bool System.Collections.Generic.ICollection<T>.Contains(T item) => Contains(item);
+
+        void System.Collections.Generic.ICollection<T>.CopyTo(T[] array, int arrayIndex) => CopyTo(array, arrayIndex);
+
+        void ICollectionBase<T>.Clear() => Clear();
+
+        bool IReadOnlyCollectionBase<T>.Contains(T item) => Contains(item);
+
+        void IReadOnlyCollectionBase<T>.CopyTo(T[] array, int arrayIndex) => CopyTo(array, arrayIndex);
+
         IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.First => First;
 
         IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.Last => Last;
@@ -79,11 +117,11 @@ namespace WinCopies.Collections.DotNetFix
         new int Count { get; }
 
         void AddAfter(System.Collections.Generic.LinkedListNode<T> node, System.Collections.Generic.LinkedListNode<T> newNode);
-        
+
         void AddBefore(System.Collections.Generic.LinkedListNode<T> node, System.Collections.Generic.LinkedListNode<T> newNode);
-        
+
         void AddFirst(System.Collections.Generic.LinkedListNode<T> node);
-        
+
         void AddLast(System.Collections.Generic.LinkedListNode<T> node);
 
         System.Collections.Generic.LinkedListNode<T> Find(T value);
@@ -119,7 +157,7 @@ System.Collections.Generic.LinkedListNode
 #else
             ILinkedListNode
 #endif
-                <T> node, T value);
+               <T> node, T value);
 
 
 #if !WinCopies3
@@ -127,7 +165,7 @@ System.Collections.Generic.LinkedListNode
 #else
         ILinkedListNode
 #endif
-                <T> AddFirst(T value);
+               <T> AddFirst(T value);
 
 
 #if !WinCopies3
@@ -135,13 +173,13 @@ System.Collections.Generic.LinkedListNode
 #else
         ILinkedListNode
 #endif
-                <T> AddLast(T value);
+               <T> AddLast(T value);
 
 
 
         void Remove(
 #if !WinCopies3
-System.Collections.Generic.LinkedListNode
+            System.Collections.Generic.LinkedListNode
 #else
             ILinkedListNode
 #endif
@@ -152,7 +190,7 @@ System.Collections.Generic.LinkedListNode
         void RemoveLast();
     }
 
-    [Obsolete("The IsReadOnly property is available through the ICollection<T> interface.")]
+    [Obsolete("The IsReadOnly property is available through the System.Collections.Generic.ICollection<T> interface.")]
     public interface ILinkedList2<T> : ILinkedList<T>
     {
         new bool IsReadOnly { get; }
@@ -164,7 +202,7 @@ System.Collections.Generic.LinkedListNode
 #else
         ILinkedList2
 #endif
-        <T>
+        <T>, IUIntCountableEnumerable<T>
 #if !WinCopies3
 , IUIntCountableEnumerable<ILinkedListNode<T>>
 #endif

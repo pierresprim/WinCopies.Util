@@ -26,6 +26,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\ObservableLinkedCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\ReadOnlyLinkedCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\ReadOnlyObservableLinkedCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedDictionary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedList\Enumerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedList\ILinkedListNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\Queue\EnumerableQueueCollection.cs" />

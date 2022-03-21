@@ -257,19 +257,19 @@ System.Collections.IEnumerator
 
 //    T IReadOnlyList<T>.this[int index] { get => this[index]; /*set => throw new NotSupportedException("This collection is read-only.") ;*/ } 
 
-//    // int IReadOnlyCollection<T>.Count => Count ; 
+//    // int System.Collections.Generic.IReadOnlyCollection<T>.Count => Count ; 
 
 //    // bool IReadOnlyList<T>.IsReadOnly => true ; 
 
 //    //void IReadOnlyList<T>.Clear() => throw new NotSupportedException("This collection is read-only.") ; 
 
-//    // System.Collections.Generic.IEnumerator<T> IReadOnlyCollection<T>.GetEnumerator() => throw new NotImplementedException();
+//    // System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IReadOnlyCollection<T>.GetEnumerator() => throw new NotImplementedException();
 
 //    //void IReadOnlyList<T>.RemoveAt(int index) => throw new NotSupportedException("This collection is read-only.") ;
 
 //}
 
-//public interface ICollection<T, U> : System.Collections.Generic.ICollection<U> where T : U
+//public interface System.Collections.Generic.ICollection<T, U> : System.Collections.Generic.ICollection<U> where T : U
 
 //{
 

@@ -23,7 +23,7 @@ using System.Collections.Generic;
 
 namespace WinCopies.Collections.DotNetFix.Generic
 {
-    public class EnumerableQueueCollection<TQueue, TItems> : QueueCollection<TQueue, TItems>, IEnumerableQueue<TItems>, IReadOnlyCollection<TItems>, ICollection where TQueue : IEnumerableQueue<TItems>
+    public class EnumerableQueueCollection<TQueue, TItems> : QueueCollection<TQueue, TItems>, IEnumerableQueue<TItems>, System.Collections.Generic.IReadOnlyCollection<TItems>, ICollection where TQueue : IEnumerableQueue<TItems>
     {
         bool ICollection.IsSynchronized => ((ICollection)InnerQueue).IsSynchronized;
 
@@ -31,7 +31,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
         int ICollection.Count => ((ICollection)InnerQueue).Count;
 
-        int IReadOnlyCollection<TItems>.Count => ((IReadOnlyCollection<TItems>)InnerQueue).Count;
+        int System.Collections.Generic.IReadOnlyCollection<TItems>.Count => ((IReadOnlyCollection<TItems>)InnerQueue).Count;
 
         public EnumerableQueueCollection(in TQueue queue) : base(queue) { /* Left empty. */ }
 
@@ -46,7 +46,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
         public TItems[] ToArray() => InnerQueue.ToArray();
     }
 
-    public class EnumerableQueueCollection<T> : EnumerableQueueCollection<IEnumerableQueue<T>, T>, IEnumerableQueue<T>, IReadOnlyCollection<T>, ICollection
+    public class EnumerableQueueCollection<T> : EnumerableQueueCollection<IEnumerableQueue<T>, T>, IEnumerableQueue<T>, System.Collections.Generic.IReadOnlyCollection<T>, ICollection
     {
         public EnumerableQueueCollection(in IEnumerableQueue<T> queue) : base(queue) { /* Left empty. */ }
 

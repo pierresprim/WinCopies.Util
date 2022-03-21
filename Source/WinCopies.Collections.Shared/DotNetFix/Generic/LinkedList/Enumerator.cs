@@ -50,12 +50,11 @@ namespace WinCopies.Collections.DotNetFix
             private Action _action;
             private Func<bool> _moveNext;
             private
-#if WinCopies3
-ILinkedListNode
-#else
-            DotNetFix.ILinkedListNode
+#if !WinCopies3
+                DotNetFix.
 #endif
-          <T> _currentNode;
+                ILinkedListNode
+            <T> _currentNode;
             private Action _reset;
 
             protected ILinkedList<T> List => GetOrThrowIfDisposed(_list);
@@ -63,20 +62,18 @@ ILinkedListNode
             public EnumerationDirection EnumerationDirection { get; }
 
             public
-#if WinCopies3
-ILinkedListNode
-#else
-            DotNetFix.ILinkedListNode
+#if !WinCopies3
+                DotNetFix.
 #endif
+                ILinkedListNode
             <T> Start
             { get; }
 
             public
-#if WinCopies3
-ILinkedListNode
-#else
-            DotNetFix.ILinkedListNode
+#if !WinCopies3
+                DotNetFix.
 #endif
+                ILinkedListNode
             <T> End
             { get; }
 
@@ -90,18 +87,14 @@ ILinkedListNode
 #endif
 
             public LinkedListEnumerator(in ILinkedList<T> list, in EnumerationDirection enumerationDirection, in
-#if WinCopies3
-ILinkedListNode
-#else
-            DotNetFix.ILinkedListNode
+#if !WinCopies3
+            DotNetFix.
 #endif
-          <T> start, in
-#if WinCopies3
-ILinkedListNode
-#else
-            DotNetFix.ILinkedListNode
+            ILinkedListNode<T> start = default, in
+#if !WinCopies3
+            DotNetFix.
 #endif
-          <T> end)
+            ILinkedListNode<T> end = default)
             {
                 _list = list ?? throw GetArgumentNullException(nameof(list));
 
@@ -203,12 +196,12 @@ ILinkedListNode
                 ResetOverride
 #endif
                 ()
-        {
+            {
 #if !WinCopies3
             base.ResetOverride();
 #endif
 
-            _reset();
+                _reset();
 
                 ResetMoveNext();
 

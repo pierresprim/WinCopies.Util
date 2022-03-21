@@ -22,7 +22,7 @@ using System.Collections.Generic;
 
 namespace WinCopies.Collections.DotNetFix.Generic
 {
-    public class EnumerableStackCollection<TStack, TItems> : StackCollection<TStack, TItems>, IEnumerableStack<TItems>, IReadOnlyCollection<TItems>, ICollection where TStack : IEnumerableStack<TItems>
+    public class EnumerableStackCollection<TStack, TItems> : StackCollection<TStack, TItems>, IEnumerableStack<TItems>, System.Collections.Generic.IReadOnlyCollection<TItems>, ICollection where TStack : IEnumerableStack<TItems>
     {
         bool ICollection.IsSynchronized => ((ICollection)InnerStack).IsSynchronized;
 
@@ -30,7 +30,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
         int ICollection.Count => ((ICollection)InnerStack).Count;
 
-        int IReadOnlyCollection<TItems>.Count => ((IReadOnlyCollection<TItems>)InnerStack).Count;
+        int System.Collections.Generic.IReadOnlyCollection<TItems>.Count => ((IReadOnlyCollection<TItems>)InnerStack).Count;
 
         public EnumerableStackCollection(in TStack stack) : base(stack) { /* Left empty. */ }
 

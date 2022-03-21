@@ -121,9 +121,13 @@ namespace WinCopies
 #endif
         T>(object obj);
 
+    public delegate TOut ConverterIn<TIn, out TOut>(in TIn value);
+
     public delegate void EventHandler<T>(T sender, EventArgs e);
 
     public delegate void EventHandler<TSender, TEventArgs>(TSender sender, TEventArgs e);
+
+
 
     public delegate void ActionParams(params object[] args);
 

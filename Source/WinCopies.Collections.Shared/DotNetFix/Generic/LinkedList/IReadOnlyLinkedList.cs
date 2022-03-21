@@ -30,9 +30,9 @@ namespace WinCopies.Collections.DotNetFix
 .Generic
 #endif
 {
-    public interface IReadOnlyLinkedList<T> : ICollection<T>, ICollection, IReadOnlyCollection<T>,
+    public interface IReadOnlyLinkedList<T> : System.Collections.Generic.ICollection<T>, ICollection, System.Collections.Generic.IReadOnlyCollection<T>,
 #if WinCopies3
-            IUIntCountable, Collections.Generic.IEnumerable<T> /* In order to have the GetReversedEnumerator() method through the Collections.Generic.IEnumerable<T> interface. */
+            IReadOnlyUIntCollection<T>, IUIntCountable, Collections.Generic.IEnumerable<T> /* In order to have the GetReversedEnumerator() method through the Collections.Generic.IEnumerable<T> interface. */
 #else
             ICountableEnumerable<T>, ISerializable, IDeserializationCallback
 #endif
@@ -102,10 +102,22 @@ int
 
         new IUIntCountableEnumerator<T> GetReversedEnumerator();
 
+        new bool Contains(T value);
+
+        new void CopyTo(T[] array, int index);
+
 #if CS8
         System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetEnumerator();
 
         System.Collections.Generic.IEnumerator<T> Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => GetReversedEnumerator();
+
+        bool System.Collections.Generic.ICollection<T>.Contains(T value) => Contains(value);
+
+        void System.Collections.Generic.ICollection<T>.CopyTo(T[] array, int index) => CopyTo(array, index);
+
+        bool IReadOnlyCollectionBase<T>.Contains(T value) => Contains(value);
+
+        void IReadOnlyCollectionBase<T>.CopyTo(T[] array, int index) => CopyTo(array, index);
 #endif
 #else
         System.Collections.Generic.IEnumerator<T> GetEnumerator(EnumerationDirection enumerationDirection);

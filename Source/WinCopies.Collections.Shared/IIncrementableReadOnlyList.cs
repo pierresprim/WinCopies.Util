@@ -47,7 +47,7 @@ namespace WinCopies.Collections.Generic
 
         int ICountableEnumerable<T, ICountableEnumerator<T>>.Count => GetOrThrowIfDisposed(_list).Count;
 
-        int IReadOnlyCollection<T>.Count => GetOrThrowIfDisposed(_list).Count;
+        int System.Collections.Generic.IReadOnlyCollection<T>.Count => GetOrThrowIfDisposed(_list).Count;
 
         int ICountable.Count => GetOrThrowIfDisposed(_list).Count;
 

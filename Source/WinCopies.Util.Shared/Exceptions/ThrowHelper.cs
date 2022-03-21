@@ -287,7 +287,7 @@ namespace WinCopies
         }
 
 #if CS7
-        public static void ThrowIfArrayHasNotEnoughSpace<T>(in IReadOnlyCollection<T> collection, in int arrayIndex, in int count, in string arrayArgumentName)
+        public static void ThrowIfArrayHasNotEnoughSpace<T>(in System.Collections.Generic.IReadOnlyCollection<T> collection, in int arrayIndex, in int count, in string arrayArgumentName)
         {
             if (count <= collection.Count - arrayIndex)
 
@@ -361,7 +361,7 @@ namespace WinCopies
         }
 
 #if CS7
-        public static void ThrowOnInvalidCopyToArrayOperation<T>(in IReadOnlyCollection<T> collection, in int arrayIndex, in int count, in string arrayArgumentName, in string arrayIndexArgumentName)
+        public static void ThrowOnInvalidCopyToArrayOperation<T>(in System.Collections.Generic.IReadOnlyCollection<T> collection, in int arrayIndex, in int count, in string arrayArgumentName, in string arrayIndexArgumentName)
         {
             ThrowIfNull(collection, nameof(collection));
 

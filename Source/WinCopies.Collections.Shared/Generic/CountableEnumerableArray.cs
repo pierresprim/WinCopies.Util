@@ -298,6 +298,51 @@ namespace Generic
 
             protected override void ResetOverride2() { /* Left empty. */ }
         }
+
+        public interface IReadOnlyCollectionBase<T> : System.Collections.Generic.IEnumerable<T>
+        {
+            bool Contains(T item);
+
+            void CopyTo(T[] array, int arrayIndex);
+        }
+
+        public interface IReadOnlyCollection<T> : IReadOnlyCollectionBase<T>, DotNetFix.Generic.ICountableEnumerable<T>
+#if CS5
+            , System.Collections.Generic.IReadOnlyCollection<T>
+#endif
+        {
+            // Left empty.
+        }
+
+        public interface IReadOnlyUIntCollection<T> : IReadOnlyCollectionBase<T>, DotNetFix.Generic.IUIntCountableEnumerable<T>
+        {
+            // Left empty.
+        }
+
+        public interface ICollectionBase<T> : IReadOnlyCollectionBase<T>
+        {
+            bool IsReadOnly { get; }
+
+            void Add(T item);
+
+            void Clear();
+
+            bool Remove(T item);
+        }
+
+        public interface ICollection<T> : ICollectionBase<T>, IReadOnlyCollection<T>,
+#if CS5
+            System.Collections.Generic.IReadOnlyCollection<T>, 
+#endif
+            DotNetFix.Generic.ICountableEnumerable<T>,  System.Collections.Generic.ICollection<T>
+        {
+            // Left empty.
+        }
+
+        public interface IUIntCollection<T> : ICollectionBase<T>, IReadOnlyUIntCollection<T>, DotNetFix.Generic.IUIntCountableEnumerable<T>
+        {
+            // Left empty.
+        }
 #endif
 
         public interface IReadOnlyList<
@@ -341,6 +386,30 @@ namespace Generic
             T this[int index] { get; }
         }
 #endif
+
+        public interface IReadOnlyList3<T>
+#if WinCopies3 || CS5
+            :
+#endif
+#if !(WinCopies3 || CS7)
+#if WinCopies3
+            IReadOnlyList<T>
+#elif CS5
+            IReadOnlyLinkedList2<T>
+#endif
+#else
+#if WinCopies3
+            IReadOnlyList<T>
+#else
+            IReadOnlyLinkedList2<T>
+#endif
+#endif
+#if CS5
+            , System.Collections.Generic.IReadOnlyCollection<T>
+#endif
+        {
+            // Left empty.
+        }
 
         public class CountableEnumerableArray<T> : IReadOnlyList<T>
         {

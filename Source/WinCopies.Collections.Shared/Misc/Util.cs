@@ -18,6 +18,7 @@
 #if WinCopies3
 
 using System;
+using System.Collections.Generic;
 
 using WinCopies.Collections.DotNetFix;
 using WinCopies.Collections.DotNetFix.Generic;
@@ -32,6 +33,34 @@ namespace WinCopies.Collections
     /// </summary>
     public static class Util
     {
+#if CS5
+        public static ILinkedListNode<KeyValuePair<TKey,TValue>> Find<TDictionary, TKey, TValue>( in TDictionary dictionary, in TKey key) where TDictionary : DotNetFix.Generic.IDictionary<TKey, TValue>, ILinkedList3<KeyValuePair<TKey, TValue>>
+        {
+            var enumerable = new Enumerable<ILinkedListNode<KeyValuePair<TKey, TValue>>>(dictionary.GetNodeEnumerator);
+
+            foreach (ILinkedListNode<KeyValuePair<TKey, TValue>> node in enumerable)
+
+                if (Delegates.CompareHashCodeGenericIn(node.Value.Key, key))
+
+                    return node;
+
+            return null;
+        }
+
+        public static bool Remove<TDictionary, TKey, TValue>(in TDictionary dictionary, in TKey key) where TDictionary : DotNetFix.Generic.IDictionary<TKey, TValue>, ILinkedList3<KeyValuePair<TKey, TValue>>
+        {
+            ILinkedListNode<KeyValuePair<TKey, TValue>> node = Find<TDictionary,TKey,TValue>(dictionary,key);
+
+            if (node == null)
+
+                return false;
+
+            dictionary.Remove(node);
+
+            return true;
+        }
+#endif
+
         private static bool _HasItems<T>(in System.Collections.Generic.IEnumerable<T> enumerable)
         {
             bool result;

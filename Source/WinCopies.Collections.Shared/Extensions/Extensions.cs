@@ -307,7 +307,7 @@ namespace WinCopies.Collections
         /// <param name="collection">The collection to which try to add the value</param>
         /// <param name="values">The values to try to add to the collection</param>
         /// <returns><see langword="true"/> if the value has been added to the collection, otherwise <see langword="false"/>.</returns>
-        public static T[] AddRangeIfNotContains<T>(this ICollection<T> collection, in System.Collections.Generic.IEnumerable<T> values)
+        public static T[] AddRangeIfNotContains<T>(this System.Collections.Generic.ICollection<T> collection, in System.Collections.Generic.IEnumerable<T> values)
         {
             ThrowIfNull(collection, nameof(collection));
             ThrowIfNull(values, nameof(values));
@@ -333,7 +333,7 @@ namespace WinCopies.Collections
         /// <param name="collection">The collection to which try to add the value</param>
         /// <param name="values">The values to try to add to the collection</param>
         /// <returns><see langword="true"/> if the value has been added to the collection, otherwise <see langword="false"/>.</returns>
-        public static T[] AddRangeIfNotContains<T>(this ICollection<T> collection, params T[] values) => collection.AddRangeIfNotContains((System.Collections.Generic.IEnumerable<T>)values);
+        public static T[] AddRangeIfNotContains<T>(this System.Collections.Generic.ICollection<T> collection, params T[] values) => collection.AddRangeIfNotContains((System.Collections.Generic.IEnumerable<T>)values);
 #endif
 
         /// <summary>
@@ -343,7 +343,7 @@ namespace WinCopies.Collections
         /// <param name="collection">The collection to which try to add the value</param>
         /// <param name="value">The value to try to add to the collection</param>
         /// <returns><see langword="true"/> if the value has been added to the collection, otherwise <see langword="false"/>.</returns>
-        public static bool AddIfNotContains<T>(this ICollection<T> collection, in T value)
+        public static bool AddIfNotContains<T>(this System.Collections.Generic.ICollection<T> collection, in T value)
         {
             if ((collection ?? throw GetArgumentNullException(nameof(collection))).Contains(value)) return false;
 
@@ -470,7 +470,7 @@ namespace WinCopies.Collections
         }
 #endif
 
-        public static bool RemoveIfContains<T>(this ICollection<T> collection, in T value) => (collection ?? throw GetArgumentNullException(nameof(collection))).Contains(value) ? collection.Remove(value) : false;
+        public static bool RemoveIfContains<T>(this System.Collections.Generic.ICollection<T> collection, in T value) => (collection ?? throw GetArgumentNullException(nameof(collection))).Contains(value) ? collection.Remove(value) : false;
 
 #if CS7
         public static T[] RemoveRangeIfContains<T>(this IList<T> collection, params T[] values) => collection.RemoveRangeIfContains((System.Collections.Generic.IEnumerable<T>)values);
@@ -536,7 +536,7 @@ namespace WinCopies.Collections
                 _ = collection.Add(values[i]);
         }
 
-        public static void AddRange<T>(this ICollection<T> collection, in System.Collections.Generic.IEnumerable<T> array)
+        public static void AddRange<T>(this System.Collections.Generic.ICollection<T> collection, in System.Collections.Generic.IEnumerable<T> array)
         {
             ThrowIfNull(collection, nameof(collection));
             ThrowIfNull(array, nameof(array));
@@ -546,7 +546,7 @@ namespace WinCopies.Collections
                 collection.Add(item);
         }
 
-        public static void AddRange<T>(this ICollection<T> collection, in int start, in int length, params T[] values)
+        public static void AddRange<T>(this System.Collections.Generic.ICollection<T> collection, in int start, in int length, params T[] values)
         {
             ThrowIfNull(collection, nameof(collection));
 
@@ -555,7 +555,7 @@ namespace WinCopies.Collections
                 collection.Add(values[i]);
         }
 
-        public static void AddRange<T>(this ICollection<T> collection, in System.Collections.Generic.IList<T> values, in int start, in int length)
+        public static void AddRange<T>(this System.Collections.Generic.ICollection<T> collection, in System.Collections.Generic.IList<T> values, in int start, in int length)
         {
             ThrowIfNull(collection, nameof(collection));
 
@@ -564,7 +564,7 @@ namespace WinCopies.Collections
                 collection.Add(values[i]);
         }
 
-        public static void AddRange<T>(this ICollection<T> collection, in System.Collections.Generic.IEnumerable<T> array, in int start, in int length) => collection.AddRange(array.ToArray<T>(), start, length);
+        public static void AddRange<T>(this System.Collections.Generic.ICollection<T> collection, in System.Collections.Generic.IEnumerable<T> array, in int start, in int length) => collection.AddRange(array.ToArray<T>(), start, length);
 
         /// <summary>
         /// Add multiple values at the top of a <see cref="System.Collections.Generic.LinkedList{T}"/>. For better performance, use the <see cref="ArrayBuilder{T}"/> class.
@@ -887,7 +887,7 @@ namespace WinCopies.Collections
 #if CS7
         public static void AddRange(this IList collection, in IEnumerable array, in int start, in int length) => collection.AddRange(array.ToArray(), start, length);
 
-        public static void AddRange<T>(this ICollection<T> collection, params T[] values) => collection.AddRange((System.Collections.Generic.IEnumerable<T>)values);
+        public static void AddRange<T>(this System.Collections.Generic.ICollection<T> collection, params T[] values) => collection.AddRange((System.Collections.Generic.IEnumerable<T>)values);
 
         /// <summary>
         /// Add multiple values after a specified node in a <see cref="ILinkedList{T}"/>. For better performance, use the <see cref="ArrayBuilder{T}"/> class.

@@ -53,7 +53,7 @@ namespace WinCopies.Collections.DotNetFix
 #if WinCopies3
             ReadOnlyStackCollection<TStack, TItems>
 #else
-            IReadOnlyCollection<T>, ICollection
+            System.Collections.Generic.IReadOnlyCollection<T>, ICollection
 #endif
         , INotifyPropertyChanged, INotifySimpleLinkedCollectionChanged<
 #if WinCopies3

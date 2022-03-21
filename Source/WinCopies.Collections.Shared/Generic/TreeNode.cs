@@ -50,7 +50,7 @@ namespace WinCopies.Collections
 #if !WinCopies3
 .Util
 #endif
-        .IValueObject, ITreeNode<T>, ICollection<TreeNode<T>>, System.Collections.Generic.IList<TreeNode<T>>, ICollection, System.Collections.IList, IReadOnlyCollection<TreeNode<T>>, System.Collections.Generic.IReadOnlyList<TreeNode<T>>, IReadOnlyCollection<T>, System.Collections.Generic.IReadOnlyList<T>
+        .IValueObject, ITreeNode<T>, System.Collections.Generic.ICollection<TreeNode<T>>, System.Collections.Generic.IList<TreeNode<T>>, ICollection, System.Collections.IList, System.Collections.Generic.IReadOnlyCollection<TreeNode<T>>, System.Collections.Generic.IReadOnlyList<TreeNode<T>>, System.Collections.Generic.IReadOnlyCollection<T>, System.Collections.Generic.IReadOnlyList<T>
     {
         private T _value;
 
@@ -272,7 +272,7 @@ namespace WinCopies.Collections
 
         int System.Collections.IList.Add(object value) => throw new InvalidOperationException("TreeNodes do not support adding a common object. Add a TreeNode<T> instead.");
 
-        void ICollection<ITreeNode<T>>.Add(ITreeNode<T> item) => Add(GetOrThrowIfNotTypeOrNull<TreeNode<T>>(item, nameof(item)));
+        void System.Collections.Generic.ICollection<ITreeNode<T>>.Add(ITreeNode<T> item) => Add(GetOrThrowIfNotTypeOrNull<TreeNode<T>>(item, nameof(item)));
 
         /// <summary>
         /// Checks if this <see cref="TreeNode{T}"/> directly contains a given <see cref="TreeNode{T}"/>.
@@ -320,7 +320,7 @@ namespace WinCopies.Collections
 
         bool System.Collections.IList.Contains(object value) => value is T item ? Contains(item) : false;
 
-        bool ICollection<ITreeNode<T>>.Contains(ITreeNode<T> item) => item is TreeNode<T> _item ? Contains(_item) : false;
+        bool System.Collections.Generic.ICollection<ITreeNode<T>>.Contains(ITreeNode<T> item) => item is TreeNode<T> _item ? Contains(_item) : false;
 
         /// <summary>
         /// Returns the idnex of a given item in this <see cref="TreeNode{T}"/>.
@@ -425,7 +425,7 @@ namespace WinCopies.Collections
             return false;
         }
 
-        bool ICollection<ITreeNode<T>>.Remove(ITreeNode<T> item) => Remove(item as TreeNode<T> ?? throw new ArgumentException($"The given item is not a {typeof(TreeNode<T>).FullName}."));
+        bool System.Collections.Generic.ICollection<ITreeNode<T>>.Remove(ITreeNode<T> item) => Remove(item as TreeNode<T> ?? throw new ArgumentException($"The given item is not a {typeof(TreeNode<T>).FullName}."));
 
         void System.Collections.IList.Remove(object value)
         {
@@ -452,7 +452,7 @@ namespace WinCopies.Collections
         /// <param name="arrayIndex">The index from which to store the items in <paramref name="array"/>.</param>
         public void CopyTo(TreeNode<T>[] array, int arrayIndex) => Items.CopyTo(array, arrayIndex);
 
-        void ICollection<ITreeNode<T>>.CopyTo(ITreeNode<T>[] array, int arrayIndex)
+        void System.Collections.Generic.ICollection<ITreeNode<T>>.CopyTo(ITreeNode<T>[] array, int arrayIndex)
         {
             ThrowOnInvalidCopyToArrayOperation(array, arrayIndex, Count, nameof(array), nameof(arrayIndex));
 
@@ -618,7 +618,7 @@ namespace WinCopies.Collections
 
     //[Serializable]
     //[DebuggerDisplay("Value = {Value}, Count = {Count}")]
-    //public class TreeNodeCollection<T> : ITreeNode<T>, ICollection<TreeNode<T>>, System.Collections.Generic.IList<TreeNode<T>>, ICollection, System.Collections.IList, IReadOnlyCollection<TreeNode<T>>, System.Collections.Generic.IReadOnlyList<TreeNode<T>>, IReadOnlyCollection<T>, System.Collections.Generic.IReadOnlyList<T> where T : T
+    //public class TreeNodeCollection<T> : ITreeNode<T>, System.Collections.Generic.ICollection<TreeNode<T>>, System.Collections.Generic.IList<TreeNode<T>>, ICollection, System.Collections.IList, System.Collections.Generic.IReadOnlyCollection<TreeNode<T>>, System.Collections.Generic.IReadOnlyList<TreeNode<T>>, System.Collections.Generic.IReadOnlyCollection<T>, System.Collections.Generic.IReadOnlyList<T> where T : T
 
     //{
 

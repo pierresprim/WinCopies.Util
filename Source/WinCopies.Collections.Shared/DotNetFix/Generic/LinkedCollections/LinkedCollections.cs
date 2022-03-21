@@ -16,10 +16,11 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if CS7
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
+
+using WinCopies.Util;
 
 #if WinCopies3
 using System.Linq;
@@ -38,9 +39,9 @@ namespace WinCopies.Collections.DotNetFix
     {
 #endif
         [Serializable]
-        public class LinkedCollection<T> : ICollection<T>, IEnumerable, IReadOnlyCollection<T>, ICollection,
+        public class LinkedCollection<T> : System.Collections.Generic.ICollection<T>, IEnumerable, System.Collections.Generic.IReadOnlyCollection<T>, ICollection,
 #if !WinCopies3
-            IDeserializationCallback, ISerializable, ILinkedList2<T>, System.Collections.Generic.IEnumerable<T>
+              IDeserializationCallback, ISerializable, ILinkedList2<T>, System.Collections.Generic.IEnumerable<T>
 #else
             ILinkedList3<T>
 #endif
@@ -55,29 +56,29 @@ namespace WinCopies.Collections.DotNetFix
 #endif
 
             protected internal
-#if !WinCopies3
-System.Collections.Generic.LinkedList
+#if WinCopies3
+            ILinkedList3
 #else
-                ILinkedList3
+            System.Collections.Generic.LinkedList
 #endif
-                <T> InnerList
+               <T> InnerList
             { get; }
 
             public
-#if !WinCopies3
-System.Collections.Generic.LinkedListNode
+#if WinCopies3
+            ILinkedListNode
 #else
-                ILinkedListNode
+            System.Collections.Generic.LinkedListNode
 #endif
                 <T> Last => InnerList.Last;
 
             public T LastValue => Last.Value;
 
             public
-#if !WinCopies3
-System.Collections.Generic.LinkedListNode
+#if WinCopies3
+            ILinkedListNode
 #else
-                ILinkedListNode
+            System.Collections.Generic.LinkedListNode
 #endif
                 <T> First => InnerList.First;
 
@@ -102,47 +103,334 @@ int
 #if WinCopies3
             int ICollection.Count => (int)Count;
 
-            int ICollection<T>.Count => (int)Count;
+            int System.Collections.Generic.ICollection<T>.Count => (int)Count;
 
-            int IReadOnlyCollection<T>.Count => (int)Count;
+            int System.Collections.Generic.IReadOnlyCollection<T>.Count => (int)Count;
 #endif
 
-            bool ICollection.IsSynchronized => ((ICollection)InnerList).IsSynchronized;
+            bool ICollection.IsSynchronized => InnerList
+#if !WinCopies3
+            .AsOfType<ICollection>()
+#endif
+            .IsSynchronized;
 
-            object ICollection.SyncRoot => ((ICollection)InnerList).SyncRoot;
+            object ICollection.SyncRoot => InnerList
+#if !WinCopies3
+            .AsOfType<ICollection>()
+#endif
+            .SyncRoot;
 
-            bool ICollection<T>.IsReadOnly => false;
-
-            public LinkedCollection() : this(new LinkedList<T>()) { }
+            bool System.Collections.Generic.ICollection<T>.IsReadOnly => false;
 
             public LinkedCollection(in
-#if !WinCopies3
-                System.Collections.Generic.LinkedList
-#else
+#if WinCopies3
                 ILinkedList3
+#else
+                System.Collections.Generic.LinkedList
 #endif
                 <T> list) => InnerList = list
 #if WinCopies3
-                ?? throw GetArgumentNullException(nameof(list))
+                    ?? throw GetArgumentNullException(nameof(list))
 #endif
-                ;
+            ;
 
+            public LinkedCollection() : this(new LinkedList<T>()) { /* Left empty. */ }
+
+            #region Add Methods
 #if WinCopies3
+            protected virtual bool OnAddItem(T item) => true;
+
             protected virtual void OnNodeAdded(ILinkedListNode<T> node) { /* Left empty. */ }
 #endif
 
             protected virtual void AddItem(T item)
             {
-                ((ICollection<T>)InnerList).Add(item);
+#if WinCopies3
+                if (OnAddItem(item))
+                {
+#endif
+                    InnerList.AsOfType<
+#if WinCopies3
+                IUIntCollection<T>
+#else
+                ICollection<T>
+#endif
+                >().Add(item);
 
 #if WinCopies3
-                OnNodeAdded(InnerList.First<ILinkedListNode<T>>(node => node.Value.Equals(item)));
+                    OnNodeAdded(InnerList.First<ILinkedListNode<T>>(node => node.Value.Equals(item)));
+                }
 #endif
             }
 
-            void ICollection<T>.Add(T item) => AddItem(item);
+#if WinCopies3
+            private ILinkedListNode<T> AddItem(T item, in Func<T, ILinkedListNode<T>> func)
+            {
+                if (OnAddItem(item))
+                {
+                    ILinkedListNode<T> node = func(item);
 
+                    OnNodeAdded(node);
+
+                    return node;
+                }
+
+                return null;
+            }
+
+            private ILinkedListNode<T> AddItem(ILinkedListNode<T> node, T item, Func<ILinkedListNode<T>, T, ILinkedListNode<T>> func) => AddItem(item, _item => func(node, _item));
+#endif
+
+            #region AddAfter Methods
+            #region AddItemAfter
+            protected virtual
 #if !WinCopies3
+                System.Collections.Generic.LinkedListNode
+#else
+                ILinkedListNode
+#endif
+                <T> AddItemAfter(
+#if !WinCopies3
+                System.Collections.Generic.LinkedListNode
+#else
+                ILinkedListNode
+#endif
+                <T> node, T value) =>
+#if WinCopies3
+                    AddItem(node, value,
+#endif
+                    InnerList.AddAfter
+#if !WinCopies3
+                    (node, value
+#endif
+                    );
+            #endregion
+
+            #region AddAfter
+            /// <summary>
+            /// Adds a new node containing the specified value after the specified existing node in the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddItemAfter(System.Collections.Generic.LinkedListNode{T}, T)"/> method to provide a custom implementation.
+            /// </summary>
+            /// <param name="node">The <see cref="System.Collections.Generic.LinkedListNode{T}"/> after which to insert a new <see cref="System.Collections.Generic.LinkedListNode{T}"/> containing value.</param>
+            /// <param name="value">The value to add to the <see cref="LinkedCollection{T}"/>.</param>
+            /// <returns>The new <see cref="System.Collections.Generic.LinkedListNode{T}"/> containing value.</returns>
+            /// <exception cref="ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
+            /// <exception cref="InvalidOperationException"><paramref name="node"/> is not in the current <see cref="LinkedCollection{T}"/>.</exception>
+            public
+#if !WinCopies3
+                System.Collections.Generic.LinkedListNode
+#else
+                ILinkedListNode
+#endif
+                <T> AddAfter(
+#if !WinCopies3
+                System.Collections.Generic.LinkedListNode
+#else
+                ILinkedListNode
+#endif
+                <T> node, T value) => AddItemAfter(node, value);
+            #endregion
+            #endregion
+
+            #region AddBefore Methods
+            #region AddItemBefore
+            protected virtual
+#if !WinCopies3
+                System.Collections.Generic.LinkedListNode
+#else
+                ILinkedListNode
+#endif
+                <T> AddItemBefore(
+#if !WinCopies3
+                System.Collections.Generic.LinkedListNode
+#else
+                ILinkedListNode
+#endif
+                <T> node, T value) =>
+#if WinCopies3
+                    AddItem(node, value,
+#endif
+                    InnerList.AddBefore
+#if !WinCopies3
+                    (node, value
+#endif
+                    );
+            #endregion
+
+            #region AddBefore
+            /// <summary>
+            /// Adds a new node containing the specified value before the specified existing node in the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddItemBefore(System.Collections.Generic.LinkedListNode{T}, T)"/> method to provide a custom implementation.
+            /// </summary>
+            /// <param name="node">The <see cref="System.Collections.Generic.LinkedListNode{T}"/> before which to insert a new <see cref="System.Collections.Generic.LinkedListNode{T}"/> containing value.</param>
+            /// <param name="value">The value to add to the <see cref="LinkedCollection{T}"/>.</param>
+            /// <returns>The new <see cref="System.Collections.Generic.LinkedListNode{T}"/> containing value.</returns>
+            /// <exception cref="ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
+            /// <exception cref="InvalidOperationException"><paramref name="node"/> is not in the current <see cref="LinkedCollection{T}"/>.</exception>
+            public
+#if !WinCopies3
+                System.Collections.Generic.LinkedListNode
+#else
+                ILinkedListNode
+#endif
+                <T> AddBefore(
+#if !WinCopies3
+                System.Collections.Generic.LinkedListNode
+#else
+                ILinkedListNode
+#endif
+                <T> node, T value) => AddItemBefore(node, value);
+            #endregion
+            #endregion
+
+            #region AddFirst Methods
+            #region AddFirstItem
+            protected virtual
+#if !WinCopies3
+                System.Collections.Generic.LinkedListNode
+#else
+                ILinkedListNode
+#endif
+                <T> AddFirstItem(T value) =>
+#if WinCopies3
+                    AddItem(value,
+#endif
+                    InnerList.AddFirst
+#if !WinCopies3
+                    (value
+#endif
+                        );
+            #endregion
+
+            #region AddFirst
+            /// <summary>
+            /// Adds a new node containing the specified value at the start of the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddFirstItem(T)"/> method to provide a custom implementation.
+            /// </summary>
+            /// <param name="value">The value to add at the start of the <see cref="LinkedCollection{T}"/>.</param>
+            /// <returns>The new <see cref="System.Collections.Generic.LinkedListNode{T}"/> containing value.</returns>
+            public
+#if !WinCopies3
+                System.Collections.Generic.LinkedListNode
+#else
+                ILinkedListNode
+#endif
+                <T> AddFirst(T value) => AddFirstItem(value);
+            #endregion
+            #endregion
+
+            #region AddLast Methods
+            #region AddLastItem
+            protected virtual
+#if !WinCopies3
+                System.Collections.Generic.LinkedListNode
+#else
+                ILinkedListNode
+#endif
+                <T> AddLastItem(T value) =>
+#if WinCopies3
+                    AddItem(value,
+#endif
+                    InnerList.AddLast
+#if !WinCopies3
+                    (value
+#endif
+                        );
+            #endregion
+
+            #region AddLast
+            /// <summary>
+            /// Adds a new node containing the specified value at the end of the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddLastItem(T)"/> method to provide a custom implementation.
+            /// </summary>
+            /// <param name="value">The value to add at the end of the <see cref="LinkedCollection{T}"/>.</param>
+            /// <returns>The new <see cref="System.Collections.Generic.LinkedListNode{T}"/> containing value.</returns>
+            public
+#if !WinCopies3
+                System.Collections.Generic.LinkedListNode
+#else
+                ILinkedListNode
+#endif
+                <T> AddLast(T value) => AddLastItem(value);
+            #endregion
+            #endregion
+
+            void System.Collections.Generic.ICollection<T>.Add(T item) => AddItem(item);
+
+#if WinCopies3
+            void ICollectionBase<T>.Add(T item) => AddItem(item);
+#endif
+            #endregion Add Methods
+
+            #region Find Methods
+            public
+#if !WinCopies3
+                System.Collections.Generic.LinkedListNode
+#else
+                ILinkedListNode
+#endif
+                <T> Find(T value) => InnerList.Find(value);
+
+            public
+#if !WinCopies3
+                System.Collections.Generic.LinkedListNode
+#else
+                ILinkedListNode
+#endif
+                <T> FindLast(T value) => InnerList.FindLast(value);
+            #endregion Find Methods
+
+#if !CS8 && WinCopies3
+            IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.Find(T value) => Find(value);
+
+            IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.FindLast(T value) => FindLast(value);
+#endif
+
+            protected virtual void ClearItems() => InnerList.Clear();
+
+            public void Clear() => ClearItems();
+
+            public bool Contains(T item) => InnerList.Contains(item);
+
+            public void CopyTo(Array array, int index) => InnerList.AsOfType<ICollection>().CopyTo(array, index);
+
+            public void CopyTo(T[] array, int arrayIndex) => InnerList.CopyTo(array, arrayIndex);
+
+            System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() =>
+
+#if WinCopies3
+                InnerList.AsOfType<System.Collections.Generic.IEnumerable<T>>().GetEnumerator();
+#else
+                GetEnumerator();
+
+            public System.Collections.Generic.LinkedList<T>.Enumerator GetEnumerator() => InnerList.GetEnumerator();
+#endif
+
+            System.Collections.IEnumerator IEnumerable.GetEnumerator() => InnerList.AsOfType<IEnumerable>().GetEnumerator();
+
+#if WinCopies3
+            public bool SupportsReversedEnumeration => InnerList.SupportsReversedEnumeration;
+
+            public IUIntCountableEnumerator<T> GetEnumerator() => InnerList.GetEnumerator();
+
+            public IUIntCountableEnumerator<T> GetReversedEnumerator() => InnerList.GetReversedEnumerator();
+
+            public IUIntCountableEnumerator<ILinkedListNode<T>> GetNodeEnumerator() => InnerList.GetNodeEnumerator();
+
+            public IUIntCountableEnumerator<ILinkedListNode<T>> GetReversedNodeEnumerator() => InnerList.GetReversedNodeEnumerator();
+
+            System.Collections.Generic.IEnumerator<T> Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => InnerList.AsOfType<Collections.Generic.IEnumerable<T>>().GetReversedEnumerator();
+
+            System.Collections.Generic.IEnumerator<ILinkedListNode<T>> System.Collections.Generic.IEnumerable<ILinkedListNode<T>>.GetEnumerator() => InnerList.AsOfType<System.Collections.Generic.IEnumerable<ILinkedListNode<T>>>().GetEnumerator();
+
+            System.Collections.Generic.IEnumerator<ILinkedListNode<T>> Collections.Generic.IEnumerable<ILinkedListNode<T>>.GetReversedEnumerator() => InnerList.AsOfType<Collections.Generic.IEnumerable<ILinkedListNode<T>>>().GetReversedEnumerator();
+
+            protected virtual void OnNodeRemoved(ILinkedListNode<T> node) { /* Left empty. */ }
+
+#if !CS8
+            IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.First => First;
+
+            IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.Last => Last;
+
+            System.Collections.IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
+#endif
+#else
         protected virtual void AddItemAfter(System.Collections.Generic.LinkedListNode<T> node, System.Collections.Generic.LinkedListNode<T> newNode) => InnerList.AddAfter(node, newNode);
 
         /// <summary>
@@ -185,357 +473,168 @@ int
         /// <exception cref="ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="node"/> belongs to another <see cref="System.Collections.Generic.LinkedList{T}"/>.</exception>
         public void AddLast(System.Collections.Generic.LinkedListNode<T> node) => AddLastItem(node);
-#endif
 
-            protected virtual
-#if !WinCopies3
-                System.Collections.Generic.LinkedListNode
-#else
-                ILinkedListNode
-#endif
-                <T> AddItemAfter(
-#if !WinCopies3
-                System.Collections.Generic.LinkedListNode
-#else
-                ILinkedListNode
-#endif
-                <T> node, T value)
-#if !WinCopies3
-=>
-#else
-            {
-                ILinkedListNode<T> newNode =
-#endif
-                InnerList.AddAfter(node, value);
-
-#if WinCopies3
-                OnNodeAdded(newNode);
-
-                return newNode;
-            }
-#endif
-
-            /// <summary>
-            /// Adds a new node containing the specified value after the specified existing node in the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddItemAfter(System.Collections.Generic.LinkedListNode{T}, T)"/> method to provide a custom implementation.
-            /// </summary>
-            /// <param name="node">The <see cref="System.Collections.Generic.LinkedListNode{T}"/> after which to insert a new <see cref="System.Collections.Generic.LinkedListNode{T}"/> containing value.</param>
-            /// <param name="value">The value to add to the <see cref="LinkedCollection{T}"/>.</param>
-            /// <returns>The new <see cref="System.Collections.Generic.LinkedListNode{T}"/> containing value.</returns>
-            /// <exception cref="ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
-            /// <exception cref="InvalidOperationException"><paramref name="node"/> is not in the current <see cref="LinkedCollection{T}"/>.</exception>
-            public
-#if !WinCopies3
-                System.Collections.Generic.LinkedListNode
-#else
-                ILinkedListNode
-#endif
-                <T> AddAfter(
-#if !WinCopies3
-                System.Collections.Generic.LinkedListNode
-#else
-                ILinkedListNode
-#endif
-                <T> node, T value) => AddItemAfter(node, value);
-
-            protected virtual
-#if !WinCopies3
-                System.Collections.Generic.LinkedListNode
-#else
-                ILinkedListNode
-#endif
-                <T> AddItemBefore(
-#if !WinCopies3
-                System.Collections.Generic.LinkedListNode
-#else
-                ILinkedListNode
-#endif
-                <T> node, T value)
-#if !WinCopies3
-                =>
-#else
-            {
-                ILinkedListNode<T> newNode =
-#endif
-                InnerList.AddBefore(node, value);
-#if WinCopies3
-                OnNodeAdded(newNode);
-
-                return newNode;
-            }
-#endif
-
-            /// <summary>
-            /// Adds a new node containing the specified value before the specified existing node in the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddItemBefore(System.Collections.Generic.LinkedListNode{T}, T)"/> method to provide a custom implementation.
-            /// </summary>
-            /// <param name="node">The <see cref="System.Collections.Generic.LinkedListNode{T}"/> before which to insert a new <see cref="System.Collections.Generic.LinkedListNode{T}"/> containing value.</param>
-            /// <param name="value">The value to add to the <see cref="LinkedCollection{T}"/>.</param>
-            /// <returns>The new <see cref="System.Collections.Generic.LinkedListNode{T}"/> containing value.</returns>
-            /// <exception cref="ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
-            /// <exception cref="InvalidOperationException"><paramref name="node"/> is not in the current <see cref="LinkedCollection{T}"/>.</exception>
-            public
-#if !WinCopies3
-                System.Collections.Generic.LinkedListNode
-#else
-                ILinkedListNode
-#endif
-                <T> AddBefore(
-#if !WinCopies3
-                System.Collections.Generic.LinkedListNode
-#else
-                ILinkedListNode
-#endif
-                <T> node, T value) => AddItemBefore(node, value);
-
-            protected virtual
-#if !WinCopies3
-                System.Collections.Generic.LinkedListNode
-#else
-                ILinkedListNode
-#endif
-                <T> AddFirstItem(T value)
-#if !WinCopies3
-                =>
-#else
-            {
-                ILinkedListNode<T> node =
-#endif
-                    InnerList.AddFirst(value);
-#if WinCopies3
-                OnNodeAdded(node);
-
-                return node;
-            }
-#endif
-
-            /// <summary>
-            /// Adds a new node containing the specified value at the start of the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddFirstItem(T)"/> method to provide a custom implementation.
-            /// </summary>
-            /// <param name="value">The value to add at the start of the <see cref="LinkedCollection{T}"/>.</param>
-            /// <returns>The new <see cref="System.Collections.Generic.LinkedListNode{T}"/> containing value.</returns>
-            public
-#if !WinCopies3
-                System.Collections.Generic.LinkedListNode
-#else
-                ILinkedListNode
-#endif
-                <T> AddFirst(T value) => AddFirstItem(value);
-
-            protected virtual
-#if !WinCopies3
-                System.Collections.Generic.LinkedListNode
-#else
-                ILinkedListNode
-#endif
-                <T> AddLastItem(T value)
-#if !WinCopies3
-                =>
-#else
-            {
-                ILinkedListNode<T> node =
-#endif
-                    InnerList.AddLast(value);
-#if WinCopies3
-                OnNodeAdded(node);
-
-                return node;
-            }
-#endif
-
-            /// <summary>
-            /// Adds a new node containing the specified value at the end of the <see cref="LinkedCollection{T}"/>. Override the <see cref="AddLastItem(T)"/> method to provide a custom implementation.
-            /// </summary>
-            /// <param name="value">The value to add at the end of the <see cref="LinkedCollection{T}"/>.</param>
-            /// <returns>The new <see cref="System.Collections.Generic.LinkedListNode{T}"/> containing value.</returns>
-            public
-#if !WinCopies3
-                System.Collections.Generic.LinkedListNode
-#else
-                ILinkedListNode
-#endif
-                <T> AddLast(T value) => AddLastItem(value);
-
-            public
-#if !WinCopies3
-                System.Collections.Generic.LinkedListNode
-#else
-                ILinkedListNode
-#endif
-                <T> Find(T value) => InnerList.Find(value);
-
-            public
-#if !WinCopies3
-                System.Collections.Generic.LinkedListNode
-#else
-                ILinkedListNode
-#endif
-                <T> FindLast(T value) => InnerList.FindLast(value);
-
-#if !CS8 && WinCopies3
-            IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.Find(T value) => Find(value);
-
-            IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.FindLast(T value) => FindLast(value);
-#endif
-
-            protected virtual void ClearItems() => InnerList.Clear();
-
-            public void Clear() => ClearItems();
-
-            public bool Contains(T item) => InnerList.Contains(item);
-
-            public void CopyTo(Array array, int index) => ((ICollection)InnerList).CopyTo(array, index);
-
-            public void CopyTo(T[] array, int arrayIndex) => InnerList.CopyTo(array, arrayIndex);
-
-            System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() =>
-
-#if !WinCopies3
-            GetEnumerator();
-
-        public System.Collections.Generic.LinkedList<T>.Enumerator GetEnumerator() => InnerList.GetEnumerator();
-#else
-((System.Collections.Generic.IEnumerable<T>)InnerList).GetEnumerator();
-#endif
-
-            System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerList).GetEnumerator();
-
-#if WinCopies3
-            public bool SupportsReversedEnumeration => InnerList.SupportsReversedEnumeration;
-
-            public IUIntCountableEnumerator<T> GetEnumerator() => InnerList.GetEnumerator();
-
-            public IUIntCountableEnumerator<T> GetReversedEnumerator() => InnerList.GetReversedEnumerator();
-
-            public IUIntCountableEnumerator<ILinkedListNode<T>> GetNodeEnumerator() => InnerList.GetNodeEnumerator();
-
-            public IUIntCountableEnumerator<ILinkedListNode<T>> GetReversedNodeEnumerator() => InnerList.GetReversedNodeEnumerator();
-
-            System.Collections.Generic.IEnumerator<T> Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => ((Collections.Generic.IEnumerable<T>)InnerList).GetReversedEnumerator();
-
-            System.Collections.Generic.IEnumerator<ILinkedListNode<T>> System.Collections.Generic.IEnumerable<ILinkedListNode<T>>.GetEnumerator() => ((System.Collections.Generic.IEnumerable<ILinkedListNode<T>>)InnerList).GetEnumerator();
-
-            System.Collections.Generic.IEnumerator<ILinkedListNode<T>> Collections.Generic.IEnumerable<ILinkedListNode<T>>.GetReversedEnumerator() => ((Collections.Generic.IEnumerable<ILinkedListNode<T>>)InnerList).GetReversedEnumerator();
-
-            protected virtual void OnNodeRemoved(ILinkedListNode<T> node) { /* Left empty. */ }
-
-#if !CS8
-            IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.First => First;
-
-            IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.Last => Last;
-
-            System.Collections.IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
-#endif
-#else
         public void GetObjectData(SerializationInfo info, StreamingContext context) => InnerList.GetObjectData(info, context);
 
         public void OnDeserialization(object sender) => InnerList.OnDeserialization(sender);
 #endif
 
-            protected virtual bool RemoveItem(T item)
-#if !WinCopies3
-                =>
-#else
-            {
-                ILinkedListNode<T> node =
-#endif
-                    InnerList.Remove(item);
+            #region Remove Methods
 #if WinCopies3
-                if (node == null)
+            protected virtual bool OnRemoveItem(T item) => true;
 
-                    return false;
+            protected virtual bool OnRemoveNode(ILinkedListNode<T> node) => true;
 
-                OnNodeRemoved(node);
+            protected virtual bool? RemoveItem(T item) => RemoveItem(item, out ILinkedListNode<T> _);
 
-                return true;
-            }
-
-            protected virtual ILinkedListNode<T> RemoveItem2(T item)
+            protected virtual ILinkedListNode<T> RemoveItem(T item, out bool cancelled)
             {
-                ILinkedListNode<T> node = InnerList.Remove(item);
-
-                if (node == null)
-
-                    return null;
-
-                OnNodeRemoved(node);
+                cancelled = RemoveItem(item, out ILinkedListNode<T> node) == null;
 
                 return node;
             }
-#endif
 
-            public bool Remove(T item) => RemoveItem(item);
+            protected virtual ILinkedListNode<T> RemoveItem2(T item) => RemoveItem(item, out bool _);
 
-#if WinCopies3
             public ILinkedListNode<T> Remove2(T item) => RemoveItem2(item);
 
             ILinkedListNode<T> ILinkedList3<T>.Remove(T item) => Remove2(item);
+
+            private void RemoveNode(ILinkedListNode<T> node, in Action action)
+            {
+                if (OnRemoveNode(node))
+                {
+                    action();
+
+                    OnNodeRemoved(node);
+                }
+            }
 #endif
 
-            protected virtual void RemoveItem(
-#if !WinCopies3
-                System.Collections.Generic.LinkedListNode
+            #region RemoveNode
+            protected virtual void
+#if WinCopies3
+                RemoveNode
 #else
-                ILinkedListNode
+                RemoveItem
 #endif
-                <T> node)
+                (
+#if WinCopies3
+                ILinkedListNode<T>
+#else
+                System.Collections.Generic.LinkedListNode<T>
+#endif
+                node)
 #if !WinCopies3
                 =>
 #else
             {
+                if (OnRemoveNode(node))
+                {
 #endif
-                InnerList.Remove(node);
+                    InnerList.Remove(node);
 #if WinCopies3
-                OnNodeRemoved(node);
+                    OnNodeRemoved(node);
+                }
             }
 #endif
+            #endregion RemoveNode
+
+            #region RemoveItem
+#if !WinCopies3
+        protected virtual bool RemoveItem(
+#if WinCopies3
+                TOut
+#else
+                T
+#endif
+                   item) => InnerList.Remove(item);
+#else
+            protected virtual bool? RemoveItem(T item, out ILinkedListNode<T> node)
+            {
+                if (OnRemoveItem(item))
+                {
+                    node = Find(item);
+
+                    if (node == null)
+
+                        return false;
+
+                    if (OnRemoveNode(node))
+                    {
+                        _ = InnerList.Remove(item);
+
+                        OnNodeRemoved(node);
+
+                        return true;
+                    }
+                }
+
+                node = null;
+
+                return null;
+            }
+#endif
+            #endregion RemoveItem
+
+            public bool
+#if WinCopies3
+                ?
+#endif
+                Remove(T item) => RemoveItem(item);
 
             public void Remove(
-#if !WinCopies3
-                System.Collections.Generic.LinkedListNode
-#else
-                ILinkedListNode
-#endif
-                <T> node)
-#if !WinCopies3
-                =>
-#else
-            {
-#endif
-                RemoveItem(node);
 #if WinCopies3
-            }
+                ILinkedListNode<T>
+#else
+                System.Collections.Generic.LinkedListNode<T>
 #endif
+                 node) =>
+#if WinCopies3
+            RemoveNode
+#else
+            RemoveItem
+#endif
+            (node);
 
-            protected virtual void RemoveFirstItem()
-#if !WinCopies3
-                =>
-#else
-            {
-                ILinkedListNode<T> node = InnerList.First;
-#endif
-                InnerList.RemoveFirst();
+            #region RemoveFirst Methods
+            #region RemoveFirstItem
+            protected virtual void RemoveFirstItem() =>
 #if WinCopies3
-                OnNodeRemoved(node);
-            }
+                RemoveNode(InnerList.First,
 #endif
+                InnerList.RemoveFirst
+#if !WinCopies3
+                (
+#endif
+                );
+            #endregion
 
             public void RemoveFirst() => RemoveFirstItem();
+            #endregion
 
-            protected virtual void RemoveLastItem()
-#if !WinCopies3
-                =>
-#else
-            {
-                ILinkedListNode<T> node = InnerList.Last;
-#endif
-                InnerList.RemoveLast();
+            #region RemoveLast Methods
+            #region RemoveLastItem
+            protected virtual void RemoveLastItem() =>
 #if WinCopies3
-                OnNodeRemoved(node);
-            }
+                RemoveNode(InnerList.First,
 #endif
+                InnerList.RemoveFirst
+#if !WinCopies3
+                (
+#endif
+                );
+            #endregion
 
             public void RemoveLast() => RemoveLastItem();
+            #endregion
+            #endregion Remove Methods
 
 #if WinCopies3
+            bool System.Collections.Generic.ICollection<T>.Remove(T item) => Remove(item) == true;
+
+            bool ICollectionBase<T>.Remove(T item) => Remove(item) == true;
+
             protected virtual void SwapItem(ILinkedListNode<T> x, ILinkedListNode<T> y) => InnerList.Swap(x, y);
 
             public void Swap(ILinkedListNode<T> x, ILinkedListNode<T> y) => SwapItem(x, y);
@@ -569,6 +668,12 @@ int
             }
 
             public bool MoveBefore(ILinkedListNode<T> node, ILinkedListNode<T> before) => MoveNodeBefore(node, before);
+
+            public IUIntCountableEnumerable<ILinkedListNode<T>> AsNodeEnumerable() => InnerList.AsNodeEnumerable();
+
+            void ILinkedList<T>.Add(T item) => InnerList.Add(item);
+
+            bool ILinkedList<T>.Remove(T item) => InnerList.Remove(item) != null;
 #endif
         }
 #if WinCopies3

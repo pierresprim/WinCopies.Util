@@ -16,7 +16,6 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if WinCopies3 && CS7
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -159,7 +158,7 @@ namespace WinCopies.Collections.Generic
 
         public bool SupportsReversedEnumeration => _list.SupportsReversedEnumeration;
 
-        int ICollection<T>.Count => ((ICollection<LinkedTreeNode<T>>)_list).Count;
+        int System.Collections.Generic.ICollection<T>.Count => _list.AsOfType<System.Collections.Generic.ICollection<LinkedTreeNode<T>>>().Count;
 
         int ICollection.Count => ((ICollection)_list).Count;
 
@@ -167,7 +166,7 @@ namespace WinCopies.Collections.Generic
 
         object ICollection.SyncRoot => ((ICollection)_list).SyncRoot;
 
-        int IReadOnlyCollection<T>.Count => ((IReadOnlyCollection<T>)_list).Count;
+        int System.Collections.Generic.IReadOnlyCollection<T>.Count => ((IReadOnlyCollection<T>)_list).Count;
 
         ILinkedListNode<T> ILinkedListNode<T>.Previous => Previous;
 
@@ -393,7 +392,7 @@ namespace WinCopies.Collections.Generic
 
         private void _AddLast(LinkedTreeNode<T> node) => Add(node, _node => _list.AddLast(_node), nameof(node));
 
-        void ICollection<T>.Add(T item) => ((ICollection<LinkedTreeNode<T>>)_list).Add(new LinkedTreeNode<T>(item));
+        void System.Collections.Generic.ICollection<T>.Add(T item) => _list.AsOfType<System.Collections.Generic.ICollection<LinkedTreeNode<T>>>().Add(new LinkedTreeNode<T>(item));
 
 
 
@@ -442,6 +441,10 @@ namespace WinCopies.Collections.Generic
         {
             LinkedTreeNode<T> node = Find(item);
 
+            if (node == null)
+
+                return null;
+
             Remove(node);
 
             return node;
@@ -451,7 +454,7 @@ namespace WinCopies.Collections.Generic
 
         ILinkedTreeNode<T> ILinkedTreeNode<T>.Remove(T item) => Remove(item);
 
-        bool ICollection<T>.Remove(T item) => Remove(item) != null;
+        bool System.Collections.Generic.ICollection<T>.Remove(T item) => Remove(item) != null;
 
         public void RemoveFirst()
         {
@@ -542,6 +545,14 @@ namespace WinCopies.Collections.Generic
 
         System.Collections.IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
 
+        public DotNetFix.Generic.IUIntCountableEnumerable<ILinkedListNode<T>> AsNodeEnumerable() => new Enumeration.Generic.UIntCountableEnumerable<LinkedTreeNode<T>, ILinkedListNode<T>>(this);
+
+        IUIntCountableEnumerator<T> IUIntCountableEnumerable<T, IUIntCountableEnumerator<T>>.GetEnumerator() => GetEnumerator();
+
+        void ILinkedList<T>.Add(T item) => AddLast(item);
+
+        bool ILinkedList<T>.Remove(T item) => Remove(item) != null;
+
 #if !CS8
         IUIntCountableEnumerator<ILinkedTreeNode<T>> ILinkedTreeNode<T>.GetNodeEnumerator() => GetNodeEnumerator();
 
@@ -566,8 +577,15 @@ namespace WinCopies.Collections.Generic
         System.Collections.Generic.IEnumerator<ILinkedTreeNode<T>> System.Collections.Generic.IEnumerable<ILinkedTreeNode<T>>.GetEnumerator() => GetNodeEnumerator();
 
         System.Collections.Generic.IEnumerator<ILinkedTreeNode<T>> IEnumerable<ILinkedTreeNode<T>>.GetReversedEnumerator() => GetReversedNodeEnumerator();
+
+        void ICollectionBase<T>.Add(T item) => AddLast(item);
+
+        bool ICollectionBase<T>.Remove(T item) => Remove(item) != null;
+
+        IUIntCountableEnumerator<T> Enumeration.DotNetFix.IEnumerable<IUIntCountableEnumerator<T>>.GetEnumerator() => GetEnumerator();
+
+        IUIntCountableEnumerator<T> DotNetFix.Generic.IEnumerable<T, IUIntCountableEnumerator<T>>.GetEnumerator() => GetEnumerator();
 #endif
     }
 }
-
 #endif

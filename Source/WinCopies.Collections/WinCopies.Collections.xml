@@ -1097,7 +1097,7 @@
         </member>
         <member name="M:WinCopies.Collections.Extensions.AddRangeIfNotContains``1(System.Collections.Generic.ICollection{``0},System.Collections.Generic.IEnumerable{``0}@)">
             <summary>
-            Tries to add multiple values to an <see cref="T:System.Collections.Generic.ICollection`1"/> if it does not contain them already.
+            Tries to add multiple values to an <see cref="T:WinCopies.Collections.Generic.ICollection`1"/> if it does not contain them already.
             </summary>
             <typeparam name="T">The value type</typeparam>
             <param name="collection">The collection to which try to add the value</param>
@@ -1106,7 +1106,7 @@
         </member>
         <member name="M:WinCopies.Collections.Extensions.AddRangeIfNotContains``1(System.Collections.Generic.ICollection{``0},``0[])">
             <summary>
-            Tries to add multiple values to an <see cref="T:System.Collections.Generic.ICollection`1"/> if it does not contain them already.
+            Tries to add multiple values to an <see cref="T:WinCopies.Collections.Generic.ICollection`1"/> if it does not contain them already.
             </summary>
             <typeparam name="T">The value type</typeparam>
             <param name="collection">The collection to which try to add the value</param>
@@ -1115,7 +1115,7 @@
         </member>
         <member name="M:WinCopies.Collections.Extensions.AddIfNotContains``1(System.Collections.Generic.ICollection{``0},``0@)">
             <summary>
-            Tries to add a value to an <see cref="T:System.Collections.Generic.ICollection`1"/> if it does not contain it already.
+            Tries to add a value to an <see cref="T:WinCopies.Collections.Generic.ICollection`1"/> if it does not contain it already.
             </summary>
             <typeparam name="T">The value type</typeparam>
             <param name="collection">The collection to which try to add the value</param>

@@ -25,13 +25,14 @@ using WinCopies.Collections.DotNetFix;
 using WinCopies.Collections.DotNetFix.Generic;
 using WinCopies.Collections.Generic;
 using WinCopies.Linq;
+using WinCopies.Util;
 
 using static WinCopies.Collections.ThrowHelper;
 using static WinCopies.ThrowHelper;
 
 namespace WinCopies.Collections.AbstractionInterop.Generic
 {
-    public static partial class AbstractionTypes<TSource, TDestination> where TSource : TDestination
+    public static partial class AbstractionTypes<TSource, TDestination>
     {
         public static class LinkedListTypes<TList, TNode> where TNode : ILinkedListNode<TSource> where TList : ILinkedList3<TSource>
         {
@@ -69,7 +70,17 @@ namespace WinCopies.Collections.AbstractionInterop.Generic
 
                 object IReadOnlyLinkedListNode.Value => InnerNode.Value;
 
-                public LinkedListNode(in TNode node) => InnerNode = node == null ? throw GetArgumentNullException(nameof(node)) : node;
+                public LinkedListNode(in TNode node) => InnerNode = node
+#if CS8
+                ??
+#else
+                == null ?
+#endif
+                throw GetArgumentNullException(nameof(node))
+#if !CS8
+                    : node
+#endif
+                    ;
 
                 public static LinkedListTypes<TList, T>.LinkedListNode GetNode<T>(in T node) where T : ILinkedListNode<TSource> => new
 #if !CS9
@@ -112,11 +123,9 @@ namespace WinCopies.Collections.AbstractionInterop.Generic
 
                 bool Enumeration.IEnumerable.SupportsReversedEnumeration => true;
 
-                uint IReadOnlyLinkedList<TDestination>.Count => InnerList.Count;
+                int System.Collections.Generic.IReadOnlyCollection<TDestination>.Count => ((System.Collections.Generic.IReadOnlyCollection<TSource>)InnerList).Count;
 
-                int IReadOnlyCollection<TDestination>.Count => ((IReadOnlyCollection<TSource>)InnerList).Count;
-
-                uint IUIntCountable.Count => InnerList.Count;
+                public uint Count => InnerList.Count;
 
                 ILinkedListNode<TDestination> ILinkedList<TDestination>.Find(TDestination value) => value is TSource _value ? GetNode(InnerList.Find(_value)) : null;
 
@@ -160,15 +169,17 @@ namespace WinCopies.Collections.AbstractionInterop.Generic
 
                 System.Collections.IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetEnumerator(EnumerationDirection.LIFO);
 
-                int ICollection<TDestination>.Count => ((ICollection<TDestination>)InnerList).Count;
+                int System.Collections.Generic.ICollection<TDestination>.Count => InnerList.AsOfType<TList, System.Collections.Generic.ICollection<TSource>>().Count;
 
-                int ICollection.Count => ((ICollection)InnerList).Count;
+                int ICollection.Count => InnerList.AsOfType<ICollection>().Count;
 
-                bool ICollection<TDestination>.IsReadOnly => false;
+                bool System.Collections.Generic.ICollection<TDestination>.IsReadOnly => false;
 
                 object ICollection.SyncRoot => InnerList.SyncRoot;
 
                 bool ICollection.IsSynchronized => InnerList.IsSynchronized;
+
+                bool ILinkedList<TDestination>.IsReadOnly => false;
 
                 public LinkedList(in TList list) => InnerList = list == null ? throw GetArgumentNullException(nameof(list)) : list;
 
@@ -187,15 +198,19 @@ namespace WinCopies.Collections.AbstractionInterop.Generic
 
                 void ILinkedList<TDestination>.RemoveLast() => InnerList.RemoveLast();
 
-                void ICollection<TDestination>.Add(TDestination item) => InnerList.Add(item is TSource _item ? _item : throw GetArgumentException());
+                protected void Add(TDestination item) => InnerList.Add(item is TSource _item ? _item : throw GetArgumentException());
 
-                void ICollection<TDestination>.Clear() => InnerList.Clear();
+                void System.Collections.Generic.ICollection<TDestination>.Add(TDestination item) => Add(item);
 
-                bool ICollection<TDestination>.Contains(TDestination item) => item is TSource _item && InnerList.Contains(_item);
+                public void Clear() => InnerList.Clear();
 
-                void ICollection<TDestination>.CopyTo(TDestination[] array, int arrayIndex) => InnerList.CopyTo(array, arrayIndex);
+                protected bool Contains(TDestination item) => item is TSource _item && InnerList.Contains(_item);
 
-                bool ICollection<TDestination>.Remove(TDestination item) => item is TSource _item && ((ICollection<TSource>)InnerList).Remove(_item);
+                bool System.Collections.Generic.ICollection<TDestination>.Contains(TDestination item) => Contains(item);
+
+                void System.Collections.Generic.ICollection<TDestination>.CopyTo(TDestination[] array, int arrayIndex) => InnerList.CopyTo(array, arrayIndex);
+
+                bool System.Collections.Generic.ICollection<TDestination>.Remove(TDestination item) => item is TSource _item && ((System.Collections.Generic.ICollection<TSource>)InnerList).Remove(_item);
 
                 void ICollection.CopyTo(Array array, int index) => InnerList.CopyTo(array, index);
 
@@ -215,7 +230,25 @@ namespace WinCopies.Collections.AbstractionInterop.Generic
 
                 public void Swap(ILinkedListNode<TDestination> x, ILinkedListNode<TDestination> y) => InnerList.Swap(GetNode(x), GetNode(y));
 
+                DotNetFix.Generic.IUIntCountableEnumerable<ILinkedListNode<TDestination>> ILinkedList<TDestination>.AsNodeEnumerable() => new UIntCountableEnumerable<ILinkedListNode<TDestination>, IUIntCountableEnumeratorInfo<ILinkedListNode<TDestination>>>(GetNodeEnumerator2(EnumerationDirection.FIFO));
+
+                void ILinkedList<TDestination>.Add(TDestination item) => Add(item);
+
+                bool ILinkedList<TDestination>.Remove(TDestination item) => Remove(item) != null;
+
+                bool ILinkedList<TDestination>.Contains(TDestination item) => Contains(item);
+
+                void ILinkedList<TDestination>.CopyTo(TDestination[] array, int arrayIndex) => InnerList.CopyTo(array, arrayIndex);
+
+                bool IReadOnlyLinkedList2<TDestination>.Contains(TDestination value) => Contains(value);
+
+                void IReadOnlyLinkedList2<TDestination>.CopyTo(TDestination[] array, int index) => InnerList.CopyTo(array, index);
+
+                IUIntCountableEnumerator<TDestination> IUIntCountableEnumerable<TDestination, IUIntCountableEnumerator<TDestination>>.GetEnumerator() => GetEnumerator3(EnumerationDirection.FIFO);
+
 #if !CS8
+                bool ICollectionBase<TDestination>.IsReadOnly => false;
+
                 System.Collections.Generic.IEnumerator<TDestination> System.Collections.Generic.IEnumerable<TDestination>.GetEnumerator() => GetEnumerator(EnumerationDirection.FIFO);
 
                 System.Collections.Generic.IEnumerator<TDestination> Collections.Generic.IEnumerable<TDestination>.GetReversedEnumerator() => GetEnumerator(EnumerationDirection.LIFO);
@@ -223,6 +256,16 @@ namespace WinCopies.Collections.AbstractionInterop.Generic
                 IUIntCountableEnumerator<TDestination> IReadOnlyLinkedList2<TDestination>.GetEnumerator() => GetEnumerator3(EnumerationDirection.FIFO);
 
                 IUIntCountableEnumerator<TDestination> IReadOnlyLinkedList2<TDestination>.GetReversedEnumerator() => GetEnumerator3(EnumerationDirection.LIFO);
+
+                void ICollectionBase<TDestination>.Add(TDestination item) => Add(item);
+
+                bool ICollectionBase<TDestination>.Remove(TDestination item) => Remove(item) != null;
+
+                bool IReadOnlyCollectionBase<TDestination>.Contains(TDestination item) => Contains(item);
+
+                public void CopyTo(TDestination[] array, int arrayIndex) => CopyTo(array, arrayIndex);
+
+                public IUIntCountableEnumerator<TDestination> GetEnumerator() => GetEnumerator();
 #endif
             }
         }

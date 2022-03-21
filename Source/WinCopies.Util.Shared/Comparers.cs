@@ -50,6 +50,8 @@ namespace WinCopies.Collections
         /// <returns><see langword="true"/> if x is equal to y, otherwise <see langword="false"/>.</returns>
         public delegate bool EqualityComparison<in T>(T x, T y);
 
+        public delegate void EqualityComparisonIn<T>(in T x, in T y);
+
         public interface IComparer<
 #if CS5
             in

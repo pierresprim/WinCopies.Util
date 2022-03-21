@@ -60,13 +60,13 @@ namespace WinCopies.Collections
 
         public int Count => InnerList.Count;
 
-        bool ICollection<T>.IsReadOnly => false;
+        bool System.Collections.Generic.ICollection<T>.IsReadOnly => false;
 
         object ICollection.SyncRoot => ((ICollection)InnerList).SyncRoot;
 
         bool ICollection.IsSynchronized => ((ICollection)InnerList).IsSynchronized;
 
-        void ICollection<T>.Add(T item) => ((ICollection<T>)InnerList).Add(item);
+        void System.Collections.Generic.ICollection<T>.Add(T item) => ((System.Collections.Generic.ICollection<T>)InnerList).Add(item);
 
         public System.Collections.Generic.LinkedListNode<T> AddAfter(System.Collections.Generic.LinkedListNode<T> node, T value) => InnerList.AddAfter(node, value);
 
@@ -127,11 +127,11 @@ namespace WinCopies.Collections
 
         public int Count => InnerList.Count;
 
-        bool ICollection<T>.IsReadOnly => true;
+        bool System.Collections.Generic.ICollection<T>.IsReadOnly => true;
 
-        object ICollection.SyncRoot => ((ICollection)InnerList).SyncRoot;
+        object ICollection.SyncRoot => InnerList.SyncRoot;
 
-        bool ICollection.IsSynchronized => ((ICollection)InnerList).IsSynchronized;
+        bool ICollection.IsSynchronized => InnerList.IsSynchronized;
 
         public bool Contains(T value) => InnerList.Contains(value);
 
@@ -147,15 +147,15 @@ namespace WinCopies.Collections
 
         public virtual void OnDeserialization(object sender) => InnerList.OnDeserialization(sender);
 
-        void ICollection<T>.Add(T item) => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
+        void System.Collections.Generic.ICollection<T>.Add(T item) => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
 
-        void ICollection<T>.Clear() => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
+        void System.Collections.Generic.ICollection<T>.Clear() => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
 
-        bool ICollection<T>.Contains(T item) => InnerList.Contains(item);
+        bool System.Collections.Generic.ICollection<T>.Contains(T item) => InnerList.Contains(item);
 
-        void ICollection<T>.CopyTo(T[] array, int arrayIndex) => InnerList.CopyTo(array, arrayIndex);
+        void System.Collections.Generic.ICollection<T>.CopyTo(T[] array, int arrayIndex) => InnerList.CopyTo(array, arrayIndex);
 
-        bool ICollection<T>.Remove(T item) => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
+        bool System.Collections.Generic.ICollection<T>.Remove(T item) => throw new InvalidOperationException(ExceptionMessages.ReadOnlyCollection);
 
         System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => InnerList.GetEnumerator();
 

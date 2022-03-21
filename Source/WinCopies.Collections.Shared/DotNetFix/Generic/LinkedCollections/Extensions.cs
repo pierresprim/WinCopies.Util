@@ -82,7 +82,7 @@ namespace WinCopies.Collections.DotNetFix.Extensions
 
     [Obsolete("This type has been replaced by WinCopies.Collections.DotNetFix.Generic.LinkedCollection<T>.")]
     [Serializable]
-    public class LinkedCollection<T> : ICollection<T>, System.Collections.Generic.IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection, IDeserializationCallback, ISerializable
+    public class LinkedCollection<T> : System.Collections.Generic.ICollection<T>, System.Collections.Generic.IEnumerable<T>, IEnumerable, System.Collections.Generic.IReadOnlyCollection<T>, ICollection, IDeserializationCallback, ISerializable
     {
         protected ILinkedList<T> InnerList { get; }
 
@@ -92,19 +92,19 @@ namespace WinCopies.Collections.DotNetFix.Extensions
 
         public int Count => InnerList.Count;
 
-        bool ICollection.IsSynchronized => ((ICollection)InnerList).IsSynchronized;
+        bool ICollection.IsSynchronized => InnerList.IsSynchronized;
 
-        object ICollection.SyncRoot => ((ICollection)InnerList).SyncRoot;
+        object ICollection.SyncRoot => InnerList.SyncRoot;
 
-        bool ICollection<T>.IsReadOnly => false;
+        bool System.Collections.Generic.ICollection<T>.IsReadOnly => false;
 
         public LinkedCollection() : this(new LinkedList<T>()) { }
 
         public LinkedCollection(in ILinkedList<T> list) => InnerList = list;
 
-        protected virtual void AddItem(T item) => ((ICollection<T>)InnerList).Add(item);
+        protected virtual void AddItem(T item) => InnerList.Add(item);
 
-        void ICollection<T>.Add(T item) => AddItem(item);
+        void System.Collections.Generic.ICollection<T>.Add(T item) => AddItem(item);
 
         protected virtual void AddItemAfter(System.Collections.Generic.LinkedListNode<T> node, System.Collections.Generic.LinkedListNode<T> newNode) => InnerList.AddAfter(node, newNode);
 

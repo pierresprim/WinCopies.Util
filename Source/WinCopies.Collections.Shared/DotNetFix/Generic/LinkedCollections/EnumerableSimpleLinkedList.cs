@@ -25,7 +25,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
     {
 #if WinCopies3
 #if CS7
-        int IReadOnlyCollection<T>.Count => (int)Count;
+        int System.Collections.Generic.IReadOnlyCollection<T>.Count => (int)Count;
 #endif
 
         int ICollection.Count => (int)Count;

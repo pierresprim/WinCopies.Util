@@ -41,7 +41,7 @@ namespace WinCopies.Collections.DotNetFix
 #if WinCopies3
             IStack<TItems> where TStack : IStack<TItems>
 #else
-IEnumerableStack<T>, IReadOnlyCollection<T>, ICollection
+IEnumerableStack<T>, System.Collections.Generic.IReadOnlyCollection<T>, ICollection
 #endif
         {
             protected
@@ -209,11 +209,11 @@ int
             }
         }
 
-        public class ReadOnlyEnumerableStackCollection<TStack, TItems> : ReadOnlyStackCollection<TStack, TItems>, IEnumerableStack<TItems>, IReadOnlyCollection<TItems>, ICollection where TStack : IEnumerableStack<TItems>
+        public class ReadOnlyEnumerableStackCollection<TStack, TItems> : ReadOnlyStackCollection<TStack, TItems>, IEnumerableStack<TItems>, System.Collections.Generic.IReadOnlyCollection<TItems>, ICollection where TStack : IEnumerableStack<TItems>
         {
             int ICollection.Count => (int)Count;
 
-            int IReadOnlyCollection<TItems>.Count => (int)Count;
+            int System.Collections.Generic.IReadOnlyCollection<TItems>.Count => (int)Count;
 
             bool ICollection.IsSynchronized => ((ICollection)InnerStack).IsSynchronized;
 

@@ -21,6 +21,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+
 using static WinCopies
 #if !WinCopies3
     .Util.Util;
@@ -42,15 +43,15 @@ namespace WinCopies.Collections.DotNetFix
     namespace Generic
     {
 #endif
-        [Serializable]
-        public class ReadOnlyObservableLinkedCollection<T> : ICollection<T>, System.Collections.Generic.IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection, INotifyPropertyChanged, INotifyLinkedCollectionChanged<T>
+    [Serializable]
+    public class ReadOnlyObservableLinkedCollection<T> : System.Collections.Generic.ICollection<T>, System.Collections.Generic.IEnumerable<T>, IEnumerable, System.Collections.Generic.IReadOnlyCollection<T>, ICollection, INotifyPropertyChanged, INotifyLinkedCollectionChanged<T>
 #if WinCopies3
 , IReadOnlyLinkedList2<T>
 #endif
-        {
-            protected ObservableLinkedCollection<T> InnerLinkedCollection { get; }
+    {
+        protected ObservableLinkedCollection<T> InnerLinkedCollection { get; }
 
-            public
+        public
 #if !WinCopies3
 int
 #else
@@ -61,20 +62,20 @@ int
 #if WinCopies3
             int ICollection.Count => (int)Count;
 
-            int ICollection<T>.Count => (int)Count;
+            int System.Collections.Generic.ICollection<T>.Count => (int)Count;
 
-            int IReadOnlyCollection<T>.Count => (int)Count;
+            int System.Collections.Generic.IReadOnlyCollection<T>.Count => (int)Count;
 #endif
 
-            public bool IsReadOnly => true;
+        public bool IsReadOnly => true;
 
-            bool ICollection.IsSynchronized => ((ICollection)InnerLinkedCollection).IsSynchronized;
+        bool ICollection.IsSynchronized => ((ICollection)InnerLinkedCollection).IsSynchronized;
 
-            object ICollection.SyncRoot => ((ICollection)InnerLinkedCollection).SyncRoot;
+        object ICollection.SyncRoot => ((ICollection)InnerLinkedCollection).SyncRoot;
 
-            public T FirstValue => InnerLinkedCollection.FirstValue;
+        public T FirstValue => InnerLinkedCollection.FirstValue;
 
-            public T LastValue => InnerLinkedCollection.LastValue;
+        public T LastValue => InnerLinkedCollection.LastValue;
 
 #if WinCopies3
             public bool SupportsReversedEnumeration => InnerLinkedCollection.SupportsReversedEnumeration;
@@ -84,26 +85,26 @@ int
             IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.Last => throw GetReadOnlyListOrCollectionException();
 #endif
 
-            public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
 
-            public event LinkedCollectionChangedEventHandler<T> CollectionChanged;
+        public event LinkedCollectionChangedEventHandler<T> CollectionChanged;
 
-            public ReadOnlyObservableLinkedCollection(in ObservableLinkedCollection<T> linkedCollection)
-            {
-                InnerLinkedCollection = linkedCollection ?? throw GetArgumentNullException(nameof(linkedCollection));
+        public ReadOnlyObservableLinkedCollection(in ObservableLinkedCollection<T> linkedCollection)
+        {
+            InnerLinkedCollection = linkedCollection ?? throw GetArgumentNullException(nameof(linkedCollection));
 
-                InnerLinkedCollection.CollectionChanged += (object sender, LinkedCollectionChangedEventArgs<T> e) => OnCollectionChanged(e);
+            InnerLinkedCollection.CollectionChanged += (object sender, LinkedCollectionChangedEventArgs<T> e) => OnCollectionChanged(e);
 
-                InnerLinkedCollection.PropertyChanged += (object sender, PropertyChangedEventArgs e) => OnPropertyChanged(e);
-            }
+            InnerLinkedCollection.PropertyChanged += (object sender, PropertyChangedEventArgs e) => OnPropertyChanged(e);
+        }
 
-            protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
 
-            protected void RaisePropertyChangedEvent(in string propertyName) => OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+        protected void RaisePropertyChangedEvent(in string propertyName) => OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
 
-            protected void RaiseCountPropertyChangedEvent() => OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
+        protected void RaiseCountPropertyChangedEvent() => OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
 
-            protected virtual void OnCollectionChanged(LinkedCollectionChangedEventArgs<T> e) => CollectionChanged?.Invoke(this, e);
+        protected virtual void OnCollectionChanged(LinkedCollectionChangedEventArgs<T> e) => CollectionChanged?.Invoke(this, e);
 
 #if !WinCopies3
         [Obsolete("This method is never used and will be removed in later versions.")]
@@ -128,21 +129,21 @@ int
                 <T> node) => OnCollectionChanged(new LinkedCollectionChangedEventArgs<T>(action, addedBefore, addedAfter, node));
 #endif
 
-            System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => ((System.Collections.Generic.IEnumerable<T>)InnerLinkedCollection).GetEnumerator();
+        System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => ((System.Collections.Generic.IEnumerable<T>)InnerLinkedCollection).GetEnumerator();
 
-            System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerLinkedCollection).GetEnumerator();
+        System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerLinkedCollection).GetEnumerator();
 
-            public void CopyTo(T[] array, int arrayIndex) => InnerLinkedCollection.CopyTo(array, arrayIndex);
+        public void CopyTo(T[] array, int arrayIndex) => InnerLinkedCollection.CopyTo(array, arrayIndex);
 
-            void ICollection.CopyTo(Array array, int index) => ((ICollection)InnerLinkedCollection).CopyTo(array, index);
+        void ICollection.CopyTo(Array array, int index) => ((ICollection)InnerLinkedCollection).CopyTo(array, index);
 
-            void ICollection<T>.Add(T item) => throw GetReadOnlyListOrCollectionException();
+        public bool Contains(T item) => InnerLinkedCollection.Contains(item);
 
-            void ICollection<T>.Clear() => throw GetReadOnlyListOrCollectionException();
+        void System.Collections.Generic.ICollection<T>.Add(T item) => throw GetReadOnlyListOrCollectionException();
 
-            public bool Contains(T item) => InnerLinkedCollection.Contains(item);
+        void System.Collections.Generic.ICollection<T>.Clear() => throw GetReadOnlyListOrCollectionException();
 
-            bool ICollection<T>.Remove(T item) => throw GetReadOnlyListOrCollectionException();
+        bool System.Collections.Generic.ICollection<T>.Remove(T item) => throw GetReadOnlyListOrCollectionException();
 
 #if WinCopies3
             IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.Find(T value) => throw GetReadOnlyListOrCollectionException();
@@ -159,7 +160,7 @@ int
             System.Collections.IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
 #endif
 #endif
-        }
+    }
 #if WinCopies3
     }
 #endif

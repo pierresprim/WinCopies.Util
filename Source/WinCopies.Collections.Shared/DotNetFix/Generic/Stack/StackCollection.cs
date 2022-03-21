@@ -42,7 +42,7 @@ namespace WinCopies.Collections.DotNetFix
 #if WinCopies3
         IStack<TItems>, IUIntCountable
 #else
-        IEnumerableStack<T>, IReadOnlyCollection<
+        IEnumerableStack<T>, System.Collections.Generic.IReadOnlyCollection<
 #if WinCopies3
 TItems
 #else

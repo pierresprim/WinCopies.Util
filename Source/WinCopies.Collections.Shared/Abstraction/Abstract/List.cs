@@ -24,7 +24,7 @@ using WinCopies.Collections.Generic;
 
 namespace WinCopies.Collections.Abstraction.Generic.Abstract
 {
-    public interface IList<T> : System.Collections.Generic.IReadOnlyList<T>, System.Collections.Generic.IList<T>, ICountableEnumerable<T>, IReadOnlyCollection<T>
+    public interface IList<T> : System.Collections.Generic.IReadOnlyList<T>, System.Collections.Generic.IList<T>, ICountableEnumerable<T>, System.Collections.Generic.IReadOnlyCollection<T>
     {
         new T this[int index] { get; set; }
     }

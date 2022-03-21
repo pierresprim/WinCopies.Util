@@ -212,7 +212,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
     //    T Value { get; set; }
     //}
 
-    //public interface ILinkedList<T> : ICollection<T>, System.Collections.Generic.IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection, IDeserializationCallback, ISerializable
+    //public interface ILinkedList<T> : System.Collections.Generic.ICollection<T>, System.Collections.Generic.IEnumerable<T>, IEnumerable, System.Collections.Generic.IReadOnlyCollection<T>, ICollection, IDeserializationCallback, ISerializable
     //{
     //    ILinkedListNode<T> Last { get; }
 
@@ -323,7 +323,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
 #if WinCopies3
         IUIntCountable, IEnumerableSimpleLinkedListBase, System.Collections.Generic.IEnumerable<T>, ICollection
 #if CS7
-        , IReadOnlyCollection<T>
+        , System.Collections.Generic.IReadOnlyCollection<T>
 #endif
 #else
 IUIntCountableEnumerable<T>

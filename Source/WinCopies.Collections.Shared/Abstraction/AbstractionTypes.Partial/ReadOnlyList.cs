@@ -23,7 +23,7 @@ using WinCopies.Util;
 
 namespace WinCopies.Collections.AbstractionInterop.Generic
 {
-    public static partial class AbstractionTypes<TSource, TDestination> where TSource : TDestination
+    public static partial class AbstractionTypes<TSource, TDestination> 
     {
         public class ReadOnlyList<TList> : IReadOnlyList<TDestination> where TList : IReadOnlyList<TSource>
         {

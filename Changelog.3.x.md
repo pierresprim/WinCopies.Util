@@ -9,6 +9,18 @@ CHANGELOG
 ### ???? ????
 
 - Move WinCopies.Util.Shared.Delegates.ActionDelegates to WinCopies namespace.
+- WinCopies.Collections.AbstractionInterop.Generic.AbstractionTypes\<TSource, TDestination>:
+	- has no longer the TSource : TDestination generic type constraint.
+	- LinkedListTypes\<TList, TNode>.LinkedList subclass has a public Count property.
+- WinCopies.Collections.DotNetFix.Generic:
+	- LinkedCollection\<T>: better control on list modification.
+	- ILinkedList\<T> has new property and methods, and new default implementations (for C# 8 and above).
+	- ILinkedList3\<T> inherits from IUIntCountableEnumerable\<T>.
+	- IReadOnlyLinkedList\<T>:
+		- inherits from IReadOnlyUIntCollection\<T>.
+		- has new property and methods, and new default implementations (for C# 8 and above).
+	- LinkedList\<T>.LinkedListNode's constructor parameter has the 'in' modifier.
+- New interfaces.
 
 ### 11/03/2021 3.16-preview
 
@@ -164,7 +176,7 @@ CHANGELOG
 	- IEnumerableSimpleLinkedList\<T> is now defined as:
 		IEnumerableSimpleLinkedList\<T> : ISimpleLinkedList\<T>, IUIntCountable, IEnumerableSimpleLinkedListBase, System.Collections.Generic.IEnumerable\<T>, ICollection (, IReadOnlyCollection\<T> -- for C# 7 and higher).
 	- IEnumerable interfaces have been entirely redefined.
-- EnumerableQueue\<T>: remove IReadOnlyCollection<T>.Count and ICollection.Count.
+- EnumerableQueue\<T>: remove System.Collections.Generic.IReadOnlyCollection<T>.Count and ICollection.Count.
 - ILinkedTreeNode\<T> is now defined as:
 	ILinkedTreeNode\<T> : ILinkedListNode\<T>, IEnumerableInfoLinkedList\<T>
 - LinkedTreeNode\<T> does not implement IEnumerableInfo\<T> anymore.

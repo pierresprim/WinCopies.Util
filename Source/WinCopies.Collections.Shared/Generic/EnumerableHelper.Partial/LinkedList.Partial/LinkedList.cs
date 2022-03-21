@@ -16,7 +16,6 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if WinCopies3
-
 using WinCopies.Collections.DotNetFix;
 using WinCopies.Collections.DotNetFix.Generic;
 
@@ -86,11 +85,19 @@ namespace WinCopies.Collections.Generic
 
             public void RemoveFirst()
             {
-                (FirstNode = (FirstNode ?? throw GetEmptyListOrCollectionException()).Next).Previous = null;
+                Node node = (FirstNode ?? throw GetEmptyListOrCollectionException()).Next;
 
-                if (FirstNode == null)
+                FirstNode.Next = null;
+
+                FirstNode = node;
+
+                if (node == null)
 
                     LastNode = null;
+
+                else
+
+                    FirstNode.Previous = null;
             }
 
             public T GetAndRemoveFirst()
@@ -118,11 +125,19 @@ namespace WinCopies.Collections.Generic
 
             public void RemoveLast()
             {
-                (LastNode = (LastNode ?? throw GetEmptyListOrCollectionException()).Previous).Next = null;
+                Node node = (LastNode ?? throw GetEmptyListOrCollectionException()).Previous;
+
+                LastNode.Previous = null;
+
+                LastNode = node;
 
                 if (LastNode == null)
 
                     FirstNode = null;
+
+                else
+
+                    LastNode.Next = null;
             }
 
             public T GetAndRemoveLast()
@@ -158,7 +173,6 @@ namespace WinCopies.Collections.Generic
             bool ISimpleLinkedListBase.IsReadOnly => false;
 
             #region IQueueBase implementation
-
             T IQueueBase<T>.Peek() => First;
 
             bool IQueueBase<T>.TryPeek(out T result) => TryGetFirst(out result);
@@ -168,11 +182,9 @@ namespace WinCopies.Collections.Generic
             T IQueueBase<T>.Dequeue() => GetAndRemoveFirst();
 
             bool IQueueBase<T>.TryDequeue(out T result) => TryGetAndRemoveFirst(out result);
-
             #endregion
 
             #region IStackBase implementation
-
             T IStackBase<T>.Peek() => Last;
 
             bool IStackBase<T>.TryPeek(out T result) => TryGetLast(out result);
@@ -182,10 +194,8 @@ namespace WinCopies.Collections.Generic
             T IStackBase<T>.Pop() => GetAndRemoveLast();
 
             bool IStackBase<T>.TryPop(out T result) => TryGetAndRemoveFirst(out result);
-
             #endregion
         }
     }
 }
-
 #endif

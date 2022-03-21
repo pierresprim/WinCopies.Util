@@ -16,6 +16,7 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using System;
+using System.Collections.Generic;
 
 using static WinCopies.
 #if WinCopies3
@@ -67,6 +68,30 @@ namespace WinCopies
         public static TOut ConvertBack<TIn, TOut>(TIn value) where TIn : TOut => value;
 
         public static TOut ConvertBackIn<TIn, TOut>(in TIn value) where TIn : TOut => value;
+
+        public static TKey GetKeyIn<TKey, TValue>(in KeyValuePair<TKey, TValue> item) => item.Key;
+
+        public static TKey GetKey<TKey, TValue>(KeyValuePair<TKey, TValue> item) => GetKeyIn(item);
+
+        public static TValue GetValueIn<TKey, TValue>(in KeyValuePair<TKey, TValue> item) => item.Value;
+
+        public static TValue GetValue<TKey, TValue>(KeyValuePair<TKey, TValue> item) => GetValueIn(item);
+
+        public static bool CompareEqualityIn(in object x, in object y) => object.Equals(x, y);
+
+        public static bool CompareEquality(object x, object y) => CompareEqualityIn(x, y);
+
+        public static bool CompareEqualityGenericIn<T>(in T x, in T y) => CompareEqualityIn(x, y);
+
+        public static bool CompareEqualityGeneric<T>(T x, T y) => CompareEqualityIn(x, y);
+
+        public static bool CompareHashCodeIn(in object x, in object y) => x == null ? y == null : y != null && x.GetHashCode() == y.GetHashCode();
+
+        public static bool CompareHashCode(object x, object y) => CompareHashCodeIn(x, y);
+
+        public static bool CompareHashCodeGenericIn<T>(in T x, in T y) => CompareHashCodeIn(x, y);
+
+        public static bool CompareHashCodeGeneric<T>(T x, T y) => CompareHashCodeIn(x, y);
     }
 
     /// <summary>

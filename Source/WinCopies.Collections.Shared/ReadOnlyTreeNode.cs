@@ -139,7 +139,7 @@
 
 //    [Serializable]
 //    [DebuggerDisplay("Value = {Value}, Count = {Count}")]
-//    public class ReadOnlyTreeNode<TValue, TItems> : ReadOnlyTreeNode<TValue>, IReadOnlyTreeNode<TValue, TItems>, ICollection<ReadOnlyTreeNode<TItems>>, System.Collections.Generic.IList<ReadOnlyTreeNode<TItems>>, ICollection, System.Collections.IList, IReadOnlyCollection<ReadOnlyTreeNode<TItems>>, System.Collections.Generic.IReadOnlyList<ReadOnlyTreeNode<TItems>>, IReadOnlyCollection<TItems>, System.Collections.Generic.IReadOnlyList<TItems>
+//    public class ReadOnlyTreeNode<TValue, TItems> : ReadOnlyTreeNode<TValue>, IReadOnlyTreeNode<TValue, TItems>, System.Collections.Generic.ICollection<ReadOnlyTreeNode<TItems>>, System.Collections.Generic.IList<ReadOnlyTreeNode<TItems>>, ICollection, System.Collections.IList, System.Collections.Generic.IReadOnlyCollection<ReadOnlyTreeNode<TItems>>, System.Collections.Generic.IReadOnlyList<ReadOnlyTreeNode<TItems>>, System.Collections.Generic.IReadOnlyCollection<TItems>, System.Collections.Generic.IReadOnlyList<TItems>
 //    {
 
 //        /// <summary>
@@ -227,7 +227,7 @@
 
 //        System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-//        void ICollection<ReadOnlyTreeNode<TItems>>.Add(ReadOnlyTreeNode<TItems> item) => throw new NotSupportedException("The current node is read-only.");
+//        void System.Collections.Generic.ICollection<ReadOnlyTreeNode<TItems>>.Add(ReadOnlyTreeNode<TItems> item) => throw new NotSupportedException("The current node is read-only.");
 
 //        int System.Collections.IList.Add(object value) => throw new NotSupportedException("The current node is read-only.");
 
@@ -339,7 +339,7 @@
 
 //        void System.Collections.Generic.IList<ReadOnlyTreeNode<TItems>>.RemoveAt(int index) => RemoveItem(index);
 
-//        bool ICollection<ReadOnlyTreeNode<TItems>>.Remove(ReadOnlyTreeNode<TItems> item) => throw new NotSupportedException("The current node is read-only.");
+//        bool System.Collections.Generic.ICollection<ReadOnlyTreeNode<TItems>>.Remove(ReadOnlyTreeNode<TItems> item) => throw new NotSupportedException("The current node is read-only.");
 
 //        void System.Collections.IList.Remove(object value) => throw new NotSupportedException("The current node is read-only.");
 
@@ -420,7 +420,7 @@
 
 //        void System.Collections.IList.Clear() => throw new NotSupportedException("The current tree node is read-only.");
 
-//        void ICollection<ReadOnlyTreeNode<TItems>>.Clear() => throw new NotSupportedException("The current tree node is read-only.");
+//        void System.Collections.Generic.ICollection<ReadOnlyTreeNode<TItems>>.Clear() => throw new NotSupportedException("The current tree node is read-only.");
 
 //        private void ThrowOnInvalidItem(ReadOnlyTreeNode<TItems> item)
 

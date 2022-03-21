@@ -6,6 +6,11 @@ The WinCopies® software framework
 CHANGELOG
 ---------
 
+### ??? ???
+
+- New static and extension methods.
+- New delegates.
+
 ### 11/03/2021 2.17
 
 - Add new types and methods.
@@ -316,17 +321,17 @@ Bug fixes and improvements for the latest features.
 		- CheckedUInt64
 
 - Existing items behavior updates:
-	- The WinCopies.UtiL.Util.AddRangeIfNotContains(this System.Collections.ICollection collection, params object[] values) now has the following signature: AddRangeIfNotContains(this System.Collections.IList collection, params object[] values). The old method is still supported.
-	- The WinCopies.Util.Util.RemoveRangeIfContains<T>(this ICollection<T> collection, params T[] values) now has the following signature: WinCopies.Util.Util.RemoveRangeIfContains<T>(this IList<T> collection, params T[] values). The old method is still supported.
-	- The WinCopies.Util.Util.RemoveRangeIfContains<T>(this ICollection<T> collection, in System.Collections.Generic.IEnumerable<T> values) now has the following signature: RemoveRangeIfContains<T>(this IList<T> collection, in System.Collections.Generic.IEnumerable<T> values). The old method is still supported.
-	- The WinCopies.Collections.DotNetFix.IReadOnlyLinkedList interface implements WinCopies.Collections.DotNetFix.ICountableEnumerable.
+	- WinCopies.Util.Util.AddRangeIfNotContains(this System.Collections.ICollection collection, params object[] values) now has the following signature: AddRangeIfNotContains(this System.Collections.IList collection, params object[] values). The old method is still supported.
+	- WinCopies.Util.Util.RemoveRangeIfContains<T>(this System.Collections.Generic.ICollection<T> collection, params T[] values) now has the following signature: WinCopies.Util.Util.RemoveRangeIfContains<T>(this IList<T> collection, params T[] values). The old method is still supported.
+	- WinCopies.Util.Util.RemoveRangeIfContains<T>(this System.Collections.Generic.ICollection<T> collection, in System.Collections.Generic.IEnumerable<T> values) now has the following signature: RemoveRangeIfContains<T>(this IList<T> collection, in System.Collections.Generic.IEnumerable<T> values). The old method is still supported.
+	- WinCopies.Collections.DotNetFix.IReadOnlyLinkedList interface implements WinCopies.Collections.DotNetFix.ICountableEnumerable.
 
 #### WinCopies.Util.Desktop
 
 - Additions:
 	- New commands.
 - Existing items behavior updates:
-	- The WinCopies.Util.Commands.ApplicationCommands.CloseAllTabs has now the Shift modifier key instead of Alt.
+	- WinCopies.Util.Commands.ApplicationCommands.CloseAllTabs has now the Shift modifier key instead of Alt.
 
 ### 05/04/2020 2.2-preview4
 

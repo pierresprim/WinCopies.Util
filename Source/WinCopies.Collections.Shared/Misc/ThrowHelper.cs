@@ -34,6 +34,14 @@ namespace WinCopies.Collections
 {
     public static class ThrowHelper
     {
+        public static ArgumentOutOfRangeException GetKeyNotFoundException(in string paramName) => new
+#if !CS9
+            ArgumentOutOfRangeException
+#endif
+            (paramName, "The given key was not found.");
+
+        public static void ThrowKeyNotFoundException(in string paramName) => throw GetKeyNotFoundException(paramName);
+
         public static InvalidOperationException GetNoItemException() => throw new InvalidOperationException(
 #if WinCopies3
             WinCopies.Resources.ExceptionMessages.
@@ -49,7 +57,7 @@ namespace WinCopies.Collections
         }
 #endif
 
-        public static void ThrowIfNullOrReadOnly<T>(in ICollection<T> linkedList, in string argumentName)
+        public static void ThrowIfNullOrReadOnly<T>(in System.Collections.Generic.ICollection<T> linkedList, in string argumentName)
         {
             if ((linkedList ?? throw GetArgumentNullException(argumentName)).IsReadOnly)
 
@@ -125,7 +133,7 @@ ThrowIfEmptyListOrCollection
 #if CS7
         public static void ThrowIfNotContainedNode<T>(in ILinkedListNode<T> node, in string argumentName, in ILinkedList<T> list)
         {
-            if (node.List != list)
+            if ((node ?? throw GetArgumentNullException(argumentName)).List != list)
 
                 throw GetNotContainedLinkedListNodeException(argumentName);
         }
@@ -138,7 +146,11 @@ ThrowIfEmptyListOrCollection
         }
 #endif
 
-        public static ArgumentException GetNodesAreEqualException() => new ArgumentException("The given nodes are equal.");
+        public static ArgumentException GetNodesAreEqualException() => new
+#if !CS9
+            ArgumentException
+#endif
+            ("The given nodes are equal.");
 
 #if WinCopies3
         public static void ThrowIfEnumeratorNotStartedOrDisposedException(in WinCopies.Collections.IDisposableEnumeratorInfo enumerator)

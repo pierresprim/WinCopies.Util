@@ -31,7 +31,7 @@ using static WinCopies.ThrowHelper;
 
 namespace WinCopies.PropertySystem
 {
-    public interface IPropertySystemCollection<TPropertyId, TPropertyGroup> : IReadOnlyCollection<IProperty>, System.Collections.Generic.IReadOnlyList<IProperty>, IReadOnlyDictionary<TPropertyId, IProperty>, ICountableEnumerableInfo<IProperty>, IEnumerableInfo<KeyValuePair<TPropertyId, IProperty>>, IEnumerableInfo<IProperty> where TPropertyId : IPropertyId<TPropertyGroup>
+    public interface IPropertySystemCollection<TPropertyId, TPropertyGroup> : System.Collections.Generic.IReadOnlyCollection<IProperty>, System.Collections.Generic.IReadOnlyList<IProperty>, System.Collections.Generic.IReadOnlyDictionary<TPropertyId, IProperty>, ICountableEnumerableInfo<IProperty>, IEnumerableInfo<KeyValuePair<TPropertyId, IProperty>>, IEnumerableInfo<IProperty> where TPropertyId : IPropertyId<TPropertyGroup>
     {
         // Left empty.
     }
@@ -48,9 +48,9 @@ namespace WinCopies.PropertySystem
 
         public abstract System.Collections.Generic.IReadOnlyList<IProperty> Values { get; }
 
-        System.Collections.Generic.IEnumerable<TPropertyId> IReadOnlyDictionary<TPropertyId, IProperty>.Keys => Keys;
+        System.Collections.Generic.IEnumerable<TPropertyId> System.Collections.Generic.IReadOnlyDictionary<TPropertyId, IProperty>.Keys => Keys;
 
-        System.Collections.Generic.IEnumerable<IProperty> IReadOnlyDictionary<TPropertyId, IProperty>.Values => Values;
+        System.Collections.Generic.IEnumerable<IProperty> System.Collections.Generic.IReadOnlyDictionary<TPropertyId, IProperty>.Values => Values;
 
         public bool ContainsKey(TPropertyId key) => Keys.Contains(key);
 

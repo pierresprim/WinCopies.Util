@@ -43,7 +43,7 @@ namespace WinCopies.Collections.DotNetFix
 #if WinCopies3
             IQueue<TItems> where TQueue : IQueue<TItems>
 #else
-IEnumerableQueue<T>, IReadOnlyCollection<T>, ICollection
+IEnumerableQueue<T>, System.Collections.Generic.IReadOnlyCollection<T>, ICollection
 #endif
         {
             protected
@@ -211,11 +211,11 @@ int
             }
         }
 
-        public class ReadOnlyEnumerableQueueCollection<TQueue, TItems> : ReadOnlyQueueCollection<TQueue, TItems>, IEnumerableQueue<TItems>, IReadOnlyCollection<TItems>, ICollection where TQueue : IEnumerableQueue<TItems>
+        public class ReadOnlyEnumerableQueueCollection<TQueue, TItems> : ReadOnlyQueueCollection<TQueue, TItems>, IEnumerableQueue<TItems>, System.Collections.Generic.IReadOnlyCollection<TItems>, ICollection where TQueue : IEnumerableQueue<TItems>
         {
             int ICollection.Count => (int)Count;
 
-            int IReadOnlyCollection<TItems>.Count => (int)Count;
+            int System.Collections.Generic.IReadOnlyCollection<TItems>.Count => (int)Count;
 
             bool ICollection.IsSynchronized => ((ICollection)InnerQueue).IsSynchronized;
 
