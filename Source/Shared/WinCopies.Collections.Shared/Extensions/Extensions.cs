@@ -1223,11 +1223,11 @@ namespace WinCopies.Collections
         }
 #endif
 
-#region Contains methods
+        #region Contains methods
 
-#region Non generic methods
+        #region Non generic methods
 
-#region ContainsOneValue overloads
+        #region ContainsOneValue overloads
 
         public static bool ContainsOneValue(this IEnumerable array, in EqualityComparison comparison, out bool containsMoreThanOneValue, in object[] values)
         {
@@ -1322,9 +1322,9 @@ namespace WinCopies.Collections
 
             return ContainsOneValue(array, (object value, object _value) => equalityComparer.Equals(value, _value), out containsMoreThanOneValue, values);
         }
-#endregion
+        #endregion
 
-#region ContainsOneOrMoreValues with notification whether contains more than one values overloads
+        #region ContainsOneOrMoreValues with notification whether contains more than one values overloads
 
         public static bool ContainsOneOrMoreValues(IEnumerable array, in EqualityComparison comparison, out bool containsMoreThanOneValue, object[] values)
         {
@@ -1406,9 +1406,9 @@ namespace WinCopies.Collections
 
             return ContainsOneOrMoreValues(array, (object value, object _value) => equalityComparer.Equals(value, _value), out containsMoreThanOneValue, values);
         }
-#endregion
+        #endregion
 
-#region ContainsOneOrMoreValues without notification whether contains more than one values overloads
+        #region ContainsOneOrMoreValues without notification whether contains more than one values overloads
 
         public static bool ContainsOneOrMoreValues(IEnumerable array, in Func<object, object, bool> comparison, object[] values)
         {
@@ -1474,9 +1474,9 @@ namespace WinCopies.Collections
 
             return ContainsOneOrMoreValues(array, (object value, object _value) => equalityComparer.Equals(value, _value), values);
         }
-#endregion
+        #endregion
 
-#region Contains array overloads
+        #region Contains array overloads
 
         public static bool Contains(IEnumerable array, in EqualityComparison comparison, object[] values)
         {
@@ -1554,11 +1554,11 @@ namespace WinCopies.Collections
 
             return Contains(array, (object value, object _value) => equalityComparer.Equals(value, _value), values);
         }
-#endregion
-#endregion
-#region Generic methods
+        #endregion
+        #endregion
+        #region Generic methods
 
-#region ContainsOneValue overloads
+        #region ContainsOneValue overloads
 
         public static bool ContainsOneValue<T>(System.Collections.Generic.IEnumerable<T> array, in EqualityComparison<T> comparison, out bool containsMoreThanOneValue, in T[] values)
         {
@@ -1639,9 +1639,9 @@ namespace WinCopies.Collections
 
             return ContainsOneValue(array, (T value, T _value) => equalityComparer.Equals(value, _value), out containsMoreThanOneValue, values); ;
         }
-#endregion
+        #endregion
 
-#region ContainsOneOrMoreValues with notification whether contains more than one values overloads
+        #region ContainsOneOrMoreValues with notification whether contains more than one values overloads
 
         public static bool ContainsOneOrMoreValues<T>(System.Collections.Generic.IEnumerable<T> array, in EqualityComparison<T> comparison, out bool containsMoreThanOneValue, in T[] values)
         {
@@ -1723,9 +1723,9 @@ namespace WinCopies.Collections
 
             return ContainsOneOrMoreValues(array, (T value, T _value) => equalityComparer.Equals(value, _value), out containsMoreThanOneValue, values);
         }
-#endregion
+        #endregion
 
-#region ContainsOneOrMoreValues without notification whether contains more than one values overloads
+        #region ContainsOneOrMoreValues without notification whether contains more than one values overloads
 
         public static bool ContainsOneOrMoreValues<T>(System.Collections.Generic.IEnumerable<T> array, in EqualityComparison<T> comparison, in T[] values)
         {
@@ -1791,9 +1791,9 @@ namespace WinCopies.Collections
 
             return ContainsOneOrMoreValues(array, (T value, T _value) => equalityComparer.Equals(value, _value), values);
         }
-#endregion
+        #endregion
 
-#region Contains array overloads
+        #region Contains array overloads
 
         public static bool Contains<T>(System.Collections.Generic.IEnumerable<T> array, in EqualityComparison<T> comparison, in T[] values)
         {
@@ -1871,10 +1871,10 @@ namespace WinCopies.Collections
 
             return Contains(array, (T value, T _value) => equalityComparer.Equals(value, _value), values);
         }
-#endregion
+        #endregion
 
-#endregion
-#endregion
+        #endregion
+        #endregion
 
         public static System.Collections.Generic.LinkedListNode<T> RemoveAndGetFirstValue<T>(this System.Collections.Generic.LinkedList<T> items)
         {
@@ -1885,14 +1885,20 @@ namespace WinCopies.Collections
             return value;
         }
 
-#if CS7
+#if CS6
         public static
 #if !WinCopies3
             System.Collections.Generic.LinkedListNode
 #else
             ILinkedListNode
 #endif
-            <T> RemoveAndGetFirstValue<T>(this ILinkedList<T> items)
+            <T>
+#if WinCopies3
+            RemoveAndGetFirst
+#else
+            RemoveAndGetFirstValue
+#endif
+            <T>(this ILinkedList<T> items)
         {
 
 #if !WinCopies3
@@ -1906,9 +1912,13 @@ namespace WinCopies.Collections
 
             return value;
         }
+
+#if WinCopies3
+        public static T RemoveAndGetFirstValue<T>(this ILinkedList<T> items) => items.RemoveAndGetFirst().Value;
+#endif
 #endif
 
-        public static System.Collections.Generic.LinkedListNode<T> RemoveAndGetLastValue<T>(this System.Collections.Generic.LinkedList<T> items)
+        public static System.Collections.Generic.LinkedListNode<T> RemoveAndGetLast<T>(this System.Collections.Generic.LinkedList<T> items)
         {
             System.Collections.Generic.LinkedListNode<T> value = (items ?? throw GetArgumentNullException(nameof(items))).Last;
 
@@ -1917,14 +1927,20 @@ namespace WinCopies.Collections
             return value;
         }
 
-#if CS7
+#if CS6
         public static
 #if !WinCopies3
             System.Collections.Generic.LinkedListNode
 #else
             ILinkedListNode
 #endif
-            <T> RemoveAndGetLastValue<T>(this ILinkedList<T> items)
+            <T>
+#if WinCopies3
+            RemoveAndGetLast
+#else
+            RemoveAndGetLastValue
+#endif
+            <T>(this ILinkedList<T> items)
         {
 
 #if !WinCopies3
@@ -1938,6 +1954,10 @@ namespace WinCopies.Collections
 
             return value;
         }
+
+#if WinCopies3
+        public static T RemoveAndGetLastValue<T>(this ILinkedList<T> items) => items.RemoveAndGetLast().Value;
+#endif
 #endif
 
         public static bool RemoveAll<T>(this IList<T> collection, in T itemToKeep, in bool onlyOne, in bool throwIfMultiple) where T : class
@@ -2124,7 +2144,7 @@ namespace WinCopies.Collections
             return false;
         }
 
-#endregion
+        #endregion
 
 #if CS7
         public static

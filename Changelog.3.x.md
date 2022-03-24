@@ -8,19 +8,34 @@ CHANGELOG
 
 ### ???? ????
 
+- WinCopies.Collections.Extensions.RemoveAndGetFirst/LastValue methods have been replaced with RemoveAndGetFirst/Last methods. RemoveAndGetFirst/LastValue methods still exist but they retrieve the value of the node directly.
+- WinCopies.Collections.Abstraction.Generic.LinkedListNode\<T> overrides Equals(object).
+- ReadOnlyLinkedDictionary:
+	- bug fixed: key/value collection properties were not initialized.
+	- empty constructor is now protected.
+	- has a new protected constructor which can be used to initialize the dictionary with custom key/value collections.
+	- implements IReadOnlyLinkedDictionary\<TKey, TValue>.
 - Move WinCopies.Util.Shared.Delegates.ActionDelegates to WinCopies namespace.
 - WinCopies.Collections.AbstractionInterop.Generic.AbstractionTypes\<TSource, TDestination>:
 	- has no longer the TSource : TDestination generic type constraint.
-	- LinkedListTypes\<TList, TNode>.LinkedList subclass has a public Count property.
-- WinCopies.Collections.DotNetFix.Generic:
-	- LinkedCollection\<T>: better control on list modification.
-	- ILinkedList\<T> has new property and methods, and new default implementations (for C# 8 and above).
-	- ILinkedList3\<T> inherits from IUIntCountableEnumerable\<T>.
-	- IReadOnlyLinkedList\<T>:
-		- inherits from IReadOnlyUIntCollection\<T>.
-		- has new property and methods, and new default implementations (for C# 8 and above).
-	- LinkedList\<T>.LinkedListNode's constructor parameter has the 'in' modifier.
-- New interfaces.
+	- LinkedListTypes\<TList, TNode>:
+		- overrides Equals(object).
+		- LinkedList subclass has a public Count property.
+- WinCopies.Collections.DotNetFix
+	- IReadOnlyLinkedListNode has a new property : IsReadOnly.
+	- Generic:
+		- IReadOnlyLinkedListNode\<out TItems, out TList> now inherits from the new interface IReadOnlyLinkedListNodeBase2\<TItems>.
+		- ILinkedListNode\<TItems, out TList> now inherits from the new interface ILinkedListNodeBase2\<TItems>.
+		- ILinkedListNodeBase\<T> no longer has the IsReadOnly property (replaced with WinCopies.Collections.DotNetFix.IReadOnlyLinkedListNode.IsReadOnly).
+		- ILinkedListNode\<TItems, out TNodes, out TList> has new properties.
+		- LinkedCollection\<T>: better control on list modification.
+		- ILinkedList\<T> has new property and methods, and new default implementations (for C\# 8 and above).
+		- ILinkedList3\<T> inherits from IUIntCountableEnumerable\<T>.
+		- IReadOnlyLinkedList\<T>:
+			- inherits from IReadOnlyUIntCollection\<T>.
+			- has new property and methods, and new default implementations (for C\# 8 and above).
+		- LinkedList\<T>.LinkedListNode's constructor parameter has the 'in' modifier.
+- New types.
 
 ### 11/03/2021 3.16-preview
 
@@ -164,7 +179,7 @@ CHANGELOG
 	- Remove ILinkedList3\<T>.GetNodeEnumerator(EnumerationDirection enumerationDirection) because it was redundant with the new implementation.
 	- IEnumerableInfoLinkedList:
 		- now implements IEnumerableInfo\<ILinkedListNode\<T>>.
-		- has default implementations for C# 8 and higher.
+		- has default implementations for C\# 8 and higher.
         - the GetEnumerator method now returns an IEnumeratorInfo2\<T>.
 	- IReadOnlyLinkedList\<T> is now defined as:
 		IReadOnlyLinkedList\<T> : ICollection\<T>, ICollection, IReadOnlyCollection\<T>, IUIntCountable, Collections.Generic.IEnumerable\<T>
@@ -174,12 +189,12 @@ CHANGELOG
 		and all of its members have been removed because they was redundant with the new implementation.
 	- ReadOnlyLinkedList\<T> implements IReadOnlyLinkedList2 instead of IReadOnlyEnumerableInfoLinkedList\<T>
 	- IEnumerableSimpleLinkedList\<T> is now defined as:
-		IEnumerableSimpleLinkedList\<T> : ISimpleLinkedList\<T>, IUIntCountable, IEnumerableSimpleLinkedListBase, System.Collections.Generic.IEnumerable\<T>, ICollection (, IReadOnlyCollection\<T> -- for C# 7 and higher).
+		IEnumerableSimpleLinkedList\<T> : ISimpleLinkedList\<T>, IUIntCountable, IEnumerableSimpleLinkedListBase, System.Collections.Generic.IEnumerable\<T>, ICollection (, IReadOnlyCollection\<T> -- for C\# 7 and higher).
 	- IEnumerable interfaces have been entirely redefined.
 - EnumerableQueue\<T>: remove System.Collections.Generic.IReadOnlyCollection<T>.Count and ICollection.Count.
 - ILinkedTreeNode\<T> is now defined as:
 	ILinkedTreeNode\<T> : ILinkedListNode\<T>, IEnumerableInfoLinkedList\<T>
-- LinkedTreeNode\<T> does not implement IEnumerableInfo\<T> anymore.
+- LinkedTreeNode\<T> no longer implements IEnumerableInfo\<T>.
 - ArrayMerger's constructor takes an ILinkedList3\IUIntCountableEnumerable\<T>>.
 - Add types and new static methods.
 
@@ -311,7 +326,7 @@ Remove the nested types in WinCopies.Util.Data.MultiConverterBase\<TSourceIn, TS
 	- Some comparison-related types in the WinCopies.Collections namespace have moved to the WinCopies.Util package, and are still in the same namespace.
 	- Enum throw methods are now in the WinCopies.ThrowHelper class of the WinCopies.Util package.
 	- WinCopies.Collections.EnumerableExtensions.Join\<T> and AppendValues methods are now in WinCopies.Linq.Extensions.
-	- Some types are not supported anymore by the .Net Framework 4.0 targetting version.
+	- Some types are no longer supported by the .Net Framework 4.0 targetting version.
 	- ToEnumerable\<T>(this T[] array) is now in WinCopies.Collections.ArrayExtensions (WinCopies.Collections package).
 	- Some static methods have new return types. These types as compatible with the previous ones, so these methods should remain compatible with older releases, but their new return types extend the capacity of the usage of the returned values.
 

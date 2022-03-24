@@ -167,7 +167,7 @@ namespace WinCopies.Collections.Generic
 
                 while (Count != 0)
 
-                    action(this.RemoveAndGetFirstValue().Value);
+                    action(this.RemoveAndGetFirst().Value);
             }
 
             else
@@ -245,7 +245,7 @@ namespace WinCopies.Collections.Generic
 
                 while (Count != 0)
 
-                    action(this.RemoveAndGetFirstValue().Value);
+                    action(this.RemoveAndGetFirst().Value);
             }
 
             else

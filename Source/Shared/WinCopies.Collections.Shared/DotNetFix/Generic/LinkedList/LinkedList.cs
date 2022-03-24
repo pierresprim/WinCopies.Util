@@ -107,6 +107,9 @@ namespace WinCopies.Collections.DotNetFix
 #if WinCopies3
             public class LinkedListNode : ILinkedListNode<T, LinkedListNode, LinkedList<T>>, ILinkedListNode<T>
             {
+                private IReadOnlyLinkedListNodeBase2<T> _asReadOnly;
+                private ILinkedListNodeBase2<T> _asReadOnly2;
+
                 public bool IsReadOnly => false;
 
                 public LinkedList<T> List { get; internal set; }
@@ -126,6 +129,18 @@ namespace WinCopies.Collections.DotNetFix
                 IReadOnlyLinkedListNode IReadOnlyLinkedListNode.Previous => Previous;
 
                 IReadOnlyLinkedListNode IReadOnlyLinkedListNode.Next => Next;
+
+                IReadOnlyLinkedListNodeBase2<T> IReadOnlyLinkedListNodeBase2<T>.Previous => Previous;
+
+                IReadOnlyLinkedListNodeBase2<T> IReadOnlyLinkedListNodeBase2<T>.Next => Next;
+
+                ILinkedListNode<T, ILinkedList<T>> ILinkedListNode<T, ILinkedListNode<T, ILinkedList<T>>, ILinkedList<T>>.Previous => Previous;
+
+                ILinkedListNode<T, ILinkedList<T>> ILinkedListNode<T, ILinkedListNode<T, ILinkedList<T>>, ILinkedList<T>>.Next => Next;
+
+                ILinkedListNodeBase2<T> ILinkedListNodeBase2<T>.Previous => Previous;
+
+                ILinkedListNodeBase2<T> ILinkedListNodeBase2<T>.Next => Next;
 
 #if !CS8
                 object IReadOnlyLinkedListNode.Value => Value;
@@ -151,6 +166,30 @@ namespace WinCopies.Collections.DotNetFix
                     Previous = null;
                     Next = null;
                 }
+
+                public IReadOnlyLinkedListNodeBase2<T> ToReadOnly() => _asReadOnly
+#if CS8
+            ??=
+#else
+            ?? (_asReadOnly =
+#endif
+            new ReadOnlyLinkedListNode<T>(this)
+#if !CS8
+                    )
+#endif
+                    ;
+
+                public ILinkedListNodeBase2<T> ToReadOnly2() => _asReadOnly2
+#if CS8
+            ??=
+#else
+            ?? (_asReadOnly2 =
+#endif
+            new LinkedListNode<T>(this)
+#if !CS8
+                    )
+#endif
+                    ;
             }
 
             public class Enumerator : Enumerator<ILinkedListNode<T>>

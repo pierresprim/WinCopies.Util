@@ -113,6 +113,8 @@ namespace WinCopies.Collections.Generic
         }
 
         private DotNetFix.Generic.LinkedList<LinkedTreeNode<T>>.LinkedListNode _node;
+        private IReadOnlyLinkedListNodeBase2<T> _asReadOnly;
+        private ILinkedListNodeBase2<T> _asReadOnly2;
         private readonly DotNetFix.Generic.LinkedList<LinkedTreeNode<T>> _list = new
 #if !CS9
             DotNetFix.Generic.LinkedList<LinkedTreeNode<T>>
@@ -180,6 +182,18 @@ namespace WinCopies.Collections.Generic
         ILinkedListNode<T> ILinkedList<T>.First => First;
 
         ILinkedListNode<T> ILinkedList<T>.Last => Last;
+
+        IReadOnlyLinkedListNodeBase2<T> IReadOnlyLinkedListNodeBase2<T>.Previous => Previous;
+
+        IReadOnlyLinkedListNodeBase2<T> IReadOnlyLinkedListNodeBase2<T>.Next => Previous;
+
+        ILinkedListNode<T, ILinkedList<T>> ILinkedListNode<T, ILinkedListNode<T, ILinkedList<T>>, ILinkedList<T>>.Previous => Previous;
+
+        ILinkedListNode<T, ILinkedList<T>> ILinkedListNode<T, ILinkedListNode<T, ILinkedList<T>>, ILinkedList<T>>.Next => Next;
+
+        ILinkedListNodeBase2<T> ILinkedListNodeBase2<T>.Previous => Previous;
+
+        ILinkedListNodeBase2<T> ILinkedListNodeBase2<T>.Next => Next;
 
 #if !CS8
         ILinkedList<T> ILinkedListNode<T>.List => Parent;
@@ -553,6 +567,30 @@ namespace WinCopies.Collections.Generic
         void ILinkedList<T>.Add(T item) => AddLast(item);
 
         bool ILinkedList<T>.Remove(T item) => Remove(item) != null;
+
+        public IReadOnlyLinkedListNodeBase2<T> ToReadOnly() => _asReadOnly
+#if CS8
+            ??=
+#else
+            ?? (_asReadOnly =
+#endif
+            new ReadOnlyLinkedListNode<T>(_node.Value)
+#if !CS8
+            )
+#endif
+            ;
+
+        public ILinkedListNodeBase2<T> ToReadOnly2() => _asReadOnly2
+#if CS8
+            ??=
+#else
+            ?? (_asReadOnly2 =
+#endif
+            new DotNetFix.Generic.LinkedListNode<T>(_node.Value)
+#if !CS8
+            )
+#endif
+            ;
 
 #if !CS8
         IUIntCountableEnumerator<ILinkedTreeNode<T>> ILinkedTreeNode<T>.GetNodeEnumerator() => GetNodeEnumerator();

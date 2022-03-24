@@ -16,7 +16,6 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if CS7
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -38,31 +37,14 @@ using WinCopies.Util;
 
 namespace WinCopies.Collections.Abstraction.Generic
 {
-    public class LinkedListNode<T> : DotNetFix.
-#if WinCopies3
-        Generic.
-#endif
-        ILinkedListNode<T>, IEquatable<DotNetFix.
-#if WinCopies3
-        Generic.
-#endif
-        ILinkedListNode<T>>
+    public class LinkedListNode<T> : ILinkedListNode<T>, IEquatable<ILinkedListNode<T>>
     {
+        private IReadOnlyLinkedListNodeBase2<T> _asReadOnly;
+        private ILinkedListNodeBase2<T> _asReadOnly2;
+
         protected internal System.Collections.Generic.LinkedListNode<T> InnerNode { get; }
 
-        ILinkedList<T> DotNetFix.
-#if WinCopies3
-        Generic.
-#endif
-       ILinkedListNode<T>.List => GetList();
-
-        bool
-#if WinCopies3
-            WinCopies.Collections.DotNetFix.Generic.ILinkedListNodeBase<T>
-#else
-            DotNetFix.ILinkedListNode<T>
-#endif
-       .IsReadOnly => false;
+        ILinkedList<T> ILinkedListNode<T>.List => GetList();
 
 #if WinCopies3
         ILinkedList<T> IReadOnlyLinkedListNode<T, ILinkedList<T>>.List => GetList();
@@ -90,6 +72,26 @@ namespace WinCopies.Collections.Abstraction.Generic
         T IReadOnlyLinkedListNodeBase<T>.Value => InnerNode.Value;
 
         object IReadOnlyLinkedListNode.Value => InnerNode.Value;
+
+        ILinkedListNode<T, ILinkedList<T>> ILinkedListNode<T, ILinkedListNode<T, ILinkedList<T>>, ILinkedList<T>>.Previous => GetNode(InnerNode.Previous);
+
+        ILinkedListNode<T, ILinkedList<T>> ILinkedListNode<T, ILinkedListNode<T, ILinkedList<T>>, ILinkedList<T>>.Next => GetNode(InnerNode.Next);
+
+        ILinkedListNodeBase2<T> ILinkedListNodeBase2<T>.Previous => GetNode(InnerNode.Previous);
+
+        ILinkedListNodeBase2<T> ILinkedListNodeBase2<T>.Next => GetNode(InnerNode.Next);
+
+        IReadOnlyLinkedListNodeBase2<T> IReadOnlyLinkedListNodeBase2<T>.Previous => GetNode(InnerNode.Previous);
+
+        IReadOnlyLinkedListNodeBase2<T> IReadOnlyLinkedListNodeBase2<T>.Next => GetNode(InnerNode.Next);
+
+        bool
+#if WinCopies3
+            IReadOnlyLinkedListNode
+#else
+            DotNetFix.ILinkedListNode<T>
+#endif
+       .IsReadOnly => false;
 #else
         DotNetFix.ILinkedListNode<T> DotNetFix.ILinkedListNode<T>.Next => GetNode(InnerNode.Next);
 
@@ -112,23 +114,37 @@ namespace WinCopies.Collections.Abstraction.Generic
 #endif
           (InnerNode.List);
 
-        public bool Equals(DotNetFix.
-#if WinCopies3
-        Generic.
-#endif
-        ILinkedListNode<T> other) => InnerNode == LinkedList<T>.TryGetNode(other);
+        public bool Equals(ILinkedListNode<T> other) => InnerNode == LinkedList<T>.TryGetNode(other);
 
-        public static bool operator ==(LinkedListNode<T> x, DotNetFix.
-#if WinCopies3
-        Generic.
-#endif
-        ILinkedListNode<T> y) => x == null ? y == null : x.Equals(y);
+        public override bool Equals(object? obj) => obj is ILinkedListNode<T> other && Equals(other);
 
-        public static bool operator !=(LinkedListNode<T> x, DotNetFix.
-#if WinCopies3
-        Generic.
+        public IReadOnlyLinkedListNodeBase2<T> ToReadOnly() => _asReadOnly
+#if CS8
+            ??=
+#else
+            ?? (_asReadOnly =
 #endif
-        ILinkedListNode<T> y) => !(x == y);
+            new ReadOnlyLinkedListNode<T>(this)
+#if !CS8
+            )
+#endif
+            ;
+
+        public ILinkedListNodeBase2<T> ToReadOnly2() => _asReadOnly2
+#if CS8
+            ??=
+#else
+            ?? (_asReadOnly2 =
+#endif
+             new DotNetFix.Generic.LinkedListNode<T>(this)
+#if !CS8
+            )
+#endif
+            ;
+
+        public static bool operator ==(LinkedListNode<T> x, ILinkedListNode<T> y) => x == null ? y == null : x.Equals(y);
+
+        public static bool operator !=(LinkedListNode<T> x, ILinkedListNode<T> y) => !(x == y);
     }
 
     public class LinkedList<T> : ILinkedList2<T>, IEquatable<LinkedList<T>>
@@ -263,17 +279,9 @@ namespace WinCopies.Collections.Abstraction.Generic
 #endif
             (node);
 
-        public static System.Collections.Generic.LinkedListNode<T> TryGetNode(in WinCopies.Collections.DotNetFix.
-#if WinCopies3
-        Generic.
-#endif
-        ILinkedListNode<T> node) => node is LinkedListNode<T> _node ? _node.InnerNode : null;
+        public static System.Collections.Generic.LinkedListNode<T> TryGetNode(in ILinkedListNode<T> node) => node is LinkedListNode<T> _node ? _node.InnerNode : null;
 
-        public static System.Collections.Generic.LinkedListNode<T> GetNode(in WinCopies.Collections.DotNetFix.
-#if WinCopies3
-        Generic.
-#endif
-        ILinkedListNode<T> node) => TryGetNode(node) ?? throw new ArgumentException("The given node is not contained in the current list.", nameof(node));
+        public static System.Collections.Generic.LinkedListNode<T> GetNode(in ILinkedListNode<T> node) => TryGetNode(node) ?? throw new ArgumentException("The given node is not contained in the current list.", nameof(node));
 
         void ILinkedList<T>.RemoveFirst() => InnerList.RemoveFirst();
 
@@ -342,5 +350,4 @@ namespace WinCopies.Collections.Abstraction.Generic
 #endif
     }
 }
-
 #endif

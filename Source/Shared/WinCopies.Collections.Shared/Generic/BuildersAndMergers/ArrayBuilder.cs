@@ -713,7 +713,7 @@ InnerList.
 #else
                             this
 #endif
-                            .RemoveAndGetFirstValue().Value);
+                            .RemoveAndGetFirst().Value);
                     }
 
                     else
@@ -724,7 +724,7 @@ InnerList.
 #else
                             this
 #endif
-                            .RemoveAndGetFirstValue().Value);
+                            .RemoveAndGetFirst().Value);
 
                     while (Count != 0)
 
@@ -805,7 +805,7 @@ InnerList.
 #else
                             this
 #endif
-                            .RemoveAndGetFirstValue().Value);
+                            .RemoveAndGetFirst().Value);
                     }
 
                     else
@@ -816,7 +816,7 @@ InnerList.
 #else
                             this
 #endif
-                            .RemoveAndGetFirstValue().Value);
+                            .RemoveAndGetFirst().Value);
 
                     while (Count != 0)
 

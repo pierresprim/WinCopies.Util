@@ -143,6 +143,7 @@ namespace WinCopies
 
     public delegate TOut FuncParams<in TParams, out TOut>(params TParams[] args);
 
+    public delegate T FuncIn<T>(in T param);
     public delegate TOut FuncIn<T1, out TOut>(in T1 p1);
     public delegate TOut FuncIn<T1, T2, out TOut>(in T1 p1, in T2 p2);
     public delegate TOut FuncIn<T1, T2, T3, out TOut>(in T1 p1, in T2 p2, in T3 p3);

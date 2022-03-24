@@ -45,17 +45,17 @@ namespace WinCopies.Collections.DotNetFix
 #else
             ISimpleLinkedListBase
 #endif
-            .SyncRoot
-        {
-            get
-            {
-                if (_syncRoot == null)
-
-                    _syncRoot = Interlocked.CompareExchange(ref _syncRoot, new object(), null);
-
-                return _syncRoot;
-            }
-        }
+            .SyncRoot => _syncRoot
+#if CS8
+                ??=
+#else
+                ?? (_syncRoot =
+#endif
+                Interlocked.CompareExchange(ref _syncRoot, new object(), null)
+#if !CS8
+                )
+#endif
+                ;
 
         bool
 #if WinCopies3
