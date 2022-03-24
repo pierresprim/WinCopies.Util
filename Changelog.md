@@ -10,7 +10,7 @@ CHANGELOG
 
 - WinCopies.Collections.Extensions.RemoveAndGetFirst/LastValue methods are now available in C\# 6.
 - New static and extension methods.
-- New delegates.
+- New types.
 
 ### 11/03/2021 2.17
 

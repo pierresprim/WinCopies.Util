@@ -45,35 +45,6 @@ using static WinCopies.ThrowHelper;
 namespace WinCopies
 #endif
 {
-    public interface ISplitFactory<T, U, TContainer>
-    {
-        TContainer Container { get; }
-
-        int SubCount { get; }
-
-        void SubClear();
-    }
-
-    public interface IValueSplitFactory<T, U, TContainer> : ISplitFactory<T, U, TContainer>
-    {
-        void Add(U enumerable);
-
-        U GetEnumerable();
-
-        void SubAdd(T value);
-    }
-
-    public interface IRefSplitFactory<T, U, V, TContainer> : ISplitFactory<T, U, TContainer> where T : class
-    {
-        void Add(V enumerable);
-
-        V GetEnumerable();
-
-        void SubAdd(U value);
-
-        U GetValueContainer(T value);
-    }
-
 #if WinCopies3
     namespace Util // To avoid name conflicts.
     {
@@ -83,14 +54,24 @@ namespace WinCopies
         /// </summary>
         public static class Extensions
         {
+            public static string GetRealName(this Type type) => type.ContainsGenericParameters ? type.Name.Remove(type.Name.IndexOf('`')) : type.Name;
+
+            public static ConstructorInfo
+#if CS8
+                ?
+#endif
+                TryGetConstructor(this Type t, params Type[] types) => t.GetConstructor(types);
+
+            public static ConstructorInfo AssertGetConstructor(this Type t, params Type[] types) => t.TryGetConstructor(types) ?? throw new InvalidOperationException("There is no such constructor for this type.");
+
             public static U AsOfType<T, U>(this T obj) where T : U => obj;
 
             public static T AsOfType<T>(this T obj) => obj;
 
 #if CS5
-            public static T First<T>(this System.Collections.Generic.IReadOnlyList<T> list) => list[0];
+            public static T First<T>(this IReadOnlyList<T> list) => list[0];
 
-            public static T Last<T>(this System.Collections.Generic.IReadOnlyList<T> list) => list[list.Count - 1];
+            public static T Last<T>(this IReadOnlyList<T> list) => list[list.Count - 1];
 #endif
 
             public static bool HasFlag(this byte value, in byte flag) => (value & flag) == flag;
@@ -109,14 +90,14 @@ namespace WinCopies
 
             public static bool HasFlag(this ulong value, in ulong flag) => (value & flag) == flag;
 
-            public static void ForEach<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Action<T> action)
+            public static void ForEach<T>(this IEnumerable<T> enumerable, in Action<T> action)
             {
                 foreach (T item in enumerable)
 
                     action(item);
             }
 
-            public static void ForEach<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in ActionIn<T> action)
+            public static void ForEach<T>(this IEnumerable<T> enumerable, in ActionIn<T> action)
             {
                 foreach (T item in enumerable)
 
@@ -180,7 +161,7 @@ namespace WinCopies
             public static string Truncate(this string s, in int index) => s.Truncate2(index, Etcetera);
 
 #if CS6
-            public static List<T> ToList<T>(this System.Collections.Generic.IReadOnlyList<T> list)
+            public static List<T> ToList<T>(this IReadOnlyList<T> list)
             {
                 var _list = new List<T>(list.Count);
 
@@ -192,14 +173,14 @@ namespace WinCopies
             }
 #endif
 
-            public static System.Collections.Generic.IEnumerable<T> ToEnumerable<T>(this System.Collections.Generic.IEnumerable<T> enumerable)
+            public static IEnumerable<T> ToEnumerable<T>(this IEnumerable<T> enumerable)
             {
                 foreach (T item in enumerable)
 
                     yield return item;
             }
 
-            public static System.Collections.Generic.IEnumerable<TDestination> ToEnumerable<TSource, TDestination>(this System.Collections.Generic.IEnumerable<TSource> enumerable) where TSource : TDestination
+            public static IEnumerable<TDestination> ToEnumerable<TSource, TDestination>(this IEnumerable<TSource> enumerable) where TSource : TDestination
             {
                 foreach (TSource item in enumerable)
 
@@ -277,7 +258,7 @@ namespace WinCopies
         public static T[] RemoveRangeIfContains<T>(this System.Collections.Generic.ICollection<T> collection, params T[] values) => collection.RemoveRangeIfContains((System.Collections.Generic.IEnumerable<T>)values);
 #endif
 #endif
-            public static bool ForEachANDALSO<T>(this System.Collections.Generic.IEnumerable<T> enumerable, Predicate<T> predicate)
+            public static bool ForEachANDALSO<T>(this IEnumerable<T> enumerable, Predicate<T> predicate)
             {
                 foreach (T item in enumerable)
 
@@ -288,7 +269,7 @@ namespace WinCopies
                 return true;
             }
 
-            public static bool ForEachAND<T>(this System.Collections.Generic.IEnumerable<T> enumerable, Predicate<T> predicate)
+            public static bool ForEachAND<T>(this IEnumerable<T> enumerable, Predicate<T> predicate)
             {
                 bool result = true;
 
@@ -299,7 +280,7 @@ namespace WinCopies
                 return result;
             }
 
-            public static bool ForEachORELSE<T>(this System.Collections.Generic.IEnumerable<T> enumerable, Predicate<T> predicate)
+            public static bool ForEachORELSE<T>(this IEnumerable<T> enumerable, Predicate<T> predicate)
             {
                 foreach (T item in enumerable)
 
@@ -310,7 +291,7 @@ namespace WinCopies
                 return false;
             }
 
-            public static bool ForEachOR<T>(this System.Collections.Generic.IEnumerable<T> enumerable, Predicate<T> predicate)
+            public static bool ForEachOR<T>(this IEnumerable<T> enumerable, Predicate<T> predicate)
             {
                 bool result = false;
 
@@ -321,7 +302,7 @@ namespace WinCopies
                 return result;
             }
 
-            public static bool ForEachXORELSE<T>(this System.Collections.Generic.IEnumerable<T> enumerable, Predicate<T> predicate)
+            public static bool ForEachXORELSE<T>(this IEnumerable<T> enumerable, Predicate<T> predicate)
             {
                 bool result = false;
 
@@ -343,7 +324,7 @@ namespace WinCopies
                 return result;
             }
 
-            public static bool ForEachXOR<T>(this System.Collections.Generic.IEnumerable<T> enumerable, Predicate<T> predicate)
+            public static bool ForEachXOR<T>(this IEnumerable<T> enumerable, Predicate<T> predicate)
             {
                 bool result = false;
 
@@ -368,9 +349,9 @@ namespace WinCopies
                 return result;
             }
 
-            public static void ForEach<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Predicate<T> firstAction, Predicate<T> otherAction)
+            public static void ForEach<T>(this IEnumerable<T> enumerable, in Predicate<T> firstAction, Predicate<T> otherAction)
             {
-                System.Collections.Generic.IEnumerator<T> enumerator = enumerable.GetEnumerator();
+                IEnumerator<T> enumerator = enumerable.GetEnumerator();
 
                 try
                 {
@@ -390,9 +371,9 @@ namespace WinCopies
                 }
             }
 
-            public static void ForEach<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Action<T> firstAction, Predicate<T> otherAction)
+            public static void ForEach<T>(this IEnumerable<T> enumerable, in Action<T> firstAction, Predicate<T> otherAction)
             {
-                System.Collections.Generic.IEnumerator<T> enumerator = enumerable.GetEnumerator();
+                IEnumerator<T> enumerator = enumerable.GetEnumerator();
 
                 try
                 {
@@ -413,9 +394,9 @@ namespace WinCopies
                 }
             }
 
-            public static void ForEach<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Action<T> firstAction, Action<T> otherAction)
+            public static void ForEach<T>(this IEnumerable<T> enumerable, in Action<T> firstAction, Action<T> otherAction)
             {
-                System.Collections.Generic.IEnumerator<T> enumerator = enumerable.GetEnumerator();
+                IEnumerator<T> enumerator = enumerable.GetEnumerator();
 
                 try
                 {
@@ -626,161 +607,1025 @@ namespace WinCopies
                     ? XOrResult.OneTrueResult
                     : XOrResult.NoTrueResult;
 
+            public static void CopyTo(this BitArray source, in BitArray array, in int startIndex)
+            {
+                ThrowIfNull(source, nameof(source));
+                ThrowIfNull(array, nameof(array));
+
+                if (array.Length > source.Length)
+
+                    throw new ArgumentOutOfRangeException(nameof(array));
+
+                if (startIndex < 0 || startIndex + array.Length > source.Length)
+
+                    throw new IndexOutOfRangeException($"{nameof(startIndex)} is out of range.");
+
+                for (int i = 0; i < source.Length; i++)
+
+                    array[startIndex + i] = source[i];
+            }
+
+            public static void SetMultipleBits(this BitArray array, in byte[] bytes, in int startIndex)
+            {
+                long length = bytes.Length * 8;
+
+                if (length > array.Length)
+
+                    throw new ArgumentOutOfRangeException(nameof(bytes));
+
+                if (startIndex < 0 || startIndex + length > array.Length)
+
+                    throw new IndexOutOfRangeException($"{nameof(startIndex)} is out of range.");
+
+                new BitArray(bytes).CopyTo(array, startIndex);
+            }
+
+            public static void SetMultipleBits(this BitArray array, in BitArray bits, in int startIndex)
+            {
+                if (bits.Length > array.Length)
+
+                    throw new ArgumentOutOfRangeException(nameof(bits));
+
+                if (startIndex < 0 || startIndex + bits.Length > array.Length)
+
+                    throw new IndexOutOfRangeException($"{nameof(startIndex)} is out of range.");
+
+                new BitArray(bits).CopyTo(array, startIndex);
+            }
+
+            public static bool And<T>(this IEnumerable<T> enumerable, in Predicate<T> predicate)
+            {
+                ThrowIfNull(enumerable, nameof(enumerable));
+                ThrowIfNull(predicate, nameof(predicate));
+
+                foreach (T item in enumerable)
+
+                    if (!predicate(item))
+
+                        return false;
+
+                return true;
+            }
+
+            public static bool Or<T>(this IEnumerable<T> enumerable, in Predicate<T> predicate)
+            {
+                ThrowIfNull(enumerable, nameof(enumerable));
+                ThrowIfNull(predicate, nameof(predicate));
+
+                foreach (T item in enumerable)
+
+                    if (predicate(item))
+
+                        return true;
+
+                return false;
+            }
+
+            public static bool XOr<T>(this IEnumerable<T> enumerable, in Predicate<T> predicate)
+            {
+                ThrowIfNull(enumerable, nameof(enumerable));
+                ThrowIfNull(predicate, nameof(predicate));
+
+                bool found = false;
+
+                foreach (T item in enumerable)
+
+                    if (predicate(item))
+                    {
+                        if (found)
+
+                            return false;
+
+                        found = true;
+                    }
+
+                return found;
+            }
+
+            public static XOrResult XOrAsXOrResult<T>(this IEnumerable<T> enumerable, in Predicate<T> predicate)
+            {
+                ThrowIfNull(enumerable, nameof(enumerable));
+                ThrowIfNull(predicate, nameof(predicate));
+
+                bool found = false;
+
+                foreach (T item in enumerable)
+
+                    if (predicate(item))
+                    {
+                        if (found)
+
+                            return XOrResult.MoreThanOneTrueResult;
+
+                        found = true;
+                    }
+
+                return found.ToXOrResult();
+            }
+
+            private static Predicate<Type> GetIsCheckPredicate(in object obj, in bool typeEquality)
+            {
+                Type objType = obj.GetType();
+
+                if (typeEquality)
+
+                    return t => objType == t;
+
+                else
+
+                    return t => t.IsAssignableFrom(objType);
+            }
+
+            /// <summary>
+            /// Checks if the current object is assignable from at least one type of a given <see cref="Type"/> array.
+            /// </summary>
+            /// <param name="obj">The object from which check the type</param>
+            /// <param name="typeEquality"><see langword="true"/> to preserve type equality, regardless of the type inheritance, otherwise <see langword="false"/></param>
+            /// <param name="types">The types to compare</param>
+            /// <returns><see langword="true"/> if the current object is assignable from at least one of the given types, otherwise <see langword="false"/>.</returns>
+            public static bool Is(this object obj, in bool typeEquality, params Type[] types)
+            {
+                ThrowIfNull(obj, nameof(obj));
+                ThrowIfNull(types, nameof(types));
+
+                return types.Or(GetIsCheckPredicate(obj, typeEquality));
+            }
+
+            public static bool IsAND(this object obj, params Type[] types)
+            {
+                ThrowIfNull(obj, nameof(obj));
+                ThrowIfNull(types, nameof(types));
+
+                return types.And(GetIsCheckPredicate(obj, false));
+            }
+
+            public static bool IsXOR(this object obj, params Type[] types)
+            {
+                ThrowIfNull(obj, nameof(obj));
+                ThrowIfNull(types, nameof(types));
+
+                return types.XOr(GetIsCheckPredicate(obj, false));
+            }
+
+            public static bool IsType(this Type t, in IEnumerable<Type> types)
+            {
+                ThrowIfNull(t, nameof(t));
+                ThrowIfNull(types, nameof(types));
+
+                return types.Or(item => t == item);
+            }
+
+            public static bool IsType(this Type t, params Type[] types) => IsType(t, (IEnumerable<Type>)types);
+
+            public static bool IsAssignableFrom<T>(this Type t) => t.IsAssignableFrom(typeof(T));
+            /*{
+                ThrowIfNull(t, nameof(t));
+
+                Type from = typeof(T);
+
+                if (from == t)
+
+                    return true;
+
+                if (t.IsInterface)
+
+                    return t.IsType(from.GetInterfaces());
+
+                if (from.IsInterface)
+
+                    return false;
+
+                from = from.BaseType;
+
+                while (from != null)
+                {
+                    if (from == t)
+
+                        return true;
+
+                    from = from.BaseType;
+                }
+
+                return false;
+            }*/
+
+#if !CS9
+        public static bool IsAssignableTo(this Type t, in Type type) => type.IsAssignableFrom(t);
+#endif
+
+            public static bool IsAssignableTo<T>(this Type t) => t.IsAssignableTo(typeof(T));
+
+            public static bool IsAssignableFrom(this Type t, in IEnumerable<Type> enumerable)
+            {
+                ThrowIfNull(t, nameof(t));
+
+                return (enumerable ?? throw GetArgumentNullException(nameof(enumerable))).Or(_t => t.IsAssignableFrom(_t));
+            }
+
+            public static bool IsAssignableFromAND(this Type t, in IEnumerable<Type> enumerable)
+            {
+                ThrowIfNull(t, nameof(t));
+
+                return (enumerable ?? throw GetArgumentNullException(nameof(enumerable))).And(_t => t.IsAssignableFrom(_t));
+            }
+
+            public static bool IsAssignableFromXOr(this Type t, in IEnumerable<Type> enumerable)
+            {
+                ThrowIfNull(t, nameof(t));
+
+                return (enumerable ?? throw GetArgumentNullException(nameof(enumerable))).XOr(_t => t.IsAssignableFrom(_t));
+            }
+
+            public static IEnumerable<TKey> GetKeys<TKey, TValue>(this KeyValuePair<TKey, TValue>[] array)
+            {
+                ThrowIfNull(array, nameof(array));
+
+                foreach (KeyValuePair<TKey, TValue> value in array)
+
+                    yield return value.Key;
+            }
+
+            public static IEnumerable<TValue> GetValues<TKey, TValue>(this KeyValuePair<TKey, TValue>[] array)
+            {
+                ThrowIfNull(array, nameof(array));
+
+                foreach (KeyValuePair<TKey, TValue> value in array)
+
+                    yield return value.Value;
+            }
+
+            public static bool CheckIntegrity<TKey, TValue>(this KeyValuePair<TKey, TValue>[] array)
+            {
+#if CS8
+                static
+#endif
+
+                bool predicateByVal(TKey keyA, TKey keyB) => Equals(keyA, keyB);
+
+#if CS8
+                static
+#endif
+
+                bool predicateByRef(TKey keyA, TKey keyB) => ReferenceEquals(keyA, keyB);
+
+                Func<TKey, TKey, bool> predicate = typeof(TKey).IsClass ? predicateByRef :
+#if !CS9
+                    (Func<TKey, TKey, bool>)
+#endif
+                    predicateByVal;
+
+                IEnumerable<TKey> keys = array.GetKeys();
+
+                IEnumerable<TKey> _keys = array.GetKeys();
+
+                bool foundOneOccurrence = false;
+
+                foreach (TKey key in keys)
+                {
+                    if (key == null)
+
+                        throw GetOneOrMoreKeyIsNullException();
+
+                    foreach (TKey _key in _keys)
+                    {
+                        if (predicate(key, _key))
+
+                            if (foundOneOccurrence)
+
+                                return false;
+
+                            else
+
+                                foundOneOccurrence = true;
+                    }
+
+                    foundOneOccurrence = false;
+                }
+
+                return true;
+            }
+
+            public static bool CheckPropertySetIntegrity(Type propertyObjectType, in string propertyName, out string methodName, in int skipFrames, in BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet)
+            {
+                ThrowIfNull(propertyObjectType, nameof(propertyObjectType));
+
+                PropertyInfo property = propertyObjectType.GetProperty(propertyName, bindingFlags) ?? throw GetFieldOrPropertyNotFoundException(propertyName, propertyObjectType);
+
+                MethodBase method = new StackFrame(skipFrames).GetMethod();
+
+                methodName = method.Name;
+
+                //#if DEBUG 
+
+                //            Debug.WriteLine("Property: " + property.Name + ", " + property.DeclaringType);
+
+                //            Debug.WriteLine("Method: " + method.Name + ", " + method.DeclaringType);
+
+                //#endif 
+
+                // todo: tuple and check DeclaringTypeNotCorrespond throws
+
+                return (property.CanWrite && property.GetSetMethod() != null) || property.DeclaringType == method.DeclaringType;
+            }
+
+            internal static FieldInfo GetField(in string fieldName, in Type objectType, in BindingFlags bindingFlags) => objectType.GetField(fieldName, bindingFlags) ?? throw GetFieldOrPropertyNotFoundException(fieldName, objectType);
+
+            internal static PropertyInfo GetProperty(in string propertyName, in Type objectType, in BindingFlags bindingFlags) => objectType.GetProperty(propertyName, bindingFlags) ?? throw GetFieldOrPropertyNotFoundException(propertyName, objectType);
+
+            // todo: use attributes
+
+#if CS7
+            private static (bool fieldChanged, object oldValue) SetField(this object obj, in FieldInfo field, in object previousValue, in object newValue, in string paramName, in bool setOnlyIfNotNull, in bool throwIfNull, in bool disposeOldValue, in FieldValidateValueCallback validateValueCallback, in bool throwIfValidationFails, in FieldValueChangedCallback valueChangedCallback)
+            {
+                if (newValue is null)
+
+                    if (throwIfNull)
+
+                        throw GetArgumentNullException(paramName);
+
+                    else if (setOnlyIfNotNull)
+
+                        return (false, previousValue);
+
+                (bool validationResult, Exception validationException) = validateValueCallback?.Invoke(obj, newValue, field, paramName) ?? (true, null);
+
+                if (validationResult)
+
+                    if ((newValue == null && previousValue != null) || (newValue != null && !newValue.Equals(previousValue)))
+                    {
+                        if (disposeOldValue)
+
+                            ((IDisposable)previousValue).Dispose();
+
+                        field.SetValue(obj, newValue);
+
+                        valueChangedCallback?.Invoke(obj, newValue, field, paramName);
+
+                        return (true, previousValue);
+
+                        //BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic |
+                        //             BindingFlags.Static | BindingFlags.Instance |
+                        //             BindingFlags.DeclaredOnly;
+                        //this.GetType().GetField(fieldName, flags).SetValue(this, newValue);
+                    }
+
+                    else
+
+                        return (false, previousValue);
+
+                else
+
+                    return throwIfValidationFails ? throw (validationException ?? new ArgumentException("Validation error.", paramName)) : (false, previousValue);
+            }
+
+            public static (bool fieldChanged, object oldValue) SetField(this object obj, in string fieldName, in object newValue, in Type declaringType, in BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, in string paramName = null, in bool setOnlyIfNotNull = false, in bool throwIfNull = false, in FieldValidateValueCallback validateValueCallback = null, in bool throwIfValidationFails = false, in FieldValueChangedCallback valueChangedCallback = null)
+            {
+                ThrowIfNull(declaringType, nameof(declaringType));
+
+                FieldInfo field = GetField(fieldName, declaringType, bindingFlags);
+
+                return obj.SetField(field, field.GetValue(obj), newValue, paramName, setOnlyIfNotNull, throwIfNull, false, validateValueCallback, throwIfValidationFails, valueChangedCallback);
+            }
+
+            public static (bool fieldChanged, IDisposable oldValue) DisposeAndSetField(this object obj, in string fieldName, in IDisposable newValue, in Type declaringType, in BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, in string paramName = null, in bool setOnlyIfNotNull = false, in bool throwIfNull = false, in FieldValidateValueCallback validateValueCallback = null, in bool throwIfValidationFails = false, in FieldValueChangedCallback valueChangedCallback = null)
+            {
+                ThrowIfNull(declaringType, nameof(declaringType));
+
+                FieldInfo field = GetField(fieldName, declaringType, bindingFlags);
+
+                return ((bool, IDisposable))obj.SetField(field, field.GetValue(obj), newValue, paramName, setOnlyIfNotNull, throwIfNull, true, validateValueCallback, throwIfValidationFails, valueChangedCallback);
+            }
+
+            // todo: update code (in, throw if null)
+
+            /// <summary>
+            /// Sets a value to a property if the new value is different.
+            /// </summary>
+            /// <param name="obj">The object in which to set the property.</param>
+            /// <param name="propertyName">The name of the given property.</param>
+            /// <param name="fieldName">The field related to the property.</param>
+            /// <param name="newValue">The value to set.</param>
+            /// <param name="declaringType">The actual declaring type of the property.</param>
+            /// <param name="throwIfReadOnly">Whether to throw if the given property is read-only.</param>
+            /// <param name="bindingFlags">The <see cref="BindingFlags"/> used to get the property.</param>
+            /// <param name="paramName">The parameter from which the value was passed to this method.</param>
+            /// <param name="setOnlyIfNotNull">Whether to set only if the given value is not null.</param>
+            /// <param name="throwIfNull">Whether to throw if the given value is null.</param>
+            /// <param name="validateValueCallback">The callback used to validate the given value. You can leave this parameter to null if you don't want to perform validation.</param>
+            /// <param name="throwIfValidationFails">Whether to throw if the validation of <paramref name="validateValueCallback"/> fails.</param>
+            /// <param name="valueChangedCallback">The callback used to perform actions after the property is set. You can leave this parameter to null if you don't want to perform actions after the property is set.</param>
+            /// <returns>A <see cref="bool"/> value that indicates whether the setting succeeded and the old value of the given property (or <see langword="null"/> if the property does not contain any value nor reference).</returns>
+            /// <exception cref="InvalidOperationException">The declaring types of the given property and field name doesn't correspond. OR The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
+            /// <exception cref="ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
+            /// <exception cref="Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="ArgumentException"/> otherwise.</exception>
+            public static (bool propertyChanged, object oldValue) SetProperty(this object obj, string propertyName, string fieldName, object newValue, Type declaringType, in bool throwIfReadOnly = true, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, string paramName = null, in bool setOnlyIfNotNull = false, in bool throwIfNull = false, FieldValidateValueCallback validateValueCallback = null, in bool throwIfValidationFails = false, FieldValueChangedCallback valueChangedCallback = null)
+            {
+                //BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic |
+                //             BindingFlags.Static | BindingFlags.Instance |
+                //             BindingFlags.DeclaredOnly;
+                //this.GetType().GetField(fieldName, flags).SetValue(this, newValue);
+
+                //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName, previousValue, newValue)); 
+
+                // if (declaringType == null) 
+
+                // {
+
+                //while (objectType != declaringType && objectType != typeof(object))
+
+                //    objectType = objectType.BaseType;
+
+                //if (objectType != declaringType)
+
+                //    throw new ArgumentException(string.Format((string)ResourcesHelper.GetResource("DeclaringTypeIsNotInObjectInheritanceHierarchyException"), declaringType, objectType));
+
+                // }
+
+                //#if DEBUG
+
+                //            var fields = objectType.GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
+
+                //            foreach (var _field in fields)
+
+                //                Debug.WriteLine("Object type: " + objectType + " " + _field.Name);
+
+                //#endif
+
+                // var objectType = obj.GetType();
+
+                FieldInfo field = GetField(fieldName, declaringType, bindingFlags);
+
+                object previousValue = field.GetValue(obj);
+
+                if (!CheckPropertySetIntegrity(declaringType, propertyName, out string methodName, 3, bindingFlags))
+
+                    throw GetDeclaringTypesNotCorrespondException(propertyName, methodName);
+
+                PropertyInfo property = GetProperty(propertyName, declaringType, bindingFlags);
+
+                return !property.CanWrite || property.SetMethod == null
+                    ? throwIfReadOnly ? throw new InvalidOperationException(string.Format("This property is read-only. Property name: {0}, declaring type: {1}.", propertyName, declaringType)) : (false, previousValue)
+                    : obj.SetField(field, previousValue, newValue, paramName, setOnlyIfNotNull, throwIfNull, false, validateValueCallback, throwIfValidationFails, valueChangedCallback);
+            }
+
+            /// <summary>
+            /// Sets a value to a property if the new value is different.
+            /// </summary>
+            /// <param name="obj">The object in which to set the property.</param>
+            /// <param name="propertyName">The name of the given property.</param>
+            /// <param name="newValue">The value to set.</param>
+            /// <param name="declaringType">The actual declaring type of the property.</param>
+            /// <param name="throwIfReadOnly">Whether to throw if the given property is read-only.</param>
+            /// <param name="bindingFlags">The <see cref="BindingFlags"/> used to get the property.</param>
+            /// <param name="paramName">The parameter from which the value was passed to this method.</param>
+            /// <param name="setOnlyIfNotNull">Whether to set only if the given value is not null.</param>
+            /// <param name="throwIfNull">Whether to throw if the given value is null.</param>
+            /// <param name="validateValueCallback">The callback used to validate the given value. You can leave this parameter to null if you don't want to perform validation.</param>
+            /// <param name="throwIfValidationFails">Whether to throw if the validation of <paramref name="validateValueCallback"/> fails.</param>
+            /// <param name="valueChangedCallback">The callback used to perform actions after the property is set. You can leave this parameter to null if you don't want to perform actions after the property is set.</param>
+            /// <returns>A <see cref="bool"/> value that indicates whether the setting succeeded and the old value of the given property (or <see langword="null"/> if the property does not contain any value nor reference).</returns>
+            /// <exception cref="InvalidOperationException">The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
+            /// <exception cref="ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
+            /// <exception cref="Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="ArgumentException"/> otherwise.</exception>
+            public static (bool propertyChanged, object oldValue) SetProperty(this object obj, string propertyName, object newValue, Type declaringType, in bool throwIfReadOnly = true, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, string paramName = null, in bool setOnlyIfNotNull = false, in bool throwIfNull = false, PropertyValidateValueCallback validateValueCallback = null, in bool throwIfValidationFails = false, PropertyValueChangedCallback valueChangedCallback = null)
+            {
+                PropertyInfo property = GetProperty(propertyName, declaringType, bindingFlags);
+
+                object previousValue = property.GetValue(obj);
+
+                if (!property.CanWrite || property.SetMethod == null)
+
+                    return throwIfReadOnly ? throw new InvalidOperationException(string.Format("This property is read-only. Property name: {0}, declaring type: {1}.", propertyName, declaringType)) : (false, previousValue);
+
+                if (newValue is null)
+
+                    if (throwIfNull)
+
+                        throw GetArgumentNullException(paramName);
+
+                    else if (setOnlyIfNotNull)
+
+                        return (false, previousValue);
+
+                (bool validationResult, Exception validationException) = validateValueCallback?.Invoke(obj, newValue, property, paramName) ?? (true, null);
+
+                if (validationResult)
+
+                    if ((newValue == null && previousValue != null) || (newValue != null && !newValue.Equals(previousValue)))
+                    {
+                        property.SetValue(obj, newValue);
+
+                        valueChangedCallback?.Invoke(obj, newValue, property, paramName);
+
+                        return (true, previousValue);
+
+                        //BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic |
+                        //             BindingFlags.Static | BindingFlags.Instance |
+                        //             BindingFlags.DeclaredOnly;
+                        //this.GetType().GetField(fieldName, flags).SetValue(this, newValue);
+                    }
+
+                    else
+
+                        return (false, previousValue);
+
+                else
+
+                    return throwIfValidationFails ? throw (validationException ?? new ArgumentException("Validation error.", paramName)) : (false, previousValue);
+            }
+
+            /// <summary>
+            /// Disposes an old value of a property then sets a new value to the given property if the new value is different.
+            /// </summary>
+            /// <param name="obj">The object in which to set the property.</param>
+            /// <param name="propertyName">The name of the given property.</param>
+            /// <param name="fieldName">The field related to the property.</param>
+            /// <param name="newValue">The value to set.</param>
+            /// <param name="declaringType">The actual declaring type of the property.</param>
+            /// <param name="throwIfReadOnly">Whether to throw if the given property is read-only.</param>
+            /// <param name="bindingFlags">The <see cref="BindingFlags"/> used to get the property.</param>
+            /// <param name="paramName">The parameter from which the value was passed to this method.</param>
+            /// <param name="setOnlyIfNotNull">Whether to set only if the given value is not null.</param>
+            /// <param name="throwIfNull">Whether to throw if the given value is null.</param>
+            /// <param name="validateValueCallback">The callback used to validate the given value. You can leave this parameter to null if you don't want to perform validation.</param>
+            /// <param name="throwIfValidationFails">Whether to throw if the validation of <paramref name="validateValueCallback"/> fails.</param>
+            /// <param name="valueChangedCallback">The callback used to perform actions after the property is set. You can leave this parameter to null if you don't want to perform actions after the property is set.</param>
+            /// <returns>A <see cref="bool"/> value that indicates whether the setting succeeded and the old value of the given property (or <see langword="null"/> if the property does not contain any value nor reference).</returns>
+            /// <exception cref="InvalidOperationException">The declaring types of the given property and field name doesn't correspond. OR The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
+            /// <exception cref="ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
+            /// <exception cref="Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="ArgumentException"/> otherwise.</exception>
+            public static (bool propertyChanged, IDisposable oldValue) DisposeAndSetProperty(this object obj, string propertyName, string fieldName, IDisposable newValue, Type declaringType, in bool throwIfReadOnly = true, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, string paramName = null, in bool setOnlyIfNotNull = false, in bool throwIfNull = false, FieldValidateValueCallback validateValueCallback = null, in bool throwIfValidationFails = false, FieldValueChangedCallback valueChangedCallback = null)
+            {
+                //BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic |
+                //             BindingFlags.Static | BindingFlags.Instance |
+                //             BindingFlags.DeclaredOnly;
+                //this.GetType().GetField(fieldName, flags).SetValue(this, newValue);
+
+                //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName, previousValue, newValue)); 
+
+                // if (declaringType == null) 
+
+                // {
+
+                //while (objectType != declaringType && objectType != typeof(object))
+
+                //    objectType = objectType.BaseType;
+
+                //if (objectType != declaringType)
+
+                //    throw new ArgumentException(string.Format((string)ResourcesHelper.GetResource("DeclaringTypeIsNotInObjectInheritanceHierarchyException"), declaringType, objectType));
+
+                // }
+
+                //#if DEBUG
+
+                //            var fields = objectType.GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
+
+                //            foreach (var _field in fields)
+
+                //                Debug.WriteLine("Object type: " + objectType + " " + _field.Name);
+
+                //#endif
+
+                // var objectType = obj.GetType();
+
+                FieldInfo field = GetField(fieldName, declaringType, bindingFlags);
+
+                var previousValue = (IDisposable)field.GetValue(obj);
+
+                if (!CheckPropertySetIntegrity(declaringType, propertyName, out string methodName, 3, bindingFlags))
+
+                    throw GetDeclaringTypesNotCorrespondException(propertyName, methodName);
+
+                PropertyInfo property = GetProperty(propertyName, declaringType, bindingFlags);
+
+                return !property.CanWrite || property.SetMethod == null
+                    ? throwIfReadOnly ? throw new InvalidOperationException(string.Format("This property is read-only. Property name: {0}, declaring type: {1}.", propertyName, declaringType)) : (false, previousValue)
+                    : ((bool, IDisposable))obj.SetField(field, previousValue, newValue, paramName, setOnlyIfNotNull, throwIfNull, true, validateValueCallback, throwIfValidationFails, valueChangedCallback);
+            }
+
+            /// <summary>
+            /// Disposes an old value of a property then sets a new value to the given property if the new value is different.
+            /// </summary>
+            /// <param name="obj">The object in which to set the property.</param>
+            /// <param name="propertyName">The name of the given property.</param>
+            /// <param name="newValue">The value to set.</param>
+            /// <param name="declaringType">The actual declaring type of the property.</param>
+            /// <param name="throwIfReadOnly">Whether to throw if the given property is read-only.</param>
+            /// <param name="bindingFlags">The <see cref="BindingFlags"/> used to get the property.</param>
+            /// <param name="paramName">The parameter from which the value was passed to this method.</param>
+            /// <param name="setOnlyIfNotNull">Whether to set only if the given value is not null.</param>
+            /// <param name="throwIfNull">Whether to throw if the given value is null.</param>
+            /// <param name="validateValueCallback">The callback used to validate the given value. You can leave this parameter to null if you don't want to perform validation.</param>
+            /// <param name="throwIfValidationFails">Whether to throw if the validation of <paramref name="validateValueCallback"/> fails.</param>
+            /// <param name="valueChangedCallback">The callback used to perform actions after the property is set. You can leave this parameter to null if you don't want to perform actions after the property is set.</param>
+            /// <returns>A <see cref="bool"/> value that indicates whether the setting succeeded and the old value of the given property (or <see langword="null"/> if the property does not contain any value nor reference).</returns>
+            /// <exception cref="InvalidOperationException">The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
+            /// <exception cref="ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
+            /// <exception cref="Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="ArgumentException"/> otherwise.</exception>
+            public static (bool propertyChanged, IDisposable oldValue) DisposeAndSetProperty(this object obj, string propertyName, IDisposable newValue, Type declaringType, in bool throwIfReadOnly = true, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, string paramName = null, in bool setOnlyIfNotNull = false, in bool throwIfNull = false, PropertyValidateValueCallback validateValueCallback = null, in bool throwIfValidationFails = false, PropertyValueChangedCallback valueChangedCallback = null)
+            {
+                PropertyInfo property = GetProperty(propertyName, declaringType, bindingFlags);
+
+                var previousValue = (IDisposable)property.GetValue(obj);
+
+                if (!property.CanWrite || property.SetMethod == null)
+
+                    return throwIfReadOnly ? throw new InvalidOperationException(string.Format("This property is read-only. Property name: {0}, declaring type: {1}.", propertyName, declaringType)) : (false, previousValue);
+
+                if (newValue is null)
+
+                    if (throwIfNull)
+
+                        throw GetArgumentNullException(paramName);
+
+                    else if (setOnlyIfNotNull)
+
+                        return (false, previousValue);
+
+                (bool validationResult, Exception validationException) = validateValueCallback?.Invoke(obj, newValue, property, paramName) ?? (true, null);
+
+                if (validationResult)
+
+                    if ((newValue == null && previousValue != null) || (newValue != null && !newValue.Equals(previousValue)))
+                    {
+                        previousValue.Dispose();
+
+                        property.SetValue(obj, newValue);
+
+                        valueChangedCallback?.Invoke(obj, newValue, property, paramName);
+
+                        return (true, previousValue);
+
+                        //BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic |
+                        //             BindingFlags.Static | BindingFlags.Instance |
+                        //             BindingFlags.DeclaredOnly;
+                        //this.GetType().GetField(fieldName, flags).SetValue(this, newValue);
+                    }
+
+                    else
+
+                        return (false, previousValue);
+
+                else
+
+                    return throwIfValidationFails ? throw (validationException ?? new ArgumentException("Validation error.", paramName)) : (false, previousValue);
+            }
+#endif
+
+            // todo: IFormatProvider
+
+            /// <summary>
+            /// Gets the numeric value for an enum.
+            /// </summary>
+            /// <param name="enum">The enum for which get the corresponding numeric value.</param>
+            /// <returns>The numeric value corresponding to this enum, in the given enum type underlying type.</returns>
+            public static object GetNumValue(this Enum @enum) => Convert.ChangeType(@enum, Enum.GetUnderlyingType(@enum.GetType()));
+
+            /// <summary>
+            /// Gets the numeric value for an enum.
+            /// </summary>
+            /// <param name="enum">The enum for which get the corresponding numeric value.</param>
+            /// <returns>The numeric value corresponding to this enum, in the given enum type underlying type.</returns>
+            public static object GetNumValue<T>(this T @enum) where T : Enum => Convert.ChangeType(@enum, Enum.GetUnderlyingType(typeof(T)));
+
+            // public static object GetNumValue(this Enum @enum) => GetNumValue(@enum, @enum.ToString());
+
+            // todo : to test if Math.Log(Convert.ToInt64(flagsEnum), 2) == 'SomeInt64'; (no float, double ...) would be faster.
+
+#if CS6
+            ///// <summary>
+            ///// Determines whether the current enum value is within the enum values range delimited by the first and the last fields; see the Remarks section for more information.
+            ///// </summary>
+            ///// <param name="enum">The enum value to check.</param>
+            ///// <returns><see langword="true"/> if the given value is in the enum values range, otherwise <see langword="false"/>.</returns>
+            ///// <remarks>This method doesn't read all the enum fields, but only takes care of the first and last numeric enum fields, so if the value is 1, and the enum has only defined fields for 0 and 2, this method still returns <see langword="true"/>. For a method that actually reads all the enum fields, see the <see cref="Type.IsEnumDefined(object)"/> method.</remarks>
+            ///// <seealso cref="ThrowIfNotValidEnumValue(Enum)"/>
+            ///// <seealso cref="ThrowIfNotDefinedEnumValue(Enum)"/>
+            ///// <seealso cref="ThrowIfNotValidEnumValue(Enum, in string)"/>
+            ///// <seealso cref="ThrowIfNotDefinedEnumValue(Enum,in string)"/>
+            public static bool IsValidEnumValue(this Enum @enum)
+            {
+                var values = new ArrayList(@enum.GetType().GetEnumValues());
+
+                values.Sort();
+
+                // object _value = Convert.ChangeType(value, value.GetType().GetEnumUnderlyingType());
+
+                return @enum.CompareTo(values[0]) >= 0 && @enum.CompareTo(values[
+#if CS8
+                ^1
+#else
+                values.Count - 1
+#endif
+                ]) <= 0;
+            }
+
+#if CS7
+            /// <summary>
+            /// Determines whether an enum has multiple flags.
+            /// </summary>
+            /// <param name="flagsEnum">The enum to check.</param>
+            /// <returns><see langword="true"/> if <paramref name="flagsEnum"/> type has the <see cref="FlagsAttribute"/> and has multiple flags; otherwise, <see langword="false"/>.</returns>
+            /// <remarks><paramref name="flagsEnum"/> type must have the <see cref="FlagsAttribute"/>.</remarks>
+            public static bool HasMultipleFlags(this Enum flagsEnum)
+            {
+                Type type = flagsEnum.GetType();
+
+                if (type.GetCustomAttributes(typeof(FlagsAttribute)).Count() == 0)
+
+                    return false; // throw new ArgumentException(string.Format("This enum does not implement the {0} attribute.", typeof(FlagsAttribute).Name));
+
+
+
+                bool alreadyFoundAFlag = false;
+
+                Enum enumValue;
+
+                // FieldInfo field = null;
+
+
+
+                foreach (string s in type.GetEnumNames())
+                {
+                    enumValue = (Enum)Enum.Parse(type, s);
+
+
+
+                    if (enumValue.GetNumValue().Equals(0)) continue;
+
+
+
+                    if (flagsEnum.HasFlag(enumValue))
+
+                        if (alreadyFoundAFlag) return true;
+
+                        else alreadyFoundAFlag = true;
+                }
+
+                return false;
+            }
+#endif
+#endif
+
+#if CS7
+            public static bool IsFlagsEnum(this Enum @enum) => (@enum ?? throw GetArgumentNullException(nameof(@enum))).GetType().GetCustomAttribute<FlagsAttribute>() is object;
+#endif
+
+            public static bool IsValidEnumValue<T>(this T value, in bool valuesAreExpected, params T[] values) where T : Enum
+            {
+                ThrowIfNull(values, nameof(values));
+
+                if (valuesAreExpected)
+                {
+                    foreach (T _value in values)
+
+                        if (value.Equals(_value))
+
+                            return true;
+
+                    return false;
+                }
+
+                foreach (T _value in values)
+
+                    if (value.Equals(_value))
+
+                        return false;
+
+                return true;
+            }
+
+            /// <summary>
+            /// Checks if a number is between two given numbers.
+            /// </summary>
+            /// <param name="b">The number to check.</param>
+            /// <param name="x">The left operand.</param>
+            /// <param name="y">The right operand.</param>
+            /// <returns><see langword="true"/> if <paramref name="b"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
+            public static bool Between(this sbyte b, in sbyte x, in sbyte y) => b >= x && b <= y;
+
+            /// <summary>
+            /// Checks if a number is between two given numbers.
+            /// </summary>
+            /// <param name="b">The number to check.</param>
+            /// <param name="x">The left operand.</param>
+            /// <param name="y">The right operand.</param>
+            /// <returns><see langword="true"/> if <paramref name="b"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
+            public static bool Between(this byte b, in byte x, in byte y) => b >= x && b <= y;
+
+            /// <summary>
+            /// Checks if a number is between two given numbers.
+            /// </summary>
+            /// <param name="s">The number to check.</param>
+            /// <param name="x">The left operand.</param>
+            /// <param name="y">The right operand.</param>
+            /// <returns><see langword="true"/> if <paramref name="s"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
+            public static bool Between(this short s, in short x, in short y) => s >= x && s <= y;
+
+            /// <summary>
+            /// Checks if a number is between two given numbers.
+            /// </summary>
+            /// <param name="s">The number to check.</param>
+            /// <param name="x">The left operand.</param>
+            /// <param name="y">The right operand.</param>
+            /// <returns><see langword="true"/> if <paramref name="s"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
+            public static bool Between(this ushort s, in ushort x, in ushort y) => s >= x && s <= y;
+
+            /// <summary>
+            /// Checks if a number is between two given numbers.
+            /// </summary>
+            /// <param name="i">The number to check.</param>
+            /// <param name="x">The left operand.</param>
+            /// <param name="y">The right operand.</param>
+            /// <returns><see langword="true"/> if <paramref name="i"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
+            public static bool Between(this int i, in int x, in int y) => i >= x && i <= y;
+
+            /// <summary>
+            /// Checks if a number is between two given numbers.
+            /// </summary>
+            /// <param name="i">The number to check.</param>
+            /// <param name="x">The left operand.</param>
+            /// <param name="y">The right operand.</param>
+            /// <returns><see langword="true"/> if <paramref name="i"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
+            public static bool Between(this uint i, in uint x, in uint y) => i >= x && i <= y;
+
+            /// <summary>
+            /// Checks if a number is between two given numbers.
+            /// </summary>
+            /// <param name="l">The number to check.</param>
+            /// <param name="x">The left operand.</param>
+            /// <param name="y">The right operand.</param>
+            /// <returns><see langword="true"/> if <paramref name="l"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
+            public static bool Between(this long l, in long x, in long y) => l >= x && l <= y;
+
+            /// <summary>
+            /// Checks if a number is between two given numbers.
+            /// </summary>
+            /// <param name="l">The number to check.</param>
+            /// <param name="x">The left operand.</param>
+            /// <param name="y">The right operand.</param>
+            /// <returns><see langword="true"/> if <paramref name="l"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
+            public static bool Between(this ulong l, in ulong x, in ulong y) => l >= x && l <= y;
+
+            /// <summary>
+            /// Checks if a number is between two given numbers.
+            /// </summary>
+            /// <param name="f">The number to check.</param>
+            /// <param name="x">The left operand.</param>
+            /// <param name="y">The right operand.</param>
+            /// <returns><see langword="true"/> if <paramref name="f"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
+            public static bool Between(this float f, in float x, in float y) => f >= x && f <= y;
+
+            /// <summary>
+            /// Checks if a number is between two given numbers.
+            /// </summary>
+            /// <param name="d">The number to check.</param>
+            /// <param name="x">The left operand.</param>
+            /// <param name="y">The right operand.</param>
+            /// <returns><see langword="true"/> if <paramref name="d"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
+            public static bool Between(this double d, in double x, in double y) => d >= x && d <= y;
+
+            /// <summary>
+            /// Checks if a number is between two given numbers.
+            /// </summary>
+            /// <param name="d">The number to check.</param>
+            /// <param name="x">The left operand.</param>
+            /// <param name="y">The right operand.</param>
+            /// <returns><see langword="true"/> if <paramref name="d"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
+            public static bool Between(this decimal d, in decimal x, in decimal y) => d >= x && d <= y;
+
 #if !WinCopies3
             #region Enumerables extension methods
-
         // todo:
+            #region Contains methods
+        /*public static bool Contains(this IEnumerable array, object value) => array.Contains(value, EqualityComparer<object>.Default);
 
-        //#region Contains methods
+        public static bool Contains(this IEnumerable array, object value, IEqualityComparer comparer)
+        {
+            foreach (object _value in array)
 
-        //// public static bool Contains(this IEnumerable array, object value) => array.Contains(value, EqualityComparer<object>.Default);
+                if (comparer.Equals(_value, value)) return true;
 
-        //public static bool Contains(this IEnumerable array, object value, IEqualityComparer comparer)
+            return false;
+        }
 
-        //{
+        public static bool Contains(this IEnumerable array, object value, System.Collections.Generic.IComparer comparer) => array.Contains(value, (object x, object y) => comparer.Compare(x, y));
 
-        //    foreach (object _value in array)
+        public static bool Contains(this IEnumerable array, object value, Comparison comparison)
+        {
+            foreach (object _value in array)
 
-        //        if (comparer.Equals(_value, value)) return true;
+                if (comparison(_value, value) == 0) return true;
 
-        //    return false;
+            return false;
+        }
 
-        //}
+        // todo: to add methods for the LongLength's Array property gesture.
+        public static bool Contains(this object[] array, object value, out int index) => array.Contains(value, EqualityComparer<object>.Default, out index);
 
-        //public static bool Contains(this IEnumerable array, object value, System.Collections.Generic.IComparer comparer) => array.Contains(value, (object x, object y) => comparer.Compare(x, y));
+        public static bool Contains(this object[] array, object value, IEqualityComparer comparer, out int index)
+        {
+            for (int i = 0; i < array.Length; i++)
 
-        //public static bool Contains(this IEnumerable array, object value, Comparison comparison)
+                if (comparer.Equals(array[i], value))
+                {
+                    index = i;
 
-        //{
+                    return true;
+                }
 
-        //    foreach (object _value in array)
+            index = -1;
 
-        //        if (comparison(_value, value) == 0) return true;
+            return false;
+        }
 
-        //    return false;
+        public static bool Contains(this object[] array, object value, System.Collections.Generic.IComparer comparer, out int index) => array.Contains(value, (object x, object y) => comparer.Compare(x, y), out index);
 
-        //}
+        public static bool Contains(this object[] array, object value, Comparison comparison, out int index)
+        {
+            for (int i = 0; i < array.Length; i++)
 
-        //// todo: to add methods for the LongLength's Array property gesture.
+                if (comparison(array[i], value) == 0)
+                {
+                    index = i;
 
-        //public static bool Contains(this object[] array, object value, out int index) => array.Contains(value, EqualityComparer<object>.Default, out index);
+                    return true;
+                }
 
-        //public static bool Contains(this object[] array, object value, IEqualityComparer comparer, out int index)
+            index = -1;
 
-        //{
+            return false;
+        }
 
-        //    for (int i = 0; i < array.Length; i++)
+        public static bool ContainsRange(this IEnumerable array, params object[] values);
 
-        //        if (comparer.Equals(array[i], value))
+        public static bool ContainsRange(this IEnumerable array, IEnumerable values);
 
-        //        {
+        public static bool ContainsRange(this IEnumerable array, IEqualityComparer comparer, params object[] values);
 
-        //            index = i;
+        public static bool ContainsRange(this IEnumerable array, IEqualityComparer comparer, IEnumerable values);
 
-        //            return true;
+        public static bool ContainsRange(this IEnumerable array, System.Collections.Generic.IComparer comparer, params object[] values);
 
-        //        }
+        public static bool ContainsRange(this IEnumerable array, System.Collections.Generic.IComparer comparer, IEnumerable values);
 
-        //    index = -1;
+        public static bool ContainsRange(this IEnumerable array, Comparison comparison, params object[] values);
 
-        //    return false;
+        public static bool ContainsRange(this IEnumerable array, Comparison comparison, IEnumerable values);
 
-        //}
+        public static bool ContainsRange(this IEnumerable array, out int index, params object[] values);
 
-        //public static bool Contains(this object[] array, object value, System.Collections.Generic.IComparer comparer, out int index) => array.Contains(value, (object x, object y) => comparer.Compare(x, y), out index);
+        public static bool ContainsRange(this IEnumerable array, out int index, IEnumerable values);
 
-        //public static bool Contains(this object[] array, object value, Comparison comparison, out int index)
+        public static bool ContainsRange(this IEnumerable array, IEqualityComparer comparer, out int index, params object[] values);
 
-        //{
+        public static bool ContainsRange(this IEnumerable array, IEqualityComparer comparer, out int index, IEnumerable values);
 
-        //    for (int i = 0; i < array.Length; i++)
+        public static bool ContainsRange(this IEnumerable array, System.Collections.Generic.IComparer comparer, out int index, params object[] values);
 
-        //        if (comparison(array[i], value) == 0)
+        public static bool ContainsRange(this IEnumerable array, System.Collections.Generic.IComparer comparer, out int index, IEnumerable values);
 
-        //        {
+        public static bool ContainsRange(this IEnumerable array, Comparison comparison, out int index, params object[] values);
 
-        //            index = i;
+        public static bool ContainsRange(this IEnumerable array, Comparison comparison, out int index, IEnumerable values);
 
-        //            return true;
+        public static bool Contains<T>(this System.Collections.Generic.IEnumerable<T> array, T value);
 
-        //        }
+        public static bool Contains<T>(this System.Collections.Generic.IEnumerable<T> array, T value, IEqualityComparer comparer);
 
-        //    index = -1;
+        public static bool Contains<T>(this System.Collections.Generic.IEnumerable<T> array, T value, System.Collections.Generic.IComparer comparer);
 
-        //    return false;
+        public static bool Contains<T>(this System.Collections.Generic.IEnumerable<T> array, T value, Comparison comparison);
 
-        //}
+        public static bool Contains<T>(this System.Collections.Generic.IEnumerable<T> array, T value, out int index);
 
-        //public static bool ContainsRange(this IEnumerable array, params object[] values);
+        public static bool Contains<T>(this System.Collections.Generic.IEnumerable<T> array, T value, IEqualityComparer comparer, out int index);
 
-        //public static bool ContainsRange(this IEnumerable array, IEnumerable values);
+        public static bool Contains<T>(this System.Collections.Generic.IEnumerable<T> array, T value, System.Collections.Generic.IComparer comparer, out int index);
 
-        //public static bool ContainsRange(this IEnumerable array, IEqualityComparer comparer, params object[] values);
+        public static bool Contains<T>(this System.Collections.Generic.IEnumerable<T> array, T value, Comparison comparison, out int index);
 
-        //public static bool ContainsRange(this IEnumerable array, IEqualityComparer comparer, IEnumerable values);
+        public static bool ContainsRange<T>(this System.Collections.Generic.IEnumerable<T> array, params T[] values);
 
-        //public static bool ContainsRange(this IEnumerable array, System.Collections.Generic.IComparer comparer, params object[] values);
+        public static bool ContainsRange<T>(this System.Collections.Generic.IEnumerable<T> array, IEqualityComparer comparer, params T[] values);
 
-        //public static bool ContainsRange(this IEnumerable array, System.Collections.Generic.IComparer comparer, IEnumerable values);
+        public static bool ContainsRange<T>(this System.Collections.Generic.IEnumerable<T> array, System.Collections.Generic.IComparer comparer, params T[] values);
 
-        //public static bool ContainsRange(this IEnumerable array, Comparison comparison, params object[] values);
+        public static bool ContainsRange<T>(this System.Collections.Generic.IEnumerable<T> array, Comparison comparison, params T[] values);
 
-        //public static bool ContainsRange(this IEnumerable array, Comparison comparison, IEnumerable values);
+        public static bool ContainsRange<T>(this System.Collections.Generic.IEnumerable<T> array, out int index, params T[] values);
 
-        //public static bool ContainsRange(this IEnumerable array, out int index, params object[] values);
+        public static bool ContainsRange<T>(this System.Collections.Generic.IEnumerable<T> array, IEqualityComparer comparer, out int index, params T[] values);
 
-        //public static bool ContainsRange(this IEnumerable array, out int index, IEnumerable values);
+        public static bool ContainsRange<T>(this System.Collections.Generic.IEnumerable<T> array, System.Collections.Generic.IComparer comparer, out int index, params T[] values);
 
-        //public static bool ContainsRange(this IEnumerable array, IEqualityComparer comparer, out int index, params object[] values);
-
-        //public static bool ContainsRange(this IEnumerable array, IEqualityComparer comparer, out int index, IEnumerable values);
-
-        //public static bool ContainsRange(this IEnumerable array, System.Collections.Generic.IComparer comparer, out int index, params object[] values);
-
-        //public static bool ContainsRange(this IEnumerable array, System.Collections.Generic.IComparer comparer, out int index, IEnumerable values);
-
-        //public static bool ContainsRange(this IEnumerable array, Comparison comparison, out int index, params object[] values);
-
-        //public static bool ContainsRange(this IEnumerable array, Comparison comparison, out int index, IEnumerable values);
-
-        //public static bool Contains<T>(this System.Collections.Generic.IEnumerable<T> array, T value);
-
-        //public static bool Contains<T>(this System.Collections.Generic.IEnumerable<T> array, T value, IEqualityComparer comparer);
-
-        //public static bool Contains<T>(this System.Collections.Generic.IEnumerable<T> array, T value, System.Collections.Generic.IComparer comparer);
-
-        //public static bool Contains<T>(this System.Collections.Generic.IEnumerable<T> array, T value, Comparison comparison);
-
-        //public static bool Contains<T>(this System.Collections.Generic.IEnumerable<T> array, T value, out int index);
-
-        //public static bool Contains<T>(this System.Collections.Generic.IEnumerable<T> array, T value, IEqualityComparer comparer, out int index);
-
-        //public static bool Contains<T>(this System.Collections.Generic.IEnumerable<T> array, T value, System.Collections.Generic.IComparer comparer, out int index);
-
-        //public static bool Contains<T>(this System.Collections.Generic.IEnumerable<T> array, T value, Comparison comparison, out int index);
-
-        //public static bool ContainsRange<T>(this System.Collections.Generic.IEnumerable<T> array, params T[] values);
-
-        //public static bool ContainsRange<T>(this System.Collections.Generic.IEnumerable<T> array, IEqualityComparer comparer, params T[] values);
-
-        //public static bool ContainsRange<T>(this System.Collections.Generic.IEnumerable<T> array, System.Collections.Generic.IComparer comparer, params T[] values);
-
-        //public static bool ContainsRange<T>(this System.Collections.Generic.IEnumerable<T> array, Comparison comparison, params T[] values);
-
-        //public static bool ContainsRange<T>(this System.Collections.Generic.IEnumerable<T> array, out int index, params T[] values);
-
-        //public static bool ContainsRange<T>(this System.Collections.Generic.IEnumerable<T> array, IEqualityComparer comparer, out int index, params T[] values);
-
-        //public static bool ContainsRange<T>(this System.Collections.Generic.IEnumerable<T> array, System.Collections.Generic.IComparer comparer, out int index, params T[] values);
-
-        //public static bool ContainsRange<T>(this System.Collections.Generic.IEnumerable<T> array, Comparison comparison, out int index, params T[] values);
-
-        //#endregion
+        public static bool ContainsRange<T>(this System.Collections.Generic.IEnumerable<T> array, Comparison comparison, out int index, params T[] values);*/
+            #endregion
 
         // todo: Add-, Insert-, Remove-If(Not)Contains methods: add parameters like the Contains methods
 
             #region Add(Range)IfNotContains methods
-
         /// <summary>
         /// Tries to add a value to an <see cref="IList"/> if it does not contain it already.
         /// </summary>
@@ -830,11 +1675,9 @@ namespace WinCopies
         /// <returns><see langword="true"/> if the value has been added to the collection, otherwise <see langword="false"/>.</returns>
         public static T[] AddRangeIfNotContains<T>(this System.Collections.Generic.ICollection<T> collection, params T[] values) => collection.AddRangeIfNotContains((System.Collections.Generic.IEnumerable<T>)values);
 #endif
-
             #endregion
 
             #region Insert(Range)IfNotContains methods
-
         /// <summary>
         /// Inserts a value at the specified index in a given collection if the value does not already exists in the collection.
         /// </summary>
@@ -867,11 +1710,9 @@ namespace WinCopies
 #if CS7
         public static T[] InsertRangeIfNotContains<T>(this System.Collections.Generic.IList<T> collection, in int index, params T[] values) => collection.InsertRangeIfNotContains(index, (System.Collections.Generic.IEnumerable<T>)values);
 #endif
-
             #endregion
 
             #region Remove(Range)IfContains methods
-
         public static bool RemoveIfContains(this IList collection, in object value)
         {
             if ((collection ?? throw GetArgumentNullException(nameof(collection))).Contains(value))
@@ -891,11 +1732,9 @@ namespace WinCopies
 #if CS7
         public static T[] RemoveRangeIfContains<T>(this IList<T> collection, params T[] values) => collection.RemoveRangeIfContains((System.Collections.Generic.IEnumerable<T>)values);
 #endif
-
             #endregion
 
             #region AddRange methods
-
         public static void AddRange(this IList collection, params object[] values) => collection.AddRange((IEnumerable)values);
 
         public static void AddRange(this IList collection, in IEnumerable array)
@@ -1440,11 +2279,8 @@ namespace WinCopies
 #endif
 
             #region Contains methods
-
             #region Non generic methods
-
             #region ContainsOneValue overloads
-
         public static bool ContainsOneValue(this IEnumerable array, in EqualityComparison comparison, out bool containsMoreThanOneValue, in object[] values)
         {
             ThrowIfNull(array, nameof(array));
@@ -1541,7 +2377,6 @@ namespace WinCopies
             #endregion
 
             #region ContainsOneOrMoreValues with notification whether contains more than one values overloads
-
         public static bool ContainsOneOrMoreValues(IEnumerable array, in EqualityComparison comparison, out bool containsMoreThanOneValue, object[] values)
         {
             ThrowIfNull(array, nameof(array));
@@ -1625,7 +2460,6 @@ namespace WinCopies
             #endregion
 
             #region ContainsOneOrMoreValues without notification whether contains more than one values overloads
-
         public static bool ContainsOneOrMoreValues(IEnumerable array, in Func<object, object, bool> comparison, object[] values)
         {
             ThrowIfNull(array, nameof(array));
@@ -1693,7 +2527,6 @@ namespace WinCopies
             #endregion
 
             #region Contains array overloads
-
         public static bool Contains(IEnumerable array, in EqualityComparison comparison, object[] values)
         {
             ThrowIfNull(array, nameof(array));
@@ -1771,13 +2604,10 @@ namespace WinCopies
             return Contains(array, (object value, object _value) => equalityComparer.Equals(value, _value), values);
         }
             #endregion
-
             #endregion
 
             #region Generic methods
-
             #region ContainsOneValue overloads
-
         public static bool ContainsOneValue<T>(System.Collections.Generic.IEnumerable<T> array, in EqualityComparison<T> comparison, out bool containsMoreThanOneValue, in T[] values)
         {
             ThrowIfNull(array, nameof(array));
@@ -1860,7 +2690,6 @@ namespace WinCopies
             #endregion
 
             #region ContainsOneOrMoreValues with notification whether contains more than one values overloads
-
         public static bool ContainsOneOrMoreValues<T>(System.Collections.Generic.IEnumerable<T> array, in EqualityComparison<T> comparison, out bool containsMoreThanOneValue, in T[] values)
         {
             ThrowIfNull(array, nameof(array));
@@ -1944,7 +2773,6 @@ namespace WinCopies
             #endregion
 
             #region ContainsOneOrMoreValues without notification whether contains more than one values overloads
-
         public static bool ContainsOneOrMoreValues<T>(System.Collections.Generic.IEnumerable<T> array, in EqualityComparison<T> comparison, in T[] values)
         {
             ThrowIfNull(array, nameof(array));
@@ -2012,7 +2840,6 @@ namespace WinCopies
             #endregion
 
             #region Contains array overloads
-
         public static bool Contains<T>(System.Collections.Generic.IEnumerable<T> array, in EqualityComparison<T> comparison, in T[] values)
         {
             ThrowIfNull(array, nameof(array));
@@ -2090,9 +2917,7 @@ namespace WinCopies
             return Contains(array, (T value, T _value) => equalityComparer.Equals(value, _value), values);
         }
             #endregion
-
             #endregion
-
             #endregion
 
         public static string ToString(this IEnumerable array, in bool parseSubEnumerables, in bool parseStrings = false)
@@ -2357,7 +3182,7 @@ namespace WinCopies
                 if (collection[0] == itemToKeep)
                 {
                     if (onlyOne)
-                    {
+
                         while (collection.Count != 1)
                         {
                             if (collection[1] == itemToKeep)
@@ -2379,7 +3204,6 @@ namespace WinCopies
 
                             return true;
                         }
-                    }
 
                     while (collection.Count != 1)
 
@@ -2401,7 +3225,7 @@ namespace WinCopies
                 if (collection[0]?.Equals(itemToKeep) == true)
                 {
                     if (onlyOne)
-                    {
+
                         while (collection.Count != 1)
                         {
                             if (collection[1]?.Equals(itemToKeep) == true)
@@ -2423,7 +3247,6 @@ namespace WinCopies
 
                             return true;
                         }
-                    }
 
                     while (collection.Count != 1)
 
@@ -2441,12 +3264,11 @@ namespace WinCopies
         public static bool RemoveAll<T>(this IList<T> collection, in T itemToKeep, in Comparison<T> comparison, in bool onlyOne, in bool throwIfMultiple)
         {
             while (collection.Count != 1)
-
             {
                 if (comparison(collection[0], itemToKeep) == 0)
                 {
                     if (onlyOne)
-                    {
+
                         while (collection.Count != 1)
                         {
                             if (comparison(collection[1], itemToKeep) == 0)
@@ -2467,9 +3289,7 @@ namespace WinCopies
                             collection.RemoveAt(1);
 
                             return true;
-
                         }
-                    }
 
                     while (collection.Count != 1)
 
@@ -2488,19 +3308,14 @@ namespace WinCopies
         {
             while (collection.Count != 1)
             {
-
                 if (comparer.Compare(collection[0], itemToKeep) == 0)
                 {
-
                     if (onlyOne)
-                    {
 
                         while (collection.Count != 1)
                         {
-
                             if (comparer.Compare(collection[1], itemToKeep) == 0)
                             {
-
                                 if (throwIfMultiple)
 
                                     ThrowMoreThanOneOccurencesWereFoundException();
@@ -2517,9 +3332,7 @@ namespace WinCopies
                             collection.RemoveAt(1);
 
                             return true;
-
                         }
-                    }
 
                     while (collection.Count != 1)
 
@@ -2533,329 +3346,18 @@ namespace WinCopies
 
             return false;
         }
-
             #endregion
-#endif
 
-            public static void CopyTo(this BitArray source, in BitArray array, in int startIndex)
-            {
-                ThrowIfNull(source, nameof(source));
-                ThrowIfNull(array, nameof(array));
-
-                if (array.Length > source.Length)
-
-                    throw new ArgumentOutOfRangeException(nameof(array));
-
-                if (startIndex < 0 || startIndex + array.Length > source.Length)
-
-                    throw new IndexOutOfRangeException($"{nameof(startIndex)} is out of range.");
-
-                for (int i = 0; i < source.Length; i++)
-
-                    array[startIndex + i] = source[i];
-            }
-
-            public static void SetMultipleBits(this BitArray array, in byte[] bytes, in int startIndex)
-            {
-                long length = bytes.Length * 8;
-
-                if (length > array.Length)
-
-                    throw new ArgumentOutOfRangeException(nameof(bytes));
-
-                if (startIndex < 0 || startIndex + length > array.Length)
-
-                    throw new IndexOutOfRangeException($"{nameof(startIndex)} is out of range.");
-
-                new BitArray(bytes).CopyTo(array, startIndex);
-            }
-
-            public static void SetMultipleBits(this BitArray array, in BitArray bits, in int startIndex)
-            {
-                if (bits.Length > array.Length)
-
-                    throw new ArgumentOutOfRangeException(nameof(bits));
-
-                if (startIndex < 0 || startIndex + bits.Length > array.Length)
-
-                    throw new IndexOutOfRangeException($"{nameof(startIndex)} is out of range.");
-
-                new BitArray(bits).CopyTo(array, startIndex);
-            }
-
-            public static bool And<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Predicate<T> predicate)
-            {
-                ThrowIfNull(enumerable, nameof(enumerable));
-                ThrowIfNull(predicate, nameof(predicate));
-
-                foreach (T item in enumerable)
-
-                    if (!predicate(item))
-
-                        return false;
-
-                return true;
-            }
-
-            public static bool Or<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Predicate<T> predicate)
-            {
-                ThrowIfNull(enumerable, nameof(enumerable));
-                ThrowIfNull(predicate, nameof(predicate));
-
-                foreach (T item in enumerable)
-
-                    if (predicate(item))
-
-                        return true;
-
-                return false;
-            }
-
-            public static bool XOr<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Predicate<T> predicate)
-            {
-                ThrowIfNull(enumerable, nameof(enumerable));
-                ThrowIfNull(predicate, nameof(predicate));
-
-                bool found = false;
-
-                foreach (T item in enumerable)
-
-                    if (predicate(item))
-                    {
-                        if (found)
-
-                            return false;
-
-                        found = true;
-                    }
-
-                return found;
-            }
-
-            public static XOrResult XOrAsXOrResult<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Predicate<T> predicate)
-            {
-                ThrowIfNull(enumerable, nameof(enumerable));
-                ThrowIfNull(predicate, nameof(predicate));
-
-                bool found = false;
-
-                foreach (T item in enumerable)
-
-                    if (predicate(item))
-                    {
-                        if (found)
-
-                            return XOrResult.MoreThanOneTrueResult;
-
-                        found = true;
-                    }
-
-                return found.ToXOrResult();
-            }
-
-            private static Predicate<Type> GetIsCheckPredicate(in object obj, in bool typeEquality)
-            {
-                Type objType = obj.GetType();
-
-                if (typeEquality)
-
-                    return t => objType == t;
-
-                else
-
-                    return t => t.IsAssignableFrom(objType);
-            }
-
-            /// <summary>
-            /// Checks if the current object is assignable from at least one type of a given <see cref="Type"/> array.
-            /// </summary>
-            /// <param name="obj">The object from which check the type</param>
-            /// <param name="typeEquality"><see langword="true"/> to preserve type equality, regardless of the type inheritance, otherwise <see langword="false"/></param>
-            /// <param name="types">The types to compare</param>
-            /// <returns><see langword="true"/> if the current object is assignable from at least one of the given types, otherwise <see langword="false"/>.</returns>
-            public static bool Is(this object obj, in bool typeEquality, params Type[] types)
-            {
-                ThrowIfNull(obj, nameof(obj));
-                ThrowIfNull(types, nameof(types));
-
-                return types.Or(GetIsCheckPredicate(obj, typeEquality));
-            }
-
-            public static bool IsAND(this object obj, params Type[] types)
-            {
-                ThrowIfNull(obj, nameof(obj));
-                ThrowIfNull(types, nameof(types));
-
-                return types.And(GetIsCheckPredicate(obj, false));
-            }
-
-            public static bool IsXOR(this object obj, params Type[] types)
-            {
-                ThrowIfNull(obj, nameof(obj));
-                ThrowIfNull(types, nameof(types));
-
-                return types.XOr(GetIsCheckPredicate(obj, false));
-            }
-
-            public static bool IsType(this Type t, in System.Collections.Generic.IEnumerable<Type> types)
-            {
-                ThrowIfNull(t, nameof(t));
-                ThrowIfNull(types, nameof(types));
-
-                return types.Or(item => t == item);
-            }
-
-            public static bool IsType(this Type t, params Type[] types) => IsType(t, (System.Collections.Generic.IEnumerable<Type>)types);
-
-            public static bool IsAssignableFrom<T>(this Type t)
-            {
-                ThrowIfNull(t, nameof(t));
-
-                Type from = typeof(T);
-
-                if (from == t)
-
-                    return true;
-
-                if (t.IsInterface)
-
-                    return t.IsType(from.GetInterfaces());
-
-                if (from.IsInterface)
-
-                    return false;
-
-                from = from.BaseType;
-
-                while (from != null)
-                {
-                    if (from == t)
-
-                        return true;
-
-                    from = from.BaseType;
-                }
-
-                return false;
-            }
-
-            public static bool IsAssignableFrom(this Type t, in System.Collections.Generic.IEnumerable<Type> enumerable)
-            {
-                ThrowIfNull(t, nameof(t));
-
-                return (enumerable ?? throw GetArgumentNullException(nameof(enumerable))).Or(_t => t.IsAssignableFrom(_t));
-            }
-
-            public static bool IsAssignableFromAND(this Type t, in System.Collections.Generic.IEnumerable<Type> enumerable)
-            {
-                ThrowIfNull(t, nameof(t));
-
-                return (enumerable ?? throw GetArgumentNullException(nameof(enumerable))).And(_t => t.IsAssignableFrom(_t));
-            }
-
-            public static bool IsAssignableFromXOr(this Type t, in System.Collections.Generic.IEnumerable<Type> enumerable)
-            {
-                ThrowIfNull(t, nameof(t));
-
-                return (enumerable ?? throw GetArgumentNullException(nameof(enumerable))).XOr(_t => t.IsAssignableFrom(_t));
-            }
-
-            public static IEnumerable<TKey> GetKeys<TKey, TValue>(this KeyValuePair<TKey, TValue>[] array)
-            {
-                ThrowIfNull(array, nameof(array));
-
-                foreach (KeyValuePair<TKey, TValue> value in array)
-
-                    yield return value.Key;
-            }
-
-            public static IEnumerable<TValue> GetValues<TKey, TValue>(this KeyValuePair<TKey, TValue>[] array)
-            {
-                ThrowIfNull(array, nameof(array));
-
-                foreach (KeyValuePair<TKey, TValue> value in array)
-
-                    yield return value.Value;
-            }
-
-            public static bool CheckIntegrity<TKey, TValue>(this KeyValuePair<TKey, TValue>[] array)
-            {
-#if CS8
-                static
-#endif
-
-                bool predicateByVal(TKey keyA, TKey keyB) => Equals(keyA, keyB);
-
-#if CS8
-                static
-#endif
-
-                bool predicateByRef(TKey keyA, TKey keyB) => ReferenceEquals(keyA, keyB);
-
-                Func<TKey, TKey, bool> predicate = typeof(TKey).IsClass ? predicateByRef : (Func<TKey, TKey, bool>)predicateByVal;
-
-                IEnumerable<TKey> keys = array.GetKeys();
-
-                IEnumerable<TKey> _keys = array.GetKeys();
-
-                bool foundOneOccurrence = false;
-
-                foreach (TKey key in keys)
-                {
-                    if (key == null)
-
-                        throw GetOneOrMoreKeyIsNullException();
-
-                    foreach (TKey _key in _keys)
-                    {
-                        if (predicate(key, _key))
-
-                            if (foundOneOccurrence)
-
-                                return false;
-
-                            else
-
-                                foundOneOccurrence = true;
-                    }
-
-                    foundOneOccurrence = false;
-                }
-
-                return true;
-            }
-
-            public static bool CheckPropertySetIntegrity(Type propertyObjectType, in string propertyName, out string methodName, in int skipFrames, in BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet)
-            {
-                ThrowIfNull(propertyObjectType, nameof(propertyObjectType));
-
-                PropertyInfo property = propertyObjectType.GetProperty(propertyName, bindingFlags) ?? throw GetFieldOrPropertyNotFoundException(propertyName, propertyObjectType);
-
-                MethodBase method = new StackFrame(skipFrames).GetMethod();
-
-                methodName = method.Name;
-
-                //#if DEBUG 
-
-                //            Debug.WriteLine("Property: " + property.Name + ", " + property.DeclaringType);
-
-                //            Debug.WriteLine("Method: " + method.Name + ", " + method.DeclaringType);
-
-                //#endif 
-
-                // todo: tuple and check DeclaringTypeNotCorrespond throws
-
-                return (property.CanWrite && property.GetSetMethod() != null) || property.DeclaringType == method.DeclaringType;
-            }
-
-            internal static FieldInfo GetField(in string fieldName, in Type objectType, in BindingFlags bindingFlags) => objectType.GetField(fieldName, bindingFlags) ?? throw GetFieldOrPropertyNotFoundException(fieldName, objectType);
-
-            internal static PropertyInfo GetProperty(in string propertyName, in Type objectType, in BindingFlags bindingFlags) => objectType.GetProperty(propertyName, bindingFlags) ?? throw GetFieldOrPropertyNotFoundException(propertyName, objectType);
-
-            // todo: use attributes
+        /// <summary>
+        /// Gets the numeric value for an enum.
+        /// </summary>
+        /// <param name="enum">The enum for which get the corresponding numeric value.</param>
+        /// <param name="enumName">Not used.</param>
+        /// <returns>The numeric value corresponding to this enum, in the given enum type underlying type.</returns>
+        [Obsolete("This method has been replaced by the GetNumValue(this Enum @enum) and the WinCopies.Util.GetNumValue(Type enumType, string fieldName) methods and will be removed in later versions.")]
+        public static object GetNumValue(this Enum @enum, in string enumName) => @enum.GetNumValue();
 
 #if CS7
-#if !WinCopies3
         /// <summary>
         /// Converts an <see cref="IEnumerable"/> to an <see cref="ArrayList"/> from a given index for a given length.
         /// </summary>
@@ -2932,7 +3434,7 @@ namespace WinCopies
         /// <param name="startIndex">The index from which start the conversion.</param>
         /// <param name="length">The length of items to copy in the out <see cref="List{T}"/>. Leave this parameter to null if you want to copy all the source <see cref="IEnumerable"/>.</param>
         /// <returns>The result <see cref="List{T}"/>.</returns>
-        public static List<T> ToList<T>(this System.Collections.Generic.IEnumerable<T> array, in int startIndex, in int? length = null)
+        public static List<T> ToList<T>(this IEnumerable<T> array, in int startIndex, in int? length = null)
         {
             ThrowIfNull(array, nameof(array));
 
@@ -2982,7 +3484,7 @@ namespace WinCopies
         }
 
         [Obsolete("This method has been replaced by the RemoveRangeIfContains<T>(this IList<T> collection, in System.Collections.Generic.IEnumerable<T> values) method.")]
-        public static T[] RemoveRangeIfContains<T>(this System.Collections.Generic.ICollection<T> collection, in System.Collections.Generic.IEnumerable<T> values)
+        public static T[] RemoveRangeIfContains<T>(this ICollection<T> collection, in IEnumerable<T> values)
         {
             ThrowIfNull(collection, nameof(collection));
             ThrowIfNull(values, nameof(values));
@@ -3003,7 +3505,7 @@ namespace WinCopies
             return removedValues.ToArray();
         }
 
-        public static T[] RemoveRangeIfContains<T>(this IList<T> collection, in System.Collections.Generic.IEnumerable<T> values)
+        public static T[] RemoveRangeIfContains<T>(this IList<T> collection, in IEnumerable<T> values)
         {
             ThrowIfNull(collection, nameof(collection));
             ThrowIfNull(values, nameof(values));
@@ -3047,7 +3549,7 @@ namespace WinCopies
             return removedValues.ToArray();
         }
 
-        public static T[] InsertRangeIfNotContains<T>(this System.Collections.Generic.IList<T> collection, in int index, in System.Collections.Generic.IEnumerable<T> values)
+        public static T[] InsertRangeIfNotContains<T>(this IList<T> collection, in int index, in IEnumerable<T> values)
         {
             ThrowIfNull(collection, nameof(collection));
             ThrowIfNull(values, nameof(values));
@@ -3092,7 +3594,7 @@ namespace WinCopies
         /// <param name="collection">The collection to which try to add the value</param>
         /// <param name="values">The values to try to add to the collection</param>
         /// <returns><see langword="true"/> if the value has been added to the collection, otherwise <see langword="false"/>.</returns>
-        public static T[] AddRangeIfNotContains<T>(this System.Collections.Generic.ICollection<T> collection, in System.Collections.Generic.IEnumerable<T> values)
+        public static T[] AddRangeIfNotContains<T>(this ICollection<T> collection, in IEnumerable<T> values)
         {
             ThrowIfNull(collection, nameof(collection));
             ThrowIfNull(values, nameof(values));
@@ -3112,13 +3614,13 @@ namespace WinCopies
         }
 
         /// <summary>
-        /// Tries to add multiple values to an <see cref="System.Collections.IList"/> if it does not contain them already.
+        /// Tries to add multiple values to an <see cref="IList"/> if it does not contain them already.
         /// </summary>
         /// <typeparam name="T">The value type</typeparam>
         /// <param name="collection">The collection to which try to add the value</param>
         /// <param name="values">The values to try to add to the collection</param>
         /// <returns><see langword="true"/> if the value has been added to the collection, otherwise <see langword="false"/>.</returns>
-        public static object[] AddRangeIfNotContains(this System.Collections.IList collection, in IEnumerable values)
+        public static object[] AddRangeIfNotContains(this IList collection, in IEnumerable values)
         {
             ThrowIfNull(collection, nameof(collection));
             ThrowIfNull(values, nameof(values));
@@ -3143,19 +3645,19 @@ namespace WinCopies
         /// <param name="collection">The <see cref="ILinkedList{T}"/> into which add the values.</param>
         /// <param name="node">The node before which to add the values</param>
         /// <param name="array">The values to add to a <see cref="ILinkedList{T}"/></param>
-        /// <returns>The added <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s.</returns>
-        public static System.Collections.Generic.LinkedListNode<T>[] AddRangeBefore<T>(this ILinkedList<T> collection, in System.Collections.Generic.LinkedListNode<T> node, in System.Collections.Generic.IEnumerable<T> array)
+        /// <returns>The added <see cref="LinkedListNode{T}"/>'s.</returns>
+        public static LinkedListNode<T>[] AddRangeBefore<T>(this ILinkedList<T> collection, in LinkedListNode<T> node, in IEnumerable<T> array)
         {
             ThrowIfNull(collection, nameof(collection));
             ThrowIfNull(array, nameof(array));
 
-            var result = new WinCopies.Collections.DotNetFix.Generic.EnumerableQueue<System.Collections.Generic.LinkedListNode<T>>();
+            var result = new Collections.DotNetFix.Generic.EnumerableQueue<LinkedListNode<T>>();
 
             foreach (T item in array)
 
                 result.Enqueue(collection.AddBefore(node, item));
 
-            return result.ToArray<System.Collections.Generic.LinkedListNode<T>>();
+            return result.ToArray<LinkedListNode<T>>();
         }
 
         /// <summary>
@@ -3164,8 +3666,8 @@ namespace WinCopies
         /// <param name="collection">The <see cref="ILinkedList{T}"/> into which add the values.</param>
         /// <param name="node">The node after which to add the values</param>
         /// <param name="values">The values to add to a <see cref="ILinkedList{T}"/></param>
-        /// <returns>The added <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s.</returns>
-        public static System.Collections.Generic.LinkedListNode<T>[] AddRangeAfter<T>(this ILinkedList<T> collection, in System.Collections.Generic.LinkedListNode<T> node, params T[] values)
+        /// <returns>The added <see cref="LinkedListNode{T}"/>'s.</returns>
+        public static LinkedListNode<T>[] AddRangeAfter<T>(this ILinkedList<T> collection, in LinkedListNode<T> node, params T[] values)
         {
             ThrowIfNull(node, nameof(node));
 
@@ -3178,12 +3680,12 @@ namespace WinCopies
         /// <param name="collection">The <see cref="ILinkedList{T}"/> into which add the values.</param>
         /// <param name="node">The node before which to add the values</param>
         /// <param name="array">The values to add to a <see cref="ILinkedList{T}"/></param>
-        public static void AddRangeBefore<T>(this ILinkedList<T> collection, in System.Collections.Generic.LinkedListNode<T> node, in IEnumerable<System.Collections.Generic.LinkedListNode<T>> array)
+        public static void AddRangeBefore<T>(this ILinkedList<T> collection, in LinkedListNode<T> node, in IEnumerable<LinkedListNode<T>> array)
         {
             ThrowIfNull(collection, nameof(collection));
             ThrowIfNull(array, nameof(array));
 
-            foreach (System.Collections.Generic.LinkedListNode<T> item in array)
+            foreach (LinkedListNode<T> item in array)
 
                 collection.AddBefore(node, item);
         }
@@ -3258,18 +3760,18 @@ namespace WinCopies
         }
 #endif
 
-        public static System.Collections.Generic.LinkedListNode<T> RemoveAndGetLastValue<T>(this ILinkedList<T> items)
+        public static LinkedListNode<T> RemoveAndGetLastValue<T>(this ILinkedList<T> items)
         {
-            System.Collections.Generic.LinkedListNode<T> value = (items ?? throw GetArgumentNullException(nameof(items))).Last;
+            LinkedListNode<T> value = (items ?? throw GetArgumentNullException(nameof(items))).Last;
 
             items.RemoveLast();
 
             return value;
         }
 
-        public static System.Collections.Generic.LinkedListNode<T> RemoveAndGetFirstValue<T>(this ILinkedList<T> items)
+        public static LinkedListNode<T> RemoveAndGetFirstValue<T>(this ILinkedList<T> items)
         {
-            System.Collections.Generic.LinkedListNode<T> value = (items ?? throw GetArgumentNullException(nameof(items))).First;
+            LinkedListNode<T> value = (items ?? throw GetArgumentNullException(nameof(items))).First;
 
             items.RemoveFirst();
 
@@ -3277,11 +3779,11 @@ namespace WinCopies
         }
 
         /// <summary>
-        /// Add multiple <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s at the top of a <see cref="ILinkedList{T}"/>. For better performance, use the <see cref="ArrayBuilder{T}"/> class.
+        /// Add multiple <see cref="LinkedListNode{T}"/>'s at the top of a <see cref="ILinkedList{T}"/>. For better performance, use the <see cref="ArrayBuilder{T}"/> class.
         /// </summary>
         /// <param name="collection">The <see cref="ILinkedList{T}"/> into which add the values.</param>
-        /// <param name="array">The <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s to add to a <see cref="ILinkedList{T}"/></param>
-        public static void AddRangeFirst<T>(this ILinkedList<T> collection, in IEnumerable<System.Collections.Generic.LinkedListNode<T>> array)
+        /// <param name="array">The <see cref="LinkedListNode{T}"/>'s to add to a <see cref="ILinkedList{T}"/></param>
+        public static void AddRangeFirst<T>(this ILinkedList<T> collection, in IEnumerable<LinkedListNode<T>> array)
         {
             ThrowIfNull(collection, nameof(collection));
 
@@ -3299,8 +3801,8 @@ namespace WinCopies
         /// </summary>
         /// <param name="collection">The <see cref="ILinkedList{T}"/> into which add the values.</param>
         /// <param name="values">The values to add to this <see cref="ILinkedList{T}"/></param>
-        /// <returns>The added <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s.</returns>
-        public static System.Collections.Generic.LinkedListNode<T>[] AddRangeFirst<T>(this ILinkedList<T> collection, params T[] values)
+        /// <returns>The added <see cref="LinkedListNode{T}"/>'s.</returns>
+        public static LinkedListNode<T>[] AddRangeFirst<T>(this ILinkedList<T> collection, params T[] values)
         {
             ThrowIfNull(collection, nameof(collection));
 
@@ -3312,8 +3814,8 @@ namespace WinCopies
         /// </summary>
         /// <param name="collection">The <see cref="ILinkedList{T}"/> into which add the values.</param>
         /// <param name="array">The values to add to this <see cref="ILinkedList{T}"/></param>
-        /// <returns>The added <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s.</returns>
-        public static System.Collections.Generic.LinkedListNode<T>[] AddRangeFirst<T>(this ILinkedList<T> collection, in System.Collections.Generic.IEnumerable<T> array)
+        /// <returns>The added <see cref="LinkedListNode{T}"/>'s.</returns>
+        public static LinkedListNode<T>[] AddRangeFirst<T>(this ILinkedList<T> collection, in IEnumerable<T> array)
         {
             ThrowIfNull(collection, nameof(collection));
 
@@ -3321,11 +3823,11 @@ namespace WinCopies
         }
 
         /// <summary>
-        /// Add multiple <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s at the top of a <see cref="ILinkedList{T}"/>.
+        /// Add multiple <see cref="LinkedListNode{T}"/>'s at the top of a <see cref="ILinkedList{T}"/>.
         /// </summary>
         /// <param name="collection">The <see cref="ILinkedList{T}"/> into which add the values.</param>
-        /// <param name="nodes">The <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s to add to a <see cref="ILinkedList{T}"/></param>
-        public static void AddRangeFirst<T>(this ILinkedList<T> collection, params System.Collections.Generic.LinkedListNode<T>[] nodes)
+        /// <param name="nodes">The <see cref="LinkedListNode{T}"/>'s to add to a <see cref="ILinkedList{T}"/></param>
+        public static void AddRangeFirst<T>(this ILinkedList<T> collection, params LinkedListNode<T>[] nodes)
         {
             ThrowIfNull(collection, nameof(collection));
 
@@ -3339,16 +3841,16 @@ namespace WinCopies
         }
 
         /// <summary>
-        /// Add multiple <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s at the end of a <see cref="ILinkedList{T}"/>.
+        /// Add multiple <see cref="LinkedListNode{T}"/>'s at the end of a <see cref="ILinkedList{T}"/>.
         /// </summary>
         /// <param name="collection">The <see cref="ILinkedList{T}"/> into which add the values.</param>
-        /// <param name="array">The <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s to add to a <see cref="ILinkedList{T}"/></param>
-        public static void AddRangeLast<T>(this ILinkedList<T> collection, in IEnumerable<System.Collections.Generic.LinkedListNode<T>> array)
+        /// <param name="array">The <see cref="LinkedListNode{T}"/>'s to add to a <see cref="ILinkedList{T}"/></param>
+        public static void AddRangeLast<T>(this ILinkedList<T> collection, in IEnumerable<LinkedListNode<T>> array)
         {
             ThrowIfNull(collection, nameof(collection));
             ThrowIfNull(array, nameof(array));
 
-            foreach (System.Collections.Generic.LinkedListNode<T> item in array)
+            foreach (LinkedListNode<T> item in array)
 
                 collection.AddLast(item);
         }
@@ -3359,7 +3861,7 @@ namespace WinCopies
         /// <param name="collection">The <see cref="ILinkedList{T}"/> into which add the values.</param>
         /// <param name="node">The node after which to add the values</param>
         /// <param name="nodes">The values to add to a <see cref="ILinkedList{T}"/></param>
-        public static void AddRangeAfter<T>(this ILinkedList<T> collection, in System.Collections.Generic.LinkedListNode<T> node, params System.Collections.Generic.LinkedListNode<T>[] nodes)
+        public static void AddRangeAfter<T>(this ILinkedList<T> collection, in LinkedListNode<T> node, params LinkedListNode<T>[] nodes)
         {
             ThrowIfNull(node, nameof(node));
 
@@ -3378,8 +3880,8 @@ namespace WinCopies
         /// <param name="collection">The <see cref="ILinkedList{T}"/> into which add the values.</param>
         /// <param name="node">The node after which to add the values</param>
         /// <param name="array">The values to add to a <see cref="ILinkedList{T}"/></param>
-        /// <returns>The added <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s.</returns>
-        public static System.Collections.Generic.LinkedListNode<T>[] AddRangeAfter<T>(this ILinkedList<T> collection, in System.Collections.Generic.LinkedListNode<T> node, in System.Collections.Generic.IEnumerable<T> array)
+        /// <returns>The added <see cref="LinkedListNode{T}"/>'s.</returns>
+        public static LinkedListNode<T>[] AddRangeAfter<T>(this ILinkedList<T> collection, in LinkedListNode<T> node, in IEnumerable<T> array)
         {
             ThrowIfNull(node, nameof(node));
 
@@ -3392,7 +3894,7 @@ namespace WinCopies
         /// <param name="collection">The <see cref="ILinkedList{T}"/> into which add the values.</param>
         /// <param name="node">The node after which to add the values</param>
         /// <param name="array">The values to add to a <see cref="ILinkedList{T}"/></param>
-        public static void AddRangeAfter<T>(this ILinkedList<T> collection, in System.Collections.Generic.LinkedListNode<T> node, in IEnumerable<System.Collections.Generic.LinkedListNode<T>> array)
+        public static void AddRangeAfter<T>(this ILinkedList<T> collection, in LinkedListNode<T> node, in IEnumerable<LinkedListNode<T>> array)
         {
             ThrowIfNull(node, nameof(node));
 
@@ -3410,8 +3912,8 @@ namespace WinCopies
         /// </summary>
         /// <param name="collection">The <see cref="ILinkedList{T}"/> into which add the values.</param>
         /// <param name="node">The node before which to add the values</param>
-        /// <param name="nodes">The <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s to add to a <see cref="ILinkedList{T}"/></param>
-        public static void AddRangeBefore<T>(this ILinkedList<T> collection, in System.Collections.Generic.LinkedListNode<T> node, params System.Collections.Generic.LinkedListNode<T>[] nodes) => collection.AddRangeBefore(node, (IEnumerable<System.Collections.Generic.LinkedListNode<T>>)nodes);
+        /// <param name="nodes">The <see cref="LinkedListNode{T}"/>'s to add to a <see cref="ILinkedList{T}"/></param>
+        public static void AddRangeBefore<T>(this ILinkedList<T> collection, in LinkedListNode<T> node, params LinkedListNode<T>[] nodes) => collection.AddRangeBefore(node, (IEnumerable<LinkedListNode<T>>)nodes);
 
         /// <summary>
         /// Add multiple values before a specified node in a <see cref="ILinkedList{T}"/>. For better performance, use the <see cref="ArrayBuilder{T}"/> class.
@@ -3419,498 +3921,45 @@ namespace WinCopies
         /// <param name="collection">The <see cref="ILinkedList{T}"/> into which add the values.</param>
         /// <param name="node">The node before which to add the values</param>
         /// <param name="values">The values to add to a <see cref="ILinkedList{T}"/></param>
-        /// <returns>The added <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s.</returns>
-        public static System.Collections.Generic.LinkedListNode<T>[] AddRangeBefore<T>(this ILinkedList<T> collection, in System.Collections.Generic.LinkedListNode<T> node, params T[] values) => collection.AddRangeBefore(node, (System.Collections.Generic.IEnumerable<T>)values);
+        /// <returns>The added <see cref="LinkedListNode{T}"/>'s.</returns>
+        public static LinkedListNode<T>[] AddRangeBefore<T>(this ILinkedList<T> collection, in LinkedListNode<T> node, params T[] values) => collection.AddRangeBefore(node, (IEnumerable<T>)values);
 
         /// <summary>
-        /// Add multiple <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s at the end of a <see cref="ILinkedList{T}"/>.
+        /// Add multiple <see cref="LinkedListNode{T}"/>'s at the end of a <see cref="ILinkedList{T}"/>.
         /// </summary>
         /// <param name="collection">The <see cref="ILinkedList{T}"/> into which add the values.</param>
-        /// <param name="nodes">The <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s to add to a <see cref="ILinkedList{T}"/></param>
-        /// <returns>The added <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s.</returns>
-        public static void AddRangeLast<T>(this ILinkedList<T> collection, params System.Collections.Generic.LinkedListNode<T>[] nodes) => collection.AddRangeLast((IEnumerable<System.Collections.Generic.LinkedListNode<T>>)nodes);
+        /// <param name="nodes">The <see cref="LinkedListNode{T}"/>'s to add to a <see cref="ILinkedList{T}"/></param>
+        /// <returns>The added <see cref="LinkedListNode{T}"/>'s.</returns>
+        public static void AddRangeLast<T>(this ILinkedList<T> collection, params LinkedListNode<T>[] nodes) => collection.AddRangeLast((IEnumerable<LinkedListNode<T>>)nodes);
 
         /// <summary>
         /// Add multiple values at the end of a <see cref="ILinkedList{T}"/>. For better performance, use the <see cref="ArrayBuilder{T}"/> class.
         /// </summary>
         /// <param name="collection">The <see cref="ILinkedList{T}"/> into which add the values.</param>
         /// <param name="values">The values to add to a <see cref="ILinkedList{T}"/></param>
-        /// <returns>The added <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s.</returns>
-        public static System.Collections.Generic.LinkedListNode<T>[] AddRangeLast<T>(this ILinkedList<T> collection, params T[] values) => collection.AddRangeLast((System.Collections.Generic.IEnumerable<T>)values);
+        /// <returns>The added <see cref="LinkedListNode{T}"/>'s.</returns>
+        public static LinkedListNode<T>[] AddRangeLast<T>(this ILinkedList<T> collection, params T[] values) => collection.AddRangeLast((IEnumerable<T>)values);
 
         /// <summary>
         /// Add multiple values at the end of a <see cref="ILinkedList{T}"/>. For better performance, use the <see cref="ArrayBuilder{T}"/> class.
         /// </summary>
         /// <param name="collection">The <see cref="ILinkedList{T}"/> into which add the values.</param>
         /// <param name="array">The values to add to a <see cref="ILinkedList{T}"/></param>
-        /// <returns>The added <see cref="System.Collections.Generic.LinkedListNode{T}"/>'s.</returns>
-        public static System.Collections.Generic.LinkedListNode<T>[] AddRangeLast<T>(this ILinkedList<T> collection, in System.Collections.Generic.IEnumerable<T> array)
+        /// <returns>The added <see cref="LinkedListNode{T}"/>'s.</returns>
+        public static LinkedListNode<T>[] AddRangeLast<T>(this ILinkedList<T> collection, in IEnumerable<T> array)
         {
             ThrowIfNull(collection, nameof(collection));
             ThrowIfNull(array, nameof(array));
 
-            var result = new WinCopies.Collections.DotNetFix.Generic.EnumerableQueue<System.Collections.Generic.LinkedListNode<T>>();
+            var result = new Collections.DotNetFix.Generic.EnumerableQueue<LinkedListNode<T>>();
 
             foreach (T item in array)
 
                 result.Enqueue(collection.AddLast(item));
 
-            return result.ToArray<System.Collections.Generic.LinkedListNode<T>>();
+            return result.ToArray<LinkedListNode<T>>();
         }
-#endif
 
-#if CS7
-            private static (bool fieldChanged, object oldValue) SetField(this object obj, in FieldInfo field, in object previousValue, in object newValue, in string paramName, in bool setOnlyIfNotNull, in bool throwIfNull, in bool disposeOldValue, in FieldValidateValueCallback validateValueCallback, in bool throwIfValidationFails, in FieldValueChangedCallback valueChangedCallback)
-            {
-                if (newValue is null)
-
-                    if (throwIfNull)
-
-                        throw GetArgumentNullException(paramName);
-
-                    else if (setOnlyIfNotNull)
-
-                        return (false, previousValue);
-
-                (bool validationResult, Exception validationException) = validateValueCallback?.Invoke(obj, newValue, field, paramName) ?? (true, null);
-
-                if (validationResult)
-
-                    if ((newValue == null && previousValue != null) || (newValue != null && !newValue.Equals(previousValue)))
-                    {
-                        if (disposeOldValue)
-
-                            ((IDisposable)previousValue).Dispose();
-
-                        field.SetValue(obj, newValue);
-
-                        valueChangedCallback?.Invoke(obj, newValue, field, paramName);
-
-                        return (true, previousValue);
-
-                        //BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic |
-                        //             BindingFlags.Static | BindingFlags.Instance |
-                        //             BindingFlags.DeclaredOnly;
-                        //this.GetType().GetField(fieldName, flags).SetValue(this, newValue);
-                    }
-
-                    else
-
-                        return (false, previousValue);
-
-                else
-
-                    return throwIfValidationFails ? throw (validationException ?? new ArgumentException("Validation error.", paramName)) : (false, previousValue);
-            }
-
-            public static (bool fieldChanged, object oldValue) SetField(this object obj, in string fieldName, in object newValue, in Type declaringType, in BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, in string paramName = null, in bool setOnlyIfNotNull = false, in bool throwIfNull = false, in FieldValidateValueCallback validateValueCallback = null, in bool throwIfValidationFails = false, in FieldValueChangedCallback valueChangedCallback = null)
-            {
-                ThrowIfNull(declaringType, nameof(declaringType));
-
-                FieldInfo field = GetField(fieldName, declaringType, bindingFlags);
-
-                return obj.SetField(field, field.GetValue(obj), newValue, paramName, setOnlyIfNotNull, throwIfNull, false, validateValueCallback, throwIfValidationFails, valueChangedCallback);
-            }
-
-            public static (bool fieldChanged, IDisposable oldValue) DisposeAndSetField(this object obj, in string fieldName, in IDisposable newValue, in Type declaringType, in BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, in string paramName = null, in bool setOnlyIfNotNull = false, in bool throwIfNull = false, in FieldValidateValueCallback validateValueCallback = null, in bool throwIfValidationFails = false, in FieldValueChangedCallback valueChangedCallback = null)
-            {
-                ThrowIfNull(declaringType, nameof(declaringType));
-
-                FieldInfo field = GetField(fieldName, declaringType, bindingFlags);
-
-                return ((bool, IDisposable))obj.SetField(field, field.GetValue(obj), newValue, paramName, setOnlyIfNotNull, throwIfNull, true, validateValueCallback, throwIfValidationFails, valueChangedCallback);
-            }
-
-            // todo: update code (in, throw if null)
-
-            /// <summary>
-            /// Sets a value to a property if the new value is different.
-            /// </summary>
-            /// <param name="obj">The object in which to set the property.</param>
-            /// <param name="propertyName">The name of the given property.</param>
-            /// <param name="fieldName">The field related to the property.</param>
-            /// <param name="newValue">The value to set.</param>
-            /// <param name="declaringType">The actual declaring type of the property.</param>
-            /// <param name="throwIfReadOnly">Whether to throw if the given property is read-only.</param>
-            /// <param name="bindingFlags">The <see cref="BindingFlags"/> used to get the property.</param>
-            /// <param name="paramName">The parameter from which the value was passed to this method.</param>
-            /// <param name="setOnlyIfNotNull">Whether to set only if the given value is not null.</param>
-            /// <param name="throwIfNull">Whether to throw if the given value is null.</param>
-            /// <param name="validateValueCallback">The callback used to validate the given value. You can leave this parameter to null if you don't want to perform validation.</param>
-            /// <param name="throwIfValidationFails">Whether to throw if the validation of <paramref name="validateValueCallback"/> fails.</param>
-            /// <param name="valueChangedCallback">The callback used to perform actions after the property is set. You can leave this parameter to null if you don't want to perform actions after the property is set.</param>
-            /// <returns>A <see cref="bool"/> value that indicates whether the setting succeeded and the old value of the given property (or <see langword="null"/> if the property does not contain any value nor reference).</returns>
-            /// <exception cref="InvalidOperationException">The declaring types of the given property and field name doesn't correspond. OR The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
-            /// <exception cref="ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
-            /// <exception cref="Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="ArgumentException"/> otherwise.</exception>
-            public static (bool propertyChanged, object oldValue) SetProperty(this object obj, string propertyName, string fieldName, object newValue, Type declaringType, in bool throwIfReadOnly = true, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, string paramName = null, in bool setOnlyIfNotNull = false, in bool throwIfNull = false, FieldValidateValueCallback validateValueCallback = null, in bool throwIfValidationFails = false, FieldValueChangedCallback valueChangedCallback = null)
-            {
-                //BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic |
-                //             BindingFlags.Static | BindingFlags.Instance |
-                //             BindingFlags.DeclaredOnly;
-                //this.GetType().GetField(fieldName, flags).SetValue(this, newValue);
-
-                //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName, previousValue, newValue)); 
-
-                // if (declaringType == null) 
-
-                // {
-
-                //while (objectType != declaringType && objectType != typeof(object))
-
-                //    objectType = objectType.BaseType;
-
-                //if (objectType != declaringType)
-
-                //    throw new ArgumentException(string.Format((string)ResourcesHelper.GetResource("DeclaringTypeIsNotInObjectInheritanceHierarchyException"), declaringType, objectType));
-
-                // }
-
-                //#if DEBUG
-
-                //            var fields = objectType.GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
-
-                //            foreach (var _field in fields)
-
-                //                Debug.WriteLine("Object type: " + objectType + " " + _field.Name);
-
-                //#endif
-
-                // var objectType = obj.GetType();
-
-                FieldInfo field = GetField(fieldName, declaringType, bindingFlags);
-
-                object previousValue = field.GetValue(obj);
-
-                if (!CheckPropertySetIntegrity(declaringType, propertyName, out string methodName, 3, bindingFlags))
-
-                    throw GetDeclaringTypesNotCorrespondException(propertyName, methodName);
-
-                PropertyInfo property = GetProperty(propertyName, declaringType, bindingFlags);
-
-                return !property.CanWrite || property.SetMethod == null
-                    ? throwIfReadOnly ? throw new InvalidOperationException(string.Format("This property is read-only. Property name: {0}, declaring type: {1}.", propertyName, declaringType)) : (false, previousValue)
-                    : obj.SetField(field, previousValue, newValue, paramName, setOnlyIfNotNull, throwIfNull, false, validateValueCallback, throwIfValidationFails, valueChangedCallback);
-            }
-
-            /// <summary>
-            /// Sets a value to a property if the new value is different.
-            /// </summary>
-            /// <param name="obj">The object in which to set the property.</param>
-            /// <param name="propertyName">The name of the given property.</param>
-            /// <param name="newValue">The value to set.</param>
-            /// <param name="declaringType">The actual declaring type of the property.</param>
-            /// <param name="throwIfReadOnly">Whether to throw if the given property is read-only.</param>
-            /// <param name="bindingFlags">The <see cref="BindingFlags"/> used to get the property.</param>
-            /// <param name="paramName">The parameter from which the value was passed to this method.</param>
-            /// <param name="setOnlyIfNotNull">Whether to set only if the given value is not null.</param>
-            /// <param name="throwIfNull">Whether to throw if the given value is null.</param>
-            /// <param name="validateValueCallback">The callback used to validate the given value. You can leave this parameter to null if you don't want to perform validation.</param>
-            /// <param name="throwIfValidationFails">Whether to throw if the validation of <paramref name="validateValueCallback"/> fails.</param>
-            /// <param name="valueChangedCallback">The callback used to perform actions after the property is set. You can leave this parameter to null if you don't want to perform actions after the property is set.</param>
-            /// <returns>A <see cref="bool"/> value that indicates whether the setting succeeded and the old value of the given property (or <see langword="null"/> if the property does not contain any value nor reference).</returns>
-            /// <exception cref="InvalidOperationException">The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
-            /// <exception cref="ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
-            /// <exception cref="Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="ArgumentException"/> otherwise.</exception>
-            public static (bool propertyChanged, object oldValue) SetProperty(this object obj, string propertyName, object newValue, Type declaringType, in bool throwIfReadOnly = true, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, string paramName = null, in bool setOnlyIfNotNull = false, in bool throwIfNull = false, PropertyValidateValueCallback validateValueCallback = null, in bool throwIfValidationFails = false, PropertyValueChangedCallback valueChangedCallback = null)
-            {
-                PropertyInfo property = GetProperty(propertyName, declaringType, bindingFlags);
-
-                object previousValue = property.GetValue(obj);
-
-                if (!property.CanWrite || property.SetMethod == null)
-
-                    return throwIfReadOnly ? throw new InvalidOperationException(string.Format("This property is read-only. Property name: {0}, declaring type: {1}.", propertyName, declaringType)) : (false, previousValue);
-
-                if (newValue is null)
-
-                    if (throwIfNull)
-
-                        throw GetArgumentNullException(paramName);
-
-                    else if (setOnlyIfNotNull)
-
-                        return (false, previousValue);
-
-                (bool validationResult, Exception validationException) = validateValueCallback?.Invoke(obj, newValue, property, paramName) ?? (true, null);
-
-                if (validationResult)
-
-                    if ((newValue == null && previousValue != null) || (newValue != null && !newValue.Equals(previousValue)))
-                    {
-                        property.SetValue(obj, newValue);
-
-                        valueChangedCallback?.Invoke(obj, newValue, property, paramName);
-
-                        return (true, previousValue);
-
-                        //BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic |
-                        //             BindingFlags.Static | BindingFlags.Instance |
-                        //             BindingFlags.DeclaredOnly;
-                        //this.GetType().GetField(fieldName, flags).SetValue(this, newValue);
-                    }
-
-                    else
-
-                        return (false, previousValue);
-
-                else
-
-                    return throwIfValidationFails ? throw (validationException ?? new ArgumentException("Validation error.", paramName)) : (false, previousValue);
-            }
-
-            /// <summary>
-            /// Disposes an old value of a property then sets a new value to the given property if the new value is different.
-            /// </summary>
-            /// <param name="obj">The object in which to set the property.</param>
-            /// <param name="propertyName">The name of the given property.</param>
-            /// <param name="fieldName">The field related to the property.</param>
-            /// <param name="newValue">The value to set.</param>
-            /// <param name="declaringType">The actual declaring type of the property.</param>
-            /// <param name="throwIfReadOnly">Whether to throw if the given property is read-only.</param>
-            /// <param name="bindingFlags">The <see cref="BindingFlags"/> used to get the property.</param>
-            /// <param name="paramName">The parameter from which the value was passed to this method.</param>
-            /// <param name="setOnlyIfNotNull">Whether to set only if the given value is not null.</param>
-            /// <param name="throwIfNull">Whether to throw if the given value is null.</param>
-            /// <param name="validateValueCallback">The callback used to validate the given value. You can leave this parameter to null if you don't want to perform validation.</param>
-            /// <param name="throwIfValidationFails">Whether to throw if the validation of <paramref name="validateValueCallback"/> fails.</param>
-            /// <param name="valueChangedCallback">The callback used to perform actions after the property is set. You can leave this parameter to null if you don't want to perform actions after the property is set.</param>
-            /// <returns>A <see cref="bool"/> value that indicates whether the setting succeeded and the old value of the given property (or <see langword="null"/> if the property does not contain any value nor reference).</returns>
-            /// <exception cref="InvalidOperationException">The declaring types of the given property and field name doesn't correspond. OR The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
-            /// <exception cref="ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
-            /// <exception cref="Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="ArgumentException"/> otherwise.</exception>
-            public static (bool propertyChanged, IDisposable oldValue) DisposeAndSetProperty(this object obj, string propertyName, string fieldName, IDisposable newValue, Type declaringType, in bool throwIfReadOnly = true, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, string paramName = null, in bool setOnlyIfNotNull = false, in bool throwIfNull = false, FieldValidateValueCallback validateValueCallback = null, in bool throwIfValidationFails = false, FieldValueChangedCallback valueChangedCallback = null)
-            {
-                //BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic |
-                //             BindingFlags.Static | BindingFlags.Instance |
-                //             BindingFlags.DeclaredOnly;
-                //this.GetType().GetField(fieldName, flags).SetValue(this, newValue);
-
-                //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName, previousValue, newValue)); 
-
-                // if (declaringType == null) 
-
-                // {
-
-                //while (objectType != declaringType && objectType != typeof(object))
-
-                //    objectType = objectType.BaseType;
-
-                //if (objectType != declaringType)
-
-                //    throw new ArgumentException(string.Format((string)ResourcesHelper.GetResource("DeclaringTypeIsNotInObjectInheritanceHierarchyException"), declaringType, objectType));
-
-                // }
-
-                //#if DEBUG
-
-                //            var fields = objectType.GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
-
-                //            foreach (var _field in fields)
-
-                //                Debug.WriteLine("Object type: " + objectType + " " + _field.Name);
-
-                //#endif
-
-                // var objectType = obj.GetType();
-
-                FieldInfo field = GetField(fieldName, declaringType, bindingFlags);
-
-                var previousValue = (IDisposable)field.GetValue(obj);
-
-                if (!CheckPropertySetIntegrity(declaringType, propertyName, out string methodName, 3, bindingFlags))
-
-                    throw GetDeclaringTypesNotCorrespondException(propertyName, methodName);
-
-                PropertyInfo property = GetProperty(propertyName, declaringType, bindingFlags);
-
-                return !property.CanWrite || property.SetMethod == null
-                    ? throwIfReadOnly ? throw new InvalidOperationException(string.Format("This property is read-only. Property name: {0}, declaring type: {1}.", propertyName, declaringType)) : (false, previousValue)
-                    : ((bool, IDisposable))obj.SetField(field, previousValue, newValue, paramName, setOnlyIfNotNull, throwIfNull, true, validateValueCallback, throwIfValidationFails, valueChangedCallback);
-            }
-
-            /// <summary>
-            /// Disposes an old value of a property then sets a new value to the given property if the new value is different.
-            /// </summary>
-            /// <param name="obj">The object in which to set the property.</param>
-            /// <param name="propertyName">The name of the given property.</param>
-            /// <param name="newValue">The value to set.</param>
-            /// <param name="declaringType">The actual declaring type of the property.</param>
-            /// <param name="throwIfReadOnly">Whether to throw if the given property is read-only.</param>
-            /// <param name="bindingFlags">The <see cref="BindingFlags"/> used to get the property.</param>
-            /// <param name="paramName">The parameter from which the value was passed to this method.</param>
-            /// <param name="setOnlyIfNotNull">Whether to set only if the given value is not null.</param>
-            /// <param name="throwIfNull">Whether to throw if the given value is null.</param>
-            /// <param name="validateValueCallback">The callback used to validate the given value. You can leave this parameter to null if you don't want to perform validation.</param>
-            /// <param name="throwIfValidationFails">Whether to throw if the validation of <paramref name="validateValueCallback"/> fails.</param>
-            /// <param name="valueChangedCallback">The callback used to perform actions after the property is set. You can leave this parameter to null if you don't want to perform actions after the property is set.</param>
-            /// <returns>A <see cref="bool"/> value that indicates whether the setting succeeded and the old value of the given property (or <see langword="null"/> if the property does not contain any value nor reference).</returns>
-            /// <exception cref="InvalidOperationException">The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
-            /// <exception cref="ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
-            /// <exception cref="Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="ArgumentException"/> otherwise.</exception>
-            public static (bool propertyChanged, IDisposable oldValue) DisposeAndSetProperty(this object obj, string propertyName, IDisposable newValue, Type declaringType, in bool throwIfReadOnly = true, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, string paramName = null, in bool setOnlyIfNotNull = false, in bool throwIfNull = false, PropertyValidateValueCallback validateValueCallback = null, in bool throwIfValidationFails = false, PropertyValueChangedCallback valueChangedCallback = null)
-            {
-                PropertyInfo property = GetProperty(propertyName, declaringType, bindingFlags);
-
-                var previousValue = (IDisposable)property.GetValue(obj);
-
-                if (!property.CanWrite || property.SetMethod == null)
-
-                    return throwIfReadOnly ? throw new InvalidOperationException(string.Format("This property is read-only. Property name: {0}, declaring type: {1}.", propertyName, declaringType)) : (false, previousValue);
-
-                if (newValue is null)
-
-                    if (throwIfNull)
-
-                        throw GetArgumentNullException(paramName);
-
-                    else if (setOnlyIfNotNull)
-
-                        return (false, previousValue);
-
-                (bool validationResult, Exception validationException) = validateValueCallback?.Invoke(obj, newValue, property, paramName) ?? (true, null);
-
-                if (validationResult)
-
-                    if ((newValue == null && previousValue != null) || (newValue != null && !newValue.Equals(previousValue)))
-                    {
-                        previousValue.Dispose();
-
-                        property.SetValue(obj, newValue);
-
-                        valueChangedCallback?.Invoke(obj, newValue, property, paramName);
-
-                        return (true, previousValue);
-
-                        //BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic |
-                        //             BindingFlags.Static | BindingFlags.Instance |
-                        //             BindingFlags.DeclaredOnly;
-                        //this.GetType().GetField(fieldName, flags).SetValue(this, newValue);
-                    }
-
-                    else
-
-                        return (false, previousValue);
-
-                else
-
-                    return throwIfValidationFails ? throw (validationException ?? new ArgumentException("Validation error.", paramName)) : (false, previousValue);
-            }
-#endif
-#endif
-
-#if !WinCopies3
-        /// <summary>
-        /// Gets the numeric value for an enum.
-        /// </summary>
-        /// <param name="enum">The enum for which get the corresponding numeric value.</param>
-        /// <param name="enumName">Not used.</param>
-        /// <returns>The numeric value corresponding to this enum, in the given enum type underlying type.</returns>
-        [Obsolete("This method has been replaced by the GetNumValue(this Enum @enum) and the WinCopies.Util.GetNumValue(Type enumType, string fieldName) methods and will be removed in later versions.")]
-        public static object GetNumValue(this Enum @enum, in string enumName) => @enum.GetNumValue();
-#endif
-
-            // todo: IFormatProvider
-
-            /// <summary>
-            /// Gets the numeric value for an enum.
-            /// </summary>
-            /// <param name="enum">The enum for which get the corresponding numeric value.</param>
-            /// <returns>The numeric value corresponding to this enum, in the given enum type underlying type.</returns>
-            public static object GetNumValue(this Enum @enum) => Convert.ChangeType(@enum, Enum.GetUnderlyingType(@enum.GetType()));
-
-            /// <summary>
-            /// Gets the numeric value for an enum.
-            /// </summary>
-            /// <param name="enum">The enum for which get the corresponding numeric value.</param>
-            /// <returns>The numeric value corresponding to this enum, in the given enum type underlying type.</returns>
-            public static object GetNumValue<T>(this T @enum) where T : Enum => Convert.ChangeType(@enum, Enum.GetUnderlyingType(typeof(T)));
-
-            // public static object GetNumValue(this Enum @enum) => GetNumValue(@enum, @enum.ToString());
-
-            // todo : to test if Math.Log(Convert.ToInt64(flagsEnum), 2) == 'SomeInt64'; (no float, double ...) would be faster.
-
-#if CS6
-            ///// <summary>
-            ///// Determines whether the current enum value is within the enum values range delimited by the first and the last fields; see the Remarks section for more information.
-            ///// </summary>
-            ///// <param name="enum">The enum value to check.</param>
-            ///// <returns><see langword="true"/> if the given value is in the enum values range, otherwise <see langword="false"/>.</returns>
-            ///// <remarks>This method doesn't read all the enum fields, but only takes care of the first and last numeric enum fields, so if the value is 1, and the enum has only defined fields for 0 and 2, this method still returns <see langword="true"/>. For a method that actually reads all the enum fields, see the <see cref="Type.IsEnumDefined(object)"/> method.</remarks>
-            ///// <seealso cref="ThrowIfNotValidEnumValue(Enum)"/>
-            ///// <seealso cref="ThrowIfNotDefinedEnumValue(Enum)"/>
-            ///// <seealso cref="ThrowIfNotValidEnumValue(Enum, in string)"/>
-            ///// <seealso cref="ThrowIfNotDefinedEnumValue(Enum,in string)"/>
-            public static bool IsValidEnumValue(this Enum @enum)
-            {
-                var values = new ArrayList(@enum.GetType().GetEnumValues());
-
-                values.Sort();
-
-                // object _value = Convert.ChangeType(value, value.GetType().GetEnumUnderlyingType());
-
-                return @enum.CompareTo(values[0]) >= 0 && @enum.CompareTo(values[
-#if CS8
-                ^1
-#else
-                values.Count - 1
-#endif
-                ]) <= 0;
-            }
-
-#if CS7
-            /// <summary>
-            /// Determines whether an enum has multiple flags.
-            /// </summary>
-            /// <param name="flagsEnum">The enum to check.</param>
-            /// <returns><see langword="true"/> if <paramref name="flagsEnum"/> type has the <see cref="FlagsAttribute"/> and has multiple flags; otherwise, <see langword="false"/>.</returns>
-            /// <remarks><paramref name="flagsEnum"/> type must have the <see cref="FlagsAttribute"/>.</remarks>
-            public static bool HasMultipleFlags(this Enum flagsEnum)
-            {
-                Type type = flagsEnum.GetType();
-
-                if (type.GetCustomAttributes(typeof(FlagsAttribute)).Count() == 0)
-
-                    return false; // throw new ArgumentException(string.Format("This enum does not implement the {0} attribute.", typeof(FlagsAttribute).Name));
-
-
-
-                bool alreadyFoundAFlag = false;
-
-                Enum enumValue;
-
-                // FieldInfo field = null;
-
-
-
-                foreach (string s in type.GetEnumNames())
-                {
-                    enumValue = (Enum)Enum.Parse(type, s);
-
-
-
-                    if (enumValue.GetNumValue().Equals(0)) continue;
-
-
-
-                    if (flagsEnum.HasFlag(enumValue))
-
-                        if (alreadyFoundAFlag) return true;
-
-                        else alreadyFoundAFlag = true;
-                }
-
-                return false;
-            }
-#endif
-#endif
-
-#if CS7
-            public static bool IsFlagsEnum(this Enum @enum) => (@enum ?? throw GetArgumentNullException(nameof(@enum))).GetType().GetCustomAttribute<FlagsAttribute>() is object;
-#endif
-
-#if !WinCopies3
-#if CS7
         /// <summary>
         /// Determines whether the current enum value is within the enum values range.
         /// </summary>
@@ -4026,11 +4075,7 @@ namespace WinCopies
 
             Util.ThrowIfNotFlagsEnumType<T>(nameof(T));
 
-#if !WinCopies3
             comparisonType.ThrowIfNotValidEnumValue(nameof(comparisonType));
-#else
-            ThrowIfNotValidEnumValue(nameof(comparisonType), comparisonType);
-#endif
 
             switch (comparisonType)
             {
@@ -4098,7 +4143,7 @@ namespace WinCopies
         /// <seealso cref="ThrowIfNotValidEnumValue(Enum,in string)"/>
         public static void ThrowIfNotValidEnumValue(this Enum @enum)
         {
-            if (!@enum.IsValidEnumValue()) throw new InvalidOperationException(string.Format(WinCopies.Util.Resources.ExceptionMessages.InvalidEnumValue, @enum.ToString()));
+            if (!@enum.IsValidEnumValue()) throw new InvalidOperationException(string.Format(ExceptionMessages.InvalidEnumValue, @enum.ToString()));
         }
 
         /// <summary>
@@ -4123,7 +4168,7 @@ namespace WinCopies
         /// <seealso cref="ThrowIfNotDefinedEnumValue(Enum,in string)"/>
         public static void ThrowIfNotDefinedEnumValue(this Enum @enum)
         {
-            if (!@enum.GetType().IsEnumDefined(@enum)) throw new InvalidOperationException(string.Format(WinCopies.Util.Resources.ExceptionMessages.InvalidEnumValue, @enum.ToString()));
+            if (!@enum.GetType().IsEnumDefined(@enum)) throw new InvalidOperationException(string.Format(ExceptionMessages.InvalidEnumValue, @enum.ToString()));
         }
 
         /// <summary>
@@ -4171,132 +4216,7 @@ namespace WinCopies
 
                 throw value.GetInvalidEnumArgumentException(argumentName);
         }
-#endif
 
-            public static bool IsValidEnumValue<T>(this T value, in bool valuesAreExpected, params T[] values) where T : Enum
-            {
-                ThrowIfNull(values, nameof(values));
-
-                if (valuesAreExpected)
-                {
-                    foreach (T _value in values)
-
-                        if (value.Equals(_value))
-
-                            return true;
-
-                    return false;
-                }
-
-                foreach (T _value in values)
-
-                    if (value.Equals(_value))
-
-                        return false;
-
-                return true;
-            }
-
-            /// <summary>
-            /// Checks if a number is between two given numbers.
-            /// </summary>
-            /// <param name="b">The number to check.</param>
-            /// <param name="x">The left operand.</param>
-            /// <param name="y">The right operand.</param>
-            /// <returns><see langword="true"/> if <paramref name="b"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-            public static bool Between(this sbyte b, in sbyte x, in sbyte y) => b >= x && b <= y;
-
-            /// <summary>
-            /// Checks if a number is between two given numbers.
-            /// </summary>
-            /// <param name="b">The number to check.</param>
-            /// <param name="x">The left operand.</param>
-            /// <param name="y">The right operand.</param>
-            /// <returns><see langword="true"/> if <paramref name="b"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-            public static bool Between(this byte b, in byte x, in byte y) => b >= x && b <= y;
-
-            /// <summary>
-            /// Checks if a number is between two given numbers.
-            /// </summary>
-            /// <param name="s">The number to check.</param>
-            /// <param name="x">The left operand.</param>
-            /// <param name="y">The right operand.</param>
-            /// <returns><see langword="true"/> if <paramref name="s"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-            public static bool Between(this short s, in short x, in short y) => s >= x && s <= y;
-
-            /// <summary>
-            /// Checks if a number is between two given numbers.
-            /// </summary>
-            /// <param name="s">The number to check.</param>
-            /// <param name="x">The left operand.</param>
-            /// <param name="y">The right operand.</param>
-            /// <returns><see langword="true"/> if <paramref name="s"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-            public static bool Between(this ushort s, in ushort x, in ushort y) => s >= x && s <= y;
-
-            /// <summary>
-            /// Checks if a number is between two given numbers.
-            /// </summary>
-            /// <param name="i">The number to check.</param>
-            /// <param name="x">The left operand.</param>
-            /// <param name="y">The right operand.</param>
-            /// <returns><see langword="true"/> if <paramref name="i"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-            public static bool Between(this int i, in int x, in int y) => i >= x && i <= y;
-
-            /// <summary>
-            /// Checks if a number is between two given numbers.
-            /// </summary>
-            /// <param name="i">The number to check.</param>
-            /// <param name="x">The left operand.</param>
-            /// <param name="y">The right operand.</param>
-            /// <returns><see langword="true"/> if <paramref name="i"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-            public static bool Between(this uint i, in uint x, in uint y) => i >= x && i <= y;
-
-            /// <summary>
-            /// Checks if a number is between two given numbers.
-            /// </summary>
-            /// <param name="l">The number to check.</param>
-            /// <param name="x">The left operand.</param>
-            /// <param name="y">The right operand.</param>
-            /// <returns><see langword="true"/> if <paramref name="l"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-            public static bool Between(this long l, in long x, in long y) => l >= x && l <= y;
-
-            /// <summary>
-            /// Checks if a number is between two given numbers.
-            /// </summary>
-            /// <param name="l">The number to check.</param>
-            /// <param name="x">The left operand.</param>
-            /// <param name="y">The right operand.</param>
-            /// <returns><see langword="true"/> if <paramref name="l"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-            public static bool Between(this ulong l, in ulong x, in ulong y) => l >= x && l <= y;
-
-            /// <summary>
-            /// Checks if a number is between two given numbers.
-            /// </summary>
-            /// <param name="f">The number to check.</param>
-            /// <param name="x">The left operand.</param>
-            /// <param name="y">The right operand.</param>
-            /// <returns><see langword="true"/> if <paramref name="f"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-            public static bool Between(this float f, in float x, in float y) => f >= x && f <= y;
-
-            /// <summary>
-            /// Checks if a number is between two given numbers.
-            /// </summary>
-            /// <param name="d">The number to check.</param>
-            /// <param name="x">The left operand.</param>
-            /// <param name="y">The right operand.</param>
-            /// <returns><see langword="true"/> if <paramref name="d"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-            public static bool Between(this double d, in double x, in double y) => d >= x && d <= y;
-
-            /// <summary>
-            /// Checks if a number is between two given numbers.
-            /// </summary>
-            /// <param name="d">The number to check.</param>
-            /// <param name="x">The left operand.</param>
-            /// <param name="y">The right operand.</param>
-            /// <returns><see langword="true"/> if <paramref name="d"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-            public static bool Between(this decimal d, in decimal x, in decimal y) => d >= x && d <= y;
-
-#if !WinCopies3
         public static void ForEach(this IEnumerableEnumerator enumerator, LoopIteration func)
         {
             while (enumerator.MoveNext())
@@ -4316,6 +4236,7 @@ namespace WinCopies
 
                         break;
             }
+
             finally
             {
                 enumerator.Dispose();
@@ -4355,143 +4276,14 @@ namespace WinCopies
 
                 return false;
             }
+
             finally
             {
                 enumerator.Dispose();
             }
         }
-#endif
 
-            public static void SplitValues<T, U, TContainer>(this System.Collections.Generic.IEnumerable<T> enumerable, in bool skipEmptyEnumerables, IValueSplitFactory<T, U, TContainer> splitFactory, params T[] separators) where T : struct where U : System.Collections.Generic.IEnumerable<T>
-            {
-                ThrowIfNull(enumerable, nameof(enumerable));
-                ThrowIfNull(splitFactory, nameof(splitFactory));
-                // ThrowIfNull(enumerableNullableValueEntryCallback, nameof(enumerableNullableValueEntryCallback));
-                ThrowIfNull(separators, nameof(separators));
-
-                if (separators.Length == 0)
-
-                    throw new ArgumentException($"{nameof(separators)} does not contain values.");
-
-                Predicate<T> predicate;
-
-                if (separators.Length == 1)
-
-                    predicate = value => /*value != null && */ value.Equals(separators[0]);
-
-                else
-
-                    predicate = value => separators.Contains(value);
-
-                System.Collections.Generic.IEnumerator<T> enumerator = enumerable.GetEnumerator();
-
-                enumerable = null;
-
-                void subAddAndAdd(in T value)
-                {
-                    splitFactory.SubAdd(value);
-
-                    splitFactory.Add(splitFactory.GetEnumerable());
-                }
-
-                if (skipEmptyEnumerables)
-                {
-                    if (enumerator.MoveNext())
-                    {
-                        T? value = enumerator.Current;
-
-                        if (enumerator.MoveNext()) // There are more than one value.
-                        {
-                            value = null;
-
-                            void tryAdd()
-                            {
-                                if (predicate(enumerator.Current) && splitFactory.SubCount > 0)
-                                {
-                                    splitFactory.Add(splitFactory.GetEnumerable());
-
-                                    splitFactory.SubClear();
-                                }
-
-                                else
-
-                                    splitFactory.SubAdd(enumerator.Current);
-                            }
-
-                            tryAdd();
-
-                            while (enumerator.MoveNext())
-
-                                tryAdd();
-                        }
-
-                        else // There is one value.
-                        {
-                            if (predicate(value.Value))
-
-                                return;
-
-                            else
-
-                                subAddAndAdd(enumerator.Current);
-                        }
-                    }
-
-                    else // There is no value.
-
-                        return;
-                }
-
-                else if (enumerator.MoveNext())
-                {
-                    T? value = enumerator.Current;
-
-                    if (enumerator.MoveNext()) // There are more than one value.
-                    {
-                        value = null;
-
-                        void tryAdd()
-                        {
-                            if (predicate(enumerator.Current))
-                            {
-                                splitFactory.Add(splitFactory.GetEnumerable());
-
-                                if (splitFactory.SubCount > 0)
-
-                                    splitFactory.SubClear();
-                            }
-
-                            else
-
-                                splitFactory.SubAdd(enumerator.Current);
-                        }
-
-                        tryAdd();
-
-                        while (enumerator.MoveNext())
-
-                            tryAdd();
-                    }
-
-                    else // There is one value.
-                    {
-                        if (predicate(value.Value))
-
-                            splitFactory.Add(splitFactory.GetEnumerable());
-
-                        else
-
-                            subAddAndAdd(enumerator.Current);
-                    }
-                }
-
-                else // There is no value.
-
-                    splitFactory.Add(splitFactory.GetEnumerable());
-            }
-
-#if !WinCopies3
-        public static void SplitReferences<T, U, V, TContainer>(this System.Collections.Generic.IEnumerable<T> enumerable, in bool skipEmptyEnumerables, IRefSplitFactory<T, U, V, TContainer> splitFactory, params T[] separators) where T : class where U : INullableRefEntry<T> where V : IEnumerable<U>
+        public static void SplitReferences<T, U, V, TContainer>(this IEnumerable<T> enumerable, in bool skipEmptyEnumerables, IRefSplitFactory<T, U, V, TContainer> splitFactory, params T[] separators) where T : class where U : INullableRefEntry<T> where V : IEnumerable<U>
         {
             ThrowIfNull(enumerable, nameof(enumerable));
             ThrowIfNull(splitFactory, nameof(splitFactory));
@@ -4512,7 +4304,7 @@ namespace WinCopies
 
                 predicate = value => separators.Contains(value);
 
-            System.Collections.Generic.IEnumerator<T> enumerator = enumerable.GetEnumerator();
+            IEnumerator<T> enumerator = enumerable.GetEnumerator();
 
             enumerable = null;
 
@@ -4633,7 +4425,7 @@ namespace WinCopies
             }
         }
 
-        public static System.Collections.Generic.IEnumerable<T> Join<T>(this IEnumerable<System.Collections.Generic.IEnumerable<T>> enumerable, bool keepEmptyEnumerables, params T[] join) => new Enumerable<T>(() => new JoinEnumerator<T>(enumerable, keepEmptyEnumerables, join));
+        public static IEnumerable<T> Join<T>(this IEnumerable<IEnumerable<T>> enumerable, bool keepEmptyEnumerables, params T[] join) => new Enumerable<T>(() => new JoinEnumerator<T>(enumerable, keepEmptyEnumerables, join));
 
             #region String extension methods
             #region Split
@@ -4749,32 +4541,32 @@ namespace WinCopies
             }
         }
 
-        public static void SplitToQueue(this string s, in bool skipEmptyValues, in StringBuilder stringBuilder, System.Collections.Generic.Queue<string> queue, params char[] separators)
+        public static void SplitToQueue(this string s, in bool skipEmptyValues, in StringBuilder stringBuilder, Queue<string> queue, params char[] separators)
         {
             ThrowIfNull(queue, nameof(queue));
 
             Split(s, skipEmptyValues, stringBuilder, _s => queue.Enqueue(_s), separators);
         }
 
-        public static System.Collections.Generic.Queue<string> SplitToQueue(this string s, in bool skipEmptyValues, params char[] separators)
+        public static Queue<string> SplitToQueue(this string s, in bool skipEmptyValues, params char[] separators)
         {
-            var queue = new System.Collections.Generic.Queue<string>();
+            var queue = new Queue<string>();
 
             SplitToQueue(s, skipEmptyValues, new StringBuilder(), queue, separators);
 
             return queue;
         }
 
-        public static void SplitToStack(this string s, in bool splitEmptyValues, in StringBuilder stringBuilder, System.Collections.Generic.Stack<string> stack, params char[] separators)
+        public static void SplitToStack(this string s, in bool splitEmptyValues, in StringBuilder stringBuilder, Stack<string> stack, params char[] separators)
         {
             ThrowIfNull(stack, nameof(stack));
 
             Split(s, splitEmptyValues, stringBuilder, _s => stack.Push(_s), separators);
         }
 
-        public static System.Collections.Generic.Stack<string> SplitToStack(this string s, in bool splitEmptyValues, params char[] separators)
+        public static Stack<string> SplitToStack(this string s, in bool splitEmptyValues, params char[] separators)
         {
-            var stack = new System.Collections.Generic.Stack<string>();
+            var stack = new Stack<string>();
 
             SplitToStack(s, splitEmptyValues, new StringBuilder(), stack, separators);
 
@@ -4803,7 +4595,7 @@ namespace WinCopies
 
         public static string Join(this IEnumerable<string> enumerable, in bool keepEmptyValues, in string join, StringBuilder stringBuilder = null)
         {
-            System.Collections.Generic.IEnumerator<string> enumerator = (enumerable ?? throw GetArgumentNullException(nameof(enumerable))).GetEnumerator();
+            IEnumerator<string> enumerator = (enumerable ?? throw GetArgumentNullException(nameof(enumerable))).GetEnumerator();
 
 #if CS8
             stringBuilder ??= new StringBuilder();
@@ -4830,6 +4622,7 @@ namespace WinCopies
                     append();
                 }
             }
+
             finally
             {
                 enumerator.Dispose();
@@ -4992,19 +4785,18 @@ namespace WinCopies
 
                     _ = stringBuilder.Append(c);
 
-            return stringBuilder.ToString().Normalize(System.Text.NormalizationForm.FormC);
+            return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
         }
-
             #endregion
 
-        internal static void ThrowIfDisposedInternal(this WinCopies.Util.DotNetFix.IDisposable obj, in string objectName)
+        internal static void ThrowIfDisposedInternal(this DotNetFix.IDisposable obj, in string objectName)
         {
             if (obj.IsDisposed)
 
                 throw GetExceptionForDispose(objectName, false);
         }
 
-        public static void ThrowIfDisposed(this WinCopies.Util.DotNetFix.IDisposable obj, in string objectName)
+        public static void ThrowIfDisposed(this DotNetFix.IDisposable obj, in string objectName)
         {
             ThrowIfNull(obj, nameof(obj));
 
@@ -5035,6 +4827,123 @@ namespace WinCopies
         }
 #endif
 
+            public static void SplitValues<T, U, TContainer>(this IEnumerable<T> enumerable, in bool skipEmptyEnumerables, IValueSplitFactory<T, U, TContainer> splitFactory, params T[] separators) where T : struct where U : IEnumerable<T>
+            {
+                ThrowIfNull(enumerable, nameof(enumerable));
+                ThrowIfNull(splitFactory, nameof(splitFactory));
+                // ThrowIfNull(enumerableNullableValueEntryCallback, nameof(enumerableNullableValueEntryCallback));
+                ThrowIfNull(separators, nameof(separators));
+
+                Predicate<T> predicate = separators.Length == 0
+                    ? throw new ArgumentException($"{nameof(separators)} does not contain values.")
+                    : separators.Length == 1
+                    ? (value => /*value != null && */ value.Equals(separators[0]))
+                    :
+#if !CS9
+                    (Predicate<T>)
+#endif
+                    (value => separators.Contains(value));
+                IEnumerator<T> enumerator = enumerable.GetEnumerator();
+
+                enumerable = null;
+
+                void subAddAndAdd(in T value)
+                {
+                    splitFactory.SubAdd(value);
+
+                    splitFactory.Add(splitFactory.GetEnumerable());
+                }
+
+                if (skipEmptyEnumerables)
+                {
+                    if (enumerator.MoveNext())
+                    {
+                        T? value = enumerator.Current;
+
+                        if (enumerator.MoveNext()) // There are more than one value.
+                        {
+                            value = null;
+
+                            void tryAdd()
+                            {
+                                if (predicate(enumerator.Current) && splitFactory.SubCount > 0)
+                                {
+                                    splitFactory.Add(splitFactory.GetEnumerable());
+
+                                    splitFactory.SubClear();
+                                }
+
+                                else
+
+                                    splitFactory.SubAdd(enumerator.Current);
+                            }
+
+                            tryAdd();
+
+                            while (enumerator.MoveNext())
+
+                                tryAdd();
+                        }
+
+                        else if (predicate(value.Value)) // There is one value.
+
+                            return;
+
+                        else
+
+                            subAddAndAdd(enumerator.Current);
+                    }
+
+                    else // There is no value.
+
+                        return;
+                }
+
+                else if (enumerator.MoveNext())
+                {
+                    T? value = enumerator.Current;
+
+                    if (enumerator.MoveNext()) // There are more than one value.
+                    {
+                        value = null;
+
+                        void tryAdd()
+                        {
+                            if (predicate(enumerator.Current))
+                            {
+                                splitFactory.Add(splitFactory.GetEnumerable());
+
+                                if (splitFactory.SubCount > 0)
+
+                                    splitFactory.SubClear();
+                            }
+
+                            else
+
+                                splitFactory.SubAdd(enumerator.Current);
+                        }
+
+                        tryAdd();
+
+                        while (enumerator.MoveNext())
+
+                            tryAdd();
+                    }
+
+                    else if (predicate(value.Value)) // There is one value.
+
+                        splitFactory.Add(splitFactory.GetEnumerable());
+
+                    else
+
+                        subAddAndAdd(enumerator.Current);
+                }
+
+                else // There is no value.
+
+                    splitFactory.Add(splitFactory.GetEnumerable());
+            }
+
             public static string Repeat(this char c, in int length) => c.Repeat(null, null, length);
 
             public static string Repeat(this char c, in char left, in char right, in int length) => c.Repeat(left, right, length);
@@ -5046,13 +4955,10 @@ namespace WinCopies
                 Action action;
 
                 if (left.HasValue)
-
                 {
-
                     char _left = left.Value;
 
                     if (right.HasValue)
-
                     {
                         char _right = right.Value;
 
@@ -5062,11 +4968,9 @@ namespace WinCopies
                     else
 
                         action = () => { _ = sb.Append(_left); _ = sb.Append(c); };
-
                 }
 
                 else if (right.HasValue)
-
                 {
                     char _right = right.Value;
 
@@ -5090,29 +4994,19 @@ namespace WinCopies
             {
                 var sb = new StringBuilder();
 
-                Action action;
-
-                if (left != null)
-
-                {
-
-                    if (right == null)
-
-                        action = () => { _ = sb.Append(left); _ = sb.Append(s); };
-
-                    else
-
-                        action = () => { _ = sb.Append(left); _ = sb.Append(s); _ = sb.Append(right); };
-
-                }
-
-                else if (right != null)
-
-                    action = () => { _ = sb.Append(s); _ = sb.Append(right); };
-
-                else
-
-                    action = () => sb.Append(s);
+                Action action = left != null
+                    ? right == null
+                        ? (() => { _ = sb.Append(left); _ = sb.Append(s); })
+                        :
+#if !CS9
+                (Action)
+#endif
+                (() => { _ = sb.Append(left); _ = sb.Append(s); _ = sb.Append(right); })
+                    : right != null ? (() => { _ = sb.Append(s); _ = sb.Append(right); }) :
+#if !CS9
+                (Action)
+#endif
+                (() => sb.Append(s));
 
                 for (int i = 0; i < length; i++)
 
@@ -5122,7 +5016,7 @@ namespace WinCopies
             }
 
 #if !WinCopies3
-        public static System.Collections.Generic.IEnumerable<T> ToEnumerable<T>(this T[] array) => array ?? throw GetArgumentNullException(nameof(array));
+        public static IEnumerable<T> ToEnumerable<T>(this T[] array) => array ?? throw GetArgumentNullException(nameof(array));
 #endif
         }
 #if WinCopies3

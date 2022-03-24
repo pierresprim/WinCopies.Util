@@ -22,81 +22,123 @@ using WinCopies.Collections.Generic;
 
 using static WinCopies.ThrowHelper;
 
-namespace WinCopies.Collections.DotNetFix.Generic
+namespace WinCopies.Collections.DotNetFix
 {
-    public class ArrayEnumerator<T> : Enumerator<T>, ICountableDisposableEnumeratorInfo<T>
+    public class ArrayEnumerator : Enumerator<object
+#if CS8
+        ?
+#endif
+        >
     {
-        private
+        protected Array Array { get; }
+
+        public int CurrentIndex { get; private set; }
+
+        public override bool? IsResetSupported => true;
+
+        protected override object
+#if CS8
+            ?
+#endif
+            CurrentOverride => Array.GetValue(CurrentIndex);
+
+        public ArrayEnumerator(in Array array)
+        {
+            Array = array ?? throw GetArgumentNullException(nameof(array));
+
+            ResetIndex();
+        }
+
+        protected void ResetIndex() => CurrentIndex = -1;
+
+        protected override void ResetCurrent()
+        {
+            base.ResetCurrent();
+
+            ResetIndex();
+        }
+
+        protected override bool MoveNextOverride() => ++CurrentIndex < Array.Length;
+
+        protected override void ResetOverride2() => ResetIndex();
+    }
+
+    namespace Generic
+    {
+        public class ArrayEnumerator<T> : Enumerator<T>, ICountableDisposableEnumeratorInfo<T>
+        {
+            private
 #if CS7
             System.Collections.Generic.
 #endif
             IReadOnlyList<T> _array;
-        private int _currentIndex;
-        private readonly int _startIndex;
-        private Func<bool> _condition;
-        private Action _moveNext;
+            private int _currentIndex;
+            private readonly int _startIndex;
+            private Func<bool> _condition;
+            private Action _moveNext;
 
-        protected
+            protected
 #if CS7
             System.Collections.Generic.
 #endif
             IReadOnlyList<T> Array => IsDisposed ? throw GetExceptionForDispose(false) : _array;
 
-        public int Count => IsDisposed ? throw GetExceptionForDispose(false) : _array.Count;
+            public int Count => IsDisposed ? throw GetExceptionForDispose(false) : _array.Count;
 
-        protected int CurrentIndex => IsDisposed ? throw GetExceptionForDispose(false) : _currentIndex;
+            protected int CurrentIndex => IsDisposed ? throw GetExceptionForDispose(false) : _currentIndex;
 
-        public ArrayEnumerator(in
+            public ArrayEnumerator(in
 #if CS7
             System.Collections.Generic.
 #endif
             IReadOnlyList<T> array, in bool reverse = false, in int? startIndex = null)
-        {
-            _array = array ?? throw GetArgumentNullException(nameof(array));
-
-            if (startIndex.HasValue && (startIndex.Value < 0 || startIndex.Value >= array.Count))
-
-                throw new ArgumentOutOfRangeException(nameof(startIndex), startIndex, $"The given index is less than zero or greater than or equal to {nameof(array.Count)}.");
-
-            if (reverse)
             {
-                _startIndex = startIndex.HasValue ? startIndex.Value + 1 : _array.Count;
-                _condition = () => _currentIndex >= 0;
-                _moveNext = () => _currentIndex--;
+                _array = array ?? throw GetArgumentNullException(nameof(array));
+
+                if (startIndex.HasValue && (startIndex.Value < 0 || startIndex.Value >= array.Count))
+
+                    throw new ArgumentOutOfRangeException(nameof(startIndex), startIndex, $"The given index is less than zero or greater than or equal to {nameof(array.Count)}.");
+
+                if (reverse)
+                {
+                    _startIndex = startIndex.HasValue ? startIndex.Value + 1 : _array.Count;
+                    _condition = () => _currentIndex >= 0;
+                    _moveNext = () => _currentIndex--;
+                }
+
+                else
+                {
+                    _startIndex = startIndex.HasValue ? startIndex.Value - 1 : -1;
+                    _condition = () => _currentIndex < _array.Count;
+                    _moveNext = () => _currentIndex++;
+                }
+
+                ResetCurrent();
             }
 
-            else
+            protected override T CurrentOverride => _array[_currentIndex];
+
+            public override bool? IsResetSupported => true;
+
+            protected override bool MoveNextOverride()
             {
-                _startIndex = startIndex.HasValue ? startIndex.Value - 1 : -1;
-                _condition = () => _currentIndex < _array.Count;
-                _moveNext = () => _currentIndex++;
+                _moveNext();
+
+                return _condition();
             }
 
-            ResetCurrent();
-        }
+            protected override void ResetCurrent() => _currentIndex = _startIndex;
 
-        protected override T CurrentOverride => _array[_currentIndex];
+            protected override void ResetOverride2() { /* Left empty. */ }
 
-        public override bool? IsResetSupported => true;
+            protected override void DisposeManaged()
+            {
+                _array = null;
+                _condition = null;
+                _moveNext = null;
 
-        protected override bool MoveNextOverride()
-        {
-            _moveNext();
-
-            return _condition();
-        }
-
-        protected override void ResetCurrent() => _currentIndex = _startIndex;
-
-        protected override void ResetOverride2() { /* Left empty. */ }
-
-        protected override void DisposeManaged()
-        {
-            _array = null;
-            _condition = null;
-            _moveNext = null;
-
-            Reset();
+                Reset();
+            }
         }
     }
 }

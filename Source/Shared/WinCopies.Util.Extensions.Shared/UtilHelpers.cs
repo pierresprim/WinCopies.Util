@@ -16,12 +16,11 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if CS7
-
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 using WinCopies.Linq;
-using WinCopies.Util;
 
 using static WinCopies.Diagnostics.IfHelpers;
 
@@ -29,11 +28,44 @@ using IfCT = WinCopies.Diagnostics.ComparisonType;
 using IfCM = WinCopies.Diagnostics.ComparisonMode;
 using IfComp = WinCopies.Diagnostics.Comparison;
 
+#if !WinCopies3
+using WinCopies.Util;
+#endif
+
 namespace WinCopies.Extensions // To avoid name conflicts.
 {
     public static class UtilHelpers
     {
-        public static System.Collections.Generic.IEnumerable<T> GetFieldValues<T>(this Type t, object obj)
+#if WinCopies3
+        public static IEnumerable<T> Enumerate<T>(params IEnumerable<T>[] enumerables) => enumerables.Join(false);
+#endif
+
+        private static void _RunAction<T>(in IEnumerable<T> enumerable, in Action<T> action)
+        {
+            foreach (var item in enumerable)
+
+                action(item);
+        }
+
+        public static void RunActionIfNotNull<T>(in IEnumerable<T> enumerable, in Action<T> action)
+        {
+            if (enumerable == null)
+
+                return;
+
+            _RunAction(enumerable, action);
+        }
+
+        public static void RunActionIfNotNull<T>(in IEnumerable enumerable, in Action<T> action)
+        {
+            if (enumerable == null)
+
+                return;
+
+            _RunAction(enumerable.To<T>(), action);
+        }
+
+        public static IEnumerable<T> GetFieldValues<T>(this Type t, object obj)
         {
             Type _t = typeof(T);
 
@@ -73,7 +105,7 @@ namespace WinCopies.Extensions // To avoid name conflicts.
         /// <returns>A value obtained by a <see cref="Func"/>, depending on the result of a comparison.</returns>
         /// <exception cref="ArgumentNullException">One or more of the given <see cref="Func"/>s are <see langword="null"/>.</exception>
         /// <remarks>See <see cref="GetIf{TValues, TResult}(in TValues, in TValues, in Comparison{TValues}, in Func{TResult}, in Func{TResult}, in Func{TResult})"/> for the generic version.</remarks>
-        public static object GetIf(in object x, in object y, in WinCopies.Collections.Comparison comparison, in Func lower, in Func equals, in Func greater)
+        public static object GetIf(in object x, in object y, in Collections.Comparison comparison, in Func lower, in Func equals, in Func greater)
         {
             if (If(IfCT.Or, IfCM.Logical, IfComp.Equal, out string key, null, GetKeyValuePair(nameof(lower), lower), GetKeyValuePair(nameof(greater), greater), GetKeyValuePair(nameof(equals), equals)))
 
@@ -118,7 +150,7 @@ namespace WinCopies.Extensions // To avoid name conflicts.
             return result < 0 ? lower() : result > 0 ? greater() : equals();
         }
 
-        public static TResult GetIf<TValues, TResult>(in TValues x, in TValues y, in WinCopies.Collections.Comparison comparison, in Func<TResult> lower, in Func<TResult> equals, in Func<TResult> greater)
+        public static TResult GetIf<TValues, TResult>(in TValues x, in TValues y, in Collections.Comparison comparison, in Func<TResult> lower, in Func<TResult> equals, in Func<TResult> greater)
         {
             if (If(IfCT.Or, IfCM.Logical, IfComp.Equal, out string key, null, GetKeyValuePair(nameof(lower), lower), GetKeyValuePair(nameof(greater), greater), GetKeyValuePair(nameof(equals), equals)))
 
@@ -130,5 +162,4 @@ namespace WinCopies.Extensions // To avoid name conflicts.
         }
     }
 }
-
 #endif

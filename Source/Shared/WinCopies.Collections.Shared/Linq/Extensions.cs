@@ -37,6 +37,182 @@ namespace WinCopies.Linq
 {
     public static class Extensions
     {
+        public static System.Collections.Generic.IEnumerable<TOut> WhereSelectPredicateConverter<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, Predicate<TIn> where, Converter<TIn, TOut> select)
+        {
+            foreach (TIn item in enumerable)
+
+                if (where(item))
+
+                    yield return select(item);
+        }
+
+#if !CS8
+        public static int LastIndexOf(this string s, in char c)
+        {
+            for (int i = 0; i < s.Length; i++)
+
+                if (s[i] == c)
+
+                    return i;
+
+            return -1;
+        }
+#endif
+
+        public static System.Collections.Generic.IEnumerable<TOut> ForEach<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, Func<TIn, System.Collections.Generic.IEnumerable<TOut>> func)
+        {
+            foreach (TIn
+#if CS9
+                ?
+#endif
+                item in enumerable)
+
+                foreach (TOut
+#if CS9
+                ?
+#endif
+                _item in func(item))
+
+                    yield return _item;
+        }
+
+        public static System.Collections.Generic.IEnumerable<TOut> ForEachConverter<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, Converter<TIn, System.Collections.Generic.IEnumerable<TOut>> func)
+        {
+            foreach (TIn
+#if CS9
+                ?
+#endif
+                item in enumerable)
+
+                foreach (TOut
+#if CS9
+                ?
+#endif
+                _item in func(item))
+
+                    yield return _item;
+        }
+
+        public static T? FirstOrNull<T>(this System.Collections.Generic.IEnumerable<T> enumerable) where T : struct
+        {
+            foreach (T item in enumerable)
+
+                return item;
+
+            return null;
+        }
+
+        public static T? FirstOrNull<T>(this System.Collections.Generic.IEnumerable<T> enumerable, Func<T, bool> predicate) where T : struct
+        {
+            ThrowIfNull(predicate, nameof(predicate));
+
+            foreach (T item in enumerable)
+
+                if (predicate(item))
+
+                    return item;
+
+            return null;
+        }
+
+        public static T? FirstOrNullPredicate<T>(this System.Collections.Generic.IEnumerable<T> enumerable, Predicate<T> predicate) where T : struct
+        {
+            ThrowIfNull(predicate, nameof(predicate));
+
+            foreach (T item in enumerable)
+
+                if (predicate(item))
+
+                    return item;
+
+            return null;
+        }
+
+        public static TResult? FirstOrNull<TItems, TResult>(this System.Collections.Generic.IEnumerable<TItems> enumerable) where TResult : struct
+        {
+            foreach (TItems item in enumerable)
+
+                if (item is TResult result)
+
+                    return result;
+
+            return null;
+        }
+
+        public static System.Collections.Generic.IEnumerable<T> AsReadOnlyEnumerable<T>(this System.Collections.Generic.IEnumerable<T> enumerable)
+        {
+            foreach (T
+#if CS9
+                ?
+#endif
+                item in enumerable)
+
+                yield return item;
+        }
+
+        public static System.Collections.Generic.IEnumerable<U> As<T, U>(this System.Collections.Generic.IEnumerable<T> enumerable) where T : U
+        {
+            foreach (T
+#if CS9
+                ?
+#endif
+                item in enumerable)
+
+                yield return item;
+        }
+
+        public static bool Any(this IEnumerable enumerable, Func<object, bool> func)
+        {
+            ThrowIfNull(enumerable, nameof(enumerable));
+            ThrowIfNull(func, nameof(func));
+
+            foreach (object value in enumerable)
+
+                if (func(value))
+
+                    return true;
+
+            return false;
+        }
+
+        public static bool AnyPredicate(this IEnumerable enumerable, Predicate func)
+        {
+            ThrowIfNull(enumerable, nameof(enumerable));
+            ThrowIfNull(func, nameof(func));
+
+            foreach (object value in enumerable)
+
+                if (func(value))
+
+                    return true;
+
+            return false;
+        }
+
+        public static bool Any<T>(this IEnumerable enumerable) => enumerable.Any(item => item is T);
+
+        public static bool AllPredicate<T>(this System.Collections.Generic.IEnumerable<T> source, Predicate<T> predicate)
+        {
+            foreach (T item in source)
+
+                if (!predicate(item))
+
+                    return false;
+
+            return true;
+        }
+
+        public static bool AnyPredicate<T>(this System.Collections.Generic.IEnumerable<T> source, Predicate<T> predicate)
+        {
+            foreach (T item in source)
+
+                if (predicate(item))
+
+                    return true;
+
+            return false;
+        }
+
         public static System.Collections.Generic.IEnumerable<TOut> SelectConverterIfNotNull<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, Converter<TIn, TOut> converter) where TOut : class
         {
             ThrowIfNull(enumerable, nameof(enumerable));

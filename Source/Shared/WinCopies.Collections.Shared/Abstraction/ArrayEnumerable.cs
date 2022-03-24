@@ -16,7 +16,6 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if WinCopies3
-
 using System;
 
 using WinCopies.Collections.DotNetFix;
@@ -25,7 +24,7 @@ using WinCopies.Collections.Generic;
 
 namespace WinCopies.Collections.Abstraction.Generic
 {
-    public interface IReadOnlyArrayEnumerable<T> : Collections.Generic.IReadOnlyList<T>
+    public interface IReadOnlyArrayEnumerable<T> : IReadOnlyList<T>
     {
         bool Check();
     }
@@ -92,7 +91,7 @@ namespace WinCopies.Collections.Abstraction.Generic
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
 
-        ICountableEnumerator WinCopies.Collections.Enumeration.DotNetFix.IEnumerable<ICountableEnumerator>.GetEnumerator() => GetEnumerator();
+        ICountableEnumerator Enumeration.DotNetFix.IEnumerable<ICountableEnumerator>.GetEnumerator() => GetEnumerator();
     }
 
     public abstract class ReadOnlyArrayEnumerableBase2<TSourceItems, TDestinationItems> : ReadOnlyArrayEnumerableBase<TSourceItems, TDestinationItems>, IReadOnlyArrayEnumerable<TDestinationItems>
@@ -151,5 +150,4 @@ namespace WinCopies.Collections.Abstraction.Generic
         public ArrayEnumerableSelector(in TSourceItems[] array, in Conversion<TSourceItems, TDestinationItems> selectors) : base(array) => _selectors = selectors;
     }
 }
-
 #endif

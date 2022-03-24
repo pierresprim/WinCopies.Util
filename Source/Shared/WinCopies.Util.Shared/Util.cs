@@ -50,29 +50,6 @@ using IfComp = WinCopies.Util.Util.Comparison;
 namespace WinCopies.Util
 {
 #endif
-    public sealed class NullableGeneric<T>
-    {
-        public T Value { get; }
-
-        public NullableGeneric(T value) => Value = value;
-    }
-
-    public interface IPropertyObservable : DotNetFix.IDisposable
-    {
-        void AddPropertyChangedDelegate(Action<string> action);
-
-        void RemovePropertyChangedDelegate(Action<string> action);
-    }
-
-    public sealed class NullableReference<T> where T : class
-    {
-        public T Value { get; }
-
-        public NullableReference(T value) => Value = value;
-    }
-
-    public delegate bool TaskAwaiterPredicate(ref bool cancel);
-
     /// <summary>
     /// Provides some static helper methods.
     /// </summary>
@@ -90,6 +67,31 @@ namespace WinCopies.Util
 
         public const BindingFlags DefaultBindingFlagsForPropertySet = BindingFlags.Public | BindingFlags.NonPublic |
                          BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly;
+
+        public static ConstructorInfo
+#if CS8
+                ?
+#endif
+                TryGetConstructor<T>(params Type[] types) => typeof(T).TryGetConstructor(types);
+
+        public static ConstructorInfo
+#if CS8
+                ?
+#endif
+                GetConstructor<T>(params Type[] types) => typeof(T).AssertGetConstructor(types);
+
+        /*public static System.Collections.Generic.IEnumerable<PropertyInfo> GetAllProperties<T, U>(in bool include = true) where T : U => typeof(T)._GetAllProperties(typeof(U), include);
+
+        public static System.Collections.Generic.IEnumerable<PropertyInfo> GetAllProperties<T>(in Type u, in bool include = true) => typeof(T).GetAllProperties(u, nameof(T), nameof(u), include);*/
+
+        public static bool IsSigned(object value) => (value ?? throw GetArgumentNullException(nameof(value))).Is(true, typeof(int), typeof(short), typeof(long), typeof(sbyte))
+                || (value.Is(true, typeof(uint), typeof(ushort), typeof(ulong), typeof(byte))
+                ? false
+                : throw new ArgumentException("The given value is neither from a signed nor an unsigned type."));
+
+        public static T[] GetArray<T>(params T[] items) => items;
+
+        public static void PerformAction<TIn, TOut>(in TOut parameter, in string paramName, in Action<TIn> action) => action(parameter is TIn _parameter ? _parameter : throw new InvalidArgumentException(paramName));
 
 #if CS6
         public const bool LOOP = true;

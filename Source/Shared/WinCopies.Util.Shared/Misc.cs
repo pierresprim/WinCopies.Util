@@ -16,6 +16,15 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using System;
+using System.IO;
+
+using static WinCopies.
+#if WinCopies3
+    ThrowHelper
+#else
+    Util.Util
+#endif
+    ;
 
 namespace WinCopies
 #if !WinCopies3
@@ -91,5 +100,110 @@ namespace WinCopies
 
             GC.SuppressFinalize(this);
         }
+    }
+
+    public sealed class NullableGeneric<T>
+    {
+        public T Value { get; }
+
+        public NullableGeneric(T value) => Value = value;
+    }
+
+    public interface IPropertyObservable : DotNetFix.IDisposable
+    {
+        void AddPropertyChangedDelegate(Action<string> action);
+
+        void RemovePropertyChangedDelegate(Action<string> action);
+    }
+
+    public sealed class NullableReference<T> where T : class
+    {
+        public T Value { get; }
+
+        public NullableReference(T value) => Value = value;
+    }
+
+    public delegate bool TaskAwaiterPredicate(ref bool cancel);
+
+    public class StreamInfo : System.IO.Stream, DotNetFix.IDisposable
+    {
+        protected System.IO.Stream Stream { get; }
+
+        public override bool CanRead => Stream.CanRead;
+
+        public override bool CanSeek => Stream.CanSeek;
+
+        public override bool CanWrite => Stream.CanWrite;
+
+        public override long Length => Stream.Length;
+
+        public override long Position { get => Stream.Position; set => Stream.Position = value; }
+
+        public bool IsDisposed { get; private set; }
+
+        public StreamInfo(in System.IO.Stream stream) => Stream = stream ?? throw GetArgumentNullException(nameof(stream));
+
+        public override void Flush() => Stream.Flush();
+
+        public override int Read(byte[] buffer, int offset, int count) => Stream.Read(buffer, offset, count);
+
+        public override long Seek(long offset, SeekOrigin origin) => Stream.Seek(offset, origin);
+
+        public override void SetLength(long value) => Stream.SetLength(value);
+
+        public override void Write(byte[] buffer, int offset, int count) => Stream.Write(buffer, offset, count);
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            IsDisposed = true;
+        }
+    }
+
+    public class BooleanEventArgs : EventArgs
+    {
+        public bool Value { get; }
+
+        public BooleanEventArgs(in bool value) => Value = value;
+    }
+
+    public interface ISplitFactory<T, U, TContainer>
+    {
+        TContainer Container { get; }
+
+        int SubCount { get; }
+
+        void SubClear();
+    }
+
+    public interface IValueSplitFactory<T, U, TContainer> : ISplitFactory<T, U, TContainer>
+    {
+        void Add(U enumerable);
+
+        U GetEnumerable();
+
+        void SubAdd(T value);
+    }
+
+    public interface IRefSplitFactory<T, U, V, TContainer> : ISplitFactory<T, U, TContainer> where T : class
+    {
+        void Add(V enumerable);
+
+        V GetEnumerable();
+
+        void SubAdd(U value);
+
+        U GetValueContainer(T value);
+    }
+
+    public interface IPopable<TIn, TOut>
+    {
+        TOut Pop(TIn key);
+    }
+
+    public interface IAsEnumerable<T>
+    {
+        System.Collections.Generic.IEnumerable<T> AsEnumerable();
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Text;
 
 using WinCopies.Util;
@@ -14,6 +15,147 @@ namespace WinCopies
 {
     public static class StringExtensions
     {
+        public static string Surround(this string
+#if CS8
+                ?
+#endif
+                value, in char left, in char right) => Surround(value, left.ToString(), right.ToString());
+        public static string Surround(this string
+#if CS8
+                ?
+#endif
+                value, in char decorator) => Surround(value, decorator.ToString());
+        public static string Surround(this string
+#if CS8
+                ?
+#endif
+                value, in string
+#if CS8
+                ?
+#endif
+                left, in string
+#if CS8
+                ?
+#endif
+                right) => $"{left}{value}{right}";
+        public static string Surround(this string
+#if CS8
+                ?
+#endif
+                value, in string
+#if CS8
+                ?
+#endif
+                decorator) => Surround(value, decorator, decorator);
+
+        private static string
+#if CS8
+                ?
+#endif
+                FirstCharTo(this string
+#if CS8
+                ?
+#endif
+                value, Converter<char, char> charConverter, Converter<string, string> stringConverter) => value == null ? null : value.Length > 1 ? charConverter(value[0]) + value
+#if CS8
+            [1..]
+#else
+            .Substring(1)
+#endif
+            : stringConverter(value);
+        public static string
+#if CS8
+                ?
+#endif
+                FirstCharToLower(this string
+#if CS8
+                ?
+#endif
+                value) => value.FirstCharTo(c => char.ToLower(c), s => s.ToLower());
+        public static string
+#if CS8
+                ?
+#endif
+                FirstCharToLowerInvariant(this string
+#if CS8
+                ?
+#endif
+                value) => value.FirstCharTo(c => char.ToLowerInvariant(c), s => s.ToLowerInvariant());
+        public static string
+#if CS8
+                ?
+#endif
+                FirstCharToLower(this string
+#if CS8
+                ?
+#endif
+                value, CultureInfo culture) => value.FirstCharTo(c => char.ToLower(c, culture), s => s.ToLower(culture));
+
+        public static string
+#if CS8
+                ?
+#endif
+                FirstCharToUpper(this string
+#if CS8
+                ?
+#endif
+                value) => value.FirstCharTo(c => char.ToLower(c), s => s.ToUpper());
+        public static string
+#if CS8
+                ?
+#endif
+                FirstCharToUpperInvariant(this string
+#if CS8
+                ?
+#endif
+                value) => value.FirstCharTo(c => char.ToUpperInvariant(c), s => s.ToUpperInvariant());
+        public static string
+#if CS8
+                ?
+#endif
+                FirstCharToUpper(this string
+#if CS8
+                ?
+#endif
+                value, CultureInfo culture) => value.FirstCharTo(c => char.ToUpper(c, culture), s => s.ToUpper(culture));
+
+        private static string FirstCharOfEachWordToUpper(this string s, in Converter<char, char> converter, params char[] separators)
+        {
+            string[] text = s.Split(separators);
+
+            char[] c = new char[s.Length];
+
+            int _j;
+
+            string _text;
+
+            for (int i = 0, j = 0; i < text.Length; i++)
+            {
+                _text = text[i];
+
+                c[j] = converter(_text[0]);
+
+                for (j++, _j = 1; _j < _text.Length; j++, _j++)
+
+                    c[j] = _text[_j];
+            }
+
+            return new string(c);
+        }
+        public static string FirstCharOfEachWordToUpper(this string s, params char[] separators) => s.FirstCharOfEachWordToUpper(c => char.ToUpper(c), separators);
+        public static string FirstCharOfEachWordToUpperInvariant(this string s, params char[] separators) => s.FirstCharOfEachWordToUpper(c => char.ToUpperInvariant(c), separators);
+        public static string FirstCharOfEachWordToUpper(this string s, CultureInfo culture, params char[] separators) => s.FirstCharOfEachWordToUpper(c => char.ToUpper(c, culture), separators);
+
+        public static string Reverse(this string s)
+        {
+            char[] c = new char[s.Length];
+
+            for (int i = 0; i < s.Length; i++)
+
+                c[i] = s[s.Length - i - 1];
+
+            return new string(c);
+        }
 #if CS5
 #if !CS8
         public static StringBuilder AppendJoin(this StringBuilder stringBuilder, in string s, in System.Collections.Generic.IEnumerable<string> values)

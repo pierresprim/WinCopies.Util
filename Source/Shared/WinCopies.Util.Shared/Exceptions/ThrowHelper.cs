@@ -39,6 +39,65 @@ namespace WinCopies
     /// </summary>
     public static class ThrowHelper
     {
+        public static T
+#if CS9
+            ?
+#endif
+             GetOrThrowIfInvalidType<T>(in object
+#if CS8
+            ?
+#endif
+            obj, in string argumentName, in bool nullAllowed) where T : class => obj is T _obj ? _obj : (obj == null && nullAllowed) ?
+#if !CS9
+            (T)
+#endif
+            null : throw new TypeArgumentException<T>(obj?.GetType(), argumentName);
+
+        public static T? GetValueOrThrowIfInvalidType<T>(in object
+#if CS8
+            ?
+#endif
+            obj, in string argumentName, in bool nullAllowed) where T : struct => obj is T _obj ? _obj : (obj == null && nullAllowed) ?
+#if !CS9
+            (T?)
+#endif
+            null : throw new TypeArgumentException<T>(obj?.GetType(), argumentName);
+
+        public static T GetOrThrowIfInvalidType<T>(in object
+#if CS8
+            ?
+#endif
+            obj, in string argumentName) => obj is T _obj ? _obj : throw new TypeArgumentException<T>(obj?.GetType(), argumentName);
+
+        public static void ThrowIfNull(object
+#if CS8
+                ?
+#endif
+                obj, in string paramName)
+        {
+            if (obj == null)
+
+                throw GetArgumentNullException(paramName);
+        }
+
+        public static T GetResultOrThrowIfNull<T>(Func<T
+#if CS8
+                ?
+#endif
+                > func, string errorMessage) where T : class => func() ?? throw new InvalidOperationException(errorMessage);
+
+        public static Func<T> FuncAsGetResultOrThrowIfNull<T>(Func<T
+#if CS8
+                ?
+#endif
+                > func, string errorMessage) where T : class => () => GetResultOrThrowIfNull(func, errorMessage);
+
+        public static Exception GetExceptionForInvalidType<T>(in object
+#if CS8
+                ?
+#endif
+                obj, in string argumentName) => GetExceptionForInvalidType<T>(obj?.GetType(), argumentName);
+
         public static InvalidEnumArgumentException GetArgumentMustBeFromEnumAndNotValueException(in string argumentName, in string enumName, in Enum value, in Enum forbiddenValue) => new InvalidEnumArgumentException(string.Format(ArgumentMustBeFromEnumAndNotValue, argumentName, enumName, $"{enumName}.{forbiddenValue}"), value);
 
 #if WinCopies3

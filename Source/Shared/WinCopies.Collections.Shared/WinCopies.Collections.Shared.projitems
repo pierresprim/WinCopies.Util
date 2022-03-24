@@ -78,6 +78,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\StringCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerables\CustomEnumeratorEnumerable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerables\DotNetFix\ILongCountableEnumerable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerables\ExtensibleEnumerable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerables\LinkedListEnumerable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerables\ReadOnlyEnumerable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerables\UIntCountableEnumerable.cs" />

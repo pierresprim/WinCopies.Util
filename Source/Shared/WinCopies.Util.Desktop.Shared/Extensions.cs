@@ -16,10 +16,12 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using System;
+using System.Collections;
 using System.Drawing;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
@@ -31,23 +33,215 @@ using WinCopies.Util;
 #endif
 
 #if !WinCopies3
+using static WinCopies.Util.ForLoop;
 using static WinCopies.Util.Util;
 
 namespace WinCopies.Util
 #else
-using static WinCopies.UtilHelpers;
+using static WinCopies.ForLoop;
 using static WinCopies.ThrowHelper;
+using static WinCopies.UtilHelpers;
 
 namespace WinCopies.Desktop
 #endif
 {
     public static class Extensions
     {
-        public static void Add(this CommandBindingCollection commandBindings, in System.Windows.Input.ICommand command, in ExecutedRoutedEventHandler executed, in CanExecuteRoutedEventHandler canExecute) => commandBindings.Add(command, executed, canExecute);
+        public static T GetChild<T>(this DependencyObject parent, in bool lookForDirectChildOnly, out bool isDirectChild) where T : Visual
+        {
+            T child = default;
+            int count = VisualTreeHelper.GetChildrenCount(parent);
 
-        public static void Add(this CommandBindingCollection commandBindings, in System.Windows.Input.ICommand command, Action _delegate) => commandBindings.Add(new CommandBinding(command, (object sender, ExecutedRoutedEventArgs e) => _delegate(), (object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = true));
+            for (int i = 0; i < count; i++)
+            {
+                var visual = (Visual)VisualTreeHelper.GetChild(parent, i);
+                child = visual as T;
 
-        public static void AddCommandBinding(this UIElement obj, in System.Windows.Input.ICommand command, Action _delegate) => obj.CommandBindings.Add(command, _delegate);
+                if (child == null)
+                {
+                    if (!lookForDirectChildOnly && child == null)
+
+                        child = GetChild<T>(visual, false, out _);
+                }
+
+                else
+                {
+                    isDirectChild = true;
+
+                    return child;
+                }
+            }
+
+            isDirectChild = false;
+
+            return child;
+        }
+
+        public static Panel GetItemsPanel(this DependencyObject itemsControl)
+        {
+            ItemsPresenter itemsPresenter = itemsControl.GetChild<ItemsPresenter>(false, out _);
+
+            return itemsPresenter == null ? null : VisualTreeHelper.GetChild(itemsPresenter, 0) as Panel;
+        }
+
+#if CS5
+        public static bool HasHorizontalOrientation(this Panel panel) => panel.HasLogicalOrientationPublic && panel.LogicalOrientationPublic == Orientation.Horizontal;
+
+        public static bool HasVerticalOrientation(this Panel panel) => panel.HasLogicalOrientationPublic && panel.LogicalOrientationPublic == Orientation.Vertical;
+
+        private struct TryGetFirstParams
+        {
+            public int Index { get; }
+
+            public int Count { get; }
+
+            public TryGetFirstParams(in int index, in int count)
+            {
+                Index = index;
+                Count = count;
+            }
+        }
+
+        private static bool TryGet<T>(in IList itemCollection, in int i, ref bool checkContent, out T item) where T : Visual
+        {
+#if CS8
+            static
+#endif
+            bool onItemFound(in T __item, out T ___item)
+            {
+                ___item = __item;
+
+                return false;
+            }
+
+            object obj = itemCollection[i];
+
+            if (obj is T _item)
+
+                return onItemFound(_item, out item);
+
+            else if (checkContent && obj is ContentPresenter contentPresenter)
+            {
+                _item = contentPresenter.GetChild<T>(true, out _);
+
+                if (_item != null)
+                {
+                    checkContent = true;
+
+                    return onItemFound(_item, out item);
+                }
+            }
+
+            item = default;
+
+            return true;
+        }
+
+        private delegate T LoopFunc<T>(in int index, in int count, out bool ok, in FuncOut<int, T, bool> func);
+
+        private static T TryGetFirst<T>(IList itemCollection, in TryGetFirstParams initParams, in TryGetFirstParams? rollBackParams, out bool rollBack, ref bool checkContent, LoopFunc<T> loopFunc, out bool found) where T : Visual
+        {
+            T loop(in TryGetFirstParams @params, ref bool _checkContent, out bool _found)
+            {
+                bool __checkContent = _checkContent;
+
+                T result = loopFunc(@params.Index, @params.Count, out _found, (int i, out T _item) => TryGet(itemCollection, i, ref __checkContent, out _item));
+
+                _checkContent = __checkContent;
+
+                return result;
+            }
+
+            T item = loop(initParams, ref checkContent, out found);
+
+            rollBack = false;
+
+            if (!found && rollBackParams.HasValue)
+            {
+                item = loop(rollBackParams.Value, ref checkContent, out found);
+
+                rollBack = true;
+            }
+
+            return item;
+        }
+
+        private struct TGFParams
+        {
+            public FuncIn<int, TryGetFirstParams> GetInitParams { get; }
+
+            public FuncIn<int, TryGetFirstParams> GetRollBackParams { get; }
+
+            public TGFParams(in int index, in FuncIn<int, int, TryGetFirstParams> getInitParams, in FuncIn<int, int, TryGetFirstParams> getRollBackParams)
+            {
+                GetInitParams = GetTGFParamsFunc(index, getInitParams);
+                GetRollBackParams = GetTGFParamsFunc(index, getRollBackParams);
+            }
+
+            private static FuncIn<int, TryGetFirstParams> GetTGFParamsFunc(int index, FuncIn<int, int, TryGetFirstParams> func) => (in int count) => func(index, count);
+        }
+
+        private static TOut TryGetFirst<TIn, TOut>(in TIn itemsControl, in FuncIn<TIn, IList> func, in TGFParams @params, ref bool rollBack, ref bool checkContent, in LoopFunc<TOut> loopFunc, out bool found) where TOut : Visual
+        {
+            if (itemsControl == null)
+
+                throw GetArgumentNullException(nameof(itemsControl));
+
+            IList itemCollection = func(itemsControl);
+
+            int count = itemCollection.Count;
+
+            return TryGetFirst(itemCollection, @params.GetInitParams(count), rollBack ? @params.GetRollBackParams(count) :
+#if !CS9
+                (TryGetFirstParams?)
+#endif
+                null, out rollBack, ref checkContent, loopFunc, out found);
+        }
+
+        private static TGFParams GetTGFParams(in int index, in FuncIn<int, int, TryGetFirstParams> funcInitParams, in FuncIn<int, int, TryGetFirstParams> funcRollBackParams) => new
+#if !CS9
+            TGFParams
+#endif
+            (index, funcInitParams, funcRollBackParams);
+
+        private static TGFParams GetTGFAParams(in int index) => GetTGFParams(index, (in int _index, in int count) => new
+#if !CS9
+            TryGetFirstParams
+#endif
+            (_index + 1, count), (in int _index, in int _count) => new
+#if !CS9
+            TryGetFirstParams
+#endif
+            (0, _index));
+
+        private static TGFParams GetTGFBParams(in int index) => GetTGFParams(index, (in int _index, in int count) => new
+#if !CS9
+            TryGetFirstParams
+#endif
+            (_index - 1, 0), (in int _index, in int _count) => new
+#if !CS9
+            TryGetFirstParams
+#endif
+            (_count - 1, _index + 1));
+
+        private static T TryGetFirst<T>(in ItemsControl itemsControl, int index, in FuncIn<int, TGFParams> func, ref bool rollBack, ref bool checkContent, in LoopFunc<T> loopFunc, out bool found) where T : Visual => TryGetFirst(itemsControl, (in ItemsControl _itemsControl) => _itemsControl.Items, func(index), ref rollBack, ref checkContent, loopFunc, out found);
+
+        public static T TryGetFirstAfter<T>(this ItemsControl itemsControl, int index, ref bool rollBack, ref bool checkContent, out bool found) where T : Visual => TryGetFirst<T>(itemsControl, index, GetTGFAParams, ref rollBack, ref checkContent, LoopFuncASC, out found);
+
+        public static T TryGetFirstBefore<T>(this ItemsControl itemsControl, int index, ref bool rollBack, ref bool checkContent, out bool found) where T : Visual => TryGetFirst<T>(itemsControl, index, GetTGFBParams, ref rollBack, ref checkContent, LoopFuncDESC, out found);
+
+        private static T TryGetFirst<T>(in Panel itemsControl, int index, in FuncIn<int, TGFParams> func, ref bool rollBack, ref bool checkContent, in LoopFunc<T> loopFunc, out bool found) where T : Visual => TryGetFirst(itemsControl, (in Panel _itemsControl) => _itemsControl.Children, func(index), ref rollBack, ref checkContent, loopFunc, out found);
+
+        public static T TryGetFirstAfter<T>(this Panel itemsControl, int index, ref bool rollBack, ref bool checkContent, out bool found) where T : Visual => TryGetFirst<T>(itemsControl, index, GetTGFAParams, ref rollBack, ref checkContent, LoopFuncASC, out found);
+
+        public static T TryGetFirstBefore<T>(this Panel itemsControl, int index, ref bool rollBack, ref bool checkContent, out bool found) where T : Visual => TryGetFirst<T>(itemsControl, index, GetTGFBParams, ref rollBack, ref checkContent, LoopFuncDESC, out found);
+#endif
+
+        public static void Add(this CommandBindingCollection commandBindings, in ICommand command, in ExecutedRoutedEventHandler executed, in CanExecuteRoutedEventHandler canExecute) => commandBindings.Add(command, executed, canExecute);
+
+        public static void Add(this CommandBindingCollection commandBindings, in ICommand command, Action _delegate) => commandBindings.Add(new CommandBinding(command, (object sender, ExecutedRoutedEventArgs e) => _delegate(), (object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = true));
+
+        public static void AddCommandBinding(this UIElement obj, in ICommand command, Action _delegate) => obj.CommandBindings.Add(command, _delegate);
 
         public static void Execute(this ICommand command, object commandParameter, IInputElement commandTarget)
         {

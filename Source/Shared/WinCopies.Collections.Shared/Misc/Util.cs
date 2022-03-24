@@ -16,23 +16,41 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if WinCopies3
-
 using System;
 using System.Collections.Generic;
 
 using WinCopies.Collections.DotNetFix;
 using WinCopies.Collections.DotNetFix.Generic;
 using WinCopies.Collections.Generic;
+using WinCopies.Linq;
 
 using static WinCopies.ThrowHelper;
+#else
+using WinCopies.Util;
+#endif
 
 namespace WinCopies.Collections
 {
+    namespace Generic
+    {
+        public interface IMultiTypeEnumerable<T, U> : System.Collections.Generic.IEnumerable<T>, IAsEnumerable<U> where T : U
+        {
+#if CS8
+            System.Collections.Generic.IEnumerable<U> IAsEnumerable<U>.AsEnumerable() => this.As<T, U>();
+#else
+            // Left empty.
+#endif
+        }
+    }
+
+#if WinCopies3
     /// <summary>
     /// Collection-oriented helper methods.
     /// </summary>
     public static class Util
     {
+        public static void PerformAction<TIn, TOut>(in System.Collections.Generic.IEnumerable<TOut> parameters, in Action<System.Collections.Generic.IEnumerable<TIn>> action) => action(parameters.To<TIn>());
+
 #if CS5
         public static ILinkedListNode<KeyValuePair<TKey,TValue>> Find<TDictionary, TKey, TValue>( in TDictionary dictionary, in TKey key) where TDictionary : DotNetFix.Generic.IDictionary<TKey, TValue>, ILinkedList3<KeyValuePair<TKey, TValue>>
         {
@@ -162,5 +180,5 @@ namespace WinCopies.Collections
             return result < 0 ? lower() : result > 0 ? greater() : equals();
         }
     }
-}
 #endif
+}

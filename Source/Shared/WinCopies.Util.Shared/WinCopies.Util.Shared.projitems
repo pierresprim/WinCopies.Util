@@ -12,6 +12,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)CheckedUInt64.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Commands.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Comparers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ForLoop.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ItemsChangedEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Regex.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StringExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Delegates\ActionDelegates.cs" />

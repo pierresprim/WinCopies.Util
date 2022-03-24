@@ -37,14 +37,24 @@ using WinCopies.Util;
 
 namespace WinCopies.Collections.Abstraction.Generic
 {
-    public class LinkedListNode<T> : ILinkedListNode<T>, IEquatable<ILinkedListNode<T>>
+    public class LinkedListNode<T> :
+#if !WinCopies3
+        DotNetFix.
+#endif
+        ILinkedListNode<T>, IEquatable<ILinkedListNode<T>>
     {
+#if WinCopies3
         private IReadOnlyLinkedListNodeBase2<T> _asReadOnly;
         private ILinkedListNodeBase2<T> _asReadOnly2;
+#endif
 
         protected internal System.Collections.Generic.LinkedListNode<T> InnerNode { get; }
 
-        ILinkedList<T> ILinkedListNode<T>.List => GetList();
+        ILinkedList<T>
+#if !WinCopies3
+        DotNetFix.
+#endif
+        ILinkedListNode<T>.List => GetList();
 
 #if WinCopies3
         ILinkedList<T> IReadOnlyLinkedListNode<T, ILinkedList<T>>.List => GetList();
@@ -84,6 +94,13 @@ namespace WinCopies.Collections.Abstraction.Generic
         IReadOnlyLinkedListNodeBase2<T> IReadOnlyLinkedListNodeBase2<T>.Previous => GetNode(InnerNode.Previous);
 
         IReadOnlyLinkedListNodeBase2<T> IReadOnlyLinkedListNodeBase2<T>.Next => GetNode(InnerNode.Next);
+#else
+        DotNetFix.ILinkedListNode<T> DotNetFix.ILinkedListNode<T>.Next => GetNode(InnerNode.Next);
+
+        DotNetFix.ILinkedListNode<T> DotNetFix.ILinkedListNode<T>.Previous => GetNode(InnerNode.Previous);
+
+        T DotNetFix.ILinkedListNode<T>.Value => InnerNode.Value;
+#endif
 
         bool
 #if WinCopies3
@@ -92,13 +109,6 @@ namespace WinCopies.Collections.Abstraction.Generic
             DotNetFix.ILinkedListNode<T>
 #endif
        .IsReadOnly => false;
-#else
-        DotNetFix.ILinkedListNode<T> DotNetFix.ILinkedListNode<T>.Next => GetNode(InnerNode.Next);
-
-        DotNetFix.ILinkedListNode<T> DotNetFix.ILinkedListNode<T>.Previous => GetNode(InnerNode.Previous);
-
-        T DotNetFix.ILinkedListNode<T>.Value => InnerNode.Value;
-#endif
 
         public LinkedListNode(in System.Collections.Generic.LinkedListNode<T> node) => InnerNode = node ?? throw GetArgumentNullException(nameof(node));
 
@@ -116,8 +126,13 @@ namespace WinCopies.Collections.Abstraction.Generic
 
         public bool Equals(ILinkedListNode<T> other) => InnerNode == LinkedList<T>.TryGetNode(other);
 
-        public override bool Equals(object? obj) => obj is ILinkedListNode<T> other && Equals(other);
+        public override bool Equals(object
+#if CS8
+            ?
+#endif
+            obj) => obj is ILinkedListNode<T> other && Equals(other);
 
+#if WinCopies3
         public IReadOnlyLinkedListNodeBase2<T> ToReadOnly() => _asReadOnly
 #if CS8
             ??=
@@ -141,6 +156,7 @@ namespace WinCopies.Collections.Abstraction.Generic
             )
 #endif
             ;
+#endif
 
         public static bool operator ==(LinkedListNode<T> x, ILinkedListNode<T> y) => x == null ? y == null : x.Equals(y);
 
@@ -219,6 +235,10 @@ namespace WinCopies.Collections.Abstraction.Generic
         System.Collections.Generic.IEnumerator<ILinkedListNode<T>> Collections.Generic.IEnumerable<ILinkedListNode<T>>.GetReversedEnumerator() => GetNodeEnumerator(EnumerationDirection.LIFO);
 
         System.Collections.IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetEnumerator(EnumerationDirection.LIFO);
+
+        bool ILinkedList<T>.IsReadOnly => false;
+
+        bool ICollectionBase<T>.IsReadOnly => false;
 #else
         System.Collections.Generic.LinkedListNode<T> ILinkedList<T>.Last => InnerList.Last;
 
@@ -267,10 +287,6 @@ namespace WinCopies.Collections.Abstraction.Generic
 
         bool ICollection.IsSynchronized => InnerList.AsOfType<ICollection>().IsSynchronized;
 
-        bool ILinkedList<T>.IsReadOnly => false;
-
-        bool ICollectionBase<T>.IsReadOnly => false;
-
         public LinkedList(in System.Collections.Generic.LinkedList<T> list) => InnerList = list ?? throw GetArgumentNullException(nameof(list));
 
         public LinkedListNode<T> GetNode(in System.Collections.Generic.LinkedListNode<T> node) => new
@@ -307,6 +323,7 @@ namespace WinCopies.Collections.Abstraction.Generic
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => ((IEnumerable)InnerList).GetEnumerator();
 
+#if WinCopies3
         DotNetFix.Generic.IUIntCountableEnumerable<ILinkedListNode<T>> ILinkedList<T>.AsNodeEnumerable() => throw new NotSupportedException("This operation is not supported by this implementation.");
 
         void ILinkedList<T>.Add(T item) => InnerCollection.Add(item);
@@ -325,7 +342,7 @@ namespace WinCopies.Collections.Abstraction.Generic
 
         IUIntCountableEnumerator<T> IUIntCountableEnumerable<T, IUIntCountableEnumerator<T>>.GetEnumerator() => GetEnumerator3(EnumerationDirection.FIFO);
 
-#if WinCopies3 && !CS8
+#if !CS8
         System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetEnumerator(EnumerationDirection.FIFO);
 
         System.Collections.Generic.IEnumerator<T> Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => GetEnumerator(EnumerationDirection.LIFO);
@@ -347,6 +364,7 @@ namespace WinCopies.Collections.Abstraction.Generic
         IUIntCountableEnumerator<T> Enumeration.DotNetFix.IEnumerable<IUIntCountableEnumerator<T>>.GetEnumerator() => GetEnumerator3(EnumerationDirection.FIFO);
 
         IUIntCountableEnumerator<T> DotNetFix.Generic.IEnumerable<T, IUIntCountableEnumerator<T>>.GetEnumerator() => GetEnumerator3(EnumerationDirection.FIFO);
+#endif
 #endif
     }
 }

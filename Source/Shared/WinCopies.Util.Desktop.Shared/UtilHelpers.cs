@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
+using System;
 using System.Windows;
 using System.Windows.Input;
 
@@ -30,6 +31,16 @@ namespace WinCopies.Util.Desktop
 {
     public static class UtilHelpers
     {
+        public static RoutedEventArgs<BooleanEventArgs> GetRoutedBooleanEventArgs(in RoutedEvent @event, in bool value) => new
+#if !CS9
+            RoutedEventArgs<BooleanEventArgs>
+#endif
+            (@event, new BooleanEventArgs(value));
+
+        public static void RegisterClassHandler<T>(RoutedEvent routedEvent, Delegate handler) => EventManager.RegisterClassHandler(typeof(T), routedEvent, handler);
+
+        public static void RegisterClassHandler<T>(RoutedEvent routedEvent, Delegate handler, bool handledEventsToo) => EventManager.RegisterClassHandler(typeof(T), routedEvent, handler, handledEventsToo);
+
         public static DependencyProperty Register<TValue, TOwnerType>(in string propertyName) => DependencyProperty.Register(propertyName, typeof(TValue), typeof(TOwnerType));
 
         public static DependencyProperty Register<TValue, TOwnerType>(in string propertyName, in PropertyMetadata propertyMetadata) => DependencyProperty.Register(propertyName, typeof(TValue), typeof(TOwnerType), propertyMetadata);

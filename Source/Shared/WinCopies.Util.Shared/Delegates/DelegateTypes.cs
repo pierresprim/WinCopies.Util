@@ -115,6 +115,10 @@ namespace WinCopies
     /// <returns><see langword="true"/> if the predicate success, otherwise <see langword="false"/>.</returns>
     public delegate bool Predicate(object value);
 
+    public delegate bool PredicateIn(in object obj);
+
+
+
     public delegate T Converter<
 #if WinCopies3
         out

@@ -35,6 +35,7 @@ CHANGELOG
 			- inherits from IReadOnlyUIntCollection\<T>.
 			- has new property and methods, and new default implementations (for C\# 8 and above).
 		- LinkedList\<T>.LinkedListNode's constructor parameter has the 'in' modifier.
+- New static and extension methods.
 - New types.
 
 ### 11/03/2021 3.16-preview

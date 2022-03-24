@@ -92,6 +92,106 @@ namespace WinCopies
         public static bool CompareHashCodeGenericIn<T>(in T x, in T y) => CompareHashCodeIn(x, y);
 
         public static bool CompareHashCodeGeneric<T>(T x, T y) => CompareHashCodeIn(x, y);
+
+        public static string
+#if CS8
+                ?
+#endif
+                ToString(object obj) => obj.ToString();
+        public static string
+#if CS8
+                ?
+#endif
+                ToStringIn(in object obj) => obj.ToString();
+        public static string
+#if CS8
+                ?
+#endif
+                ToStringRef(ref object obj) => obj.ToString();
+        public static string
+#if CS8
+                ?
+#endif
+                ToStringT<T>(T value) => (value
+#if CS8
+            ??
+#else
+        == null ?
+#endif
+            throw GetArgumentNullException(nameof(value))
+#if !CS8
+             : value
+#endif
+            ).ToString();
+        public static string
+#if CS8
+                ?
+#endif
+                ToStringInT<T>(in T value) => (value
+#if CS8
+            ??
+#else
+        == null ?
+#endif
+             throw GetArgumentNullException(nameof(value))
+#if !CS8
+             : value
+#endif
+            ).ToString();
+        public static string
+#if CS8
+                ?
+#endif
+                ToStringRefT<T>(ref T value) => (value
+#if CS8
+            ??
+#else
+        == null ?
+#endif
+             throw GetArgumentNullException(nameof(value))
+#if !CS8
+             : value
+#endif
+            ).ToString();
+
+        public static Converter<T, string
+#if CS8
+                ?
+#endif
+                > GetSurrounder<T>(in char decorator) => GetSurrounder<T>(decorator.ToString());
+        public static Converter<T, string
+#if CS8
+                ?
+#endif
+                > GetSurrounder<T>(string decorator) => value => value?.ToString().Surround(decorator);
+
+        private static T _GetIn<T>(in Func<bool> func, in T ifTrue, in T ifFalse) => GetIn(func, ifTrue, ifFalse);
+
+        public static T Get<T>(Func<bool> func, T ifTrue, T ifFalse) => GetIn(func, ifTrue, ifFalse);
+        public static T GetIn<T>(in Func<bool> func, in T ifTrue, in T ifFalse) => _GetIn(func ?? throw GetArgumentNullException(nameof(func)), ifTrue, ifFalse);
+        public static T Get<T>(bool value, T ifTrue, T ifFalse) => GetIn(value, ifTrue, ifFalse);
+        public static T GetIn<T>(in bool value, in T ifTrue, in T ifFalse) => value ? ifTrue : ifFalse;
+
+        public static TOut GetIfNull<TIn, TOut>(Func<TIn> func, TOut ifTrue, TOut ifFalse) where TIn : class
+#if CS8
+                ?
+#endif
+                => GetIfNullIn(func, ifTrue, ifFalse);
+        public static TOut GetIfNullIn<TIn, TOut>(in Func<TIn> func, in TOut ifTrue, in TOut ifFalse) where TIn : class
+#if CS8
+                ?
+#endif
+                => GetIfNullIn((func ?? throw GetArgumentNullException(nameof(func)))(), ifTrue, ifFalse);
+        public static TOut GetIfNull<TIn, TOut>(TIn value, TOut ifTrue, TOut ifFalse) where TIn : class
+#if CS8
+                ?
+#endif
+                => GetIfNullIn(value, ifTrue, ifFalse);
+        public static TOut GetIfNullIn<TIn, TOut>(TIn value, in TOut ifTrue, in TOut ifFalse) where TIn : class
+#if CS8
+                ?
+#endif
+                => _GetIn(() => value == null, ifTrue, ifFalse);
     }
 
     /// <summary>
@@ -156,5 +256,184 @@ namespace WinCopies
         public static bool GetReversedBoolFunc<T>(in Predicate<T> func, in T param) => !GetOrThrowIfNull(func, nameof(func))(param);
 
         public static bool GetReversedBoolFunc<TPredicateParam, TOut>(in PredicateOut<TPredicateParam, TOut> func, in TPredicateParam param, out TOut result) => !GetOrThrowIfNull(func, nameof(func))(param, out result);
+
+        public static bool FirstBool(bool ok, object
+#if CS8
+                ?
+#endif
+                obj) => FirstBoolIn(ok, obj);
+        public static bool FirstBoolIn(in bool ok, in object
+#if CS8
+                ?
+#endif
+                obj) => ok;
+        public static bool FirstBoolGeneric<T>(bool ok, T value) => FirstBoolIn(ok, value);
+        public static bool FirstBoolInGeneric<T>(in bool ok, in T value) => FirstBoolIn(ok, value);
+
+        private static T2 PrependPredicate<T1, T2>(T1 x, Func<T2> func) where T1 : class
+#if CS8
+                ?
+#endif
+                => x == null ? throw GetArgumentNullException(nameof(x)) : func();
+
+        private static Predicate GetPredicate(Predicate x, Predicate y) => value => x(value) && y(value);
+        private static Predicate<T> GetPredicate<T>(Predicate<T> x, Predicate<T> y) => value => x(value) && y(value);
+        private static PredicateIn GetPredicateIn(Predicate x, PredicateIn y) => (in object value) => x(value) && y(value);
+        private static PredicateIn GetPredicateIn(PredicateIn x, PredicateIn y) => (in object value) => x(value) && y(value);
+        private static PredicateIn<T> GetPredicateIn<T>(Predicate<T> x, PredicateIn<T> y) => (in T value) => x(value) && y(value);
+        private static PredicateIn<T> GetPredicateIn<T>(PredicateIn<T> x, PredicateIn<T> y) => (in T value) => x(value) && y(value);
+
+        public static Predicate PrependPredicateNULL(Predicate x, Predicate
+#if CS8
+                ?
+#endif
+                y) => PrependPredicate(x, () => y == null ? x : GetPredicate(x, y));
+        public static Predicate<T> PrependPredicateNULL<T>(Predicate<T> x, Predicate<T>
+#if CS8
+                ?
+#endif
+                y) => PrependPredicate(x, () => y == null ? x : value => x(value) && y(value));
+        public static PredicateIn PrependPredicateInNULL(PredicateIn x, PredicateIn
+#if CS8
+                ?
+#endif
+                y) => PrependPredicate(x, () => y == null ? x : (in object obj) => x(obj) && y(obj));
+        public static PredicateIn<T> PrependPredicateInNULL<T>(PredicateIn<T> x, PredicateIn<T>
+#if CS8
+                ?
+#endif
+                y) => PrependPredicate(x, () => y == null ? x : (in T value) => x(value) && y(value));
+
+        public static Predicate PrependPredicate(Predicate x, Predicate y) => PrependPredicate(x, () => y == null ? throw GetArgumentNullException(nameof(y)) : GetPredicate(x, y));
+        public static Predicate<T> PrependPredicate<T>(Predicate<T> x, Predicate<T> y) => PrependPredicate(x, () => y == null ? throw GetArgumentNullException(nameof(y)) : GetPredicate(x, y));
+        public static PredicateIn PrependPredicateIn(PredicateIn x, PredicateIn y) => PrependPredicate(x, () => y == null ? throw GetArgumentNullException(nameof(y)) : GetPredicateIn(x, y));
+        public static PredicateIn<T> PrependPredicateIn<T>(PredicateIn<T> x, PredicateIn<T> y) => PrependPredicate(x, () => y == null ? throw GetArgumentNullException(nameof(y)) : GetPredicateIn(x, y));
+
+        public static PredicateIn PrependPredicateIn(Predicate x, PredicateIn y) => PrependPredicate(x, () => y == null ? throw GetArgumentNullException(nameof(y)) : GetPredicateIn(x, y));
+        public static PredicateIn<T> PrependPredicateIn<T>(Predicate<T> x, PredicateIn<T> y) => PrependPredicate(x, () => y == null ? throw GetArgumentNullException(nameof(y)) : GetPredicateIn(x, y));
+
+        public static Func<bool, object, bool> PrependPredicate(Predicate
+#if CS8
+                ?
+#endif
+                predicate)
+#if CS9
+            =>
+#else
+        {
+            if (
+#endif
+                predicate == null
+#if CS9
+            ?
+#else
+            ) return
+#endif
+                FirstBool
+#if CS9
+                :
+#else
+                ;
+
+            else return
+#endif
+            (bool ok, object value) => ok && predicate(value);
+#if !CS9
+        }
+#endif
+
+        public static Func<bool, T, bool> PrependPredicate<T>(Predicate<T>
+#if CS8
+                ?
+#endif
+                predicate)
+#if CS9
+            =>
+#else
+        {
+            if (
+#endif
+                predicate == null
+#if CS9
+                ?
+#else
+                ) return
+#endif
+                FirstBoolGeneric
+
+#if CS9
+                :
+#else
+                ;
+
+            else return
+#endif
+                    (bool ok, T value) => ok && predicate(value);
+#if !CS9
+        }
+#endif
+
+        public static FuncIn<bool, object, bool> PrependPredicateIn(Predicate
+#if CS8
+                ?
+#endif
+                predicate)
+#if CS9
+            =>
+#else
+        {
+            if (
+#endif
+         predicate == null
+#if CS9
+        ?
+#else
+        ) return
+#endif
+        FirstBoolIn
+#if CS9
+
+            :
+#else
+            ;
+
+            else return
+#endif
+            (in bool ok, in object value) => ok && predicate(value);
+#if !CS9
+        }
+#endif
+
+        public static FuncIn<bool, T, bool> PrependPredicateIn<T>(Predicate<T>
+#if CS8
+                ?
+#endif
+                predicate)
+#if CS9
+            =>
+#else
+        {
+            if (
+#endif
+         predicate == null
+#if CS9
+         ?
+#else
+         )
+
+                return
+#endif
+            FirstBoolInGeneric
+#if CS9
+                :
+#else
+                ;
+
+            else return
+#endif
+                (in bool ok, in T value) => ok && predicate(value);
+#if !CS9
+        }
+#endif
     }
 }
