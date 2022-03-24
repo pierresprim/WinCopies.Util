@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#if WinCopies3 && CS5
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 using WinCopies.Collections.Generic;
@@ -22,14 +23,12 @@ namespace WinCopies.Collections.DotNetFix.Generic
         bool TryGetValue(TKey key, out TValue value);
     }
 
-#if WinCopies3 && CS5
     public interface IReadOnlyLinkedDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, TValue>
     {
         IReadOnlyLinkedListNodeBase<KeyValuePair<TKey, TValue>> First { get; }
 
         IReadOnlyLinkedListNodeBase<KeyValuePair<TKey, TValue>> Last { get; }
     }
-#endif
 
     public interface IDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, TValue>, IUIntCollection<KeyValuePair<TKey, TValue>>, System.Collections.Generic.IEnumerable<KeyValuePair<TKey, TValue>>
     {
@@ -40,7 +39,6 @@ namespace WinCopies.Collections.DotNetFix.Generic
         bool Remove(TKey key);
     }
 
-#if WinCopies3 && CS5
     public interface ILinkedDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IReadOnlyLinkedDictionary<TKey, TValue>
     {
         ILinkedListNodeBase<KeyValuePair<TKey, TValue>> First { get; }
@@ -57,5 +55,5 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
         KeyValuePair<TKey, TValue> RemoveLast();
     }
-#endif
 }
+#endif
