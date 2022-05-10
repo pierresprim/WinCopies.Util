@@ -69,7 +69,13 @@ namespace WinCopies.Collections.Generic
 #else
                         this
 #endif
-                        .RemoveAndGetFirst().Value.Value);
+                        .
+#if WinCopies3
+                            RemoveAndGetFirst
+#else
+                            RemoveAndGetFirstValue
+#endif
+                            ().Value.Value);
 
             else
 

@@ -24,11 +24,19 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 #if CS6
 using System.Threading.Tasks;
+
+using WinCopies.Collections;
 #endif
 
-using WinCopies.Util;
+using static WinCopies.
+#if !WinCopies3
+    Util.
+#endif
+    Delegates;
 
 #if WinCopies3
+using WinCopies.Util;
+
 using static WinCopies.ThrowHelper;
 
 namespace WinCopies
@@ -54,19 +62,159 @@ namespace WinCopies.Util
     /// Provides some static helper methods.
     /// </summary>
     public static class
-#if !WinCopies3
-        Util
-#else
+#if WinCopies3
         UtilHelpers
+#else
+        Util
 #endif
     {
-        public const string NotApplicable = "N/A";
+        public static List<T> GetList<T>(params
+#if CS5
+            IReadOnlyList<T>
+#else
+            T[]
+#endif
+            []
+            arrays)
+        {
+            int length = 0;
 
-        public const char PathFilterChar = '*';
-        public const char LikeStatementChar = '%';
+            foreach (
+#if CS5
+                IReadOnlyList<T>
+#else
+                T[]
+#endif
+                array in arrays)
 
-        public const BindingFlags DefaultBindingFlagsForPropertySet = BindingFlags.Public | BindingFlags.NonPublic |
-                         BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly;
+                length += array.
+#if CS5
+                    Count
+#else
+                    Length
+#endif
+                    ;
+
+            var items = new List<T>(length);
+
+            foreach (
+#if CS5
+                IReadOnlyList<T>
+#else
+                T[]
+#endif
+                array in arrays)
+
+                foreach (T item in array)
+
+                    items.Add(item);
+
+            return items;
+        }
+
+        public static void Using<T>(in Func<T> func, in Action<T> action) where T : System.IDisposable
+        {
+            ThrowIfNull(func, nameof(func));
+            ThrowIfNull(action, nameof(action));
+
+            using
+#if !CS8
+                (
+#endif
+                T obj = func()
+#if CS8
+                ;
+#else
+                )
+#endif
+
+            action(obj);
+        }
+
+        public static void UsingIn<T>(in Func<T> func, in ActionIn<T> action) where T : System.IDisposable
+        {
+            ThrowIfNull(func, nameof(func));
+            ThrowIfNull(action, nameof(action));
+
+            using
+#if !CS8
+                (
+#endif
+                T obj = func()
+#if CS8
+                ;
+#else
+                )
+#endif
+
+            action(obj);
+        }
+
+#if CS8
+        public static ReadOnlySpan<T> GetReadOnlySpan<T>(T[]? array, int start) => array == null ? new
+#if !CS9
+            ReadOnlySpan<T>
+#endif
+            () : new
+#if !CS9
+            ReadOnlySpan<T>
+#endif
+            (array, start, array.Length - start);
+
+        public static ReadOnlySpan<T> GetReadOnlySpanL<T>(T[]? array, int length) => array == null ? new
+#if !CS9
+            ReadOnlySpan<T>
+#endif
+            () : new
+#if !CS9
+            ReadOnlySpan<T>
+#endif
+            (array, length, length > array.Length ? array.Length : length);
+#endif
+
+        private static void _Dispose<T>(ref T obj) where T : System.IDisposable
+        {
+            obj.Dispose();
+            obj = default;
+        }
+
+        public static void Dispose<T>(ref T obj) where T : System.IDisposable
+        {
+            if (obj == null)
+
+                throw GetArgumentNullException(nameof(obj));
+
+            _Dispose(ref obj);
+        }
+
+        private static bool TryDispose<T>(ref T obj, in PredicateIn<T> func) where T : System.IDisposable
+        {
+            if (func(obj))
+
+                return false;
+
+            _Dispose(ref obj);
+
+            return true;
+        }
+
+        public static bool TryDispose<T>(ref T obj) where T : System.IDisposable => TryDispose(ref obj, (in T _obj) => _obj == null);
+
+        public static bool TryDispose2<T>(ref T obj) where T : DotNetFix.IDisposable => TryDispose(ref obj, (in T _obj) => _obj == null || _obj.IsDisposed);
+
+#if !CS9
+        public static Type GetUnderlyingType<T>() where T : Enum => Enum.GetUnderlyingType(typeof(T));
+
+        public static string[] GetNames<T>() where T : Enum => Enum.GetNames(typeof(T));
+#endif
+
+        public static Predicate GetPredicate(object obj) => _obj => Delegates.CompareEquality(obj, _obj);
+
+        public static Predicate<object> GetObjectPredicate(object obj) => _obj => Delegates.CompareEquality(obj, _obj);
+
+        [DllImport("gdi32.dll", CharSet = CharSet.Auto)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool DeleteObject([In] IntPtr hObject);
 
         public static ConstructorInfo
 #if CS8
@@ -92,6 +240,282 @@ namespace WinCopies.Util
         public static T[] GetArray<T>(params T[] items) => items;
 
         public static void PerformAction<TIn, TOut>(in TOut parameter, in string paramName, in Action<TIn> action) => action(parameter is TIn _parameter ? _parameter : throw new InvalidArgumentException(paramName));
+
+        public static bool PerformActionIf(in bool condition, in Action action)
+        {
+            if (condition)
+            {
+                action();
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool PerformActionIfNull(in object param, in Action action) => PerformActionIf(param == null, action);
+
+        public static bool PerformActionIfIsNull(in object param, in Action action) => PerformActionIf(param is null, action);
+
+        public static bool PerformActionIfNotNull(in object param, in Action action) => PerformActionIf(param != null, action);
+
+        public static bool PerformActionIfIsNotNull(in object param, in Action action) => PerformActionIf(
+#if !CS9
+            !(
+#endif
+            param is
+#if CS9
+            not
+#endif
+            null
+#if !CS9
+            )
+#endif
+            , action);
+
+        public static bool PerformActionIf(in Func<bool> func, in Action action) => PerformActionIf(func(), action);
+
+        public static bool PerformActionIfNull(in Func<object> func, in Action action) => PerformActionIf(func() == null, action);
+
+        public static bool PerformActionIfIsNull(in Func<object> func, in Action action) => PerformActionIf(func() is null, action);
+
+        public static bool PerformActionIfNotNull(in Func<object> func, in Action action) => PerformActionIf(func() != null, action);
+
+        public static bool PerformActionIfIsNotNull(in Func<object> func, in Action action) => PerformActionIf(
+#if !CS9
+            !(
+#endif
+            func() is
+#if CS9
+            not
+#endif
+            null
+#if !CS9
+            )
+#endif
+            , action);
+
+        public static bool PerformActionIf<T>(in T param, in bool condition, Action<T> action) => PerformActionIf(condition, GetAction(param, action));
+
+        public static bool PerformActionIf<T>(in T param, Func<bool> func, in Action<T> action) => PerformActionIf(param, func(), action);
+
+        public static bool PerformActionIf<T>(T param, Predicate<T> predicate, Action action) => PerformActionIf(() => predicate(param), action);
+
+        public static bool PerformActionIf<T>(T param, Predicate<T> predicate, Action<T> action) => PerformActionIf(param, predicate, GetAction(param, action));
+
+        public static bool PerformActionIfNull<T>(in T param, in Action<T> action) => PerformActionIf(param, param == null, action);
+
+        public static bool PerformActionIfNull<T>(in Func<T> func, in Action<T> action) => PerformActionIf(func(), param => param == null, action);
+
+        public static bool PerformActionIfNotNull<T>(in T param, in Action<T> action) => PerformActionIf(param, param != null, action);
+
+        public static bool PerformActionIfNotNull<T>(in Func<T> func, in Action<T> action) => PerformActionIf(func(), param => param != null, action);
+
+#if CS8
+        public static bool PerformActionIfIsNull<T>(in T param, in Action<T> action) => PerformActionIf(param, param is null, action);
+
+        public static bool PerformActionIfIsNull<T>(in Func<T> func, in Action<T> action) => PerformActionIf(func(), param => param is null, action);
+
+        public static bool PerformActionIfIsNotNull<T>(in T param, in Action<T> action) => PerformActionIf(param,
+#if !CS9
+            !(
+#endif
+            param is
+#if CS9
+            not
+#endif
+            null
+#if !CS9
+            )
+#endif
+            , action);
+
+        public static bool PerformActionIfIsNotNull<T>(in Func<T> func, in Action<T> action) => PerformActionIf(func(), param =>
+#if !CS9
+            !(
+#endif
+            param is
+#if CS9
+            not
+#endif
+            null
+#if !CS9
+            )
+#endif
+            , action);
+#endif
+
+        public static bool PerformActionIfNotValidated<TIn, TOut>(TIn param, Predicate<TIn> predicate, Converter<TIn, TOut> converter, out TOut result)
+        {
+            if (predicate(param))
+            {
+                result = default;
+
+                return false;
+            }
+
+            result = converter(param);
+
+            return true;
+        }
+
+        public static TOut PerformActionIfNotValidated<TIn, TOut>(TIn param, Predicate<TIn> predicate, Converter<TIn, TOut> converter) => PerformActionIfNotValidated(param, predicate, converter, out TOut result) ? result : default;
+
+        public static bool PerformActionIfNotNull<TIn, TOut>(TIn
+#if CS9
+            ?
+#endif
+            param, Converter<TIn, TOut> converter, out TOut result) => PerformActionIfNotValidated(param, CheckIfEqualsNull, converter, out result);
+
+        public static TOut PerformActionIfNotNull<TIn, TOut>(TIn
+#if CS9
+            ?
+#endif
+            param, Converter<TIn, TOut> converter) => PerformActionIfNotNull(param, converter, out TOut result) ? result : default;
+
+        public static bool PerformActionIf<TIn, TOut>(TIn param, Predicate<TIn> predicate, Converter<TIn, TOut> converter, out TOut result)
+        {
+            if (predicate(param))
+            {
+                result = converter(param);
+
+                return true;
+            }
+
+            result = default;
+
+            return false;
+        }
+
+        public static TOut PerformActionIf<TIn, TOut>(TIn param, Predicate<TIn> predicate, Converter<TIn, TOut> converter) => PerformActionIf(param, predicate, converter, out TOut result) ? result : default;
+
+        public static bool PerformActionIfNull<TIn, TOut>(TIn
+#if CS9
+            ?
+#endif
+            param, Converter<TIn, TOut> converter, out TOut result) => PerformActionIf(param, CheckIfEqualsNull, converter, out result);
+
+        public static TOut PerformActionIfNull<TIn, TOut>(TIn
+#if CS9
+            ?
+#endif
+            param, Converter<TIn, TOut> converter) => PerformActionIfNull(param, converter, out TOut result) ? result : default;
+
+        public static bool PerformActionIf<TIn, TOut>(TIn param, Predicate<TIn> predicate, Converter<TIn, TOut> ifTrue, Converter<TIn, TOut> ifFalse, out TOut result)
+        {
+            if (predicate(param))
+            {
+                result = ifTrue(param);
+
+                return true;
+            }
+
+            result = ifFalse(param);
+
+            return false;
+        }
+
+        public static TOut PerformActionIf<TIn, TOut>(TIn param, Predicate<TIn> predicate, Converter<TIn, TOut> ifTrue, Converter<TIn, TOut> ifFalse) => PerformActionIf(param, predicate, ifTrue, ifFalse, out TOut result) ? result : default;
+
+        public static bool PerformActionIfNull<TIn, TOut>(TIn
+#if CS9
+            ?
+#endif
+            param, Converter<TIn, TOut> ifTrue, Converter<TIn, TOut> ifFalse, out TOut result) => PerformActionIf(param, CheckIfEqualsNull, ifTrue, ifFalse, out result);
+
+        public static TOut PerformActionIfNull<TIn, TOut>(TIn
+#if CS9
+            ?
+#endif
+            param, Converter<TIn, TOut> ifTrue, Converter<TIn, TOut> ifFalse) => PerformActionIfNull(param, ifTrue, ifFalse, out TOut result) ? result : default;
+
+        public static bool PerformActionIfNotNull<TIn, TOut>(TIn
+#if CS9
+            ?
+#endif
+            param, Converter<TIn, TOut> ifTrue, Converter<TIn, TOut> ifFalse, out TOut result) => PerformActionIf(param, CheckIfEqualsNull, ifFalse, ifTrue, out result);
+
+        public static TOut PerformActionIfNotNull<TIn, TOut>(TIn
+#if CS9
+            ?
+#endif
+            param, Converter<TIn, TOut> ifTrue, Converter<TIn, TOut> ifFalse) => PerformActionIfNotNull(param, ifTrue, ifFalse, out TOut result) ? result : default;
+
+        public static bool PerformActionIf<TIn, TOut>(TIn param, Predicate<TIn> predicate, TOut ifTrue, Converter<TIn, TOut> ifFalse, out TOut result)
+        {
+            if (predicate(param))
+            {
+                result = ifTrue;
+
+                return true;
+            }
+
+            result = ifFalse(param);
+
+            return false;
+        }
+
+        public static bool PerformActionIfNull<TIn, TOut>(TIn
+#if CS9
+            ?
+#endif
+            param, TOut ifTrue, Converter<TIn, TOut> ifFalse, out TOut result) => PerformActionIf(param, CheckIfEqualsNull, ifTrue, ifFalse, out result);
+
+        public static TOut PerformActionIfNull<TIn, TOut>(TIn
+#if CS9
+            ?
+#endif
+            param, TOut ifTrue, Converter<TIn, TOut> ifFalse) => PerformActionIfNull(param, ifTrue, ifFalse, out TOut result) ? result : default;
+
+        public static bool PerformActionIfNotNull<TIn, TOut>(TIn
+#if CS9
+            ?
+#endif
+            param, TOut ifTrue, Converter<TIn, TOut> ifFalse, out TOut result) => PerformActionIf(param, CheckIfEqualsNull, ifFalse, ifTrue, out result);
+
+        public static TOut PerformActionIfNotNull<TIn, TOut>(TIn
+#if CS9
+            ?
+#endif
+            param, TOut ifTrue, Converter<TIn, TOut> ifFalse) => PerformActionIfNotNull(param, ifTrue, ifFalse, out TOut result) ? result : default;
+
+        public static bool PerformActionIf<TIn, TOut>(TIn param, Predicate<TIn> predicate, Converter<TIn, TOut> ifTrue, TOut ifFalse, out TOut result)
+        {
+            if (predicate(param))
+            {
+                result = ifTrue(param);
+
+                return true;
+            }
+
+            result = ifFalse;
+
+            return false;
+        }
+
+        public static bool PerformActionIfNull<TIn, TOut>(TIn
+#if CS9
+            ?
+#endif
+            param, Converter<TIn, TOut> ifTrue, TOut ifFalse, out TOut result) => PerformActionIf(param, CheckIfEqualsNull, ifTrue, ifFalse, out result);
+
+        public static TOut PerformActionIfNull<TIn, TOut>(TIn
+#if CS9
+            ?
+#endif
+            param, Converter<TIn, TOut> ifTrue, TOut ifFalse) => PerformActionIfNull(param, ifTrue, ifFalse, out TOut result) ? result : default;
+
+        public static bool PerformActionIfNotNull<TIn, TOut>(TIn
+#if CS9
+            ?
+#endif
+            param, Converter<TIn, TOut> ifTrue, TOut ifFalse, out TOut result) => PerformActionIf(param, CheckIfEqualsNull, ifFalse, ifTrue, out result);
+
+        public static TOut PerformActionIfNotNull<TIn, TOut>(TIn
+#if CS9
+            ?
+#endif
+            param, Converter<TIn, TOut> ifTrue, TOut ifFalse) => PerformActionIfNotNull(param, ifTrue, ifFalse, out TOut result) ? result : default;
 
 #if CS6
         public const bool LOOP = true;
@@ -269,6 +693,9 @@ namespace WinCopies.Util
 #endif
 
         public static void Reverse<T>(ref T x, ref T y)
+#if CS7
+            => (y, x) = (x, y);
+#else
         {
             T z = x;
 
@@ -276,6 +703,7 @@ namespace WinCopies.Util
 
             y = z;
         }
+#endif
 
         public static void Reverse<T>(in T x, in T y, in Action<T> setX, in Action<T> setY)
         {
@@ -286,6 +714,36 @@ namespace WinCopies.Util
 
             setY(x);
         }
+
+        public static bool UpdateValue<T>(ref T value, in T newValue, in bool condition)
+        {
+            if (condition)
+            {
+                value = newValue;
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool UpdateValue(ref bool value) => UpdateValue(ref value, false, value);
+
+        public static bool UpdateValue<T>(ref T value, in T whenTrue, in T whenFalse, in bool condition)
+        {
+            if (condition)
+            {
+                value = whenTrue;
+
+                return true;
+            }
+
+            value = whenFalse;
+
+            return false;
+        }
+
+        public static bool UpdateValue2(ref bool value) => UpdateValue(ref value, false, true, value);
 
         public static bool UpdateValue<T>(ref T value, in T newValue)
         {
@@ -345,18 +803,28 @@ namespace WinCopies.Util
             return false;
         }
 
-        public static bool For(in Func<bool> loopCondition, Action action, in Action postIterationAction) => For(loopCondition, () =>
+        public static bool For(in Func<bool> loopCondition, in Action action, in Action postIterationAction) => For(loopCondition, action.ToBoolFunc(), postIterationAction);
+
+        public static bool TryFor(in Func<bool> loopCondition, Func<bool> action, in Action postIterationAction, out bool succeeded)
         {
-            try
+            bool _succeeded = true;
+
+            bool result = For(loopCondition, () =>
             {
-                action();
+                try
+                {
+                    return action();
+                }
 
-                return true;
-            }
+                catch { return _succeeded = false; }
+            }, postIterationAction);
 
-            catch { return false; }
+            succeeded = _succeeded;
 
-        }, postIterationAction);
+            return result;
+        }
+
+        public static bool TryFor(in Func<bool> loopCondition, Action action, in Action postIterationAction, out bool succeeded) => TryFor(loopCondition, action.ToBoolFunc(), postIterationAction, out succeeded);
 
         public static bool PredicateRef<T>(object value, Predicate<T> predicate) where T : class
 #if CS9
@@ -578,7 +1046,7 @@ namespace WinCopies.Util
 
                 throw new ArgumentException($"{nameof(comparisonDelegate)} have to be set to null in order to use this method with the {nameof(IfComp.ReferenceEqual)} enum value.");
 
-            if (comparison == IfComp.ReferenceEqual && !valueType.GetType().IsClass) throw new InvalidOperationException("ReferenceEqual comparison is only valid with class types.");
+            if (comparison == IfComp.ReferenceEqual && valueType.GetType().IsValueType) throw new InvalidOperationException("ReferenceEqual comparison is only valid with non-value types.");
         }
 
         private static void ThrowOnInvalidEqualityIfMethodArg<T>(IfCT comparisonType, IfCM comparisonMode, IfComp comparison, EqualityComparison<T> comparisonDelegate)
@@ -589,7 +1057,7 @@ namespace WinCopies.Util
 
                 throw new ArgumentException($"{nameof(comparisonDelegate)} have to be set to null in order to use this method with the {nameof(IfComp.ReferenceEqual)} enum value.");
 
-            if (comparison == IfComp.ReferenceEqual && !typeof(T).IsClass) throw new InvalidOperationException("ReferenceEqual comparison is only valid with class types.");
+            if (comparison == IfComp.ReferenceEqual && typeof(T).IsValueType) throw new InvalidOperationException("ReferenceEqual comparison is only valid with non-value types.");
         }
 #endif
         #endregion
@@ -635,7 +1103,7 @@ namespace WinCopies.Util
 
         private static bool CheckEqualityComparison(in IfComp comparison, in object value, in object valueToCompare, in Func<bool> predicateResult, in EqualityComparison comparisonDelegate)
         {
-            if (comparison == IfComp.ReferenceEqual && !value.GetType().IsClass) throw new InvalidOperationException("ReferenceEqual comparison is only valid with class types.");
+            if (comparison == IfComp.ReferenceEqual && !value.GetType().IsValueType) throw new InvalidOperationException("ReferenceEqual comparison is only valid with non-value types.");
 
             if (comparison != IfComp.NotEqual && !predicateResult()) return false;
 
@@ -1809,7 +2277,7 @@ namespace WinCopies.Util
 
             foreach (object value in array)
 
-                values |= (long)Convert.ChangeType(value, TypeCode.Int64, CultureInfo.CurrentCulture);
+                values |= (long)System.Convert.ChangeType(value, TypeCode.Int64, CultureInfo.CurrentCulture);
 
             return values;
         }
@@ -1822,7 +2290,7 @@ namespace WinCopies.Util
 
             foreach (object value in array)
 
-                values |= (ulong)Convert.ChangeType(value, TypeCode.UInt64, CultureInfo.CurrentCulture);
+                values |= (ulong)System.Convert.ChangeType(value, TypeCode.UInt64, CultureInfo.CurrentCulture);
 
             return values;
         }
@@ -1850,7 +2318,7 @@ where T : Enum
             Type enumType = typeof(T);
 #endif
 
-            return enumType.IsEnum ? Convert.ChangeType(enumType.GetField(fieldName).GetValue(null), Enum.GetUnderlyingType(enumType)) : throw new ArgumentException("'enumType' is not an enum type.");
+            return enumType.IsEnum ? System.Convert.ChangeType(enumType.GetField(fieldName).GetValue(null), Enum.GetUnderlyingType(enumType)) : throw new ArgumentException("'enumType' is not an enum type.");
         }
 
 #if !WinCopies3
@@ -1891,8 +2359,9 @@ where T : Enum
         /// </summary>
         /// <param name="obj">The object to check.</param>
         /// <param name="argumentName">The argument name for the <see cref="ArgumentNullException"/> that is thrown.</param>
-        /// <returns></returns>
-        public static object GetOrThrowIfNull(in object obj, in string argumentName) => obj ?? throw GetArgumentNullException(argumentName);
+        public static object GetOrThrowIfNull(in object obj, in string argumentName) => GetOrThrowIfNull<object>(obj, argumentName);
+
+        public static object GetOrThrowIfNull(in object obj, in string argumentName, in Func func) => GetOrThrowIfNull(obj, argumentName, func.AsObjectFunc());
 
         /// <summary>
         /// Returns <paramref name="obj"/> if it is not null, otherwise throws the <see cref="ArgumentNullException"/> that is returned by the <see cref="GetArgumentNullException(in string)"/> method.
@@ -1900,8 +2369,25 @@ where T : Enum
         /// <typeparam name="T">The type of <paramref name="obj"/>. This must be a class type.</typeparam>
         /// <param name="obj">The object to check.</param>
         /// <param name="argumentName">The argument name for the <see cref="ArgumentNullException"/> that is thrown.</param>
-        /// <returns></returns>
-        public static T GetOrThrowIfNull<T>(in T obj, in string argumentName) where T : class => obj ?? throw GetArgumentNullException(argumentName);
+        public static T GetOrThrowIfNull<T>(in T obj, in string argumentName)
+#if !WinCopies3
+            where T : class
+#endif
+            => GetOrThrowIfNull(obj, argumentName, Delegates.Self);
+
+        public static TOut GetOrThrowIfNull<TIn, TOut>(in TIn obj, in string argumentName, in Func<TOut> func) => obj == null ? throw GetArgumentNullException(argumentName) : GetOrThrowIfNull(func, nameof(func))();
+
+        private static TOut GetOrThrowIfNull<TIn, TOut>(in TIn obj, in string argumentName, in Func<TIn, TOut> func) => func(obj
+#if CS8
+            ??
+#else
+            == null ?
+#endif
+            throw GetArgumentNullException(argumentName)
+#if !CS8
+            : obj
+#endif
+            );
 
         /// <summary>
         /// Returns an <see cref="ArgumentException"/> for the given object and argument name.
@@ -2103,5 +2589,22 @@ where T : Enum
             //}
         }
 #endif
+#if WinCopies3
+    }
+
+    public static class Consts
+    {
+#endif
+        public const int NotSetIndex = -1;
+        public const int DefaultStartIndex = 0;
+
+
+        public const string NotApplicable = "N/A";
+
+        public const char PathFilterChar = '*';
+        public const char LikeStatementChar = '%';
+
+        public const BindingFlags DefaultBindingFlagsForPropertySet = BindingFlags.Public | BindingFlags.NonPublic |
+                         BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly;
     }
 }

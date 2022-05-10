@@ -16,22 +16,16 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if CS7
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
 
 using WinCopies.Util;
 
-using static WinCopies
-#if !WinCopies3
-    .Util.Util;
-
-using System.Runtime.Serialization;
-
-using WinCopies.Collections.Generic;
+#if WinCopies3
+using static WinCopies.ThrowHelper;
 #else
-    .ThrowHelper;
+using System.Runtime.Serialization;
 #endif
 
 using static WinCopies.Collections.ThrowHelper;
@@ -73,15 +67,7 @@ int
             int ICollection.Count => (int)Count;
 
             int System.Collections.Generic.IReadOnlyCollection<T>.Count => (int)Count;
-#endif
 
-            public bool IsReadOnly => true;
-
-            bool ICollection.IsSynchronized => InnerList.IsSynchronized;
-
-            object ICollection.SyncRoot => InnerList.SyncRoot;
-
-#if WinCopies3
             public T FirstValue => InnerList.FirstValue;
 
             public T LastValue => InnerList.LastValue;
@@ -92,6 +78,20 @@ int
 
             IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.Last => throw GetReadOnlyListOrCollectionException();
 #endif
+
+            public bool IsReadOnly => true;
+
+            bool ICollection.IsSynchronized => InnerList
+#if !WinCopies3
+                .AsFromType<ICollection>()
+#endif
+            .IsSynchronized;
+
+            object ICollection.SyncRoot => InnerList
+#if !WinCopies3
+                .AsFromType<ICollection>()
+#endif
+            .SyncRoot;
 
             public ReadOnlyLinkedCollection(in
 #if !WinCopies3
@@ -107,17 +107,15 @@ int
             IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.FindLast(T value) => throw GetReadOnlyListOrCollectionException();
 #endif
 
-            public void CopyTo(Array array, int index) => InnerList.CopyTo(array, index);
-
-            public void CopyTo(
-#if WinCopies3
-            T
-#else
-            T
+            public void CopyTo(Array array, int index) => InnerList
+#if !WinCopies3
+                .AsFromType<ICollection>()
 #endif
-           [] array, int arrayIndex) => InnerList.CopyTo(array, arrayIndex);
+            .CopyTo(array, index);
 
-            System.Collections.IEnumerator IEnumerable.GetEnumerator() => InnerList.AsOfType<IEnumerable>().GetEnumerator();
+            public void CopyTo(T[] array, int arrayIndex) => InnerList.CopyTo(array, arrayIndex);
+
+            System.Collections.IEnumerator IEnumerable.GetEnumerator() => InnerList.AsFromType<IEnumerable>().GetEnumerator();
 
             void ICollection<T>.Add(T item) => throw GetReadOnlyListOrCollectionException();
 
@@ -132,7 +130,7 @@ int
 
             public IUIntCountableEnumerator<T> GetReversedEnumerator() => InnerList.GetReversedEnumerator();
 
-            System.Collections.Generic.IEnumerator<T> Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => InnerList.AsOfType<Collections.Generic.IEnumerable<T>>().GetReversedEnumerator();
+            System.Collections.Generic.IEnumerator<T> Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => InnerList.AsFromType<Collections.Generic.IEnumerable<T>>().GetReversedEnumerator();
 
 #if !CS8
             System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetEnumerator();

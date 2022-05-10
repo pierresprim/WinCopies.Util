@@ -209,9 +209,9 @@ namespace WinCopies.Collections.AbstractionInterop.Generic
 
                 System.Collections.IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetEnumerator(EnumerationDirection.LIFO);
 
-                int System.Collections.Generic.ICollection<TDestination>.Count => InnerList.AsOfType<TList, System.Collections.Generic.ICollection<TSource>>().Count;
+                int System.Collections.Generic.ICollection<TDestination>.Count => InnerList.AsFromType<TList, System.Collections.Generic.ICollection<TSource>>().Count;
 
-                int ICollection.Count => InnerList.AsOfType<ICollection>().Count;
+                int ICollection.Count => InnerList.AsFromType<ICollection>().Count;
 
                 bool System.Collections.Generic.ICollection<TDestination>.IsReadOnly => false;
 

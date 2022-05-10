@@ -161,7 +161,7 @@ namespace WinCopies.Collections.Generic
 
         public bool SupportsReversedEnumeration => _list.SupportsReversedEnumeration;
 
-        int System.Collections.Generic.ICollection<T>.Count => _list.AsOfType<System.Collections.Generic.ICollection<LinkedTreeNode<T>>>().Count;
+        int System.Collections.Generic.ICollection<T>.Count => _list.AsFromType<System.Collections.Generic.ICollection<LinkedTreeNode<T>>>().Count;
 
         int ICollection.Count => ((ICollection)_list).Count;
 
@@ -407,7 +407,7 @@ namespace WinCopies.Collections.Generic
 
         private void _AddLast(LinkedTreeNode<T> node) => Add(node, _node => _list.AddLast(_node), nameof(node));
 
-        void System.Collections.Generic.ICollection<T>.Add(T item) => _list.AsOfType<System.Collections.Generic.ICollection<LinkedTreeNode<T>>>().Add(new LinkedTreeNode<T>(item));
+        void System.Collections.Generic.ICollection<T>.Add(T item) => _list.AsFromType<System.Collections.Generic.ICollection<LinkedTreeNode<T>>>().Add(new LinkedTreeNode<T>(item));
 
 
 

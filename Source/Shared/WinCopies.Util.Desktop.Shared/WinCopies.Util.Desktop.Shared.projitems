@@ -42,6 +42,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Binding\PushBindingCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Binding\PushBindingManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\ActionToCommandConverters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\BooleanMultiConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\CheckableObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\CoalesceConverter.cs" />

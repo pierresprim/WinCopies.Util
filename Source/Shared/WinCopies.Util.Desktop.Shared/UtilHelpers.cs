@@ -19,6 +19,8 @@ using System;
 using System.Windows;
 using System.Windows.Input;
 
+using WinCopies.Commands;
+
 namespace WinCopies.Desktop
 {
     public static class Delegates
@@ -37,16 +39,39 @@ namespace WinCopies.Util.Desktop
 #endif
             (@event, new BooleanEventArgs(value));
 
-        public static void RegisterClassHandler<T>(RoutedEvent routedEvent, Delegate handler) => EventManager.RegisterClassHandler(typeof(T), routedEvent, handler);
+        public static void RegisterClassHandler<T>(in RoutedEvent routedEvent, in Delegate handler) => EventManager.RegisterClassHandler(typeof(T), routedEvent, handler);
 
-        public static void RegisterClassHandler<T>(RoutedEvent routedEvent, Delegate handler, bool handledEventsToo) => EventManager.RegisterClassHandler(typeof(T), routedEvent, handler, handledEventsToo);
+        public static void RegisterClassHandler<T>(in RoutedEvent routedEvent, in Delegate handler, in bool handledEventsToo) => EventManager.RegisterClassHandler(typeof(T), routedEvent, handler, handledEventsToo);
 
-        public static DependencyProperty Register<TValue, TOwnerType>(in string propertyName) => DependencyProperty.Register(propertyName, typeof(TValue), typeof(TOwnerType));
+        public static DependencyProperty Register<TValue, TOwner>(in string propertyName) => DependencyProperty.Register(propertyName, typeof(TValue), typeof(TOwner));
 
-        public static DependencyProperty Register<TValue, TOwnerType>(in string propertyName, in PropertyMetadata propertyMetadata) => DependencyProperty.Register(propertyName, typeof(TValue), typeof(TOwnerType), propertyMetadata);
+        public static DependencyProperty Register<TValue, TOwner>(in string propertyName, in PropertyMetadata propertyMetadata) => DependencyProperty.Register(propertyName, typeof(TValue), typeof(TOwner), propertyMetadata);
 
-        public static DependencyPropertyKey RegisterReadOnly<TValue, TOwnerType>(in string propertyName, in PropertyMetadata propertyMetadata) => DependencyProperty.RegisterReadOnly(propertyName, typeof(TValue), typeof(TOwnerType), propertyMetadata);
+        public static DependencyPropertyKey RegisterReadOnly<TValue, TOwner>(in string propertyName, in PropertyMetadata propertyMetadata) => DependencyProperty.RegisterReadOnly(propertyName, typeof(TValue), typeof(TOwner), propertyMetadata);
 
-        public static RoutedEvent RegisterRoutedEvent<TEventHandler, TOwnerType>(in string eventName, in RoutingStrategy routingStrategy) => EventManager.RegisterRoutedEvent(eventName, routingStrategy, typeof(TEventHandler), typeof(TOwnerType));
+        public static DependencyProperty RegisterAttached<T>(in string propertyName, in Type ownerType) => DependencyProperty.RegisterAttached(propertyName, typeof(T), ownerType);
+
+        public static DependencyProperty RegisterAttached<TValue, TOwner>(in string propertyName) => RegisterAttached<TValue>(propertyName, typeof(TOwner));
+
+        public static RoutedEvent RegisterRoutedEvent<TEventHandler, TOwner>(in string eventName, in RoutingStrategy routingStrategy) => EventManager.RegisterRoutedEvent(eventName, routingStrategy, typeof(TEventHandler), typeof(TOwner));
+
+        public static void RaiseEvent(this UIElement uiElement, RoutedEvent routedEvent) => (uiElement ?? throw WinCopies.
+#if WinCopies3
+            ThrowHelper
+#else
+            Util.Util
+#endif
+            .GetArgumentNullException(nameof(uiElement))).RaiseEvent(new RoutedEventArgs(routedEvent));
+
+        public static void UpdateAttachedRoutedEventHandler(in DependencyObject d, in RoutedEvent @event, in Delegate handler, in Converter<UIElement, Action<RoutedEvent, Delegate>> converter)
+        {
+            if (d is UIElement uiElement)
+
+                converter(uiElement)(@event, handler);
+        }
+
+        public static void AddAttachedRoutedEventHandler(in DependencyObject d, in RoutedEvent @event, in Delegate handler) => UpdateAttachedRoutedEventHandler(d, @event, handler, uiElement => uiElement.AddHandler);
+
+        public static void RemoveAttachedRoutedEventHandler(in DependencyObject d, in RoutedEvent @event, in Delegate handler) => UpdateAttachedRoutedEventHandler(d, @event, handler, uiElement => uiElement.RemoveHandler);
     }
 }

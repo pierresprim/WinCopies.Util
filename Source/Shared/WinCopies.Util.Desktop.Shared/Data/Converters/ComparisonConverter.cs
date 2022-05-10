@@ -77,7 +77,7 @@ namespace WinCopies.Util.Data
                     switch (parameter.ExpectedComparisonResult)
                     {
                         case Diagnostics.Comparison.Equal:
-                        case Diagnostics.Comparison.LesserOrEqual:
+                        case Diagnostics.Comparison.LessOrEqual:
                         case Diagnostics.Comparison.GreaterOrEqual:
 
                             return true;
@@ -89,8 +89,8 @@ namespace WinCopies.Util.Data
 
                     switch (parameter.ExpectedComparisonResult)
                     {
-                        case Diagnostics.Comparison.Lesser:
-                        case Diagnostics.Comparison.LesserOrEqual:
+                        case Diagnostics.Comparison.Less:
+                        case Diagnostics.Comparison.LessOrEqual:
                         case Diagnostics.Comparison.NotEqual:
 
                             return true;

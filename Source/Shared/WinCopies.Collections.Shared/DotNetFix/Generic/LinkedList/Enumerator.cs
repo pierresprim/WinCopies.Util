@@ -239,21 +239,33 @@ override
                 _reset = null;
             }
 
-            protected override void Dispose(bool disposing)
+            protected override void
+#if WinCopies3
+            DisposeUnmanaged()
+#else
+            Dispose(bool disposing)
+#endif
             {
                 _list = null;
 
-                base.Dispose(disposing);
-
-#if !WinCopies3
-            DisposeManaged();
+                base.
+#if WinCopies3
+                DisposeUnmanaged();
+#else
+                Dispose(disposing);
 #endif
+
+#if WinCopies3
+            }
+#else
+                DisposeManaged();
             }
 
             ~LinkedListEnumerator() => Dispose(false);
+#endif
         }
 #if WinCopies3
     }
 #endif
 #endif
-}
+    }

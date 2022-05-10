@@ -16,22 +16,21 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if CS7
-
 using System;
 using System.Diagnostics;
 using System.Linq;
 
 using WinCopies.Collections;
+using WinCopies.Util;
 
 using IfCT = WinCopies.Diagnostics.ComparisonType;
+using System.Reflection;
 
 #if WinCopies3
 using WinCopies.Collections.Generic;
 
 using static WinCopies.ThrowHelper;
 #else
-using WinCopies.Util;
-
 using static WinCopies.Util.Util;
 
 using InvalidEnumArgumentException = WinCopies.Util.InvalidEnumArgumentException;
@@ -49,6 +48,15 @@ namespace WinCopies.Extensions // To avoid name conflicts.
             // .GetType().IsEnumDefined(@enum)
         }
 #endif
+
+        public static System.Collections.Generic.IReadOnlyList<Type> GetRealGenericParameters(this Type type)
+        {
+            Type[] array = type.GetGenericArguments();
+
+            int length = type.GetRealGenericTypeParameterLength();
+
+            return new SubReadOnlyList<Type>(array, length == 0 ? 0 : array.Length - length);
+        }
 
         public static bool HasFlag(this Enum @enum, System.Collections.Generic.IEnumerable<Enum> values)
         {
@@ -245,5 +253,4 @@ namespace WinCopies.Extensions // To avoid name conflicts.
         }
     }
 }
-
 #endif

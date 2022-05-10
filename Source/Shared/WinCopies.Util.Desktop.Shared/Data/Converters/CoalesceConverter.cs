@@ -18,7 +18,9 @@
 using System;
 using System.Globalization;
 
+#if WinCopies3
 using static WinCopies.Util.Data.ConverterHelper;
+#endif
 
 namespace WinCopies.Util.Data
 {
@@ -57,21 +59,23 @@ namespace WinCopies.Util.Data
 #endif
 
 #if WinCopies3
-protected
+        protected
 #else
         public
 #endif
             override object Convert(object[] values,
 #if !WinCopies3
-        Type targetType,
+                Type targetType,
 #endif
             object parameter, CultureInfo culture)
         {
-            foreach (object value in values)
+            if (values != null)
 
-                if (value != null)
+                foreach (object value in values)
 
-                    return value;
+                    if (value != null)
+
+                        return value;
 
             return parameter;
         }

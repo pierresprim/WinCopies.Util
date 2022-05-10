@@ -130,6 +130,11 @@
               Looks up a localized string similar to This collection is read-only..
             </summary>
         </member>
+        <member name="P:WinCopies.Util.Resources.ExceptionMessages.ResourceNotFoundExceptionMessage">
+            <summary>
+              Looks up a localized string similar to The object or resource requested was not found in the given collection or no object or resource in the given collection matches the given criteria..
+            </summary>
+        </member>
         <member name="P:WinCopies.Util.Resources.ExceptionMessages.SequenceContainsNoItemOrNoItemMatchedGivenPredicate">
             <summary>
               Looks up a localized string similar to The sequence contains no item or no item matched the given predicate..
@@ -400,6 +405,222 @@
             <param name="collection">The collection to which try to add the value</param>
             <param name="values">The values to try to add to the collection</param>
             <returns><see langword="true"/> if the value has been added to the collection, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Util.Extensions.Is(System.Object,System.Boolean@,System.Type[])">
+            <summary>
+            Checks if the current object is assignable from at least one type of a given <see cref="T:System.Type"/> array.
+            </summary>
+            <param name="obj">The object from which check the type</param>
+            <param name="typeEquality"><see langword="true"/> to preserve type equality, regardless of the type inheritance, otherwise <see langword="false"/></param>
+            <param name="types">The types to compare</param>
+            <returns><see langword="true"/> if the current object is assignable from at least one of the given types, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Util.Extensions.SetProperty(System.Object,System.String,System.String,System.Object,System.Type,System.Boolean@,System.Reflection.BindingFlags,System.String,System.Boolean@,System.Boolean@,WinCopies.Util.FieldValidateValueCallback,System.Boolean@,WinCopies.Util.FieldValueChangedCallback)">
+            <summary>
+            Sets a value to a property if the new value is different.
+            </summary>
+            <param name="obj">The object in which to set the property.</param>
+            <param name="propertyName">The name of the given property.</param>
+            <param name="fieldName">The field related to the property.</param>
+            <param name="newValue">The value to set.</param>
+            <param name="declaringType">The actual declaring type of the property.</param>
+            <param name="throwIfReadOnly">Whether to throw if the given property is read-only.</param>
+            <param name="bindingFlags">The <see cref="T:System.Reflection.BindingFlags"/> used to get the property.</param>
+            <param name="paramName">The parameter from which the value was passed to this method.</param>
+            <param name="setOnlyIfNotNull">Whether to set only if the given value is not null.</param>
+            <param name="throwIfNull">Whether to throw if the given value is null.</param>
+            <param name="validateValueCallback">The callback used to validate the given value. You can leave this parameter to null if you don't want to perform validation.</param>
+            <param name="throwIfValidationFails">Whether to throw if the validation of <paramref name="validateValueCallback"/> fails.</param>
+            <param name="valueChangedCallback">The callback used to perform actions after the property is set. You can leave this parameter to null if you don't want to perform actions after the property is set.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether the setting succeeded and the old value of the given property (or <see langword="null"/> if the property does not contain any value nor reference).</returns>
+            <exception cref="T:System.InvalidOperationException">The declaring types of the given property and field name doesn't correspond. OR The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
+            <exception cref="T:System.ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
+            <exception cref="T:System.Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="T:System.ArgumentException"/> otherwise.</exception>
+        </member>
+        <member name="M:WinCopies.Util.Extensions.SetProperty(System.Object,System.String,System.Object,System.Type,System.Boolean@,System.Reflection.BindingFlags,System.String,System.Boolean@,System.Boolean@,WinCopies.Util.PropertyValidateValueCallback,System.Boolean@,WinCopies.Util.PropertyValueChangedCallback)">
+            <summary>
+            Sets a value to a property if the new value is different.
+            </summary>
+            <param name="obj">The object in which to set the property.</param>
+            <param name="propertyName">The name of the given property.</param>
+            <param name="newValue">The value to set.</param>
+            <param name="declaringType">The actual declaring type of the property.</param>
+            <param name="throwIfReadOnly">Whether to throw if the given property is read-only.</param>
+            <param name="bindingFlags">The <see cref="T:System.Reflection.BindingFlags"/> used to get the property.</param>
+            <param name="paramName">The parameter from which the value was passed to this method.</param>
+            <param name="setOnlyIfNotNull">Whether to set only if the given value is not null.</param>
+            <param name="throwIfNull">Whether to throw if the given value is null.</param>
+            <param name="validateValueCallback">The callback used to validate the given value. You can leave this parameter to null if you don't want to perform validation.</param>
+            <param name="throwIfValidationFails">Whether to throw if the validation of <paramref name="validateValueCallback"/> fails.</param>
+            <param name="valueChangedCallback">The callback used to perform actions after the property is set. You can leave this parameter to null if you don't want to perform actions after the property is set.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether the setting succeeded and the old value of the given property (or <see langword="null"/> if the property does not contain any value nor reference).</returns>
+            <exception cref="T:System.InvalidOperationException">The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
+            <exception cref="T:System.ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
+            <exception cref="T:System.Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="T:System.ArgumentException"/> otherwise.</exception>
+        </member>
+        <member name="M:WinCopies.Util.Extensions.DisposeAndSetProperty(System.Object,System.String,System.String,WinCopies.Util.IDisposable,System.Type,System.Boolean@,System.Reflection.BindingFlags,System.String,System.Boolean@,System.Boolean@,WinCopies.Util.FieldValidateValueCallback,System.Boolean@,WinCopies.Util.FieldValueChangedCallback)">
+            <summary>
+            Disposes an old value of a property then sets a new value to the given property if the new value is different.
+            </summary>
+            <param name="obj">The object in which to set the property.</param>
+            <param name="propertyName">The name of the given property.</param>
+            <param name="fieldName">The field related to the property.</param>
+            <param name="newValue">The value to set.</param>
+            <param name="declaringType">The actual declaring type of the property.</param>
+            <param name="throwIfReadOnly">Whether to throw if the given property is read-only.</param>
+            <param name="bindingFlags">The <see cref="T:System.Reflection.BindingFlags"/> used to get the property.</param>
+            <param name="paramName">The parameter from which the value was passed to this method.</param>
+            <param name="setOnlyIfNotNull">Whether to set only if the given value is not null.</param>
+            <param name="throwIfNull">Whether to throw if the given value is null.</param>
+            <param name="validateValueCallback">The callback used to validate the given value. You can leave this parameter to null if you don't want to perform validation.</param>
+            <param name="throwIfValidationFails">Whether to throw if the validation of <paramref name="validateValueCallback"/> fails.</param>
+            <param name="valueChangedCallback">The callback used to perform actions after the property is set. You can leave this parameter to null if you don't want to perform actions after the property is set.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether the setting succeeded and the old value of the given property (or <see langword="null"/> if the property does not contain any value nor reference).</returns>
+            <exception cref="T:System.InvalidOperationException">The declaring types of the given property and field name doesn't correspond. OR The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
+            <exception cref="T:System.ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
+            <exception cref="T:System.Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="T:System.ArgumentException"/> otherwise.</exception>
+        </member>
+        <member name="M:WinCopies.Util.Extensions.DisposeAndSetProperty(System.Object,System.String,WinCopies.Util.IDisposable,System.Type,System.Boolean@,System.Reflection.BindingFlags,System.String,System.Boolean@,System.Boolean@,WinCopies.Util.PropertyValidateValueCallback,System.Boolean@,WinCopies.Util.PropertyValueChangedCallback)">
+            <summary>
+            Disposes an old value of a property then sets a new value to the given property if the new value is different.
+            </summary>
+            <param name="obj">The object in which to set the property.</param>
+            <param name="propertyName">The name of the given property.</param>
+            <param name="newValue">The value to set.</param>
+            <param name="declaringType">The actual declaring type of the property.</param>
+            <param name="throwIfReadOnly">Whether to throw if the given property is read-only.</param>
+            <param name="bindingFlags">The <see cref="T:System.Reflection.BindingFlags"/> used to get the property.</param>
+            <param name="paramName">The parameter from which the value was passed to this method.</param>
+            <param name="setOnlyIfNotNull">Whether to set only if the given value is not null.</param>
+            <param name="throwIfNull">Whether to throw if the given value is null.</param>
+            <param name="validateValueCallback">The callback used to validate the given value. You can leave this parameter to null if you don't want to perform validation.</param>
+            <param name="throwIfValidationFails">Whether to throw if the validation of <paramref name="validateValueCallback"/> fails.</param>
+            <param name="valueChangedCallback">The callback used to perform actions after the property is set. You can leave this parameter to null if you don't want to perform actions after the property is set.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether the setting succeeded and the old value of the given property (or <see langword="null"/> if the property does not contain any value nor reference).</returns>
+            <exception cref="T:System.InvalidOperationException">The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
+            <exception cref="T:System.ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
+            <exception cref="T:System.Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="T:System.ArgumentException"/> otherwise.</exception>
+        </member>
+        <member name="M:WinCopies.Util.Extensions.GetNumValue(System.Enum)">
+            <summary>
+            Gets the numeric value for an enum.
+            </summary>
+            <param name="enum">The enum for which get the corresponding numeric value.</param>
+            <returns>The numeric value corresponding to this enum, in the given enum type underlying type.</returns>
+        </member>
+        <member name="M:WinCopies.Util.Extensions.GetNumValue``1(``0)">
+            <summary>
+            Gets the numeric value for an enum.
+            </summary>
+            <param name="enum">The enum for which get the corresponding numeric value.</param>
+            <returns>The numeric value corresponding to this enum, in the given enum type underlying type.</returns>
+        </member>
+        <member name="M:WinCopies.Util.Extensions.HasMultipleFlags(System.Enum)">
+            <summary>
+            Determines whether an enum has multiple flags.
+            </summary>
+            <param name="flagsEnum">The enum to check.</param>
+            <returns><see langword="true"/> if <paramref name="flagsEnum"/> type has the <see cref="T:System.FlagsAttribute"/> and has multiple flags; otherwise, <see langword="false"/>.</returns>
+            <remarks><paramref name="flagsEnum"/> type must have the <see cref="T:System.FlagsAttribute"/>.</remarks>
+        </member>
+        <member name="M:WinCopies.Util.Extensions.Between(System.SByte,System.SByte@,System.SByte@)">
+            <summary>
+            Checks if a number is between two given numbers.
+            </summary>
+            <param name="b">The number to check.</param>
+            <param name="x">The left operand.</param>
+            <param name="y">The right operand.</param>
+            <returns><see langword="true"/> if <paramref name="b"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Util.Extensions.Between(System.Byte,System.Byte@,System.Byte@)">
+            <summary>
+            Checks if a number is between two given numbers.
+            </summary>
+            <param name="b">The number to check.</param>
+            <param name="x">The left operand.</param>
+            <param name="y">The right operand.</param>
+            <returns><see langword="true"/> if <paramref name="b"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Util.Extensions.Between(System.Int16,System.Int16@,System.Int16@)">
+            <summary>
+            Checks if a number is between two given numbers.
+            </summary>
+            <param name="s">The number to check.</param>
+            <param name="x">The left operand.</param>
+            <param name="y">The right operand.</param>
+            <returns><see langword="true"/> if <paramref name="s"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Util.Extensions.Between(System.UInt16,System.UInt16@,System.UInt16@)">
+            <summary>
+            Checks if a number is between two given numbers.
+            </summary>
+            <param name="s">The number to check.</param>
+            <param name="x">The left operand.</param>
+            <param name="y">The right operand.</param>
+            <returns><see langword="true"/> if <paramref name="s"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Util.Extensions.Between(System.Int32,System.Int32@,System.Int32@)">
+            <summary>
+            Checks if a number is between two given numbers.
+            </summary>
+            <param name="i">The number to check.</param>
+            <param name="x">The left operand.</param>
+            <param name="y">The right operand.</param>
+            <returns><see langword="true"/> if <paramref name="i"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Util.Extensions.Between(System.UInt32,System.UInt32@,System.UInt32@)">
+            <summary>
+            Checks if a number is between two given numbers.
+            </summary>
+            <param name="i">The number to check.</param>
+            <param name="x">The left operand.</param>
+            <param name="y">The right operand.</param>
+            <returns><see langword="true"/> if <paramref name="i"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Util.Extensions.Between(System.Int64,System.Int64@,System.Int64@)">
+            <summary>
+            Checks if a number is between two given numbers.
+            </summary>
+            <param name="l">The number to check.</param>
+            <param name="x">The left operand.</param>
+            <param name="y">The right operand.</param>
+            <returns><see langword="true"/> if <paramref name="l"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Util.Extensions.Between(System.UInt64,System.UInt64@,System.UInt64@)">
+            <summary>
+            Checks if a number is between two given numbers.
+            </summary>
+            <param name="l">The number to check.</param>
+            <param name="x">The left operand.</param>
+            <param name="y">The right operand.</param>
+            <returns><see langword="true"/> if <paramref name="l"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Util.Extensions.Between(System.Single,System.Single@,System.Single@)">
+            <summary>
+            Checks if a number is between two given numbers.
+            </summary>
+            <param name="f">The number to check.</param>
+            <param name="x">The left operand.</param>
+            <param name="y">The right operand.</param>
+            <returns><see langword="true"/> if <paramref name="f"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Util.Extensions.Between(System.Double,System.Double@,System.Double@)">
+            <summary>
+            Checks if a number is between two given numbers.
+            </summary>
+            <param name="d">The number to check.</param>
+            <param name="x">The left operand.</param>
+            <param name="y">The right operand.</param>
+            <returns><see langword="true"/> if <paramref name="d"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Util.Extensions.Between(System.Decimal,System.Decimal@,System.Decimal@)">
+            <summary>
+            Checks if a number is between two given numbers.
+            </summary>
+            <param name="d">The number to check.</param>
+            <param name="x">The left operand.</param>
+            <param name="y">The right operand.</param>
+            <returns><see langword="true"/> if <paramref name="d"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
         <member name="M:WinCopies.Util.Extensions.AddIfNotContains(System.Collections.IList,System.Object@)">
             <summary>
@@ -971,14 +1192,13 @@
             <seealso cref="M:WinCopies.Util.Extensions.FirstOrDefault``1(System.Collections.IEnumerable)"/>
             <seealso cref="M:WinCopies.Util.Extensions.LastOrDefault``1(System.Collections.IEnumerable)"/>
         </member>
-        <member name="M:WinCopies.Util.Extensions.Is(System.Object,System.Boolean@,System.Type[])">
+        <member name="M:WinCopies.Util.Extensions.GetNumValue(System.Enum,System.String@)">
             <summary>
-            Checks if the current object is assignable from at least one type of a given <see cref="T:System.Type"/> array.
+            Gets the numeric value for an enum.
             </summary>
-            <param name="obj">The object from which check the type</param>
-            <param name="typeEquality"><see langword="true"/> to preserve type equality, regardless of the type inheritance, otherwise <see langword="false"/></param>
-            <param name="types">The types to compare</param>
-            <returns><see langword="true"/> if the current object is assignable from at least one of the given types, otherwise <see langword="false"/>.</returns>
+            <param name="enum">The enum for which get the corresponding numeric value.</param>
+            <param name="enumName">Not used.</param>
+            <returns>The numeric value corresponding to this enum, in the given enum type underlying type.</returns>
         </member>
         <member name="M:WinCopies.Util.Extensions.ToList(System.Collections.IEnumerable,System.Int32@,System.Nullable{System.Int32}@)">
             <summary>
@@ -1145,122 +1365,6 @@
             <param name="array">The values to add to a <see cref="T:WinCopies.Collections.DotNetFix.ILinkedList`1"/></param>
             <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
         </member>
-        <member name="M:WinCopies.Util.Extensions.SetProperty(System.Object,System.String,System.String,System.Object,System.Type,System.Boolean@,System.Reflection.BindingFlags,System.String,System.Boolean@,System.Boolean@,WinCopies.Util.FieldValidateValueCallback,System.Boolean@,WinCopies.Util.FieldValueChangedCallback)">
-            <summary>
-            Sets a value to a property if the new value is different.
-            </summary>
-            <param name="obj">The object in which to set the property.</param>
-            <param name="propertyName">The name of the given property.</param>
-            <param name="fieldName">The field related to the property.</param>
-            <param name="newValue">The value to set.</param>
-            <param name="declaringType">The actual declaring type of the property.</param>
-            <param name="throwIfReadOnly">Whether to throw if the given property is read-only.</param>
-            <param name="bindingFlags">The <see cref="T:System.Reflection.BindingFlags"/> used to get the property.</param>
-            <param name="paramName">The parameter from which the value was passed to this method.</param>
-            <param name="setOnlyIfNotNull">Whether to set only if the given value is not null.</param>
-            <param name="throwIfNull">Whether to throw if the given value is null.</param>
-            <param name="validateValueCallback">The callback used to validate the given value. You can leave this parameter to null if you don't want to perform validation.</param>
-            <param name="throwIfValidationFails">Whether to throw if the validation of <paramref name="validateValueCallback"/> fails.</param>
-            <param name="valueChangedCallback">The callback used to perform actions after the property is set. You can leave this parameter to null if you don't want to perform actions after the property is set.</param>
-            <returns>A <see cref="T:System.Boolean"/> value that indicates whether the setting succeeded and the old value of the given property (or <see langword="null"/> if the property does not contain any value nor reference).</returns>
-            <exception cref="T:System.InvalidOperationException">The declaring types of the given property and field name doesn't correspond. OR The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
-            <exception cref="T:System.ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
-            <exception cref="T:System.Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="T:System.ArgumentException"/> otherwise.</exception>
-        </member>
-        <member name="M:WinCopies.Util.Extensions.SetProperty(System.Object,System.String,System.Object,System.Type,System.Boolean@,System.Reflection.BindingFlags,System.String,System.Boolean@,System.Boolean@,WinCopies.Util.PropertyValidateValueCallback,System.Boolean@,WinCopies.Util.PropertyValueChangedCallback)">
-            <summary>
-            Sets a value to a property if the new value is different.
-            </summary>
-            <param name="obj">The object in which to set the property.</param>
-            <param name="propertyName">The name of the given property.</param>
-            <param name="newValue">The value to set.</param>
-            <param name="declaringType">The actual declaring type of the property.</param>
-            <param name="throwIfReadOnly">Whether to throw if the given property is read-only.</param>
-            <param name="bindingFlags">The <see cref="T:System.Reflection.BindingFlags"/> used to get the property.</param>
-            <param name="paramName">The parameter from which the value was passed to this method.</param>
-            <param name="setOnlyIfNotNull">Whether to set only if the given value is not null.</param>
-            <param name="throwIfNull">Whether to throw if the given value is null.</param>
-            <param name="validateValueCallback">The callback used to validate the given value. You can leave this parameter to null if you don't want to perform validation.</param>
-            <param name="throwIfValidationFails">Whether to throw if the validation of <paramref name="validateValueCallback"/> fails.</param>
-            <param name="valueChangedCallback">The callback used to perform actions after the property is set. You can leave this parameter to null if you don't want to perform actions after the property is set.</param>
-            <returns>A <see cref="T:System.Boolean"/> value that indicates whether the setting succeeded and the old value of the given property (or <see langword="null"/> if the property does not contain any value nor reference).</returns>
-            <exception cref="T:System.InvalidOperationException">The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
-            <exception cref="T:System.ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
-            <exception cref="T:System.Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="T:System.ArgumentException"/> otherwise.</exception>
-        </member>
-        <member name="M:WinCopies.Util.Extensions.DisposeAndSetProperty(System.Object,System.String,System.String,WinCopies.Util.IDisposable,System.Type,System.Boolean@,System.Reflection.BindingFlags,System.String,System.Boolean@,System.Boolean@,WinCopies.Util.FieldValidateValueCallback,System.Boolean@,WinCopies.Util.FieldValueChangedCallback)">
-            <summary>
-            Disposes an old value of a property then sets a new value to the given property if the new value is different.
-            </summary>
-            <param name="obj">The object in which to set the property.</param>
-            <param name="propertyName">The name of the given property.</param>
-            <param name="fieldName">The field related to the property.</param>
-            <param name="newValue">The value to set.</param>
-            <param name="declaringType">The actual declaring type of the property.</param>
-            <param name="throwIfReadOnly">Whether to throw if the given property is read-only.</param>
-            <param name="bindingFlags">The <see cref="T:System.Reflection.BindingFlags"/> used to get the property.</param>
-            <param name="paramName">The parameter from which the value was passed to this method.</param>
-            <param name="setOnlyIfNotNull">Whether to set only if the given value is not null.</param>
-            <param name="throwIfNull">Whether to throw if the given value is null.</param>
-            <param name="validateValueCallback">The callback used to validate the given value. You can leave this parameter to null if you don't want to perform validation.</param>
-            <param name="throwIfValidationFails">Whether to throw if the validation of <paramref name="validateValueCallback"/> fails.</param>
-            <param name="valueChangedCallback">The callback used to perform actions after the property is set. You can leave this parameter to null if you don't want to perform actions after the property is set.</param>
-            <returns>A <see cref="T:System.Boolean"/> value that indicates whether the setting succeeded and the old value of the given property (or <see langword="null"/> if the property does not contain any value nor reference).</returns>
-            <exception cref="T:System.InvalidOperationException">The declaring types of the given property and field name doesn't correspond. OR The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
-            <exception cref="T:System.ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
-            <exception cref="T:System.Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="T:System.ArgumentException"/> otherwise.</exception>
-        </member>
-        <member name="M:WinCopies.Util.Extensions.DisposeAndSetProperty(System.Object,System.String,WinCopies.Util.IDisposable,System.Type,System.Boolean@,System.Reflection.BindingFlags,System.String,System.Boolean@,System.Boolean@,WinCopies.Util.PropertyValidateValueCallback,System.Boolean@,WinCopies.Util.PropertyValueChangedCallback)">
-            <summary>
-            Disposes an old value of a property then sets a new value to the given property if the new value is different.
-            </summary>
-            <param name="obj">The object in which to set the property.</param>
-            <param name="propertyName">The name of the given property.</param>
-            <param name="newValue">The value to set.</param>
-            <param name="declaringType">The actual declaring type of the property.</param>
-            <param name="throwIfReadOnly">Whether to throw if the given property is read-only.</param>
-            <param name="bindingFlags">The <see cref="T:System.Reflection.BindingFlags"/> used to get the property.</param>
-            <param name="paramName">The parameter from which the value was passed to this method.</param>
-            <param name="setOnlyIfNotNull">Whether to set only if the given value is not null.</param>
-            <param name="throwIfNull">Whether to throw if the given value is null.</param>
-            <param name="validateValueCallback">The callback used to validate the given value. You can leave this parameter to null if you don't want to perform validation.</param>
-            <param name="throwIfValidationFails">Whether to throw if the validation of <paramref name="validateValueCallback"/> fails.</param>
-            <param name="valueChangedCallback">The callback used to perform actions after the property is set. You can leave this parameter to null if you don't want to perform actions after the property is set.</param>
-            <returns>A <see cref="T:System.Boolean"/> value that indicates whether the setting succeeded and the old value of the given property (or <see langword="null"/> if the property does not contain any value nor reference).</returns>
-            <exception cref="T:System.InvalidOperationException">The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
-            <exception cref="T:System.ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
-            <exception cref="T:System.Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="T:System.ArgumentException"/> otherwise.</exception>
-        </member>
-        <member name="M:WinCopies.Util.Extensions.GetNumValue(System.Enum,System.String@)">
-            <summary>
-            Gets the numeric value for an enum.
-            </summary>
-            <param name="enum">The enum for which get the corresponding numeric value.</param>
-            <param name="enumName">Not used.</param>
-            <returns>The numeric value corresponding to this enum, in the given enum type underlying type.</returns>
-        </member>
-        <member name="M:WinCopies.Util.Extensions.GetNumValue(System.Enum)">
-            <summary>
-            Gets the numeric value for an enum.
-            </summary>
-            <param name="enum">The enum for which get the corresponding numeric value.</param>
-            <returns>The numeric value corresponding to this enum, in the given enum type underlying type.</returns>
-        </member>
-        <member name="M:WinCopies.Util.Extensions.GetNumValue``1(``0)">
-            <summary>
-            Gets the numeric value for an enum.
-            </summary>
-            <param name="enum">The enum for which get the corresponding numeric value.</param>
-            <returns>The numeric value corresponding to this enum, in the given enum type underlying type.</returns>
-        </member>
-        <member name="M:WinCopies.Util.Extensions.HasMultipleFlags(System.Enum)">
-            <summary>
-            Determines whether an enum has multiple flags.
-            </summary>
-            <param name="flagsEnum">The enum to check.</param>
-            <returns><see langword="true"/> if <paramref name="flagsEnum"/> type has the <see cref="T:System.FlagsAttribute"/> and has multiple flags; otherwise, <see langword="false"/>.</returns>
-            <remarks><paramref name="flagsEnum"/> type must have the <see cref="T:System.FlagsAttribute"/>.</remarks>
-        </member>
         <member name="M:WinCopies.Util.Extensions.IsValidFlagsEnumValue(System.Enum,System.Boolean@,System.Boolean@)">
             <summary>
             Determines whether the current enum value is within the enum values range.
@@ -1335,105 +1439,6 @@
             <remarks>This method doesn't read all the enum fields, but only takes care of the first and last numeric enum fields, so if the value is 1, and the enum has only defined fields for 0 and 2, this method still doesn't throw. For a method that actually reads all the enum fields, see the <see cref="M:WinCopies.Util.Extensions.ThrowIfNotDefinedEnumValue(System.Enum)"/> method.</remarks>
             <seealso cref="M:WinCopies.Util.Extensions.IsValidEnumValue(System.Enum)"/>
             <seealso cref="M:WinCopies.Util.Extensions.ThrowIfNotDefinedEnumValue(System.Enum)"/>
-        </member>
-        <member name="M:WinCopies.Util.Extensions.Between(System.SByte,System.SByte@,System.SByte@)">
-            <summary>
-            Checks if a number is between two given numbers.
-            </summary>
-            <param name="b">The number to check.</param>
-            <param name="x">The left operand.</param>
-            <param name="y">The right operand.</param>
-            <returns><see langword="true"/> if <paramref name="b"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Util.Extensions.Between(System.Byte,System.Byte@,System.Byte@)">
-            <summary>
-            Checks if a number is between two given numbers.
-            </summary>
-            <param name="b">The number to check.</param>
-            <param name="x">The left operand.</param>
-            <param name="y">The right operand.</param>
-            <returns><see langword="true"/> if <paramref name="b"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Util.Extensions.Between(System.Int16,System.Int16@,System.Int16@)">
-            <summary>
-            Checks if a number is between two given numbers.
-            </summary>
-            <param name="s">The number to check.</param>
-            <param name="x">The left operand.</param>
-            <param name="y">The right operand.</param>
-            <returns><see langword="true"/> if <paramref name="s"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Util.Extensions.Between(System.UInt16,System.UInt16@,System.UInt16@)">
-            <summary>
-            Checks if a number is between two given numbers.
-            </summary>
-            <param name="s">The number to check.</param>
-            <param name="x">The left operand.</param>
-            <param name="y">The right operand.</param>
-            <returns><see langword="true"/> if <paramref name="s"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Util.Extensions.Between(System.Int32,System.Int32@,System.Int32@)">
-            <summary>
-            Checks if a number is between two given numbers.
-            </summary>
-            <param name="i">The number to check.</param>
-            <param name="x">The left operand.</param>
-            <param name="y">The right operand.</param>
-            <returns><see langword="true"/> if <paramref name="i"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Util.Extensions.Between(System.UInt32,System.UInt32@,System.UInt32@)">
-            <summary>
-            Checks if a number is between two given numbers.
-            </summary>
-            <param name="i">The number to check.</param>
-            <param name="x">The left operand.</param>
-            <param name="y">The right operand.</param>
-            <returns><see langword="true"/> if <paramref name="i"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Util.Extensions.Between(System.Int64,System.Int64@,System.Int64@)">
-            <summary>
-            Checks if a number is between two given numbers.
-            </summary>
-            <param name="l">The number to check.</param>
-            <param name="x">The left operand.</param>
-            <param name="y">The right operand.</param>
-            <returns><see langword="true"/> if <paramref name="l"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Util.Extensions.Between(System.UInt64,System.UInt64@,System.UInt64@)">
-            <summary>
-            Checks if a number is between two given numbers.
-            </summary>
-            <param name="l">The number to check.</param>
-            <param name="x">The left operand.</param>
-            <param name="y">The right operand.</param>
-            <returns><see langword="true"/> if <paramref name="l"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Util.Extensions.Between(System.Single,System.Single@,System.Single@)">
-            <summary>
-            Checks if a number is between two given numbers.
-            </summary>
-            <param name="f">The number to check.</param>
-            <param name="x">The left operand.</param>
-            <param name="y">The right operand.</param>
-            <returns><see langword="true"/> if <paramref name="f"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Util.Extensions.Between(System.Double,System.Double@,System.Double@)">
-            <summary>
-            Checks if a number is between two given numbers.
-            </summary>
-            <param name="d">The number to check.</param>
-            <param name="x">The left operand.</param>
-            <param name="y">The right operand.</param>
-            <returns><see langword="true"/> if <paramref name="d"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Util.Extensions.Between(System.Decimal,System.Decimal@,System.Decimal@)">
-            <summary>
-            Checks if a number is between two given numbers.
-            </summary>
-            <param name="d">The number to check.</param>
-            <param name="x">The left operand.</param>
-            <param name="y">The right operand.</param>
-            <returns><see langword="true"/> if <paramref name="d"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
         <member name="T:WinCopies.Util.IBackgroundWorker">
             <summary>
@@ -1998,7 +2003,6 @@
             </summary>
             <param name="obj">The object to check.</param>
             <param name="argumentName">The argument name for the <see cref="T:System.ArgumentNullException"/> that is thrown.</param>
-            <returns></returns>
         </member>
         <member name="M:WinCopies.Util.Util.GetOrThrowIfNull``1(``0@,System.String@)">
             <summary>
@@ -2007,7 +2011,6 @@
             <typeparam name="T">The type of <paramref name="obj"/>. This must be a class type.</typeparam>
             <param name="obj">The object to check.</param>
             <param name="argumentName">The argument name for the <see cref="T:System.ArgumentNullException"/> that is thrown.</param>
-            <returns></returns>
         </member>
         <member name="M:WinCopies.Util.Util.GetExceptionForInvalidType``1(System.String@,System.String@)">
             <summary>
@@ -2061,6 +2064,16 @@
             <param name="argumentName">The argument name for the <see cref="T:System.ArgumentException"/>.</param>
             <returns><paramref name="obj"/> when it is an instance of <typeparamref name="T"/>, otherwise throws an <see cref="T:System.ArgumentNullException"/> if <paramref name="obj"/> is <see langword="null"/> or an <see cref="T:System.ArgumentException"/> with <paramref name="argumentName"/> for the argument name otherwise.</returns>
         </member>
+        <member name="P:WinCopies.Util.IReadOnlyValueObject.IsReadOnly">
+            <summary>
+            Gets a value that indicates whether this object is read-only.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.IReadOnlyValueObject.Value">
+            <summary>
+            Gets or sets the value of the object.
+            </summary>
+        </member>
         <member name="T:WinCopies.Util.IValueObject">
             <summary>
             Represents a value container. See the <see cref="T:WinCopies.Util.IValueObject`1"/> for a generic version of this class.
@@ -2072,16 +2085,6 @@
             </summary>
         </member>
         <member name="P:WinCopies.Util.IValueObject`1.Value">
-            <summary>
-            Gets or sets the value of the object.
-            </summary>
-        </member>
-        <member name="P:WinCopies.Util.IReadOnlyValueObject.IsReadOnly">
-            <summary>
-            Gets a value that indicates whether this object is read-only.
-            </summary>
-        </member>
-        <member name="P:WinCopies.Util.IReadOnlyValueObject.Value">
             <summary>
             Gets or sets the value of the object.
             </summary>
@@ -2125,6 +2128,210 @@
             </summary>
             <param name="obj">The <see cref="T:WinCopies.Util.IReadOnlyValueObject`1"/> for which to return the hash code.</param>
             <returns>The hash code of <paramref name="obj"/>'s <see cref="P:WinCopies.Util.IReadOnlyValueObject`1.Value"/> if <paramref name="obj"/> has a value, otherwise the <paramref name="obj"/>'s hash code.</returns>
+        </member>
+        <member name="T:WinCopies.Diagnostics.ComparisonType">
+            <summary>
+            Comparison types for the If functions.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Diagnostics.ComparisonType.And">
+            <summary>
+            Check if all conditions are checked.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Diagnostics.ComparisonType.Or">
+            <summary>
+            Check if at least one condition is checked.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Diagnostics.ComparisonType.Xor">
+            <summary>
+            Check if exactly one condition is checked.
+            </summary>
+        </member>
+        <member name="T:WinCopies.Diagnostics.ComparisonMode">
+            <summary>
+            Comparison modes for the If functions.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Diagnostics.ComparisonMode.Binary">
+            <summary>
+            Use a binary comparison
+            </summary>
+        </member>
+        <member name="F:WinCopies.Diagnostics.ComparisonMode.Logical">
+            <summary>
+            Use a logical comparison
+            </summary>
+        </member>
+        <member name="T:WinCopies.Diagnostics.Comparison">
+            <summary>
+            Comparison to perform.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Diagnostics.Comparison.Equal">
+            <summary>
+            Check for values equality
+            </summary>
+        </member>
+        <member name="F:WinCopies.Diagnostics.Comparison.NotEqual">
+            <summary>
+            Check for values non-equality
+            </summary>
+        </member>
+        <member name="F:WinCopies.Diagnostics.Comparison.Less">
+            <summary>
+            Check if a value is lesser than a given value. This field only works for methods that use lesser/greater/equal comparers.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Diagnostics.Comparison.LessOrEqual">
+            <summary>
+            Check if a value is lesser than or equal to a given value. This field only works for methods that use lesser/greater/equal comparers.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Diagnostics.Comparison.Greater">
+            <summary>
+            Check if a value is greater than a given value. This field only works for methods that use lesser/greater/equal comparers.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Diagnostics.Comparison.GreaterOrEqual">
+            <summary>
+            Check if a value is greater than or equal to a given value. This field only works for methods that use lesser/greater/equal comparers.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Diagnostics.Comparison.ReferenceEqual">
+            <summary>
+            Check if an object reference is equal to a given object reference. This field only works for methods that use equality comparers (not lesser/greater ones).
+            </summary>
+        </member>
+        <member name="M:WinCopies.Diagnostics.IfHelpers.If(WinCopies.Diagnostics.ComparisonType@,WinCopies.Diagnostics.ComparisonMode@,WinCopies.Diagnostics.Comparison@,System.Object@,System.Object[])">
+            <summary>
+            Performs a comparison by testing a value compared to an array of values.
+            </summary>
+            <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
+            <param name="comparisonMode">Whether to perform a binary or a logical comparison.</param>
+            <param name="comparison">Whether to perform an equality or an inequality comparison, and, if to perform an inequality comparison, the type of the inequality comparison to perform.</param>
+            <param name="value">The value to compare the values of the table with.</param>
+            <param name="values">The values to compare.</param>
+            <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Diagnostics.IfHelpers.If(WinCopies.Diagnostics.ComparisonType@,WinCopies.Diagnostics.ComparisonMode@,WinCopies.Diagnostics.Comparison@,System.Collections.IComparer,WinCopies.Util.Predicate@,System.Object@,System.Object[])">
+            <summary>
+            Performs a comparison by testing a value compared to an array of values using a custom <see cref="T:System.Collections.IComparer"/> and <see cref="T:WinCopies.Util.Predicate"/>.
+            </summary>
+            <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
+            <param name="comparisonMode">Whether to perform a binary or a logical comparison.</param>
+            <param name="comparison">Whether to perform an equality or an inequality comparison, and, if to perform an inequality comparison, the type of the inequality comparison to perform.</param>
+            <param name="comparer">The comparer used to compare the values.</param>
+            <param name="value">The value to compare with.</param>
+            <param name="values">The values to compare.</param>
+            <param name="predicate">The comparison predicate</param>
+            <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Diagnostics.IfHelpers.If(WinCopies.Diagnostics.ComparisonType@,WinCopies.Diagnostics.ComparisonMode@,WinCopies.Diagnostics.Comparison,WinCopies.Collections.Comparison,WinCopies.Util.Predicate@,System.Object,System.Object[])">
+            <summary>
+            Performs a comparison by testing a value compared to an array of values using a custom <see cref="T:WinCopies.Collections.Comparison"/> and <see cref="T:WinCopies.Util.Predicate"/>.
+            </summary>
+            <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
+            <param name="comparisonMode">Whether to perform a binary or a logical comparison.</param>
+            <param name="comparison">Whether to perform an equality or an inequality comparison, and, if to perform an inequality comparison, the type of the inequality comparison to perform.</param>
+            <param name="comparisonDelegate">The comparison delegate used to compare the values.</param>
+            <param name="value">The value to compare with.</param>
+            <param name="values">The values to compare.</param>
+            <param name="predicate">The comparison predicate</param>
+            <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Diagnostics.IfHelpers.If(WinCopies.Diagnostics.ComparisonType@,WinCopies.Diagnostics.ComparisonMode@,WinCopies.Diagnostics.Comparison@,System.Collections.IEqualityComparer,WinCopies.Util.Predicate@,System.Object@,System.Object[])">
+            <summary>
+            Performs a comparison by testing a value compared to an array of values using a custom <see cref="T:System.Collections.IComparer"/> and <see cref="T:WinCopies.Util.Predicate"/>.
+            </summary>
+            <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
+            <param name="comparisonMode">Whether to perform a binary or a logical comparison.</param>
+            <param name="comparison">Whether to perform an equality or an inequality comparison, and, if to perform an inequality comparison, the type of the inequality comparison to perform.</param>
+            <param name="equalityComparer">The equality comparer used to compare the values.</param>
+            <param name="value">The value to compare with.</param>
+            <param name="values">The values to compare.</param>
+            <param name="predicate">The comparison predicate</param>
+            <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Diagnostics.IfHelpers.If(WinCopies.Diagnostics.ComparisonType@,WinCopies.Diagnostics.ComparisonMode@,WinCopies.Diagnostics.Comparison,WinCopies.Collections.EqualityComparison,WinCopies.Util.Predicate@,System.Object,System.Object[])">
+            <summary>
+            Performs a comparison by testing a value compared to an array of values using a custom <see cref="T:WinCopies.Collections.EqualityComparison"/> and <see cref="T:WinCopies.Util.Predicate"/>.
+            </summary>
+            <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
+            <param name="comparisonMode">Whether to perform a binary or a logical comparison.</param>
+            <param name="comparison">Whether to perform an equality or an inequality comparison, and, if to perform an inequality comparison, the type of the inequality comparison to perform.</param>
+            <param name="comparisonDelegate">The comparison delegate used to compare the values.</param>
+            <param name="value">The value to compare with.</param>
+            <param name="values">The values to compare.</param>
+            <param name="predicate">The comparison predicate</param>
+            <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Diagnostics.IfHelpers.If(WinCopies.Diagnostics.ComparisonType@,WinCopies.Diagnostics.ComparisonMode@,WinCopies.Diagnostics.Comparison@,System.Object@,System.Object@,System.Collections.Generic.KeyValuePair{System.Object,System.Object}[])">
+            <summary>
+            Performs a comparison by testing a value compared to an array of objects or values.
+            </summary>
+            <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
+            <param name="comparison">The comparison type</param>
+            <param name="value">The value to compare the values of the table with.</param>
+            <param name="values">The values to compare.</param>
+            <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Diagnostics.IfHelpers.If(WinCopies.Diagnostics.ComparisonType@,WinCopies.Diagnostics.ComparisonMode@,WinCopies.Diagnostics.Comparison@,System.Object@,System.Collections.IComparer,WinCopies.Util.Predicate@,System.Object@,System.Collections.Generic.KeyValuePair{System.Object,System.Object}[])">
+            <summary>
+            Performs a comparison by testing a value compared to an array of objects or values using a custom <see cref="T:System.Collections.Generic.IComparer`1"/> and <see cref="T:System.Predicate`1"/>.
+            </summary>
+            <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
+            <param name="comparison">The comparison type</param>
+            <param name="comparer">The comparer used to compare the values.</param>
+            <param name="value">The value to compare with.</param>
+            <param name="values">The values to compare.</param>
+            <param name="predicate">The comparison predicate</param>
+            <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Diagnostics.IfHelpers.If``1(WinCopies.Diagnostics.ComparisonType@,WinCopies.Diagnostics.ComparisonMode@,WinCopies.Diagnostics.Comparison@,``0@,``0[])">
+            <summary>
+            Performs a comparison by testing a value compared to an array of objects or values.
+            </summary>
+            <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
+            <param name="comparison">The comparison type</param>
+            <param name="value">The value to compare the values of the table with.</param>
+            <param name="values">The values to compare.</param>
+            <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Diagnostics.IfHelpers.If``1(WinCopies.Diagnostics.ComparisonType@,WinCopies.Diagnostics.ComparisonMode@,WinCopies.Diagnostics.Comparison@,System.Collections.Generic.IComparer{``0},System.Predicate{``0}@,``0@,``0[])">
+            <summary>
+            Performs a comparison by testing a value compared to an array of objects or values using a custom <see cref="T:System.Collections.Generic.IComparer`1"/> and <see cref="T:System.Predicate`1"/>.
+            </summary>
+            <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
+            <param name="comparison">The comparison type</param>
+            <param name="comparer">The comparer used to compare the values.</param>
+            <param name="value">The value to compare with.</param>
+            <param name="values">The values to compare.</param>
+            <param name="predicate">The comparison predicate</param>
+            <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Diagnostics.IfHelpers.If``2(WinCopies.Diagnostics.ComparisonType@,WinCopies.Diagnostics.ComparisonMode@,WinCopies.Diagnostics.Comparison@,``0@,``1@,System.Collections.Generic.KeyValuePair{``0,``1}[])">
+            <summary>
+            Performs a comparison by testing a value compared to an array of objects or values.
+            </summary>
+            <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
+            <param name="comparison">The comparison type</param>
+            <param name="value">The value to compare the values of the table with.</param>
+            <param name="values">The values to compare.</param>
+            <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Diagnostics.IfHelpers.If``2(WinCopies.Diagnostics.ComparisonType@,WinCopies.Diagnostics.ComparisonMode@,WinCopies.Diagnostics.Comparison@,``0@,System.Collections.Generic.IComparer{``1},System.Predicate{``1}@,``1@,System.Collections.Generic.KeyValuePair{``0,``1}[])">
+            <summary>
+            Performs a comparison by testing a value compared to an array of objects or values using a custom <see cref="!:System.Collections.Generic.System.Collections.Generic.IComparer&lt;Object&gt;"/> and <see cref="T:System.Predicate`1"/>.
+            </summary>
+            <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
+            <param name="comparison">The comparison type</param>
+            <param name="comparer">The comparer used to compare the values.</param>
+            <param name="value">The value to compare with.</param>
+            <param name="values">The values to compare.</param>
+            <param name="predicate">The comparison predicate</param>
+            <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
         </member>
         <member name="T:WinCopies.Collections.Comparison">
             <summary>
@@ -2649,6 +2856,40 @@
             </summary>
             <param name="stack">The <see cref="T:WinCopies.Collections.DotNetFix.EnumerableStack"/> to enumerate.</param>
         </member>
+        <member name="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddAfter(System.Collections.Generic.LinkedListNode{`0},`0)">
+            <summary>
+            Adds a new node containing the specified value after the specified existing node in the <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddItemAfter(System.Collections.Generic.LinkedListNode{`0},`0)"/> method to provide a custom implementation.
+            </summary>
+            <param name="node">The <see cref="T:System.Collections.Generic.LinkedListNode`1"/> after which to insert a new <see cref="T:System.Collections.Generic.LinkedListNode`1"/> containing value.</param>
+            <param name="value">The value to add to the <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>.</param>
+            <returns>The new <see cref="T:System.Collections.Generic.LinkedListNode`1"/> containing value.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
+            <exception cref="T:System.InvalidOperationException"><paramref name="node"/> is not in the current <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>.</exception>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddBefore(System.Collections.Generic.LinkedListNode{`0},`0)">
+            <summary>
+            Adds a new node containing the specified value before the specified existing node in the <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddItemBefore(System.Collections.Generic.LinkedListNode{`0},`0)"/> method to provide a custom implementation.
+            </summary>
+            <param name="node">The <see cref="T:System.Collections.Generic.LinkedListNode`1"/> before which to insert a new <see cref="T:System.Collections.Generic.LinkedListNode`1"/> containing value.</param>
+            <param name="value">The value to add to the <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>.</param>
+            <returns>The new <see cref="T:System.Collections.Generic.LinkedListNode`1"/> containing value.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
+            <exception cref="T:System.InvalidOperationException"><paramref name="node"/> is not in the current <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>.</exception>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddFirst(`0)">
+            <summary>
+            Adds a new node containing the specified value at the start of the <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddFirstItem(`0)"/> method to provide a custom implementation.
+            </summary>
+            <param name="value">The value to add at the start of the <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>.</param>
+            <returns>The new <see cref="T:System.Collections.Generic.LinkedListNode`1"/> containing value.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddLast(`0)">
+            <summary>
+            Adds a new node containing the specified value at the end of the <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddLastItem(`0)"/> method to provide a custom implementation.
+            </summary>
+            <param name="value">The value to add at the end of the <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>.</param>
+            <returns>The new <see cref="T:System.Collections.Generic.LinkedListNode`1"/> containing value.</returns>
+        </member>
         <member name="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddAfter(System.Collections.Generic.LinkedListNode{`0},System.Collections.Generic.LinkedListNode{`0})">
             <summary>
             Adds the specified new node after the specified existing node in the <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddItemAfter(System.Collections.Generic.LinkedListNode{`0},System.Collections.Generic.LinkedListNode{`0})"/> method to provide a custom implementation.
@@ -2683,40 +2924,6 @@
             <param name="node">The new <see cref="T:System.Collections.Generic.LinkedListNode`1"/> to add at the end of the <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>.</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
             <exception cref="T:System.InvalidOperationException"><paramref name="node"/> belongs to another <see cref="T:System.Collections.Generic.LinkedList`1"/>.</exception>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddAfter(System.Collections.Generic.LinkedListNode{`0},`0)">
-            <summary>
-            Adds a new node containing the specified value after the specified existing node in the <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddItemAfter(System.Collections.Generic.LinkedListNode{`0},`0)"/> method to provide a custom implementation.
-            </summary>
-            <param name="node">The <see cref="T:System.Collections.Generic.LinkedListNode`1"/> after which to insert a new <see cref="T:System.Collections.Generic.LinkedListNode`1"/> containing value.</param>
-            <param name="value">The value to add to the <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>.</param>
-            <returns>The new <see cref="T:System.Collections.Generic.LinkedListNode`1"/> containing value.</returns>
-            <exception cref="T:System.ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
-            <exception cref="T:System.InvalidOperationException"><paramref name="node"/> is not in the current <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>.</exception>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddBefore(System.Collections.Generic.LinkedListNode{`0},`0)">
-            <summary>
-            Adds a new node containing the specified value before the specified existing node in the <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddItemBefore(System.Collections.Generic.LinkedListNode{`0},`0)"/> method to provide a custom implementation.
-            </summary>
-            <param name="node">The <see cref="T:System.Collections.Generic.LinkedListNode`1"/> before which to insert a new <see cref="T:System.Collections.Generic.LinkedListNode`1"/> containing value.</param>
-            <param name="value">The value to add to the <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>.</param>
-            <returns>The new <see cref="T:System.Collections.Generic.LinkedListNode`1"/> containing value.</returns>
-            <exception cref="T:System.ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
-            <exception cref="T:System.InvalidOperationException"><paramref name="node"/> is not in the current <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>.</exception>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddFirst(`0)">
-            <summary>
-            Adds a new node containing the specified value at the start of the <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddFirstItem(`0)"/> method to provide a custom implementation.
-            </summary>
-            <param name="value">The value to add at the start of the <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>.</param>
-            <returns>The new <see cref="T:System.Collections.Generic.LinkedListNode`1"/> containing value.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddLast(`0)">
-            <summary>
-            Adds a new node containing the specified value at the end of the <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>. Override the <see cref="M:WinCopies.Collections.DotNetFix.LinkedCollection`1.AddLastItem(`0)"/> method to provide a custom implementation.
-            </summary>
-            <param name="value">The value to add at the end of the <see cref="T:WinCopies.Collections.DotNetFix.LinkedCollection`1"/>.</param>
-            <returns>The new <see cref="T:System.Collections.Generic.LinkedListNode`1"/> containing value.</returns>
         </member>
         <member name="P:WinCopies.Collections.DotNetFix.IUIntIndexedCollection.Count">
             <summary>
@@ -3526,210 +3733,6 @@
             <seealso cref="M:WinCopies.Linq.Extensions.PredicateFirstOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
             <seealso cref="M:WinCopies.Linq.Extensions.FirstOrDefault``1(System.Collections.IEnumerable)"/>
             <seealso cref="M:WinCopies.Linq.Extensions.LastOrDefault``1(System.Collections.IEnumerable)"/>
-        </member>
-        <member name="T:WinCopies.Diagnostics.ComparisonType">
-            <summary>
-            Comparison types for the If functions.
-            </summary>
-        </member>
-        <member name="F:WinCopies.Diagnostics.ComparisonType.And">
-            <summary>
-            Check if all conditions are checked.
-            </summary>
-        </member>
-        <member name="F:WinCopies.Diagnostics.ComparisonType.Or">
-            <summary>
-            Check if at least one condition is checked.
-            </summary>
-        </member>
-        <member name="F:WinCopies.Diagnostics.ComparisonType.Xor">
-            <summary>
-            Check if exactly one condition is checked.
-            </summary>
-        </member>
-        <member name="T:WinCopies.Diagnostics.ComparisonMode">
-            <summary>
-            Comparison modes for the If functions.
-            </summary>
-        </member>
-        <member name="F:WinCopies.Diagnostics.ComparisonMode.Binary">
-            <summary>
-            Use a binary comparison
-            </summary>
-        </member>
-        <member name="F:WinCopies.Diagnostics.ComparisonMode.Logical">
-            <summary>
-            Use a logical comparison
-            </summary>
-        </member>
-        <member name="T:WinCopies.Diagnostics.Comparison">
-            <summary>
-            Comparison to perform.
-            </summary>
-        </member>
-        <member name="F:WinCopies.Diagnostics.Comparison.Equal">
-            <summary>
-            Check for values equality
-            </summary>
-        </member>
-        <member name="F:WinCopies.Diagnostics.Comparison.NotEqual">
-            <summary>
-            Check for values non-equality
-            </summary>
-        </member>
-        <member name="F:WinCopies.Diagnostics.Comparison.Lesser">
-            <summary>
-            Check if a value is lesser than a given value. This field only works for methods that use lesser/greater/equal comparers.
-            </summary>
-        </member>
-        <member name="F:WinCopies.Diagnostics.Comparison.LesserOrEqual">
-            <summary>
-            Check if a value is lesser than or equal to a given value. This field only works for methods that use lesser/greater/equal comparers.
-            </summary>
-        </member>
-        <member name="F:WinCopies.Diagnostics.Comparison.Greater">
-            <summary>
-            Check if a value is greater than a given value. This field only works for methods that use lesser/greater/equal comparers.
-            </summary>
-        </member>
-        <member name="F:WinCopies.Diagnostics.Comparison.GreaterOrEqual">
-            <summary>
-            Check if a value is greater than or equal to a given value. This field only works for methods that use lesser/greater/equal comparers.
-            </summary>
-        </member>
-        <member name="F:WinCopies.Diagnostics.Comparison.ReferenceEqual">
-            <summary>
-            Check if an object reference is equal to a given object reference. This field only works for methods that use equality comparers (not lesser/greater ones).
-            </summary>
-        </member>
-        <member name="M:WinCopies.Diagnostics.IfHelpers.If(WinCopies.Diagnostics.ComparisonType@,WinCopies.Diagnostics.ComparisonMode@,WinCopies.Diagnostics.Comparison@,System.Object@,System.Object[])">
-            <summary>
-            Performs a comparison by testing a value compared to an array of values.
-            </summary>
-            <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
-            <param name="comparisonMode">Whether to perform a binary or a logical comparison.</param>
-            <param name="comparison">Whether to perform an equality or an inequality comparison, and, if to perform an inequality comparison, the type of the inequality comparison to perform.</param>
-            <param name="value">The value to compare the values of the table with.</param>
-            <param name="values">The values to compare.</param>
-            <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Diagnostics.IfHelpers.If(WinCopies.Diagnostics.ComparisonType@,WinCopies.Diagnostics.ComparisonMode@,WinCopies.Diagnostics.Comparison@,System.Collections.IComparer,WinCopies.Util.Predicate@,System.Object@,System.Object[])">
-            <summary>
-            Performs a comparison by testing a value compared to an array of values using a custom <see cref="T:System.Collections.IComparer"/> and <see cref="T:WinCopies.Util.Predicate"/>.
-            </summary>
-            <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
-            <param name="comparisonMode">Whether to perform a binary or a logical comparison.</param>
-            <param name="comparison">Whether to perform an equality or an inequality comparison, and, if to perform an inequality comparison, the type of the inequality comparison to perform.</param>
-            <param name="comparer">The comparer used to compare the values.</param>
-            <param name="value">The value to compare with.</param>
-            <param name="values">The values to compare.</param>
-            <param name="predicate">The comparison predicate</param>
-            <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Diagnostics.IfHelpers.If(WinCopies.Diagnostics.ComparisonType@,WinCopies.Diagnostics.ComparisonMode@,WinCopies.Diagnostics.Comparison,WinCopies.Collections.Comparison,WinCopies.Util.Predicate@,System.Object,System.Object[])">
-            <summary>
-            Performs a comparison by testing a value compared to an array of values using a custom <see cref="T:WinCopies.Collections.Comparison"/> and <see cref="T:WinCopies.Util.Predicate"/>.
-            </summary>
-            <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
-            <param name="comparisonMode">Whether to perform a binary or a logical comparison.</param>
-            <param name="comparison">Whether to perform an equality or an inequality comparison, and, if to perform an inequality comparison, the type of the inequality comparison to perform.</param>
-            <param name="comparisonDelegate">The comparison delegate used to compare the values.</param>
-            <param name="value">The value to compare with.</param>
-            <param name="values">The values to compare.</param>
-            <param name="predicate">The comparison predicate</param>
-            <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Diagnostics.IfHelpers.If(WinCopies.Diagnostics.ComparisonType@,WinCopies.Diagnostics.ComparisonMode@,WinCopies.Diagnostics.Comparison@,System.Collections.IEqualityComparer,WinCopies.Util.Predicate@,System.Object@,System.Object[])">
-            <summary>
-            Performs a comparison by testing a value compared to an array of values using a custom <see cref="T:System.Collections.IComparer"/> and <see cref="T:WinCopies.Util.Predicate"/>.
-            </summary>
-            <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
-            <param name="comparisonMode">Whether to perform a binary or a logical comparison.</param>
-            <param name="comparison">Whether to perform an equality or an inequality comparison, and, if to perform an inequality comparison, the type of the inequality comparison to perform.</param>
-            <param name="equalityComparer">The equality comparer used to compare the values.</param>
-            <param name="value">The value to compare with.</param>
-            <param name="values">The values to compare.</param>
-            <param name="predicate">The comparison predicate</param>
-            <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Diagnostics.IfHelpers.If(WinCopies.Diagnostics.ComparisonType@,WinCopies.Diagnostics.ComparisonMode@,WinCopies.Diagnostics.Comparison,WinCopies.Collections.EqualityComparison,WinCopies.Util.Predicate@,System.Object,System.Object[])">
-            <summary>
-            Performs a comparison by testing a value compared to an array of values using a custom <see cref="T:WinCopies.Collections.EqualityComparison"/> and <see cref="T:WinCopies.Util.Predicate"/>.
-            </summary>
-            <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
-            <param name="comparisonMode">Whether to perform a binary or a logical comparison.</param>
-            <param name="comparison">Whether to perform an equality or an inequality comparison, and, if to perform an inequality comparison, the type of the inequality comparison to perform.</param>
-            <param name="comparisonDelegate">The comparison delegate used to compare the values.</param>
-            <param name="value">The value to compare with.</param>
-            <param name="values">The values to compare.</param>
-            <param name="predicate">The comparison predicate</param>
-            <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Diagnostics.IfHelpers.If(WinCopies.Diagnostics.ComparisonType@,WinCopies.Diagnostics.ComparisonMode@,WinCopies.Diagnostics.Comparison@,System.Object@,System.Object@,System.Collections.Generic.KeyValuePair{System.Object,System.Object}[])">
-            <summary>
-            Performs a comparison by testing a value compared to an array of objects or values.
-            </summary>
-            <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
-            <param name="comparison">The comparison type</param>
-            <param name="value">The value to compare the values of the table with.</param>
-            <param name="values">The values to compare.</param>
-            <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Diagnostics.IfHelpers.If(WinCopies.Diagnostics.ComparisonType@,WinCopies.Diagnostics.ComparisonMode@,WinCopies.Diagnostics.Comparison@,System.Object@,System.Collections.IComparer,WinCopies.Util.Predicate@,System.Object@,System.Collections.Generic.KeyValuePair{System.Object,System.Object}[])">
-            <summary>
-            Performs a comparison by testing a value compared to an array of objects or values using a custom <see cref="T:System.Collections.Generic.IComparer`1"/> and <see cref="T:System.Predicate`1"/>.
-            </summary>
-            <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
-            <param name="comparison">The comparison type</param>
-            <param name="comparer">The comparer used to compare the values.</param>
-            <param name="value">The value to compare with.</param>
-            <param name="values">The values to compare.</param>
-            <param name="predicate">The comparison predicate</param>
-            <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Diagnostics.IfHelpers.If``1(WinCopies.Diagnostics.ComparisonType@,WinCopies.Diagnostics.ComparisonMode@,WinCopies.Diagnostics.Comparison@,``0@,``0[])">
-            <summary>
-            Performs a comparison by testing a value compared to an array of objects or values.
-            </summary>
-            <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
-            <param name="comparison">The comparison type</param>
-            <param name="value">The value to compare the values of the table with.</param>
-            <param name="values">The values to compare.</param>
-            <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Diagnostics.IfHelpers.If``1(WinCopies.Diagnostics.ComparisonType@,WinCopies.Diagnostics.ComparisonMode@,WinCopies.Diagnostics.Comparison@,System.Collections.Generic.IComparer{``0},System.Predicate{``0}@,``0@,``0[])">
-            <summary>
-            Performs a comparison by testing a value compared to an array of objects or values using a custom <see cref="T:System.Collections.Generic.IComparer`1"/> and <see cref="T:System.Predicate`1"/>.
-            </summary>
-            <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
-            <param name="comparison">The comparison type</param>
-            <param name="comparer">The comparer used to compare the values.</param>
-            <param name="value">The value to compare with.</param>
-            <param name="values">The values to compare.</param>
-            <param name="predicate">The comparison predicate</param>
-            <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Diagnostics.IfHelpers.If``2(WinCopies.Diagnostics.ComparisonType@,WinCopies.Diagnostics.ComparisonMode@,WinCopies.Diagnostics.Comparison@,``0@,``1@,System.Collections.Generic.KeyValuePair{``0,``1}[])">
-            <summary>
-            Performs a comparison by testing a value compared to an array of objects or values.
-            </summary>
-            <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
-            <param name="comparison">The comparison type</param>
-            <param name="value">The value to compare the values of the table with.</param>
-            <param name="values">The values to compare.</param>
-            <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Diagnostics.IfHelpers.If``2(WinCopies.Diagnostics.ComparisonType@,WinCopies.Diagnostics.ComparisonMode@,WinCopies.Diagnostics.Comparison@,``0@,System.Collections.Generic.IComparer{``1},System.Predicate{``1}@,``1@,System.Collections.Generic.KeyValuePair{``0,``1}[])">
-            <summary>
-            Performs a comparison by testing a value compared to an array of objects or values using a custom <see cref="!:System.Collections.Generic.System.Collections.Generic.IComparer&lt;Object&gt;"/> and <see cref="T:System.Predicate`1"/>.
-            </summary>
-            <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
-            <param name="comparison">The comparison type</param>
-            <param name="comparer">The comparer used to compare the values.</param>
-            <param name="value">The value to compare with.</param>
-            <param name="values">The values to compare.</param>
-            <param name="predicate">The comparison predicate</param>
-            <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
         </member>
         <member name="M:WinCopies.Extensions.ThrowHelper.ThrowIfNotValidFlagsEnumValue(System.Enum@,System.Boolean@,System.Boolean@)">
             <summary>

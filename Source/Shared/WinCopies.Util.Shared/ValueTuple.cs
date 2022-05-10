@@ -1,6 +1,22 @@
-﻿#if !CS7
+﻿using System;
+
 namespace WinCopies
 {
+#if CS8
+    public ref struct ReadOnlySpanTuple<T1, T2>
+    {
+        public ReadOnlySpan<T1> item1;
+
+        public ReadOnlySpan<T2> item2;
+
+        public ReadOnlySpanTuple(ReadOnlySpan<T1> item1, ReadOnlySpan<T2> item2)
+        {
+            this.item1 = item1;
+
+            this.item2 = item2;
+        }
+    }
+#elif !CS7
     public struct ValueTuple<T1, T2>
     {
         public T1 item1;
@@ -630,5 +646,5 @@ namespace WinCopies
             this.item16 = item16;
         }
     }
-}
 #endif
+}

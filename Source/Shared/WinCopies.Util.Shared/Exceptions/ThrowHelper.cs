@@ -21,12 +21,12 @@ using System.Globalization;
 
 using WinCopies.Util;
 
-#if !WinCopies3
-using static WinCopies.Util.Util;
-using static WinCopies.Util.Resources.ExceptionMessages;
-#else
+#if WinCopies3
 using static WinCopies.UtilHelpers;
 using static WinCopies.Resources.ExceptionMessages;
+#else
+using static WinCopies.Util.Util;
+using static WinCopies.Util.Resources.ExceptionMessages;
 #endif
 
 namespace WinCopies
@@ -39,6 +39,32 @@ namespace WinCopies
     /// </summary>
     public static class ThrowHelper
     {
+        public static InvalidCastException GetInvalidCastException(in Type
+#if CS8
+            ?
+#endif
+            typeIn, in Type typeOut) => new
+#if !CS9
+            InvalidCastException
+#endif
+            ($"Cannot convert from {typeIn?.ToString() ?? "null"} to {typeOut}.");
+
+        public static InvalidCastException GetInvalidCastException(in object
+#if CS8
+            ?
+#endif
+            obj, in Type typeOut) => GetInvalidCastException(obj?.GetType(), typeOut);
+
+        public static InvalidCastException GetInvalidCastException<T>(in Type type) => GetInvalidCastException(type, typeof(T));
+
+        public static InvalidCastException GetInvalidCastException<T>(in object
+#if CS8
+            ?
+#endif
+            obj) => GetInvalidCastException(obj, typeof(T));
+
+        public static InvalidCastException GetInvalidCastException<TIn, TOut>() => GetInvalidCastException<TOut>(typeof(TIn));
+
         public static T
 #if CS9
             ?
@@ -240,17 +266,81 @@ namespace WinCopies
 
         #endregion
 
-        public static ArgumentException GetArgumentMustBeAnInstanceOfTypeException(in string argumentName, in string typeName) => new ArgumentException(string.Format(ArgumentMustBeAnInstanceOf, argumentName, typeName));
+#if !CS5
+        public
+#else
+        private
+#endif
+            static ArgumentException GetValuesMustBeAnInstanceOfTypeException<T>(in object value, in int index, in string paramName) => new
+#if !CS9
+            ArgumentException
+#endif
+            ($"{paramName} must all be instances of {typeof(T)}. The value at {index} is {(value == null ? "null" : $"an instance of {value.GetType()}")}.", paramName);
 
-        public static ArgumentException GetInvalidTypeArgumentException(in string argumentName) => new ArgumentException(GivenTypeIsNotSupported, argumentName);
+#if !CS5
+        public
+#else
+        private
+#endif
+            static object GetAtOrThrowIfArrayNull<T>(in
+#if CS5
+            IReadOnlyList<
+#endif
+            T
+#if CS5
+            >
+#else
+            []
+#endif
+            values, in int index) => (values ?? throw GetArgumentNullException(nameof(values)))[index];
 
-        public static InvalidOperationException GetMoreThanOneOccurencesWereFoundException() => new InvalidOperationException(MoreThanOneOccurencesWereFound);
+#if CS5
+        public static ArgumentException GetValuesMustBeAnInstanceOfTypeException<TValues, TExpected>(in IReadOnlyList<TValues> values, in int index, in string paramName) => GetValuesMustBeAnInstanceOfTypeException<TExpected>(GetAtOrThrowIfArrayNull(values, index), index, paramName);
+#endif
 
-        public static ArgumentException GetOneOrMoreKeyIsNullException() => new ArgumentException(OneOrMoreKeyIsNull);
+        public static ArgumentException GetArgumentMustBeAnInstanceOfTypeException(in string argumentName, in string typeName) => new
+#if !CS9
+            ArgumentException
+#endif
+            (string.Format(ArgumentMustBeAnInstanceOf, argumentName, typeName));
 
-        public static InvalidOperationException GetEnumeratorNotStartedOrDisposedException() => new InvalidOperationException(EnumeratorIsNotStartedOrDisposed);
+        public static ArgumentException GetArgumentMustBeAnInstanceOfTypeException(in string argumentName, in Type t) => new
+#if !CS9
+            ArgumentException
+#endif
+            (string.Format(ArgumentMustBeAnInstanceOf, argumentName, t));
 
-        public static InvalidOperationException GetVersionHasChangedException() => new InvalidOperationException(CollectionChangedDuringEnumeration);
+        public static ArgumentException GetArgumentMustBeAnInstanceOfTypeException<T>(in string argumentName) => GetArgumentMustBeAnInstanceOfTypeException(argumentName, typeof(T));
+
+        public static ArgumentException GetInvalidTypeArgumentException(in string argumentName) => new
+#if !CS9
+            ArgumentException
+#endif
+            (GivenTypeIsNotSupported, argumentName);
+
+        public static InvalidOperationException GetMoreThanOneOccurencesWereFoundException() => new
+#if !CS9
+            InvalidOperationException
+#endif
+            (MoreThanOneOccurencesWereFound);
+
+        public static ArgumentException GetOneOrMoreKeyIsNullException() => new
+#if !CS9
+            ArgumentException
+#endif
+            (OneOrMoreKeyIsNull);
+
+        public static InvalidOperationException GetEnumeratorNotStartedOrDisposedException() => new
+#if !CS9
+            InvalidOperationException
+#endif
+            (EnumeratorIsNotStartedOrDisposed);
+
+        public static InvalidOperationException GetVersionHasChangedException() => new
+#if !CS9
+            InvalidOperationException
+#endif
+            (CollectionChangedDuringEnumeration);
 
         public static void ThrowIfVersionHasChanged(int currentVersion, int initialVersion)
         {
@@ -605,7 +695,9 @@ namespace WinCopies
         /// </summary>
         /// <param name="obj">The object to check.</param>
         /// <param name="argumentName">The argument name for the <see cref="ArgumentNullException"/> that is thrown.</param>
-        public static object GetOrThrowIfNull(in object obj, in string argumentName) => obj ?? throw GetArgumentNullException(argumentName);
+        public static object GetOrThrowIfNull(in object obj, in string argumentName) => GetOrThrowIfNull<object>(obj, argumentName);
+
+        public static object GetOrThrowIfNull(in object obj, in string argumentName, in Func func) => GetOrThrowIfNull(obj, argumentName, func.AsObjectFunc());
 
         /// <summary>
         /// Returns <paramref name="obj"/> if it is not null, otherwise throws the <see cref="ArgumentNullException"/> that is returned by the <see cref="GetArgumentNullException(in string)"/> method.
@@ -613,7 +705,25 @@ namespace WinCopies
         /// <typeparam name="T">The type of <paramref name="obj"/>. This must be a class type.</typeparam>
         /// <param name="obj">The object to check.</param>
         /// <param name="argumentName">The argument name for the <see cref="ArgumentNullException"/> that is thrown.</param>
-        public static T GetOrThrowIfNull<T>(in T obj, in string argumentName) where T : class => obj ?? throw GetArgumentNullException(argumentName);
+        public static T GetOrThrowIfNull<T>(in T obj, in string argumentName)
+#if !WinCopies3
+            where T : class
+#endif
+            => GetOrThrowIfNull(obj, argumentName, Delegates.Self);
+
+        public static TOut GetOrThrowIfNull<TIn, TOut>(in TIn obj, in string argumentName, in Func<TOut> func) => obj == null ? throw GetArgumentNullException(argumentName) : GetOrThrowIfNull(func, nameof(func))();
+
+        private static TOut GetOrThrowIfNull<TIn, TOut>(in TIn obj, in string argumentName, in Func<TIn, TOut> func) => (func ?? throw GetArgumentNullException(nameof(func)))(obj
+#if CS8
+            ??
+#else
+            == null ?
+#endif
+            throw GetArgumentNullException(argumentName)
+#if !CS8
+            : obj
+#endif
+            );
 
         public static T TryGetIfTypeOrThrowIfNull<T>(in object obj, in string argumentName) where T : class => GetOrThrowIfNull(obj, argumentName) is T _obj ? _obj : null;
 

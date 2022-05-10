@@ -16,13 +16,69 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if CS7 && WinCopies3
+using System.Text;
 
 using WinCopies.Collections;
+using WinCopies.Collections.Generic;
+using WinCopies.Util;
 
 namespace WinCopies.Extensions // To avoid name conflicts.
 {
     public static class StringExtensions
     {
+        public static string[] Split(this string s, in bool keepEmpty, params char[] chars)
+        {
+            var sb = new StringBuilder();
+            var result = new ArrayBuilder<string>();
+
+            foreach (char c in s)
+
+                if (chars.Contains(c))
+                {
+                    if (!(keepEmpty && sb.Length == 0))
+
+                        _ = result.AddLast(sb.ToString());
+
+                    _ = sb.Clear();
+                }
+
+                else
+
+                    _ = sb.Append(c);
+
+            return result.ToArray();
+        }
+
+        public static (string left, string
+#if CS8
+            ?
+#endif
+            right) SplitF(this string s, char c)
+        {
+            for (int i = 0; i < s.Length; i++)
+
+                if (s[i] == c)
+
+                    return s.Split(i);
+
+            return (s, null);
+        }
+
+        public static (string left, string
+#if CS8
+            ?
+#endif
+            right) SplitL(this string s, char c)
+        {
+            for (int i = s.Length - 1; i >= 0; i--)
+
+                if (s[i] == c)
+
+                    return s.Split(i);
+
+            return (s, null);
+        }
+
         public static StringCharArray AsCharArray(this string s) => new
 #if !CS9
             StringCharArray
@@ -36,5 +92,4 @@ namespace WinCopies.Extensions // To avoid name conflicts.
         public static bool Validate(this string s, in char startsWith, in int skipLength, in int? length, in int? lowerBound, in int? upperBound, params char[] chars) => s.AsCharArray().Validate(new char[] { startsWith }, (char x, char y) => x == y, skipLength, length, lowerBound, upperBound, chars);
     }
 }
-
 #endif

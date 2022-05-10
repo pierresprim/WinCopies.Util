@@ -38,6 +38,10 @@
 		<DefineConstants>CS4;CS5;CS6;CS7;CS8;NETCORE;$(DefineConstants)</DefineConstants>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(TargetFramework.TrimEnd(`0123456789-windows`))' == 'net7.'">
+		<DefineConstants>CS4;CS5;CS6;CS7;CS8;CS9;CS10;CS11;$(DefineConstants)</DefineConstants>
+	</PropertyGroup>
+
 	<PropertyGroup Condition="'$(TargetFramework.TrimEnd(`0123456789-windows`))' == 'net6.'">
 		<DefineConstants>CS4;CS5;CS6;CS7;CS8;CS9;CS10;$(DefineConstants)</DefineConstants>
 	</PropertyGroup>

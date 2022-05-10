@@ -72,7 +72,7 @@ namespace WinCopies.Diagnostics
 
                 throw new ArgumentException($"{nameof(comparisonDelegate)} have to be set to null in order to use this method with the {nameof(IfComp.ReferenceEqual)} enum value.");
 
-            if (comparison == IfComp.ReferenceEqual && !valueType.GetType().IsClass) throw new InvalidOperationException("ReferenceEqual comparison is only valid with class types.");
+            if (comparison == IfComp.ReferenceEqual && valueType.GetType().IsValueType) throw new InvalidOperationException("ReferenceEqual comparison is only valid with class types.");
         }
 
         internal static void ThrowOnInvalidEqualityIfMethodArg<T>(IfCT comparisonType, IfCM comparisonMode, IfComp comparison, EqualityComparison<T> comparisonDelegate)
@@ -83,7 +83,7 @@ namespace WinCopies.Diagnostics
 
                 throw new ArgumentException($"{nameof(comparisonDelegate)} have to be set to null in order to use this method with the {nameof(IfComp.ReferenceEqual)} enum value.");
 
-            if (comparison == IfComp.ReferenceEqual && !typeof(T).IsClass) throw new InvalidOperationException("ReferenceEqual comparison is only valid with class types.");
+            if (comparison == IfComp.ReferenceEqual && typeof(T).IsValueType) throw new InvalidOperationException("ReferenceEqual comparison is only valid with class types.");
         }
     }
 }

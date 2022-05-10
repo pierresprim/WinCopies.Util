@@ -49,6 +49,20 @@ namespace WinCopies.Commands
 #endif
     }
 
+    public interface IQueryCommandSource<T> : ICommandSource
+    {
+        new IQueryCommand<T> Command { get; }
+
+#if CS8
+        ICommand ICommandSource.Command => Command;
+#endif
+    }
+
+    public interface IQueryCommandSource<TParam, TResult> : ICommandSource<TParam>, IQueryCommandSource<TResult>
+    {
+        new IQueryCommand<TParam, TResult> Command { get; }
+    }
+
     public abstract class CommandSourceBase
     {
         public IInputElement CommandTarget { get; set; }
@@ -221,7 +235,9 @@ namespace WinCopies.Commands
 
         public static void RunCommand(in Action<ExecutedRoutedEventArgs> action, in ExecutedRoutedEventArgs e)
         {
-            e.Handled = true;
+            if (e != null)
+
+                e.Handled = true;
 
             action(e);
         }

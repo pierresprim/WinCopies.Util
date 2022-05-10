@@ -917,14 +917,21 @@
             A static <see cref="T:System.Windows.Input.CanExecuteRoutedEventHandler"/> that sets the <see cref="P:System.Windows.Input.CanExecuteRoutedEventArgs.CanExecute"/> to true. This handler can be used for commands that can always be executed.
             </summary>
         </member>
+        <member name="P:WinCopies.Util.Commands.DelegateCommandBase.CanExecuteDelegate">
+            <summary>
+            Gets or sets the Predicate to execute when the CanExecute of the command gets called
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.Commands.DelegateCommandBase.CanExecute(System.Object)">
+            <summary>
+            Checks if the command Execute method can run
+            </summary>
+            <param name="parameter">THe command parameter to be passed</param>
+            <returns>Returns true if the command can execute. By default true is returned so that if the user of SimpleCommand does not specify a CanExecuteCommand delegate the command still executes.</returns>
+        </member>
         <member name="T:WinCopies.Util.Commands.DelegateCommand">
             <summary>
             Provides a base class for WPF commands.
-            </summary>
-        </member>
-        <member name="P:WinCopies.Util.Commands.DelegateCommand.CanExecuteDelegate">
-            <summary>
-            Gets or sets the Predicate to execute when the CanExecute of the command gets called
             </summary>
         </member>
         <member name="P:WinCopies.Util.Commands.DelegateCommand.ExecuteDelegate">
@@ -932,18 +939,11 @@
             Gets or sets the action to be called when the Execute method of the command gets called
             </summary>
         </member>
-        <member name="M:WinCopies.Util.Commands.DelegateCommand.CanExecute(System.Object)">
-            <summary>
-            Checks if the command Execute method can run
-            </summary>
-            <param name="parameter">THe command parameter to be passed</param>
-            <returns>Returns true if the command can execute. By default true is returned so that if the user of SimpleCommand does not specify a CanExecuteCommand delegate the command still executes.</returns>
-        </member>
         <member name="M:WinCopies.Util.Commands.DelegateCommand.Execute(System.Object)">
             <summary>
             Executes the actual command
             </summary>
-            <param name="parameter">THe command parameter to be passed</param>
+            <param name="parameter">The command parameter to be passed</param>
         </member>
         <member name="M:WinCopies.Util.Commands.ICommand`1.CanExecute(`0)">
             <summary>
@@ -958,27 +958,27 @@
             </summary>
             <param name="parameter">Data used by the command. If the command does not require data to be passed, this object can be set to null.</param>
         </member>
+        <member name="P:WinCopies.Util.Commands.DelegateCommandBase`1.CanExecuteDelegate">
+            <summary>
+            Gets or sets the Predicate to execute when the CanExecute of the command gets called
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.Commands.DelegateCommandBase`1.CanExecute(`0)">
+            <summary>
+            Checks if the command Execute method can run
+            </summary>
+            <param name="parameter">The command parameter to be passed</param>
+            <returns>Returns true if the command can execute. By default true is returned so that if the user of SimpleCommand does not specify a CanExecuteCommand delegate the command still executes.</returns>
+        </member>
         <member name="T:WinCopies.Util.Commands.DelegateCommand`1">
             <summary>
             Provides a base class for WPF commands.
-            </summary>
-        </member>
-        <member name="P:WinCopies.Util.Commands.DelegateCommand`1.CanExecuteDelegate">
-            <summary>
-            Gets or sets the Predicate to execute when the CanExecute of the command gets called
             </summary>
         </member>
         <member name="P:WinCopies.Util.Commands.DelegateCommand`1.ExecuteDelegate">
             <summary>
             Gets or sets the action to be called when the Execute method of the command gets called
             </summary>
-        </member>
-        <member name="M:WinCopies.Util.Commands.DelegateCommand`1.CanExecute(`0)">
-            <summary>
-            Checks if the command Execute method can run
-            </summary>
-            <param name="parameter">THe command parameter to be passed</param>
-            <returns>Returns true if the command can execute. By default true is returned so that if the user of SimpleCommand does not specify a CanExecuteCommand delegate the command still executes.</returns>
         </member>
         <member name="M:WinCopies.Util.Commands.DelegateCommand`1.Execute(`0)">
             <summary>
@@ -1009,24 +1009,24 @@
             </summary>
             <param name="parameter">The command parameter to be passed.</param>
         </member>
-        <member name="T:WinCopies.Util.Commands.DelegateCommand3">
+        <member name="T:WinCopies.Util.Commands.DelegateCommand3`1">
             <summary>
             Provides a base class for WPF commands.
             </summary>
         </member>
-        <member name="P:WinCopies.Util.Commands.DelegateCommand3.ExecuteDelegate">
+        <member name="P:WinCopies.Util.Commands.DelegateCommand3`1.ExecuteDelegate">
             <summary>
             Gets or sets the action to be called when the Execute method of the command gets called.
             </summary>
         </member>
-        <member name="M:WinCopies.Util.Commands.DelegateCommand3.CanExecute(System.Object)">
+        <member name="M:WinCopies.Util.Commands.DelegateCommand3`1.CanExecute(`0)">
             <summary>
             Checks if the command Execute method can run.
             </summary>
             <param name="parameter">THe command parameter to be passed.</param>
             <returns>Returns true if the command can execute. By default true is returned so that if the user of SimpleCommand does not specify a CanExecuteCommand delegate the command still executes.</returns>
         </member>
-        <member name="M:WinCopies.Util.Commands.DelegateCommand3.Execute(System.Object)">
+        <member name="M:WinCopies.Util.Commands.DelegateCommand3`1.Execute(`0)">
             <summary>
             Executes the actual command.
             </summary>

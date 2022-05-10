@@ -16,7 +16,6 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if WinCopies3 && CS7
-
 using WinCopies.Collections.DotNetFix;
 using WinCopies.Collections.DotNetFix.Generic;
 
@@ -28,7 +27,7 @@ namespace WinCopies.Collections.Generic
 
         int ICountableEnumerable<TItems, ArrayEnumerator<TItems>>.Count => List.Count;
 
-        int ICountable.Count => List.Count;
+        public int Count => List.Count;
 
         int System.Collections.Generic.IReadOnlyCollection<TItems>.Count => List.Count;
 
@@ -36,9 +35,13 @@ namespace WinCopies.Collections.Generic
 
         int ICountableEnumerable<TItems, ICountableEnumerator<TItems>>.Count => List.Count;
 
+        TItems IIndexableR<TItems>.this[int index] => GetAt(index);
+
+        object IIndexableR.this[int index] => GetAt(index);
+
         protected TItems this[in int index] => List[GetIndex(index)];
 
-        TItems System.Collections.Generic.IReadOnlyList<TItems>.this[int index] => this[index];
+        TItems System.Collections.Generic.IReadOnlyList<TItems>.this[int index] => GetAt(index);
 
 #if !(WinCopies3 && CS7)
         object IReadOnlyList.this[int index] => this[index];
@@ -60,6 +63,8 @@ namespace WinCopies.Collections.Generic
         }
 
         protected int GetIndex(in int index) => List.Count - 1 - index;
+
+        protected TItems GetAt(in int index) => this[Count - 1 - index];
 
         public ArrayEnumerator<TItems> GetEnumerator() => new
 #if !CS9
@@ -102,5 +107,4 @@ namespace WinCopies.Collections.Generic
         }
     }
 }
-
 #endif

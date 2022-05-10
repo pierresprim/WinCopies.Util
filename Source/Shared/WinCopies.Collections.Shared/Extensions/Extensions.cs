@@ -16,15 +16,21 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if WinCopies3
+#region System
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+#endregion System
 
+#region WinCopies
 using WinCopies.Collections;
 using WinCopies.Collections.DotNetFix.Generic;
+using WinCopies.Collections.Enumeration.Generic;
 using WinCopies.Collections.Generic;
+using WinCopies.Linq;
 using WinCopies.Util;
+#endregion WinCopies
 
 using static WinCopies.ThrowHelper;
 
@@ -32,7 +38,11 @@ namespace WinCopies.Collections
 {
     public static class Extensions
     {
-#if !CS5
+#if CS5
+        public static System.Collections.Generic.IEnumerable<T> GetEnumerable<T>(this System.Collections.Generic.IReadOnlyList<T> array, in int start, in int length) => Enumerable.GetEnumerable(new SkipEnumerator<T>(array, start, length));
+
+        public static System.Collections.Generic.IEnumerable<T> GetEnumerable<T>(this System.Collections.Generic.IReadOnlyList<T> array, in int start) => Enumerable.GetEnumerable(new SkipEnumerator<T>(array, start));
+#else
         public static T First<T>(this WinCopies.Collections.Generic.IReadOnlyList<T> list) => list[0];
 
         public static T Last<T>(this WinCopies.Collections.Generic.IReadOnlyList<T> list) => list[list.Count - 1];
@@ -2353,7 +2363,7 @@ int
 
             // If not, we have to check if the given value is a power of 2.
 
-            double valueDouble = (double)Convert.ChangeType(value, TypeCode.Double);
+            double valueDouble = (double)System.Convert.ChangeType(value, TypeCode.Double);
 
             // If yes and if we reached this point, that means that the value is a power of 2 -- and therefore represents a flag in the enum --, but is not defined in the enum.
 

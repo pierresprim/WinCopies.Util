@@ -23,10 +23,19 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-#if !WinCopies3
+using WinCopies.Collections;
+
+#if WinCopies3
+using WinCopies.Collections.Generic;
+
+using static WinCopies.Consts;
+using static WinCopies.UtilHelpers;
+using static WinCopies.ThrowHelper;
+
+namespace WinCopies
+#else
 using System.Globalization;
 
-using WinCopies.Collections;
 using WinCopies.Collections.DotNetFix;
 using WinCopies.Util.Resources;
 
@@ -38,11 +47,6 @@ using IfCT = WinCopies.Util.Util.ComparisonType;
 #endif
 
 namespace WinCopies.Util
-#else
-using static WinCopies.UtilHelpers;
-using static WinCopies.ThrowHelper;
-
-namespace WinCopies
 #endif
 {
 #if WinCopies3
@@ -54,7 +58,85 @@ namespace WinCopies
         /// </summary>
         public static class Extensions
         {
-            public static string GetRealName(this Type type) => type.ContainsGenericParameters ? type.Name.Remove(type.Name.IndexOf('`')) : type.Name;
+            public static Func<bool> ToBoolFunc(this Action action) => () =>
+            {
+                action();
+
+                return true;
+            };
+
+#if !CS9
+            public static string GetName<T>(this T value) where T : Enum => Enum.GetName(typeof(T), value);
+
+            public static string Format<T>(this T value, in string format) where T : Enum => Enum.Format(typeof(T), value, format);
+
+            public static bool IsDefined<T>(this T value) where T : Enum => Enum.IsDefined(typeof(T), value);
+
+            public static T Parse<T>(this string value) where T : Enum => (T)Enum.Parse(typeof(T), value);
+
+            public static T Parse<T>(this string value, in bool ignoreCase) where T : Enum => (T)Enum.Parse(typeof(T), value, ignoreCase);
+
+            public static T ToObject<T>(this object value) where T : Enum => (T)Enum.ToObject(typeof(T), value);
+
+            public static T ToObject<T>(this byte value) where T : Enum => (T)Enum.ToObject(typeof(T), value);
+
+            public static T ToObject<T>(this sbyte value) where T : Enum => (T)Enum.ToObject(typeof(T), value);
+
+            public static T ToObject<T>(this short value) where T : Enum => (T)Enum.ToObject(typeof(T), value);
+
+            public static T ToObject<T>(this ushort value) where T : Enum => (T)Enum.ToObject(typeof(T), value);
+
+            public static T ToObject<T>(this int value) where T : Enum => (T)Enum.ToObject(typeof(T), value);
+
+            public static T ToObject<T>(this uint value) where T : Enum => (T)Enum.ToObject(typeof(T), value);
+
+            public static T ToObject<T>(this long value) where T : Enum => (T)Enum.ToObject(typeof(T), value);
+
+            public static T ToObject<T>(this ulong value) where T : Enum => (T)Enum.ToObject(typeof(T), value);
+#endif
+
+            public static Predicate<object> AsObjectPredicate(this Predicate predicate) => GetOrThrowIfNull<Predicate, Predicate<object>>(predicate, nameof(predicate), () => obj => predicate(obj));
+
+            public static Func<object> AsObjectFunc(this Func func) => GetOrThrowIfNull<Func, Func<object>>(func, nameof(func), () => () => func());
+
+            public static EqualityComparison<object> AsObjectEqualityComparison(this EqualityComparison comparison) => GetOrThrowIfNull<EqualityComparison, EqualityComparison<object>>(comparison, nameof(comparison), () => (object x, object y) => comparison(x, y));
+
+            public static Comparison<object> AsObjectComparison(this
+#if !WinCopies3
+                Collections.
+#endif
+                Comparison comparison) => GetOrThrowIfNull<
+#if !WinCopies3
+                Collections.
+#endif
+                Comparison, Comparison<object>>(comparison, nameof(comparison), () => (object x, object y) => comparison(x, y));
+
+            public static Predicate GetPredicate(this EqualityComparison comparison, object obj) => GetOrThrowIfNull(comparison, nameof(comparison), () => GetOrThrowIfNull<object, Predicate>(obj, nameof(obj), () => _obj => comparison(obj, _obj)));
+
+            public static Predicate<T> GetPredicate<T>(this EqualityComparison<T> comparison, T obj) => GetOrThrowIfNull(comparison, nameof(comparison), () => GetOrThrowIfNull<object, Predicate<T>>(obj, nameof(obj), () => _obj => comparison(obj, _obj)));
+
+            public static string GetRealName(this Type type) => type.GetRealGenericTypeParameterLength() == 0 ? type.Name : type.Name.Remove(type.Name.IndexOf('`'));
+
+            public static byte GetRealGenericTypeParameterLength(this Type type)
+            {
+                if (type.GetGenericArguments().Length == 0)
+
+                    return new byte();
+
+                int i = type.Name.IndexOf('`');
+
+                return i > -1 ? byte.Parse(type.Name.Substring(i + 1)) : new byte();
+            }
+
+            public static bool ContainsRealGenericParameters(this Type type) => type.GetRealGenericTypeParameterLength() > 0;
+
+            public static bool IsStruct(this Type type) => type.IsValueType && !type.IsEnum;
+
+            public static bool IsReferenceType(this Type type) => type.IsClass || type.IsInterface;
+
+            public static bool IsPublicType(this Type type) => type.IsPublic || type.IsNestedPublic;
+
+            public static bool IsTypeNestedFamily(this Type type) => type.IsNestedFamily || type.IsNestedFamORAssem;
 
             public static ConstructorInfo
 #if CS8
@@ -64,14 +146,22 @@ namespace WinCopies
 
             public static ConstructorInfo AssertGetConstructor(this Type t, params Type[] types) => t.TryGetConstructor(types) ?? throw new InvalidOperationException("There is no such constructor for this type.");
 
-            public static U AsOfType<T, U>(this T obj) where T : U => obj;
+            public static U AsFromType<T, U>(this T obj) where T : U => obj;
 
-            public static T AsOfType<T>(this T obj) => obj;
+            public static T AsFromType<T>(this T obj) => obj;
 
 #if CS5
-            public static T First<T>(this IReadOnlyList<T> list) => list[0];
+            public static T First<T>(this
+#if !WinCopies3
+                System.Collections.Generic.
+#endif
+                IReadOnlyList<T> list) => list[0];
 
-            public static T Last<T>(this IReadOnlyList<T> list) => list[list.Count - 1];
+            public static T Last<T>(this
+#if !WinCopies3
+                System.Collections.Generic.
+#endif
+                IReadOnlyList<T> list) => list[list.Count - 1];
 #endif
 
             public static bool HasFlag(this byte value, in byte flag) => (value & flag) == flag;
@@ -138,30 +228,82 @@ namespace WinCopies
 
                 object _value = value.GetNumValue();
 
-                return _value is int
-                    ? ((int)_value).HasFlag((int)flag.GetNumValue())
-                    : _value is uint
-                    ? ((uint)_value).HasFlag((uint)flag.GetNumValue())
-                    : _value is short
-                    ? ((short)_value).HasFlag((short)flag.GetNumValue())
-                    : _value is short
-                    ? ((ushort)_value).HasFlag((ushort)flag.GetNumValue())
-                    : _value is long
-                    ? ((long)_value).HasFlag((long)flag.GetNumValue())
-                    : _value is ulong
-                    ? ((ulong)_value).HasFlag((ulong)flag.GetNumValue())
-                    : _value is byte ? ((byte)_value).HasFlag((byte)flag.GetNumValue()) : ((sbyte)_value).HasFlag((sbyte)flag.GetNumValue());
+                return _value is int @int
+                    ? @int.HasFlag((int)flag.GetNumValue())
+                    : _value is uint @uint
+                    ? @uint.HasFlag((uint)flag.GetNumValue())
+                    : _value is short @short
+                    ? @short.HasFlag((short)flag.GetNumValue())
+                    : _value is ushort @ushort
+                    ? @ushort.HasFlag((ushort)flag.GetNumValue())
+                    : _value is long @long
+                    ? @long.HasFlag((long)flag.GetNumValue())
+                    : _value is ulong @ulong
+                    ? @ulong.HasFlag((ulong)flag.GetNumValue())
+                    : _value is byte @byte 
+                    ? @byte.HasFlag((byte)flag.GetNumValue()) 
+                    : ((sbyte)_value).HasFlag((sbyte)flag.GetNumValue());
             }
 #endif
 
-            public static string Truncate(this string s, in int index, in string replace) => s == null ? throw GetArgumentNullException(nameof(s)) : index.Between(0, s.Length, true, false) ? $"{s.Remove(index)}{replace}" : throw new ArgumentOutOfRangeException(nameof(index));
+#if WinCopies3
+            public static string Truncate(this string s, in int length) => s.Substring(0, length);
+
+            // TODO: add custom index checks
+
+            public static string Truncate(this string s, in char c) => s.Truncate(s.IndexOf(c));
+
+            public static string Truncate(this string s, in string str) => s.Truncate(s.IndexOf(str));
+
+            public static string TryTruncate(this string s, in int index) => index > -1 ? s.Truncate(index) : null;
+
+            public static string TryTruncate(this string s, in char c) => s.TryTruncate(s.IndexOf(c));
+
+            public static string TryTruncate(this string s, in string str) => s.TryTruncate(s.IndexOf(str));
+
+            public static string TryTruncateOrOriginal(this string s, in int index) => index > -1 ? s.Truncate(index) : s;
+
+            public static string TryTruncateOrOriginal(this string s, in char c) => s.TryTruncateOrOriginal(s.IndexOf(c));
+
+            public static string TryTruncateOrOriginal(this string s, in string str) => s.TryTruncateOrOriginal(s.IndexOf(str));
+
+            public static string TruncateL(this string s, in char c) => s.Truncate(s.LastIndexOf(c));
+
+            public static string TruncateL(this string s, in string str) => s.Truncate(s.LastIndexOf(str));
+
+            public static string TryTruncateL(this string s, in char c) => s.TryTruncate(s.LastIndexOf(c));
+
+            public static string TryTruncateL(this string s, in string str) => s.TryTruncate(s.LastIndexOf(str));
+
+            public static string TryTruncateOrOriginalL(this string s, in char c) => s.TryTruncateOrOriginal(s.LastIndexOf(c));
+
+            public static string TryTruncateOrOriginalL(this string s, in string str) => s.TryTruncateOrOriginal(s.LastIndexOf(str));
+#endif
+
+            public static string Truncate(this string s, in int index, in string replace) => s == null ? throw GetArgumentNullException(nameof(s)) : index.Between(0, s.Length, true, false) ? $"{s.Remove(index)}{replace}" : throw new
+#if WinCopies3
+                IndexOutOfRangeException
+#else
+                ArgumentOutOfRangeException
+#endif
+                (nameof(index));
 
             public static string Truncate2(this string s, in int index, in string replace) => s.Truncate(index - Etcetera.Length, replace);
 
-            public static string Truncate(this string s, in int index) => s.Truncate2(index, Etcetera);
+            public static string
+#if WinCopies3
+                Truncate2
+#else
+                Truncate
+#endif
+                (this string s, in int index) => s.Truncate2(index, Etcetera);
 
 #if CS6
-            public static List<T> ToList<T>(this IReadOnlyList<T> list)
+            public static List<T> ToList<T>(this
+#if !WinCopies3
+                System.Collections.Generic.
+#endif
+                IReadOnlyList<T> list)
             {
                 var _list = new List<T>(list.Count);
 
@@ -420,13 +562,68 @@ namespace WinCopies
 
             public static T GetIfNotDisposedOrDisposing<T>(this IDisposable obj, in T value) => obj.IsDisposed ? throw GetExceptionForDispose(false) : obj.IsDisposing ? throw GetExceptionForDispose(true) : value;
 
-            public static object GetFromLast(this Array array, int indexation) => (array ?? throw GetArgumentNullException(nameof(array))).Length > indexation ? array.GetValue(array.Length - 1 - indexation) : throw new ArgumentOutOfRangeException(nameof(indexation), indexation, $"{nameof(indexation)} must be less than or equal to {nameof(array)}'s length.");
+            private static void ActionFromLast<T>(this T array, in int indexation, in Func<int> func, in ActionIn<int> action)
+            {
+                ThrowIfNull(array, nameof(array));
+
+                int count = func();
+
+                (count-- > indexation ? action : throw new ArgumentOutOfRangeException(nameof(indexation), indexation, $"{nameof(indexation)} must be less than or equal to {nameof(array)}'s length."))(count - indexation);
+            }
+
+            private static TItems
+#if CS9
+                ?
+#endif
+                GetFromLast<TArray, TItems>(this TArray array, in int indexation, in Func<int> func, Func<Converter<int, TItems>> _func)
+            {
+                TItems
+#if CS9
+                ?
+#endif
+                value = default;
+
+                array.ActionFromLast(indexation, func, (in int i) => value = _func()(i));
+
+                return value;
+            }
+
+            public static object GetFromLast(this Array array, int indexation) => array.GetFromLast<Array, object>(indexation, () => array.Length, () => array.GetValue);
+            public static void SetFromLast(this Array array, object value, int indexation) => array.ActionFromLast(indexation, () => array.Length, (in int i) => array.SetValue(value, i));
 
             public static object GetLast(this Array array) => array.GetFromLast(0);
+            public static void SetLast(this Array array, object value) => array.SetFromLast(value, 0);
 
-            public static T GetFromLast<T>(this T[] array, int indexation) => (array ?? throw GetArgumentNullException(nameof(array))).Length > indexation ? array[array.Length - 1 - indexation] : throw new ArgumentOutOfRangeException(nameof(indexation), indexation, $"{nameof(indexation)} must be less than or equal to {nameof(array)}'s length.");
+            public static T GetFromLast<T>(this T[] array, int indexation)
+#if CS5
+                => array.AsFromType<IReadOnlyList<T>>().GetFromLast(indexation);
+
+            public static T GetFromLast<T>(this IReadOnlyList<T> array, int indexation) 
+#endif
+                => array.GetFromLast<
+#if CS5
+                    IReadOnlyList<T>
+#else
+                    T[]
+#endif
+                    , T>(indexation, () => array.
+#if CS5
+                    Count
+#else
+                    Length
+#endif
+                    , () => i => array[i]);
+
+            public static void SetFromLast<T>(this T[] array, T value, int indexation) => array.ActionFromLast(indexation, () => array.Length, (in int i) => array[i] = value);
+            public static void SetFromLast<T>(this IList<T> values, T value, int indexation) => values.ActionFromLast(indexation, () => values.Count, (in int i) => values[i] = value);
 
             public static T GetLast<T>(this T[] array) => array.GetFromLast(0);
+#if CS5
+            public static T GetLast<T>(this IReadOnlyList<T> array) => array.GetFromLast(0);
+#endif
+
+            public static void SetLast<T>(this T[] array, T value) => array.SetFromLast(value, 0);
+            public static void SetLast<T>(this IList<T> values, T value) => values.SetFromLast(value, 0);
 
             public static Result ToResultEnum(this bool? value) => value.HasValue ? value.Value.ToResultEnum() : Result.None;
 
@@ -777,7 +974,7 @@ namespace WinCopies
 
             public static bool IsType(this Type t, params Type[] types) => IsType(t, (IEnumerable<Type>)types);
 
-            public static bool IsAssignableFrom<T>(this Type t) => t.IsAssignableFrom(typeof(T));
+            public static bool IsAssignableFrom<T>(this Type t) => (t ?? throw GetArgumentNullException(nameof(t))).IsAssignableFrom(typeof(T));
             /*{
                 ThrowIfNull(t, nameof(t));
 
@@ -810,30 +1007,28 @@ namespace WinCopies
             }*/
 
 #if !CS9
-        public static bool IsAssignableTo(this Type t, in Type type) => type.IsAssignableFrom(t);
+            public static bool IsAssignableTo(this Type t, in Type type) => type.IsAssignableFrom(t);
 #endif
 
-            public static bool IsAssignableTo<T>(this Type t) => t.IsAssignableTo(typeof(T));
+            public static bool IsAssignableTo<T>(this Type t) => (t ?? throw GetArgumentNullException(nameof(t))).IsAssignableTo(typeof(T));
 
             public static bool IsAssignableFrom(this Type t, in IEnumerable<Type> enumerable)
             {
-                ThrowIfNull(t, nameof(t));
-
-                return (enumerable ?? throw GetArgumentNullException(nameof(enumerable))).Or(_t => t.IsAssignableFrom(_t));
+                return (enumerable ?? throw GetArgumentNullException(nameof(enumerable))).Or((t ?? throw GetArgumentNullException(nameof(t))).IsAssignableFrom);
             }
 
             public static bool IsAssignableFromAND(this Type t, in IEnumerable<Type> enumerable)
             {
                 ThrowIfNull(t, nameof(t));
 
-                return (enumerable ?? throw GetArgumentNullException(nameof(enumerable))).And(_t => t.IsAssignableFrom(_t));
+                return (enumerable ?? throw GetArgumentNullException(nameof(enumerable))).And((t ?? throw GetArgumentNullException(nameof(t))).IsAssignableFrom);
             }
 
             public static bool IsAssignableFromXOr(this Type t, in IEnumerable<Type> enumerable)
             {
                 ThrowIfNull(t, nameof(t));
 
-                return (enumerable ?? throw GetArgumentNullException(nameof(enumerable))).XOr(_t => t.IsAssignableFrom(_t));
+                return (enumerable ?? throw GetArgumentNullException(nameof(enumerable))).XOr((t ?? throw GetArgumentNullException(nameof(t))).IsAssignableFrom);
             }
 
             public static IEnumerable<TKey> GetKeys<TKey, TValue>(this KeyValuePair<TKey, TValue>[] array)
@@ -868,11 +1063,11 @@ namespace WinCopies
 
                 bool predicateByRef(TKey keyA, TKey keyB) => ReferenceEquals(keyA, keyB);
 
-                Func<TKey, TKey, bool> predicate = typeof(TKey).IsClass ? predicateByRef :
+                Func<TKey, TKey, bool> predicate = typeof(TKey).IsValueType ? predicateByVal :
 #if !CS9
                     (Func<TKey, TKey, bool>)
 #endif
-                    predicateByVal;
+                    predicateByRef;
 
                 IEnumerable<TKey> keys = array.GetKeys();
 
@@ -1280,14 +1475,14 @@ namespace WinCopies
             /// </summary>
             /// <param name="enum">The enum for which get the corresponding numeric value.</param>
             /// <returns>The numeric value corresponding to this enum, in the given enum type underlying type.</returns>
-            public static object GetNumValue(this Enum @enum) => Convert.ChangeType(@enum, Enum.GetUnderlyingType(@enum.GetType()));
+            public static object GetNumValue(this Enum @enum) => System.Convert.ChangeType(@enum, Enum.GetUnderlyingType(@enum.GetType()));
 
             /// <summary>
             /// Gets the numeric value for an enum.
             /// </summary>
             /// <param name="enum">The enum for which get the corresponding numeric value.</param>
             /// <returns>The numeric value corresponding to this enum, in the given enum type underlying type.</returns>
-            public static object GetNumValue<T>(this T @enum) where T : Enum => Convert.ChangeType(@enum, Enum.GetUnderlyingType(typeof(T)));
+            public static object GetNumValue<T>(this T @enum) where T : Enum => System.Convert.ChangeType(@enum, Enum.GetUnderlyingType(typeof(T)));
 
             // public static object GetNumValue(this Enum @enum) => GetNumValue(@enum, @enum.ToString());
 
@@ -4541,32 +4736,32 @@ namespace WinCopies
             }
         }
 
-        public static void SplitToQueue(this string s, in bool skipEmptyValues, in StringBuilder stringBuilder, Queue<string> queue, params char[] separators)
+        public static void SplitToQueue(this string s, in bool skipEmptyValues, in StringBuilder stringBuilder, System.Collections.Generic.Queue<string> queue, params char[] separators)
         {
             ThrowIfNull(queue, nameof(queue));
 
             Split(s, skipEmptyValues, stringBuilder, _s => queue.Enqueue(_s), separators);
         }
 
-        public static Queue<string> SplitToQueue(this string s, in bool skipEmptyValues, params char[] separators)
+        public static System.Collections.Generic.Queue<string> SplitToQueue(this string s, in bool skipEmptyValues, params char[] separators)
         {
-            var queue = new Queue<string>();
+            var queue = new System.Collections.Generic.Queue<string>();
 
             SplitToQueue(s, skipEmptyValues, new StringBuilder(), queue, separators);
 
             return queue;
         }
 
-        public static void SplitToStack(this string s, in bool splitEmptyValues, in StringBuilder stringBuilder, Stack<string> stack, params char[] separators)
+        public static void SplitToStack(this string s, in bool splitEmptyValues, in StringBuilder stringBuilder, System.Collections.Generic.Stack<string> stack, params char[] separators)
         {
             ThrowIfNull(stack, nameof(stack));
 
             Split(s, splitEmptyValues, stringBuilder, _s => stack.Push(_s), separators);
         }
 
-        public static Stack<string> SplitToStack(this string s, in bool splitEmptyValues, params char[] separators)
+        public static System.Collections.Generic.Stack<string> SplitToStack(this string s, in bool splitEmptyValues, params char[] separators)
         {
-            var stack = new Stack<string>();
+            var stack = new System.Collections.Generic.Stack<string>();
 
             SplitToStack(s, splitEmptyValues, new StringBuilder(), stack, separators);
 
@@ -4597,13 +4792,18 @@ namespace WinCopies
         {
             IEnumerator<string> enumerator = (enumerable ?? throw GetArgumentNullException(nameof(enumerable))).GetEnumerator();
 
-#if CS8
-            stringBuilder ??= new StringBuilder();
-#else
-            if (stringBuilder == null)
-
-                stringBuilder = new StringBuilder();
+#if !CS8
+            if (
 #endif
+                stringBuilder
+#if CS8
+            ??=
+#else
+            == null)
+
+                stringBuilder =
+#endif
+            new StringBuilder();
 
             try
             {

@@ -128,7 +128,7 @@ Current
 #if !WinCopies3
 Current
 #else
-                    _current
+                        _current
 #endif
                     = InnerEnumerator.Current;
 
@@ -188,14 +188,12 @@ Current
                 InitDelegate();
             }
 
-            protected override void Dispose(bool disposing)
+            protected override void DisposeUnmanaged()
             {
-                base.Dispose(disposing);
+                base.DisposeUnmanaged();
 
                 _joinEnumerator = null;
-
                 _firstValue = default;
-
                 _moveNext = null;
             }
         }
@@ -208,7 +206,7 @@ Current
         {
             private System.Collections.Generic.IEnumerator<T> _subEnumerator;
             private System.Collections.Generic.IEnumerable<T> _joinEnumerable;
-            private Action _updateEnumerator;
+            private Func<System.Collections.Generic.IEnumerator<T>> _updateEnumerator;
             private Func<bool> _moveNext;
             private readonly bool _keepEmptyEnumerables;
 
@@ -238,20 +236,23 @@ Current
             {
                 _updateEnumerator = () =>
                 {
-                    _subEnumerator = InnerEnumerator.Current.GetEnumerator();
+                    _updateEnumerator = _keepEmptyEnumerables
+                        ? () => _joinEnumerable.AppendValues(InnerEnumerator.Current).GetEnumerator()
+                        :
+#if !CS9
+                        (Func<System.Collections.Generic.IEnumerator<T>>)(
+#endif
+                        () => new JoinSubEnumerator<T>(InnerEnumerator.Current, _joinEnumerable)
+#if !CS9
+                        )
+#endif
+                        ;
 
-                    if (_keepEmptyEnumerables)
-
-                        _updateEnumerator = () => _subEnumerator = _joinEnumerable.AppendValues(InnerEnumerator.Current).GetEnumerator();
-
-                    else
-
-                        _updateEnumerator = () => _subEnumerator = new JoinSubEnumerator<T>(InnerEnumerator.Current, _joinEnumerable);
+                    return InnerEnumerator.Current.GetEnumerator();
                 };
 
                 _moveNext = () =>
                 {
-
                     if (_subEnumerator == null && !_MoveNext())
 
                         return false;
@@ -268,10 +269,10 @@ Current
                 {
                     if (_subEnumerator.MoveNext())
                     {
-#if !WinCopies3
-Current 
-#else
+#if WinCopies3
                         _current
+#else
+                        Current
 #endif
                         = _subEnumerator.Current;
 
@@ -296,7 +297,7 @@ Current
             {
                 if (InnerEnumerator.MoveNext())
                 {
-                    _updateEnumerator();
+                    _subEnumerator = _updateEnumerator();
 
                     return true;
                 }
@@ -340,11 +341,8 @@ Dispose(bool disposing)
                 = default;
 
                 _joinEnumerable = null;
-
                 _updateEnumerator = null;
-
                 _moveNext = null;
-
                 _subEnumerator = null;
 #if !WinCopies3
         }

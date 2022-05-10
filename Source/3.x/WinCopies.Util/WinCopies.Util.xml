@@ -130,6 +130,11 @@
               Looks up a localized string similar to This collection is read-only..
             </summary>
         </member>
+        <member name="P:WinCopies.Resources.ExceptionMessages.ResourceNotFoundExceptionMessage">
+            <summary>
+              Looks up a localized string similar to The object or resource requested was not found in the given collection or no object or resource in the given collection matches the given criteria..
+            </summary>
+        </member>
         <member name="P:WinCopies.Resources.ExceptionMessages.SequenceContainsNoItemOrNoItemMatchedGivenPredicate">
             <summary>
               Looks up a localized string similar to The sequence contains no item or no item matched the given predicate..
@@ -143,6 +148,81 @@
         <member name="P:WinCopies.Resources.ExceptionMessages.StringParameterEmptyOrWhiteSpaces">
             <summary>
               Looks up a localized string similar to &apos;{0}&apos; is empty or white space..
+            </summary>
+        </member>
+        <member name="T:WinCopies.Diagnostics.ComparisonType">
+            <summary>
+            Comparison types for the If functions.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Diagnostics.ComparisonType.And">
+            <summary>
+            Check if all conditions are checked.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Diagnostics.ComparisonType.Or">
+            <summary>
+            Check if at least one condition is checked.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Diagnostics.ComparisonType.Xor">
+            <summary>
+            Check if exactly one condition is checked.
+            </summary>
+        </member>
+        <member name="T:WinCopies.Diagnostics.ComparisonMode">
+            <summary>
+            Comparison modes for the If functions.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Diagnostics.ComparisonMode.Binary">
+            <summary>
+            Use a binary comparison
+            </summary>
+        </member>
+        <member name="F:WinCopies.Diagnostics.ComparisonMode.Logical">
+            <summary>
+            Use a logical comparison
+            </summary>
+        </member>
+        <member name="T:WinCopies.Diagnostics.Comparison">
+            <summary>
+            Comparison to perform.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Diagnostics.Comparison.Equal">
+            <summary>
+            Check for values equality
+            </summary>
+        </member>
+        <member name="F:WinCopies.Diagnostics.Comparison.NotEqual">
+            <summary>
+            Check for values non-equality
+            </summary>
+        </member>
+        <member name="F:WinCopies.Diagnostics.Comparison.Less">
+            <summary>
+            Check if a value is lesser than a given value. This field only works for methods that use lesser/greater/equal comparers.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Diagnostics.Comparison.LessOrEqual">
+            <summary>
+            Check if a value is lesser than or equal to a given value. This field only works for methods that use lesser/greater/equal comparers.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Diagnostics.Comparison.Greater">
+            <summary>
+            Check if a value is greater than a given value. This field only works for methods that use lesser/greater/equal comparers.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Diagnostics.Comparison.GreaterOrEqual">
+            <summary>
+            Check if a value is greater than or equal to a given value. This field only works for methods that use lesser/greater/equal comparers.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Diagnostics.Comparison.ReferenceEqual">
+            <summary>
+            Check if an object reference is equal to a given object reference. This field only works for methods that use equality comparers (not lesser/greater ones).
             </summary>
         </member>
         <member name="T:WinCopies.Util.Extensions">
@@ -561,7 +641,7 @@
         </member>
         <member name="F:WinCopies.Result.None">
             <summary>
-            The operation did not return any particular value. This value is the same as returning a <see langword="null"/> <see cref="T:System.Nullable`1"/>.
+            The operation did not return any particular value. This value is the same as returning a <see langword="null"/> <see cref="T:WinCopies.Nullable`1"/>.
             </summary>
         </member>
         <member name="F:WinCopies.Result.False">
@@ -921,6 +1001,16 @@
             <param name="fieldName">The enum field to look for.</param>
             <returns>The numeric value corresponding to this enum, in the given enum type underlying type.</returns>
         </member>
+        <member name="P:WinCopies.IReadOnlyValueObject.IsReadOnly">
+            <summary>
+            Gets a value that indicates whether this object is read-only.
+            </summary>
+        </member>
+        <member name="P:WinCopies.IReadOnlyValueObject.Value">
+            <summary>
+            Gets or sets the value of the object.
+            </summary>
+        </member>
         <member name="T:WinCopies.IValueObject">
             <summary>
             Represents a value container. See the <see cref="T:WinCopies.IValueObject`1"/> for a generic version of this class.
@@ -932,16 +1022,6 @@
             </summary>
         </member>
         <member name="P:WinCopies.IValueObject`1.Value">
-            <summary>
-            Gets or sets the value of the object.
-            </summary>
-        </member>
-        <member name="P:WinCopies.IReadOnlyValueObject.IsReadOnly">
-            <summary>
-            Gets a value that indicates whether this object is read-only.
-            </summary>
-        </member>
-        <member name="P:WinCopies.IReadOnlyValueObject.Value">
             <summary>
             Gets or sets the value of the object.
             </summary>

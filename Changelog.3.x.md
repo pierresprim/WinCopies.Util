@@ -6,35 +6,62 @@ The WinCopies® software framework
 CHANGELOG
 ---------
 
-### ???? ????
+### ???? 3.17-preview
 
-- WinCopies.Collections.Extensions.RemoveAndGetFirst/LastValue methods have been replaced with RemoveAndGetFirst/Last methods. RemoveAndGetFirst/LastValue methods still exist but they retrieve the value of the node directly.
-- WinCopies.Collections.Abstraction.Generic.LinkedListNode\<T> overrides Equals(object).
 - ReadOnlyLinkedDictionary:
 	- bug fixed: key/value collection properties were not initialized.
 	- empty constructor is now protected.
 	- has a new protected constructor which can be used to initialize the dictionary with custom key/value collections.
 	- implements IReadOnlyLinkedDictionary\<TKey, TValue>.
 - Move WinCopies.Util.Shared.Delegates.ActionDelegates to WinCopies namespace.
-- WinCopies.Collections.AbstractionInterop.Generic.AbstractionTypes\<TSource, TDestination>:
-	- has no longer the TSource : TDestination generic type constraint.
-	- LinkedListTypes\<TList, TNode>:
-		- overrides Equals(object).
-		- LinkedList subclass has a public Count property.
-- WinCopies.Collections.DotNetFix
-	- IReadOnlyLinkedListNode has a new property : IsReadOnly.
+- WinCopies.Collections:
+	- Extensions.RemoveAndGetFirst/LastValue methods have been replaced with RemoveAndGetFirst/Last methods. RemoveAndGetFirst/LastValue methods still exist but they retrieve the value of the node directly.
+	- Abstraction.Generic:
+		- LinkedListNode\<T> overrides Equals(object).
+		- ReadOnlyArrayEnumerableBase\<TSourceItems, TDestinationItems>: the indexer is implicitly implemented.
+	- AbstractionInterop.Generic.AbstractionTypes\<TSource, TDestination>:
+		- has no longer the TSource : TDestination generic type constraint.
+		- LinkedListTypes\<TList, TNode>:
+			- overrides Equals(object).
+			- LinkedList subclass has a public Count property.
+	- DotNetFix:
+		- IReadOnlyLinkedListNode has a new property : IsReadOnly.
+		- Generic:
+			- IReadOnlyLinkedListNode\<out TItems, out TList> now inherits from the new interface IReadOnlyLinkedListNodeBase2\<TItems>.
+			- ILinkedListNode\<TItems, out TList> now inherits from the new interface ILinkedListNodeBase2\<TItems>.
+			- ILinkedListNodeBase\<T> no longer has the IsReadOnly property (replaced with WinCopies.Collections.DotNetFix.IReadOnlyLinkedListNode.IsReadOnly).
+			- ILinkedListNode\<TItems, out TNodes, out TList> has new properties.
+			- LinkedCollection\<T>: better control on list modification.
+			- ILinkedList\<T> has new property and methods, and new default implementations (for C\# 8 and above).
+			- ILinkedList3\<T> inherits from IUIntCountableEnumerable\<T>.
+			- IReadOnlyLinkedList\<T>:
+				- inherits from IReadOnlyUIntCollection\<T>.
+				- has new property and methods, and new default implementations (for C\# 8 and above).
+			- LinkedList\<T>:
+				- implements IExtensibleEnumerable\<T>.
+				- has new methods.
+				- Some method parameters no longer have the 'in' modifier.
+				- LinkedListNode's constructor parameter has the 'in' modifier.
 	- Generic:
-		- IReadOnlyLinkedListNode\<out TItems, out TList> now inherits from the new interface IReadOnlyLinkedListNodeBase2\<TItems>.
-		- ILinkedListNode\<TItems, out TList> now inherits from the new interface ILinkedListNodeBase2\<TItems>.
-		- ILinkedListNodeBase\<T> no longer has the IsReadOnly property (replaced with WinCopies.Collections.DotNetFix.IReadOnlyLinkedListNode.IsReadOnly).
-		- ILinkedListNode\<TItems, out TNodes, out TList> has new properties.
-		- LinkedCollection\<T>: better control on list modification.
-		- ILinkedList\<T> has new property and methods, and new default implementations (for C\# 8 and above).
-		- ILinkedList3\<T> inherits from IUIntCountableEnumerable\<T>.
-		- IReadOnlyLinkedList\<T>:
-			- inherits from IReadOnlyUIntCollection\<T>.
-			- has new property and methods, and new default implementations (for C\# 8 and above).
-		- LinkedList\<T>.LinkedListNode's constructor parameter has the 'in' modifier.
+		- IReadOnlyList\<T> implements IIndexableR\<T>.
+		- ReversedReadOnlyList\<TItems, TList>:
+			- Count is implicitly implemented.
+			- new method: GetAt(in int index).
+		- SubReadOnlyListBase\<TList, TItems, TEnumerator>:
+			- has a new constructor.
+			- all constructors are protected as their declaring type is abstract.
+		- SubReadOnlyList\<T> has a new constructor.
+	- EnumeratorInfoBase has a new method, DisposeUnmanaged. The combination of this method and DisposeManaged replaces the old Dispose(bool disposing) method.
+- WinCopies.Util.Extensions.Truncate:
+	- Truncate(this string s, in int index, in string replace): throw an IndexOutOfRangeException instead of an ArgumentOutOfRangeException on error.
+	- Truncate(this string s, in int index) has been replaced with Truncate2(this string s, in int index). Truncate(this string s, in int index) still exists but has a different behavior.
+- Moved constants from UtilHelpers to Consts.
+- WinCopies.Diagnostics:
+	- Comparison/Type/Mode are now in the WinCopies.Util package.
+	- Comparison: some labels have been removed.
+- WinCopies.PropertySystem.ObjectToPropertyCollectionConverter: bug fixed.
+- WinCopies.Commands: re-design commands.
+- Bug fixed for reference equality comparison in If methods.
 - New static and extension methods.
 - New types.
 

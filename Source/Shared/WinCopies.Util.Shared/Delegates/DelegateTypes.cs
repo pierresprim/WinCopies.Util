@@ -117,6 +117,12 @@ namespace WinCopies
 
     public delegate bool PredicateIn(in object obj);
 
+    public delegate bool PredicateIn<T>(in T value);
+
+    public delegate bool PredicateOut<TIn, TOut>(TIn param, out TOut result);
+
+    public delegate bool PredicateInOut<TIn, TOut>(in TIn param, out TOut result);
+
 
 
     public delegate T Converter<
@@ -180,6 +186,23 @@ namespace WinCopies
     public delegate TOut FuncIn2<in T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, out TOut>(T1 value1, in T2 value2, in T3 value3, in T4 value4, in T5 value5, in T6 value6, in T7 value7, in T8 value8, in T9 value9, in T10 value10, in T11 value11, in T12 value12, in T13 value13, in T14 value14);
     public delegate TOut FuncIn2<in T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, out TOut>(T1 value1, in T2 value2, in T3 value3, in T4 value4, in T5 value5, in T6 value6, in T7 value7, in T8 value8, in T9 value9, in T10 value10, in T11 value11, in T12 value12, in T13 value13, in T14 value14, in T15 value15);
     public delegate TOut FuncIn2<in T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, out TOut>(T1 value1, in T2 value2, in T3 value3, in T4 value4, in T5 value5, in T6 value6, in T7 value7, in T8 value8, in T9 value9, in T10 value10, in T11 value11, in T12 value12, in T13 value13, in T14 value14, in T15 value15, in T16 value16);
+
+    public delegate TOut FuncRef<TParam, out TOut>(ref TParam param);
+    public delegate TOut FuncRef<in T1, T2, out TOut>(T1 p1, ref T2 p2);
+    public delegate TOut FuncRef<in T1, in T2, T3, out TOut>(T1 p1, T2 p2, ref T3 p3);
+    public delegate TOut FuncRef<in T1, in T2, in T3, T4, out TOut>(T1 p1, T2 p2, T3 p3, ref T4 p4);
+    public delegate TOut FuncRef<in T1, in T2, in T3, in T4, T5, out TOut>(T1 p1, T2 p2, T3 p3, T4 p4, ref T5 p5);
+    public delegate TOut FuncRef<in T1, in T2, in T3, in T4, in T5, T6, out TOut>(T1 p1, T2 p2, T3 p3, T4 p4, T5 p5, ref T6 p6);
+    public delegate TOut FuncRef<in T1, in T2, in T3, in T4, in T5, in T6, T7, out TOut>(T1 p1, T2 p2, T3 p3, T4 p4, T5 p5, T6 p6, ref T7 p7);
+    public delegate TOut FuncRef<in T1, in T2, in T3, in T4, in T5, in T6, in T7, T8, out TOut>(T1 p1, T2 p2, T3 p3, T4 p4, T5 p5, T6 p6, T7 p7, ref T8 p8);
+    public delegate TOut FuncRef<in T1, in T2, in T3, in T4, in T5, in T6, in T7, in T8, T9, out TOut>(T1 p1, T2 p2, T3 p3, T4 p4, T5 p5, T6 p6, T7 p7, T8 p8, ref T9 p9);
+    public delegate TOut FuncRef<in T1, in T2, in T3, in T4, in T5, in T6, in T7, in T8, in T9, T10, out TOut>(T1 p1, T2 p2, T3 p3, T4 p4, T5 p5, T6 p6, T7 p7, T8 p8, T9 p9, ref T10 p10);
+    public delegate TOut FuncRef<in T1, in T2, in T3, in T4, in T5, in T6, in T7, in T8, in T9, in T10, T11, out TOut>(T1 p1, T2 p2, T3 p3, T4 p4, T5 p5, T6 p6, T7 p7, T8 p8, T9 p9, T10 p10, ref T11 p11);
+    public delegate TOut FuncRef<in T1, in T2, in T3, in T4, in T5, in T6, in T7, in T8, in T9, in T10, in T11, T12, out TOut>(T1 p1, T2 p2, T3 p3, T4 p4, T5 p5, T6 p6, T7 p7, T8 p8, T9 p9, T10 p10, T11 p11, ref T12 p12);
+    public delegate TOut FuncRef<in T1, in T2, in T3, in T4, in T5, in T6, in T7, in T8, in T9, in T10, in T11, in T12, T13, out TOut>(T1 p1, T2 p2, T3 p3, T4 p4, T5 p5, T6 p6, T7 p7, T8 p8, T9 p9, T10 p10, T11 p11, T12 p12, ref T13 p13);
+    public delegate TOut FuncRef<in T1, in T2, in T3, in T4, in T5, in T6, in T7, in T8, in T9, in T10, in T11, in T12, in T13, T14, out TOut>(T1 p1, T2 p2, T3 p3, T4 p4, T5 p5, T6 p6, T7 p7, T8 p8, T9 p9, T10 p10, T11 p11, T12 p12, T13 p13, ref T14 p14);
+    public delegate TOut FuncRef<in T1, in T2, in T3, in T4, in T5, in T6, in T7, in T8, in T9, in T10, in T11, in T12, in T13, in T14, T15, out TOut>(T1 p1, T2 p2, T3 p3, T4 p4, T5 p5, T6 p6, T7 p7, T8 p8, T9 p9, T10 p10, T11 p11, T12 p12, T13 p13, T14 p14, ref T15 p15);
+    public delegate TOut FuncRef<in T1, in T2, in T3, in T4, in T5, in T6, in T7, in T8, in T9, in T10, in T11, in T12, in T13, in T14, in T15, T16, out TOut>(T1 p1, T2 p2, T3 p3, T4 p4, T5 p5, T6 p6, T7 p7, T8 p8, T9 p9, T10 p10, T11 p11, T12 p12, T13 p13, T14 p14, T15 p15, ref T16 p16);
 
     public delegate TOut FuncOut<TParam, out TOut>(out TParam param);
     public delegate TOut FuncOut<in T1, T2, out TOut>(T1 p1, out T2 p2);

@@ -16,8 +16,6 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 
 using static WinCopies
 #if !WinCopies3
@@ -105,25 +103,17 @@ namespace WinCopies.Collections.DotNetFix.Generic
         [Serializable]
 #endif
         public sealed class Enumerator :
-#if !WinCopies3
-            System.Collections.Generic.IEnumerator<T>, WinCopies.Util.DotNetFix.IDisposable
+#if WinCopies3
+            Collections.Generic.Enumerator<T>, IUIntCountableEnumerator<T>
 #else
-WinCopies.Collections.Generic.Enumerator<T>, IUIntCountableEnumerator<T>
+            System.Collections.Generic.IEnumerator<T>, WinCopies.Util.DotNetFix.IDisposable
 #endif
         {
             private EnumerableQueue<T> _queue;
             private ISimpleLinkedListNode<T> _currentNode;
             private readonly uint _version;
 
-#if !WinCopies3
-            private T _current;
-
-            public T Current => IsDisposed ? throw GetExceptionForDispose(false) : _current;
-
-            object System.Collections.IEnumerator.Current => Current;
-
-            public bool IsDisposed { get; private set; }
-#else
+#if WinCopies3
             private bool _first = true;
 
             public override bool? IsResetSupported => true;
@@ -134,6 +124,14 @@ WinCopies.Collections.Generic.Enumerator<T>, IUIntCountableEnumerator<T>
             protected override T CurrentOverride => _currentNode.Value;
 
             public uint Count => _queue.Count;
+#else
+            private T _current;
+
+            public T Current => IsDisposed ? throw GetExceptionForDispose(false) : _current;
+
+            object System.Collections.IEnumerator.Current => Current;
+
+            public bool IsDisposed { get; private set; }
 #endif
 
             public Enumerator(in EnumerableQueue<T> queue)
@@ -142,53 +140,43 @@ WinCopies.Collections.Generic.Enumerator<T>, IUIntCountableEnumerator<T>
 
                 _version = queue.EnumerableVersion;
 
-#if !WinCopies3
-                Reset();
-#else
+#if WinCopies3
                 ResetOverride();
+#else
+                Reset();
 #endif
             }
 
-#if !WinCopies3
-            public void Reset()
-            {
-                if (IsDisposed)
-
-                    throw GetExceptionForDispose(false);
-#else
+#if WinCopies3
             protected override void ResetOverride2()
             {
                 ThrowIfVersionHasChanged(_queue.EnumerableVersion, _version);
 
                 _first = true;
+#else
+            public void Reset()
+            {
+                if (IsDisposed)
+
+                    throw GetExceptionForDispose(false);
 #endif
 
-                _currentNode = _queue._queue.FirstItem;
+            _currentNode = _queue._queue.FirstItem;
             }
 
-#if !WinCopies3
+#if WinCopies3
+            protected override bool MoveNextOverride()
+            {
+#else
             public bool MoveNext()
             {
                 if (IsDisposed)
 
                     throw GetExceptionForDispose(false);
-#else
-            protected override bool MoveNextOverride()
-            {
 #endif
-                ThrowIfVersionHasChanged(_queue.EnumerableVersion, _version);
+            ThrowIfVersionHasChanged(_queue.EnumerableVersion, _version);
 
-#if !WinCopies3
-                if (_currentNode == null)
-
-                    return false;
-
-                _current = _currentNode.Value;
-
-                _currentNode = _currentNode.NextNode;
-
-                return true;
-#else
+#if WinCopies3
                 if (_first)
                 {
                     _first = false;
@@ -206,10 +194,35 @@ WinCopies.Collections.Generic.Enumerator<T>, IUIntCountableEnumerator<T>
                 _currentNode = _currentNode.Next;
 
                 return true;
+#else
+                if (_currentNode == null)
+
+                    return false;
+
+                _current = _currentNode.Value;
+
+                _currentNode = _currentNode.NextNode;
+
+                return true;
 #endif
             }
 
-#if !WinCopies3
+#if WinCopies3
+            protected override void DisposeUnmanaged()
+            {
+                _queue.DecrementEnumeratorCount();
+                _queue = null;
+
+                base.DisposeUnmanaged();
+            }
+
+            protected override void DisposeManaged()
+            {
+                base.DisposeManaged();
+
+                _currentNode = null;
+            }
+#else
             private void Dispose(bool disposing)
             {
                 if (IsDisposed)
@@ -231,25 +244,9 @@ WinCopies.Collections.Generic.Enumerator<T>, IUIntCountableEnumerator<T>
             }
 
             public void Dispose() => Dispose(true);
-#else
-            protected override void Dispose(bool disposing)
-            {
-                _queue.DecrementEnumeratorCount();
-
-                base.Dispose(disposing);
-            }
-
-            protected override void DisposeManaged()
-            {
-                base.DisposeManaged();
-
-                _queue = null;
-
-                _currentNode = null;
-            }
-#endif
 
             ~Enumerator() => Dispose(false);
+#endif
         }
     }
 }

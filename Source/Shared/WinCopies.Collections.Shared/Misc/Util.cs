@@ -15,19 +15,21 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
+using
 #if WinCopies3
-using System;
+System;
 using System.Collections.Generic;
 
 using WinCopies.Collections.DotNetFix;
 using WinCopies.Collections.DotNetFix.Generic;
 using WinCopies.Collections.Generic;
-using WinCopies.Linq;
 
 using static WinCopies.ThrowHelper;
 #else
-using WinCopies.Util;
+WinCopies.Util;
 #endif
+
+using WinCopies.Linq;
 
 namespace WinCopies.Collections
 {

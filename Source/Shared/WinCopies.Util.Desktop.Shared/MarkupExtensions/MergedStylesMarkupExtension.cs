@@ -53,7 +53,7 @@ namespace WinCopies
         {
             if (_mergedStyle == null)
             {
-                System.Collections.Generic.IEnumerator<Style> enumerator = _styles.GetEnumerator();
+                IEnumerator<Style> enumerator = _styles.GetEnumerator();
 
                 if (enumerator.MoveNext())
                 {

@@ -16,8 +16,10 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
+using WinCopies.Util;
 using static WinCopies.
 #if WinCopies3
     ThrowHelper
@@ -31,6 +33,117 @@ namespace WinCopies
     .Util
 #endif
 {
+    public static class Convert
+    {
+#if CS8
+        private const string VALUE = "value";
+#endif
+
+        public static bool TryChangeType(in object
+#if CS8
+            ?
+#endif
+            value, Type type,
+#if CS8
+            [NotNullIfNotNull(VALUE)]
+#endif
+            out object
+#if CS8
+            ?
+#endif
+            result)
+        {
+            if (value is IConvertible && (type = System.Nullable.GetUnderlyingType(type) ?? type).IsAssignableTo<IConvertible>())
+            {
+                result = System.Convert.ChangeType(value, type);
+
+                return true;
+            }
+
+            result = value;
+
+            return false;
+        }
+
+#if CS8
+        [return: NotNullIfNotNull(nameof(VALUE))]
+#endif
+        public static object
+#if CS8
+            ?
+#endif
+            TryChangeType(in object
+#if CS8
+            ?
+#endif
+            value, in Type type)
+        {
+            _ = TryChangeType(value, type, out object
+#if CS8
+            ?
+#endif
+            result);
+
+            return result;
+        }
+
+        public static bool TryChangeType<T>(in object
+#if CS8
+            ?
+#endif
+            value,
+#if CS8
+        [NotNullIfNotNull(nameof(VALUE))]
+#endif
+        out T
+#if CS9
+            ?
+#endif
+            result)
+        {
+            if (TryChangeType(value, typeof(T), out object
+#if CS8
+                ?
+#endif
+                _result))
+            {
+                result = (T)_result;
+
+                return true;
+            }
+
+            result = default;
+
+            return false;
+        }
+
+#if CS8
+        [return: NotNullIfNotNull(nameof(VALUE))]
+#endif
+        public static T
+#if CS9
+            ?
+#endif
+            TryChangeType<T>(in object
+#if CS8
+            ?
+#endif
+            value) => TryChangeType<T>(value, out T result) ? result : default;
+
+#if CS8
+        [return: NotNullIfNotNull(nameof(VALUE))]
+#endif
+        public static T ChangeType<T>(in object
+#if CS8
+            ?
+#endif
+            value) => TryChangeType(value, out T
+#if CS9
+                ?
+#endif
+                result) ? result : throw GetInvalidCastException<ulong>(value);
+    }
+
     /// <summary>
     /// This enum is designed as an extension of the <see cref="bool"/> type.
     /// </summary>
@@ -121,6 +234,74 @@ namespace WinCopies
         public T Value { get; }
 
         public NullableReference(T value) => Value = value;
+    }
+
+    public struct Nullable : IEquatable<Nullable>
+    {
+        private readonly object
+#if CS9
+            ?
+#endif
+            _value;
+
+        public bool HasValue { get; }
+
+        public object
+#if CS9
+            ?
+#endif
+            Value => HasValue ? _value : throw new InvalidOperationException("This instance does not contain any value.");
+
+        public Nullable(in object
+#if CS9
+            ?
+#endif
+            value)
+        {
+            _value = value;
+
+            HasValue = true;
+        }
+
+        public override string ToString() => HasValue ? Value?.ToString() ?? "<Null value>" : "<Null>";
+
+        public bool Equals(Nullable other) => HasValue ? other.HasValue && other.Value?.Equals(Value) == true : !other.HasValue;
+
+        public override bool Equals(object obj) => obj is Nullable nullable && Equals(nullable);
+
+        public override int GetHashCode() => HasValue && Value != null ? Value.GetHashCode() : base.GetHashCode();
+    }
+
+    public struct Nullable<T>
+    {
+        private readonly T
+#if CS9
+            ?
+#endif
+            _value;
+
+        public bool HasValue { get; }
+
+        public T
+#if CS9
+            ?
+#endif
+            Value => HasValue ? _value : throw new InvalidOperationException("This instance does not contain any value.");
+
+        public Nullable(
+#if CS8 && (!CS9)
+            [AllowNull]
+#endif
+            in T
+#if CS9
+            ?
+#endif
+            value)
+        {
+            _value = value;
+
+            HasValue = true;
+        }
     }
 
     public delegate bool TaskAwaiterPredicate(ref bool cancel);

@@ -30,17 +30,111 @@ namespace WinCopies
 .Util
 #endif
 {
-    public delegate bool PredicateIn<T>(in T value);
-
-    public delegate bool PredicateOut<TIn, TOut>(TIn param, out TOut result);
-
-    public delegate bool PredicateInOut<TIn, TOut>(in TIn param, out TOut result);
-
     /// <summary>
     /// This class contains static methods that can be used as delegates.
     /// </summary>
     public static class Delegates
     {
+        public static bool CheckIfEqualsNull(object item) => item == null;
+        public static bool CheckIfEqualsNullIn(in object item) => item == null;
+
+        public static bool CheckIfEqualsNull<T>(T item) => item == null;
+        public static bool CheckIfEqualsNullIn<T>(in T item) => item == null;
+
+        public static bool CheckIfIsNull(object item) => item is null;
+        public static bool CheckIfIsNullIn(in object item) => item is null;
+
+        public static bool CheckIfIsNull<T>(T item)
+#if !CS8
+            where T : class
+#endif
+            => item is null;
+        public static bool CheckIfIsNullIn<T>(in T item)
+#if !CS8
+            where T : class
+#endif
+            => item is null;
+
+        public static bool CheckIfNotEqualsNull(object item) => item != null;
+        public static bool CheckIfNotEqualsNullIn(in object item) => item != null;
+
+        public static bool CheckIfNotEqualsNull<T>(T item) => item != null;
+        public static bool CheckIfNotEqualsNullIn<T>(in T item) => item != null;
+
+        public static bool CheckIfIsNotNull(object item) =>
+#if !CS9
+            !(
+#endif
+            item is
+#if CS9
+            not
+#endif
+            null
+#if !CS9
+            )
+#endif
+            ;
+        public static bool CheckIfIsNotNullIn(in object item) =>
+#if !CS9
+            !(
+#endif
+            item is
+#if CS9
+            not
+#endif
+            null
+#if !CS9
+            )
+#endif
+            ;
+
+        public static bool CheckIfIsNotNull<T>(T item)
+#if !CS8
+            where T : class
+#endif
+            =>
+#if !CS9
+            !(
+#endif
+            item is
+#if CS9
+            not
+#endif
+            null
+#if !CS9
+            )
+#endif
+            ;
+        public static bool CheckIfIsNotNullIn<T>(in T item)
+#if !CS8
+            where T : class
+#endif
+            =>
+#if !CS9
+            !(
+#endif
+            item is
+#if CS9
+            not
+#endif
+            null
+#if !CS9
+            )
+#endif
+            ;
+
+        public static Action GetAction<T>(T param, Action<T> action) => () => action(param);
+
+        public static Action GetAction<T>(T param, ActionIn<T> action) => () => action(param);
+
+        public static T GetResultIn<T>(in Func<T> func) => (func ?? throw GetArgumentNullException(nameof(func)))();
+
+        public static T GetResult<T>(Func<T> func) => GetResultIn(func);
+
+        public static object GetResultIn(in Func func) => (func ?? throw GetArgumentNullException(nameof(func)))();
+
+        public static object GetResult(Func func) => GetResultIn(func);
+
         public static void EmptyVoid(object parameter) { }
 
         public static void EmptyVoid<T>(T parameter) { }
@@ -435,5 +529,52 @@ namespace WinCopies
 #if !CS9
         }
 #endif
+
+        public static bool AndIn(in IEnumerable<bool> values)
+        {
+            foreach (bool value in values)
+
+                if (!value)
+
+                    return false;
+
+            return true;
+        }
+
+        public static bool OrIn(in IEnumerable<bool> values)
+        {
+            foreach (bool value in values)
+
+                if (value)
+
+                    return true;
+
+            return false;
+        }
+
+        public static bool XOrIn(in IEnumerable<bool> values)
+        {
+            bool found = false;
+
+            foreach (bool value in values)
+
+                if (value)
+
+                    if (found)
+
+                        return false;
+
+                    else
+
+                        found = true;
+
+            return found;
+        }
+
+        public static bool And(IEnumerable<bool> values) => AndIn(values);
+
+        public static bool Or(IEnumerable<bool> values) => OrIn(values);
+
+        public static bool XOr(IEnumerable<bool> values) => XOrIn(values);
     }
 }

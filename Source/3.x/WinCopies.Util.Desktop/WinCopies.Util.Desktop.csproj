@@ -4,7 +4,7 @@
 		<PackageId>WinCopies.Util.Desktop</PackageId>
 		<AssemblyName>WinCopies.Util.Desktop</AssemblyName>
 		<Title>WinCopies.Util.Desktop</Title>
-		<TargetFrameworks>net35;net472;net48;netcoreapp3.0;netcoreapp3.1;net5.0-windows;net6.0-windows</TargetFrameworks>
+		<TargetFrameworks>net35;net472;net48;netcoreapp3.0;netcoreapp3.1;net5.0-windows;net6.0-windows;net7.0-windows</TargetFrameworks>
 		<UseWPF>true</UseWPF>
 		<Description>WinCopies framework desktop utilities</Description>
 		<AssemblyOriginatorKeyFile>WinCopies.Util.Desktop.snk</AssemblyOriginatorKeyFile>

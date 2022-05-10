@@ -80,13 +80,19 @@ namespace WinCopies
 
     public class TypeArgumentException<TExpected> : ArgumentException
     {
-        private const string MESSAGE = "an instance of or an instance of a type that inherits or implement ";
+        private const string MESSAGE = "an instance of or an instance of a type that inherits or implements ";
 
         public TypeArgumentException(in Type
 #if CS8
             ?
 #endif
             type, in string argumentName) : base($"{argumentName} should be {MESSAGE}{GetTypeFullName(typeof(TExpected))}. {argumentName} was {(type == null ? "null" : MESSAGE + GetTypeFullName(type))}.") { /* Left empty. */ }
+
+        public TypeArgumentException(in object
+#if CS8
+            ?
+#endif
+            value, in string argumentName) : this(value?.GetType(), argumentName) { /* Left empty. */ }
 
         private static string GetTypeFullName(in Type t) => t.FullName ?? t.Name;
     }

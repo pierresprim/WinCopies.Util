@@ -149,7 +149,7 @@
             </summary>
             <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="!:TryPeek(out T)"/>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`2.TryPeek(`1@)"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`2.TryPeek(`1@)">
             <summary>

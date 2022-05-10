@@ -19,7 +19,7 @@ namespace WinCopies.Util.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class ExceptionMessages {
@@ -255,6 +255,15 @@ namespace WinCopies.Util.Resources {
         public static string ReadOnlyCollection {
             get {
                 return ResourceManager.GetString("ReadOnlyCollection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The object or resource requested was not found in the given collection or no object or resource in the given collection matches the given criteria..
+        /// </summary>
+        public static string ResourceNotFoundExceptionMessage {
+            get {
+                return ResourceManager.GetString("ResourceNotFoundExceptionMessage", resourceCulture);
             }
         }
         

@@ -16,15 +16,40 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 
-#if !WinCopies3
-namespace WinCopies.Util
+using static WinCopies
+#if WinCopies3
+    .ThrowHelper;
 #else
+    .Util.Util;
+#endif
+
 namespace WinCopies
+#if !WinCopies3
+    .Util
 #endif
 {
+    public interface IReadOnlyValueObject : IEquatable<IReadOnlyValueObject>, System.IDisposable
+    {
+        /// <summary>
+        /// Gets a value that indicates whether this object is read-only.
+        /// </summary>
+        bool IsReadOnly { get; }
+
+        /// <summary>
+        /// Gets or sets the value of the object.
+        /// </summary>
+        object Value { get; }
+    }
+
+    public interface IReadOnlyValueObject<T> : IReadOnlyValueObject, IEquatable<IReadOnlyValueObject<T>>, System.IDisposable
+    {
+        new T Value { get; }
+    }
+
     /// <summary>
     /// Represents a value container. See the <see cref="IValueObject{T}"/> for a generic version of this class.
     /// </summary>
@@ -50,22 +75,103 @@ namespace WinCopies
         new T Value { get; set; }
     }
 
-    public interface IReadOnlyValueObject : IEquatable<IReadOnlyValueObject>, System.IDisposable
+    public sealed class PropertyValueObject : IValueObject, IEquatable<PropertyValueObject>
     {
-        /// <summary>
-        /// Gets a value that indicates whether this object is read-only.
-        /// </summary>
-        bool IsReadOnly { get; }
+        private PropertyInfo _property;
+        private object _obj;
 
-        /// <summary>
-        /// Gets or sets the value of the object.
-        /// </summary>
-        object Value { get; }
+        public object Value
+        {
+            get => _property.GetValue(_obj
+#if !CS5
+            , null
+#endif
+            ); set => _property.SetValue(_obj, value
+#if !CS5
+            , null
+#endif
+            );
+        }
+
+        public bool IsReadOnly => !_property.CanWrite;
+
+        public bool IsDisposed => _property == null;
+
+        public PropertyValueObject(in PropertyInfo property, in object obj)
+        {
+            _property = property ?? throw GetArgumentNullException(nameof(property));
+
+            _obj = obj ?? throw GetArgumentNullException(nameof(property));
+        }
+
+        public void Dispose()
+        {
+            if (!IsDisposed)
+            {
+                _property = null;
+                _obj = null;
+            }
+        }
+
+        public bool Equals(PropertyValueObject other) => _property == other._property && _obj == other._obj;
+
+        public override bool Equals(
+#if CS8
+            [NotNullWhen(true)]
+#endif
+        object
+#if CS8
+            ?
+#endif
+            obj) => obj is PropertyValueObject other && Equals(other);
+
+        public override int GetHashCode() => _property.GetHashCode() ^ _obj.GetHashCode();
+
+        bool IEquatable<IReadOnlyValueObject>.Equals(IReadOnlyValueObject other) => Equals(other);
     }
 
-    public interface IReadOnlyValueObject<T> : IReadOnlyValueObject, IEquatable<IReadOnlyValueObject<T>>, System.IDisposable
+    public sealed class PropertyValueObject<T> : IValueObject<T>, IEquatable<PropertyValueObject<T>>
     {
-        new T Value { get; }
+        private PropertyValueObject _innerStruct;
+
+        public T Value { get => (T)_innerStruct.Value; set => _innerStruct.Value = value; }
+
+        public bool IsReadOnly => _innerStruct.IsReadOnly;
+
+        public bool IsDisposed => _innerStruct == null;
+
+        object IValueObject.Value { get => Value; set => Value = (T)value; }
+
+        object IReadOnlyValueObject.Value => Value;
+
+        public PropertyValueObject(in PropertyInfo property, in object obj) => _innerStruct = new PropertyValueObject(property, obj);
+
+        public void Dispose()
+        {
+            if (!IsDisposed)
+            {
+                _innerStruct.Dispose();
+                _innerStruct = null;
+            }
+        }
+
+        public bool Equals(PropertyValueObject<T> other) => _innerStruct.Equals(other._innerStruct);
+
+        public override bool Equals(
+#if CS8
+            [NotNullWhen(true)]
+#endif
+        object
+#if CS8
+            ?
+#endif
+            obj) => obj is PropertyValueObject<T> other && Equals(other);
+
+        bool IEquatable<IReadOnlyValueObject<T>>.Equals(IReadOnlyValueObject<T> other) => Equals(other);
+
+        bool IEquatable<IReadOnlyValueObject>.Equals(IReadOnlyValueObject other) => Equals(other);
+
+        public override int GetHashCode() => _innerStruct.GetHashCode();
     }
 
     /// <summary>

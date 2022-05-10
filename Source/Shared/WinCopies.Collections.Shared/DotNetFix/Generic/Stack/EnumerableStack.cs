@@ -102,15 +102,7 @@ WinCopies.Collections.Generic.Enumerator<T>, IUIntCountableEnumerator<T>
             private ISimpleLinkedListNode<T> _currentNode;
             private readonly uint _version;
 
-#if !WinCopies3
-            private T _current;
-
-            public T Current => IsDisposed ? throw GetExceptionForDispose(false) : _current;
-
-            object System.Collections.IEnumerator.Current => Current;
-
-            public bool IsDisposed { get; private set; }
-#else
+#if WinCopies3
             private bool _first = true;
 
             public override bool? IsResetSupported => true;
@@ -121,6 +113,14 @@ WinCopies.Collections.Generic.Enumerator<T>, IUIntCountableEnumerator<T>
             protected override T CurrentOverride => _currentNode.Value;
 
             public uint Count => _stack.Count;
+#else
+            private T _current;
+
+            public T Current => IsDisposed ? throw GetExceptionForDispose(false) : _current;
+
+            object System.Collections.IEnumerator.Current => Current;
+
+            public bool IsDisposed { get; private set; }
 #endif
 
             public Enumerator(in EnumerableStack<T> stack)
@@ -129,22 +129,22 @@ WinCopies.Collections.Generic.Enumerator<T>, IUIntCountableEnumerator<T>
 
                 _version = stack.EnumerableVersion;
 
-#if !WinCopies3
-                Reset();
-#else
+#if WinCopies3
                 ResetOverride();
+#else
+                Reset();
 #endif
             }
 
-#if !WinCopies3
+#if WinCopies3
+            protected override void ResetOverride2()
+            {
+#else
             public void Reset()
             {
                 if (IsDisposed)
 
                     throw GetExceptionForDispose(false);
-#else
-            protected override void ResetOverride2()
-            {
 #endif
                 ThrowIfVersionHasChanged(_stack.EnumerableVersion, _version);
 
@@ -155,29 +155,19 @@ WinCopies.Collections.Generic.Enumerator<T>, IUIntCountableEnumerator<T>
                 _currentNode = _stack._stack.FirstItem;
             }
 
-#if !WinCopies3
+#if WinCopies3
+            protected override bool MoveNextOverride()
+            {
+#else
             public bool MoveNext()
             {
                 if (IsDisposed)
 
                     throw GetExceptionForDispose(false);
-#else
-            protected override bool MoveNextOverride()
-            {
 #endif
                 ThrowIfVersionHasChanged(_stack.EnumerableVersion, _version);
 
-#if !WinCopies3
-                if (_currentNode == null)
-
-                    return false;
-
-                _current = _currentNode.Value;
-
-                _currentNode = _currentNode.NextNode;
-
-                return true;
-#else
+#if WinCopies3
                 if (_first)
                 {
                     _first = false;
@@ -195,10 +185,35 @@ WinCopies.Collections.Generic.Enumerator<T>, IUIntCountableEnumerator<T>
                 _currentNode = _currentNode.Next;
 
                 return true;
+#else
+                if (_currentNode == null)
+
+                    return false;
+
+                _current = _currentNode.Value;
+
+                _currentNode = _currentNode.NextNode;
+
+                return true;
 #endif
             }
 
-#if !WinCopies3
+#if WinCopies3
+            protected override void DisposeUnmanaged()
+            {
+                _stack.DecrementEnumeratorCount();
+                _stack = null;
+
+                base.DisposeUnmanaged();
+            }
+
+            protected override void DisposeManaged()
+            {
+                base.DisposeManaged();
+
+                _currentNode = null;
+            }
+#else
             private void Dispose(bool disposing)
             {
                 if (IsDisposed)
@@ -220,25 +235,9 @@ WinCopies.Collections.Generic.Enumerator<T>, IUIntCountableEnumerator<T>
             }
 
             public void Dispose() => Dispose(true);
-#else
-            protected override void Dispose(bool disposing)
-            {
-                _stack.DecrementEnumeratorCount();
-
-                base.Dispose(disposing);
-            }
-
-            protected override void DisposeManaged()
-            {
-                base.DisposeManaged();
-
-                _stack = null;
-
-                _currentNode = null;
-            }
-#endif
 
             ~Enumerator() => Dispose(false);
+#endif
         }
     }
 }

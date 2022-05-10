@@ -122,6 +122,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Generic\EnumerableHelper.Partial\LinkedList.Partial\LinkedList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\EnumerableHelper.Partial\Queue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\EnumerableHelper.Partial\Stack.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generic\GenericEnumerableArray.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\LinkedCollections.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\LinkedTree.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\LoopEnumerator.cs" />

@@ -72,12 +72,20 @@ namespace WinCopies.Diagnostics
         /// <summary>
         /// Check if a value is lesser than a given value. This field only works for methods that use lesser/greater/equal comparers.
         /// </summary>
-        Lesser,
+        Less,
+
+#if !WinCopies3
+        Lesser = Less,
+#endif
 
         /// <summary>
         /// Check if a value is lesser than or equal to a given value. This field only works for methods that use lesser/greater/equal comparers.
         /// </summary>
-        LesserOrEqual,
+        LessOrEqual,
+
+#if !WinCopies3
+        LesserOrEqual = LessOrEqual,
+#endif
 
         /// <summary>
         /// Check if a value is greater than a given value. This field only works for methods that use lesser/greater/equal comparers.

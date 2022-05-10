@@ -542,7 +542,7 @@ namespace WinCopies.Collections
 
         System.Collections.IEnumerator IEnumerable.GetEnumerator() => InnerList.GetEnumerator();
 
-        void System.Collections.Generic.ICollection<T>.Add(T item) => InnerList.AsOfType<System.Collections.Generic.ICollection<T>>().Add(item);
+        void System.Collections.Generic.ICollection<T>.Add(T item) => InnerList.AsFromType<System.Collections.Generic.ICollection<T>>().Add(item);
 
         void ICollection.CopyTo(Array array, int index) => ((ICollection)InnerList).CopyTo(array, index);
 #endif
@@ -708,23 +708,35 @@ InnerList.
                         int index = startIndex.Value;
 
                         action = () => arrayList.Insert(index++,
-#if !WinCopies3
-                            InnerList
-#else
+#if WinCopies3
                             this
+#else
+                            InnerList
 #endif
-                            .RemoveAndGetFirst().Value);
+                            .
+#if WinCopies3
+                            RemoveAndGetFirst
+#else
+                            RemoveAndGetFirstValue
+#endif
+                            ().Value);
                     }
 
                     else
 
                         action = () => _ = arrayList.Add(
-#if !WinCopies3
-                            InnerList
-#else
+#if WinCopies3
                             this
+#else
+                            InnerList
 #endif
-                            .RemoveAndGetFirst().Value);
+                            .
+#if WinCopies3
+                            RemoveAndGetFirst
+#else
+                            RemoveAndGetFirstValue
+#endif
+                            ().Value);
 
                     while (Count != 0)
 
@@ -805,7 +817,13 @@ InnerList.
 #else
                             this
 #endif
-                            .RemoveAndGetFirst().Value);
+                            .
+#if WinCopies3
+                            RemoveAndGetFirst
+#else
+                            RemoveAndGetFirstValue
+#endif
+                            ().Value);
                     }
 
                     else
@@ -816,7 +834,13 @@ InnerList.
 #else
                             this
 #endif
-                            .RemoveAndGetFirst().Value);
+                            .
+#if WinCopies3
+                            RemoveAndGetFirst
+#else
+                            RemoveAndGetFirstValue
+#endif
+                            ().Value);
 
                     while (Count != 0)
 

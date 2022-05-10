@@ -27,56 +27,65 @@
 * For more information, please refer to <http://unlicense.org> */
 
 using System;
+using System.Windows;
 using System.Windows.Input;
 
-#if !WinCopies3
-namespace WinCopies.Util.Commands
+using WinCopies.
+#if WinCopies3
+    Desktop;
 #else
-namespace WinCopies.Commands
+    Util;
 #endif
+
+namespace WinCopies.
+#if !WinCopies3
+Util.
+#endif
+    Commands
 {
-    /// <summary>
-    /// Provides a base class for WPF commands.
-    /// </summary>
-    public class DelegateCommand : ICommand
+    public abstract class DelegateCommandRoot
+    {
+        public event EventHandler CanExecuteChanged
+        {
+            add => CommandManager.RequerySuggested += value;
+            remove => CommandManager.RequerySuggested -= value;
+        }
+    }
+
+    public abstract class DelegateCommandBase : DelegateCommandRoot
     {
         /// <summary>
         /// Gets or sets the Predicate to execute when the CanExecute of the command gets called
         /// </summary>
         public Predicate CanExecuteDelegate { get; set; }
 
-        /// <summary>
-        /// Gets or sets the action to be called when the Execute method of the command gets called
-        /// </summary>
-        public Action<object> ExecuteDelegate { get; set; }
+        public DelegateCommandBase(Predicate canExecuteDelegate) => CanExecuteDelegate = canExecuteDelegate;
 
-        public DelegateCommand(Predicate canExecuteDelegate, Action<object> executeDelegate)
-        {
-            CanExecuteDelegate = canExecuteDelegate;
-
-            ExecuteDelegate = executeDelegate;
-        }
-
-        #region ICommand Members
         /// <summary>
         /// Checks if the command Execute method can run
         /// </summary>
         /// <param name="parameter">THe command parameter to be passed</param>
         /// <returns>Returns true if the command can execute. By default true is returned so that if the user of SimpleCommand does not specify a CanExecuteCommand delegate the command still executes.</returns>
         public bool CanExecute(object parameter) => CanExecuteDelegate == null || CanExecuteDelegate(parameter); // if there is no can execute default to true
+    }
 
-        public event EventHandler CanExecuteChanged
-        {
-            add => CommandManager.RequerySuggested += value;
-            remove => CommandManager.RequerySuggested -= value;
-        }
+    /// <summary>
+    /// Provides a base class for WPF commands.
+    /// </summary>
+    public class DelegateCommand : DelegateCommandBase, ICommand
+    {
+        /// <summary>
+        /// Gets or sets the action to be called when the Execute method of the command gets called
+        /// </summary>
+        public Action<object> ExecuteDelegate { get; set; }
+
+        public DelegateCommand(Predicate canExecuteDelegate, Action<object> executeDelegate) : base(canExecuteDelegate) => ExecuteDelegate = executeDelegate;
 
         /// <summary>
         /// Executes the actual command
         /// </summary>
-        /// <param name="parameter">THe command parameter to be passed</param>
+        /// <param name="parameter">The command parameter to be passed</param>
         public void Execute(object parameter) => ExecuteDelegate?.Invoke(parameter);
-        #endregion
     }
 
     public interface ICommand<T> : ICommand
@@ -95,57 +104,60 @@ namespace WinCopies.Commands
         void Execute(T parameter);
 
 #if CS8
-        bool ICommand.CanExecute(object parameter) => parameter is T _parameter && CanExecute(_parameter);
+        bool ICommand.CanExecute(object parameter) => this.CanExecuteCommand(parameter);
 
-        void ICommand.Execute(object parameter)
-        {
-            if (parameter is T _parameter)
-
-                Execute(_parameter);
-        }
+        void ICommand.Execute(object parameter) => this.TryExecuteCommand(parameter);
 #endif
     }
 
-    /// <summary>
-    /// Provides a base class for WPF commands.
-    /// </summary>
-    public class DelegateCommand<T> : ICommand
-#if WinCopies3
-        <T>
-#endif
+    public interface IQueryCommand<T> : ICommand
+    {
+        new T Execute(object parameter);
+    }
+
+    public interface IQueryRoutedCommand<T> : IQueryCommand<T>
+    {
+        new T Execute(object parameter, IInputElement commandTarget);
+    }
+
+    public interface IQueryCommand<TParam, TResult> : ICommand<TParam>, IQueryCommand<TResult>
+    {
+        new TResult Execute(TParam parameter);
+    }
+
+    public interface IQueryRoutedCommand<TParam, TResult> : IQueryCommand<TParam, TResult>, IQueryRoutedCommand<TResult>
+    {
+        new TResult Execute(TParam parameter, IInputElement commandTarget);
+    }
+
+    public abstract class DelegateCommandBase<T> : DelegateCommandRoot
     {
         /// <summary>
         /// Gets or sets the Predicate to execute when the CanExecute of the command gets called
         /// </summary>
         public Predicate<T> CanExecuteDelegate { get; set; }
 
+        public DelegateCommandBase(Predicate<T> canExecuteDelegate) => CanExecuteDelegate = canExecuteDelegate;
+
+        /// <summary>
+        /// Checks if the command Execute method can run
+        /// </summary>
+        /// <param name="parameter">The command parameter to be passed</param>
+        /// <returns>Returns true if the command can execute. By default true is returned so that if the user of SimpleCommand does not specify a CanExecuteCommand delegate the command still executes.</returns>
+        public bool CanExecute(T parameter) => CanExecuteDelegate == null || CanExecuteDelegate(parameter); // if there is no can execute default to true
+    }
+
+    /// <summary>
+    /// Provides a base class for WPF commands.
+    /// </summary>
+    public class DelegateCommand<T> : DelegateCommandBase<T>, ICommand<T>
+    {
         /// <summary>
         /// Gets or sets the action to be called when the Execute method of the command gets called
         /// </summary>
         public Action<T> ExecuteDelegate { get; set; }
 
-        public DelegateCommand(Predicate<T> canExecuteDelegate, Action<T> executeDelegate)
-        {
-            CanExecuteDelegate = canExecuteDelegate;
-
-            ExecuteDelegate = executeDelegate;
-        }
-
-        #region ICommand Members
-        /// <summary>
-        /// Checks if the command Execute method can run
-        /// </summary>
-        /// <param name="parameter">THe command parameter to be passed</param>
-        /// <returns>Returns true if the command can execute. By default true is returned so that if the user of SimpleCommand does not specify a CanExecuteCommand delegate the command still executes.</returns>
-        public bool CanExecute(T parameter) => CanExecuteDelegate == null || CanExecuteDelegate(parameter); // if there is no can execute default to true
-
-        bool ICommand.CanExecute(object parameter) => CanExecute((T)parameter);
-
-        public event EventHandler CanExecuteChanged
-        {
-            add => CommandManager.RequerySuggested += value;
-            remove => CommandManager.RequerySuggested -= value;
-        }
+        public DelegateCommand(Predicate<T> canExecuteDelegate, Action<T> executeDelegate) : base(canExecuteDelegate) => ExecuteDelegate = executeDelegate;
 
         /// <summary>
         /// Executes the actual command
@@ -153,25 +165,52 @@ namespace WinCopies.Commands
         /// <param name="parameter">The command parameter to be passed</param>
         public void Execute(T parameter) => ExecuteDelegate?.Invoke(parameter);
 
-        void ICommand.Execute(object parameter) => Execute((T)parameter);
-        #endregion
+#if !CS8
+        bool ICommand.CanExecute(object parameter) => this.CanExecuteCommand(parameter);
+
+        void ICommand.Execute(object parameter) => this.TryExecuteCommand(parameter);
+#endif
+    }
+
+    public class DelegateQueryCommand<T> : DelegateCommandBase, IQueryCommand<T>
+    {
+        public Func<object, T> ExecuteDelegate { get; set; }
+
+        public DelegateQueryCommand(Predicate canExecuteDelegate, Func<object, T> executeDelegate) : base(canExecuteDelegate) => ExecuteDelegate = executeDelegate;
+
+        public T Execute(object parameter) => ExecuteDelegate == null ? default : ExecuteDelegate(parameter);
+
+        void ICommand.Execute(object parameter) => Execute(parameter);
+    }
+
+    public class DelegateQueryCommand<TParam, TResult> : DelegateCommandBase<TParam>, IQueryCommand<TParam, TResult>
+    {
+        public Func<TParam, TResult> ExecuteDelegate { get; set; }
+
+        public DelegateQueryCommand(Predicate<TParam> canExecuteDelegate, Func<TParam, TResult> executeDelegate) : base(canExecuteDelegate) => ExecuteDelegate = executeDelegate;
+
+        public TResult Execute(TParam parameter) => ExecuteDelegate == null ? default : ExecuteDelegate(parameter);
+
+        void ICommand<TParam>.Execute(TParam parameter) => Execute(parameter);
+
+        TResult IQueryCommand<TResult>.Execute(object parameter) => Execute((TParam)parameter);
+
+#if !CS8
+        bool ICommand.CanExecute(object parameter) => this.CanExecuteCommand(parameter);
+
+        void ICommand.Execute(object parameter) => this.TryExecuteCommand(parameter);
+#endif
     }
 
     /// <summary>
     /// Provides a base class for WPF commands.
     /// </summary>
-    public class DelegateCommand2 : ICommand
+    public class DelegateCommand2 : DelegateCommandRoot, ICommand
     {
         /// <summary>
         /// Gets or sets the action to be called when the Execute method of the command gets called.
         /// </summary>
         public Action ExecuteDelegate { get; set; }
-
-        public event EventHandler CanExecuteChanged
-        {
-            add => CommandManager.RequerySuggested += value;
-            remove => CommandManager.RequerySuggested -= value;
-        }
 
         public DelegateCommand2(in Action executeDelegate) => ExecuteDelegate = executeDelegate;
 
@@ -192,32 +231,37 @@ namespace WinCopies.Commands
     /// <summary>
     /// Provides a base class for WPF commands.
     /// </summary>
-    public class DelegateCommand3 : ICommand<object>
+    public class DelegateCommand3<T> : DelegateCommandRoot, ICommand<T>
     {
         /// <summary>
         /// Gets or sets the action to be called when the Execute method of the command gets called.
         /// </summary>
-        public Action<object> ExecuteDelegate { get; set; }
+        public Action<T> ExecuteDelegate { get; set; }
 
-        public event EventHandler CanExecuteChanged
-        {
-            add => CommandManager.RequerySuggested += value;
-            remove => CommandManager.RequerySuggested -= value;
-        }
-
-        public DelegateCommand3(in Action<object> executeDelegate) => ExecuteDelegate = executeDelegate;
+        public DelegateCommand3(in Action<T> executeDelegate) => ExecuteDelegate = executeDelegate;
 
         /// <summary>
         /// Checks if the command Execute method can run.
         /// </summary>
         /// <param name="parameter">THe command parameter to be passed.</param>
         /// <returns>Returns true if the command can execute. By default true is returned so that if the user of SimpleCommand does not specify a CanExecuteCommand delegate the command still executes.</returns>
-        public bool CanExecute(object parameter) => true;
+        public bool CanExecute(T parameter) => true;
 
         /// <summary>
         /// Executes the actual command.
         /// </summary>
         /// <param name="parameter">The command parameter to be passed.</param>
-        public void Execute(object parameter) => ExecuteDelegate?.Invoke(parameter);
+        public void Execute(T parameter) => ExecuteDelegate?.Invoke(parameter);
+
+#if !CS8
+        bool ICommand.CanExecute(object parameter) => this.CanExecuteCommand(parameter);
+
+        void ICommand.Execute(object parameter) => this.TryExecuteCommand(parameter);
+#endif
+    }
+
+    public class DelegateCommand3 : DelegateCommand3<object>
+    {
+        public DelegateCommand3(in Action<object> executeDelegate) : base(executeDelegate) { /* Left empty. */ }
     }
 }

@@ -167,7 +167,7 @@ namespace WinCopies.Collections.Abstraction.Generic
     {
         protected System.Collections.Generic.LinkedList<T> InnerList { get; }
 
-        protected System.Collections.Generic.ICollection<T> InnerCollection => InnerList.AsOfType<System.Collections.Generic.ICollection<T>>();
+        protected System.Collections.Generic.ICollection<T> InnerCollection => InnerList.AsFromType<System.Collections.Generic.ICollection<T>>();
 
         bool ILinkedList2<T>.IsReadOnly => false;
 
@@ -283,9 +283,9 @@ namespace WinCopies.Collections.Abstraction.Generic
 
         bool System.Collections.Generic.ICollection<T>.IsReadOnly => false;
 
-        object ICollection.SyncRoot => InnerList.AsOfType<ICollection>().SyncRoot;
+        object ICollection.SyncRoot => InnerList.AsFromType<ICollection>().SyncRoot;
 
-        bool ICollection.IsSynchronized => InnerList.AsOfType<ICollection>().IsSynchronized;
+        bool ICollection.IsSynchronized => InnerList.AsFromType<ICollection>().IsSynchronized;
 
         public LinkedList(in System.Collections.Generic.LinkedList<T> list) => InnerList = list ?? throw GetArgumentNullException(nameof(list));
 

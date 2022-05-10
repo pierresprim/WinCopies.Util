@@ -67,7 +67,7 @@ namespace WinCopies.Collections.Generic
 
             public void AddFirst(T item)
             {
-                FirstNode = FirstNode == null ? new Node(item) : (FirstNode.Previous = new Node(item));
+                FirstNode = FirstNode == null ? new Node(item) : (FirstNode.Previous = new Node(item) { Next = FirstNode });
 
                 if (LastNode == null)
 
@@ -76,7 +76,7 @@ namespace WinCopies.Collections.Generic
 
             public void AddLast(T item)
             {
-                LastNode = LastNode == null ? new Node(item) : (LastNode.Next = new Node(item));
+                LastNode = LastNode == null ? new Node(item) : (LastNode.Next = new Node(item) { Previous = LastNode });
 
                 if (FirstNode == null)
 

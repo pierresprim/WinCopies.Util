@@ -21,11 +21,7 @@ using System.Globalization;
 using System.Windows.Data;
 
 using static WinCopies.Util.Data.ConverterHelper;
-using static WinCopies.
-#if !WinCopies3
-    Util.
-#endif
-    Desktop.Resources.ExceptionMessages;
+using static WinCopies.Desktop.Resources.ExceptionMessages;
 
 namespace WinCopies.Util.Data
 {
@@ -59,7 +55,7 @@ namespace WinCopies.Util.Data
             throw GetNotSupportedConversionWayException(ConversionWays.OneWay);
         }
 
-        protected abstract object[] ConvertBack(TDestination _value, TParam _parameter, CultureInfo culture);
+        protected abstract object[] ConvertBack(TDestination value, TParam parameter, CultureInfo culture);
 
         public sealed override object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {

@@ -43,7 +43,7 @@ namespace WinCopies.Collections
 
             protected TEnumerator Enumerator { get; }
 
-            object System.Collections.IEnumerator.Current => Enumerator.Current;
+            object IEnumerator.Current => Enumerator.Current;
 
             public TCount Count => _func();
 
@@ -156,9 +156,19 @@ namespace WinCopies.Collections
                 public CountableEnumeratorInfo(in TEnumerator enumerator, in Func<int> func) : base(enumerator, func) { /* Left empty. */ }
             }
 
+            public class CountableEnumeratorInfo<T> : CountableEnumeratorInfo<System.Collections.Generic.IEnumerator<T>, T>
+            {
+                public CountableEnumeratorInfo(in System.Collections.Generic.IEnumerator<T> enumerator, in Func<int> func) : base(enumerator, func) { /* Left empty. */ }
+            }
+
             public class UIntCountableEnumeratorInfo<TEnumerator, TItems> : CountableEnumeratorInfo<TEnumerator, TItems, uint>, IUIntCountableEnumeratorInfo<TItems> where TEnumerator : System.Collections.Generic.IEnumerator<TItems>
             {
                 public UIntCountableEnumeratorInfo(in TEnumerator enumerator, in Func<uint> func) : base(enumerator, func) { /* Left empty. */ }
+            }
+
+            public class UIntCountableEnumeratorInfo<T> : UIntCountableEnumeratorInfo<System.Collections.Generic.IEnumerator<T>, T>
+            {
+                public UIntCountableEnumeratorInfo(in System.Collections.Generic.IEnumerator<T> enumerator, in Func<uint> func) : base(enumerator, func) { /* Left empty. */ }
             }
 
             public class CountableEnumerator<TEnumerator, TItems> : CountableEnumerator<TEnumerator, TItems, int>, ICountableEnumerator<TItems> where TEnumerator : System.Collections.Generic.IEnumerator<TItems>
@@ -166,9 +176,19 @@ namespace WinCopies.Collections
                 public CountableEnumerator(in TEnumerator enumerator, in Func<int> func) : base(enumerator, func) { /* Left empty. */ }
             }
 
+            public class CountableEnumerator<T> : CountableEnumerator<System.Collections.Generic.IEnumerator<T>, T>
+            {
+                public CountableEnumerator(in System.Collections.Generic.IEnumerator<T> enumerator, in Func<int> func) : base(enumerator, func) { /* Left empty. */ }
+            }
+
             public class UIntCountableEnumerator<TEnumerator, TItems> : CountableEnumerator<TEnumerator, TItems, uint>, IUIntCountableEnumerator<TItems> where TEnumerator : System.Collections.Generic.IEnumerator<TItems>
             {
                 public UIntCountableEnumerator(in TEnumerator enumerator, in Func<uint> func) : base(enumerator, func) { /* Left empty. */ }
+            }
+
+            public class UIntCountableEnumerator<T> : UIntCountableEnumerator<System.Collections.Generic.IEnumerator<T>, T>
+            {
+                public UIntCountableEnumerator(in System.Collections.Generic.IEnumerator<T> enumerator, in Func<uint> func) : base(enumerator, func) { /* Left empty. */ }
             }
 
             public class DisposableEnumerator<TEnumerator, TItems> : IDisposableEnumerator<TItems> where TEnumerator : System.Collections.Generic.IEnumerator<TItems>
@@ -221,6 +241,11 @@ namespace WinCopies.Collections
                 }
             }
 
+            public class DisposableEnumerator<T> : DisposableEnumerator<System.Collections.Generic.IEnumerator<T>, T>
+            {
+                public DisposableEnumerator(in System.Collections.Generic.IEnumerator<T> enumerator) : base(enumerator) { /* Left empty. */ }
+            }
+
             public class CountableEnumerable<TEnumerable, TItems> : CountableEnumerableBase<TEnumerable, ICountableEnumerator<TItems>>, Collections.DotNetFix.Generic.ICountableEnumerable<TItems> where TEnumerable : ICountable, System.Collections.Generic.IEnumerable<TItems>
             {
 #if !CS8
@@ -257,7 +282,7 @@ namespace WinCopies.Collections
 #endif
             }
 
-            public abstract class CountableEnumerableInfoBase<TEnumerable, TEnumerator, TItems> : CountableEnumerableBase<TEnumerable, TEnumerator> where TEnumerable : ICountable, Collections.DotNetFix.Generic.IEnumerable<TItems, TEnumerator>, IEnumerableInfo<TEnumerator> where TEnumerator : Collections.DotNetFix.Generic.IEnumerator<TItems>, IEnumeratorInfo2<TItems>
+            public abstract class CountableEnumerableInfoBase<TEnumerable, TEnumerator, TItems> : CountableEnumerableBase<TEnumerable, TEnumerator> where TEnumerable : ICountable, Collections.DotNetFix.Generic.IEnumerable<TItems, TEnumerator>, IEnumerableInfo<TEnumerator> where TEnumerator : IEnumerator<TItems>, IEnumeratorInfo2<TItems>
             {
                 public bool SupportsReversedEnumeration => Enumerable.SupportsReversedEnumeration;
 
@@ -268,17 +293,20 @@ namespace WinCopies.Collections
 #endif
 
 #if !WinCopies3
-namespace Generic
-{
-#endif
-    public interface IReadOnlyList : ICountableEnumerable
+    namespace Generic
     {
-#if !(WinCopies3 && CS7)
-        object this[int index] { get; }
 #endif
-    }
+        public interface IReadOnlyList : ICountableEnumerable
+#if WinCopies3
+        , IIndexableR
+#endif
+        {
+#if !(WinCopies3 && CS7)
+            object this[int index] { get; }
+#endif
+        }
 #if !WinCopies3
-}
+    }
 #endif
 
     namespace Generic
@@ -332,9 +360,9 @@ namespace Generic
 
         public interface ICollection<T> : ICollectionBase<T>, IReadOnlyCollection<T>,
 #if CS5
-            System.Collections.Generic.IReadOnlyCollection<T>, 
+            System.Collections.Generic.IReadOnlyCollection<T>,
 #endif
-            DotNetFix.Generic.ICountableEnumerable<T>,  System.Collections.Generic.ICollection<T>
+            DotNetFix.Generic.ICountableEnumerable<T>, System.Collections.Generic.ICollection<T>
         {
             // Left empty.
         }
@@ -355,7 +383,7 @@ namespace Generic
 #endif
             ICountableEnumerable<T>
 #if WinCopies3
-        , IReadOnlyList
+        , IReadOnlyList, IIndexableR<T>
 #endif
 #if CS7
 , System.Collections.Generic.IReadOnlyList<T>
@@ -419,8 +447,13 @@ namespace Generic
 
             public T this[int index] => Array[index];
 
-#if WinCopies3 && !CS7
+#if WinCopies3
+#if !CS8
+            object IIndexableR.this[int index] => this[index];
+#if !CS7
             object IReadOnlyList.this[int index] => this[index];
+#endif
+#endif
 #endif
 
             public CountableEnumerableArray(in T[] array) => Array = array;
@@ -429,7 +462,7 @@ namespace Generic
 #if WinCopies3
             ICountableEnumeratorInfo<T>
 #else
-         System.Collections.Generic.IEnumerator<T>
+        System.Collections.Generic.IEnumerator<T>
 #endif
             GetEnumerator() => new ArrayEnumerator<T>(
 #if WinCopies3 && !CS7
@@ -476,7 +509,7 @@ namespace Generic
 #if WinCopies3
             IUIntCountableEnumeratorInfo<T>
 #else
-         System.Collections.Generic.IEnumerator<T>
+        System.Collections.Generic.IEnumerator<T>
 #endif
             GetEnumerator() =>
 #if WinCopies3

@@ -6,15 +6,49 @@ using WinCopies.Util;
 
 using static WinCopies.
 #if WinCopies3
-    ThrowHelper;
+ThrowHelper;
+using static WinCopies.UtilHelpers;
 #else
-    Util.Util;
+Util.Util;
 #endif
+
 
 namespace WinCopies
 {
     public static class StringExtensions
     {
+        public static char[] ToCharArray(this string s, in int start) => (s ?? throw GetArgumentNullException(nameof(s))).ToCharArray(start, s.Length - start);
+
+        public static char[] ToCharArrayL(this string s, in int length) => (s ?? throw GetArgumentNullException(nameof(s))).ToCharArray(0, length > s.Length ? s.Length : length);
+
+        public static
+#if CS5
+            (string left, string right)
+#else
+            ValueTuple<string, string>
+#endif
+            Split(this string s, in int index)
+        {
+            return
+#if !CS5
+                new ValueTuple<string, string>
+#endif
+                (new string((s ?? throw GetArgumentNullException(nameof(s))).ToCharArrayL(index)), new string(s.ToCharArray(index + 1)));
+        }
+
+#if CS8
+        public static ReadOnlySpanTuple<char, char> SplitAsReadOnlySpan(this string s, in int index)
+        {
+            char[] array = (s ?? throw GetArgumentNullException(nameof(s))).ToCharArray();
+
+            return new
+#if !CS9
+            ReadOnlySpanTuple<char, char>
+#endif
+            (GetReadOnlySpanL(array, index), GetReadOnlySpan(array, index + 1));
+        }
+#endif
+
         public static string Surround(this string
 #if CS8
                 ?

@@ -16,7 +16,6 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if WinCopies3
-
 using System.Collections;
 
 using WinCopies.Collections.DotNetFix.Generic;
@@ -24,13 +23,17 @@ using WinCopies.Collections.Generic;
 
 namespace WinCopies.Collections
 {
-    public class StringCharArray : ICountableEnumerableInfo<char>, Generic.IReadOnlyList<char>
+    public class StringCharArray : ICountableEnumerableInfo<char>, IReadOnlyList<char>
     {
         private readonly string _s;
 
         public int Count => _s.Length;
 
         public char this[int index] => _s[index];
+
+#if !CS8
+        object IIndexableR.this[int index] => this[index];
+#endif
 
         public bool SupportsReversedEnumeration => true;
 
@@ -50,7 +53,7 @@ namespace WinCopies.Collections
 
         System.Collections.Generic.IEnumerator<char> Generic.IEnumerable<char>.GetReversedEnumerator() => GetReversedEnumerator();
 
-        ICountableEnumerator<char> Generic.IReadOnlyList<char>.GetEnumerator() => GetEnumerator();
+        ICountableEnumerator<char> IReadOnlyList<char>.GetEnumerator() => GetEnumerator();
 
         private CountableEnumeratorInfo<char> _GetReversedEnumerator() => new
 #if !CS9
@@ -73,5 +76,4 @@ CountableEnumeratorInfo<char>
 #endif
     }
 }
-
 #endif

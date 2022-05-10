@@ -70,7 +70,11 @@ namespace WinCopies
 
             Type itemType = item.GetType();
 
-            return System.Linq.Enumerable.Repeat(itemType, 1).Concat(itemType.GetDirectInterfaces(IgnoreGenerics, DirectTypeOnly, IgnoreFirstTypesWithoutInterfaces, t => t.CustomAttributes.FirstOrDefault(_t => typeof(Ignore).IsAssignableFrom(_t.AttributeType)) == null))
+            return
+#if !WinCopies3
+                System.Linq.
+#endif
+                Enumerable.Repeat(itemType, 1).Concat(itemType.GetDirectInterfaces(IgnoreGenerics, DirectTypeOnly, IgnoreFirstTypesWithoutInterfaces, t => t.CustomAttributes.FirstOrDefault(_t => typeof(Ignore).IsAssignableFrom(_t.AttributeType)) == null))
                 .FirstOrDefault<DataTemplate>(t => containerElement.TryFindResource(new DataTemplateKey(t))) ?? base.SelectTemplate(item, container);
         }
     }

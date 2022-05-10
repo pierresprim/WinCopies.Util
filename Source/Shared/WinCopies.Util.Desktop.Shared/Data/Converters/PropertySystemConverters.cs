@@ -72,7 +72,7 @@ namespace WinCopies.PropertySystem
     [ValueConversion(typeof(object), typeof(IPropertySystemCollection<ReflectionPropertyId, object>))]
     public class ObjectToPropertyCollectionConverter : AlwaysConvertibleOneWayConverter<object, object, IPropertySystemCollection<ReflectionPropertyId, object>>
     {
-        private IConversionOptions _convertOptions = new ConversionOptions(false, true);
+        private IConversionOptions _convertOptions = new ConversionOptions(true, true);
 
         public override IReadOnlyConversionOptions ConvertOptions => ConvertOptions2;
 

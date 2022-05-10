@@ -6,11 +6,27 @@ The WinCopies® software framework
 CHANGELOG
 ---------
 
-### ??? ???
+### ??? 2.18
 
+- Add support for .Net 7
 - WinCopies.Collections.Extensions.RemoveAndGetFirst/LastValue methods are now available in C\# 6.
 - New static and extension methods.
-- New types.
+- New types, including delegates.
+- WinCopies.Util:
+	- Commands.Primitives: command classes are no longer sealed.
+	- Extensions:
+		- HasFlag\<T>(this T value, in T flag): bug fixed for ushort values.
+		- CheckIntegrity: bug fixed.
+- WinCopies.Collections:
+	- DotNetFix.StringCollection: the indexer is implicitly implemented and available for all C\# version.
+	- Enumerable has new static methods.
+- WinCopies.Diagnostics.Comparison has new labels.
+- WinCopies.Util:
+	- Extensions (from WinCopies.Util.Desktop package): bugs fixed in:
+		- GetChild\<T>.
+		- TryExecute(this RoutedCommand, object, IInputElement): an exception was thrown when the given command is null.
+	- Data.CoalesceMultiConverter: bug fixed: an exception was thrown when converting from a null array.
+- Bug fixed for reference equality comparison in If methods.
 
 ### 11/03/2021 2.17
 

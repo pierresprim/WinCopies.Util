@@ -16,22 +16,23 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if CS7 && WinCopies3
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
+
+using WinCopies.Util;
 
 namespace WinCopies.Collections.DotNetFix.Generic
 {
     public class EnumerableQueueCollection<TQueue, TItems> : QueueCollection<TQueue, TItems>, IEnumerableQueue<TItems>, System.Collections.Generic.IReadOnlyCollection<TItems>, ICollection where TQueue : IEnumerableQueue<TItems>
     {
-        bool ICollection.IsSynchronized => ((ICollection)InnerQueue).IsSynchronized;
+        bool ICollection.IsSynchronized => InnerQueue.AsFromType<ICollection>().IsSynchronized;
 
-        object ICollection.SyncRoot => ((ICollection)InnerQueue).SyncRoot;
+        object ICollection.SyncRoot => InnerQueue.AsFromType<ICollection>().SyncRoot;
 
-        int ICollection.Count => ((ICollection)InnerQueue).Count;
+        int ICollection.Count => InnerQueue.AsFromType<ICollection>().Count;
 
-        int System.Collections.Generic.IReadOnlyCollection<TItems>.Count => ((IReadOnlyCollection<TItems>)InnerQueue).Count;
+        int IReadOnlyCollection<TItems>.Count => InnerQueue.AsFromType<IReadOnlyCollection<TItems>>().Count;
 
         public EnumerableQueueCollection(in TQueue queue) : base(queue) { /* Left empty. */ }
 
@@ -39,14 +40,14 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
         public void CopyTo(Array array, int index) => InnerQueue.CopyTo(array, index);
 
-        System.Collections.Generic.IEnumerator<TItems> System.Collections.Generic.IEnumerable<TItems>.GetEnumerator() => InnerQueue.GetEnumerator();
+        System.Collections.Generic.IEnumerator<TItems> System.Collections.Generic.IEnumerable<TItems>.GetEnumerator() => InnerQueue.AsFromType<System.Collections.Generic.IEnumerable<TItems>>().GetEnumerator();
 
-        public System.Collections.IEnumerator GetEnumerator() => ((IEnumerable)InnerQueue).GetEnumerator();
+        public System.Collections.IEnumerator GetEnumerator() => InnerQueue.AsFromType<IEnumerable>().GetEnumerator();
 
         public TItems[] ToArray() => InnerQueue.ToArray();
     }
 
-    public class EnumerableQueueCollection<T> : EnumerableQueueCollection<IEnumerableQueue<T>, T>, IEnumerableQueue<T>, System.Collections.Generic.IReadOnlyCollection<T>, ICollection
+    public class EnumerableQueueCollection<T> : EnumerableQueueCollection<IEnumerableQueue<T>, T>, IEnumerableQueue<T>, IReadOnlyCollection<T>, ICollection
     {
         public EnumerableQueueCollection(in IEnumerableQueue<T> queue) : base(queue) { /* Left empty. */ }
 

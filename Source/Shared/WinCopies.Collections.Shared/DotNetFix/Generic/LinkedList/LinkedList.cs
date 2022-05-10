@@ -21,19 +21,19 @@ using System.Collections;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
-#if !WinCopies3
-using System.Runtime.Serialization;
-#else
+#if WinCopies3
 using System.Collections.Generic;
 using System.Linq;
 
 using WinCopies.Collections.Generic;
 using WinCopies.Linq;
 
+using static WinCopies.Collections.Resources.ExceptionMessages;
 using static WinCopies.Collections.ThrowHelper;
 using static WinCopies.ThrowHelper;
-using static WinCopies.Collections.Resources.ExceptionMessages;
 using static WinCopies.UtilHelpers;
+#else
+using System.Runtime.Serialization;
 #endif
 #endif
 
@@ -48,7 +48,7 @@ namespace WinCopies.Collections.DotNetFix
         [Serializable]
         public class LinkedList<T> :
 #if WinCopies3
-            IEnumerableInfoLinkedList<T>, ISortable<T>
+            IEnumerableInfoLinkedList<T>, ISortable<T>, IExtensibleEnumerable<T>
 #else
             System.Collections.Generic.LinkedList<T>, ILinkedList2<T>
 #endif
@@ -60,7 +60,6 @@ namespace WinCopies.Collections.DotNetFix
             #endregion
 
             #region Constructors
-
             /// <summary>
             /// Initializes a new instance of the <see cref="System.Collections.Generic.LinkedList{T}"/> class that is empty.
             /// </summary>
@@ -68,15 +67,13 @@ namespace WinCopies.Collections.DotNetFix
 #if !WinCopies3
             : base()
 #endif
-            {
-                // Left empty.
-            }
+            { /* Left empty. */ }
 
             /// <summary>
             /// Initializes a new instance of the <see cref="System.Collections.Generic.LinkedList{T}"/> class that contains elements copied from the specified <see cref="IEnumerable"/> and has sufficient capacity to accommodate the number of elements copied.
             /// </summary>
             /// <param name="collection">The <see cref="IEnumerable"/> whose elements are copied to the new <see cref="System.Collections.Generic.LinkedList{T}"/>.</param>
-            /// <exception cref="System.ArgumentNullException"><paramref name="collection"/> is <see langword="null"/>.</exception>
+            /// <exception cref="ArgumentNullException"><paramref name="collection"/> is <see langword="null"/>.</exception>
             public LinkedList(System.Collections.Generic.IEnumerable<T> collection)
 #if !WinCopies3
 : base(collection)
@@ -227,11 +224,11 @@ namespace WinCopies.Collections.DotNetFix
                     InnerEnumerator.Reset();
                 }
 
-                protected override void Dispose(bool disposing)
+                protected override void DisposeUnmanaged()
                 {
                     List.DecrementEnumeratorsCount();
 
-                    base.Dispose(disposing);
+                    base.DisposeUnmanaged();
                 }
             }
 
@@ -411,9 +408,9 @@ namespace WinCopies.Collections.DotNetFix
 
             private void _AddAfter(in LinkedListNode addAfter, in LinkedListNode node) => Weld(addAfter, node, addAfter.Next);
 
-            public void AddAfter(in LinkedListNode addAfter, in LinkedListNode node) => AddNewItem(addAfter, node, nameof(addAfter), nameof(node), _AddAfter);
+            public void AddAfter(LinkedListNode addAfter, LinkedListNode node) => AddNewItem(addAfter, node, nameof(addAfter), nameof(node), _AddAfter);
 
-            public LinkedListNode AddAfter(in LinkedListNode node, T value) => AddNewItem(node, () => new LinkedListNode(value), nameof(node), _AddAfter);
+            public LinkedListNode AddAfter(LinkedListNode node, T value) => AddNewItem(node, () => new LinkedListNode(value), nameof(node), _AddAfter);
 
             ILinkedListNode<T> ILinkedList<T>.AddAfter(ILinkedListNode<T> node, T value) => AddAfter(node is LinkedListNode _node ? _node : throw new ArgumentException($"{nameof(node)} must be an instance of {GetName<LinkedListNode>()}."), value);
 
@@ -421,9 +418,9 @@ namespace WinCopies.Collections.DotNetFix
 
             private void _AddBefore(in LinkedListNode addBefore, in LinkedListNode node) => Weld(addBefore.Previous, node, addBefore);
 
-            public void AddBefore(in LinkedListNode addBefore, in LinkedListNode node) => AddNewItem(addBefore, node, nameof(addBefore), nameof(node), _AddBefore);
+            public void AddBefore(LinkedListNode addBefore, LinkedListNode node) => AddNewItem(addBefore, node, nameof(addBefore), nameof(node), _AddBefore);
 
-            public LinkedListNode AddBefore(in LinkedListNode node, T value) => AddNewItem(node, () => new LinkedListNode(value), nameof(node), _AddBefore);
+            public LinkedListNode AddBefore(LinkedListNode node, T value) => AddNewItem(node, () => new LinkedListNode(value), nameof(node), _AddBefore);
 
             ILinkedListNode<T> ILinkedList<T>.AddBefore(ILinkedListNode<T> node, T value) => AddBefore(node is LinkedListNode _node ? _node : throw new ArgumentException($"{nameof(node)} must be an instance of {GetName<LinkedListNode>()}."), value);
 
@@ -958,7 +955,64 @@ namespace WinCopies.Collections.DotNetFix
                 }
             }
             #endregion
-            #endregion
+
+
+
+            public System.Collections.Generic.IEnumerable<LinkedListNode> AddRangeBefore(in LinkedListNode node, in System.Collections.Generic.IEnumerable<T> values) => AddRange(node, values, AddBefore);
+
+            public void AddRangeBefore(in LinkedListNode node, in System.Collections.Generic.IEnumerable<LinkedListNode> values) => AddRange(node, values, AddBefore);
+
+            public System.Collections.Generic.IEnumerable<LinkedListNode> AddRangeAfter(in LinkedListNode node, in System.Collections.Generic.IEnumerable<T> values) => AddRange(node, values, AddAfter);
+
+            public void AddRangeAfter(in LinkedListNode node, in System.Collections.Generic.IEnumerable<LinkedListNode> values) => AddRange(node, values, AddAfter);
+
+
+
+            protected ArrayBuilder<LinkedListNode> AddRange(System.Collections.Generic.IEnumerable<T> values, FuncIn<T, LinkedListNode> action)
+            {
+                var builder = new ArrayBuilder<LinkedListNode>();
+
+                foreach (T item in values)
+
+                    _ = builder.AddLast(action(item));
+
+                return builder;
+            }
+
+            protected void AddRange(in System.Collections.Generic.IEnumerable<LinkedListNode> values, in ActionIn<LinkedListNode> action)
+            {
+                foreach (LinkedListNode item in values)
+
+                    action(item);
+            }
+
+
+            protected ArrayBuilder<LinkedListNode> AddRange(LinkedListNode node, in System.Collections.Generic.IEnumerable<T> values, Func<LinkedListNode, T, LinkedListNode> action) => AddRange(values, (in T value) => action(node, value));
+
+            protected void AddRange(LinkedListNode node, in System.Collections.Generic.IEnumerable<LinkedListNode> values, Action<LinkedListNode, LinkedListNode> action) => AddRange(values, (in LinkedListNode newNode) => action(node, newNode));
+
+
+
+            public ArrayBuilder<LinkedListNode> AddRangeFirst(in System.Collections.Generic.IEnumerable<T> values) => AddRange(values, AddFirst);
+
+            public void AddRangeFirst(in System.Collections.Generic.IEnumerable<LinkedListNode> values) => AddRange(values, AddFirst);
+
+            public ArrayBuilder<LinkedListNode> AddRangeLast(in System.Collections.Generic.IEnumerable<T> values) => AddRange(values, AddLast);
+
+            public void AddRangeLast(in System.Collections.Generic.IEnumerable<LinkedListNode> values) => AddRange(values, AddLast);
+
+
+
+            void IAppendableExtensibleEnumerable<T>.Append(T item) => AddLast(item);
+
+            void IAppendableExtensibleEnumerable<T>.AppendRange(System.Collections.Generic.IEnumerable<T> items) => AddRangeLast(items);
+
+
+
+            void IPrependableExtensibleEnumerable<T>.Prepend(T item) => AddFirst(item);
+
+            void IPrependableExtensibleEnumerable<T>.PrependRange(System.Collections.Generic.IEnumerable<T> items) => AddRangeFirst(items);
+#endregion
 
             ~LinkedList() => Clear();
 #endif

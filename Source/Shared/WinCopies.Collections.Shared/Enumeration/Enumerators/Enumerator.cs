@@ -31,7 +31,7 @@ ThrowHelper;
 namespace WinCopies.Collections
 {
 #if WinCopies3
-    public abstract class EnumeratorInfoBase : WinCopies.Collections.DotNetFix.IDisposableEnumeratorInfo, IEnumeratorBase
+    public abstract class EnumeratorInfoBase : DotNetFix.IDisposableEnumeratorInfo, IEnumeratorBase
     {
         public bool IsStarted { get; private set; }
 
@@ -108,40 +108,49 @@ namespace WinCopies.Collections
         {
             ThrowIfDisposed();
 
-            if (IsResetSupported == false ? throw new InvalidOperationException("The current enumerator does not support resetting.") : IsStarted)
+            if (IsResetSupported == false
+#if WinCopies3
+                )
+#else
+                ?
+#endif
+                throw new InvalidOperationException("The current enumerator does not support resetting.")
+#if WinCopies3
+                ;
+#else
+                : IsStarted)
+#endif
 
-                ResetOverride();
+            ResetOverride();
         }
+
+        protected virtual void DisposeUnmanaged() { /* Left empty. */ }
 
         protected virtual void DisposeManaged() => OnResetOrDisposed();
 
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-
-                DisposeManaged();
-
-            IsDisposed = true;
-        }
-
-        public void Dispose()
+        public virtual void Dispose()
         {
             if (IsDisposed)
 
                 return;
 
-            Dispose(true);
+            DisposeManaged();
+            DisposeUnmanaged();
+
+            IsDisposed = true;
 
             GC.SuppressFinalize(this);
         }
+
+        ~EnumeratorInfoBase() => DisposeUnmanaged();
     }
 #endif
 
     public abstract class Enumerator :
-#if !WinCopies3
-System.Collections.IEnumerator, WinCopies.Util.DotNetFix.IDisposable
-#else
+#if WinCopies3
         EnumeratorInfoBase, IDisposableEnumerator, IDisposableEnumeratorInfo
+#else
+        System.Collections.IEnumerator, WinCopies.Util.DotNetFix.IDisposable
 #endif
     {
         public object Current
@@ -150,19 +159,22 @@ System.Collections.IEnumerator, WinCopies.Util.DotNetFix.IDisposable
             get
 #endif
             => IsDisposed ? throw GetExceptionForDispose(false) : IsStarted ?
-#if !WinCopies3
-                _current 
-#else
+#if WinCopies3
                 CurrentOverride
+#else
+                _current 
 #endif
                 : throw new InvalidOperationException("The enumeration has not been started or has completed.");
 
-#if !WinCopies3
+#if WinCopies3
+        /// <summary>
+        /// When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+        /// </summary>
+        protected abstract object CurrentOverride { get; }
+#else
             protected set => _current = IsDisposed ? throw GetExceptionForDispose(false) : value;
         }
-#endif
 
-#if !WinCopies3
         private object _current;
 
         public bool IsStarted { get; private set; }
@@ -234,12 +246,13 @@ System.Collections.IEnumerator, WinCopies.Util.DotNetFix.IDisposable
                 GC.SuppressFinalize(this);
             }
         }
-#else
-        /// <summary>
-        /// When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
-        /// </summary>
-        protected abstract object CurrentOverride { get; }
 #endif
+
+        public static Generic.WhileEnumerator<T> GetNullCheckWhileEnumerator<T>(in T first, in Converter<T, T> converter) => new
+#if !CS9
+            Generic.WhileEnumerator<T>
+#endif
+            (first, converter, Delegates.CheckIfNotEqualsNull);
     }
 
 #if WinCopies3
@@ -299,10 +312,10 @@ System.Collections.IEnumerator, WinCopies.Util.DotNetFix.IDisposable
     {
 #endif
         public abstract class Enumerator<T> :
-#if !WinCopies3
-System.Collections.Generic.IEnumerator<T>, WinCopies.Util.DotNetFix.IDisposable
+#if WinCopies3
+            EnumeratorInfoBase, IDisposableEnumerator<T>, IDisposableEnumeratorInfo, IEnumeratorInfo2<T>
 #else
-           EnumeratorInfoBase, IDisposableEnumerator<T>, IDisposableEnumeratorInfo, IEnumeratorInfo2<T>
+            System.Collections.Generic.IEnumerator<T>, WinCopies.Util.DotNetFix.IDisposable
 #endif
         {
 #if !WinCopies3
@@ -321,10 +334,10 @@ System.Collections.Generic.IEnumerator<T>, WinCopies.Util.DotNetFix.IDisposable
                 get
 #endif
                 => IsDisposed ? throw GetExceptionForDispose(false) :
-#if !WinCopies3
-_enumerationStarted
-#else
+#if WinCopies3
                     IsStarted
+#else
+                    _enumerationStarted
 #endif
                     ?
 #if WinCopies3
@@ -418,7 +431,7 @@ T CurrentOverride
 #if CS5
             out
 #endif
-             T> : IEnumeratorInfo<T>, WinCopies.Collections.DotNetFix.IDisposableEnumeratorInfo, IDisposableEnumerator<T>, IDisposableEnumeratorInfo
+             T> : IEnumeratorInfo<T>, DotNetFix.IDisposableEnumeratorInfo, IDisposableEnumerator<T>, IDisposableEnumeratorInfo
         {
             // Left empty.
         }
@@ -460,10 +473,11 @@ T CurrentOverride
             , TEnumDestination
 #endif
             > :
-#if !WinCopies3
-            System.Collections.Generic.IEnumerator<TDestination>, WinCopies.Util.DotNetFix.IDisposable
-#else
+#if WinCopies3
             Enumerator<TDestination>
+#else
+            System.Collections.Generic.IEnumerator<TDestination>, WinCopies.Util.DotNetFix.IDisposable
+            
 #endif
             where TEnumSource : System.Collections.Generic.IEnumerator<TSource>
 #if !WinCopies3
@@ -532,13 +546,13 @@ T CurrentOverride
 #endif
 
             protected
-#if !WinCopies3
-                virtual void ResetOverride
-#else
+#if WinCopies3
                 override void ResetOverride2
+#else
+                virtual void ResetOverride
 #endif
             ()
-        {
+            {
 #if !WinCopies3
             _current = default;
 #endif
@@ -546,19 +560,17 @@ T CurrentOverride
             }
 
             protected
-#if !WinCopies3
-                virtual void Dispose(bool disposing) => _innerEnumerator = default;
-#else
+#if WinCopies3
                 override void DisposeManaged()
             {
-#if WinCopies3
                 base.DisposeManaged();
-#endif
 
                 _innerEnumerator.Dispose();
 
                 _innerEnumerator = default;
             }
+#else
+            virtual void Dispose(bool disposing) => _innerEnumerator = default;
 #endif
         }
 
@@ -582,7 +594,7 @@ T CurrentOverride
         }
 
 #if WinCopies3
-        public abstract class ExtensionEnumerator<TItems, TEnumerator> : WinCopies.Collections.DotNetFix.IDisposableEnumeratorInfo, IEnumeratorBase, IDisposableEnumerator<TItems>, IDisposableEnumeratorInfo, IEnumeratorInfo2<TItems> where TEnumerator : IEnumeratorInfo<TItems>
+        public abstract class ExtensionEnumerator<TItems, TEnumerator> : DotNetFix.IDisposableEnumeratorInfo, IEnumeratorBase, IDisposableEnumerator<TItems>, IDisposableEnumeratorInfo, IEnumeratorInfo2<TItems> where TEnumerator : IEnumeratorInfo<TItems>
         {
             protected TEnumerator InnerEnumerator { get; }
 
@@ -652,10 +664,7 @@ T CurrentOverride
 
         public sealed class CountableEnumeratorInfo<T> : CountableEnumeratorInfoBase<T, IEnumeratorInfo<T>>
         {
-            public CountableEnumeratorInfo(in IEnumeratorInfo<T> enumerator, in Func<int> countableFunc) : base(enumerator, countableFunc)
-            {
-                // Left empty.
-            }
+            public CountableEnumeratorInfo(in IEnumeratorInfo<T> enumerator, in Func<int> countableFunc) : base(enumerator, countableFunc) { /* Left empty. */ }
         }
 
         public abstract class UIntCountableEnumeratorInfoBase<TItems, TEnumerator> : ExtensionEnumerator<TItems, TEnumerator>, IUIntCountableEnumeratorInfo<TItems> where TEnumerator : IEnumeratorInfo<TItems>
@@ -678,11 +687,198 @@ T CurrentOverride
 
         public sealed class UIntCountableEnumeratorInfo<T> : UIntCountableEnumeratorInfoBase<T, IEnumeratorInfo<T>>
         {
-            public UIntCountableEnumeratorInfo(in IEnumeratorInfo<T> enumerator, in Func<uint> countableFunc) : base(enumerator, countableFunc)
+            public UIntCountableEnumeratorInfo(in IEnumeratorInfo<T> enumerator, in Func<uint> countableFunc) : base(enumerator, countableFunc) { /* Left empty. */ }
+        }
+#else
+    namespace Generic
+    {
+#endif
+        public sealed class SingletonEnumerable<T> : System.Collections.Generic.IEnumerable<T>
+        {
+            private readonly SingletonEnumerator<T> _enumerator = new
+#if !CS9
+                SingletonEnumerator<T>
+#endif
+                ();
+
+            public System.Collections.Generic.IEnumerator<T> GetEnumerator() => _enumerator;
+
+            public void UpdateCurrent(T value) => _enumerator.UpdateCurrent(value);
+
+            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
+        }
+
+        public sealed class SingletonEnumerator<T> : Enumerator<T>
+        {
+            private bool _move;
+            private T _current;
+
+            public override bool? IsResetSupported => true;
+
+            protected override T CurrentOverride => _current;
+
+            public bool TryUpdateCurrent(in T value)
             {
-                // Left empty.
+                if (IsResetSupported != false)
+                {
+                    Reset();
+
+                    _current = IsDisposed ? throw GetExceptionForDispose(false) : value;
+
+                    _move = true;
+
+                    return true;
+                }
+
+                return false;
             }
+
+            public void UpdateCurrent(in T value)
+            {
+                if (!TryUpdateCurrent(value))
+
+                    throw new InvalidOperationException("The current enumerator does not support resetting.");
+            }
+
+            protected override bool MoveNextOverride() => UtilHelpers.UpdateValue(ref _move);
+
+            protected override void ResetOverride2() => _move = true;
+
+            protected override void ResetCurrent()
+            {
+                base.ResetCurrent();
+
+                _move = false;
+                _current = default;
+            }
+
+            public override void Dispose() { /* Left empty. */ }
+        }
+
+        public class WhileEnumerator<T> : Enumerator<T>
+        {
+            private T _current;
+            private Func<bool> _moveNext;
+
+            protected Converter<T, T> Converter { get; }
+
+            protected Predicate<T> Predicate { get; }
+
+            public override bool? IsResetSupported => false;
+
+            protected override T CurrentOverride => _current;
+
+            public WhileEnumerator(T first, Converter<T, T> converter, Predicate<T> predicate)
+            {
+                Converter = converter;
+
+                Predicate = predicate;
+
+                _moveNext = () => UtilHelpers.PerformActionIf(first, predicate, () =>
+                {
+                    _current = first;
+
+                    _moveNext = () => predicate(_current = converter(_current));
+                });
+            }
+
+            protected override bool MoveNextOverride() => _moveNext();
+
+            protected override void ResetCurrent()
+            {
+                _current = default;
+
+                base.ResetCurrent();
+            }
+
+            protected override void ResetOverride2() { /* Left empty. */ }
+        }
+
+        public class SkipEnumerator<T> : Enumerator<T>
+        {
+            private T _current;
+
+            public int Start { get; }
+
+            public int Length { get; }
+
+            public
+#if CS5
+                System.Collections.Generic.IReadOnlyList<T>
+#else
+                T[]
+#endif
+                InnerArray
+            { get; }
+
+            public int CurrentIndex { get; private set; }
+
+            public override bool? IsResetSupported => true;
+
+            protected override T CurrentOverride => _current;
+
+            public SkipEnumerator(in
+#if CS5
+                System.Collections.Generic.IReadOnlyList<T>
+#else
+                T[]
+#endif
+                innerArray, in int start, in int length)
+            {
+                int arrayLength = (innerArray ?? throw GetArgumentNullException(nameof(innerArray))).
+#if CS5
+                    Count
+#else
+                    Length
+#endif
+                    ;
+
+                if (start >= arrayLength)
+
+                    throw new ArgumentOutOfRangeException(nameof(start));
+
+                if (length > arrayLength - start)
+
+                    throw new ArgumentOutOfRangeException(nameof(length));
+
+                InnerArray = innerArray;
+
+                Start = start;
+
+                Length = length;
+
+                ResetCurrentIndex();
+            }
+
+            public SkipEnumerator(in
+#if CS5
+                System.Collections.Generic.IReadOnlyList<T>
+#else
+                T[]
+#endif
+                innerArray, in int start) : this(innerArray, start, (innerArray ?? throw GetArgumentNullException(nameof(innerArray))).
+#if CS5
+                    Count
+#else
+                    Length
+#endif
+                    - start)
+            { /* Left empty. */ }
+
+            protected override bool MoveNextOverride() => UtilHelpers.PerformActionIf(CurrentIndex < Length, () => _current = InnerArray[CurrentIndex++]);
+
+            protected virtual void ResetCurrentIndex() => CurrentIndex = Start;
+
+            protected override void ResetCurrent()
+            {
+                _current = default;
+
+                ResetCurrentIndex();
+
+                base.ResetCurrent();
+            }
+
+            protected override void ResetOverride2() { /* Left empty. */ }
         }
     }
-#endif
 }

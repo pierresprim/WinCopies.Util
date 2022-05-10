@@ -38,6 +38,8 @@ namespace WinCopies.Extensions // To avoid name conflicts.
     {
 #if WinCopies3
         public static IEnumerable<T> Enumerate<T>(params IEnumerable<T>[] enumerables) => enumerables.Join(false);
+
+        public static IEnumerable<T> Enumerate<T>(params Func<IEnumerable<T>>[] enumerables) => enumerables.Join(false);
 #endif
 
         private static void _RunAction<T>(in IEnumerable<T> enumerable, in Action<T> action)

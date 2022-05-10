@@ -16,12 +16,13 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if WinCopies3 && CS7
-
 using System;
 using System.Collections;
 
 using WinCopies.Collections.DotNetFix.Generic;
 using WinCopies.Util;
+
+using static WinCopies.ThrowHelper;
 
 namespace WinCopies.Collections.Generic
 {
@@ -42,31 +43,55 @@ namespace WinCopies.Collections.Generic
 
         public int Count { get; }
 
-        public SubReadOnlyListBase(in TList list, in int startIndex, in int count)
+#if WinCopies3
+        protected
+#else
+        public
+#endif
+        SubReadOnlyListBase(in TList list, in int startIndex, in int count)
         {
-            if (list == null)
+            int arrayLength = (list
+#if CS8
+                ??
+#else
+                == null ?
+#endif
+                throw GetArgumentNullException(nameof(list))
+#if !CS8
+                : list
+#endif
+                ).Count;
 
-                throw WinCopies.ThrowHelper.GetArgumentNullException(nameof(list));
+            if (!(arrayLength == 0 && arrayLength == startIndex && arrayLength == count))
+            {
+                if (startIndex >= arrayLength)
 
-            if (list.Count == 0)
+                    throw new ArgumentOutOfRangeException(nameof(startIndex));
 
-                throw new ArgumentException("The given list is empty.");
+                if (count > arrayLength - startIndex)
 
-            if (startIndex.Between(0, list.Count - 1))
+                    throw new ArgumentOutOfRangeException(nameof(count));
+            }
 
-                if (count.Between(0, list.Count))
-                {
-                    InnerList = list;
+            InnerList = list;
 
-                    StartIndex = startIndex;
+            StartIndex = startIndex;
 
-                    Count = count;
-                }
-
-                else throw new IndexOutOfRangeException($"{nameof(count)} must be between 0 and {nameof(list)}.{nameof(list.Count)}.");
-
-            else throw new ArgumentOutOfRangeException(nameof(startIndex), startIndex, $"{nameof(startIndex)} must be between 0 and {nameof(list)}.{nameof(list.Count)} - 1.");
+            Count = count;
         }
+
+        protected SubReadOnlyListBase(in TList list, in int startIndex) : this(list, startIndex, (list
+#if CS8
+                ??
+#else
+                == null ?
+#endif
+                throw GetArgumentNullException(nameof(list))
+#if !CS8
+                : list
+#endif
+                ).Count - startIndex)
+        { /* Left empty. */ }
 
         public abstract TEnumerator GetEnumerator();
 
@@ -74,17 +99,16 @@ namespace WinCopies.Collections.Generic
 
         System.Collections.Generic.IEnumerator<TItems> System.Collections.Generic.IEnumerable<TItems>.GetEnumerator() => GetEnumerator();
 
-        System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 
     public sealed class SubReadOnlyList<T> : SubReadOnlyListBase<System.Collections.Generic.IReadOnlyList<T>, T, ArrayEnumerator<T>>
     {
         public override bool SupportsReversedEnumeration => true;
 
-        public SubReadOnlyList(in System.Collections.Generic.IReadOnlyList<T> list, in int startIndex, in int count) : base(list, startIndex, count)
-        {
-            // Left empty.
-        }
+        public SubReadOnlyList(in System.Collections.Generic.IReadOnlyList<T> list, in int startIndex, in int count) : base(list, startIndex, count) { /* Left empty. */ }
+
+        public SubReadOnlyList(in System.Collections.Generic.IReadOnlyList<T> list, in int startIndex) : base(list, startIndex) { /* Left empty. */ }
 
         public override ArrayEnumerator<T> GetEnumerator() => new
 #if !CS9
@@ -99,5 +123,4 @@ namespace WinCopies.Collections.Generic
             (this, true);
     }
 }
-
 #endif

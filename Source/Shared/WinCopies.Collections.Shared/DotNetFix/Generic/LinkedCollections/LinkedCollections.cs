@@ -110,13 +110,13 @@ int
 
             bool ICollection.IsSynchronized => InnerList
 #if !WinCopies3
-            .AsOfType<ICollection>()
+            .AsFromType<ICollection>()
 #endif
             .IsSynchronized;
 
             object ICollection.SyncRoot => InnerList
 #if !WinCopies3
-            .AsOfType<ICollection>()
+            .AsFromType<ICollection>()
 #endif
             .SyncRoot;
 
@@ -149,7 +149,7 @@ int
                 if (OnAddItem(item))
                 {
 #endif
-                    InnerList.AsOfType<
+                    InnerList.AsFromType<
 #if WinCopies3
                 IUIntCollection<T>
 #else
@@ -388,21 +388,21 @@ int
 
             public bool Contains(T item) => InnerList.Contains(item);
 
-            public void CopyTo(Array array, int index) => InnerList.AsOfType<ICollection>().CopyTo(array, index);
+            public void CopyTo(Array array, int index) => InnerList.AsFromType<ICollection>().CopyTo(array, index);
 
             public void CopyTo(T[] array, int arrayIndex) => InnerList.CopyTo(array, arrayIndex);
 
             System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() =>
 
 #if WinCopies3
-                InnerList.AsOfType<System.Collections.Generic.IEnumerable<T>>().GetEnumerator();
+                InnerList.AsFromType<System.Collections.Generic.IEnumerable<T>>().GetEnumerator();
 #else
                 GetEnumerator();
 
             public System.Collections.Generic.LinkedList<T>.Enumerator GetEnumerator() => InnerList.GetEnumerator();
 #endif
 
-            System.Collections.IEnumerator IEnumerable.GetEnumerator() => InnerList.AsOfType<IEnumerable>().GetEnumerator();
+            System.Collections.IEnumerator IEnumerable.GetEnumerator() => InnerList.AsFromType<IEnumerable>().GetEnumerator();
 
 #if WinCopies3
             public bool SupportsReversedEnumeration => InnerList.SupportsReversedEnumeration;
@@ -415,11 +415,11 @@ int
 
             public IUIntCountableEnumerator<ILinkedListNode<T>> GetReversedNodeEnumerator() => InnerList.GetReversedNodeEnumerator();
 
-            System.Collections.Generic.IEnumerator<T> Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => InnerList.AsOfType<Collections.Generic.IEnumerable<T>>().GetReversedEnumerator();
+            System.Collections.Generic.IEnumerator<T> Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => InnerList.AsFromType<Collections.Generic.IEnumerable<T>>().GetReversedEnumerator();
 
-            System.Collections.Generic.IEnumerator<ILinkedListNode<T>> System.Collections.Generic.IEnumerable<ILinkedListNode<T>>.GetEnumerator() => InnerList.AsOfType<System.Collections.Generic.IEnumerable<ILinkedListNode<T>>>().GetEnumerator();
+            System.Collections.Generic.IEnumerator<ILinkedListNode<T>> System.Collections.Generic.IEnumerable<ILinkedListNode<T>>.GetEnumerator() => InnerList.AsFromType<System.Collections.Generic.IEnumerable<ILinkedListNode<T>>>().GetEnumerator();
 
-            System.Collections.Generic.IEnumerator<ILinkedListNode<T>> Collections.Generic.IEnumerable<ILinkedListNode<T>>.GetReversedEnumerator() => InnerList.AsOfType<Collections.Generic.IEnumerable<ILinkedListNode<T>>>().GetReversedEnumerator();
+            System.Collections.Generic.IEnumerator<ILinkedListNode<T>> Collections.Generic.IEnumerable<ILinkedListNode<T>>.GetReversedEnumerator() => InnerList.AsFromType<Collections.Generic.IEnumerable<ILinkedListNode<T>>>().GetReversedEnumerator();
 
             protected virtual void OnNodeRemoved(ILinkedListNode<T> node) { /* Left empty. */ }
 

@@ -16,10 +16,11 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if WinCopies3
-
 using System.Collections;
 
 using WinCopies.Collections.DotNetFix.Generic;
+
+using WinCopies.Util;
 
 namespace WinCopies.Collections.Generic
 {
@@ -57,13 +58,13 @@ namespace WinCopies.Collections.Generic
 
             public IEnumeratorInfo<T> GetEnumerator() => Enumerable.GetEnumerator();
 
-            System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => ((System.Collections.Generic.IEnumerable<T>)Enumerable).GetEnumerator();
+            System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => Enumerable.AsFromType<System.Collections.Generic.IEnumerable<T>>().GetEnumerator();
 
-            System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)Enumerable).GetEnumerator();
+            System.Collections.IEnumerator IEnumerable.GetEnumerator() => Enumerable.AsFromType<IEnumerable>().GetEnumerator();
 
             public IEnumeratorInfo<T> GetReversedEnumerator() => Enumerable.GetReversedEnumerator();
 
-            System.Collections.Generic.IEnumerator<T> IEnumerable<T>.GetReversedEnumerator() => ((IEnumerable<T>)Enumerable).GetReversedEnumerator();
+            System.Collections.Generic.IEnumerator<T> IEnumerable<T>.GetReversedEnumerator() => Enumerable.AsFromType<IEnumerable<T>>().GetReversedEnumerator();
 
 #if !CS8
             IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
@@ -71,5 +72,4 @@ namespace WinCopies.Collections.Generic
         }
     }
 }
-
 #endif

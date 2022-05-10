@@ -19,6 +19,7 @@ using System;
 using System.Globalization;
 
 using WinCopies.Collections;
+using WinCopies.Linq;
 
 namespace WinCopies.Util.Data
 {
@@ -30,6 +31,13 @@ namespace WinCopies.Util.Data
         public override IReadOnlyConversionOptions ConvertOptions => ConverterHelper.AllowNull;
 
         protected override string Convert(object[] values, string parameter, CultureInfo culture) => values == null ? parameter : parameter == null ? values.ConcatenateString2() : string.Format(culture, parameter, values);
+    }
+
+    public class StringMergerConverter : AlwaysConvertibleOneWayMultiConverter<string, string>
+    {
+        public override IReadOnlyConversionOptions ConvertOptions => ConverterHelper.AllowNull;
+
+        protected override string Convert(object[] values, string parameter, CultureInfo culture) => values?.To<string>().Join(false, parameter);
     }
 #else
         MultiConverterBase

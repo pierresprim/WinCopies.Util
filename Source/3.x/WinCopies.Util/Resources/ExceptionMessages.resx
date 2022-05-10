@@ -183,6 +183,9 @@
   <data name="ReadOnlyCollection" xml:space="preserve">
     <value>This collection is read-only.</value>
   </data>
+  <data name="ResourceNotFoundExceptionMessage" xml:space="preserve">
+    <value>The object or resource requested was not found in the given collection or no object or resource in the given collection matches the given criteria.</value>
+  </data>
   <data name="SequenceContainsNoItemOrNoItemMatchedGivenPredicate" xml:space="preserve">
     <value>The sequence contains no item or no item matched the given predicate.</value>
   </data>

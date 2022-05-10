@@ -73,7 +73,11 @@ namespace WinCopies.Util.Data
 
         protected abstract bool Convert(TSourceEnumerableIn values, TParamOut parameter, CultureInfo culture, out TDestinationIn result);
 
-        protected InvalidOperationException GetLengthMismatchException() => new InvalidOperationException("The number of items in _result must be equal to ConvertBack result's.");
+        protected InvalidOperationException GetLengthMismatchException() => new
+#if !CS9
+            InvalidOperationException
+#endif
+            ("The number of items in _result must be equal to ConvertBack result's.");
 
         protected sealed override object[] ConvertBack(TDestinationIn _value, TParamOut _parameter, CultureInfo culture)
         {
@@ -145,5 +149,4 @@ namespace WinCopies.Util.Data
     }
 #endif
 }
-
 #endif

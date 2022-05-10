@@ -16,16 +16,25 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if CS7
-
 using System;
+using System.Collections;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 using WinCopies.Collections.Generic;
+using WinCopies.Linq;
+
+#if WinCopies3
+using WinCopies.Collections;
+using WinCopies.Util;
+#endif
 
 using static WinCopies.
 #if WinCopies3
-    ThrowHelper;
+    UtilHelpers;
+using static WinCopies.ThrowHelper;
+
+using static WinCopies.Consts;
 #else
     Util.Util;
 
@@ -39,6 +48,52 @@ namespace WinCopies
 {
     public static class EnumerableExtensions
     {
+        public static int TryFindIndexOf<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Predicate<T> predicate)
+        {
+            ThrowIfNull(enumerable, nameof(enumerable));
+            ThrowIfNull(predicate, nameof(predicate));
+
+            int i = NotSetIndex;
+
+            foreach (T item in enumerable)
+            {
+                i++;
+
+                if (predicate(item))
+
+                    return i;
+            }
+
+            return NotSetIndex;
+        }
+
+        public static uint FindIndexOf<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Predicate<T> predicate)
+        {
+            int result = enumerable.TryFindIndexOf(predicate);
+
+            return result > NotSetIndex ? (uint)result : throw new ResourceNotFoundException(nameof(enumerable));
+        }
+
+        public static int TryFindIndexOf(this IEnumerable enumerable, Predicate predicate) => enumerable.AsObjectEnumerable().TryFindIndexOf(predicate.AsObjectPredicate());
+
+        public static uint FindIndexOfObject(this IEnumerable enumerable, in Predicate predicate) => enumerable.AsObjectEnumerable().FindIndexOf(predicate.AsObjectPredicate());
+
+        public static int TryFindIndexOf<T>(this System.Collections.Generic.IEnumerable<T> enumerable, T obj, EqualityComparison<T> comparison) => enumerable.TryFindIndexOf(comparison.GetPredicate(obj));
+
+        public static uint FindIndexOf<T>(this System.Collections.Generic.IEnumerable<T> enumerable, T obj, EqualityComparison<T> comparison) => enumerable.FindIndexOf(comparison.GetPredicate(obj));
+
+        public static int TryFindIndexOfObject<T>(this System.Collections.Generic.IEnumerable<T> enumerable, object obj) => enumerable.TryFindIndexOf(GetPredicate(obj));
+
+        public static uint FindIndexOf<T>(this System.Collections.Generic.IEnumerable<T> enumerable, object obj) => enumerable.FindIndexOfObject(GetPredicate(obj));
+
+        public static int TryFindIndexOf(this IEnumerable enumerable, object obj, EqualityComparison comparison) => enumerable.TryFindIndexOf(comparison.GetPredicate(obj));
+
+        public static uint FindIndexOf(this IEnumerable enumerable, object obj, EqualityComparison comparison) => enumerable.FindIndexOfObject(comparison.GetPredicate(obj));
+
+        public static int TryFindIndexOf(this IEnumerable enumerable, object obj) => enumerable.TryFindIndexOf(GetPredicate(obj));
+
+        public static uint FindIndexOf(this IEnumerable enumerable, object obj) => enumerable.FindIndexOfObject(GetPredicate(obj));
+
         public static unsafe bool Contains<T>(this
 #if CS7
             System.Collections.Generic.IReadOnlyList
@@ -269,5 +324,4 @@ namespace WinCopies
 #endif
     }
 }
-
 #endif

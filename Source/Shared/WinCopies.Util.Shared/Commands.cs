@@ -74,7 +74,7 @@ namespace WinCopies.Util.Commands.Primitives
         public sealed override void Execute(object value) => Execute((T)value);
     }
 
-    public sealed class DelegateCommand : Command
+    public class DelegateCommand : Command
     {
         private readonly Predicate _predicate;
         private readonly Action<object> _action;
@@ -91,7 +91,7 @@ namespace WinCopies.Util.Commands.Primitives
         public override void Execute(object value) => _action(value);
     }
 
-    public sealed class DelegateCommand<T> : Command<T>
+    public class DelegateCommand<T> : Command<T>
     {
         private readonly Predicate<T> _predicate;
         private readonly Action<T> _action;
@@ -108,7 +108,7 @@ namespace WinCopies.Util.Commands.Primitives
         public override void Execute(T value) => _action(value);
     }
 
-    public sealed class Command<TSource, TDestination> : ICommand<TDestination> where TSource : TDestination
+    public class Command<TSource, TDestination> : ICommand<TDestination> where TSource : TDestination
     {
         private readonly ICommand<TSource> _command;
 

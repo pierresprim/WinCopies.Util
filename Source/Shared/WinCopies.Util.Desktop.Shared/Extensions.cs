@@ -27,26 +27,59 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-#if WinCopies3
-using WinCopies.DotNetFix;
-using WinCopies.Util;
-#endif
-
+using WinCopies
 #if !WinCopies3
-using static WinCopies.Util.ForLoop;
-using static WinCopies.Util.Util;
+    .Util
+#endif
+    .Commands;
 
-namespace WinCopies.Util
-#else
-using static WinCopies.ForLoop;
+using static WinCopies.
+#if !WinCopies3
+    Util.
+#endif
+    ForLoop;
+
+using
+#if WinCopies3
+WinCopies.DotNetFix;
+using WinCopies.Util;
+
+using static WinCopies.Consts;
 using static WinCopies.ThrowHelper;
 using static WinCopies.UtilHelpers;
 
 namespace WinCopies.Desktop
+#else
+static WinCopies.Util.Util;
+
+namespace WinCopies.Util
 #endif
 {
     public static class Extensions
     {
+        public static bool CanExecuteCommand<T>(this ICommand<T> command, in object parameter) => (parameter is T _parameter && command.CanExecute(_parameter)) || (parameter == null && !typeof(T).IsValueType && command.CanExecute(default));
+
+        public static bool TryExecuteCommand<T>(this ICommand<T> command, in object parameter)
+        {
+            if (parameter is T _parameter)
+            {
+                command.Execute(_parameter);
+
+                return true;
+            }
+
+            if ((parameter == null && !typeof(T).IsValueType))
+            {
+                command.Execute(default);
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public static void OverrideFrameworkPropertyMetadata<T>(this DependencyProperty property) => property.OverrideMetadata(typeof(T), new FrameworkPropertyMetadata(typeof(T)));
+
         public static T GetChild<T>(this DependencyObject parent, in bool lookForDirectChildOnly, out bool isDirectChild) where T : Visual
         {
             T child = default;
@@ -62,6 +95,10 @@ namespace WinCopies.Desktop
                     if (!lookForDirectChildOnly && child == null)
 
                         child = GetChild<T>(visual, false, out _);
+
+                    if (child != null)
+
+                        break;
                 }
 
                 else
@@ -237,7 +274,7 @@ namespace WinCopies.Desktop
         public static T TryGetFirstBefore<T>(this Panel itemsControl, int index, ref bool rollBack, ref bool checkContent, out bool found) where T : Visual => TryGetFirst<T>(itemsControl, index, GetTGFBParams, ref rollBack, ref checkContent, LoopFuncDESC, out found);
 #endif
 
-        public static void Add(this CommandBindingCollection commandBindings, in ICommand command, in ExecutedRoutedEventHandler executed, in CanExecuteRoutedEventHandler canExecute) => commandBindings.Add(command, executed, canExecute);
+        public static void Add(this CommandBindingCollection commandBindings, in ICommand command, in ExecutedRoutedEventHandler executed, in CanExecuteRoutedEventHandler canExecute) => commandBindings.Add(new CommandBinding(command, executed, canExecute));
 
         public static void Add(this CommandBindingCollection commandBindings, in ICommand command, Action _delegate) => commandBindings.Add(new CommandBinding(command, (object sender, ExecutedRoutedEventArgs e) => _delegate(), (object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = true));
 
@@ -245,6 +282,8 @@ namespace WinCopies.Desktop
 
         public static void Execute(this ICommand command, object commandParameter, IInputElement commandTarget)
         {
+            ThrowIfNull(command, nameof(command));
+
             if (command is RoutedCommand _command)
 
                 _command.Execute(commandParameter, commandTarget);
@@ -253,10 +292,6 @@ namespace WinCopies.Desktop
 
                 command.Execute(commandParameter);
         }
-
-        public static bool TryExecute(this ICommand command, object commandParameter, IInputElement commandTarget) => command is RoutedCommand
-                ? ((RoutedCommand)command).TryExecute(commandParameter, commandTarget)
-                : command.TryExecute(commandParameter);
 
         /// <summary>
         /// Check if the command can be executed, and executes it if available. See the remarks section.
@@ -268,7 +303,7 @@ namespace WinCopies.Desktop
         /// </remarks>
         public static bool TryExecute(this ICommand command, object commandParameter)
         {
-            if (command != null && command.CanExecute(commandParameter))
+            if (command?.CanExecute(commandParameter) == true)
             {
                 command.Execute(commandParameter);
 
@@ -280,7 +315,7 @@ namespace WinCopies.Desktop
 
         public static bool TryExecute(this RoutedCommand command, object commandParameter, IInputElement commandTarget)
         {
-            if (command.CanExecute(commandParameter, commandTarget))
+            if (command?.CanExecute(commandParameter, commandTarget) == true)
             {
                 // try
                 // {
@@ -298,6 +333,55 @@ namespace WinCopies.Desktop
 
             return false;
         }
+
+        public static bool TryExecute<T>(this IQueryCommand<T> command, object commandParameter, out T result)
+        {
+            if (command?.CanExecute(commandParameter) == true)
+            {
+                result = command.Execute(commandParameter);
+
+                return true;
+            }
+
+            result = default;
+
+            return false;
+        }
+
+        public static bool TryExecute<T>(this IQueryRoutedCommand<T> command, object commandParameter, IInputElement commandTarget, out T result)
+        {
+            if (command?.CanExecute(commandParameter, commandTarget) == true)
+            {
+                // try
+                // {
+
+                result = command.Execute(commandParameter, commandTarget);
+
+                // }
+                // catch (InvalidOperationException ex)
+                // {
+                // Debug.WriteLine(ex.Message);
+                // }
+
+                return true;
+            }
+
+            result = default;
+
+            return false;
+        }
+
+        public static bool TryExecute(this ICommand command, object commandParameter, IInputElement commandTarget) => command is RoutedCommand _command
+                ? _command.TryExecute(commandParameter, commandTarget)
+                : command.TryExecute(commandParameter);
+
+        public static bool TryExecute2(this ICommand command, ICommandSource commandSource) => command.TryExecute(commandSource.CommandParameter, commandSource.CommandTarget);
+
+        public static bool TryExecute<T>(this IQueryCommand<T> command, object commandParameter, IInputElement commandTarget, out T result) => command is IQueryRoutedCommand<T> _command
+                ? _command.TryExecute(commandParameter, commandTarget, out result)
+                : command.TryExecute(commandParameter, out result);
+
+        public static bool TryExecute<T>(this IQueryCommand<T> command, ICommandSource commandSource, out T result) => command.TryExecute(commandSource.CommandParameter, commandSource.CommandTarget, out result);
 
         public static bool CanExecute(this ICommand command, object commandParameter, IInputElement commandTarget) => command is RoutedCommand routedCommand
                 ? routedCommand.CanExecute(commandParameter, commandTarget)
@@ -692,17 +776,6 @@ namespace WinCopies.Desktop
                 : obj.DisposeAndSetProperty(propertyName, newValue, declaringType, throwIfReadOnly, bindingFlags, paramName, setOnlyIfNotNull, throwIfNull, validateValueCallback, throwIfValidationFails, valueChangedCallback);
 #endif
 
-        [DllImport("gdi32.dll", CharSet = CharSet.Auto)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool DeleteObject([In] IntPtr hObject);
-
-        /// <summary>
-        /// Converts a <see cref="Bitmap"/> to an <see cref="ImageSource"/>.
-        /// </summary>
-        /// <param name="bitmap">The <see cref="Bitmap"/> to convert.</param>
-        /// <returns>The <see cref="ImageSource"/> obtained from the given <see cref="Bitmap"/>.</returns>
-        public static BitmapSource ToImageSource(this Bitmap bitmap) => _ToImageSource(bitmap ?? throw GetArgumentNullException(nameof(bitmap)));
-
         private static BitmapSource _ToImageSource(in Bitmap bitmap)
         {
             bitmap.MakeTransparent();
@@ -720,25 +793,33 @@ namespace WinCopies.Desktop
                 Marshal.ThrowExceptionForHR(Marshal.GetHRForLastWin32Error());
 
             return wpfBitmap;
-
-            //            //using (MemoryStream stream = new MemoryStream())
-            //            //{
-            //            //    bitmap.Save(stream, ImageFormat.Png); // Was .Bmp, but this did not show a transparent background.
-
-            //            //    stream.Position = 0;
-            //            //    BitmapImage result = new BitmapImage();
-            //            //    result.BeginInit();
-            //            //    // According to MSDN, "The default OnDemand cache option retains access to the stream until the image is needed."
-            //            //    // Force the bitmap to load right now so we can dispose the stream.
-            //            //    result.CacheOption = BitmapCacheOption.OnLoad;
-            //            //    result.StreamSource = stream;
-            //            //    result.EndInit();
-            //            //    result.Freeze();
-            //            //    return result;
-            //            //}
-
-            //            return wpfBitmap;
         }
+
+        //public static BitmapSource ToImageSource2(this Bitmap bitmap)
+        //{
+        //using (MemoryStream stream = new MemoryStream())
+        //{
+        //    bitmap.MakeTransparent();
+        //    bitmap.Save(stream, ImageFormat.Png); // Was .Bmp, but this did not show a transparent background.
+
+        //    BitmapImage result = new BitmapImage();
+        //    result.BeginInit();
+        //    // According to MSDN, "The default OnDemand cache option retains access to the stream until the image is needed."
+        //    // Force the bitmap to load right now so we can dispose the stream.
+        //    result.CacheOption = BitmapCacheOption.OnLoad;
+        //    result.StreamSource = stream;
+        //    result.EndInit();
+        //    result.Freeze();
+        //    return result;
+        //}
+        //}
+
+        /// <summary>
+        /// Converts a <see cref="Bitmap"/> to an <see cref="ImageSource"/>.
+        /// </summary>
+        /// <param name="bitmap">The <see cref="Bitmap"/> to convert.</param>
+        /// <returns>The <see cref="ImageSource"/> obtained from the given <see cref="Bitmap"/>.</returns>
+        public static BitmapSource ToImageSource(this Bitmap bitmap) => _ToImageSource(bitmap ?? throw GetArgumentNullException(nameof(bitmap)));
 
         public static BitmapSource ToImageSource(this Icon icon) => _ToImageSource((icon ?? throw GetArgumentNullException(nameof(icon))).ToBitmap());
 

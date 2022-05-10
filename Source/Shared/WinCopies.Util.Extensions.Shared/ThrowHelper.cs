@@ -78,7 +78,7 @@ namespace WinCopies.Extensions // To avoid name conflicts.
         {
             if (!@enum.IsValidFlagsEnumValue(throwIfNotFlagsEnum, throwIfZero))
 
-                throw new InvalidEnumArgumentException(argumentName, (int)Convert.ChangeType(@enum, TypeCode.Int32), @enum.GetType());
+                throw new InvalidEnumArgumentException(argumentName, (int)System.Convert.ChangeType(@enum, TypeCode.Int32), @enum.GetType());
         }
     }
 }

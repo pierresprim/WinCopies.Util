@@ -208,7 +208,22 @@ namespace WinCopies.Collections.DotNetFix
 #endif
             }
 
-#if !WinCopies3
+#if WinCopies3
+            protected override void DisposeUnmanaged()
+            {
+                _queue.DecrementEnumeratorCount();
+                _queue = null;
+
+                base.DisposeUnmanaged();
+            }
+
+            protected override void DisposeManaged()
+            {
+                base.DisposeManaged();
+
+                _currentNode = null;
+            }
+#else
             private void Dispose(bool disposing)
             {
                 if (IsDisposed)
@@ -228,25 +243,9 @@ namespace WinCopies.Collections.DotNetFix
             }
 
             public void Dispose() => Dispose(true);
-#else
-            protected override void DisposeManaged()
-            {
-                base.DisposeManaged();
-
-                _queue = null;
-
-                _currentNode = null;
-            }
-
-            protected override void Dispose(bool disposing)
-            {
-                base.Dispose(disposing);
-
-                _queue.DecrementEnumeratorCount();
-            }
-#endif
 
             ~Enumerator() => Dispose(false);
+#endif
         }
     }
 }

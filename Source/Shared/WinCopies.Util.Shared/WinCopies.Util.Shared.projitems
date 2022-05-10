@@ -9,9 +9,14 @@
     <Import_RootNamespace>WinCopies.Util.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Console.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Convertible.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\Assert.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CheckedUInt64.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Commands.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Comparers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\Enums.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Exceptions\ResourceNotFoundException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ForLoop.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ItemsChangedEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Regex.cs" />

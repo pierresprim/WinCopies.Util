@@ -58,6 +58,161 @@ namespace WinCopies.Collections
         ulong Count { get; }
     }
 
+    public interface IIndexableR
+    {
+        object this[int index] { get; }
+    }
+
+    public interface IIndexableW
+    {
+        object this[int index] { set; }
+    }
+
+    public interface IIndexable : IIndexableR, IIndexableW
+    {
+        // Left empty.
+    }
+
+    public interface IUIntIndexableR
+    {
+        object this[uint index] { get; }
+    }
+
+    public interface IUIntIndexableW
+    {
+        object this[uint index] { set; }
+    }
+
+    public interface IUIntIndexable : IUIntIndexableR, IUIntIndexableW
+    {
+        // Left empty.
+    }
+
+    public interface ILongIndexableR
+    {
+        object this[long index] { get; }
+    }
+
+    public interface ILongIndexableW
+    {
+        object this[long index] { set; }
+    }
+
+    public interface ILongIndexable : ILongIndexableR, ILongIndexableW
+    {
+        // Left empty.
+    }
+
+    public interface IULongIndexableR
+    {
+        object this[ulong index] { get; }
+    }
+
+    public interface IULongIndexableW
+    {
+        object this[ulong index] { set; }
+    }
+
+    public interface IULongIndexable : IULongIndexableR, IULongIndexableW
+    {
+        // Left empty.
+    }
+
+    namespace Generic
+    {
+        public interface IIndexableR<out T> : IIndexableR
+        {
+            new T this[int index] { get; }
+
+#if CS8
+            object IIndexableR.this[int index] => this[index];
+#endif
+        }
+
+        public interface IIndexableW<in T> : IIndexableW
+        {
+            new T this[int index] { set; }
+
+#if CS8
+            object IIndexableW.this[int index] { set => this[index] = (T)value; }
+#endif
+        }
+
+        public interface IIndexable<T> : IIndexableR<T>, IIndexableW<T>, IIndexable
+        {
+            // Left empty.
+        }
+
+        public interface IUIntIndexableR<out T> : IUIntIndexableR
+        {
+            new T this[uint index] { get; }
+
+#if CS8
+            object IUIntIndexableR.this[uint index] => this[index];
+#endif
+        }
+
+        public interface IUIntIndexableW<in T> : IUIntIndexableW
+        {
+            new T this[uint index] { set; }
+
+#if CS8
+            object IUIntIndexableW.this[uint index] { set => this[index] = (T)value; }
+#endif
+        }
+
+        public interface IUIntIndexable<T> : IUIntIndexableR<T>, IUIntIndexableW<T>, IUIntIndexable
+        {
+            // Left empty.
+        }
+
+        public interface ILongIndexableR<out T> : ILongIndexableR
+        {
+            new T this[long index] { get; }
+
+#if CS8
+            object ILongIndexableR.this[long index] => this[index];
+#endif
+        }
+
+        public interface ILongIndexableW<in T> : ILongIndexableW
+        {
+            new T this[long index] { set; }
+
+#if CS8
+            object ILongIndexableW.this[long index] { set => this[index] = (T)value; }
+#endif
+        }
+
+        public interface ILongIndexable<T> : ILongIndexableR<T>, ILongIndexableW<T>, ILongIndexable
+        {
+            // Left empty.
+        }
+
+        public interface IULongIndexableR<out T> : IULongIndexableR
+        {
+            new T this[ulong index] { get; }
+
+#if CS8
+            object IULongIndexableR.this[ulong index] => this[index];
+#endif
+        }
+
+        public interface IULongIndexableW<in T> : IULongIndexableW
+        {
+            new T this[ulong index] { set; }
+
+#if CS8
+            object IULongIndexableW.this[ulong index] { set => this[index] = (T)value; }
+#endif
+        }
+
+        public interface IULongIndexable<T> : IULongIndexableR<T>, IULongIndexableW<T>, IULongIndexable
+        {
+            // Left empty.
+        }
+    }
+
     public interface IEnumeratorInfo :
 #if !WinCopies3
 System.Collections.IEnumerator

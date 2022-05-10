@@ -17,23 +17,24 @@
 
 using WinCopies.Collections.DotNetFix.Generic;
 using WinCopies.Collections.Generic;
+
 #if WinCopies3
 using WinCopies.Collections.Enumeration.Generic;
 #endif
 
 namespace WinCopies.Collections.DotNetFix
 {
-    public class StringCollection : WinCopies.Collections.Generic.IReadOnlyList<string>
+    public class StringCollection : IReadOnlyList<string>
     {
         private readonly System.Collections.Specialized.StringCollection _sc;
 
-#if CS7
-        string System.Collections.Generic.IReadOnlyList<string>.this[int index] => _sc[index];
+        public string this[int index] => _sc[index];
 
+#if CS7
         int System.Collections.Generic.IReadOnlyCollection<string>.Count => _sc.Count;
 
 #if WinCopies3
-        int WinCopies.Collections.Generic.IReadOnlyList<string>.Count => _sc.Count;
+        int IReadOnlyList<string>.Count => _sc.Count;
 
         int ICountableEnumerable<string, Generic.ICountableEnumerator<string>>.Count => _sc.Count;
 #else
@@ -56,7 +57,7 @@ namespace WinCopies.Collections.DotNetFix
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
 
 #if WinCopies3
-        ICountableEnumerator<string> WinCopies.Collections.Generic.IReadOnlyList<string>.GetEnumerator() => GetCountableEnumerator();
+        ICountableEnumerator<string> IReadOnlyList<string>.GetEnumerator() => GetCountableEnumerator();
 
         ICountableEnumerator<string> ICountableEnumerable<string, ICountableEnumerator<string>>.GetEnumerator() => GetCountableEnumerator();
 
@@ -77,6 +78,8 @@ namespace WinCopies.Collections.DotNetFix
 #endif
 
 #if WinCopies3
+        object IIndexableR.this[int index] => this[index];
+
         int ICountable.Count => _sc.Count;
 
         ICountableEnumerator<string> Enumeration.DotNetFix.IEnumerable<ICountableEnumerator<string>>.GetEnumerator() => GetCountableEnumerator();

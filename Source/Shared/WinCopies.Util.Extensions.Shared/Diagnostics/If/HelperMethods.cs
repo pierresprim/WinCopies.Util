@@ -37,7 +37,7 @@ namespace WinCopies.Diagnostics
 
                     return result == 0;
 
-                case IfComp.LesserOrEqual:
+                case IfComp.LessOrEqual:
 
                     return result <= 0;
 
@@ -45,7 +45,7 @@ namespace WinCopies.Diagnostics
 
                     return result >= 0;
 
-                case IfComp.Lesser:
+                case IfComp.Less:
 
                     return result < 0;
 
@@ -65,7 +65,7 @@ namespace WinCopies.Diagnostics
 
         internal static bool CheckEqualityComparison(in IfComp comparison, in object value, in object valueToCompare, in Func<bool> predicateResult, in EqualityComparison comparisonDelegate)
         {
-            if (comparison == IfComp.ReferenceEqual && !value.GetType().IsClass) throw new InvalidOperationException("ReferenceEqual comparison is only valid with class types.");
+            if (comparison == IfComp.ReferenceEqual && value.GetType().IsValueType) throw new InvalidOperationException($"{nameof(IfComp.ReferenceEqual)} comparison is only valid with class types.");
 
             if (comparison != IfComp.NotEqual && !predicateResult()) return false;
 
