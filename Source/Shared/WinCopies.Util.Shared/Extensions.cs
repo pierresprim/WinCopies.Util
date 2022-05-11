@@ -4194,7 +4194,7 @@ namespace WinCopies.Util
 
             // If not, we have to check if the given value is a power of 2.
 
-            double valueDouble = (double)Convert.ChangeType(value, TypeCode.Double);
+            double valueDouble = (double)System.Convert.ChangeType(value, TypeCode.Double);
 
             // If yes and if we reached this point, that means that the value is a power of 2 -- and therefore represents a flag in the enum --, but is not defined in the enum.
 
@@ -4254,7 +4254,7 @@ namespace WinCopies.Util
         {
             if (!@enum.IsValidFlagsEnumValue(throwIfNotFlagsEnum, throwIfZero))
 
-                throw new InvalidEnumArgumentException(argumentName, (int)Convert.ChangeType(@enum, TypeCode.Int32), @enum.GetType());
+                throw new InvalidEnumArgumentException(argumentName, (int)System.Convert.ChangeType(@enum, TypeCode.Int32), @enum.GetType());
         }
 
         public static void ThrowIfNotFlagsEnum(this Enum value, in string argumentName)

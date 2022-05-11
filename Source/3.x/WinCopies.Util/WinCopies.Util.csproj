@@ -9,10 +9,10 @@
 		<AssemblyOriginatorKeyFile>WinCopies.Util.snk</AssemblyOriginatorKeyFile>
 		<Description>WinCopies framework utilities</Description>
 		<PackageTags>WinCopies</PackageTags>
-		<VersionPrefix>3.16</VersionPrefix>
+		<VersionPrefix>3.17</VersionPrefix>
 		<VersionSuffix>preview</VersionSuffix>
-		<AssemblyVersion>3.16.0</AssemblyVersion>
-		<FileVersion>3.16</FileVersion>
+		<AssemblyVersion>3.17.0</AssemblyVersion>
+		<FileVersion>3.17</FileVersion>
 		<RootNamespace>WinCopies</RootNamespace>
 		<DefineConstants>WinCopies3;$(DefineConstants)</DefineConstants>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>

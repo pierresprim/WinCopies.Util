@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>AttachedCommandBehaviorDemo.snk</AssemblyOriginatorKeyFile>
@@ -24,6 +24,10 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Source\3.x\WinCopies.Util.Desktop\WinCopies.Util.Desktop.csproj" />
   </ItemGroup>
 
 </Project>

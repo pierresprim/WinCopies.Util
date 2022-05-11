@@ -1,5 +1,5 @@
-﻿WinCopies-framework (WinCopies.Util.Desktop package)
-====================================================
+﻿WinCopies-framework (WinCopies.Util.Desktop package / 3.x)
+==========================================================
 
 The WinCopies® software framework
 

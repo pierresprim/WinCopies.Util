@@ -8,6 +8,7 @@ CHANGELOG
 
 ### ???? 3.17-preview
 
+- See 3.16-preview erratum.
 - ReadOnlyLinkedDictionary:
 	- bug fixed: key/value collection properties were not initialized.
 	- empty constructor is now protected.
@@ -67,7 +68,7 @@ CHANGELOG
 
 ### 11/03/2021 3.16-preview
 
-- EnumeratorInfoBase has a new abstract method (ResetOverride2).
+- EnumeratorInfoBase has a new abstract method (ResetOverride2). This method should be overridden instead of ResetOverride.
 
 ### 3.15-preview
 

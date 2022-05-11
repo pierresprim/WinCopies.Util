@@ -10,10 +10,10 @@
 		<AssemblyOriginatorKeyFile>WinCopies.Util.Desktop.snk</AssemblyOriginatorKeyFile>
 		<DocumentationFile>WinCopies.Util.Desktop.xml</DocumentationFile>
 		<PackageTags>WinCopies</PackageTags>
-		<VersionPrefix>3.16</VersionPrefix>
+		<VersionPrefix>3.17</VersionPrefix>
 		<VersionSuffix>preview</VersionSuffix>
-		<AssemblyVersion>3.16.0</AssemblyVersion>
-		<FileVersion>3.16</FileVersion>
+		<AssemblyVersion>3.17.0</AssemblyVersion>
+		<FileVersion>3.17</FileVersion>
 		<RootNamespace>WinCopies.Desktop</RootNamespace>
 		<DefineConstants>WinCopies3;$(DefineConstants)</DefineConstants>
 	</PropertyGroup>
@@ -33,6 +33,14 @@
 
 	<ItemGroup Condition="$(DefineConstants.Contains('CS9'))">
 		<PackageReference Include="System.Drawing.Common" Version="5.0.0" />
+	</ItemGroup>
+
+	<ItemGroup Condition="$(DefineConstants.Contains('CS10'))">
+		<PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+	</ItemGroup>
+
+	<ItemGroup Condition="$(DefineConstants.Contains('CS11'))">
+		<PackageReference Include="System.Drawing.Common" Version="7.0.0" />
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)'=='netcoreapp3.0'">

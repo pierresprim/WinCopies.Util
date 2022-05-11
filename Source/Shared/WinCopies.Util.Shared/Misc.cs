@@ -19,14 +19,16 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
-using WinCopies.Util;
 using static WinCopies.
 #if WinCopies3
-    ThrowHelper
+    ThrowHelper;
+
+using WinCopies.Util;
 #else
-    Util.Util
+    Util.Util;
+
+using static WinCopies.Util.ThrowHelper;
 #endif
-    ;
 
 namespace WinCopies
 #if !WinCopies3

@@ -182,21 +182,36 @@ Current
                 _firstValue = default;
 
 #if !WinCopies3
-            _completed = false;
+                _completed = false;
 #endif
 
                 InitDelegate();
             }
 
-            protected override void DisposeUnmanaged()
+            protected
+#if WinCopies3
+                override
+#endif
+            void DisposeUnmanaged()
             {
+#if WinCopies3
                 base.DisposeUnmanaged();
+#endif
 
                 _joinEnumerator = null;
                 _firstValue = default;
                 _moveNext = null;
             }
+
+#if !WinCopies3
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            DisposeUnmanaged();
         }
+#endif
+    }
 
         public sealed class JoinEnumerator<T> :
 #if WinCopies3

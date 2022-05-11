@@ -18,14 +18,17 @@
 using System;
 using System.Collections.Generic;
 
+using static WinCopies.
+#if WinCopies3
+    UtilHelpers;
+using static WinCopies.ThrowHelper;
+
 using WinCopies.Collections.DotNetFix;
 using WinCopies.Collections.DotNetFix.Generic;
-
-using static WinCopies.
-#if !WinCopies3
-    Util.Util;
 #else
-ThrowHelper;
+    Util.Util;
+
+using WinCopies.Util;
 #endif
 
 namespace WinCopies.Collections
@@ -162,7 +165,7 @@ namespace WinCopies.Collections
 #if WinCopies3
                 CurrentOverride
 #else
-                _current 
+                _current
 #endif
                 : throw new InvalidOperationException("The enumeration has not been started or has completed.");
 
@@ -313,9 +316,9 @@ namespace WinCopies.Collections
 #endif
         public abstract class Enumerator<T> :
 #if WinCopies3
-            EnumeratorInfoBase, IDisposableEnumerator<T>, IDisposableEnumeratorInfo, IEnumeratorInfo2<T>
+                EnumeratorInfoBase, IDisposableEnumerator<T>, IDisposableEnumeratorInfo, IEnumeratorInfo2<T>
 #else
-            System.Collections.Generic.IEnumerator<T>, WinCopies.Util.DotNetFix.IDisposable
+        System.Collections.Generic.IEnumerator<T>, WinCopies.Util.DotNetFix.IDisposable
 #endif
         {
 #if !WinCopies3
@@ -330,25 +333,25 @@ namespace WinCopies.Collections
             /// <exception cref="InvalidOperationException">The enumerator is disposed.</exception>
             public T Current
 #if !WinCopies3
-            {
-                get
+        {
+            get
 #endif
                 => IsDisposed ? throw GetExceptionForDispose(false) :
 #if WinCopies3
-                    IsStarted
+                        IsStarted
 #else
-                    _enumerationStarted
+                _enumerationStarted
 #endif
                     ?
 #if WinCopies3
-                CurrentOverride
+                    CurrentOverride
 #else
-                _current
+            _current
 #endif
                 : throw new InvalidOperationException("The enumeration has not been started or has completed.");
 #if !WinCopies3
-                protected set => _current = IsDisposed ? throw GetExceptionForDispose(false) : value;
-            }
+            protected set => _current = IsDisposed ? throw GetExceptionForDispose(false) : value;
+        }
 #endif
 
             /// <summary>
@@ -359,11 +362,11 @@ namespace WinCopies.Collections
 #endif
             protected
 #if WinCopies3
-abstract
+    abstract
 #else
             virtual
 #endif
-T CurrentOverride
+    T CurrentOverride
             { get; }
 
             object System.Collections.IEnumerator.Current => Current;
@@ -470,18 +473,18 @@ T CurrentOverride
 
         public abstract class Enumerator<TSource, TEnumSource, TDestination
 #if !WinCopies3
-            , TEnumDestination
+        , TEnumDestination
 #endif
             > :
 #if WinCopies3
-            Enumerator<TDestination>
+                Enumerator<TDestination>
 #else
-            System.Collections.Generic.IEnumerator<TDestination>, WinCopies.Util.DotNetFix.IDisposable
-            
+        System.Collections.Generic.IEnumerator<TDestination>, WinCopies.Util.DotNetFix.IDisposable
+
 #endif
             where TEnumSource : System.Collections.Generic.IEnumerator<TSource>
 #if !WinCopies3
-            where TEnumDestination : System.Collections.Generic.IEnumerator<TDestination>
+        where TEnumDestination : System.Collections.Generic.IEnumerator<TDestination>
 #endif
         {
             private TEnumSource _innerEnumerator;
@@ -494,7 +497,7 @@ T CurrentOverride
         public TDestination Current { get => IsDisposed ? throw GetExceptionForDispose(false) : _current; protected set => _current = IsDisposed ? throw GetExceptionForDispose(false) : value; }
 
         object System.Collections.IEnumerator.Current => Current;
-        
+
         public bool IsDisposed { get; private set; }
 
         protected abstract bool MoveNextOverride();
@@ -547,9 +550,9 @@ T CurrentOverride
 
             protected
 #if WinCopies3
-                override void ResetOverride2
+                    override void ResetOverride2
 #else
-                virtual void ResetOverride
+            virtual void ResetOverride
 #endif
             ()
             {
@@ -561,7 +564,7 @@ T CurrentOverride
 
             protected
 #if WinCopies3
-                override void DisposeManaged()
+                    override void DisposeManaged()
             {
                 base.DisposeManaged();
 
@@ -570,13 +573,13 @@ T CurrentOverride
                 _innerEnumerator = default;
             }
 #else
-            virtual void Dispose(bool disposing) => _innerEnumerator = default;
+        virtual void Dispose(bool disposing) => _innerEnumerator = default;
 #endif
         }
 
         public abstract class Enumerator<TSource, TDestination> : Enumerator<TSource, System.Collections.Generic.IEnumerator<TSource>, TDestination
 #if !WinCopies3
-            , System.Collections.Generic.IEnumerator<TDestination>
+        , System.Collections.Generic.IEnumerator<TDestination>
 #endif
             >
         {
@@ -713,14 +716,18 @@ T CurrentOverride
             private bool _move;
             private T _current;
 
+#if WinCopies3
             public override bool? IsResetSupported => true;
+#endif
 
             protected override T CurrentOverride => _current;
 
             public bool TryUpdateCurrent(in T value)
             {
+#if WinCopies3
                 if (IsResetSupported != false)
                 {
+#endif
                     Reset();
 
                     _current = IsDisposed ? throw GetExceptionForDispose(false) : value;
@@ -728,9 +735,11 @@ T CurrentOverride
                     _move = true;
 
                     return true;
+#if WinCopies3
                 }
 
                 return false;
+#endif
             }
 
             public void UpdateCurrent(in T value)
@@ -740,19 +749,43 @@ T CurrentOverride
                     throw new InvalidOperationException("The current enumerator does not support resetting.");
             }
 
-            protected override bool MoveNextOverride() => UtilHelpers.UpdateValue(ref _move);
+            protected override bool MoveNextOverride() => UpdateValue(ref _move);
 
-            protected override void ResetOverride2() => _move = true;
-
-            protected override void ResetCurrent()
+            protected
+#if WinCopies3
+                override
+#endif
+                void ResetCurrent()
             {
+#if WinCopies3
                 base.ResetCurrent();
+#endif
 
                 _move = false;
                 _current = default;
             }
 
-            public override void Dispose() { /* Left empty. */ }
+            protected override void
+
+#if WinCopies3
+                ResetOverride2
+#else
+                ResetOverride
+#endif
+                ()
+#if WinCopies3
+                =>
+#else
+            {
+                ResetCurrent();
+
+#endif
+                _move = true;
+#if !WinCopies3
+                base.ResetOverride();
+
+            }
+#endif
         }
 
         public class WhileEnumerator<T> : Enumerator<T>
@@ -764,7 +797,9 @@ T CurrentOverride
 
             protected Predicate<T> Predicate { get; }
 
+#if WinCopies3
             public override bool? IsResetSupported => false;
+#endif
 
             protected override T CurrentOverride => _current;
 
@@ -774,7 +809,7 @@ T CurrentOverride
 
                 Predicate = predicate;
 
-                _moveNext = () => UtilHelpers.PerformActionIf(first, predicate, () =>
+                _moveNext = () => PerformActionIf(first, predicate, () =>
                 {
                     _current = first;
 
@@ -784,14 +819,39 @@ T CurrentOverride
 
             protected override bool MoveNextOverride() => _moveNext();
 
-            protected override void ResetCurrent()
+            protected
+#if WinCopies3
+                override
+#endif
+                void ResetCurrent()
+#if WinCopies3
             {
+#else
+                =>
+#endif
                 _current = default;
 
+#if WinCopies3
                 base.ResetCurrent();
             }
+#endif
 
-            protected override void ResetOverride2() { /* Left empty. */ }
+            protected
+#if WinCopies3
+                override
+#endif
+                void
+#if WinCopies3
+                ResetOverride2
+#else
+                ResetOverride
+#endif
+                ()
+#if WinCopies3
+            { /* Left empty. */ }
+#else
+                => ResetCurrent();
+#endif
         }
 
         public class SkipEnumerator<T> : Enumerator<T>
@@ -813,7 +873,9 @@ T CurrentOverride
 
             public int CurrentIndex { get; private set; }
 
+#if WinCopies3
             public override bool? IsResetSupported => true;
+#endif
 
             protected override T CurrentOverride => _current;
 
@@ -865,20 +927,35 @@ T CurrentOverride
                     - start)
             { /* Left empty. */ }
 
-            protected override bool MoveNextOverride() => UtilHelpers.PerformActionIf(CurrentIndex < Length, () => _current = InnerArray[CurrentIndex++]);
+            protected override bool MoveNextOverride() => PerformActionIf(CurrentIndex < Length, () => _current = InnerArray[CurrentIndex++]);
 
             protected virtual void ResetCurrentIndex() => CurrentIndex = Start;
 
-            protected override void ResetCurrent()
+            protected
+#if WinCopies3
+                override
+#endif
+                void ResetCurrent()
             {
                 _current = default;
 
                 ResetCurrentIndex();
 
+#if WinCopies3
                 base.ResetCurrent();
+#endif
             }
 
-            protected override void ResetOverride2() { /* Left empty. */ }
+            protected
+#if WinCopies3
+                override
+#endif
+                void ResetOverride2()
+#if WinCopies3
+            { /* Left empty. */ }
+#else
+                => ResetCurrent();
+#endif
         }
     }
 }

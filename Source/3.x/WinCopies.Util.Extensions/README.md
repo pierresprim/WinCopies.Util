@@ -1,5 +1,5 @@
-﻿WinCopies-framework (WinCopies.Util.Extensions package)
-=======================================================
+﻿WinCopies-framework (WinCopies.Util.Extensions package / 3.x)
+=============================================================
 
 The WinCopies® software framework
 

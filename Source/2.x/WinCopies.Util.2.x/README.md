@@ -1,5 +1,5 @@
-﻿WinCopies-framework (WinCopies.Util package)
-============================================
+﻿WinCopies-framework (WinCopies.Util package / 2.x)
+==================================================
 
 The WinCopies® software framework
 

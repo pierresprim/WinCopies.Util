@@ -299,7 +299,7 @@
         </member>
         <member name="F:WinCopies.Util.Result.None">
             <summary>
-            The operation did not return any particular value. This value is the same as returning a <see langword="null"/> <see cref="T:System.Nullable`1"/>.
+            The operation did not return any particular value. This value is the same as returning a <see langword="null"/> <see cref="T:WinCopies.Util.Nullable`1"/>.
             </summary>
         </member>
         <member name="F:WinCopies.Util.Result.False">
@@ -2571,15 +2571,7 @@
             </summary>
             <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.TryPeek(`0@)"/>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.TryPeek(`0@)">
-            <summary>
-            Tries to peek the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/> without removing it.
-            </summary>
-            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
-            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been retrieved.</returns>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.Peek"/>
+            <seealso cref="!:TryPeek(out TItems)"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection`1.GetEnumerator">
             <summary>
@@ -2622,15 +2614,7 @@
             </summary>
             <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.StackCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.StackCollection`1"/> is empty.</exception>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.ReadOnlyStackCollection`1.TryPeek(`0@)"/>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.ReadOnlyStackCollection`1.TryPeek(`0@)">
-            <summary>
-            Tries to peek the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.StackCollection`1"/> without removing it.
-            </summary>
-            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.StackCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
-            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been retrieved.</returns>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.ReadOnlyStackCollection`1.Peek"/>
+            <seealso cref="!:TryPeek(out T)"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.ReadOnlyStackCollection`1.GetEnumerator">
             <summary>
@@ -3777,6 +3761,23 @@
             Returns a value obtained by a <see cref="T:WinCopies.Util.Func"/>, depending on the result of a comparison.
             </summary>
             <param name="x">The value to compare to <paramref name="y"/>.</param>
+            <param name="y">The value to compare to <paramref name="x"/>.</param>
+            <param name="comparison">The comparison delegate.</param>
+            <param name="lower">The <see cref="T:WinCopies.Util.Func"/> that provides the value for <paramref name="x"/> is lower than <paramref name="y"/>.</param>
+            <param name="equals">The <see cref="T:WinCopies.Util.Func"/> that provides the value for <paramref name="x"/> is equal to <paramref name="y"/>.</param>
+            <param name="greater">The <see cref="T:WinCopies.Util.Func"/> that provides the value for <paramref name="x"/> is greater than <paramref name="y"/>.</param>
+            <returns>A value obtained by a <see cref="T:WinCopies.Util.Func"/>, depending on the result of a comparison.</returns>
+            <exception cref="T:System.ArgumentNullException">One or more of the given <see cref="T:WinCopies.Util.Func"/>s are <see langword="null"/>.</exception>
+            <remarks>See <see cref="M:WinCopies.Extensions.UtilHelpers.GetIf(System.Object@,System.Object@,WinCopies.Collections.Comparison@,WinCopies.Util.Func@,WinCopies.Util.Func@,WinCopies.Util.Func@)"/> for the non-generic version.</remarks>
+        </member>
+        <member name="M:WinCopies.ActionDictionaryBase`2.DisposeUnmanaged">
+            <summary>
+            This method is called by <see cref="M:WinCopies.ActionDictionaryBase`2.Dispose"/> and by the deconstructor. This overload does nothing and it is not necessary to call this base overload in derived classes.
+            </summary>
+        </member>
+    </members>
+</doc>
+
             <param name="y">The value to compare to <paramref name="x"/>.</param>
             <param name="comparison">The comparison delegate.</param>
             <param name="lower">The <see cref="T:WinCopies.Util.Func"/> that provides the value for <paramref name="x"/> is lower than <paramref name="y"/>.</param>

@@ -19,12 +19,12 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 
 using WinCopies.Collections;
 using WinCopies.Util;
 
 using IfCT = WinCopies.Diagnostics.ComparisonType;
-using System.Reflection;
 
 #if WinCopies3
 using WinCopies.Collections.Generic;
@@ -40,15 +40,7 @@ namespace WinCopies.Extensions // To avoid name conflicts.
 {
     public static class Extensions
     {
-#if !WinCopies3
-        internal static void ThrowIfNotValidEnumValue(in string argumentName, in Enum @enum)
-        {
-            if (!@enum.IsValidEnumValue()) throw new InvalidEnumArgumentException(argumentName, @enum);
-
-            // .GetType().IsEnumDefined(@enum)
-        }
-#endif
-
+#if WinCopies3
         public static System.Collections.Generic.IReadOnlyList<Type> GetRealGenericParameters(this Type type)
         {
             Type[] array = type.GetGenericArguments();
@@ -57,6 +49,14 @@ namespace WinCopies.Extensions // To avoid name conflicts.
 
             return new SubReadOnlyList<Type>(array, length == 0 ? 0 : array.Length - length);
         }
+#else
+        internal static void ThrowIfNotValidEnumValue(in string argumentName, in Enum @enum)
+        {
+            if (!@enum.IsValidEnumValue()) throw new InvalidEnumArgumentException(argumentName, @enum);
+
+            // .GetType().IsEnumDefined(@enum)
+        }
+#endif
 
         public static bool HasFlag(this Enum @enum, System.Collections.Generic.IEnumerable<Enum> values)
         {
