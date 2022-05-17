@@ -33,7 +33,12 @@
 
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
+
+	<ItemGroup Condition="'$(Configuration)'=='Release'">
+		<None Include="README.md" Pack="true" PackagePath="" />
+	</ItemGroup>
 
 	<PropertyGroup Condition="'$(TargetFramework.TrimEnd(`0123456789.`))'=='netcoreapp'">
 		<DefineConstants>CS4;CS5;CS6;CS7;CS8;NETCORE;$(DefineConstants)</DefineConstants>

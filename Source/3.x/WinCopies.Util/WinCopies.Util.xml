@@ -75,6 +75,11 @@
               Looks up a localized string similar to The given type is not supported..
             </summary>
         </member>
+        <member name="P:WinCopies.Resources.ExceptionMessages.IndexOutOfRange">
+            <summary>
+              Looks up a localized string similar to The index passed to parameter {0} was out of range..
+            </summary>
+        </member>
         <member name="P:WinCopies.Resources.ExceptionMessages.InvalidArgument">
             <summary>
               Looks up a localized string similar to The argument passed to parameter {0} is not supported..
@@ -118,6 +123,11 @@
         <member name="P:WinCopies.Resources.ExceptionMessages.OneOrMoreSameKey">
             <summary>
               Looks up a localized string similar to &apos;{0}&apos; has one or more same key..
+            </summary>
+        </member>
+        <member name="P:WinCopies.Resources.ExceptionMessages.Overflow">
+            <summary>
+              Looks up a localized string similar to The argument passed to parameter {0} caused an overflow..
             </summary>
         </member>
         <member name="P:WinCopies.Resources.ExceptionMessages.ParameterIsNotAnExpectedValue">
@@ -653,31 +663,6 @@
             <summary>
             The operation returned True. This value is the same number as <see langword="true"/>.
             </summary>
-        </member>
-        <member name="M:WinCopies.InvalidArgumentException.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:WinCopies.InvalidArgumentException"/> class.
-            </summary>
-        </member>
-        <member name="M:WinCopies.InvalidArgumentException.#ctor(System.String@)">
-            <summary>
-            Initializes a new instance of the <see cref="T:WinCopies.InvalidArgumentException"/> class with the name of the parameter that causes this exception.
-            </summary>
-            <param name="paramName">The name of the parameter that caused the current exception.</param>
-        </member>
-        <member name="M:WinCopies.InvalidArgumentException.#ctor(System.String@,System.Exception@)">
-            <summary>
-            Initializes a new instance of the <see cref="T:WinCopies.InvalidArgumentException"/> class with the name of the parameter that causes this exception.
-            </summary>
-            <param name="paramName">The name of the parameter that caused the current exception.</param>
-            <param name="innerException">The exception that is the cause of the current exception. If the innerException parameter is not a null reference, the current exception is raised in a catch block that handles the inner exception.</param>
-        </member>
-        <member name="M:WinCopies.InvalidArgumentException.#ctor(System.Runtime.Serialization.SerializationInfo@,System.Runtime.Serialization.StreamingContext@)">
-            <summary>
-            Initializes a new instance of the System.ArgumentException class with serialized data.
-            </summary>
-            <param name="info">The object that holds the serialized object data.</param>
-            <param name="context">The contextual information about the source or destination.</param>
         </member>
         <member name="T:WinCopies.ThrowHelper">
             <summary>

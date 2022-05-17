@@ -688,6 +688,11 @@
             </summary>
             <param name="enumerator">The enumerator to enumerate.</param>
         </member>
+        <member name="M:WinCopies.Collections.Generic.SingletonEnumerator`1.Dispose">
+            <summary>
+            Disposing is disabled for the <see cref="T:WinCopies.Collections.Generic.SingletonEnumerator`1"/> class because this enumerator does not have to be disposed and does not support it. Calling this method from this class will not do anything, as it was left empty.
+            </summary>
+        </member>
         <member name="P:WinCopies.Collections.Generic.JoinSubEnumerator`1.CurrentOverride">
             <summary>
             When overridden in a derived class, gets the element in the collection at the current position of the enumerator.

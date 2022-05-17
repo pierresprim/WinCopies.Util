@@ -787,7 +787,16 @@ namespace WinCopies.Collections
             /// <summary>
             /// Disposing is disabled for the <see cref="SingletonEnumerator{T}"/> class because this enumerator does not have to be disposed and does not support it. Calling this method from this class will not do anything, as it was left empty.
             /// </summary>
-            public override void Dispose() { /* Left empty. */ }
+#if WinCopies3
+            public
+#else
+            protected
+#endif
+            override void Dispose(
+#if !WinCopies3
+                bool disposing
+#endif
+                ) { /* Left empty. */ }
         }
 
         public class WhileEnumerator<T> : Enumerator<T>

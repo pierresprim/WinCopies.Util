@@ -11,6 +11,7 @@ CHANGELOG
 - Add new types.
 - WinCopies.Collections(.Generic): SelectEnumerator\<TSource, TDestination>, JoinEnumerator\<T>, EmptyCheckEnumerator, EmptyCheckEnumerator\<T> override ResetOverride2 instead of ResetOverride.
 - InvalidArgumentException has benn replaced with ThrowHelper.Get/ThrowArgumentException methods.
+- Bug fixes.
 
 ### 05/11/2022 3.17-preview
 

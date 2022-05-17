@@ -34,11 +34,13 @@ namespace WinCopies.Collections
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
+#if WinCopies3
         public static System.Collections.Generic.IEnumerable<T> GetEnumerable<T>(System.Collections.Generic.IEnumerator<T> enumerator) => new Generic.Enumerable<T>(() => enumerator);
 
         public static System.Collections.Generic.IEnumerable<T> GetNullCheckWhileEnumerable<T>(T first, Converter<T, T> converter) => new Generic.Enumerable<T>(() => Enumerator.GetNullCheckWhileEnumerator(first, converter));
 
         public static System.Collections.Generic.IEnumerable<T> GetNullCheckWhileEnumerableC<T>(T first, Converter<T, T> converter) => GetEnumerable(Enumerator.GetNullCheckWhileEnumerator(first, converter));
+#endif
     }
 
 #if WinCopies3
@@ -127,7 +129,7 @@ namespace WinCopies.Collections
     namespace Generic
     {
 #endif
-        public interface IDisposableEnumerable : IEnumerable, System.IDisposable
+    public interface IDisposableEnumerable : IEnumerable, System.IDisposable
         {
             // Left empty.
         }

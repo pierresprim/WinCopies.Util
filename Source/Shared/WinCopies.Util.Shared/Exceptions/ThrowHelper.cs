@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using System.Globalization;
 
 using WinCopies.Util;
-using WinCopies.Resources;
 
 using static WinCopies.
 #if !WinCopies3
