@@ -150,6 +150,9 @@
   <data name="GivenTypeIsNotSupported" xml:space="preserve">
     <value>The given type is not supported.</value>
   </data>
+  <data name="IndexOutOfRange" xml:space="preserve">
+    <value>The index passed to parameter {0} was out of range.</value>
+  </data>
   <data name="InvalidArgument" xml:space="preserve">
     <value>The argument passed to parameter {0} is not supported.</value>
   </data>
@@ -176,6 +179,9 @@
   </data>
   <data name="OneOrMoreSameKey" xml:space="preserve">
     <value>'{0}' has one or more same key.</value>
+  </data>
+  <data name="Overflow" xml:space="preserve">
+    <value>The argument passed to parameter {0} caused an overflow.</value>
   </data>
   <data name="ParameterIsNotAnExpectedValue" xml:space="preserve">
     <value>'{0}' is not an expected value.</value>

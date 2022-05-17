@@ -20,13 +20,17 @@ using System.Collections.Generic;
 using System.Globalization;
 
 using WinCopies.Util;
+using WinCopies.Resources;
 
+using static WinCopies.
+#if !WinCopies3
+    Util.
+#endif
+    Resources.ExceptionMessages;
 #if WinCopies3
 using static WinCopies.UtilHelpers;
-using static WinCopies.Resources.ExceptionMessages;
 #else
 using static WinCopies.Util.Util;
-using static WinCopies.Util.Resources.ExceptionMessages;
 #endif
 
 namespace WinCopies
@@ -39,6 +43,30 @@ namespace WinCopies
     /// </summary>
     public static class ThrowHelper
     {
+        public static OverflowException GetOverflowException(in string paramName) => new
+#if !CS9
+            OverflowException
+#endif
+            (Format(Overflow, paramName));
+
+        public static void ThrowOverflowException(in string paramName) => throw GetOverflowException(paramName);
+
+        public static ArgumentException GetArgumentException(in string paramName) => new
+#if !CS9
+            ArgumentException
+#endif
+            (Format(InvalidArgument, paramName));
+
+        public static void ThrowArgumentException(in string paramName) => throw GetArgumentException(paramName);
+
+        public static IndexOutOfRangeException GetIndexOutOfRangeException(in string paramName) => new
+#if !CS9
+            IndexOutOfRangeException
+#endif
+            (Format(IndexOutOfRange, paramName));
+
+        public static void ThrowIndexOutOfRangeException(in string paramName) => throw GetIndexOutOfRangeException(paramName);
+
         public static InvalidCastException GetInvalidCastException(in Type
 #if CS8
             ?

@@ -22,12 +22,12 @@ using System.Threading;
 
 using static WinCopies.Util.Desktop.ThrowHelper;
 
-#if !WinCopies3
-namespace WinCopies.Util
-#else
+#if WinCopies3
 using WinCopies.Desktop;
 
 namespace WinCopies
+#else
+namespace WinCopies.Util
 #endif
 {
     /// <summary>
@@ -116,9 +116,7 @@ namespace WinCopies
             {
                 if (_ApartmentState == value) return;
 
-                else if (value == ApartmentState.Unknown) throw new InvalidArgumentException(nameof(value));
-
-                _ = this.SetBackgroundWorkerProperty(nameof(ApartmentState), nameof(_ApartmentState), value, typeof(BackgroundWorker), true);
+                _ = value == ApartmentState.Unknown ? throw ThrowHelper.GetArgumentException(nameof(value)) : this.SetBackgroundWorkerProperty(nameof(ApartmentState), nameof(_ApartmentState), value, typeof(BackgroundWorker), true);
             }
         }
 
@@ -198,10 +196,7 @@ namespace WinCopies
 
             //Exception error = null;
 
-            _Thread = new Thread(() => ThreadStart(new DoWorkEventArgs(argument)))
-            {
-                IsBackground = true
-            };
+            _Thread = new Thread(() => ThreadStart(new DoWorkEventArgs(argument))) { IsBackground = true };
 
             _Thread.SetApartmentState(_ApartmentState);
 

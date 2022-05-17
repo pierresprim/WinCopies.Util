@@ -58,6 +58,38 @@ namespace WinCopies.Util
         /// </summary>
         public static class Extensions
         {
+            public static Action<T> ToParameterizedAction<T>(this Action action) => value => action();
+
+            public static Action ToConditionalAction(this Action action, bool condition) => () =>
+            {
+                if (condition)
+
+                    action();
+            };
+
+            public static Action ToConditionalAction(this Action action, Func<bool> func) => action.ToConditionalAction(func());
+
+            public static Action<T> ToConditionalAction<T>(this Action<T> action, bool condition) => value =>
+            {
+                if (condition)
+
+                    action(value);
+            };
+
+            public static Action<T> ToConditionalAction<T>(this Action<T> action, Predicate<T> predicate) => value =>
+            {
+                if (predicate(value))
+
+                    action(value);
+            };
+
+            public static Action<T1,T2> ToConditionalAction2<T1,T2>(this Action<T1> action, Predicate<T2> predicate) => (T1 value1,T2 value2) =>
+            {
+                if (predicate(value2))
+
+                    action(value1);
+            };
+
             public static Func<bool> ToBoolFunc(this Action action) => () =>
             {
                 action();
@@ -598,7 +630,7 @@ namespace WinCopies.Util
 #if CS5
                 => array.AsFromType<IReadOnlyList<T>>().GetFromLast(indexation);
 
-            public static T GetFromLast<T>(this IReadOnlyList<T> array, int indexation) 
+            public static T GetFromLast<T>(this IReadOnlyList<T> array, int indexation)
 #endif
                 => array.GetFromLast<
 #if CS5

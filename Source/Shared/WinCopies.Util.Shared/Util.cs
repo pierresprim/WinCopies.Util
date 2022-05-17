@@ -20,6 +20,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 #if CS6
@@ -68,6 +69,374 @@ namespace WinCopies.Util
         Util
 #endif
     {
+        public static IEnumerable<U> GetArrayEnumerable<T, U>(IEnumerable<U> arrays, IEnumerable<U> right) where U : IEnumerable<T>
+        {
+            foreach (U array in arrays)
+
+                yield return array;
+
+            foreach (U array in right)
+
+                yield return array;
+        }
+
+        public static IEnumerable<U> GetArrayEnumerable<T, U>(in IEnumerable<U> arrays, params U[] right) where U : IEnumerable<T> => GetArrayEnumerable<T, U>(arrays, right.AsEnumerable());
+
+        public static IEnumerable<U> GetArrayEnumerable<T, U>(U left, IEnumerable<U> arrays, IEnumerable<U> right) where U : IEnumerable<T>
+        {
+            yield return left;
+
+            foreach (U array in GetArrayEnumerable<T, U>(arrays, right))
+
+                yield return array;
+        }
+
+        public static IEnumerable<U> GetArrayEnumerable<T, U>(in U left, in IEnumerable<U> arrays, params U[] right) where U : IEnumerable<T> => GetArrayEnumerable<T, U>(left, arrays, right.AsEnumerable());
+
+        public static IEnumerable<U> GetArrayEnumerable<T, U>(IEnumerable<U> left, IEnumerable<U> arrays, IEnumerable<U> right) where U : IEnumerable<T>
+        {
+            foreach (U array in left)
+
+                yield return array;
+
+            foreach (U array in GetArrayEnumerable<T, U>(arrays, right))
+
+                yield return array;
+        }
+
+        public static IEnumerable<U> GetArrayEnumerable<T, U>(T left, IEnumerable<U> arrays, T right, Converter<T, U> converter) where U : IEnumerable<T>
+        {
+            yield return converter(left);
+
+            foreach (U array in arrays)
+
+                yield return array;
+
+            yield return converter(right);
+        }
+
+        public static IEnumerable<U> GetArrayEnumerable<T, U>(in T left, in T right, Converter<T, U> converter, params U[] arrays) where U : IEnumerable<T> => GetArrayEnumerable<T, U>(left, arrays, right, converter);
+
+        public static string Format(string format, params object[] args) => string.Format(CultureInfo.CurrentCulture, format, args);
+
+        public static ulong GetLength<T>(in Converter<T, ulong> converter,
+#if CS5
+            IEnumerable<
+#else
+            params
+#endif
+            T
+#if CS5
+            >
+#else
+            []
+#endif
+            arrays)
+        {
+            ulong length = 0;
+
+            foreach (T array in arrays)
+
+                length += converter(array);
+
+            return length;
+        }
+
+        public static ulong GetLength<T>(Converter<T, int> converter,
+#if CS5
+            IEnumerable<
+#else
+            params
+#endif
+            T
+#if CS5
+            >
+#else
+            []
+#endif
+            arrays) => GetLength(value => (ulong)converter(value), arrays);
+
+#if CS5
+        public static ulong GetLength<T>(in Converter<T, ulong> converter, params T[] arrays) => GetLength(converter, arrays.AsEnumerable());
+
+        public static ulong GetLength<T>(in Converter<T, int> converter, params T[] arrays) => GetLength(converter, arrays.AsEnumerable());
+#endif
+
+        public static ulong GetLength<T>(
+#if CS5
+            IEnumerable<
+#else
+            params
+#endif
+#if CS5
+            IReadOnlyList<
+#endif
+            T
+#if CS5
+            >>
+#else
+            [][]
+#endif
+            arrays) => GetLength(GetULongLength, arrays);
+
+#if CS5
+        public static ulong GetLength<T>(params IReadOnlyList<T>[] arrays) => GetLength(arrays.AsEnumerable());
+#endif
+
+        public static T GetValue<T>(in Func<T> func, in Predicate<T> predicate, in T defaultValue)
+        {
+            T value = func();
+
+            return predicate(value) ? value : defaultValue;
+        }
+
+        public static T GetValueF<T>(in Func<T> func, in Predicate<T> predicate, in Func<T> defaultValue)
+        {
+            T value = func();
+
+            return predicate(value) ? value : defaultValue();
+        }
+
+        public static T GetValue<T>(in Func<T> func, in Predicate<T> predicate)
+        {
+            T value = func();
+
+            return predicate(value) ? value : default;
+        }
+
+        public static TOut GetValue<TIn, TOut>(in Func<TIn> func, in Predicate<TIn> predicate, in Converter<TIn, TOut> ifTrue, in Converter<TIn, TOut> ifFalse)
+        {
+            TIn value = func();
+
+            return (predicate(value) ? ifTrue : ifFalse)(value);
+        }
+
+        public static T GetValue<T>(in Func<T?> func, T defaultValue) where T : struct => GetValue(func, HasValue, Delegates.GetValue, value => default);
+
+        public static T GetValueF<T>(in Func<T?> func, Func<T> defaultValue) where T : struct => GetValue(func, HasValue, Delegates.GetValue, value => defaultValue());
+
+        public static T GetValue<T>(in Func<T?> func) where T : struct => GetValue(func, default);
+
+        public static TOut GetValue<TIn, TOut>(in Func<TIn> func, in Predicate<TIn> predicate, in Converter<TIn, TOut> converter, in TOut defaultValue)
+        {
+            TIn value = func();
+
+            return predicate(value) ? converter(value) : defaultValue;
+        }
+
+        public static TOut GetValueF<TIn, TOut>(in Func<TIn> func, in Predicate<TIn> predicate, in Converter<TIn, TOut> converter, in Func<TOut> defaultValue)
+        {
+            TIn value = func();
+
+            return predicate(value) ? converter(value) : defaultValue();
+        }
+
+        // TODO: should also exists as a foreach version.
+
+        public static int While<T>(in
+#if CS5
+            IReadOnlyList<
+#endif
+            Func<T>
+#if CS5
+            >
+#else
+            []
+#endif
+            funcs, in Predicate<T> predicate, out T value)
+        {
+            int i = 0;
+
+            for (; predicate(value = funcs[i]()) && i < funcs.
+#if CS5
+                Count
+#else
+                Length
+#endif
+                ; i++)
+            {
+                // Left empty.
+            }
+
+            return i;
+        }
+
+        public static TOut While<TIn, TOut>(
+#if CS5
+            IReadOnlyList<
+#endif
+            Func<TIn>
+#if CS5
+            >
+#else
+            []
+#endif
+            funcs, Predicate<TIn> predicate, Func<TIn, TOut> onError, out int result, out TIn value, out bool error)
+        {
+            TIn _value = default;
+
+            TOut _result = PerformAction((out TIn __value) => While(funcs, predicate, out __value), __value => __value < funcs.
+#if CS5
+                   Count
+#else
+                Length
+#endif
+                   , __value => onError(_value = __value), out result, out error);
+
+            value = _value;
+
+            return _result;
+        }
+
+        public static int While<T>(
+#if CS5
+            IReadOnlyList<
+#endif
+            Func<T>
+#if CS5
+            >
+#else
+            []
+#endif
+            funcs, Predicate<T> predicate, Action<T> onError, out T value, out bool error)
+        {
+            _ = While<T, object
+#if CS8
+                ?
+#endif
+                >(funcs, predicate, _value =>
+            {
+                onError(_value);
+
+                return null;
+            },
+            out int result, out value, out error);
+
+            return result;
+        }
+
+        public static T While<T>(
+#if CS5
+            IReadOnlyList<
+#endif
+            Func<T>
+#if CS5
+            >
+#else
+            []
+#endif
+            funcs, Predicate<T> predicate, Func<T> onError, out int value, out bool error) => While(funcs, predicate, _value => onError(), out value, out _, out error);
+
+        public static int While<T>(
+#if CS5
+            IReadOnlyList<
+#endif
+            Func<T>
+#if CS5
+            >
+#else
+            []
+#endif
+            funcs, Predicate<T> predicate, in Action onError, out T value, out bool error) => While(funcs, predicate, onError.ToParameterizedAction<T>(), out value, out error);
+
+        public static int While<T>(in
+#if CS5
+            IReadOnlyList<
+#endif
+            Func<T>
+#if CS5
+            >
+#else
+            []
+#endif
+            funcs, in Predicate<T> predicate) => While(funcs, predicate, out _);
+
+        public static TOut While<TIn, TOut>(
+#if CS5
+            IReadOnlyList<
+#endif
+            Func<TIn>
+#if CS5
+            >
+#else
+            []
+#endif
+            funcs, Predicate<TIn> predicate, Func<TIn, TOut> onError) => While(funcs, predicate, onError, out _, out _, out _);
+
+        public static int While<T>(
+#if CS5
+            IReadOnlyList<
+#endif
+            Func<T>
+#if CS5
+            >
+#else
+            []
+#endif
+            funcs, Predicate<T> predicate, Action<T> onError) => While(funcs, predicate, onError, out _, out _);
+
+        public static T While<T>(
+#if CS5
+            IReadOnlyList<
+#endif
+            Func<T>
+#if CS5
+            >
+#else
+            []
+#endif
+            funcs, Predicate<T> predicate, Func<T> onError) => While(funcs, predicate, onError, out _, out _);
+
+        public static int While<T>(
+#if CS5
+            IReadOnlyList<
+#endif
+            Func<T>
+#if CS5
+            >
+#else
+            []
+#endif
+            funcs, Predicate<T> predicate, in Action onError) => While(funcs, predicate, onError, out _, out _);
+
+#if CS5
+        public static int While<T>(in Predicate<T> predicate, out T value, params Func<T>[] funcs) => While(funcs, predicate, out value);
+
+        public static TOut While<TIn, TOut>(in Predicate<TIn> predicate, in Func<TIn, TOut> onError, out int result, out TIn value, out bool error, params Func<TIn>[] funcs) => While(funcs, predicate, onError, out result, out value, out error);
+
+        public static int While<T>(in Predicate<T> predicate, in Action<T> onError, out T value, out bool error, params Func<T>[] funcs) => While(funcs, predicate, onError, out value, out error);
+
+        public static int While<T>(in Predicate<T> predicate, in Action onError, out T value, out bool error, params Func<T>[] funcs) => While(funcs, predicate, onError, out value, out error);
+
+        public static int While<T>(in Predicate<T> predicate, params Func<T>[] funcs) => While(funcs, predicate);
+
+        public static TOut While<TIn, TOut>(in Predicate<TIn> predicate, in Func<TIn, TOut> onError, params Func<TIn>[] funcs) => While(funcs, predicate, onError);
+
+        public static int While<T>(in Predicate<T> predicate, in Action<T> onError, params Func<T>[] funcs) => While(funcs, predicate, onError);
+
+        public static int While<T>(in Predicate<T> predicate, in Action onError, params Func<T>[] funcs) => While(funcs, predicate, onError);
+
+        public static T While<T>(in Predicate<T> predicate, in Func<T> onError, out int value, out bool error, params Func<T>[] funcs) => While(funcs, predicate, onError, out value, out error);
+
+        public static T While<T>(in Predicate<T> predicate, in Func<T> onError, params Func<T>[] funcs) => While(funcs, predicate, onError);
+#endif
+
+        public static int While(in
+#if CS5
+            IReadOnlyList<
+#endif
+            Func<bool>
+#if CS5
+            >
+#else
+            []
+#endif
+            funcs) => While(funcs, Self);
+
+#if CS5
+        public static int While(params Func<bool>[] funcs) => While(funcs.AsFromType<IReadOnlyList<Func<bool>>>());
+#endif
+
         public static List<T> GetList<T>(params
 #if CS5
             IReadOnlyList<T>
@@ -128,7 +497,7 @@ namespace WinCopies.Util
                 )
 #endif
 
-            action(obj);
+                action(obj);
         }
 
         public static void UsingIn<T>(in Func<T> func, in ActionIn<T> action) where T : System.IDisposable
@@ -147,7 +516,7 @@ namespace WinCopies.Util
                 )
 #endif
 
-            action(obj);
+                action(obj);
         }
 
 #if CS8
@@ -239,7 +608,48 @@ namespace WinCopies.Util
 
         public static T[] GetArray<T>(params T[] items) => items;
 
-        public static void PerformAction<TIn, TOut>(in TOut parameter, in string paramName, in Action<TIn> action) => action(parameter is TIn _parameter ? _parameter : throw new InvalidArgumentException(paramName));
+        public static T PerformAction<T>(in Func<T> func, in Action<T> action)
+        {
+            T result = func();
+
+            action(result);
+
+            return result;
+        }
+
+        public static T1 PerformAction<T1, T2>(FuncOut<T1, T2> func)
+        {
+            _ = func(out T1 value);
+
+            return value;
+        }
+
+        public static T2 PerformAction<T1, T2>(FuncOut<T1, T2> func, Action<T1, T2> action)
+        {
+            T1
+#if CS9
+                ?
+#endif
+                value = default;
+
+            return PerformAction(() => func(out value), result => action(value, result));
+        }
+
+        public static T PerformAction<T>(in Func<T> func, in Predicate<T> predicate, in Action<T> action) => PerformAction(func, action.ToConditionalAction(predicate));
+
+        public static T2 PerformAction<T1, T2>(in FuncOut<T1, T2> func, in Predicate<T2> predicate, in Action<T1> action) => PerformAction(func, action.ToConditionalAction2(predicate));
+
+        public static T2 PerformAction<T1, T2, TResult>(in FuncOut<T1, TResult> func, Predicate<TResult> predicate, Func<T1, T2> action, out TResult result, out bool predicateResult)
+        {
+            bool _predicateResult = false;
+            T2 _result = default;
+
+            result = PerformAction(func, value => _predicateResult = predicate(value), value => _result = action(value));
+
+            return (predicateResult = _predicateResult) ? _result : default;
+        }
+
+        public static void PerformAction<TIn, TOut>(in TOut parameter, in string paramName, in Action<TIn> action) => action(parameter is TIn _parameter ? _parameter : throw GetArgumentException(paramName));
 
         public static bool PerformActionIf(in bool condition, in Action action)
         {

@@ -6,7 +6,13 @@ The WinCopies® software framework
 CHANGELOG
 ---------
 
-### ???? 3.17-preview
+### 05/17/2022 3.17.1-preview
+
+- Add new types.
+- WinCopies.Collections(.Generic): SelectEnumerator\<TSource, TDestination>, JoinEnumerator\<T>, EmptyCheckEnumerator, EmptyCheckEnumerator\<T> override ResetOverride2 instead of ResetOverride.
+- InvalidArgumentException has benn replaced with ThrowHelper.Get/ThrowArgumentException methods.
+
+### 05/11/2022 3.17-preview
 
 - See 3.16-preview erratum.
 - ReadOnlyLinkedDictionary:

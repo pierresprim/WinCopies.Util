@@ -4,6 +4,8 @@ using System.Diagnostics.CodeAnalysis;
 
 using WinCopies.Util;
 
+using static System.Console;
+
 using static WinCopies
 #if !WinCopies3
     .Util
@@ -15,6 +17,34 @@ namespace WinCopies
     .Util
 #endif
 {
+    public struct ConsoleLogger
+    {
+        public byte TabsCount { get; private set; }
+
+        public ConsoleLogger(in byte initialTabsCount) => TabsCount = initialTabsCount;
+
+        public void WriteLine(string
+#if CS8
+            ?
+#endif
+            msg, bool? increment, ConsoleColor? color = null)
+        {
+            if (color.HasValue)
+
+                ForegroundColor = color.Value;
+
+            System.Console.WriteLine(new string('\t', increment.HasValue ? increment.Value ? ++TabsCount : TabsCount-- : TabsCount) + msg);
+
+            ResetColor();
+        }
+    }
+
+    public delegate void Logger(string
+#if CS8
+        ?
+#endif
+        server, bool? increment, ConsoleColor? consoleColor = null);
+
     public static class Console
     {
         public static unsafe void ReadLines(params IValueObject<string

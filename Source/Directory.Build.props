@@ -5,11 +5,12 @@
 		<RepositoryUrl>https://github.com/pierresprim/WinCopies.Util.git</RepositoryUrl>
 		<RepositoryType>Git</RepositoryType>
 		<PackageReleaseNotes>See https://github.com/pierresprim/WinCopies.Util/blob/master/Changelog.md</PackageReleaseNotes>
-		<Copyright>Copyright © 2022 Pierre Sprimont</Copyright>
-		<PackageIcon>WinCopies.png</PackageIcon>
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
 		<SignAssembly>true</SignAssembly>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageIcon>WinCopies.png</PackageIcon>
+		<Copyright>Copyright © 2022 Pierre Sprimont</Copyright>
+		<ProduceReferenceAssembly>true</ProduceReferenceAssembly>
 	</PropertyGroup>
 
 	<!--Constants-->
@@ -100,6 +101,10 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 	</ItemGroup>
+
+	<PropertyGroup Condition="'$(TargetFramework.TrimEnd(`0123456789-windows`))' == 'net7.'">
+		<WarningLevel>7</WarningLevel>
+	</PropertyGroup>
 
 	<ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789-windows`))' == 'net7.'">
 		<PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="7.0-preview">

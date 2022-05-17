@@ -17,16 +17,14 @@
 
 using System;
 
-#if !WinCopies3
+#if WinCopies3
+using static WinCopies.ThrowHelper;
+#else
 using System.Collections;
 using System.Collections.Generic;
 
 using static WinCopies.Util.Util;
 using static WinCopies.Util.ThrowHelper;
-
-#else
-using static WinCopies.ThrowHelper;
-
 #endif
 
 namespace WinCopies.Collections.Generic
@@ -75,9 +73,21 @@ namespace WinCopies.Collections.Generic
             return false;
         }
 
-        protected override void ResetOverride()
+        protected override void
+#if WinCopies3
+            ResetOverride2
+#else
+            ResetOverride
+#endif
+            ()
         {
-            base.ResetOverride();
+            base.
+#if WinCopies3
+                ResetOverride2
+#else
+                ResetOverride
+#endif
+                ();
 
             InnerEnumerator.Reset();
         }

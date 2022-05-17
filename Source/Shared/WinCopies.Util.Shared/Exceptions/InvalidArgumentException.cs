@@ -15,32 +15,28 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
+#if !WinCopies3
 using System;
 using System.Globalization;
 using System.Runtime.Serialization;
-using WinCopies
-#if !WinCopies3
-    .Util
-#endif
-    .Resources;
 
-namespace WinCopies
-#if !WinCopies3
-.Util
-#endif
+using WinCopies.Util.Resources;
+
+namespace WinCopies.Util
 {
+    [Obsolete("Replaced with WinCopies.Util.ThrowHelper.Get/ThrowArgumentException.")]
     public class InvalidArgumentException : ArgumentException
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="InvalidArgumentException"/> class.
         /// </summary>
-        public InvalidArgumentException() : base() { }
+        public InvalidArgumentException() : base() { /* Left empty. */ }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InvalidArgumentException"/> class with the name of the parameter that causes this exception.
         /// </summary>
         /// <param name="paramName">The name of the parameter that caused the current exception.</param>
-        public InvalidArgumentException(in string paramName) : base(GetErrorMessage(paramName)) { }
+        public InvalidArgumentException(in string paramName) : base(GetErrorMessage(paramName)) { /* Left empty. */ }
 
         private static string GetErrorMessage(in string paramName) => string.Format(CultureInfo.CurrentCulture, ExceptionMessages.InvalidArgument, paramName);
 
@@ -49,13 +45,14 @@ namespace WinCopies
         /// </summary>
         /// <param name="paramName">The name of the parameter that caused the current exception.</param>
         /// <param name="innerException">The exception that is the cause of the current exception. If the innerException parameter is not a null reference, the current exception is raised in a catch block that handles the inner exception.</param>
-        public InvalidArgumentException(in string paramName, in Exception innerException) : base(GetErrorMessage(paramName), innerException) { }
+        public InvalidArgumentException(in string paramName, in Exception innerException) : base(GetErrorMessage(paramName), innerException) { /* Left empty. */ }
 
         /// <summary>
         /// Initializes a new instance of the System.ArgumentException class with serialized data.
         /// </summary>
         /// <param name="info">The object that holds the serialized object data.</param>
         /// <param name="context">The contextual information about the source or destination.</param>
-        protected InvalidArgumentException(in SerializationInfo info, in StreamingContext context) : base(info, context) { }
+        protected InvalidArgumentException(in SerializationInfo info, in StreamingContext context) : base(info, context) { /* Left empty. */ }
     }
 }
+#endif

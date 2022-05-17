@@ -211,7 +211,7 @@ Current
             DisposeUnmanaged();
         }
 #endif
-    }
+        }
 
         public sealed class JoinEnumerator<T> :
 #if WinCopies3
@@ -328,9 +328,21 @@ Current
 #endif
             _moveNext();
 
-            protected override void ResetOverride()
+            protected override void
+#if WinCopies3
+                ResetOverride2
+#else
+                ResetOverride
+#endif
+                ()
             {
-                base.ResetOverride();
+                base.
+#if WinCopies3
+                ResetOverride2
+#else
+                ResetOverride
+#endif
+                ();
 
                 _subEnumerator = null;
 

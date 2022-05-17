@@ -35,6 +35,11 @@ namespace WinCopies
     /// </summary>
     public static class Delegates
     {
+        public static ulong GetULongLength(Array array) => (ulong)array.Length;
+#if CS5
+        public static ulong GetULongLength<T>(IReadOnlyList<T> array) => (ulong)array.Count;
+#endif
+
         public static bool CheckIfEqualsNull(object item) => item == null;
         public static bool CheckIfEqualsNullIn(in object item) => item == null;
 
@@ -259,7 +264,7 @@ namespace WinCopies
 #endif
                 > GetSurrounder<T>(string decorator) => value => value?.ToString().Surround(decorator);
 
-        private static T _GetIn<T>(in Func<bool> func, in T ifTrue, in T ifFalse) => GetIn(func, ifTrue, ifFalse);
+        private static T _GetIn<T>(in Func<bool> func, in T ifTrue, in T ifFalse) => GetIn(func(), ifTrue, ifFalse);
 
         public static T Get<T>(Func<bool> func, T ifTrue, T ifFalse) => GetIn(func, ifTrue, ifFalse);
         public static T GetIn<T>(in Func<bool> func, in T ifTrue, in T ifFalse) => _GetIn(func ?? throw GetArgumentNullException(nameof(func)), ifTrue, ifFalse);
@@ -286,6 +291,16 @@ namespace WinCopies
                 ?
 #endif
                 => _GetIn(() => value == null, ifTrue, ifFalse);
+
+        public static bool HasValueIn<T>(in T? value) where T : struct => value.HasValue;
+
+        public static bool HasValue<T>(T? value) where T : struct => HasValueIn(value);
+
+        public static T GetValueIn<T>(in T? value) where T : struct => value.Value;
+
+        public static T GetValue<T>(T? value) where T : struct => GetValueIn(value);
+
+        public static TOut GetDefault<TIn, TOut>(TIn value) => default;
     }
 
     /// <summary>

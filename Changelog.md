@@ -6,7 +6,11 @@ The WinCopies® software framework
 CHANGELOG
 ---------
 
-### ??? 2.18
+### 05/17/2022 2.18.1
+
+- Add new static and extension methods and types.
+
+### 05/11/2022 2.18
 
 - Add support for .Net 7
 - WinCopies.Collections.Extensions.RemoveAndGetFirst/LastValue methods are now available in C\# 6.

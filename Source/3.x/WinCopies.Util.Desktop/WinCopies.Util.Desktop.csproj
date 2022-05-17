@@ -12,7 +12,7 @@
 		<PackageTags>WinCopies</PackageTags>
 		<VersionPrefix>3.17</VersionPrefix>
 		<VersionSuffix>preview</VersionSuffix>
-		<AssemblyVersion>3.17.0</AssemblyVersion>
+		<AssemblyVersion>3.17</AssemblyVersion>
 		<FileVersion>3.17</FileVersion>
 		<RootNamespace>WinCopies.Desktop</RootNamespace>
 		<DefineConstants>WinCopies3;$(DefineConstants)</DefineConstants>

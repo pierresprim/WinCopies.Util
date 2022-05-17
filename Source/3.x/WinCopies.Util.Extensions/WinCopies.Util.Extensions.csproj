@@ -10,7 +10,7 @@
 		<PackageTags>WinCopies</PackageTags>
 		<VersionPrefix>3.17</VersionPrefix>
 		<VersionSuffix>preview</VersionSuffix>
-		<AssemblyVersion>3.17.0</AssemblyVersion>
+		<AssemblyVersion>3.17</AssemblyVersion>
 		<FileVersion>3.17</FileVersion>
 		<RootNamespace>WinCopies</RootNamespace>
 		<AssemblyOriginatorKeyFile>WinCopies.Util.Extensions.snk</AssemblyOriginatorKeyFile>

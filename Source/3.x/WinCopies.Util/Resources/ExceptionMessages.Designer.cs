@@ -160,6 +160,15 @@ namespace WinCopies.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The index passed to parameter {0} was out of range..
+        /// </summary>
+        public static string IndexOutOfRange {
+            get {
+                return ResourceManager.GetString("IndexOutOfRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The argument passed to parameter {0} is not supported..
         /// </summary>
         public static string InvalidArgument {
@@ -237,6 +246,15 @@ namespace WinCopies.Resources {
         public static string OneOrMoreSameKey {
             get {
                 return ResourceManager.GetString("OneOrMoreSameKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The argument passed to parameter {0} caused an overflow..
+        /// </summary>
+        public static string Overflow {
+            get {
+                return ResourceManager.GetString("Overflow", resourceCulture);
             }
         }
         

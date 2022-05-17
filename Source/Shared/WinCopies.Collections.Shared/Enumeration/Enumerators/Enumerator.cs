@@ -84,10 +84,9 @@ namespace WinCopies.Collections
             ResetCurrent();
         }
 
-        protected virtual void ResetCurrent()
-        {
-            // Left empty.
-        }
+        protected virtual void ResetCurrent() { /* Left empty. */ }
+
+        protected abstract void ResetOverride2();
 
         protected virtual void ResetOverride()
         {
@@ -95,8 +94,6 @@ namespace WinCopies.Collections
 
             OnResetOrDisposed();
         }
-
-        protected abstract void ResetOverride2();
 
         protected virtual void OnResetOrDisposed()
         {
@@ -786,6 +783,11 @@ namespace WinCopies.Collections
 
             }
 #endif
+
+            /// <summary>
+            /// Disposing is disabled for the <see cref="SingletonEnumerator{T}"/> class because this enumerator does not have to be disposed and does not support it. Calling this method from this class will not do anything, as it was left empty.
+            /// </summary>
+            public override void Dispose() { /* Left empty. */ }
         }
 
         public class WhileEnumerator<T> : Enumerator<T>
