@@ -78,7 +78,7 @@ namespace WinCopies
         protected TypeArgumentException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 
-    public class TypeArgumentException<TExpected> : ArgumentException
+    public class TypeArgumentException<T> : ArgumentException
     {
         private const string MESSAGE = "an instance of or an instance of a type that inherits or implements ";
 
@@ -86,7 +86,7 @@ namespace WinCopies
 #if CS8
             ?
 #endif
-            type, in string argumentName) : base($"{argumentName} should be {MESSAGE}{GetTypeFullName(typeof(TExpected))}. {argumentName} was {(type == null ? "null" : MESSAGE + GetTypeFullName(type))}.") { /* Left empty. */ }
+            type, in string argumentName) : base($"{argumentName} should be {MESSAGE}{GetTypeFullName(typeof(T))}. {argumentName} was {(type == null ? "null" : MESSAGE + GetTypeFullName(type))}.") { /* Left empty. */ }
 
         public TypeArgumentException(in object
 #if CS8

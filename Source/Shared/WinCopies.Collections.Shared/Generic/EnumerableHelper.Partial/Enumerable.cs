@@ -16,7 +16,6 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if WinCopies3
-
 using WinCopies.Collections.DotNetFix;
 
 namespace WinCopies.Collections.Generic
@@ -43,14 +42,17 @@ namespace WinCopies.Collections.Generic
 
             public IEnumeratorInfo<T> GetReversedEnumerator() => GetEnumerator(EnumerationDirection.LIFO);
 
-            System.Collections.Generic.IEnumerator<T> WinCopies.Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => GetReversedEnumerator();
+            System.Collections.Generic.IEnumerator<T>
+#if WinCopies3
+                Extensions.
+#endif
+                Generic.IEnumerable<T>.GetReversedEnumerator() => GetReversedEnumerator();
 
 #if !CS8
             System.Collections.IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
 #endif
-#endregion
+            #endregion
         }
     }
 }
-
 #endif

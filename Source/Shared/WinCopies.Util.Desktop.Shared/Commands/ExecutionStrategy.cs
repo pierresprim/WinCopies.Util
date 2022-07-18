@@ -27,11 +27,11 @@
 
 using System;
 
+namespace WinCopies.
 #if !WinCopies3
-namespace WinCopies.Util.Commands
-#else
-namespace WinCopies.Commands
+    Util.
 #endif
+    Commands
 {
     /// <summary>
     /// Defines the interface for a strategy of execution for the CommandBehaviorBinding
@@ -67,12 +67,10 @@ namespace WinCopies.Commands
         /// <param name="parameter">The parameter for the command</param>
         public void Execute(object parameter)
         {
-            if (Behavior == null)
-                throw new InvalidOperationException("Behavior property cannot be null when executing a strategy");
-            if (Behavior.Command.CanExecute(Behavior.CommandParameter))
+            if ((Behavior ?? throw new InvalidOperationException("Behavior property cannot be null when executing a strategy")).Command.CanExecute(Behavior.CommandParameter))
+
                 Behavior.Command.Execute(Behavior.CommandParameter);
         }
-
         #endregion
     }
 
@@ -82,7 +80,6 @@ namespace WinCopies.Commands
     public class ActionExecutionStrategy : IExecutionStrategy
     {
         #region IExecutionStrategy Members
-
         /// <summary>
         /// Gets or sets the Behavior that we execute this strategy
         /// </summary>

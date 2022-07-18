@@ -883,12 +883,12 @@
         </member>
         <member name="P:WinCopies.Commands.BehaviorBinding.Behavior">
             <summary>
-            Stores the Command Behavior Binding
+            Stores the <see cref="T:WinCopies.Commands.CommandBehaviorBinding"/>.
             </summary>
         </member>
         <member name="F:WinCopies.Commands.BehaviorBinding.CommandProperty">
             <summary>
-            Command Dependency Property
+            <see cref="P:WinCopies.Commands.BehaviorBinding.Command"/> Dependency Property
             </summary>
         </member>
         <member name="P:WinCopies.Commands.BehaviorBinding.Command">
@@ -908,7 +908,7 @@
         </member>
         <member name="F:WinCopies.Commands.BehaviorBinding.ActionProperty">
             <summary>
-            Action Dependency Property
+            <see cref="P:WinCopies.Commands.BehaviorBinding.Action"/> Dependency Property
             </summary>
         </member>
         <member name="P:WinCopies.Commands.BehaviorBinding.Action">
@@ -928,7 +928,7 @@
         </member>
         <member name="F:WinCopies.Commands.BehaviorBinding.CommandParameterProperty">
             <summary>
-            CommandParameter Dependency Property
+            <see cref="P:WinCopies.Commands.BehaviorBinding.CommandParameter"/> Dependency Property
             </summary>
         </member>
         <member name="P:WinCopies.Commands.BehaviorBinding.CommandParameter">
@@ -948,12 +948,12 @@
         </member>
         <member name="F:WinCopies.Commands.BehaviorBinding.EventProperty">
             <summary>
-            Event Dependency Property
+            <see cref="P:WinCopies.Commands.BehaviorBinding.Event"/> Dependency Property
             </summary>
         </member>
         <member name="P:WinCopies.Commands.BehaviorBinding.Event">
             <summary>
-            Gets or sets the Event property.  
+            Gets or sets the Event property.
             </summary>
         </member>
         <member name="M:WinCopies.Commands.BehaviorBinding.OnEventChanged(System.Windows.DependencyObject,System.Windows.DependencyPropertyChangedEventArgs)">
@@ -973,7 +973,7 @@
         </member>
         <member name="T:WinCopies.Commands.CommandBehavior">
             <summary>
-            Defines the attached properties to create a CommandBehaviorBinding
+            Defines the attached properties to create a <see cref="T:WinCopies.Commands.CommandBehaviorBinding"/>.
             </summary>
         </member>
         <member name="F:WinCopies.Commands.CommandBehavior.BehaviorProperty">
@@ -1080,14 +1080,14 @@
         </member>
         <member name="P:WinCopies.Commands.CommandBehaviorBinding.Owner">
             <summary>
-            Get the owner of the CommandBinding ex: a Button
-            This property can only be set from the BindEvent Method
+            Get the owner of the <see cref="T:System.Windows.Input.CommandBinding"/> ex: a Button
+            This property can only be set from the <see cref="M:WinCopies.Commands.CommandBehaviorBinding.BindEvent(System.Windows.DependencyObject,System.String)"/> Method
             </summary>
         </member>
         <member name="P:WinCopies.Commands.CommandBehaviorBinding.EventName">
             <summary>
             The event name to hook up to
-            This property can only be set from the BindEvent Method
+            This property can only be set from the <see cref="M:WinCopies.Commands.CommandBehaviorBinding.BindEvent(System.Windows.DependencyObject,System.String)"/> Method
             </summary>
         </member>
         <member name="P:WinCopies.Commands.CommandBehaviorBinding.Event">
@@ -1107,7 +1107,7 @@
         </member>
         <member name="P:WinCopies.Commands.CommandBehaviorBinding.Command">
             <summary>
-            The command to execute when the specified event is raised
+            The command to execute when the specified event is raised.
             </summary>
         </member>
         <member name="P:WinCopies.Commands.CommandBehaviorBinding.Action">
@@ -1306,13 +1306,13 @@
         </member>
         <member name="M:WinCopies.Commands.EventHandlerGenerator.CreateDelegate(System.Type,System.Reflection.MethodInfo,System.Object)">
             <summary>
-            Generates a delegate with a matching signature of the supplied eventHandlerType
-            This method only supports Events that have a delegate of type void
+            Generates a delegate with a matching signature of the supplied eventHandlerType.
+            This method only supports Events that have a delegate of type void.
             </summary>
-            <param name="eventHandlerType">The delegate type to wrap. Note that this must always be a void delegate</param>
-            <param name="methodToInvoke">The method to invoke</param>
-            <param name="methodInvoker">The object where the method resides</param>
-            <returns>Returns a delegate with the same signature as eventHandlerType that calls the methodToInvoke inside</returns>
+            <param name="eventHandlerType">The delegate type to wrap. Note that this must always be a <see langword="void"/> delegate.</param>
+            <param name="methodToInvoke">The method to invoke.</param>
+            <param name="methodInvoker">The object where the method resides.</param>
+            <returns>Returns a delegate with the same signature as <paramref name="eventHandlerType"/> that calls the methodToInvoke inside.</returns>
         </member>
         <member name="T:WinCopies.Commands.IExecutionStrategy">
             <summary>
@@ -1392,6 +1392,41 @@
             Gets the <b>DeletePermanently</b> command.
             </summary>
         </member>
+        <member name="T:WinCopies.Util.Data.BindingProxy`1">
+            <summary>
+            Represents a <see cref="T:System.Windows.Freezable"/> object that can be used as a <see cref="T:System.Windows.Data.Binding"/> proxy. See the Remarks section.
+            </summary>
+            <typeparam name="T">The type of the data context bound to this proxy. This value is stored in the <see cref="P:WinCopies.Util.Data.BindingProxy`1.DataContext"/> property.</typeparam>
+            <remarks><para><b>Usage:</b> This class can be used in XAML when a <see cref="T:System.Windows.Data.Binding"/> must be used to link two properties when a (relative) source must be set to a <see cref="T:System.Windows.Data.Binding"/> object but when this (relative) source is not inherited via the visual tree, for example when binding a property of a class for which the instanciated object is assigned as the value of a property declared in a <see cref="T:System.Windows.Controls.ValidationRule"/> object. In that case, because the <see cref="T:System.Windows.Controls.ValidationRule"/> is not added to the visual tree, it does not inherit the data context. Then, a <see cref="T:WinCopies.Util.Data.BindingProxy`1"/> can be added as a resource for the control that is concerned by the validation and thus can be used as the source of the <see cref="T:System.Windows.Data.Binding"/>, that is why this class is called <see cref="T:WinCopies.Util.Data.BindingProxy`1"/>. However, be careful the path you use for the <see cref="T:System.Windows.Data.Binding"/> is like following: <see cref="P:WinCopies.Util.Data.BindingProxy`1.DataContext"/>.&lt;the path starting from your data context&gt; because the real source is not your data context directly, but the <see cref="P:WinCopies.Util.Data.BindingProxy`1.DataContext"/> property of this class.</para>
+            <para><b>More info:</b> When you have to use a proxy for your <see cref="T:System.Windows.Data.Binding"/> object, it is easier to use a non-generic type. A default one exists for this class : <see cref="T:WinCopies.Util.Data.BindingProxy"/>, where <typeparamref name="T"/> is sealed to <see cref="T:System.Object"/>, so that this class overload can handle every .Net object.</para>
+            </remarks>
+            <seealso cref="T:WinCopies.Util.Data.BindingProxy"/>
+        </member>
+        <member name="F:WinCopies.Util.Data.BindingProxy`1.DataContextProperty">
+            <summary>
+            Identifies the <see cref="P:WinCopies.Util.Data.BindingProxy`1.DataContext"/> property.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.Data.BindingProxy`1.DataContext">
+            <summary>
+            Gets or sets the data context of this binding proxy.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.Data.BindingProxy`1.CreateInstanceCore">
+            <summary>
+            Creates a new instance of the <see cref="T:WinCopies.Util.Data.BindingProxy`1"/> class.
+            </summary>
+            <returns>The new instance.</returns>
+        </member>
+        <member name="M:WinCopies.Util.Data.BindingProxy`1.CloneCore(System.Windows.Freezable)">
+            <inheritdoc/>
+        </member>
+        <member name="T:WinCopies.Util.Data.BindingProxy">
+            <summary>
+            Non-generic class overload of <see cref="T:WinCopies.Util.Data.BindingProxy`1"/>. See the doc for this type for more information.
+            </summary>
+            <seealso cref="T:WinCopies.Util.Data.BindingProxy`1"/>
+        </member>
         <member name="T:WinCopies.Util.Data.BooleanToVisibilityConverter">
             <summary>
             Provides a converter for conversion from a <see langword="bool"/> value to a <see cref="T:System.Windows.Visibility"/> value.
@@ -1416,6 +1451,18 @@
             <param name="parameter">The parameter of this converter. This parameter isn't evaluated in this converter.</param>
             <param name="culture">The culture used for the conversion. This parameter isn't evaluated in this converter.</param>
             <returns><see langword="true"/> if the value to convert is <see cref="F:System.Windows.Visibility.Visible"/>, otherwise false.</returns>
+        </member>
+        <member name="M:WinCopies.Util.Data.CheckableNamedObjectViewModel.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.CheckableObject"/> class.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.Data.CheckableNamedObjectViewModel.#ctor(System.Boolean@,System.String@)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.CheckableObject"/> class using custom values.
+            </summary>
+            <param name="isChecked">A value that indicates if this object is checked by default.</param>
+            <param name="name">The name of the object.</param>
         </member>
         <member name="T:WinCopies.Util.Data.ConverterBase">
             <summary>
@@ -1578,21 +1625,6 @@
             <param name="serviceProvider">A service provider helper that can provide services for the markup extension.</param>
             <returns>The object value to set on the property where the extension is applied.</returns>
         </member>
-        <member name="T:WinCopies.Util.Data.INamedObject">
-            <summary>
-            Provides an object that defines a value with an associated name and notifies of the name or value change.
-            </summary>
-        </member>
-        <member name="P:WinCopies.Util.Data.INamedObject.Name">
-            <summary>
-            Gets or sets the name of this object.
-            </summary>
-        </member>
-        <member name="T:WinCopies.Util.Data.INamedObject`1">
-            <summary>
-            Provides an object that defines a value with an associated name and notifies of the name or value change.
-            </summary>
-        </member>
         <member name="P:WinCopies.Util.Data.NamedObjectBase.Name">
             <summary>
             Gets or sets the name of the object.
@@ -1703,7 +1735,7 @@
             <param name="validationStep">One of the enumeration values that specifies when the validation rule runs.</param>
             <param name="validatesOnTargetUpdated"><see langword="true"/> to have the validation rule run when the target of the <see cref="T:System.Windows.Data.Binding"/> is updated; otherwise, <see langword="false"/>.</param>
         </member>
-        <member name="P:WinCopies.Util.Data.ValidationRule`1.AllowNullValueOverride">
+        <member name="P:WinCopies.Util.Data.ValidationRule`1.AllowNullValue">
             <summary>
             Gets a value indicating whether null values are allowed. When this property is set to <see langword="false"/>, validation will fail for null values.
             </summary>
@@ -1814,7 +1846,7 @@
             Provides a base class for view models.
             </summary>
         </member>
-        <member name="M:WinCopies.Util.Data.ViewModel.#ctor(System.Object)">
+        <member name="M:WinCopies.Util.Data.ViewModel.#ctor(System.Object@)">
             <summary>
             Initializes a new instance of the <see cref="T:WinCopies.Util.Data.ViewModel"/> class.
             </summary>
@@ -1830,7 +1862,7 @@
             The model for this instance of view model.
             </summary>
         </member>
-        <member name="M:WinCopies.Util.Data.ViewModel`1.#ctor(`0)">
+        <member name="M:WinCopies.Util.Data.ViewModel`1.#ctor(`0@)">
             <summary>
             Initializes a new instance of the <see cref="T:WinCopies.Util.Data.ViewModel"/> class.
             </summary>
@@ -1859,7 +1891,7 @@
             Occurs when an item is added, removed, changed, moved, or the entire list is refreshed.
             </summary>
         </member>
-        <member name="M:WinCopies.Util.Data.CollectionViewModel`1.#ctor(System.Collections.ObjectModel.Collection{`0})">
+        <member name="M:WinCopies.Util.Data.CollectionViewModel`1.#ctor(System.Collections.ObjectModel.Collection{`0}@)">
             <summary>
             Initializes a new instance of the <see cref="T:WinCopies.Util.Data.CollectionViewModel`1"/> class.
             </summary>

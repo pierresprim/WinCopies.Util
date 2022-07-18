@@ -30,4 +30,6 @@
     <ProjectReference Include="..\..\Source\3.x\WinCopies.Util.Desktop\WinCopies.Util.Desktop.csproj" />
   </ItemGroup>
 
+  <Import Project="..\Shared\AttachedCommandBehaviorDemo.Shared\AttachedCommandBehaviorDemo.Shared.projitems" Label="Shared" />
+
 </Project>

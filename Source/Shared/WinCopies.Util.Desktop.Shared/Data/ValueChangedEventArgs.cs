@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
+#if !WinCopies3
 using System;
 
 namespace WinCopies.Util.Data
@@ -29,51 +30,48 @@ namespace WinCopies.Util.Data
 
     public class EventArgs<T> : EventArgs
     {
-        public T Value { get; } = default;
+        public T Value { get; }
 
         public EventArgs(T value) => Value = value;
     }
 
     public class ValueChangedEventArgs : EventArgs
     {
-        public object OldValue { get; } = null;
+        public object OldValue { get; }
 
-        public object NewValue { get; } = null;
+        public object NewValue { get; }
 
         public ValueChangedEventArgs(object oldValue, object newValue)
         {
             OldValue = oldValue;
-
             NewValue = newValue;
         }
     }
 
     public class ValueChangedEventArgs<T> : EventArgs
     {
-        public T OldValue { get; } = default;
+        public T OldValue { get; }
 
-        public T NewValue { get; } = default;
+        public T NewValue { get; }
 
         public ValueChangedEventArgs(T oldValue, T newValue)
-
         {
             OldValue = oldValue;
-
             NewValue = newValue;
         }
     }
 
     public class ValueChangedEventArgs<TOldValue, TNewValue> : EventArgs
     {
-        public TOldValue OldValue { get; } = default;
+        public TOldValue OldValue { get; }
 
-        public TNewValue NewValue { get; } = default;
+        public TNewValue NewValue { get; }
 
         public ValueChangedEventArgs(TOldValue oldValue, TNewValue newValue)
         {
             OldValue = oldValue;
-
             NewValue = newValue;
         }
     }
 }
+#endif

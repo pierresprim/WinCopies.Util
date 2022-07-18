@@ -16,7 +16,6 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if WinCopies3 && CS7
-
 using System.Collections;
 
 using WinCopies.Collections.DotNetFix.Generic;
@@ -31,17 +30,21 @@ namespace WinCopies.Collections.Generic
 
         public T this[int index] => InnerEnumerable[index];
 
-        public ReadOnlyArray(T[] array) : base(array) { /* Left empty. */ }
+        public ReadOnlyArray(params T[] array) : base(array) { /* Left empty. */ }
 
         public ICountableEnumeratorInfo<T> GetEnumerator() => new ArrayEnumerator<T>(InnerEnumerable);
 
-        System.Collections.IEnumerator IEnumerable.GetEnumerator() => InnerEnumerable.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => InnerEnumerable.GetEnumerator();
 
         System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetEnumerator();
 
         public ICountableEnumeratorInfo<T> GetReversedEnumerator() => new ArrayEnumerator<T>(InnerEnumerable, true);
 
-        System.Collections.Generic.IEnumerator<T> Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => GetReversedEnumerator();
+        System.Collections.Generic.IEnumerator<T>
+#if WinCopies3
+            Extensions.Generic.
+#endif
+            IEnumerable<T>.GetReversedEnumerator() => GetReversedEnumerator();
 
 #if !CS8
         IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();

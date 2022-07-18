@@ -31,15 +31,15 @@ namespace WinCopies.Collections
 {
     public static class EnumerableExtensions
     {
-        public static ICountableEnumerable GetCountableEnumerable<TEnumerable>(this TEnumerable enumerable) where TEnumerable : ICountable, System.Collections.IEnumerable => enumerable as ICountableEnumerable ?? new Enumeration.CountableEnumerable<TEnumerable>(enumerable);
+        public static ICountableEnumerable GetCountableEnumerable<TEnumerable>(this TEnumerable enumerable) where TEnumerable : ICountable, IEnumerable => enumerable as ICountableEnumerable ?? new Enumeration.CountableEnumerable<TEnumerable>(enumerable);
 
-        public static IUIntCountableEnumerable GetUIntCountableEnumerable<TEnumerable>(this TEnumerable enumerable) where TEnumerable : IUIntCountable, System.Collections.IEnumerable => enumerable as IUIntCountableEnumerable ?? new Enumeration.UIntCountableEnumerable<TEnumerable>(enumerable);
+        public static IUIntCountableEnumerable GetUIntCountableEnumerable<TEnumerable>(this TEnumerable enumerable) where TEnumerable : IUIntCountable, IEnumerable => enumerable as IUIntCountableEnumerable ?? new Enumeration.UIntCountableEnumerable<TEnumerable>(enumerable);
 
         public static DotNetFix.Generic.ICountableEnumerable<TItems> GetCountableEnumerable<TEnumerable, TItems>(this TEnumerable enumerable) where TEnumerable : ICountable, System.Collections.Generic.IEnumerable<TItems> => enumerable as DotNetFix.Generic.ICountableEnumerable<TItems> ?? new Enumeration.Generic.CountableEnumerable<TEnumerable, TItems>(enumerable);
 
         public static DotNetFix.Generic.IUIntCountableEnumerable<TItems> GetUIntCountableEnumerable<TEnumerable, TItems>(this TEnumerable enumerable) where TEnumerable : IUIntCountable, System.Collections.Generic.IEnumerable<TItems> => enumerable as DotNetFix.Generic.IUIntCountableEnumerable<TItems> ?? new Enumeration.Generic.UIntCountableEnumerable<TEnumerable, TItems>(enumerable);
 
-        public static System.Collections.Generic.IEnumerator<T> GetEnumerator<T>(this Generic.IEnumerable<T> enumerable, in EnumerationDirection enumerationDirection)
+        public static System.Collections.Generic.IEnumerator<T> GetEnumerator<T>(this Extensions.Generic.IEnumerable<T> enumerable, in EnumerationDirection enumerationDirection)
 #if CS8
             => enumerationDirection switch
             {
@@ -133,16 +133,17 @@ namespace WinCopies.Collections
 
                 throw new ArgumentException($"{nameof(separators)} does not contain any value.");
 
-            Predicate<T> predicate;
-
-            if (separators.Length == 1)
-
-                predicate = value => value == null ? separators[0] == null : value.Equals(separators[0]);
-
-            else
-
-                predicate = value => separators.Contains(value);
-
+            Predicate<T> predicate = separators.Length == 1
+                ? value => value == null ? separators[0] == null : value.Equals(separators[0])
+                :
+#if !CS9
+                (Predicate<T>)(
+#endif
+                value => separators.Contains(value)
+#if !CS9
+                )
+#endif
+                ;
             System.Collections.Generic.IEnumerator<T> enumerator = enumerable.GetEnumerator();
 
             enumerable = null;
@@ -245,9 +246,10 @@ namespace WinCopies.Collections
                 {
                     if (predicate(value))
                     {
-                        subAddAndAdd(null);
+                        void add() => subAddAndAdd(null);
 
-                        subAddAndAdd(null);
+                        add();
+                        add();
                     }
 
                     else

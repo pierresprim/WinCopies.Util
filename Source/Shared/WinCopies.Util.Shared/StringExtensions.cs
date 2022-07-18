@@ -7,6 +7,7 @@ using WinCopies.Util;
 using static WinCopies.
 #if WinCopies3
 ThrowHelper;
+
 using static WinCopies.UtilHelpers;
 #else
 Util.Util;
@@ -17,6 +18,35 @@ namespace WinCopies
 {
     public static class StringExtensions
     {
+        public static string TryPrefix(this string value, in string prefix) => value.StartsWith(prefix) ? value : prefix + value;
+        public static string TrySuffix(this string value, in string suffix) => value.EndsWith(suffix) ? value : value + suffix;
+
+        private static string TryPrefix(this string value, in string prefix, in ActionIn<StringBuilder> action)
+        {
+            var stringBuilder = new StringBuilder();
+
+            void append(in string text) => stringBuilder.Append(text);
+
+            append(prefix);
+            action(stringBuilder);
+
+            string toString() => stringBuilder.ToString();
+
+            if (value.StartsWith(toString()))
+
+                return value;
+
+            append(value);
+
+            return toString();
+        }
+
+        public static string TryPrefix(this string value, in string prefix, string separator) => value.TryPrefix(prefix, (in StringBuilder stringBuilder) => stringBuilder.Append(separator));
+        public static string TryPrefix(this string value, in string prefix, char separator) => value.TryPrefix(prefix, (in StringBuilder stringBuilder) => stringBuilder.Append(separator));
+
+        public static string TrySuffix(this string value, string suffix, in string separator) => value.EndsWith(suffix = separator + suffix) ? value : value + suffix;
+        public static string TrySuffix(this string value, string suffix, in char separator) => value.EndsWith(suffix = separator + suffix) ? value : value + suffix;
+
         public static char[] ToCharArray(this string s, in int start) => (s ?? throw GetArgumentNullException(nameof(s))).ToCharArray(start, s.Length - start);
 
         public static char[] ToCharArrayL(this string s, in int length) => (s ?? throw GetArgumentNullException(nameof(s))).ToCharArray(0, length > s.Length ? s.Length : length);

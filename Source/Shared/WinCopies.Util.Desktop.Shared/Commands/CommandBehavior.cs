@@ -30,31 +30,39 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 
+using WinCopies.Diagnostics;
+
+using DesktopHelpers = WinCopies.Util.Desktop.UtilHelpers;
+
+namespace WinCopies.
 #if !WinCopies3
-namespace WinCopies.Util.Commands
-#else
-namespace WinCopies.Commands
+    Util.
 #endif
+    Commands
 {
     /// <summary>
-    /// Defines the attached properties to create a CommandBehaviorBinding
+    /// Defines the attached properties to create a <see cref="CommandBehaviorBinding"/>.
     /// </summary>
     public static class CommandBehavior
     {
-        private const string Behavior = "Behavior";
-        private const string Command = "Command";
-        private const string Action = "Action";
-        private const string CommandParameter = "CommandParameter";
-        private const string Event = "Event";
+        private static DependencyProperty RegisterAttached<T>(in string propertyName, in T
+#if CS8
+            ?
+#endif
+            defaultValue, in PropertyChangedCallback callback) where T : class => DesktopHelpers.RegisterAttached<T>(propertyName, typeof(CommandBehavior), new FrameworkPropertyMetadata(defaultValue, callback));
+        private static DependencyProperty RegisterAttached<T>(in string propertyName, in PropertyChangedCallback callback) where T : class => RegisterAttached<T>(propertyName, default, callback);
+
+        private const string Behavior = nameof(Behavior);
+        private const string Command = nameof(Command);
+        private const string Action = nameof(Action);
+        private const string CommandParameter = nameof(CommandParameter);
+        private const string Event = nameof(Event);
 
         #region Behavior
-
         /// <summary>
         /// Behavior Attached Dependency Property
         /// </summary>
-        private static readonly DependencyProperty BehaviorProperty =
-            DependencyProperty.RegisterAttached(Behavior, typeof(CommandBehaviorBinding), typeof(CommandBehavior),
-                new FrameworkPropertyMetadata((CommandBehaviorBinding)null));
+        private static readonly DependencyProperty BehaviorProperty = DesktopHelpers.RegisterAttached<CommandBehaviorBinding>(Behavior, typeof(CommandBehavior));
 
         /// <summary>
         /// Gets the Behavior property. 
@@ -65,18 +73,13 @@ namespace WinCopies.Commands
         /// Sets the Behavior property.  
         /// </summary>
         private static void SetBehavior(DependencyObject d, CommandBehaviorBinding value) => d.SetValue(BehaviorProperty, value);
-
-        #endregion
+        #endregion Behavior
 
         #region Command
-
         /// <summary>
         /// Command Attached Dependency Property
         /// </summary>
-        public static readonly DependencyProperty CommandProperty =
-            DependencyProperty.RegisterAttached(Command, typeof(ICommand), typeof(CommandBehavior),
-                new FrameworkPropertyMetadata(null,
-                    new PropertyChangedCallback(OnCommandChanged)));
+        public static readonly DependencyProperty CommandProperty = RegisterAttached<ICommand>(Command, OnCommandChanged);
 
         /// <summary>
         /// Gets the Command property.  
@@ -92,18 +95,13 @@ namespace WinCopies.Commands
         /// Handles changes to the Command property.
         /// </summary>
         private static void OnCommandChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => FetchOrCreateBinding(d).Command = (ICommand)e.NewValue;
-
-        #endregion
+        #endregion Command
 
         #region Action
-
         /// <summary>
         /// Action Attached Dependency Property
         /// </summary>
-        public static readonly DependencyProperty ActionProperty =
-            DependencyProperty.RegisterAttached(Action, typeof(Action<object>), typeof(CommandBehavior),
-                new FrameworkPropertyMetadata(null,
-                    new PropertyChangedCallback(OnActionChanged)));
+        public static readonly DependencyProperty ActionProperty = RegisterAttached<Action<object>>(Action, OnActionChanged);
 
         /// <summary>
         /// Gets the Action property.  
@@ -119,18 +117,13 @@ namespace WinCopies.Commands
         /// Handles changes to the Action property.
         /// </summary>
         private static void OnActionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => FetchOrCreateBinding(d).Action = (Action<object>)e.NewValue;
-
-        #endregion
+        #endregion Action
 
         #region CommandParameter
-
         /// <summary>
         /// CommandParameter Attached Dependency Property
         /// </summary>
-        public static readonly DependencyProperty CommandParameterProperty =
-            DependencyProperty.RegisterAttached(CommandParameter, typeof(object), typeof(CommandBehavior),
-                new FrameworkPropertyMetadata(null,
-                    new PropertyChangedCallback(OnCommandParameterChanged)));
+        public static readonly DependencyProperty CommandParameterProperty = RegisterAttached<object>(CommandParameter, OnCommandParameterChanged);
 
         /// <summary>
         /// Gets the CommandParameter property.  
@@ -146,28 +139,21 @@ namespace WinCopies.Commands
         /// Handles changes to the CommandParameter property.
         /// </summary>
         private static void OnCommandParameterChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => FetchOrCreateBinding(d).CommandParameter = e.NewValue;
-
-        #endregion
+        #endregion CommandParameter
 
         #region Event
-
         /// <summary>
         /// Event Attached Dependency Property
         /// </summary>
-        public static readonly DependencyProperty EventProperty =
-            DependencyProperty.RegisterAttached(Event, typeof(string), typeof(CommandBehavior),
-                new FrameworkPropertyMetadata(string.Empty,
-                    new PropertyChangedCallback(OnEventChanged)));
+        public static readonly DependencyProperty EventProperty = RegisterAttached(Event, string.Empty, OnEventChanged);
 
         /// <summary>
-        /// Gets the Event property.  This dependency property 
-        /// indicates ....
+        /// Gets the Event property.
         /// </summary>
         public static string GetEvent(DependencyObject d) => (string)d.GetValue(EventProperty);
 
         /// <summary>
-        /// Sets the Event property.  This dependency property 
-        /// indicates ....
+        /// Sets the Event property.
         /// </summary>
         public static void SetEvent(DependencyObject d, string value) => d.SetValue(EventProperty, value);
 
@@ -183,7 +169,8 @@ namespace WinCopies.Commands
             CommandBehaviorBinding binding = FetchOrCreateBinding(d);
 
             //check if the Event is set. If yes we need to rebind the Command to the new event and unregister the old one
-            if (binding.Event != null && binding.Owner != null)
+            if (Determine.AreNotNull(binding.Event, binding.Owner))
+
                 binding.Dispose();
 
             //if (string.IsNullOrEmpty((string)e.NewValue))
@@ -193,8 +180,7 @@ namespace WinCopies.Commands
             //bind the new event to the command
             binding.BindEvent(d, e.NewValue.ToString());
         }
-
-        #endregion
+        #endregion Event
 
         #region Helpers
         //tries to get a CommandBehaviorBinding from the element. Creates a new instance if there is not one attached
@@ -203,13 +189,11 @@ namespace WinCopies.Commands
             CommandBehaviorBinding binding = GetBehavior(d);
 
             if (binding == null)
-            {
-                binding = new CommandBehaviorBinding();
-                SetBehavior(d, binding);
-            }
+
+                SetBehavior(d, binding = new CommandBehaviorBinding());
 
             return binding;
         }
-        #endregion
+        #endregion Helpers
     }
 }

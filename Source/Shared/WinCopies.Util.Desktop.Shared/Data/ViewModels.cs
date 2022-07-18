@@ -17,7 +17,6 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -42,7 +41,11 @@ namespace WinCopies.Util.Data
         /// <summary>
         /// Occurs when a property value changes.
         /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler
+#if CS8
+            ?
+#endif
+            PropertyChanged;
 
         protected virtual
 #if WinCopies3
@@ -611,7 +614,15 @@ in
         /// Initializes a new instance of the <see cref="ViewModel"/> class.
         /// </summary>
         /// <param name="model">The model to use for this instance of view model.</param>
-        protected ViewModel(object model) => Model = model;
+        protected ViewModel(
+#if WinCopies3
+            in
+#endif
+            object model) => Model = model
+#if WinCopies3
+            ?? throw GetArgumentNullException(nameof(model))
+#endif
+            ;
     }
 
     /// <summary>
@@ -634,7 +645,23 @@ in
         /// Initializes a new instance of the <see cref="ViewModel"/> class.
         /// </summary>
         /// <param name="model">The model to use for this instance of view model.</param>
-        protected ViewModel(T model) => ModelGeneric = model;
+        protected ViewModel(
+#if WinCopies3
+            in
+#endif
+            T model) => ModelGeneric = model
+#if WinCopies3
+#if CS8
+            ??
+#else
+            == null ?
+#endif
+            throw GetArgumentNullException(nameof(model))
+#if !CS8
+            : model
+#endif
+#endif
+            ;
     }
 
     /// <summary>
@@ -705,16 +732,20 @@ in
 #if CS7
         event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged { add => PropertyChanged += value; remove => PropertyChanged -= value; }
 #endif
-#endregion
+        #endregion
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CollectionViewModel{T}"/> class.
         /// </summary>
-        public CollectionViewModel(Collection<T> collection) => Collection = collection ?? throw GetArgumentNullException(nameof(collection));
+        public CollectionViewModel(
+#if WinCopies3
+            in
+#endif
+            Collection<T> collection) => Collection = collection ?? throw GetArgumentNullException(nameof(collection));
 
         #region Methods
-#region Protected Methods
-#region 'On-' Methods
+        #region Protected Methods
+        #region 'On-' Methods
 #if !WinCopies3
         protected void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
 #endif
@@ -737,9 +768,9 @@ in
         protected void OnCollectionChanged(NotifyCollectionChangedAction action, object item, int newIndex, int oldIndex) => OnCollectionChanged(new System.Collections.Specialized.NotifyCollectionChangedEventArgs(action, item, newIndex, oldIndex));
 
         protected void OnCollectionReset() => OnCollectionChanged(new System.Collections.Specialized.NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-#endregion
+        #endregion
 
-#region Reentrancy Checks
+        #region Reentrancy Checks
         /// <summary>
         /// Checks for reentrant attempts to change this collection.
         /// </summary>
@@ -765,9 +796,9 @@ in
 
             return _monitor;
         }
-#endregion
+        #endregion
 
-#region Collection Update Methods
+        #region Collection Update Methods
         protected void AddOrInsert(int index, T item)
         {
             if (index == Collection.Count)
@@ -871,9 +902,9 @@ in
             OnCollectionReset();
         }
         #endregion
-#endregion
+        #endregion
 
-#region Public Methods
+        #region Public Methods
 #if !WinCopies3
         public override object ProvideValue(IServiceProvider serviceProvider) => this;
 #endif
@@ -1009,7 +1040,7 @@ in
         /// Removes all elements from the <see cref="CollectionViewModel{T}"/>.
         /// </summary>
         public void Clear() => ClearItems();
-#endregion
-#endregion
+        #endregion
+        #endregion
     }
 }

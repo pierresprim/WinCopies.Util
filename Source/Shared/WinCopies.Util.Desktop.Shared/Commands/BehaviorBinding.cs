@@ -29,11 +29,15 @@ using System;
 using System.Windows;
 using System.Windows.Input;
 
+using WinCopies.Diagnostics;
+
+using static WinCopies.Util.Desktop.UtilHelpers;
+
+namespace WinCopies.
 #if !WinCopies3
-namespace WinCopies.Util.Commands
-#else
-namespace WinCopies.Commands
+    Util.
 #endif
+    Commands
 {
     /// <summary>
     /// Provides a base class for behaviors.
@@ -43,22 +47,23 @@ namespace WinCopies.Commands
     {
         internal int Id { get; set; }
 
-        DependencyObject owner;
+        DependencyObject _owner;
 
         /// <summary>
         /// Gets or sets the Owner of the binding
         /// </summary>
         public DependencyObject Owner
         {
-            get => owner;
+            get => _owner;
+
             set
             {
-                owner = value;
+                _owner = value;
                 ResetBehavior();
             }
         }
 
-        static void OwnerReset(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((BehaviorBinding)d).ResetBehavior();
+        // static void OwnerReset(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((BehaviorBinding)d).ResetBehavior();
 
         /// <summary>
         /// When overriden in a derived class, resets the behavior.
@@ -77,31 +82,35 @@ namespace WinCopies.Commands
     /// </summary>
     public class BehaviorBinding : Behavior
     {
-        CommandBehaviorBinding behavior;
+        private static DependencyProperty Register<T>(in string propertyName, in PropertyChangedCallback callback) => Register<T, BehaviorBinding>(propertyName, new FrameworkPropertyMetadata(null, callback));
+
+        CommandBehaviorBinding _behavior;
 
         /// <summary>
-        /// Stores the Command Behavior Binding
+        /// Stores the <see cref="CommandBehaviorBinding"/>.
         /// </summary>
-        internal CommandBehaviorBinding Behavior => behavior ?? (behavior = new CommandBehaviorBinding());
+        internal CommandBehaviorBinding Behavior => _behavior
+#if CS8
+            ??=
+#else
+            ?? (_behavior =
+#endif
+            new CommandBehaviorBinding()
+#if !CS8
+        )
+#endif
+        ;
 
         #region Command
-
         /// <summary>
-        /// Command Dependency Property
+        /// <see cref="Command"/> Dependency Property
         /// </summary>
-        public static readonly DependencyProperty CommandProperty =
-            DependencyProperty.Register(nameof(Command), typeof(ICommand), typeof(BehaviorBinding),
-                new FrameworkPropertyMetadata(null,
-                    new PropertyChangedCallback(OnCommandChanged)));
+        public static readonly DependencyProperty CommandProperty = Register<ICommand>(nameof(Command), OnCommandChanged);
 
         /// <summary>
         /// Gets or sets the Command property.  
         /// </summary>
-        public ICommand Command
-        {
-            get => (ICommand)GetValue(CommandProperty);
-            set => SetValue(CommandProperty, value);
-        }
+        public ICommand Command { get => (ICommand)GetValue(CommandProperty); set => SetValue(CommandProperty, value); }
 
         /// <summary>
         /// Handles changes to the Command property.
@@ -112,27 +121,18 @@ namespace WinCopies.Commands
         /// Provides derived classes an opportunity to handle changes to the Command property.
         /// </summary>
         protected virtual void OnCommandChanged(DependencyPropertyChangedEventArgs e) => Behavior.Command = Command;
-
-        #endregion
+        #endregion Command
 
         #region Action
-
         /// <summary>
-        /// Action Dependency Property
+        /// <see cref="Action"/> Dependency Property
         /// </summary>
-        public static readonly DependencyProperty ActionProperty =
-            DependencyProperty.Register(nameof(Action), typeof(Action<object>), typeof(BehaviorBinding),
-                new FrameworkPropertyMetadata(null,
-                    new PropertyChangedCallback(OnActionChanged)));
+        public static readonly DependencyProperty ActionProperty = Register<Action<object>>(nameof(Action), OnActionChanged);
 
         /// <summary>
         /// Gets or sets the Action property. 
         /// </summary>
-        public Action<object> Action
-        {
-            get => (Action<object>)GetValue(ActionProperty);
-            set => SetValue(ActionProperty, value);
-        }
+        public Action<object> Action { get => (Action<object>)GetValue(ActionProperty); set => SetValue(ActionProperty, value); }
 
         /// <summary>
         /// Handles changes to the Action property.
@@ -143,27 +143,18 @@ namespace WinCopies.Commands
         /// Provides derived classes an opportunity to handle changes to the Action property.
         /// </summary>
         protected virtual void OnActionChanged(DependencyPropertyChangedEventArgs e) => Behavior.Action = Action;
-
-        #endregion
+        #endregion Action
 
         #region CommandParameter
-
         /// <summary>
-        /// CommandParameter Dependency Property
+        /// <see cref="CommandParameter"/> Dependency Property
         /// </summary>
-        public static readonly DependencyProperty CommandParameterProperty =
-            DependencyProperty.Register(nameof(CommandParameter), typeof(object), typeof(BehaviorBinding),
-                new FrameworkPropertyMetadata(null,
-                    new PropertyChangedCallback(OnCommandParameterChanged)));
+        public static readonly DependencyProperty CommandParameterProperty = Register<object>(nameof(CommandParameter), OnCommandParameterChanged);
 
         /// <summary>
         /// Gets or sets the CommandParameter property.  
         /// </summary>
-        public object CommandParameter
-        {
-            get => GetValue(CommandParameterProperty);
-            set => SetValue(CommandParameterProperty, value);
-        }
+        public object CommandParameter { get => GetValue(CommandParameterProperty); set => SetValue(CommandParameterProperty, value); }
 
         /// <summary>
         /// Handles changes to the CommandParameter property.
@@ -174,27 +165,18 @@ namespace WinCopies.Commands
         /// Provides derived classes an opportunity to handle changes to the CommandParameter property.
         /// </summary>
         protected virtual void OnCommandParameterChanged(DependencyPropertyChangedEventArgs e) => Behavior.CommandParameter = CommandParameter;
-
-        #endregion
+        #endregion CommandParameter
 
         #region Event
+        /// <summary>
+        /// <see cref="Event"/> Dependency Property
+        /// </summary>
+        public static readonly DependencyProperty EventProperty = Register<string>(nameof(Event), OnEventChanged);
 
         /// <summary>
-        /// Event Dependency Property
+        /// Gets or sets the Event property.
         /// </summary>
-        public static readonly DependencyProperty EventProperty =
-            DependencyProperty.Register(nameof(Event), typeof(string), typeof(BehaviorBinding),
-                new FrameworkPropertyMetadata(null,
-                    new PropertyChangedCallback(OnEventChanged)));
-
-        /// <summary>
-        /// Gets or sets the Event property.  
-        /// </summary>
-        public string Event
-        {
-            get => (string)GetValue(EventProperty);
-            set => SetValue(EventProperty, value);
-        }
+        public string Event { get => (string)GetValue(EventProperty); set => SetValue(EventProperty, value); }
 
         /// <summary>
         /// Handles changes to the Event property.
@@ -211,19 +193,28 @@ namespace WinCopies.Commands
         /// </summary>
         protected override void ResetBehavior()
         {
-            if (Owner != null) //only do this when the Owner is set
-            {
-                //check if the Event is set. If yes we need to rebind the Command to the new event and unregister the old one
-                if (Behavior.Event != null && Behavior.Owner != null)
-                    Behavior.Dispose();
+            if (Owner == null) return; //only do this when the Owner is set
 
-                //bind the new event to the command
-                Behavior.BindEvent(Owner, Event);
-            }
+            //check if the Event is set. If yes we need to rebind the Command to the new event and unregister the old one
+            if (Determine.AreNotNull(Behavior.Event, Behavior.Owner))
+
+                Behavior.Dispose();
+
+            //bind the new event to the command
+            Behavior.BindEvent(Owner, Event);
         }
 
-        protected override Freezable CreateInstanceCore() => new BehaviorBinding();
-
-        #endregion
+        protected override
+#if WinCopies3 && CS10
+            BehaviorBinding
+#else
+            Freezable
+#endif
+            CreateInstanceCore() => new
+#if !CS10
+            BehaviorBinding
+#endif
+            ();
+        #endregion Event
     }
 }

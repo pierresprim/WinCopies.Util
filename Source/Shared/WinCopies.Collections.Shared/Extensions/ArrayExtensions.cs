@@ -20,15 +20,19 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-using static WinCopies.ThrowHelper;
-
 using WinCopies.Collections.Abstraction.Generic;
+
+using static WinCopies.ThrowHelper;
 
 namespace WinCopies.Collections
 {
     public static class ArrayExtensions
     {
-        public static void Clear<T>(this IArrayEnumerable<T> array)
+        public static void Clear<T>(this IArrayEnumerable<T
+#if CS9
+                ?
+#endif
+                > array)
         {
             ThrowIfNull(array, nameof(array));
 
@@ -42,7 +46,7 @@ namespace WinCopies.Collections
         /// </summary>
         /// <param name="array">The source table.</param>
         /// <param name="arrays">The tables to concatenate.</param>
-        /// <returns></returns>
+        /// <returns>The concatenatd array.</returns>
         public static object[] Append(this Array array, params Array[] arrays) => UtilHelpers.Concatenate((object[])array, arrays);
 
         public static ArrayList ToList(this object[] array, in int startIndex, in int length)
@@ -97,7 +101,11 @@ namespace WinCopies.Collections
 
                 return;
 
-            object value = array.GetValue(move);
+            object
+#if CS8
+                ?
+#endif
+                value = array.GetValue(move);
 
             int i;
 
@@ -151,8 +159,6 @@ namespace WinCopies.Collections
             }
         }
 
-
-
         public static void Swap(this Array array, int x, int y)
         {
             ThrowOnInvalidArrayMoveOperation(array, nameof(array), x, nameof(x), y, nameof(y));
@@ -161,7 +167,11 @@ namespace WinCopies.Collections
 
                 return;
 
-            object temp = array.GetValue(x);
+            object
+#if CS8
+                ?
+#endif
+                temp = array.GetValue(x);
 
             array.SetValue(array.GetValue(y), x);
 
@@ -176,16 +186,20 @@ namespace WinCopies.Collections
 
                 return;
 
+#if CS5
+            (array[y], array[x]) = (array[x], array[y]);
+#else
             T temp = array[x];
 
             array[x] = array[y];
 
             array[y] = temp;
+#endif
         }
 
-
-
-        public static System.Collections.Generic.IEnumerable<T> ToEnumerable<T>(this T[] array) => array ?? throw GetArgumentNullException(nameof(array));
+#if !WinCopies3
+        public static IEnumerable<T> ToEnumerable<T>(this T[] array) => array ?? throw GetArgumentNullException(nameof(array));
+#endif
     }
 }
 #endif

@@ -15,30 +15,34 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
+#if !WinCopies3
 using System;
 using System.Globalization;
 
-#if WinCopies3
-using static WinCopies.Util.Data.ConverterHelper;
-#endif
-
 namespace WinCopies.Util.Data
 {
+    [Obsolete("Use WinCopies.Util.Data.DecimalRangeRule instead.")]
     public class IntConversionResult
     {
         private readonly int? _value;
 
         public bool ConversionSucceeded { get; private set; }
 
-        public int? Value => ConversionSucceeded ? _value : throw new InvalidOperationException(WinCopies.
-            #if !WinCopies3
-            Util.
-            #endif
-            Desktop.Resources.ExceptionMessages.ConversionDidNotSucceeded);
+        public int? Value => ConversionSucceeded ? _value : throw new InvalidOperationException(Desktop.Resources.ExceptionMessages.ConversionDidNotSucceeded);
 
         private static IntConversionResult _invalidValue;
 
-        public static IntConversionResult InvalidValue => _invalidValue ?? (_invalidValue = new IntConversionResult());
+        public static IntConversionResult InvalidValue => _invalidValue
+#if CS8
+            ??=
+#else
+            ?? (_invalidValue =
+#endif
+            new IntConversionResult()
+#if !CS8
+        )
+#endif
+        ;
 
         private IntConversionResult() { /* Left empty. */ }
 
@@ -52,26 +56,16 @@ namespace WinCopies.Util.Data
         public override string ToString() => ConversionSucceeded ? _value.ToString() : "NaN";
     }
 
+    [Obsolete("Use WinCopies.Util.Data.DecimalRangeRule instead.")]
     public class IntConversionResultToStringConverter : AlwaysConvertibleTwoWayConverter<IntConversionResult, object, string>
     {
-        public override
-#if WinCopies3
-            IReadOnlyConversionOptions
-#else
-            ConversionOptions
-#endif
-            ConvertOptions => ParameterCanBeNull;
+        public override ConversionOptions ConvertOptions => ParameterCanBeNull;
 
-        public override
-#if WinCopies3
-            IReadOnlyConversionOptions
-#else
-            ConversionOptions
-#endif
-            ConvertBackOptions => AllowNull;
+        public override ConversionOptions ConvertBackOptions => AllowNull;
 
         protected override string Convert(IntConversionResult value, object parameter, CultureInfo culture) => value.ToString();
 
         protected override IntConversionResult ConvertBack(string value, object parameter, CultureInfo culture) => value == null || value.Length == 0 ? new IntConversionResult(null) : int.TryParse(value, out int _value) ? new IntConversionResult(_value) : IntConversionResult.InvalidValue;
     }
 }
+#endif

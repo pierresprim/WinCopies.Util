@@ -16,8 +16,12 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using System;
+using System.Linq;
+
 using WinCopies.Collections.DotNetFix;
 using WinCopies.Collections.DotNetFix.Generic;
+
+using static WinCopies.ThrowHelper;
 
 namespace WinCopies.Collections
 {
@@ -50,27 +54,19 @@ namespace WinCopies.Collections
 
     namespace Generic
     {
-        public abstract class DisposableEnumerable<T> : IDisposableEnumerable<T>, WinCopies.
-#if !WinCopies3
-            Util.
-#endif
-            DotNetFix.IDisposable
+        public abstract class DisposableEnumerableBase<T> : DotNetFix.Generic.IDisposableEnumerable<T>
         {
-            public bool IsDisposed { get; private set; }
+            public abstract bool IsDisposed { get; }
 
             protected abstract System.Collections.Generic.IEnumerator<T> GetEnumeratorOverride();
 
-            public System.Collections.Generic.IEnumerator<T> GetEnumerator() => WinCopies.
-#if !WinCopies3
-                Util.
-#endif
-                ThrowHelper.GetOrThrowIfDisposed(this, GetEnumeratorOverride());
+            public System.Collections.Generic.IEnumerator<T> GetEnumerator() => GetOrThrowIfDisposed(this, GetEnumeratorOverride());
 
             System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
 
-            protected virtual void Dispose(bool disposing) => IsDisposed = true;
+            protected abstract void Dispose(bool disposing);
 
-            ~DisposableEnumerable() => Dispose(false);
+            ~DisposableEnumerableBase() => Dispose(false);
 
             public void Dispose()
             {
@@ -84,11 +80,70 @@ namespace WinCopies.Collections
             }
         }
 
+        public abstract class DisposableEnumerable<T> : DisposableEnumerableBase<T>
+        {
+            private bool _isDisposed = false;
+
+            public sealed override bool IsDisposed => _isDisposed;
+
+            protected override void Dispose(bool disposing) => _isDisposed = true;
+        }
+
+        public class DisposableEnumerable2<T> : DisposableEnumerableBase<T>
+        {
+            private Action _onDispose;
+            protected System.Collections.Generic.IEnumerable<T> InnerEnumerable { get; private set; }
+
+            public override bool IsDisposed => InnerEnumerable == null;
+
+            public DisposableEnumerable2(in System.Collections.Generic.IEnumerable<T> enumerable, in Action
+#if CS8
+                ?
+#endif
+                onDispose)
+            {
+                InnerEnumerable = enumerable ?? throw GetArgumentNullException(nameof(enumerable));
+                _onDispose = onDispose ?? Delegates.EmptyVoid;
+            }
+
+            protected override System.Collections.Generic.IEnumerator<T> GetEnumeratorOverride() => InnerEnumerable.GetEnumerator();
+
+            protected override void Dispose(bool disposing)
+            {
+                _onDispose();
+                InnerEnumerable = null;
+                _onDispose = null;
+            }
+        }
+
+        public class DisposableEnumerable<TIn, TOut> : DisposableEnumerableBase<TOut> where TIn : TOut
+        {
+            protected IDisposableEnumerable<TIn> InnerEnumerable { get; private set; }
+
+            public override bool IsDisposed => InnerEnumerable == null;
+
+            public DisposableEnumerable(in IDisposableEnumerable<TIn> enumerable) => InnerEnumerable = enumerable ?? throw GetArgumentNullException(nameof(enumerable));
+
+            protected override System.Collections.Generic.IEnumerator<TOut> GetEnumeratorOverride() => InnerEnumerable.OfType<TOut>().GetEnumerator();
+
+            protected override void Dispose(bool disposing)
+            {
+                InnerEnumerable.Dispose();
+                InnerEnumerable = null;
+            }
+        }
+
         public interface IRecursiveEnumerableProviderEnumerable<
 #if CS5
             out
 #endif
-             T> : System.Collections.Generic.IEnumerable<T>
+             T> :
+#if WinCopies3 && CS8
+            DotNetFix
+#else
+            System.Collections
+#endif
+            .Generic.IEnumerable<T>
         {
             System.Collections.Generic.IEnumerator<IRecursiveEnumerable<T>> GetRecursiveEnumerator();
         }

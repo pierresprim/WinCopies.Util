@@ -229,12 +229,12 @@ System.Collections.IEnumerator
         // Left empty.
     }
 #else
-        WinCopies.Collections.DotNetFix.IEnumerator, WinCopies.Collections.DotNetFix.IEnumeratorInfo
+        DotNetFix.IEnumerator, DotNetFix.IEnumeratorInfo
     {
         // Left empty.
     }
 
-    public interface IDisposableEnumeratorInfo : WinCopies.Collections.DotNetFix.IDisposableEnumeratorInfo, IEnumeratorInfo
+    public interface IDisposableEnumeratorInfo : DotNetFix.IDisposableEnumeratorInfo, IEnumeratorInfo
     {
         // Left empty.
     }

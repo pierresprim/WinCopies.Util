@@ -19,6 +19,7 @@
 using System.Collections;
 
 using WinCopies.Collections.DotNetFix.Generic;
+using WinCopies.Collections.Extensions.Generic;
 using WinCopies.Collections.Generic;
 
 namespace WinCopies.Collections
@@ -51,13 +52,17 @@ namespace WinCopies.Collections
 
         public IEnumeratorInfo2<char> GetReversedEnumerator() => new ArrayEnumerator<char>(this, true);
 
-        System.Collections.Generic.IEnumerator<char> Generic.IEnumerable<char>.GetReversedEnumerator() => GetReversedEnumerator();
+        System.Collections.Generic.IEnumerator<char>
+#if WinCopies3
+            Extensions. 
+#endif
+            Generic.IEnumerable<char>.GetReversedEnumerator() => GetReversedEnumerator();
 
         ICountableEnumerator<char> IReadOnlyList<char>.GetEnumerator() => GetEnumerator();
 
         private CountableEnumeratorInfo<char> _GetReversedEnumerator() => new
 #if !CS9
-CountableEnumeratorInfo<char>
+            CountableEnumeratorInfo<char>
 #endif
             (GetReversedEnumerator(), () => Count);
 

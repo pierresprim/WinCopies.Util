@@ -397,46 +397,40 @@ namespace WinCopies
                 throw GetVersionHasChangedException();
         }
 
-        public static ArgumentException GetArrayHasNotEnoughSpaceException(in string arrayArgumentName) => new ArgumentException(ArrayHasNotEnoughSpace, arrayArgumentName);
+        public static ArgumentException GetArrayHasNotEnoughSpaceException(in string arrayArgumentName) => new
+#if !CS9
+            ArgumentException
+#endif
+            (ArrayHasNotEnoughSpace, arrayArgumentName);
 
         public static void ThrowIfIndexIsLowerThanZero(in int index, in string indexArgumentName)
         {
             if (index < 0)
 
                 throw new
-#if !WinCopies3
-                    ArgumentOutOfRangeException
-#else
+#if WinCopies3
                     IndexOutOfRangeException
+#else
+                    ArgumentOutOfRangeException
 #endif
                     (indexArgumentName);
         }
 
-        public static T GetOrThrowIfDisposed<T>(in DotNetFix.IDisposable obj, in T value) => (obj ?? throw GetArgumentNullException(nameof(obj))).IsDisposed ? throw GetExceptionForDispose(false) : value;
-
-#if !WinCopies3
-        public static void ThrowIfEnumeratorNotStartedOrDisposedException(in WinCopies.Collections.IDisposableEnumeratorInfo enumerator)
+        public static T GetOrThrowIfDisposed<T>(in DotNetFix.IDisposable obj, in T value)
         {
-            if (Extensions.IsEnumeratorNotStartedOrDisposed(enumerator))
+            ThrowIfDisposed(obj);
 
-                throw GetEnumeratorNotStartedOrDisposedException();
+            return value;
         }
 
-        [Obsolete("This method has been replaced by GetArrayWithMoreThanOneDimensionException and ThrowIfArrayWithMoreThanOneDimension.")]
-        public static void ThrowArrayWithMoreThanOneDimensionException(in string paramName) => throw GetArrayWithMoreThanOneDimensionException(paramName);
+        public static T GetOrThrowIfDisposed<T>(in DotNetFix.IDisposable obj, in Func<T> func)
+        {
+            ThrowIfDisposed(obj);
 
-        [Obsolete("Throw the result of GetDeclaringTypesNotCorrespondException instead of calling this method.")]
-        public static void ThrowDeclaringTypesNotCorrespondException(string propertyName, string methodName) => throw GetDeclaringTypesNotCorrespondException(propertyName, methodName);
+            return func();
+        }
 
-        [Obsolete("Throw the result of GetMoreThanOneOccurencesWereFoundException instead of calling this method.")]
-        public static void ThrowMoreThanOneOccurencesWereFoundException() => throw GetMoreThanOneOccurencesWereFoundException();
-
-        [Obsolete("This method has been replaced by GetOneOrMoreKeyIsNullException.")]
-        public static ArgumentException GetOneOrMoreKeyIsNull() => GetOneOrMoreKeyIsNullException();
-
-        [Obsolete("Throw the result of GetOneOrMoreKeyIsNullException instead of calling this method.")]
-        public static void ThrowOneOrMoreKeyIsNull() => throw GetOneOrMoreKeyIsNullException();
-#else
+#if WinCopies3
         public static ArgumentException GetMultidimensionalArraysNotSupportedException(in string arrayArgumentName) => new ArgumentException(MultidimensionalArraysNotSupported, arrayArgumentName);
 
         public static void ThrowIfMultidimensionalArray(in Array array, in string arrayArgumentName)
@@ -463,7 +457,7 @@ namespace WinCopies
         }
 
 #if CS7
-        public static void ThrowIfArrayHasNotEnoughSpace<T>(in System.Collections.Generic.IReadOnlyCollection<T> collection, in int arrayIndex, in int count, in string arrayArgumentName)
+        public static void ThrowIfArrayHasNotEnoughSpace<T>(in IReadOnlyCollection<T> collection, in int arrayIndex, in int count, in string arrayArgumentName)
         {
             if (count <= collection.Count - arrayIndex)
 
@@ -512,13 +506,7 @@ namespace WinCopies
         {
             if (index < 0)
 
-                throw new
-#if !WinCopies3
-                    ArgumentOutOfRangeException
-#else
-                    IndexOutOfRangeException
-#endif
-                    (indexArgumentName);
+                throw new IndexOutOfRangeException(indexArgumentName);
         }
 
         public static void ThrowOnInvalidCopyToArrayOperation(in Array array, in int arrayIndex, in uint count, in string arrayArgumentName, in string arrayIndexArgumentName)
@@ -537,7 +525,7 @@ namespace WinCopies
         }
 
 #if CS7
-        public static void ThrowOnInvalidCopyToArrayOperation<T>(in System.Collections.Generic.IReadOnlyCollection<T> collection, in int arrayIndex, in int count, in string arrayArgumentName, in string arrayIndexArgumentName)
+        public static void ThrowOnInvalidCopyToArrayOperation<T>(in IReadOnlyCollection<T> collection, in int arrayIndex, in int count, in string arrayArgumentName, in string arrayIndexArgumentName)
         {
             ThrowIfNull(collection, nameof(collection));
 
@@ -552,11 +540,6 @@ namespace WinCopies
 #endif
 
         #region IndexOutOfRange throws
-
-        public static IndexOutOfRangeException GetIndexOutOfRangeException(string argumentName) => new IndexOutOfRangeException($"{argumentName} is out of range.");
-
-
-
         public static void ThrowIfBetween(in sbyte i, in sbyte x, in sbyte y, in string argumentName)
         {
             if (i.Between(x, y))
@@ -670,7 +653,6 @@ namespace WinCopies
 
                 throw GetIndexOutOfRangeException(argumentName);
         }
-
         #endregion
 
         #region String Throws
@@ -696,6 +678,14 @@ namespace WinCopies
 
         public static ArgumentException GetNullEmptyOrWhiteSpaceStringException(in string value, in string argumentName) => new ArgumentException(value, argumentName);
         #endregion
+
+
+
+        public static IndexOutOfRangeException GetIndexOutOfRangeException(string argumentName) => new
+#if !CS9
+            IndexOutOfRangeException
+#endif
+            ($"{argumentName} is out of range.");
 
         /// <summary>
         /// Returns an <see cref="ArgumentNullException"/> for a given argument name.
@@ -752,11 +742,19 @@ namespace WinCopies
 #endif
             );
 
-        public static T TryGetIfTypeOrThrowIfNull<T>(in object obj, in string argumentName) where T : class => GetOrThrowIfNull(obj, argumentName) is T _obj ? _obj : null;
+        public static T
+#if CS9
+            ?
+#endif
+            TryGetIfTypeOrThrowIfNull<T>(in object obj, in string argumentName) where T : class => GetOrThrowIfNull(obj, argumentName) is T _obj ? _obj : null;
 
         public static T GetIfType<T>(in object obj, in string argumentName) where T : class => TryGetIfTypeOrThrowIfNull<T>(obj, argumentName) ?? throw new ArgumentException($"{argumentName} must be {typeof(T)}");
 
-        public static bool TryGetIfTypeOrDefault<T>(in object obj, out T result)
+        public static bool TryGetIfTypeOrDefault<T>(in object obj, out T
+#if CS9
+            ?
+#endif
+            result)
         {
             if (obj is T _obj)
             {
@@ -770,7 +768,11 @@ namespace WinCopies
             return false;
         }
 
-        public static T GetIfTypeOrDefault<T>(in object obj) => obj is T _obj ? _obj : default;
+        public static T
+#if CS9
+            ?
+#endif
+            GetIfTypeOrDefault<T>(in object obj) => obj is T _obj ? _obj : default;
 
         /// <summary>
         /// Returns an <see cref="ArgumentException"/> for the given object and argument name.
@@ -816,7 +818,19 @@ namespace WinCopies
         /// <param name="argumentName">The argument name for the <see cref="Exception"/> that is thrown.</param>
         public static void ThrowIfNotType<T>(in object obj, in string argumentName) where T : struct
         {
-            if (!(obj is T))
+            if (
+#if !CS8
+                !(
+#endif
+                obj is
+#if CS8        
+                not
+#endif
+                T
+#if !CS8
+                )
+#endif
+                )
 
                 throw GetExceptionForInvalidType<T>(obj.GetType().ToString(), argumentName);
         }
@@ -833,7 +847,19 @@ namespace WinCopies
 
                 throw GetArgumentNullException(argumentName);
 
-            else if (!(obj is T))
+            else if (
+#if !CS9
+                !(
+#endif
+                obj is
+#if CS9
+                not
+#endif
+                T
+#if !CS9
+                )
+#endif
+                )
 
                 throw GetExceptionForInvalidType<T>(obj.GetType().ToString(), argumentName);
         }
@@ -857,8 +883,12 @@ namespace WinCopies
         public static T GetOrThrowIfNotTypeOrNull<T>(in object obj, in string argumentName) where T : class => (obj ?? throw GetArgumentNullException(argumentName)) is T _obj ? _obj : throw GetExceptionForInvalidType<T>(obj.GetType().ToString(), argumentName);
 
         public static InvalidOperationException GetExceptionForDispose(in string objectName, in bool forDisposing) => forDisposing
-                ? new ObjectDisposingException(objectName)
-                : (InvalidOperationException)new ObjectDisposedException(objectName, "The current object or value is disposed.");
+            ? new ObjectDisposingException(objectName)
+            :
+#if !CS9
+            (InvalidOperationException)
+#endif
+            new ObjectDisposedException(objectName, "The current object or value is disposed.");
 
         public static InvalidOperationException GetExceptionForDispose(in bool forDisposing) => new InvalidOperationException($"The current object or value is {(forDisposing ? "disposing" : "disposed")}.");
 
@@ -869,12 +899,7 @@ namespace WinCopies
                 throw GetExceptionForDispose(false);
         }
 
-        public static void ThrowIfDisposed(DotNetFix.IDisposable obj)
-        {
-            ThrowIfNull(obj, nameof(obj));
-
-            ThrowIfDisposedInternal(obj);
-        }
+        public static void ThrowIfDisposed(DotNetFix.IDisposable obj) => ThrowIfDisposedInternal(obj ?? throw GetArgumentNullException(nameof(obj)));
 
         internal static void ThrowIfDisposingInternal(IDisposable obj)
         {
@@ -883,21 +908,36 @@ namespace WinCopies
                 throw GetExceptionForDispose(true);
         }
 
-        public static void ThrowIfDisposing(IDisposable obj)
-        {
-            ThrowIfNull(obj, nameof(obj));
-
-            ThrowIfDisposingInternal(obj);
-        }
+        public static void ThrowIfDisposing(IDisposable obj) => ThrowIfDisposingInternal(obj ?? throw GetArgumentNullException(nameof(obj)));
 
         public static void ThrowIfDisposingOrDisposed(IDisposable obj)
         {
-            ThrowIfNull(obj, nameof(obj));
-
-            ThrowIfDisposedInternal(obj);
+            ThrowIfDisposedInternal(obj ?? throw GetArgumentNullException(nameof(obj)));
 
             ThrowIfDisposingInternal(obj);
         }
+#else
+        public static void ThrowIfEnumeratorNotStartedOrDisposedException(in WinCopies.Collections.IDisposableEnumeratorInfo enumerator)
+        {
+            if (Extensions.IsEnumeratorNotStartedOrDisposed(enumerator))
+
+                throw GetEnumeratorNotStartedOrDisposedException();
+        }
+
+        [Obsolete("This method has been replaced by GetArrayWithMoreThanOneDimensionException and ThrowIfArrayWithMoreThanOneDimension.")]
+        public static void ThrowArrayWithMoreThanOneDimensionException(in string paramName) => throw GetArrayWithMoreThanOneDimensionException(paramName);
+
+        [Obsolete("Throw the result of GetDeclaringTypesNotCorrespondException instead of calling this method.")]
+        public static void ThrowDeclaringTypesNotCorrespondException(string propertyName, string methodName) => throw GetDeclaringTypesNotCorrespondException(propertyName, methodName);
+
+        [Obsolete("Throw the result of GetMoreThanOneOccurencesWereFoundException instead of calling this method.")]
+        public static void ThrowMoreThanOneOccurencesWereFoundException() => throw GetMoreThanOneOccurencesWereFoundException();
+
+        [Obsolete("This method has been replaced by GetOneOrMoreKeyIsNullException.")]
+        public static ArgumentException GetOneOrMoreKeyIsNull() => GetOneOrMoreKeyIsNullException();
+
+        [Obsolete("Throw the result of GetOneOrMoreKeyIsNullException instead of calling this method.")]
+        public static void ThrowOneOrMoreKeyIsNull() => throw GetOneOrMoreKeyIsNullException();
 #endif
     }
 }

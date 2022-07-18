@@ -76,7 +76,11 @@ namespace WinCopies.Collections
 
             public IUIntCountableEnumeratorInfo<T> GetReversedEnumerator() => new UIntCountableEnumeratorInfo<T>(new EnumeratorInfo<T>(Enumerable.GetReversedEnumerator()), () => (uint)Enumerable.Count);
 
-            System.Collections.Generic.IEnumerator<T> Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => GetReversedEnumerator();
+            System.Collections.Generic.IEnumerator<T> Collections.
+#if WinCopies3
+                Extensions.
+#endif
+                Generic.IEnumerable<T>.GetReversedEnumerator() => GetReversedEnumerator();
 
             IUIntCountableEnumeratorInfo<T> IEnumerable<T, IUIntCountableEnumeratorInfo<T>>.GetReversedEnumerator() => GetReversedEnumerator();
 

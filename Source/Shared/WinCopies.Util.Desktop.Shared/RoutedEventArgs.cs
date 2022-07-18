@@ -47,7 +47,7 @@ namespace WinCopies
         /// <summary>
         /// The original <see cref="EventArgs"/>.
         /// </summary>
-        public T OriginalEventArgs { get; } = null;
+        public T OriginalEventArgs { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RoutedEventArgs{T}"/> class.
@@ -58,7 +58,7 @@ namespace WinCopies
         /// <li><see cref="RoutedEventArgs.Handled"/> defaults to <see langword="false"/>.</li>
         /// <li><see cref="RoutedEventArgs.Source"/> defaults to <see langword="null"/>.</li>
         /// <li><see cref="RoutedEventArgs.OriginalSource"/> defaults to <see langword="null"/>.</li></ul>
-        /// Null values for <see cref="RoutedEventArgs.Source"/> and <see cref="RoutedEventArgs.OriginalSource"/> only mean that the <see cref="RoutedEventArgs"/> data makes no attempt to specify the source. When this instance is used in a call to <see cref="UIElement.RaiseEvent(RoutedEventArgs)"/>, the <see cref="RoutedEventArgs.Source"/> and <see cref="RoutedEventArgs.OriginalSource"/> values are populated based on the element that raised the event and are passed on to listeners through the routing.
+        /// <see langword="null"/> values for <see cref="RoutedEventArgs.Source"/> and <see cref="RoutedEventArgs.OriginalSource"/> only mean that the <see cref="RoutedEventArgs"/> data makes no attempt to specify the source. When this instance is used in a call to <see cref="UIElement.RaiseEvent(RoutedEventArgs)"/>, the <see cref="RoutedEventArgs.Source"/> and <see cref="RoutedEventArgs.OriginalSource"/> values are populated based on the element that raised the event and are passed on to listeners through the routing.
         /// </remarks>
         /// <seealso cref="RoutedEventArgs.RoutedEvent"/>
         public RoutedEventArgs(T originalEventArgs) => OriginalEventArgs = originalEventArgs;
@@ -93,5 +93,96 @@ namespace WinCopies
         /// <para>Null values for <see cref="RoutedEventArgs.OriginalSource"/> are populated based on the element that raised the event and passed on through the routing, but will read <see langword="null"/> prior to invocation.</para>
         /// <para>Use this signature when passing <see cref="RoutedEventArgs"/> to virtuals such as <see cref="TextBoxBase.OnSelectionChanged"/>, where the arguments are used to call <see cref="UIElement.RaiseEvent(RoutedEventArgs)"/> internally.</para>
         public RoutedEventArgs(RoutedEvent routedEvent, object source, T originalEventArgs) : base(routedEvent, source) => OriginalEventArgs = originalEventArgs;
+    }
+
+    namespace
+#if WinCopies3
+        Util.
+#endif
+        Data
+    {
+        public delegate void ValueChangedRoutedEventHandler(object sender, ValueChangedRoutedEventArgs e);
+
+        public delegate void ValueChangedRoutedEventHandler<T>(object sender, ValueChangedRoutedEventArgs<T> e);
+
+        public class ValueChangedRoutedEventArgs : RoutedEventArgs
+        {
+            public object OldValue { get; }
+
+            public object NewValue { get; }
+
+            public ValueChangedRoutedEventArgs(in object oldValue, in object newValue)
+            {
+                OldValue = oldValue;
+                NewValue = newValue;
+            }
+
+            public ValueChangedRoutedEventArgs(in object oldValue, in object newValue, RoutedEvent routedEvent) : base(routedEvent)
+            {
+                OldValue = oldValue;
+                NewValue = newValue;
+            }
+
+            public ValueChangedRoutedEventArgs(in object oldValue, in object newValue, RoutedEvent routedEvent, object source) : base(routedEvent, source)
+            {
+                OldValue = oldValue;
+                NewValue = newValue;
+            }
+        }
+
+        public class ValueChangedRoutedEventArgs<T> : RoutedEventArgs
+        {
+            public T OldValue { get; }
+
+            public T NewValue { get; }
+
+            public ValueChangedRoutedEventArgs(in T oldValue, in T newValue)
+            {
+                OldValue = oldValue;
+                NewValue = newValue;
+            }
+
+            public ValueChangedRoutedEventArgs(in T oldValue, in T newValue, RoutedEvent routedEvent) : base(routedEvent)
+            {
+                OldValue = oldValue;
+                NewValue = newValue;
+            }
+
+            public ValueChangedRoutedEventArgs(in T oldValue, in T newValue, RoutedEvent routedEvent, object source) : base(routedEvent, source)
+            {
+                OldValue = oldValue;
+                NewValue = newValue;
+            }
+        }
+    }
+
+    namespace DotNetFix
+    {
+        public class RoutedEventArgs<T> : RoutedEventArgs
+        {
+            public T OldValue { get; }
+
+            public T NewValue { get; }
+
+            public RoutedEventArgs(in T oldValue, in T newValue)
+            {
+                OldValue = oldValue;
+                NewValue = newValue;
+            }
+
+            public RoutedEventArgs(in T oldValue, in T newValue, RoutedEvent routedEvent) : base(routedEvent)
+            {
+                OldValue = oldValue;
+                NewValue = newValue;
+            }
+
+            public RoutedEventArgs(in T oldValue, in T newValue, RoutedEvent routedEvent, object source) : base(routedEvent, source)
+            {
+                OldValue = oldValue;
+                NewValue = newValue;
+            }
+        }
+
+        public delegate void RoutedEventHandler<T>(object sender, T e) where T : EventArgs;
     }
 }

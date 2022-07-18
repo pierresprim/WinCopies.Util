@@ -76,10 +76,22 @@ namespace WinCopies.Util.Commands.Primitives
 
     public class DelegateCommand : Command
     {
-        private readonly Predicate _predicate;
+        private readonly
+#if CS8 && WinCopies4
+            PredicateNull
+#else
+            Predicate
+#endif
+            _predicate;
         private readonly Action<object> _action;
 
-        public DelegateCommand(in string name, in string description, in Predicate predicate, in Action<object> action) : base(name, description)
+        public DelegateCommand(in string name, in string description, in
+#if CS8 && WinCopies4
+            PredicateNull
+#else
+            Predicate
+#endif
+            predicate, in Action<object> action) : base(name, description)
         {
             _predicate = predicate;
 

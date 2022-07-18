@@ -1,5 +1,5 @@
 ﻿/*
- Original source code: Fredrik Hedblad (https://meleak.wordpress.com/2011/08/28/onewaytosource-binding-for-readonly-dependency-property/)
+Original source code: Fredrik Hedblad (https://meleak.wordpress.com/2011/08/28/onewaytosource-binding-for-readonly-dependency-property/)
 
 This is free and unencumbered software released into the public domain.
 
@@ -26,187 +26,104 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 For more information, please refer to <http://unlicense.org> */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Data;
 using System.Globalization;
 using System.Windows.Controls;
-using System.Windows.Markup;
-using System.Xml;
 
 namespace WinCopies.Util.Data
 {
     public class FreezableBinding : Freezable
     {
         #region Properties
-
         private Binding _binding;
 
-#if NETFRAMEWORK
-        protected Binding Binding => _binding ?? (_binding = new Binding());
+        protected Binding Binding => _binding
+#if CS8
+            ??=
 #else
-        protected Binding Binding => _binding ??= new Binding();
+            ?? (_binding =
 #endif
+            new Binding()
+#if !CS8
+            )
+#endif
+            ;
 
         public DependencyObject TargetObject { get; internal set; }
 
         internal int Id { get; set; }
 
         [DefaultValue(null)]
-        public object AsyncState
-        {
-            get => Binding.AsyncState;
-            set => Binding.AsyncState = value;
-        }
+        public object AsyncState { get => Binding.AsyncState; set => Binding.AsyncState = value; }
 
         [DefaultValue(false)]
-        public bool BindsDirectlyToSource
-        {
-            get => Binding.BindsDirectlyToSource;
-            set => Binding.BindsDirectlyToSource = value;
-        }
+        public bool BindsDirectlyToSource { get => Binding.BindsDirectlyToSource; set => Binding.BindsDirectlyToSource = value; }
 
         [DefaultValue(null)]
-        public IValueConverter Converter
-        {
-            get => Binding.Converter;
-            set => Binding.Converter = value;
-        }
+        public IValueConverter Converter { get => Binding.Converter; set => Binding.Converter = value; }
 
         [TypeConverter(typeof(CultureInfoIetfLanguageTagConverter)), DefaultValue(null)]
-        public CultureInfo ConverterCulture
-        {
-            get => Binding.ConverterCulture;
-            set => Binding.ConverterCulture = value;
-        }
+        public CultureInfo ConverterCulture { get => Binding.ConverterCulture; set => Binding.ConverterCulture = value; }
 
         [DefaultValue(null)]
-        public object ConverterParameter
-        {
-            get => Binding.ConverterParameter;
-            set => Binding.ConverterParameter = value;
-        }
+        public object ConverterParameter { get => Binding.ConverterParameter; set => Binding.ConverterParameter = value; }
 
         [DefaultValue(null)]
-        public string ElementName
-        {
-            get => Binding.ElementName;
-            set => Binding.ElementName = value;
-        }
+        public string ElementName { get => Binding.ElementName; set => Binding.ElementName = value; }
 
         [DefaultValue(null)]
-        public object FallbackValue
-        {
-            get => Binding.FallbackValue;
-            set => Binding.FallbackValue = value;
-        }
+        public object FallbackValue { get => Binding.FallbackValue; set => Binding.FallbackValue = value; }
 
         [DefaultValue(false)]
-        public bool IsAsync
-        {
-            get => Binding.IsAsync;
-            set => Binding.IsAsync = value;
-        }
+        public bool IsAsync { get => Binding.IsAsync; set => Binding.IsAsync = value; }
 
         [DefaultValue(BindingMode.Default)]
-        public BindingMode Mode
-        {
-            get => Binding.Mode;
-            set => Binding.Mode = value;
-        }
+        public BindingMode Mode { get => Binding.Mode; set => Binding.Mode = value; }
 
         [DefaultValue(false)]
-        public bool NotifyOnSourceUpdated
-        {
-            get => Binding.NotifyOnSourceUpdated;
-            set => Binding.NotifyOnSourceUpdated = value;
-        }
+        public bool NotifyOnSourceUpdated { get => Binding.NotifyOnSourceUpdated; set => Binding.NotifyOnSourceUpdated = value; }
 
         [DefaultValue(false)]
-        public bool NotifyOnTargetUpdated
-        {
-            get => Binding.NotifyOnTargetUpdated;
-            set => Binding.NotifyOnTargetUpdated = value;
-        }
+        public bool NotifyOnTargetUpdated { get => Binding.NotifyOnTargetUpdated; set => Binding.NotifyOnTargetUpdated = value; }
 
         [DefaultValue(false)]
-        public bool NotifyOnValidationError
-        {
-            get => Binding.NotifyOnValidationError;
-            set => Binding.NotifyOnValidationError = value;
-        }
+        public bool NotifyOnValidationError { get => Binding.NotifyOnValidationError; set => Binding.NotifyOnValidationError = value; }
 
         [DefaultValue(null)]
-        public PropertyPath Path
-        {
-            get => Binding.Path;
-            set => Binding.Path = value;
-        }
+        public PropertyPath Path { get => Binding.Path; set => Binding.Path = value; }
 
         [DefaultValue(null)]
-        public RelativeSource RelativeSource
-        {
-            get => Binding.RelativeSource;
-            set => Binding.RelativeSource = value;
-        }
+        public RelativeSource RelativeSource { get => Binding.RelativeSource; set => Binding.RelativeSource = value; }
 
         [DefaultValue(null)]
-        public object Source
-        {
-            get => Binding.Source;
-            set => Binding.Source = value;
-        }
+        public object Source { get => Binding.Source; set => Binding.Source = value; }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public UpdateSourceExceptionFilterCallback UpdateSourceExceptionFilter
-        {
-            get => Binding.UpdateSourceExceptionFilter;
-            set => Binding.UpdateSourceExceptionFilter = value;
-        }
+        public UpdateSourceExceptionFilterCallback UpdateSourceExceptionFilter { get => Binding.UpdateSourceExceptionFilter; set => Binding.UpdateSourceExceptionFilter = value; }
 
         [DefaultValue(UpdateSourceTrigger.PropertyChanged)]
-        public UpdateSourceTrigger UpdateSourceTrigger
-        {
-            get => Binding.UpdateSourceTrigger;
-            set => Binding.UpdateSourceTrigger = value;
-        }
+        public UpdateSourceTrigger UpdateSourceTrigger { get => Binding.UpdateSourceTrigger; set => Binding.UpdateSourceTrigger = value; }
 
         [DefaultValue(false)]
-        public bool ValidatesOnDataErrors
-        {
-            get => Binding.ValidatesOnDataErrors;
-            set => Binding.ValidatesOnDataErrors = value;
-        }
+        public bool ValidatesOnDataErrors { get => Binding.ValidatesOnDataErrors; set => Binding.ValidatesOnDataErrors = value; }
 
         [DefaultValue(false)]
-        public bool ValidatesOnExceptions
-        {
-            get => Binding.ValidatesOnExceptions;
-            set => Binding.ValidatesOnExceptions = value;
-        }
+        public bool ValidatesOnExceptions { get => Binding.ValidatesOnExceptions; set => Binding.ValidatesOnExceptions = value; }
 
         [DefaultValue(null)]
-        public string XPath
-        {
-            get => Binding.XPath;
-            set => Binding.XPath = value;
-        }
+        public string XPath { get => Binding.XPath; set => Binding.XPath = value; }
 
         [DefaultValue(null)]
         public Collection<ValidationRule> ValidationRules => Binding.ValidationRules;
-
-        #endregion // Properties
+        #endregion Properties
 
         #region Freezable overrides
-
         protected override void CloneCore(Freezable sourceFreezable)
         {
-            var freezableBindingClone = sourceFreezable as FreezableBinding;
+            var freezableBindingClone = (FreezableBinding)sourceFreezable;
 
             if (freezableBindingClone.ElementName != null)
 
@@ -236,7 +153,7 @@ namespace WinCopies.Util.Data
             UpdateSourceTrigger = freezableBindingClone.UpdateSourceTrigger;
             ValidatesOnDataErrors = freezableBindingClone.ValidatesOnDataErrors;
             ValidatesOnExceptions = freezableBindingClone.ValidatesOnExceptions;
-            XPath = XPath;
+            XPath = freezableBindingClone.XPath;
 
             foreach (ValidationRule validationRule in freezableBindingClone.ValidationRules)
 
@@ -245,8 +162,17 @@ namespace WinCopies.Util.Data
             base.CloneCore(sourceFreezable);
         }
 
-        protected override Freezable CreateInstanceCore() => new FreezableBinding();
-
-        #endregion // Freezable overrides
+        protected override
+#if WinCopies3 && CS10
+            FreezableBinding
+#else
+            Freezable
+#endif
+            CreateInstanceCore() => new
+#if !CS10
+            FreezableBinding
+#endif
+            ();
+        #endregion Freezable overrides
     }
 }

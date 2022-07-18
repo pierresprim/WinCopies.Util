@@ -17,11 +17,11 @@
 
 using System.Windows.Input;
 
-#if WinCopies3
-namespace WinCopies.Commands
-#else
-namespace WinCopies.Util.Commands
+namespace WinCopies.
+#if !WinCopies3
+Util.
 #endif
+    Commands
 { 
     public static class TextCommands
     {

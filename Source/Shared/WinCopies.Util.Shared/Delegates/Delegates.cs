@@ -40,33 +40,143 @@ namespace WinCopies
         public static ulong GetULongLength<T>(IReadOnlyList<T> array) => (ulong)array.Count;
 #endif
 
-        public static bool CheckIfEqualsNull(object item) => item == null;
-        public static bool CheckIfEqualsNullIn(in object item) => item == null;
+        public static bool AreEqualIn(in object x, in object y) => x == y;
+        public static bool AreEqual(object x, object y) => AreEqualIn(x, y);
 
-        public static bool CheckIfEqualsNull<T>(T item) => item == null;
-        public static bool CheckIfEqualsNullIn<T>(in T item) => item == null;
+        public static bool AreNotEqualIn(in object x, in object y) => x != y;
+        public static bool AreNotEqual(object x, object y) => AreNotEqualIn(x, y);
 
-        public static bool CheckIfIsNull(object item) => item is null;
-        public static bool CheckIfIsNullIn(in object item) => item is null;
+        public static bool AreEqualIn<T>(in T x, in T y) => AreEqualIn((object)x, y);
+        public static bool AreEqual<T>(T x, T y) => AreEqualIn(x, y);
 
-        public static bool CheckIfIsNull<T>(T item)
+        public static bool AreNotEqualIn<T>(in T x, in T y) => AreNotEqualIn((object)x, y);
+        public static bool AreNotEqual<T>(T x, T y) => AreNotEqualIn(x, y);
+
+        public static Predicate GetAreEqualPredicate(object obj) => value => AreEqualIn(value, obj);
+        public static PredicateIn GetAreEqualPredicateIn(object obj) => (in object value) => AreEqualIn(value, obj);
+
+        public static Predicate GetAreNotEqualPredicate(object obj) => value => AreNotEqualIn(value, obj);
+        public static PredicateIn GetAreNotEqualPredicateIn(object obj) => (in object value) => AreNotEqualIn(value, obj);
+
+        public static Predicate<T> GetAreEqualPredicate<T>(T obj) => value => AreEqualIn(value, obj);
+        public static PredicateIn<T> GetAreEqualPredicateIn<T>(T obj) => (in T value) => AreEqualIn(value, obj);
+
+        public static Predicate<T> GetAreNotEqualPredicate<T>(T obj) => value => AreNotEqualIn(value, obj);
+        public static PredicateIn<T> GetAreNotEqualPredicateIn<T>(T obj) => (in T value) => AreNotEqualIn(value, obj);
+
+        public static bool
+#if WinCopies4
+            EqualsNull
+#else
+            CheckIfEqualsNull
+#endif
+            (object item) => item == null;
+        public static bool
+#if WinCopies4
+            EqualsNullIn
+#else
+            CheckIfEqualsNullIn
+#endif
+            (in object item) => item == null;
+
+        public static bool
+#if WinCopies4
+            EqualsNull
+#else
+            CheckIfEqualsNull
+#endif
+            <T>(T
+#if CS9
+            ?
+#endif
+            item) => item == null;
+        public static bool
+#if WinCopies4
+            EqualsNullIn
+#else
+            CheckIfEqualsNullIn
+#endif
+            <T>(in T
+#if CS9
+            ?
+#endif
+            item) => item == null;
+
+        public static bool
+#if WinCopies4
+            IsNull
+#else
+            CheckIfIsNull
+#endif
+            (object item) => item is null;
+        public static bool
+#if WinCopies4
+            IsNullIn
+#else
+            CheckIfIsNullIn
+#endif
+            (in object item) => item is null;
+
+        public static bool
+#if WinCopies4
+            IsNull
+#else
+            CheckIfIsNull
+#endif
+            <T>(T item)
 #if !CS8
             where T : class
 #endif
             => item is null;
-        public static bool CheckIfIsNullIn<T>(in T item)
+        public static bool
+#if WinCopies4
+            IsNullIn
+#else
+            CheckIfIsNullIn
+#endif
+            <T>(in T item)
 #if !CS8
             where T : class
 #endif
             => item is null;
 
-        public static bool CheckIfNotEqualsNull(object item) => item != null;
-        public static bool CheckIfNotEqualsNullIn(in object item) => item != null;
+        public static bool
+#if WinCopies4
+            NotEqualsNull
+#else
+            CheckIfNotEqualsNull
+#endif
+            (object item) => item != null;
+        public static bool
+#if WinCopies4
+            NotEqualsNullIn
+#else
+            CheckIfNotEqualsNullIn
+#endif
+            (in object item) => item != null;
 
-        public static bool CheckIfNotEqualsNull<T>(T item) => item != null;
-        public static bool CheckIfNotEqualsNullIn<T>(in T item) => item != null;
+        public static bool
+#if WinCopies4
+            NotEqualsNull
+#else
+            CheckIfNotEqualsNull
+#endif
+            <T>(T item) => item != null;
+        public static bool
+#if WinCopies4
+            NotEqualsNullIn
+#else
+            CheckIfNotEqualsNullIn
+#endif
+            <T>(in T item) => item != null;
 
-        public static bool CheckIfIsNotNull(object item) =>
+        public static bool
+#if WinCopies4
+            IsNotNull
+#else
+            CheckIfIsNotNull
+#endif
+            (object item) =>
 #if !CS9
             !(
 #endif
@@ -79,7 +189,13 @@ namespace WinCopies
             )
 #endif
             ;
-        public static bool CheckIfIsNotNullIn(in object item) =>
+        public static bool
+#if WinCopies4
+            IsNotNullIn
+#else
+            CheckIfIsNotNullIn
+#endif
+            (in object item) =>
 #if !CS9
             !(
 #endif
@@ -93,7 +209,13 @@ namespace WinCopies
 #endif
             ;
 
-        public static bool CheckIfIsNotNull<T>(T item)
+        public static bool
+#if WinCopies4
+            IsNotNull
+#else
+            CheckIfIsNotNull
+#endif
+            <T>(T item)
 #if !CS8
             where T : class
 #endif
@@ -110,7 +232,13 @@ namespace WinCopies
             )
 #endif
             ;
-        public static bool CheckIfIsNotNullIn<T>(in T item)
+        public static bool
+#if WinCopies4
+            IsNotNullIn
+#else
+            CheckIfIsNotNullIn
+#endif
+            <T>(in T item)
 #if !CS8
             where T : class
 #endif
@@ -140,25 +268,24 @@ namespace WinCopies
 
         public static object GetResult(Func func) => GetResultIn(func);
 
+        public static void EmptyVoid() { }
         public static void EmptyVoid(object parameter) { }
-
         public static void EmptyVoid<T>(T parameter) { }
 
+        public static T GetDefault<T>() => default;
+        public static TOut GetDefault<TIn, TOut>(TIn value) => default;
+
         public static object Null(object parameter) => null;
-
-        public static T Null<T>(T parameter) where T : class => null;
-
-        public static TOut Null<TIn, TOut>(TIn parameter) where TOut : class => null;
-
-        public static T Self<T>(T value) => value;
-
-        public static T SelfIn<T>(in T value) => value;
-
         public static object NullIn(in object parameter) => null;
 
+        public static T Null<T>(T parameter) where T : class => null;
         public static T NullIn<T>(in T parameter) where T : class => null;
 
+        public static TOut Null<TIn, TOut>(TIn parameter) where TOut : class => null;
         public static TOut NullIn<TIn, TOut>(in TIn parameter) where TOut : class => null;
+
+        public static T Self<T>(T value) => value;
+        public static T SelfIn<T>(in T value) => value;
 
         public static TOut Convert<TIn, TOut>(TIn value) where TOut : TIn => (TOut)value;
 
@@ -299,8 +426,6 @@ namespace WinCopies
         public static T GetValueIn<T>(in T? value) where T : struct => value.Value;
 
         public static T GetValue<T>(T? value) where T : struct => GetValueIn(value);
-
-        public static TOut GetDefault<TIn, TOut>(TIn value) => default;
     }
 
     /// <summary>
@@ -337,6 +462,12 @@ namespace WinCopies
         public static bool True(object value) => true;
 
         public static bool False(object value) => false;
+
+#if CS8
+        public static bool TrueNull(object? value) => true;
+
+        public static bool FalseNull(object? value) => false;
+#endif
 
         public static bool True<T>(T value) => true;
 

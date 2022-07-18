@@ -415,11 +415,27 @@ int
 
             public IUIntCountableEnumerator<ILinkedListNode<T>> GetReversedNodeEnumerator() => InnerList.GetReversedNodeEnumerator();
 
-            System.Collections.Generic.IEnumerator<T> Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => InnerList.AsFromType<Collections.Generic.IEnumerable<T>>().GetReversedEnumerator();
+            System.Collections.Generic.IEnumerator<T> Collections.
+#if WinCopies3
+            Extensions.
+#endif
+            Generic.IEnumerable<T>.GetReversedEnumerator() => InnerList.AsFromType<Collections.
+#if WinCopies3
+            Extensions.
+#endif
+            Generic.IEnumerable<T>>().GetReversedEnumerator();
 
             System.Collections.Generic.IEnumerator<ILinkedListNode<T>> System.Collections.Generic.IEnumerable<ILinkedListNode<T>>.GetEnumerator() => InnerList.AsFromType<System.Collections.Generic.IEnumerable<ILinkedListNode<T>>>().GetEnumerator();
 
-            System.Collections.Generic.IEnumerator<ILinkedListNode<T>> Collections.Generic.IEnumerable<ILinkedListNode<T>>.GetReversedEnumerator() => InnerList.AsFromType<Collections.Generic.IEnumerable<ILinkedListNode<T>>>().GetReversedEnumerator();
+            System.Collections.Generic.IEnumerator<ILinkedListNode<T>> Collections.
+#if WinCopies3
+            Extensions.
+#endif
+            Generic.IEnumerable<ILinkedListNode<T>>.GetReversedEnumerator() => InnerList.AsFromType<Collections.
+#if WinCopies3
+            Extensions.
+#endif
+            Generic.IEnumerable<ILinkedListNode<T>>>().GetReversedEnumerator();
 
             protected virtual void OnNodeRemoved(ILinkedListNode<T> node) { /* Left empty. */ }
 

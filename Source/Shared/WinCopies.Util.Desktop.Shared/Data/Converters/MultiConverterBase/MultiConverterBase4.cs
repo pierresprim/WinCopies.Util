@@ -18,13 +18,13 @@
 #if WinCopies3
 using System;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Data;
 
 using WinCopies.Collections;
 using WinCopies.Collections.Abstraction.Generic;
 using WinCopies.Collections.DotNetFix.Generic;
 using WinCopies.Collections.Generic;
-using WinCopies.Linq;
 
 namespace WinCopies.Util.Data
 {
@@ -44,7 +44,7 @@ namespace WinCopies.Util.Data
 #else
                     values == null ? null :
 #endif
-                    To<TSourceIn>(
+                    Cast<TSourceIn>(
 #if !WinCopies3
                         values
 #endif

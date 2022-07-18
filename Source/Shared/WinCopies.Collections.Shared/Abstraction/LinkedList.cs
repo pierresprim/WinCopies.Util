@@ -232,7 +232,11 @@ namespace WinCopies.Collections.Abstraction.Generic
 
         System.Collections.Generic.IEnumerator<ILinkedListNode<T>> System.Collections.Generic.IEnumerable<ILinkedListNode<T>>.GetEnumerator() => GetNodeEnumerator(EnumerationDirection.FIFO);
 
-        System.Collections.Generic.IEnumerator<ILinkedListNode<T>> Collections.Generic.IEnumerable<ILinkedListNode<T>>.GetReversedEnumerator() => GetNodeEnumerator(EnumerationDirection.LIFO);
+        System.Collections.Generic.IEnumerator<ILinkedListNode<T>> Collections.
+#if WinCopies3
+            Extensions.
+#endif
+            Generic.IEnumerable<ILinkedListNode<T>>.GetReversedEnumerator() => GetNodeEnumerator(EnumerationDirection.LIFO);
 
         System.Collections.IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetEnumerator(EnumerationDirection.LIFO);
 
@@ -303,7 +307,7 @@ namespace WinCopies.Collections.Abstraction.Generic
 
         void ILinkedList<T>.RemoveLast() => InnerList.RemoveLast();
 
-        void System.Collections.Generic.ICollection<T>.Add(T item) => ((System.Collections.Generic.ICollection<T>)InnerList).Add(item);
+        void System.Collections.Generic.ICollection<T>.Add(T item) => InnerList.AsFromType<System.Collections.Generic.ICollection<T>>().Add(item);
 
         void System.Collections.Generic.ICollection<T>.Clear() => InnerList.Clear();
 
@@ -313,7 +317,7 @@ namespace WinCopies.Collections.Abstraction.Generic
 
         bool System.Collections.Generic.ICollection<T>.Remove(T item) => InnerList.Remove(item);
 
-        void ICollection.CopyTo(Array array, int index) => ((ICollection)InnerList).CopyTo(array, index);
+        void ICollection.CopyTo(Array array, int index) => InnerList.AsFromType<ICollection>().CopyTo(array, index);
 
         public bool Equals(LinkedList<T> other) => other == null ? false : InnerList == other.InnerList;
 
@@ -321,7 +325,7 @@ namespace WinCopies.Collections.Abstraction.Generic
 
         public static bool operator !=(LinkedList<T> x, ILinkedList<T> y) => !(x == y);
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => ((IEnumerable)InnerList).GetEnumerator();
+        System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerList).GetEnumerator();
 
 #if WinCopies3
         DotNetFix.Generic.IUIntCountableEnumerable<ILinkedListNode<T>> ILinkedList<T>.AsNodeEnumerable() => throw new NotSupportedException("This operation is not supported by this implementation.");
@@ -343,9 +347,9 @@ namespace WinCopies.Collections.Abstraction.Generic
         IUIntCountableEnumerator<T> IUIntCountableEnumerable<T, IUIntCountableEnumerator<T>>.GetEnumerator() => GetEnumerator3(EnumerationDirection.FIFO);
 
 #if !CS8
-        System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetEnumerator(EnumerationDirection.FIFO);
+        System.Collections.Generic.IEnumerator<T> IEnumerable<T>.GetEnumerator() => GetEnumerator(EnumerationDirection.FIFO);
 
-        System.Collections.Generic.IEnumerator<T> Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => GetEnumerator(EnumerationDirection.LIFO);
+        System.Collections.Generic.IEnumerator<T> Extensions.Generic.IEnumerable<T>.GetReversedEnumerator() => GetEnumerator(EnumerationDirection.LIFO);
 
         IUIntCountableEnumerator<T> IReadOnlyLinkedList2<T>.GetEnumerator() => GetEnumerator3(EnumerationDirection.FIFO);
 

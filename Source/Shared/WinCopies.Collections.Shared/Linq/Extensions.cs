@@ -22,6 +22,7 @@ using System.Linq;
 
 using WinCopies.Collections;
 using WinCopies.Collections.Generic;
+using WinCopies.Util;
 
 using static WinCopies.Collections.ThrowHelper;
 
@@ -37,6 +38,17 @@ namespace WinCopies.Linq
 {
     public static class Extensions
     {
+        public static TOut[] Convert<TIn, TOut>(this TIn[] values, in Converter<TIn, TOut> converter)
+        {
+            var result = new TOut[values.Length];
+
+            for (int i = 0; i < values.Length; i++)
+
+                result[i] = converter(values[i]);
+
+            return result;
+        }
+
         private static TOut[] Select<TIn, TOut>(in int length, in ConverterIn<int, TOut> func)
         {
             var result = new TOut[length];
@@ -59,7 +71,7 @@ namespace WinCopies.Linq
 
         public static TOut[] SelectConverter<TIn, TOut>(this TIn[] items, Converter<TIn, TOut> func) => Select(items, nameof(items), nameof(func), (in int i) => func(items[i]));
 
-        public static System.Collections.Generic.IEnumerable<TOut> WhereSelectPredicateConverter<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, Predicate<TIn> where, Converter<TIn, TOut> select)
+        public static IEnumerable<TOut> WhereSelectPredicateConverter<TIn, TOut>(this IEnumerable<TIn> enumerable, Predicate<TIn> where, Converter<TIn, TOut> select)
         {
             foreach (TIn item in enumerable)
 
@@ -81,7 +93,7 @@ namespace WinCopies.Linq
         }
 #endif
 
-        public static System.Collections.Generic.IEnumerable<TOut> ForEach<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, Func<TIn, System.Collections.Generic.IEnumerable<TOut>> func)
+        public static IEnumerable<TOut> ForEach<TIn, TOut>(this IEnumerable<TIn> enumerable, Func<TIn, IEnumerable<TOut>> func)
         {
             foreach (TIn
 #if CS9
@@ -98,7 +110,7 @@ namespace WinCopies.Linq
                     yield return _item;
         }
 
-        public static System.Collections.Generic.IEnumerable<TOut> ForEachConverter<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, Converter<TIn, System.Collections.Generic.IEnumerable<TOut>> func)
+        public static IEnumerable<TOut> ForEachConverter<TIn, TOut>(this IEnumerable<TIn> enumerable, Converter<TIn, IEnumerable<TOut>> func)
         {
             foreach (TIn
 #if CS9
@@ -115,9 +127,9 @@ namespace WinCopies.Linq
                     yield return _item;
         }
 
-        public static System.Collections.Generic.IEnumerable<TOut> ForEachConverter<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, Converter<TIn, Func<System.Collections.Generic.IEnumerable<TOut>>> func) => enumerable.ForEachConverter(item => func(item)());
+        public static IEnumerable<TOut> ForEachConverter<TIn, TOut>(this IEnumerable<TIn> enumerable, Converter<TIn, Func<IEnumerable<TOut>>> func) => enumerable.ForEachConverter(item => func(item)());
 
-        public static T? FirstOrNull<T>(this System.Collections.Generic.IEnumerable<T> enumerable) where T : struct
+        public static T? FirstOrNull<T>(this IEnumerable<T> enumerable) where T : struct
         {
             foreach (T item in enumerable)
 
@@ -126,7 +138,7 @@ namespace WinCopies.Linq
             return null;
         }
 
-        public static T? FirstOrNull<T>(this System.Collections.Generic.IEnumerable<T> enumerable, Func<T, bool> predicate) where T : struct
+        public static T? FirstOrNull<T>(this IEnumerable<T> enumerable, Func<T, bool> predicate) where T : struct
         {
             ThrowIfNull(predicate, nameof(predicate));
 
@@ -139,7 +151,7 @@ namespace WinCopies.Linq
             return null;
         }
 
-        public static T? FirstOrNullPredicate<T>(this System.Collections.Generic.IEnumerable<T> enumerable, Predicate<T> predicate) where T : struct
+        public static T? FirstOrNullPredicate<T>(this IEnumerable<T> enumerable, Predicate<T> predicate) where T : struct
         {
             ThrowIfNull(predicate, nameof(predicate));
 
@@ -152,7 +164,7 @@ namespace WinCopies.Linq
             return null;
         }
 
-        public static TResult? FirstOrNull<TItems, TResult>(this System.Collections.Generic.IEnumerable<TItems> enumerable) where TResult : struct
+        public static TResult? FirstOrNull<TItems, TResult>(this IEnumerable<TItems> enumerable) where TResult : struct
         {
             foreach (TItems item in enumerable)
 
@@ -163,7 +175,7 @@ namespace WinCopies.Linq
             return null;
         }
 
-        public static System.Collections.Generic.IEnumerable<T> AsReadOnlyEnumerable<T>(this System.Collections.Generic.IEnumerable<T> enumerable)
+        public static IEnumerable<T> AsReadOnlyEnumerable<T>(this IEnumerable<T> enumerable)
         {
             foreach (T
 #if CS9
@@ -174,7 +186,7 @@ namespace WinCopies.Linq
                 yield return item;
         }
 
-        public static System.Collections.Generic.IEnumerable<U> As<T, U>(this System.Collections.Generic.IEnumerable<T> enumerable) where T : U
+        public static IEnumerable<U> As<T, U>(this IEnumerable<T> enumerable) where T : U
         {
             foreach (T
 #if CS9
@@ -215,7 +227,7 @@ namespace WinCopies.Linq
 
         public static bool Any<T>(this IEnumerable enumerable) => enumerable.Any(item => item is T);
 
-        public static bool AllPredicate<T>(this System.Collections.Generic.IEnumerable<T> source, Predicate<T> predicate)
+        public static bool AllPredicate<T>(this IEnumerable<T> source, Predicate<T> predicate)
         {
             foreach (T item in source)
 
@@ -226,7 +238,7 @@ namespace WinCopies.Linq
             return true;
         }
 
-        public static bool AnyPredicate<T>(this System.Collections.Generic.IEnumerable<T> source, Predicate<T> predicate)
+        public static bool AnyPredicate<T>(this IEnumerable<T> source, Predicate<T> predicate)
         {
             foreach (T item in source)
 
@@ -237,7 +249,7 @@ namespace WinCopies.Linq
             return false;
         }
 
-        public static System.Collections.Generic.IEnumerable<TOut> SelectConverterIfNotNull<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, Converter<TIn, TOut> converter) where TOut : class
+        public static IEnumerable<TOut> SelectConverterIfNotNull<TIn, TOut>(this IEnumerable<TIn> enumerable, Converter<TIn, TOut> converter) where TOut : class
         {
             ThrowIfNull(enumerable, nameof(enumerable));
 
@@ -250,7 +262,7 @@ namespace WinCopies.Linq
                     yield return value;
         }
 
-        public static System.Collections.Generic.IEnumerable<TOut> SelectIfNotNull<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, Func<TIn, TOut> converter) where TOut : class
+        public static IEnumerable<TOut> SelectIfNotNull<TIn, TOut>(this IEnumerable<TIn> enumerable, Func<TIn, TOut> converter) where TOut : class
         {
             ThrowIfNull(enumerable, nameof(enumerable));
 
@@ -263,7 +275,7 @@ namespace WinCopies.Linq
                     yield return value;
         }
 
-        public static System.Collections.Generic.IEnumerable<TOut> SelectConverterIfNotNullStruct<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, Converter<TIn, TOut?> converter) where TOut : struct
+        public static IEnumerable<TOut> SelectConverterIfNotNullStruct<TIn, TOut>(this IEnumerable<TIn> enumerable, Converter<TIn, TOut?> converter) where TOut : struct
         {
             ThrowIfNull(enumerable, nameof(enumerable));
 
@@ -276,7 +288,7 @@ namespace WinCopies.Linq
                     yield return value.Value;
         }
 
-        public static System.Collections.Generic.IEnumerable<TOut> SelectIfNotNullStruct<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, Func<TIn, TOut?> converter) where TOut : struct
+        public static IEnumerable<TOut> SelectIfNotNullStruct<TIn, TOut>(this IEnumerable<TIn> enumerable, Func<TIn, TOut?> converter) where TOut : struct
         {
             ThrowIfNull(enumerable, nameof(enumerable));
 
@@ -289,7 +301,7 @@ namespace WinCopies.Linq
                     yield return value.Value;
         }
 
-        public static T FirstOrValue<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in T value)
+        public static T FirstOrValue<T>(this IEnumerable<T> enumerable, in T value)
         {
 #if CS7
             if ((enumerable ?? throw GetArgumentNullException(nameof(enumerable))) is System.Collections.Generic.IReadOnlyList<T> list)
@@ -308,13 +320,13 @@ namespace WinCopies.Linq
             return value;
         }
 
-        public static T FirstOrValue<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Func<T> func)
+        public static T FirstOrValue<T>(this IEnumerable<T> enumerable, in Func<T> func)
         {
             ThrowIfNull(enumerable, nameof(enumerable));
             ThrowIfNull(func, nameof(func));
 
 #if CS7
-            if (enumerable is System.Collections.Generic.IReadOnlyList<T> list)
+            if (enumerable is IReadOnlyList<T> list)
 
                 return list.Count > 0 ? list[0] : func();
 #endif
@@ -330,7 +342,7 @@ namespace WinCopies.Linq
             return func();
         }
 
-        public static bool FirstOrValue<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in T value, out T result)
+        public static bool FirstOrValue<T>(this IEnumerable<T> enumerable, in T value, out T result)
         {
 #if CS7
             if ((enumerable ?? throw GetArgumentNullException(nameof(enumerable))) is System.Collections.Generic.IReadOnlyList<T> list)
@@ -374,13 +386,13 @@ namespace WinCopies.Linq
             return false;
         }
 
-        public static bool FirstOrValue<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Func<T> func, out T result)
+        public static bool FirstOrValue<T>(this IEnumerable<T> enumerable, in Func<T> func, out T result)
         {
             ThrowIfNull(enumerable, nameof(enumerable));
             ThrowIfNull(func, nameof(func));
 
 #if CS7
-            if (enumerable is System.Collections.Generic.IReadOnlyList<T> list)
+            if (enumerable is IReadOnlyList<T> list)
             {
                 if (list.Count > 0)
                 {
@@ -421,15 +433,15 @@ namespace WinCopies.Linq
             return false;
         }
 
-        public static T FirstOrDefaultValue<T>(this System.Collections.Generic.IEnumerable<T> enumerable) => enumerable.FirstOrValue(default(T));
+        public static T FirstOrDefaultValue<T>(this IEnumerable<T> enumerable) => enumerable.FirstOrValue(default(T));
 
-        public static bool FirstOrDefaultValue<T>(this System.Collections.Generic.IEnumerable<T> enumerable, out T result) => enumerable.FirstOrValue(default(T), out result);
+        public static bool FirstOrDefaultValue<T>(this IEnumerable<T> enumerable, out T result) => enumerable.FirstOrValue(default(T), out result);
 
-        public static T FirstValue<T>(this System.Collections.Generic.IEnumerable<T> enumerable) => enumerable.FirstOrValue(() => throw GetNoItemException());
+        public static T FirstValue<T>(this IEnumerable<T> enumerable) => enumerable.FirstOrValue(() => throw GetNoItemException());
 
-        public static bool FirstValue<T>(this System.Collections.Generic.IEnumerable<T> enumerable, out T result) => enumerable.FirstOrValue(() => throw GetNoItemException(), out result);
+        public static bool FirstValue<T>(this IEnumerable<T> enumerable, out T result) => enumerable.FirstOrValue(() => throw GetNoItemException(), out result);
 
-        public static T FirstOrValue<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in T value, in Func<T, bool> predicate)
+        public static T FirstOrValue<T>(this IEnumerable<T> enumerable, in T value, in Func<T, bool> predicate)
         {
             ThrowIfNull(enumerable, nameof(enumerable));
             ThrowIfNull(predicate, nameof(predicate));
@@ -443,7 +455,7 @@ namespace WinCopies.Linq
             return value;
         }
 
-        public static T FirstOrValuePredicate<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in T value, in Predicate<T> predicate)
+        public static T FirstOrValuePredicate<T>(this IEnumerable<T> enumerable, in T value, in Predicate<T> predicate)
         {
             ThrowIfNull(enumerable, nameof(enumerable));
             ThrowIfNull(predicate, nameof(predicate));
@@ -457,7 +469,7 @@ namespace WinCopies.Linq
             return value;
         }
 
-        public static T FirstOrValue<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Func<T> func, in Func<T, bool> predicate)
+        public static T FirstOrValue<T>(this IEnumerable<T> enumerable, in Func<T> func, in Func<T, bool> predicate)
         {
             ThrowIfNull(enumerable, nameof(enumerable));
             ThrowIfNull(func, nameof(func));
@@ -472,7 +484,7 @@ namespace WinCopies.Linq
             return func();
         }
 
-        public static T FirstOrValuePredicate<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Func<T> func, in Predicate<T> predicate)
+        public static T FirstOrValuePredicate<T>(this IEnumerable<T> enumerable, in Func<T> func, in Predicate<T> predicate)
         {
             ThrowIfNull(enumerable, nameof(enumerable));
             ThrowIfNull(func, nameof(func));
@@ -487,7 +499,7 @@ namespace WinCopies.Linq
             return func();
         }
 
-        public static bool FirstOrValue<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in T value, in Func<T, bool> predicate, out T result)
+        public static bool FirstOrValue<T>(this IEnumerable<T> enumerable, in T value, in Func<T, bool> predicate, out T result)
         {
             ThrowIfNull(enumerable, nameof(enumerable));
             ThrowIfNull(predicate, nameof(predicate));
@@ -506,7 +518,7 @@ namespace WinCopies.Linq
             return false;
         }
 
-        public static bool FirstOrValuePredicate<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in T value, in Predicate<T> predicate, out T result)
+        public static bool FirstOrValuePredicate<T>(this IEnumerable<T> enumerable, in T value, in Predicate<T> predicate, out T result)
         {
             ThrowIfNull(enumerable, nameof(enumerable));
             ThrowIfNull(predicate, nameof(predicate));
@@ -525,7 +537,7 @@ namespace WinCopies.Linq
             return false;
         }
 
-        public static bool FirstOrValue<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Func<T> func, in Func<T, bool> predicate, out T result)
+        public static bool FirstOrValue<T>(this IEnumerable<T> enumerable, in Func<T> func, in Func<T, bool> predicate, out T result)
         {
             ThrowIfNull(enumerable, nameof(enumerable));
             ThrowIfNull(func, nameof(func));
@@ -545,7 +557,7 @@ namespace WinCopies.Linq
             return false;
         }
 
-        public static bool FirstOrValuePredicate<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Func<T> func, in Predicate<T> predicate, out T result)
+        public static bool FirstOrValuePredicate<T>(this IEnumerable<T> enumerable, in Func<T> func, in Predicate<T> predicate, out T result)
         {
             ThrowIfNull(enumerable, nameof(enumerable));
             ThrowIfNull(func, nameof(func));
@@ -565,30 +577,30 @@ namespace WinCopies.Linq
             return false;
         }
 
-        public static T FirstOrDefaultValue<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Func<T, bool> func) => enumerable.FirstOrValue(default(T), func);
+        public static T FirstOrDefaultValue<T>(this IEnumerable<T> enumerable, in Func<T, bool> func) => enumerable.FirstOrValue(default(T), func);
 
-        public static T FirstOrDefaultValuePredicate<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Predicate<T> func) => enumerable.FirstOrValuePredicate(default(T), func);
+        public static T FirstOrDefaultValuePredicate<T>(this IEnumerable<T> enumerable, in Predicate<T> func) => enumerable.FirstOrValuePredicate(default(T), func);
 
-        public static bool FirstOrDefaultValue<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Func<T, bool> func, out T result) => enumerable.FirstOrValue(default(T), func, out result);
+        public static bool FirstOrDefaultValue<T>(this IEnumerable<T> enumerable, in Func<T, bool> func, out T result) => enumerable.FirstOrValue(default(T), func, out result);
 
-        public static bool FirstOrDefaultValuePredicate<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Predicate<T> func, out T result) => enumerable.FirstOrValuePredicate(default(T), func, out result);
+        public static bool FirstOrDefaultValuePredicate<T>(this IEnumerable<T> enumerable, in Predicate<T> func, out T result) => enumerable.FirstOrValuePredicate(default(T), func, out result);
 
-        public static T FirstValue<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Func<T, bool> func) => enumerable.FirstOrValue(() => throw GetNoItemException(), func);
+        public static T FirstValue<T>(this IEnumerable<T> enumerable, in Func<T, bool> func) => enumerable.FirstOrValue(() => throw GetNoItemException(), func);
 
-        public static T FirstPredicate<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Predicate<T> func) => enumerable.FirstOrValuePredicate(() => throw GetNoItemException(), func);
+        public static T FirstPredicate<T>(this IEnumerable<T> enumerable, in Predicate<T> func) => enumerable.FirstOrValuePredicate(() => throw GetNoItemException(), func);
 
-        public static bool FirstValue<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Func<T, bool> func, out T result) => enumerable.FirstOrValue(() => throw GetNoItemException(), func, out result);
+        public static bool FirstValue<T>(this IEnumerable<T> enumerable, in Func<T, bool> func, out T result) => enumerable.FirstOrValue(() => throw GetNoItemException(), func, out result);
 
-        public static bool FirstPredicate<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in Predicate<T> func, out T result) => enumerable.FirstOrValuePredicate(() => throw GetNoItemException(), func, out result);
+        public static bool FirstPredicate<T>(this IEnumerable<T> enumerable, in Predicate<T> func, out T result) => enumerable.FirstOrValuePredicate(() => throw GetNoItemException(), func, out result);
 
-        public static System.Collections.Generic.IEnumerable<T> Select<T>(this IEnumerable enumerable, Func<object, T> func)
+        public static IEnumerable<T> Select<T>(this IEnumerable enumerable, Func<object, T> func)
         {
             foreach (object value in enumerable)
 
                 yield return func(value);
         }
 
-        public static System.Collections.Generic.IEnumerable<TValue> OrderBy<TValue, TKey>(this System.Collections.Generic.IEnumerable<TValue> enumerable, Func<TValue, TKey> func, Comparison<TKey> comparison) => enumerable.OrderBy(func, new Comparer2<TKey>(comparison));
+        public static IEnumerable<TValue> OrderBy<TValue, TKey>(this System.Collections.Generic.IEnumerable<TValue> enumerable, Func<TValue, TKey> func, Comparison<TKey> comparison) => enumerable.OrderBy(func, new Comparer2<TKey>(comparison));
 
         public static T FirstOrDefault<T>(this IEnumerable enumerable, in Func<object, bool> predicate)
         {
@@ -601,7 +613,7 @@ namespace WinCopies.Linq
             return default;
         }
 
-        public static TOut FirstOrDefault<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, in Func<TIn, bool> predicate)
+        public static TOut FirstOrDefault<TIn, TOut>(this IEnumerable<TIn> enumerable, in Func<TIn, bool> predicate)
         {
             foreach (TIn item in enumerable)
 
@@ -612,7 +624,7 @@ namespace WinCopies.Linq
             return default;
         }
 
-        public static TOut PredicateFirstOrDefault<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, in Predicate<TIn> predicate)
+        public static TOut PredicateFirstOrDefault<TIn, TOut>(this IEnumerable<TIn> enumerable, in Predicate<TIn> predicate)
         {
             foreach (TIn item in enumerable)
 
@@ -623,7 +635,7 @@ namespace WinCopies.Linq
             return default;
         }
 
-        public static TOut FirstOrDefault<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, in Func<TOut, bool> predicate)
+        public static TOut FirstOrDefault<TIn, TOut>(this IEnumerable<TIn> enumerable, in Func<TOut, bool> predicate)
         {
             foreach (TIn item in enumerable)
 
@@ -634,7 +646,7 @@ namespace WinCopies.Linq
             return default;
         }
 
-        public static TOut PredicateFirstOrDefault<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, in Predicate<TOut> predicate)
+        public static TOut PredicateFirstOrDefault<TIn, TOut>(this IEnumerable<TIn> enumerable, in Predicate<TOut> predicate)
         {
             foreach (TIn item in enumerable)
 
@@ -645,7 +657,7 @@ namespace WinCopies.Linq
             return default;
         }
 
-        public static TOut FirstOrDefault<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, in Func<TIn, bool> inPredicate, in Func<TOut, bool> outPredicate)
+        public static TOut FirstOrDefault<TIn, TOut>(this IEnumerable<TIn> enumerable, in Func<TIn, bool> inPredicate, in Func<TOut, bool> outPredicate)
         {
             foreach (TIn item in enumerable)
 
@@ -656,7 +668,7 @@ namespace WinCopies.Linq
             return default;
         }
 
-        public static TOut PredicateFirstOrDefault<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, in Predicate<TIn> inPredicate, in Predicate<TOut> outPredicate)
+        public static TOut PredicateFirstOrDefault<TIn, TOut>(this IEnumerable<TIn> enumerable, in Predicate<TIn> inPredicate, in Predicate<TOut> outPredicate)
         {
             foreach (TIn item in enumerable)
 
@@ -667,7 +679,7 @@ namespace WinCopies.Linq
             return default;
         }
 
-        public static System.Collections.Generic.IEnumerable<TOut> WhereSelect<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, Func<TIn, bool> where, Func<TIn, TOut> select)
+        public static IEnumerable<TOut> WhereSelect<TIn, TOut>(this IEnumerable<TIn> enumerable, Func<TIn, bool> where, Func<TIn, TOut> select)
         {
             foreach (TIn item in enumerable)
 
@@ -676,12 +688,25 @@ namespace WinCopies.Linq
                     yield return select(item);
         }
 
+        public static bool AnyPredicate<T>(this IEnumerable<T> enumerable, in Predicate<T> predicate, in bool ifValidated)
+        {
+            foreach (T value in enumerable)
+
+                if (predicate(value)) return ifValidated;
+
+            return !ifValidated;
+        }
+
+        public static bool AnyPredicate<T>(this IEnumerable<T> enumerable, in Predicate<T> predicate) => enumerable.AnyPredicate(predicate, true);
+
+        public static bool AllPredicate<T>(this IEnumerable<T> enumerable, in Predicate<T> predicate) => enumerable.AnyPredicate(predicate.Reverse(), false);
+
         /// <summary>
         /// Yield returns each object of an <see cref="IEnumerable"/>, so the given <see cref="IEnumerable"/> will be considered as an <see cref="IEnumerable{Object}"/>.
         /// </summary>
         /// <param name="enumerable">An <see cref="IEnumerable"/> to consider as a <see cref="IEnumerable{Object}"/>.</param>
         /// <returns>Yield returns the same enumerable as the given <paramref name="enumerable"/>, as an <see cref="IEnumerable{Object}"/>.</returns>
-        public static System.Collections.Generic.IEnumerable<object> AsObjectEnumerable(this IEnumerable enumerable)
+        public static IEnumerable<object> AsObjectEnumerable(this IEnumerable enumerable)
         {
             ThrowIfNull(enumerable, nameof(enumerable));
 
@@ -690,6 +715,7 @@ namespace WinCopies.Linq
                 yield return item;
         }
 
+#if !WinCopies3
         /// <summary>
         /// Iterates through a given <see cref="IEnumerable"/> and tries to convert the items to a given generic type parameter. If an item cannot be converted, it is ignored in the resulting enumerable.
         /// </summary>
@@ -697,7 +723,14 @@ namespace WinCopies.Linq
         /// <param name="enumerable">The source enumerable.</param>
         /// <returns>An enumerable containing all the items from <paramref name="enumerable"/> that could be converted to <typeparamref name="T"/>.</returns>
         /// <seealso cref="To{T}(IEnumerable)"/>
-        public static System.Collections.Generic.IEnumerable<T> As<T>(this IEnumerable enumerable) => new Enumerable<T>(() => new TypeConverterEnumerator<T>(enumerable));
+        public static System.Collections.Generic.IEnumerable<T> As<T>(this IEnumerable enumerable) //=> new Enumerable<T>(() => new TypeConverterEnumerator<T>(enumerable));
+        {
+            foreach (object item in enumerable)
+
+                if (item is T _item)
+
+                    yield return _item;
+        }
 
         /// <summary>
         /// Iterates through a given <see cref="IEnumerable"/> and directly converts the items to a given generic type parameter. An <see cref="InvalidCastException"/> is thrown when an item cannot be converted.
@@ -708,6 +741,9 @@ namespace WinCopies.Linq
         /// <exception cref="InvalidCastException">An item could not be converted.</exception>
         /// <seealso cref="As{T}(IEnumerable)"/>
         public static System.Collections.Generic.IEnumerable<T> To<T>(this IEnumerable enumerable) => enumerable.SelectConverter(value => (T)value);
+#endif
+
+        public static IEnumerable<T> SelectMany<T>(this IEnumerable<IEnumerable<T>> enumerable) => enumerable.SelectMany(Delegates.Self);
 
         public static
 #if WinCopies3
@@ -719,7 +755,7 @@ namespace WinCopies.Linq
 #if CS9
                 ?
 #endif
-                > Join<T>(this System.Collections.Generic.IEnumerable<System.Collections.Generic.IEnumerable<T
+                > Join<T>(this IEnumerable<IEnumerable<T
 #if CS9
                 ?
 #endif
@@ -739,11 +775,11 @@ namespace WinCopies.Linq
 #endif
             );
 
-        public static System.Collections.Generic.IEnumerable<T
+        public static IEnumerable<T
 #if CS9
                 ?
 #endif
-                > Join<T>(this System.Collections.Generic.IEnumerable<Func<System.Collections.Generic.IEnumerable<T
+                > Join<T>(this IEnumerable<Func<IEnumerable<T
 #if CS9
                 ?
 #endif
@@ -753,7 +789,7 @@ namespace WinCopies.Linq
 #endif
                 >> enumerable, bool keepEmptyEnumerables, params T[] join) => enumerable.Select(Delegates.GetResult).Join(keepEmptyEnumerables, join);
 
-        public static System.Collections.Generic.IEnumerable<T> WherePredicate<T>(this System.Collections.Generic.IEnumerable<T> enumerable, Predicate<T> func)
+        public static IEnumerable<T> WherePredicate<T>(this System.Collections.Generic.IEnumerable<T> enumerable, Predicate<T> func)
         {
             ThrowIfNull(enumerable, nameof(enumerable));
             ThrowIfNull(func, nameof(func));
@@ -808,7 +844,7 @@ Select
 #else
             SelectConverter
 #endif
-            <TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, Converter<TIn, TOut> selector)
+            <TIn, TOut>(this IEnumerable<TIn> enumerable, Converter<TIn, TOut> selector)
 #if !WinCopies3
         {
             foreach (TIn item in enumerable)
@@ -820,7 +856,11 @@ Select
 
         public static Collections.Generic.IEnumerableInfo<TOut> SelectConverter<TIn, TOut>(this Collections.Generic.IEnumerableInfo<TIn> enumerable, Converter<TIn, TOut> selector) => new EnumerableInfo<TOut>(() => new SelectEnumerator<TIn, TOut>(enumerable, selector), () => new SelectEnumerator<TIn, TOut>(enumerable.GetReversedEnumerator(), selector));
 
-        public static T Last<T>(this Collections.Generic.IEnumerable<T> enumerable)
+        public static T Last<T>(this Collections.
+#if WinCopies3
+            Extensions.
+#endif
+            Generic.IEnumerable<T> enumerable)
         {
             if ((enumerable ?? throw GetArgumentNullException(nameof(enumerable))).SupportsReversedEnumeration)
             {
@@ -829,10 +869,14 @@ Select
                 return enumerator.MoveNext() ? enumerator.Current : throw new InvalidOperationException("The enumerable is empty.");
             }
 
-            return ((System.Collections.Generic.IEnumerable<T>)enumerable).Last();
+            return ((IEnumerable<T>)enumerable).Last();
         }
 
-        public static T PredicateLast<T>(this Collections.Generic.IEnumerable<T> enumerable, Predicate<T> predicate)
+        public static T PredicateLast<T>(this Collections.
+#if WinCopies3
+            Extensions.
+#endif
+            Generic.IEnumerable<T> enumerable, Predicate<T> predicate)
         {
             ThrowIfNull(enumerable, nameof(enumerable));
             ThrowIfNull(predicate, nameof(predicate));
@@ -853,7 +897,11 @@ Select
             return enumerable.Last(item => predicate(item));
         }
 
-        public static T LastOrDefault<T>(this Collections.Generic.IEnumerable<T> enumerable)
+        public static T LastOrDefault<T>(this Collections.
+#if WinCopies3
+            Extensions.
+#endif
+            Generic.IEnumerable<T> enumerable)
         {
             if ((enumerable ?? throw GetArgumentNullException(nameof(enumerable))).SupportsReversedEnumeration)
             {
@@ -865,7 +913,11 @@ Select
             return enumerable.AsEnumerable().LastOrDefault();
         }
 
-        public static T PredicateLastOrDefault<T>(this Collections.Generic.IEnumerable<T> enumerable, Predicate<T> predicate)
+        public static T PredicateLastOrDefault<T>(this Collections.
+#if WinCopies3
+            Extensions.
+#endif
+            Generic.IEnumerable<T> enumerable, Predicate<T> predicate)
         {
             ThrowIfNull(enumerable, nameof(enumerable));
             ThrowIfNull(predicate, nameof(predicate));
@@ -1030,10 +1082,9 @@ Select
 
             return value!;
         }
-#nullable restore
 #endif
 
-        public static TOut FirstOrDefault<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, in Func<TIn, object> func)
+        public static TOut FirstOrDefault<TIn, TOut>(this IEnumerable<TIn> enumerable, in Func<TIn, object> func)
         {
             ThrowIfNull(enumerable, nameof(enumerable));
 
@@ -1076,7 +1127,7 @@ Select
 
         public static IEnumerable AppendValues(this IEnumerable enumerable, params IEnumerable[] newValues) => AppendValues(enumerable, newValues.ToEnumerable());
 
-        public static System.Collections.Generic.IEnumerable<T> AppendValues<T>(this System.Collections.Generic.IEnumerable<T> enumerable, params System.Collections.Generic.IEnumerable<T>[] newValues)
+        public static IEnumerable<T> AppendValues<T>(this IEnumerable<T> enumerable, params IEnumerable<T>[] newValues)
         {
             ThrowIfNull(enumerable, nameof(enumerable));
 
@@ -1084,13 +1135,14 @@ Select
 
                 yield return obj;
 
-            foreach (System.Collections.Generic.IEnumerable<T> _enumerable in newValues)
+            foreach (IEnumerable<T> _enumerable in newValues)
 
                 foreach (T _obj in _enumerable)
 
                     yield return _obj;
         }
-        public static System.Collections.Generic.IEnumerable<T> AppendValues<T>(this System.Collections.Generic.IEnumerable<T> enumerable, System.Collections.Generic.IEnumerable<T> values)
+
+        public static IEnumerable<T> AppendValues<T>(this IEnumerable<T> enumerable, IEnumerable<T> values)
         {
             foreach (T value in enumerable)
 
@@ -1101,18 +1153,18 @@ Select
                 yield return _value;
         }
 
-        public static System.Collections.Generic.IEnumerable<T> AppendValues<T>(this System.Collections.Generic.IEnumerable<T> enumerable, params T[] values) => enumerable.AppendValues(values.ToEnumerable());
+        public static IEnumerable<T> AppendValues<T>(this IEnumerable<T> enumerable, params T[] values) => enumerable.AppendValues(values.ToEnumerable());
 
-        public static System.Collections.Generic.IEnumerable<T> Merge<T>(this System.Collections.Generic.IEnumerable<System.Collections.Generic.IEnumerable<T>> enumerable)
+        public static IEnumerable<T> Merge<T>(this IEnumerable<IEnumerable<T>> enumerable)
         {
-            foreach (System.Collections.Generic.IEnumerable<T> _enumerable in enumerable)
+            foreach (IEnumerable<T> _enumerable in enumerable)
 
                 foreach (T item in _enumerable)
 
                     yield return item;
         }
 
-        public static IEnumerable Merge(this System.Collections.Generic.IEnumerable<IEnumerable> enumerable)
+        public static IEnumerable Merge(this IEnumerable<IEnumerable> enumerable)
         {
             foreach (IEnumerable _enumerable in enumerable)
 
@@ -1120,7 +1172,8 @@ Select
 
                     yield return item;
         }
-        public static IEnumerable TryMerge(this System.Collections.Generic.IEnumerable<IEnumerable> enumerable)
+
+        public static IEnumerable TryMerge(this IEnumerable<IEnumerable> enumerable)
         {
             foreach (IEnumerable _enumerable in enumerable)
 
@@ -1131,9 +1184,9 @@ Select
                         yield return item;
         }
 
-        public static System.Collections.Generic.IEnumerable<T> TryMerge<T>(this System.Collections.Generic.IEnumerable<System.Collections.Generic.IEnumerable<T>> enumerable)
+        public static IEnumerable<T> TryMerge<T>(this IEnumerable<IEnumerable<T>> enumerable)
         {
-            foreach (System.Collections.Generic.IEnumerable<T> _enumerable in enumerable)
+            foreach (IEnumerable<T> _enumerable in enumerable)
 
                 if (_enumerable != null)
 
@@ -1142,7 +1195,7 @@ Select
                         yield return item;
         }
 
-        public static System.Collections.Generic.IEnumerable<TOut> WherePredicateSelect<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, Predicate<TIn> where, Converter<TIn, TOut> select)
+        public static IEnumerable<TOut> WherePredicateSelect<TIn, TOut>(this IEnumerable<TIn> enumerable, Predicate<TIn> where, Converter<TIn, TOut> select)
         {
             foreach (TIn item in enumerable)
 
@@ -1151,7 +1204,7 @@ Select
                     yield return select(item);
         }
 
-        public static System.Collections.Generic.IEnumerable<TOut> SelectWhere<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, Func<TIn, TOut> select, Func<TOut, bool> where)
+        public static IEnumerable<TOut> SelectWhere<TIn, TOut>(this IEnumerable<TIn> enumerable, Func<TIn, TOut> select, Func<TOut, bool> where)
         {
             TOut _item;
 
@@ -1162,7 +1215,7 @@ Select
                     yield return _item;
         }
 
-        public static System.Collections.Generic.IEnumerable<TOut> SelectWherePredicate<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, Converter<TIn, TOut> select, Predicate<TOut> where)
+        public static IEnumerable<TOut> SelectWherePredicate<TIn, TOut>(this IEnumerable<TIn> enumerable, Converter<TIn, TOut> select, Predicate<TOut> where)
         {
             TOut _item;
 
@@ -1173,7 +1226,7 @@ Select
                     yield return _item;
         }
 
-        public static System.Collections.Generic.IEnumerable<TOut> WhereSelectWhere<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, Func<TIn, bool> inPredicate, Func<TIn, TOut> converter, Func<TOut, bool> outPredicate)
+        public static IEnumerable<TOut> WhereSelectWhere<TIn, TOut>(this IEnumerable<TIn> enumerable, Func<TIn, bool> inPredicate, Func<TIn, TOut> converter, Func<TOut, bool> outPredicate)
         {
             TOut _item;
 
@@ -1186,7 +1239,7 @@ Select
                         yield return _item;
         }
 
-        public static System.Collections.Generic.IEnumerable<TOut> WhereSelectWherePredicate<TIn, TOut>(this System.Collections.Generic.IEnumerable<TIn> enumerable, Predicate<TIn> inPredicate, Converter<TIn, TOut> converter, Predicate<TOut> outPredicate)
+        public static IEnumerable<TOut> WhereSelectWherePredicate<TIn, TOut>(this IEnumerable<TIn> enumerable, Predicate<TIn> inPredicate, Converter<TIn, TOut> converter, Predicate<TOut> outPredicate)
         {
             TOut _item;
 
@@ -1199,7 +1252,7 @@ Select
                         yield return _item;
         }
 
-        public static System.Collections.Generic.IEnumerable<T> PrependValues<T>(this System.Collections.Generic.IEnumerable<T> enumerable, System.Collections.Generic.IEnumerable<T> values)
+        public static IEnumerable<T> PrependValues<T>(this IEnumerable<T> enumerable, IEnumerable<T> values)
         {
             ThrowIfNull(enumerable, nameof(enumerable));
             ThrowIfNull(values, nameof(values));
@@ -1213,14 +1266,14 @@ Select
                 yield return item;
         }
 
-        public static System.Collections.Generic.IEnumerable<T> PrependValues<T>(this System.Collections.Generic.IEnumerable<T> enumerable, params T[] values) => enumerable.PrependValues(values.ToEnumerable());
+        public static IEnumerable<T> PrependValues<T>(this IEnumerable<T> enumerable, params T[] values) => enumerable.PrependValues(values.ToEnumerable());
 
-        public static System.Collections.Generic.IEnumerable<T> PrependValues<T>(this System.Collections.Generic.IEnumerable<T> enumerable, System.Collections.Generic.IEnumerable<System.Collections.Generic.IEnumerable<T>> values)
+        public static IEnumerable<T> PrependValues<T>(this IEnumerable<T> enumerable, IEnumerable<IEnumerable<T>> values)
         {
             ThrowIfNull(enumerable, nameof(enumerable));
             ThrowIfNull(values, nameof(values));
 
-            foreach (System.Collections.Generic.IEnumerable<T> _values in values)
+            foreach (IEnumerable<T> _values in values)
 
                 foreach (T item in _values)
 
@@ -1231,9 +1284,9 @@ Select
                 yield return item;
         }
 
-        public static System.Collections.Generic.IEnumerable<T> PrependValues<T>(this System.Collections.Generic.IEnumerable<T> enumerable, params System.Collections.Generic.IEnumerable<T>[] values) => enumerable.PrependValues(values.ToEnumerable());
+        public static IEnumerable<T> PrependValues<T>(this IEnumerable<T> enumerable, params IEnumerable<T>[] values) => enumerable.PrependValues(values.ToEnumerable());
 
-        public static System.Collections.Generic.IEnumerable<T> Surround<T>(this System.Collections.Generic.IEnumerable<T> enumerable, System.Collections.Generic.IEnumerable<T> firstItems, System.Collections.Generic.IEnumerable<T> lastItems)
+        public static IEnumerable<T> Surround<T>(this IEnumerable<T> enumerable, IEnumerable<T> firstItems, IEnumerable<T> lastItems)
         {
             ThrowIfNull(enumerable, nameof(enumerable));
             ThrowIfNull(firstItems, nameof(firstItems));
@@ -1252,13 +1305,13 @@ Select
                 yield return item;
         }
 
-        public static System.Collections.Generic.IEnumerable<T> Surround<T>(this System.Collections.Generic.IEnumerable<T> enumerable, System.Collections.Generic.IEnumerable<System.Collections.Generic.IEnumerable<T>> firstItems, System.Collections.Generic.IEnumerable<System.Collections.Generic.IEnumerable<T>> lastItems)
+        public static IEnumerable<T> Surround<T>(this IEnumerable<T> enumerable, IEnumerable<IEnumerable<T>> firstItems, IEnumerable<IEnumerable<T>> lastItems)
         {
             ThrowIfNull(enumerable, nameof(enumerable));
             ThrowIfNull(firstItems, nameof(firstItems));
             ThrowIfNull(lastItems, nameof(lastItems));
 
-            foreach (System.Collections.Generic.IEnumerable<T> _firstItems in firstItems)
+            foreach (IEnumerable<T> _firstItems in firstItems)
 
                 foreach (T item in _firstItems)
 
@@ -1268,21 +1321,21 @@ Select
 
                 yield return item;
 
-            foreach (System.Collections.Generic.IEnumerable<T> _lastItems in lastItems)
+            foreach (IEnumerable<T> _lastItems in lastItems)
 
                 foreach (T item in _lastItems)
 
                     yield return item;
         }
 
-        public static System.Collections.Generic.IEnumerable<T> SelectConverter<T>(this IEnumerable enumerable, Converter<T> converter)
+        public static IEnumerable<T> SelectConverter<T>(this IEnumerable enumerable, Converter<T> converter)
         {
             foreach (object value in enumerable ?? throw GetArgumentNullException(nameof(enumerable)))
 
                 yield return converter(value);
         }
 
-        public static U SelectFirstOrDefault<T, U>(this System.Collections.Generic.IEnumerable<T> enumerable, Predicate<T> predicate, Converter<T, U> converter)
+        public static U SelectFirstOrDefault<T, U>(this IEnumerable<T> enumerable, Predicate<T> predicate, Converter<T, U> converter)
         {
             foreach (T item in enumerable)
 

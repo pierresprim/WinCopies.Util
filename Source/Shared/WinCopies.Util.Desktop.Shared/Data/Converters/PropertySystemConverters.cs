@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Data;
 
 using WinCopies.Collections.DotNetFix.Generic;
@@ -56,7 +57,7 @@ namespace WinCopies.PropertySystem
 
                     return new ArrayBuilder<IProperty>();
 
-            return new ArrayBuilder<IProperty>(values.To<System.Collections.Generic.IEnumerable<IProperty>>().TryMerge());
+            return new ArrayBuilder<IProperty>(values.Cast<System.Collections.Generic.IEnumerable<IProperty>>().TryMerge());
         }
 
         protected override bool Convert(ArrayBuilder<IProperty> value, object parameter, CultureInfo culture, out IList<IProperty> result)

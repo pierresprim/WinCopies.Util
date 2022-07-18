@@ -32,7 +32,11 @@ namespace WinCopies.Collections.DotNetFix
 {
     public interface IReadOnlyLinkedList<T> : System.Collections.Generic.ICollection<T>, ICollection, System.Collections.Generic.IReadOnlyCollection<T>,
 #if WinCopies3
-            IReadOnlyUIntCollection<T>, IUIntCountable, Collections.Generic.IEnumerable<T> /* In order to have the GetReversedEnumerator() method through the Collections.Generic.IEnumerable<T> interface. */
+            IReadOnlyUIntCollection<T>, IUIntCountable, Collections.
+#if WinCopies3
+            Extensions.
+#endif
+            Generic.IEnumerable<T> /* In order to have the GetReversedEnumerator() method through the Collections.Generic.IEnumerable<T> interface. */
 #else
             ICountableEnumerable<T>, ISerializable, IDeserializationCallback
 #endif
@@ -109,7 +113,11 @@ int
 #if CS8
         System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetEnumerator();
 
-        System.Collections.Generic.IEnumerator<T> Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => GetReversedEnumerator();
+        System.Collections.Generic.IEnumerator<T> Collections.
+#if WinCopies3
+            Extensions.
+#endif
+            Generic.IEnumerable<T>.GetReversedEnumerator() => GetReversedEnumerator();
 
         bool System.Collections.Generic.ICollection<T>.Contains(T value) => Contains(value);
 

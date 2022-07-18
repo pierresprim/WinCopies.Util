@@ -36,6 +36,8 @@ using static WinCopies.
     Delegates;
 
 #if WinCopies3
+using System.ComponentModel;
+
 using WinCopies.Util;
 
 using static WinCopies.ThrowHelper;
@@ -59,6 +61,38 @@ using IfComp = WinCopies.Util.Util.Comparison;
 namespace WinCopies.Util
 {
 #endif
+    public readonly
+#if CS10
+        record
+#endif
+        struct Interval
+#if CS10
+        (
+#else
+    {
+        public readonly
+#endif
+        ulong Start
+#if CS10
+        ,
+#else
+    ;
+        public readonly
+#endif
+        ulong Length
+#if CS10
+        );
+#else
+            ;
+
+        public Interval(in ulong start, in ulong length)
+        {
+            Start = start;
+            Length = length;
+        }
+    }
+#endif
+
     /// <summary>
     /// Provides some static helper methods.
     /// </summary>
@@ -69,6 +103,94 @@ namespace WinCopies.Util
         Util
 #endif
     {
+#if !CS5
+        public static TAttribute GetCustomAttribute<TType, TAttribute>(in bool inherit) => (TAttribute)typeof(TType).GetCustomAttributes(typeof(TAttribute), inherit).TryGet(0);
+#endif
+        public static T CastIfNotNull<T>(in object value, out bool succeeded) where T : struct
+        {
+            if (value == null)
+            {
+                succeeded = false;
+
+                return default;
+            }
+
+            succeeded = true;
+
+            return (T)value;
+        }
+
+        public static string GetAssemblyName() => (Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly()).GetAssemblyName();
+
+        public static void ToggleBitFromLeft(ref byte b, byte pos) => b = b.ToggleBitFromLeft(pos);
+
+        public static void SetBitFromLeft(ref byte b, byte pos) => b = b.SetBitFromLeft(pos);
+
+        public static void UnsetBitFromLeft(ref byte b, byte pos) => b = b.UnsetBitFromLeft(pos);
+
+        public static void SetBitFromLeft(ref byte b, in byte pos, in bool value) => b = b.SetBitFromLeft(pos, value);
+
+        public static void ToggleBit(ref byte b, byte pos) => b = b.ToggleBit(pos);
+
+        public static void SetBit(ref byte b, byte pos) => b = b.SetBit(pos);
+
+        public static void UnsetBit(ref byte b, byte pos) => b = b.UnsetBit(pos);
+
+        public static void SetBit(ref byte b, in byte pos, in bool value) => b = b.SetBit(pos, value);
+
+        public static void ToggleBitFromLeft(ref ushort b, byte pos) => b = b.ToggleBitFromLeft(pos);
+
+        public static void SetBitFromLeft(ref ushort b, byte pos) => b = b.SetBitFromLeft(pos);
+
+        public static void UnsetBitFromLeft(ref ushort b, byte pos) => b = b.UnsetBitFromLeft(pos);
+
+        public static void SetBitFromLeft(ref ushort b, in byte pos, in bool value) => b = b.SetBitFromLeft(pos, value);
+
+        public static void ToggleBit(ref ushort b, byte pos) => b = b.ToggleBit(pos);
+
+        public static void SetBit(ref ushort b, byte pos) => b = b.SetBit(pos);
+
+        public static void UnsetBit(ref ushort b, byte pos) => b = b.UnsetBit(pos);
+
+        public static void SetBit(ref ushort b, in byte pos, in bool value) => b = b.SetBit(pos, value);
+
+        public static T Update<T>(ref T value, in T defaultValue)
+        {
+            if (value == null)
+
+                value = defaultValue;
+
+            return value;
+        }
+
+        /// <summary>
+        /// Creates a new instance of a given type if <paramref name="value"/> is null and update <paramref name="value"/> with that value; then returns the value of <paramref name="value"/>.
+        /// </summary>
+        /// <typeparam name="T">The type from which to create a new value, if applicable, and of the value to return.</typeparam>
+        /// <param name="value">The reference of the variable to read from and to write to the new value, if applicable.</param>
+        /// <param name="func">The <see cref="Func{T}"/> that provides a new value to assign to <paramref name="value"/>.</param>
+        /// <returns>A new value from <typeparamref name="T"/> if <paramref name="value"/> is null; otherwise the value of <paramref name="value"/>.</returns>
+        public static T InitializeStruct<T>(ref T? value, in Func<T> func) where T : struct
+        {
+            if (value == null)
+
+                value = func();
+
+            return value.Value;
+        }
+
+        public static void SetOrThrowIfNull<T>(ref T value, in T newValue, in string paramName) => value = newValue
+#if CS8
+        ??
+#else
+        == null ?
+#endif
+        throw GetArgumentNullException(paramName)
+#if !CS8
+            : newValue
+#endif
+            ;
+
         public static IEnumerable<U> GetArrayEnumerable<T, U>(IEnumerable<U> arrays, IEnumerable<U> right) where U : IEnumerable<T>
         {
             foreach (U array in arrays)
@@ -183,26 +305,33 @@ namespace WinCopies.Util
         public static ulong GetLength<T>(params IReadOnlyList<T>[] arrays) => GetLength(arrays.AsEnumerable());
 #endif
 
-        public static T GetValue<T>(in Func<T> func, in Predicate<T> predicate, in T defaultValue)
-        {
-            T value = func();
+        public static T GetValue<T>(in T value, in Predicate<T> predicate, in T defaultValue) => predicate(value) ? value : defaultValue;
 
-            return predicate(value) ? value : defaultValue;
-        }
+        public static T GetValue<T>(in Func<T> func, in Predicate<T> predicate, in T defaultValue) => GetValue(func(), predicate, defaultValue);
 
-        public static T GetValueF<T>(in Func<T> func, in Predicate<T> predicate, in Func<T> defaultValue)
-        {
-            T value = func();
+        public static T GetValueF<T>(in T value, in Predicate<T> predicate, in Func<T> defaultValue) => predicate(value) ? value : defaultValue();
 
-            return predicate(value) ? value : defaultValue();
-        }
+        public static T GetValueF<T>(in Func<T> func, in Predicate<T> predicate, in Func<T> defaultValue) => GetValueF(func(), predicate, defaultValue);
 
-        public static T GetValue<T>(in Func<T> func, in Predicate<T> predicate)
-        {
-            T value = func();
+        public static T GetValue<T>(in T value, in Predicate<T> predicate, Func<Exception> func) => GetValue(value, predicate, () => throw func());
 
-            return predicate(value) ? value : default;
-        }
+        public static T GetValue<T>(in Func<T> func, in Predicate<T> predicate, Func<Exception> exceptionFunc) => GetValue(func, predicate, () => throw exceptionFunc());
+
+        public static T
+#if CS9
+            ?
+#endif
+            GetValue<T>(in T value, in Predicate<T> predicate) => predicate(value) ? value : default;
+
+        public static T
+#if CS9
+            ?
+#endif
+            GetValue<T>(in Func<T> func, in Predicate<T> predicate) => GetValue(func(), predicate);
+
+        public static T GetValue<T>(in bool condition, in Func<T> ifTrue, in Func<T> ifFalse) => (condition ? ifTrue : ifFalse)();
+
+        public static T GetValue<T>(in Func<bool> condition, in Func<T> ifTrue, in Func<T> ifFalse) => GetValue(condition(), ifTrue, ifFalse);
 
         public static TOut GetValue<TIn, TOut>(in Func<TIn> func, in Predicate<TIn> predicate, in Converter<TIn, TOut> ifTrue, in Converter<TIn, TOut> ifFalse)
         {
@@ -211,7 +340,7 @@ namespace WinCopies.Util
             return (predicate(value) ? ifTrue : ifFalse)(value);
         }
 
-        public static T GetValue<T>(in Func<T?> func, T defaultValue) where T : struct => GetValue(func, HasValue, Delegates.GetValue, value => default);
+        public static T GetValue<T>(in Func<T?> func, T defaultValue) where T : struct => GetValue(func, HasValue, Delegates.GetValue, value => defaultValue);
 
         public static T GetValueF<T>(in Func<T?> func, Func<T> defaultValue) where T : struct => GetValue(func, HasValue, Delegates.GetValue, value => defaultValue());
 
@@ -497,7 +626,7 @@ namespace WinCopies.Util
                 )
 #endif
 
-                action(obj);
+            action(obj);
         }
 
         public static void UsingIn<T>(in Func<T> func, in ActionIn<T> action) where T : System.IDisposable
@@ -516,7 +645,25 @@ namespace WinCopies.Util
                 )
 #endif
 
-                action(obj);
+            action(obj);
+        }
+
+        public static TOut Using2<TIn, TOut>(in Func<TIn> func, Func<TIn, TOut> action) where TIn : System.IDisposable
+        {
+            TOut result = default;
+
+            Using(func, (obj) => result = action(obj));
+
+            return result;
+        }
+
+        public static TOut UsingIn2<TIn, TOut>(in Func<TIn> func, FuncIn<TIn, TOut> action) where TIn : System.IDisposable
+        {
+            TOut result = default;
+
+            UsingIn(func, (in TIn obj) => result = action(obj));
+
+            return result;
         }
 
 #if CS8
@@ -549,14 +696,42 @@ namespace WinCopies.Util
 
         public static void Dispose<T>(ref T obj) where T : System.IDisposable
         {
-            if (obj == null)
-
-                throw GetArgumentNullException(nameof(obj));
+            ThrowIfNull(obj, nameof(obj));
 
             _Dispose(ref obj);
         }
 
-        private static bool TryDispose<T>(ref T obj, in PredicateIn<T> func) where T : System.IDisposable
+        public static bool TryDisposeNullable<T>(ref T? obj) where T : struct, System.IDisposable
+        {
+            ThrowIfNull(obj, nameof(obj));
+
+            if (obj.HasValue)
+            {
+                obj.Value.Dispose();
+                obj = null;
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public static void DisposeNullable<T>(ref T? obj) where T : struct, System.IDisposable
+        {
+            if (!TryDisposeNullable(ref obj))
+
+                throw GetArgumentNullException(nameof(obj));
+        }
+
+        private static bool TryDispose<T>(ref T
+#if CS9
+            ?
+#endif
+            obj, in PredicateIn<T
+#if CS9
+            ?
+#endif
+            > func) where T : System.IDisposable
         {
             if (func(obj))
 
@@ -567,9 +742,21 @@ namespace WinCopies.Util
             return true;
         }
 
-        public static bool TryDispose<T>(ref T obj) where T : System.IDisposable => TryDispose(ref obj, (in T _obj) => _obj == null);
+        public static bool TryDispose<T>(ref T
+#if CS9
+            ?
+#endif
+            obj) where T : System.IDisposable => TryDispose(ref obj, CheckIfEqualsNullIn);
 
-        public static bool TryDispose2<T>(ref T obj) where T : DotNetFix.IDisposable => TryDispose(ref obj, (in T _obj) => _obj == null || _obj.IsDisposed);
+        public static bool TryDispose2<T>(ref T
+#if CS9
+            ?
+#endif
+            obj) where T : DotNetFix.IDisposable => TryDispose(ref obj, (in T
+#if CS9
+                ?
+#endif
+                _obj) => _obj == null || _obj.IsDisposed);
 
 #if !CS9
         public static Type GetUnderlyingType<T>() where T : Enum => Enum.GetUnderlyingType(typeof(T));
@@ -607,6 +794,22 @@ namespace WinCopies.Util
                 : throw new ArgumentException("The given value is neither from a signed nor an unsigned type."));
 
         public static T[] GetArray<T>(params T[] items) => items;
+
+        public static bool PerformAction<T>(T? value, Action<T> action) where T : struct => PerformActionIf(value.HasValue, () => action(value.Value));
+
+        public static bool PerformActionIn<T>(T? value, ActionIn<T> action) where T : struct => PerformActionIf(value.HasValue, () => action(value.Value));
+
+        public static TOut
+#if CS9
+            ?
+#endif
+            PerformAction<TIn, TOut>(TIn? value, Func<TIn, TOut> func, out bool result) where TIn : struct => PerformActionIf<TIn, TOut>(value.HasValue, () => func(value.Value), out result);
+
+        public static TOut
+#if CS9
+            ?
+#endif
+            PerformActionIn<TIn, TOut>(TIn? value, FuncIn<TIn, TOut> func, out bool result) where TIn : struct => PerformActionIf<TIn, TOut>(value.HasValue, () => func(value.Value), out result);
 
         public static T PerformAction<T>(in Func<T> func, in Action<T> action)
         {
@@ -663,13 +866,35 @@ namespace WinCopies.Util
             return false;
         }
 
-        public static bool PerformActionIfNull(in object param, in Action action) => PerformActionIf(param == null, action);
+        public static TOut
+#if CS9
+            ?
+#endif
+            PerformActionIf<TIn, TOut>(in bool condition, in Func<TOut> func, out bool result) => (result = condition) ? func() : default;
 
-        public static bool PerformActionIfIsNull(in object param, in Action action) => PerformActionIf(param is null, action);
+        public static bool PerformActionIfNull(in object
+#if CS8
+                    ?
+#endif
+                    param, in Action action) => PerformActionIf(param == null, action);
 
-        public static bool PerformActionIfNotNull(in object param, in Action action) => PerformActionIf(param != null, action);
+        public static bool PerformActionIfIsNull(in object
+#if CS8
+                    ?
+#endif
+                    param, in Action action) => PerformActionIf(param is null, action);
 
-        public static bool PerformActionIfIsNotNull(in object param, in Action action) => PerformActionIf(
+        public static bool PerformActionIfNotNull(in object
+#if CS8
+                    ?
+#endif
+                    param, in Action action) => PerformActionIf(param != null, action);
+
+        public static bool PerformActionIfIsNotNull(in object
+#if CS8
+                    ?
+#endif
+                    param, in Action action) => PerformActionIf(
 #if !CS9
             !(
 #endif
@@ -685,13 +910,29 @@ namespace WinCopies.Util
 
         public static bool PerformActionIf(in Func<bool> func, in Action action) => PerformActionIf(func(), action);
 
-        public static bool PerformActionIfNull(in Func<object> func, in Action action) => PerformActionIf(func() == null, action);
+        public static bool PerformActionIfNull(in Func<object
+#if CS8
+                    ?
+#endif
+                    > func, in Action action) => PerformActionIf(func() == null, action);
 
-        public static bool PerformActionIfIsNull(in Func<object> func, in Action action) => PerformActionIf(func() is null, action);
+        public static bool PerformActionIfIsNull(in Func<object
+#if CS8
+                    ?
+#endif
+                    > func, in Action action) => PerformActionIf(func() is null, action);
 
-        public static bool PerformActionIfNotNull(in Func<object> func, in Action action) => PerformActionIf(func() != null, action);
+        public static bool PerformActionIfNotNull(in Func<object
+#if CS8
+                    ?
+#endif
+                    > func, in Action action) => PerformActionIf(func() != null, action);
 
-        public static bool PerformActionIfIsNotNull(in Func<object> func, in Action action) => PerformActionIf(
+        public static bool PerformActionIfIsNotNull(in Func<object
+#if CS8
+                    ?
+#endif
+                    > func, in Action action) => PerformActionIf(
 #if !CS9
             !(
 #endif
@@ -713,13 +954,29 @@ namespace WinCopies.Util
 
         public static bool PerformActionIf<T>(T param, Predicate<T> predicate, Action<T> action) => PerformActionIf(param, predicate, GetAction(param, action));
 
-        public static bool PerformActionIfNull<T>(in T param, in Action<T> action) => PerformActionIf(param, param == null, action);
+        public static bool PerformActionIfNull<T>(in T
+#if CS9
+                    ?
+#endif
+                    param, in Action<T> action) => PerformActionIf(param, param == null, action);
 
-        public static bool PerformActionIfNull<T>(in Func<T> func, in Action<T> action) => PerformActionIf(func(), param => param == null, action);
+        public static bool PerformActionIfNull<T>(in Func<T
+#if CS9
+                    ?
+#endif
+                    > func, in Action<T> action) => PerformActionIf(func(), param => param == null, action);
 
-        public static bool PerformActionIfNotNull<T>(in T param, in Action<T> action) => PerformActionIf(param, param != null, action);
+        public static bool PerformActionIfNotNull<T>(in T
+#if CS9
+                    ?
+#endif
+                    param, in Action<T> action) => PerformActionIf(param, param != null, action);
 
-        public static bool PerformActionIfNotNull<T>(in Func<T> func, in Action<T> action) => PerformActionIf(func(), param => param != null, action);
+        public static bool PerformActionIfNotNull<T>(in Func<T
+#if CS9
+                    ?
+#endif
+                    > func, in Action<T> action) => PerformActionIf(func(), param => param != null, action);
 
 #if CS8
         public static bool PerformActionIfIsNull<T>(in T param, in Action<T> action) => PerformActionIf(param, param is null, action);
@@ -755,7 +1012,23 @@ namespace WinCopies.Util
             , action);
 #endif
 
-        public static bool PerformActionIfNotValidated<TIn, TOut>(TIn param, Predicate<TIn> predicate, Converter<TIn, TOut> converter, out TOut result)
+        public static bool PerformActionIfNotValidated<TIn, TOut>(TIn
+#if CS9
+            ?
+#endif
+            param, Predicate<TIn
+#if CS9
+            ?
+#endif
+            > predicate, Converter<TIn
+#if CS9
+            ?
+#endif
+            , TOut> converter, out TOut
+#if CS9
+            ?
+#endif
+            result)
         {
             if (predicate(param))
             {
@@ -769,13 +1042,33 @@ namespace WinCopies.Util
             return true;
         }
 
-        public static TOut PerformActionIfNotValidated<TIn, TOut>(TIn param, Predicate<TIn> predicate, Converter<TIn, TOut> converter) => PerformActionIfNotValidated(param, predicate, converter, out TOut result) ? result : default;
+        public static TOut
+#if CS9
+            ?
+#endif
+            PerformActionIfNotValidated<TIn, TOut>(TIn param, Predicate<TIn
+#if CS9
+            ?
+#endif
+            > predicate, Converter<TIn
+#if CS9
+            ?
+#endif
+            , TOut> converter) => PerformActionIfNotValidated(param, predicate, converter, out TOut
+#if CS9
+                ?
+#endif
+                result) ? result : default;
 
         public static bool PerformActionIfNotNull<TIn, TOut>(TIn
 #if CS9
             ?
 #endif
-            param, Converter<TIn, TOut> converter, out TOut result) => PerformActionIfNotValidated(param, CheckIfEqualsNull, converter, out result);
+            param, Converter<TIn, TOut> converter, out TOut
+#if CS9
+            ?
+#endif
+            result) => PerformActionIfNotValidated(param, CheckIfEqualsNull, converter, out result);
 
         public static TOut PerformActionIfNotNull<TIn, TOut>(TIn
 #if CS9
@@ -783,7 +1076,11 @@ namespace WinCopies.Util
 #endif
             param, Converter<TIn, TOut> converter) => PerformActionIfNotNull(param, converter, out TOut result) ? result : default;
 
-        public static bool PerformActionIf<TIn, TOut>(TIn param, Predicate<TIn> predicate, Converter<TIn, TOut> converter, out TOut result)
+        public static bool PerformActionIf<TIn, TOut>(TIn param, Predicate<TIn> predicate, Converter<TIn, TOut> converter, out TOut
+#if CS9
+            ?
+#endif
+            result)
         {
             if (predicate(param))
             {
@@ -797,7 +1094,11 @@ namespace WinCopies.Util
             return false;
         }
 
-        public static TOut PerformActionIf<TIn, TOut>(TIn param, Predicate<TIn> predicate, Converter<TIn, TOut> converter) => PerformActionIf(param, predicate, converter, out TOut result) ? result : default;
+        public static TOut
+#if CS9
+            ?
+#endif
+            PerformActionIf<TIn, TOut>(TIn param, Predicate<TIn> predicate, Converter<TIn, TOut> converter) => PerformActionIf(param, predicate, converter, out TOut result) ? result : default;
 
         public static bool PerformActionIfNull<TIn, TOut>(TIn
 #if CS9
@@ -805,7 +1106,11 @@ namespace WinCopies.Util
 #endif
             param, Converter<TIn, TOut> converter, out TOut result) => PerformActionIf(param, CheckIfEqualsNull, converter, out result);
 
-        public static TOut PerformActionIfNull<TIn, TOut>(TIn
+        public static TOut
+#if CS9
+            ?
+#endif
+            PerformActionIfNull<TIn, TOut>(TIn
 #if CS9
             ?
 #endif
@@ -825,7 +1130,11 @@ namespace WinCopies.Util
             return false;
         }
 
-        public static TOut PerformActionIf<TIn, TOut>(TIn param, Predicate<TIn> predicate, Converter<TIn, TOut> ifTrue, Converter<TIn, TOut> ifFalse) => PerformActionIf(param, predicate, ifTrue, ifFalse, out TOut result) ? result : default;
+        public static TOut
+#if CS9
+            ?
+#endif
+            PerformActionIf<TIn, TOut>(TIn param, Predicate<TIn> predicate, Converter<TIn, TOut> ifTrue, Converter<TIn, TOut> ifFalse) => PerformActionIf(param, predicate, ifTrue, ifFalse, out TOut result) ? result : default;
 
         public static bool PerformActionIfNull<TIn, TOut>(TIn
 #if CS9
@@ -833,7 +1142,11 @@ namespace WinCopies.Util
 #endif
             param, Converter<TIn, TOut> ifTrue, Converter<TIn, TOut> ifFalse, out TOut result) => PerformActionIf(param, CheckIfEqualsNull, ifTrue, ifFalse, out result);
 
-        public static TOut PerformActionIfNull<TIn, TOut>(TIn
+        public static TOut
+#if CS9
+            ?
+#endif
+            PerformActionIfNull<TIn, TOut>(TIn
 #if CS9
             ?
 #endif
@@ -845,7 +1158,11 @@ namespace WinCopies.Util
 #endif
             param, Converter<TIn, TOut> ifTrue, Converter<TIn, TOut> ifFalse, out TOut result) => PerformActionIf(param, CheckIfEqualsNull, ifFalse, ifTrue, out result);
 
-        public static TOut PerformActionIfNotNull<TIn, TOut>(TIn
+        public static TOut
+#if CS9
+            ?
+#endif
+            PerformActionIfNotNull<TIn, TOut>(TIn
 #if CS9
             ?
 #endif
@@ -883,7 +1200,11 @@ namespace WinCopies.Util
 #endif
             param, TOut ifTrue, Converter<TIn, TOut> ifFalse, out TOut result) => PerformActionIf(param, CheckIfEqualsNull, ifFalse, ifTrue, out result);
 
-        public static TOut PerformActionIfNotNull<TIn, TOut>(TIn
+        public static TOut
+#if CS9
+            ?
+#endif
+            PerformActionIfNotNull<TIn, TOut>(TIn
 #if CS9
             ?
 #endif
@@ -909,7 +1230,11 @@ namespace WinCopies.Util
 #endif
             param, Converter<TIn, TOut> ifTrue, TOut ifFalse, out TOut result) => PerformActionIf(param, CheckIfEqualsNull, ifTrue, ifFalse, out result);
 
-        public static TOut PerformActionIfNull<TIn, TOut>(TIn
+        public static TOut
+#if CS9
+            ?
+#endif
+            PerformActionIfNull<TIn, TOut>(TIn
 #if CS9
             ?
 #endif
@@ -921,7 +1246,11 @@ namespace WinCopies.Util
 #endif
             param, Converter<TIn, TOut> ifTrue, TOut ifFalse, out TOut result) => PerformActionIf(param, CheckIfEqualsNull, ifFalse, ifTrue, out result);
 
-        public static TOut PerformActionIfNotNull<TIn, TOut>(TIn
+        public static TOut
+#if CS9
+            ?
+#endif
+            PerformActionIfNotNull<TIn, TOut>(TIn
 #if CS9
             ?
 #endif
@@ -1082,24 +1411,92 @@ namespace WinCopies.Util
             value1 = _value1;
         }
 
-        public static T GetValue<T>(Func<T> func) => func == null ? default : func();
-        public static TResult GetValue<TParam, TResult>(in Func<TParam, TResult> func, in TParam param) => func == null ? default : func(param);
-        public static TResult GetValue<T1, T2, TResult>(in Func<T1, T2, TResult> func, in T1 param1, in T2 param2) => func == null ? default : func(param1, param2);
-        public static TResult GetValue<T1, T2, T3, TResult>(in Func<T1, T2, T3, TResult> func, in T1 param1, in T2 param2, in T3 param3) => func == null ? default : func(param1, param2, param3);
-        public static TResult GetValue<T1, T2, T3, T4, TResult>(in Func<T1, T2, T3, T4, TResult> func, in T1 param1, in T2 param2, in T3 param3, in T4 param4) => func == null ? default : func(param1, param2, param3, param4);
+        public static T
+#if CS9
+            ?
+#endif
+            GetValue<T>(Func<T> func) => func == null ? default : func();
+        public static TResult
+#if CS9
+            ?
+#endif
+            GetValue<TParam, TResult>(in Func<TParam, TResult> func, in TParam param) => func == null ? default : func(param);
+        public static TResult
+#if CS9
+            ?
+#endif
+            GetValue<T1, T2, TResult>(in Func<T1, T2, TResult> func, in T1 param1, in T2 param2) => func == null ? default : func(param1, param2);
+        public static TResult
+#if CS9
+            ?
+#endif
+            GetValue<T1, T2, T3, TResult>(in Func<T1, T2, T3, TResult> func, in T1 param1, in T2 param2, in T3 param3) => func == null ? default : func(param1, param2, param3);
+        public static TResult
+#if CS9
+            ?
+#endif
+            GetValue<T1, T2, T3, T4, TResult>(in Func<T1, T2, T3, T4, TResult> func, in T1 param1, in T2 param2, in T3 param3, in T4 param4) => func == null ? default : func(param1, param2, param3, param4);
 #if CS5
-        public static TResult GetValue<T1, T2, T3, T4, T5, TResult>(in Func<T1, T2, T3, T4, T5, TResult> func, in T1 param1, in T2 param2, in T3 param3, in T4 param4, in T5 param5) => func == null ? default : func(param1, param2, param3, param4, param5);
-        public static TResult GetValue<T1, T2, T3, T4, T5, T6, TResult>(in Func<T1, T2, T3, T4, T5, T6, TResult> func, in T1 param1, in T2 param2, in T3 param3, in T4 param4, in T5 param5, in T6 param6) => func == null ? default : func(param1, param2, param3, param4, param5, param6);
-        public static TResult GetValue<T1, T2, T3, T4, T5, T6, T7, TResult>(in Func<T1, T2, T3, T4, T5, T6, T7, TResult> func, in T1 param1, in T2 param2, in T3 param3, in T4 param4, in T5 param5, in T6 param6, in T7 param7) => func == null ? default : func(param1, param2, param3, param4, param5, param6, param7);
-        public static TResult GetValue<T1, T2, T3, T4, T5, T6, T7, T8, TResult>(in Func<T1, T2, T3, T4, T5, T6, T7, T8, TResult> func, in T1 param1, in T2 param2, in T3 param3, in T4 param4, in T5 param5, in T6 param6, in T7 param7, in T8 param8) => func == null ? default : func(param1, param2, param3, param4, param5, param6, param7, param8);
-        public static TResult GetValue<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult>(in Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult> func, in T1 param1, in T2 param2, in T3 param3, in T4 param4, in T5 param5, in T6 param6, in T7 param7, in T8 param8, in T9 param9) => func == null ? default : func(param1, param2, param3, param4, param5, param6, param7, param8, param9);
-        public static TResult GetValue<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult>(in Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult> func, in T1 param1, in T2 param2, in T3 param3, in T4 param4, in T5 param5, in T6 param6, in T7 param7, in T8 param8, in T9 param9, in T10 param10) => func == null ? default : func(param1, param2, param3, param4, param5, param6, param7, param8, param9, param10);
-        public static TResult GetValue<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TResult>(in Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TResult> func, in T1 param1, in T2 param2, in T3 param3, in T4 param4, in T5 param5, in T6 param6, in T7 param7, in T8 param8, in T9 param9, in T10 param10, in T11 param11) => func == null ? default : func(param1, param2, param3, param4, param5, param6, param7, param8, param9, param10, param11);
-        public static TResult GetValue<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TResult>(in Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TResult> func, in T1 param1, in T2 param2, in T3 param3, in T4 param4, in T5 param5, in T6 param6, in T7 param7, in T8 param8, in T9 param9, in T10 param10, in T11 param11, in T12 param12) => func == null ? default : func(param1, param2, param3, param4, param5, param6, param7, param8, param9, param10, param11, param12);
-        public static TResult GetValue<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TResult>(in Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TResult> func, in T1 param1, in T2 param2, in T3 param3, in T4 param4, in T5 param5, in T6 param6, in T7 param7, in T8 param8, in T9 param9, in T10 param10, in T11 param11, in T12 param12, in T13 param13) => func == null ? default : func(param1, param2, param3, param4, param5, param6, param7, param8, param9, param10, param11, param12, param13);
-        public static TResult GetValue<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TResult>(in Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TResult> func, in T1 param1, in T2 param2, in T3 param3, in T4 param4, in T5 param5, in T6 param6, in T7 param7, in T8 param8, in T9 param9, in T10 param10, in T11 param11, in T12 param12, in T13 param13, in T14 param14) => func == null ? default : func(param1, param2, param3, param4, param5, param6, param7, param8, param9, param10, param11, param12, param13, param14);
-        public static TResult GetValue<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult>(in Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult> func, in T1 param1, in T2 param2, in T3 param3, in T4 param4, in T5 param5, in T6 param6, in T7 param7, in T8 param8, in T9 param9, in T10 param10, in T11 param11, in T12 param12, in T13 param13, in T14 param14, in T15 param15) => func == null ? default : func(param1, param2, param3, param4, param5, param6, param7, param8, param9, param10, param11, param12, param13, param14, param15);
-        public static TResult GetValue<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, TResult>(in Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, TResult> func, in T1 param1, in T2 param2, in T3 param3, in T4 param4, in T5 param5, in T6 param6, in T7 param7, in T8 param8, in T9 param9, in T10 param10, in T11 param11, in T12 param12, in T13 param13, in T14 param14, in T15 param15, in T16 param16) => func == null ? default : func(param1, param2, param3, param4, param5, param6, param7, param8, param9, param10, param11, param12, param13, param14, param15, param16);
+        public static TResult
+#if CS9
+            ?
+#endif
+            GetValue<T1, T2, T3, T4, T5, TResult>(in Func<T1, T2, T3, T4, T5, TResult> func, in T1 param1, in T2 param2, in T3 param3, in T4 param4, in T5 param5) => func == null ? default : func(param1, param2, param3, param4, param5);
+        public static TResult
+#if CS9
+            ?
+#endif
+            GetValue<T1, T2, T3, T4, T5, T6, TResult>(in Func<T1, T2, T3, T4, T5, T6, TResult> func, in T1 param1, in T2 param2, in T3 param3, in T4 param4, in T5 param5, in T6 param6) => func == null ? default : func(param1, param2, param3, param4, param5, param6);
+        public static TResult
+#if CS9
+            ?
+#endif
+            GetValue<T1, T2, T3, T4, T5, T6, T7, TResult>(in Func<T1, T2, T3, T4, T5, T6, T7, TResult> func, in T1 param1, in T2 param2, in T3 param3, in T4 param4, in T5 param5, in T6 param6, in T7 param7) => func == null ? default : func(param1, param2, param3, param4, param5, param6, param7);
+        public static TResult
+#if CS9
+            ?
+#endif
+            GetValue<T1, T2, T3, T4, T5, T6, T7, T8, TResult>(in Func<T1, T2, T3, T4, T5, T6, T7, T8, TResult> func, in T1 param1, in T2 param2, in T3 param3, in T4 param4, in T5 param5, in T6 param6, in T7 param7, in T8 param8) => func == null ? default : func(param1, param2, param3, param4, param5, param6, param7, param8);
+        public static TResult
+#if CS9
+            ?
+#endif
+            GetValue<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult>(in Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult> func, in T1 param1, in T2 param2, in T3 param3, in T4 param4, in T5 param5, in T6 param6, in T7 param7, in T8 param8, in T9 param9) => func == null ? default : func(param1, param2, param3, param4, param5, param6, param7, param8, param9);
+        public static TResult
+#if CS9
+            ?
+#endif
+            GetValue<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult>(in Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult> func, in T1 param1, in T2 param2, in T3 param3, in T4 param4, in T5 param5, in T6 param6, in T7 param7, in T8 param8, in T9 param9, in T10 param10) => func == null ? default : func(param1, param2, param3, param4, param5, param6, param7, param8, param9, param10);
+        public static TResult
+#if CS9
+            ?
+#endif
+            GetValue<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TResult>(in Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TResult> func, in T1 param1, in T2 param2, in T3 param3, in T4 param4, in T5 param5, in T6 param6, in T7 param7, in T8 param8, in T9 param9, in T10 param10, in T11 param11) => func == null ? default : func(param1, param2, param3, param4, param5, param6, param7, param8, param9, param10, param11);
+        public static TResult
+#if CS9
+            ?
+#endif
+            GetValue<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TResult>(in Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TResult> func, in T1 param1, in T2 param2, in T3 param3, in T4 param4, in T5 param5, in T6 param6, in T7 param7, in T8 param8, in T9 param9, in T10 param10, in T11 param11, in T12 param12) => func == null ? default : func(param1, param2, param3, param4, param5, param6, param7, param8, param9, param10, param11, param12);
+        public static TResult
+#if CS9
+            ?
+#endif
+            GetValue<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TResult>(in Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TResult> func, in T1 param1, in T2 param2, in T3 param3, in T4 param4, in T5 param5, in T6 param6, in T7 param7, in T8 param8, in T9 param9, in T10 param10, in T11 param11, in T12 param12, in T13 param13) => func == null ? default : func(param1, param2, param3, param4, param5, param6, param7, param8, param9, param10, param11, param12, param13);
+        public static TResult
+#if CS9
+            ?
+#endif
+            GetValue<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TResult>(in Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TResult> func, in T1 param1, in T2 param2, in T3 param3, in T4 param4, in T5 param5, in T6 param6, in T7 param7, in T8 param8, in T9 param9, in T10 param10, in T11 param11, in T12 param12, in T13 param13, in T14 param14) => func == null ? default : func(param1, param2, param3, param4, param5, param6, param7, param8, param9, param10, param11, param12, param13, param14);
+        public static TResult
+#if CS9
+            ?
+#endif
+            GetValue<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult>(in Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult> func, in T1 param1, in T2 param2, in T3 param3, in T4 param4, in T5 param5, in T6 param6, in T7 param7, in T8 param8, in T9 param9, in T10 param10, in T11 param11, in T12 param12, in T13 param13, in T14 param14, in T15 param15) => func == null ? default : func(param1, param2, param3, param4, param5, param6, param7, param8, param9, param10, param11, param12, param13, param14, param15);
+        public static TResult
+#if CS9
+            ?
+#endif
+            GetValue<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, TResult>(in Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, TResult> func, in T1 param1, in T2 param2, in T3 param3, in T4 param4, in T5 param5, in T6 param6, in T7 param7, in T8 param8, in T9 param9, in T10 param10, in T11 param11, in T12 param12, in T13 param13, in T14 param14, in T15 param15, in T16 param16) => func == null ? default : func(param1, param2, param3, param4, param5, param6, param7, param8, param9, param10, param11, param12, param13, param14, param15, param16);
 #endif
 
         public static void Reverse<T>(ref T x, ref T y)
@@ -1227,7 +1624,8 @@ namespace WinCopies.Util
                 }
 
                 catch { return _succeeded = false; }
-            }, postIterationAction);
+            }, 
+            postIterationAction);
 
             succeeded = _succeeded;
 
@@ -1236,7 +1634,11 @@ namespace WinCopies.Util
 
         public static bool TryFor(in Func<bool> loopCondition, Action action, in Action postIterationAction, out bool succeeded) => TryFor(loopCondition, action.ToBoolFunc(), postIterationAction, out succeeded);
 
-        public static bool PredicateRef<T>(object value, Predicate<T> predicate) where T : class
+        public static bool PredicateRef<T>(object value, Predicate<T
+#if CS9
+            ?
+#endif
+            > predicate) where T : class
 #if CS9
             => predicate(value is T _value ? _value : value == null ? null : throw GetInvalidTypeArgumentException(nameof(value)));
 #else
@@ -1333,17 +1735,43 @@ namespace WinCopies.Util
 #endif
 
 #if CS7
-        public static bool IsFlagsEnum<T>() where T : Enum => typeof(T).GetCustomAttribute<FlagsAttribute>() is object;
+        public static bool IsFlagsEnum<T>() where T : Enum =>
+#if !CS9
+            !(
+#endif
+            typeof(T).GetCustomAttribute<FlagsAttribute>() is
+#if CS9
+            not
+#endif
+            null
+#if !CS9
+            )
+#endif
+            ;
 #endif
 
-        // public static KeyValuePair<TKey, Func<bool>>[] GetIfKeyValuePairPredicateArray<TKey>(params KeyValuePair<TKey, Func<bool>>[] keyValuePairs) => keyValuePairs;
+        public static KeyValuePair<TKey, TValue> GetKeyValuePair<TKey, TValue>(in TKey key, in TValue value) => new
+#if !CS9
+            KeyValuePair<TKey, TValue>
+#endif
+            (key, value);
+
+        public static KeyValuePair<TKey, Func<bool>>
+#if WinCopies3
+            GetKeyValuePairPredicate
+#else
+            GetIfKeyValuePairPredicate
+#endif
+            <TKey>(in TKey key, in Func<bool> predicate) =>
+#if CS9
+            new
+#else
+            GetKeyValuePair
+#endif
+            (key, predicate);
 
 #if !WinCopies3 && CS6
         #region 'If' methods
-        public static KeyValuePair<TKey, TValue> GetKeyValuePair<TKey, TValue>(in TKey key, in TValue value) => new KeyValuePair<TKey, TValue>(key, value);
-
-        public static KeyValuePair<TKey, Func<bool>> GetIfKeyValuePairPredicate<TKey>(in TKey key, in Func<bool> predicate) => new KeyValuePair<TKey, Func<bool>>(key, predicate);
-
         #region Enums
 
         /// <summary>
@@ -2510,7 +2938,11 @@ namespace WinCopies.Util
 #endif
 
 #if CS5
-        public static bool IsNullEmptyOrWhiteSpace(in string value) => string.IsNullOrEmpty(value) || string.IsNullOrWhiteSpace(value);
+        public static bool IsNullEmptyOrWhiteSpace(in string
+#if CS8
+            ?
+#endif
+            value) => string.IsNullOrEmpty(value) || string.IsNullOrWhiteSpace(value);
 #endif
 
 #if !WinCopies3 && CS5
@@ -3014,7 +3446,1798 @@ where T : Enum
         public const char PathFilterChar = '*';
         public const char LikeStatementChar = '%';
 
+        public const byte LSBMask = 1;
+        public const byte MSBMask = LSBMask << 7;
+        public const byte SetToFalseMask = byte.MaxValue;
+
+        public const ushort MSBMask16 = LSBMask << 15;
+        public const ushort SetToFalseMask16 = ushort.MaxValue;
+
         public const BindingFlags DefaultBindingFlagsForPropertySet = BindingFlags.Public | BindingFlags.NonPublic |
                          BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly;
+    }
+
+    namespace ActionRunners
+    {
+        public static class BoolChecks
+        {
+            #region Action
+            #region AB1
+            public static bool Run(in bool value, in Action ifTrue)
+            {
+                if (value)
+                {
+                    ifTrue();
+
+                    return true;
+                }
+
+                return false;
+            }
+
+            public static bool Run(in Func<bool> value, in Action ifTrue) => Run(value(), ifTrue);
+
+            public static bool Run(in bool value, in Func<Action> ifTrue) => Run(value, ifTrue.GetAction());
+
+            public static bool Run(in Func<bool> value, in Func<Action> ifTrue) => Run(value(), ifTrue);
+            #endregion AB1
+
+            #region AB2
+            public static bool Run(in bool value, in Action ifTrue, in Action ifFalse)
+            {
+                if (value)
+                {
+                    ifTrue();
+
+                    return true;
+                }
+
+                ifFalse();
+
+                return false;
+            }
+
+            public static bool Run(in Func<bool> value, in Action ifTrue, in Action ifFalse) => Run(value(), ifTrue, ifFalse);
+
+            public static bool Run(in bool value, in Func<Action> ifTrue, in Func<Action> ifFalse) => Run(value, ifTrue.GetAction(), ifFalse.GetAction());
+
+            public static bool Run(in Func<bool> value, in Func<Action> ifTrue, in Func<Action> ifFalse) => Run(value(), ifTrue, ifFalse);
+            #endregion AB2
+
+            #region ABF1
+            public static bool Run(in bool value, in Func<bool> ifTrue) => value ? ifTrue() : false;
+
+            public static bool Run(in Func<bool> value, in Func<bool> ifTrue) => Run(value(), ifTrue);
+
+            public static bool Run(in bool value, in Func<Func<bool>> ifTrue) => Run(value, ifTrue.GetFunc());
+
+            public static bool Run(in Func<bool> value, in Func<Func<bool>> ifTrue) => Run(value(), ifTrue);
+            #endregion ABF1
+
+            #region ABF2
+            public static bool Run(in bool value, in Func<bool> ifTrue, in Func<bool> ifFalse) => value ? ifTrue() : ifFalse();
+
+            public static bool Run(in Func<bool> value, in Func<bool> ifTrue, in Func<bool> ifFalse) => Run(value(), ifTrue, ifFalse);
+
+            public static bool Run(in bool value, in Func<Func<bool>> ifTrue, in Func<Func<bool>> ifFalse) => Run(value, ifTrue.GetFunc(), ifFalse.GetFunc());
+
+            public static bool Run(in Func<bool> value, in Func<Func<bool>> ifTrue, in Func<Func<bool>> ifFalse) => Run(value(), ifTrue, ifFalse);
+            #endregion ABF2
+            #endregion Action
+
+            #region Func
+            #region FB1
+            public static bool Run(in bool value, in Func ifTrue, out object
+#if CS8
+                ?
+#endif
+                result)
+            {
+                if (value)
+                {
+                    result = ifTrue();
+
+                    return true;
+                }
+
+                result = null;
+
+                return false;
+            }
+
+            public static bool Run(in Func<bool> value, in Func ifTrue, out object
+#if CS8
+                ?
+#endif
+                result) => Run(value(), ifTrue, out result);
+
+            public static bool Run(in bool value, in Func<Func> ifTrue, out object
+#if CS8
+                ?
+#endif
+                result) => Run(value, ifTrue.GetFunc(), out result);
+
+            public static bool Run(in Func<bool> value, in Func<Func> ifTrue, out object
+#if CS8
+                ?
+#endif
+                result) => Run(value(), ifTrue, out result);
+            #endregion FB1
+
+            #region FB2
+            public static bool Run(in bool value, in Func ifTrue, in Func ifFalse, out object result)
+            {
+                if (value)
+                {
+                    result = ifTrue();
+
+                    return true;
+                }
+
+                result = ifFalse();
+
+                return false;
+            }
+
+            public static bool Run(in Func<bool> value, in Func ifTrue, in Func ifFalse, out object result) => Run(value(), ifTrue, ifFalse, out result);
+
+            public static bool Run(in bool value, in Func<Func> ifTrue, in Func<Func> ifFalse, out object result) => Run(value, ifTrue.GetFunc(), ifFalse.GetFunc(), out result);
+
+            public static bool Run(in Func<bool> value, in Func<Func> ifTrue, in Func<Func> ifFalse, out object result) => Run(value(), ifTrue, ifFalse, out result);
+            #endregion FB2
+
+            #region FO1
+            public static object
+#if CS8
+                ?
+#endif
+                Run(in bool value, in Func ifTrue) => value ? ifTrue() : null;
+
+            public static object
+#if CS8
+                ?
+#endif
+                Run(in Func<bool> value, in Func ifTrue) => Run(value(), ifTrue);
+
+            public static object
+#if CS8
+                ?
+#endif
+                Run(in bool value, in Func<Func> ifTrue) => Run(value, ifTrue.GetFunc());
+
+            public static object
+#if CS8
+                ?
+#endif
+                Run(in Func<bool> value, in Func<Func> ifTrue) => Run(value(), ifTrue);
+            #endregion FO1
+
+            #region FO2
+            public static object Run(in bool value, in Func ifTrue, in Func ifFalse) => (value ? ifTrue : ifFalse)();
+
+            public static object Run(in Func<bool> value, in Func ifTrue, in Func ifFalse) => Run(value(), ifTrue, ifFalse);
+
+            public static object Run(in bool value, in Func<Func> ifTrue, in Func<Func> ifFalse) => Run(value, ifTrue.GetFunc(), ifFalse.GetFunc());
+
+            public static object Run(in Func<bool> value, in Func<Func> ifTrue, in Func<Func> ifFalse) => Run(value(), ifTrue, ifFalse);
+            #endregion FO2
+            #endregion Func
+
+#if CS8
+            #region FuncNull
+            #region FBN1
+            public static bool Run(in bool value, in FuncNull ifTrue, out object? result)
+            {
+                if (value)
+                {
+                    result = ifTrue();
+
+                    return true;
+                }
+
+                result = null;
+
+                return false;
+            }
+
+            public static bool Run(in Func<bool> value, in FuncNull ifTrue, out object? result) => Run(value(), ifTrue, out result);
+
+            public static bool Run(in bool value, in Func<FuncNull> ifTrue, out object? result) => Run(value, ifTrue.GetFuncNull(), out result);
+
+            public static bool Run(in Func<bool> value, in Func<FuncNull> ifTrue, out object? result) => Run(value(), ifTrue, out result);
+            #endregion FBN1
+
+            #region FBN2
+            public static bool Run(in bool value, in FuncNull ifTrue, in FuncNull ifFalse, out object? result)
+            {
+                if (value)
+                {
+                    result = ifTrue();
+
+                    return true;
+                }
+
+                result = ifFalse();
+
+                return false;
+            }
+
+            public static bool Run(in Func<bool> value, in FuncNull ifTrue, in FuncNull ifFalse, out object? result) => Run(value(), ifTrue, ifFalse, out result);
+
+            public static bool Run(in bool value, in Func<FuncNull> ifTrue, in Func<FuncNull> ifFalse, out object? result) => Run(value, ifTrue.GetFuncNull(), ifFalse.GetFuncNull(), out result);
+
+            public static bool Run(in Func<bool> value, in Func<FuncNull> ifTrue, in Func<FuncNull> ifFalse, out object? result) => Run(value(), ifTrue, ifFalse, out result);
+            #endregion FBN2
+
+            #region FON1
+            public static object? Run(in bool value, in FuncNull ifTrue) => value ? ifTrue() : null;
+
+            public static object? Run(in Func<bool> value, in FuncNull ifTrue) => Run(value(), ifTrue);
+
+            public static object? Run(in bool value, in Func<FuncNull> ifTrue) => Run(value, ifTrue.GetFuncNull());
+
+            public static object? Run(in Func<bool> value, in Func<FuncNull> ifTrue) => Run(value(), ifTrue);
+            #endregion FON1
+
+            #region FON2
+            public static object? Run(in bool value, in FuncNull ifTrue, in FuncNull ifFalse) => (value ? ifTrue : ifFalse)();
+
+            public static object? Run(in Func<bool> value, in FuncNull ifTrue, in FuncNull ifFalse) => Run(value(), ifTrue, ifFalse);
+
+            public static object? Run(in bool value, in Func<FuncNull> ifTrue, in Func<FuncNull> ifFalse) => Run(value, ifTrue.GetFuncNull(), ifFalse.GetFuncNull());
+
+            public static object? Run(in Func<bool> value, in Func<FuncNull> ifTrue, in Func<FuncNull> ifFalse) => Run(value(), ifTrue, ifFalse);
+            #endregion FON2
+            #endregion FuncNull
+#endif
+
+            #region Func<T>
+            #region FBG1
+            public static bool Run<T>(in bool value, in Func<T> ifTrue, out T
+#if CS9
+                ?
+#endif
+                result)
+            {
+                if (value)
+                {
+                    result = ifTrue();
+
+                    return true;
+                }
+
+                result = default;
+
+                return false;
+            }
+
+            public static bool Run<T>(in Func<bool> value, in Func<T> ifTrue, out T
+#if CS9
+                ?
+#endif
+                result) => Run(value(), ifTrue, out result);
+
+            public static bool Run<T>(in bool value, in Func<Func<T>> ifTrue, out T
+#if CS9
+                ?
+#endif
+                result) => Run(value, ifTrue.GetFunc(), out result);
+
+            public static bool Run<T>(in Func<bool> value, in Func<Func<T>> ifTrue, out T
+#if CS9
+                ?
+#endif
+                result) => Run(value(), ifTrue, out result);
+            #endregion FBG1
+
+            #region FBG2
+            public static bool Run<T>(in bool value, in Func<T> ifTrue, in Func<T> ifFalse, out T result)
+            {
+                if (value)
+                {
+                    result = ifTrue();
+
+                    return true;
+                }
+
+                result = ifFalse();
+
+                return false;
+            }
+
+            public static bool Run<T>(in Func<bool> value, in Func<T> ifTrue, in Func<T> ifFalse, out T result) => Run(value(), ifTrue, ifFalse, out result);
+
+            public static bool Run<T>(in bool value, in Func<Func<T>> ifTrue, in Func<Func<T>> ifFalse, out T result) => Run(value, ifTrue.GetFunc(), ifFalse.GetFunc(), out result);
+
+            public static bool Run<T>(in Func<bool> value, in Func<Func<T>> ifTrue, in Func<Func<T>> ifFalse, out T result) => Run(value(), ifTrue, ifFalse, out result);
+            #endregion FBG2
+
+            #region FT1
+            public static T
+#if CS9
+                ?
+#endif
+                Run<T>(in bool value, in Func<T> ifTrue) => value ? ifTrue() : default;
+
+            public static T
+#if CS9
+                ?
+#endif
+                Run<T>(in Func<bool> value, in Func<T> ifTrue) => Run(value(), ifTrue);
+
+            public static T
+#if CS9
+                ?
+#endif
+                Run<T>(in bool value, in Func<Func<T>> ifTrue) => Run(value, ifTrue.GetFunc());
+
+            public static T
+#if CS9
+                ?
+#endif
+                Run<T>(in Func<bool> value, in Func<Func<T>> ifTrue) => Run(value(), ifTrue);
+            #endregion FT1
+
+            #region FT2
+            public static T Run<T>(in bool value, in Func<T> ifTrue, in Func<T> ifFalse) => (value ? ifTrue : ifFalse)();
+
+            public static T Run<T>(in Func<bool> value, in Func<T> ifTrue, in Func<T> ifFalse) => Run(value(), ifTrue, ifFalse);
+
+            public static T Run<T>(in bool value, in Func<Func<T>> ifTrue, in Func<Func<T>> ifFalse) => Run(value, ifTrue.GetFunc(), ifFalse.GetFunc());
+
+            public static T Run<T>(in Func<bool> value, in Func<Func<T>> ifTrue, in Func<Func<T>> ifFalse) => Run(value(), ifTrue, ifFalse);
+            #endregion FT2
+            #endregion Func<T>
+        }
+
+        public static class ValueChecks
+        {
+            #region Action
+            #region AB1
+            public static bool Run<T>(in T? value, in Action ifTrue) where T : struct => BoolChecks.Run(value.HasValue, ifTrue);
+
+            public static bool Run<T>(in Func<T?> value, in Action ifTrue) where T : struct => Run(value(), ifTrue);
+
+            public static bool Run<T>(in T? value, in Func<Action> ifTrue) where T : struct => Run(value, ifTrue.GetAction());
+
+            public static bool Run<T>(in Func<T?> value, in Func<Action> ifTrue) where T : struct => Run(value(), ifTrue);
+            #endregion AB1
+
+            #region AB2
+            public static bool Run<T>(in T? value, in Action ifTrue, in Action ifFalse) where T : struct => BoolChecks.Run(value.HasValue, ifTrue, ifFalse);
+
+            public static bool Run<T>(in Func<T?> value, in Action ifTrue, in Action ifFalse) where T : struct => Run(value(), ifTrue, ifFalse);
+
+            public static bool Run<T>(in T? value, in Func<Action> ifTrue, in Func<Action> ifFalse) where T : struct => Run(value, ifTrue.GetAction(), ifFalse.GetAction());
+
+            public static bool Run<T>(in Func<T?> value, in Func<Action> ifTrue, in Func<Action> ifFalse) where T : struct => Run(value(), ifTrue, ifFalse);
+            #endregion AB2
+
+            #region ABA1
+            public static bool Run<T>(T? value, Action<T> ifTrue) where T : struct => BoolChecks.Run(value.HasValue, () => ifTrue(value.Value));
+
+            public static bool Run<T>(in Func<T?> value, in Action<T> ifTrue) where T : struct => Run(value(), ifTrue);
+
+            public static bool Run<T>(in T? value, in Func<Action<T>> ifTrue) where T : struct => Run(value, ifTrue.GetAction());
+
+            public static bool Run<T>(in Func<T?> value, in Func<Action<T>> ifTrue) where T : struct => Run(value(), ifTrue);
+            #endregion ABA1
+
+            #region ABA2
+            public static bool Run<T>(T? value, Action<T> ifTrue, in Action ifFalse) where T : struct => BoolChecks.Run(value.HasValue, () => ifTrue(value.Value), ifFalse);
+
+            public static bool Run<T>(in Func<T?> value, in Action<T> ifTrue, in Action ifFalse) where T : struct => Run(value(), ifTrue, ifFalse);
+
+            public static bool Run<T>(in T? value, in Func<Action<T>> ifTrue, in Func<Action> ifFalse) where T : struct => Run(value, ifTrue.GetAction(), ifFalse.GetAction());
+
+            public static bool Run<T>(in Func<T?> value, in Func<Action<T>> ifTrue, in Func<Action> ifFalse) where T : struct => Run(value(), ifTrue, ifFalse);
+            #endregion ABA2
+
+            #region ABAI1
+            public static bool Run<T>(T? value, ActionIn<T> ifTrue) where T : struct => BoolChecks.Run(value.HasValue, () => ifTrue(value.Value));
+
+            public static bool Run<T>(in Func<T?> value, in ActionIn<T> ifTrue) where T : struct => Run(value(), ifTrue);
+
+            public static bool Run<T>(in T? value, in Func<ActionIn<T>> ifTrue) where T : struct => Run(value, ifTrue.GetAction());
+
+            public static bool Run<T>(in Func<T?> value, in Func<ActionIn<T>> ifTrue) where T : struct => Run(value(), ifTrue);
+            #endregion ABAI1
+
+            #region ABAI2
+            public static bool Run<T>(T? value, ActionIn<T> ifTrue, in Action ifFalse) where T : struct => BoolChecks.Run(value.HasValue, () => ifTrue(value.Value), ifFalse);
+
+            public static bool Run<T>(in Func<T?> value, in ActionIn<T> ifTrue, in Action ifFalse) where T : struct => Run(value(), ifTrue, ifFalse);
+
+            public static bool Run<T>(in T? value, in Func<ActionIn<T>> ifTrue, in Func<Action> ifFalse) where T : struct => Run(value, ifTrue.GetAction(), ifFalse.GetAction());
+
+            public static bool Run<T>(in Func<T?> value, in Func<ActionIn<T>> ifTrue, in Func<Action> ifFalse) where T : struct => Run(value(), ifTrue, ifFalse);
+            #endregion ABAI2
+
+            #region ABF1
+            public static bool Run<T>(T? value, Func<T, bool> ifTrue) where T : struct => BoolChecks.Run(value.HasValue, () => ifTrue(value.Value));
+
+            public static bool Run<T>(in Func<T?> value, in Func<T, bool> ifTrue) where T : struct => Run(value(), ifTrue);
+
+            public static bool Run<T>(in T? value, in Func<Func<T, bool>> ifTrue) where T : struct => Run(value, ifTrue.GetFunc());
+
+            public static bool Run<T>(in Func<T?> value, in Func<Func<T, bool>> ifTrue) where T : struct => Run(value(), ifTrue);
+            #endregion ABF1
+
+            #region ABF2
+            public static bool Run<T>(T? value, Func<T, bool> ifTrue, in Func<bool> ifFalse) where T : struct => BoolChecks.Run(value.HasValue, () => ifTrue(value.Value), ifFalse);
+
+            public static bool Run<T>(in Func<T?> value, in Func<T, bool> ifTrue, in Func<bool> ifFalse) where T : struct => Run(value(), ifTrue, ifFalse);
+
+            public static bool Run<T>(in T? value, in Func<Func<T, bool>> ifTrue, in Func<Func<bool>> ifFalse) where T : struct => Run(value, ifTrue.GetFunc(), ifFalse.GetFunc());
+
+            public static bool Run<T>(in Func<T?> value, in Func<Func<T, bool>> ifTrue, in Func<Func<bool>> ifFalse) where T : struct => Run(value(), ifTrue, ifFalse);
+            #endregion ABF2
+
+            #region ABFI1
+            public static bool Run<T>(T? value, FuncIn<T, bool> ifTrue) where T : struct => BoolChecks.Run(value.HasValue, () => ifTrue(value.Value));
+
+            public static bool Run<T>(in Func<T?> value, in FuncIn<T, bool> ifTrue) where T : struct => Run(value(), ifTrue);
+
+            public static bool Run<T>(in T? value, in Func<FuncIn<T, bool>> ifTrue) where T : struct => Run(value, ifTrue.GetFunc());
+
+            public static bool Run<T>(in Func<T?> value, in Func<FuncIn<T, bool>> ifTrue) where T : struct => Run(value(), ifTrue);
+            #endregion ABFI1
+
+            #region ABFI2
+            public static bool Run<T>(T? value, FuncIn<T, bool> ifTrue, in Func<bool> ifFalse) where T : struct => BoolChecks.Run(value.HasValue, () => ifTrue(value.Value), ifFalse);
+
+            public static bool Run<T>(in Func<T?> value, in FuncIn<T, bool> ifTrue, in Func<bool> ifFalse) where T : struct => Run(value(), ifTrue, ifFalse);
+
+            public static bool Run<T>(in T? value, in Func<FuncIn<T, bool>> ifTrue, in Func<Func<bool>> ifFalse) where T : struct => Run(value, ifTrue.GetFunc(), ifFalse.GetFunc());
+
+            public static bool Run<T>(in Func<T?> value, in Func<FuncIn<T, bool>> ifTrue, in Func<Func<bool>> ifFalse) where T : struct => Run(value(), ifTrue, ifFalse);
+            #endregion ABFI2
+            #endregion Action
+
+            #region Func
+            #region FB1
+            public static bool Run<T>(in T? value, in Func ifTrue, out object
+#if CS8
+                ?
+#endif
+                result) where T : struct => BoolChecks.Run(value.HasValue, ifTrue, out result);
+
+            public static bool Run<T>(in Func<T?> value, in Func ifTrue, out object
+#if CS8
+                ?
+#endif
+                result) where T : struct => Run(value(), ifTrue, out result);
+
+            public static bool Run<T>(in T? value, in Func<Func> ifTrue, out object
+#if CS8
+                ?
+#endif
+                result) where T : struct => Run(value, ifTrue.GetFunc(), out result);
+
+            public static bool Run<T>(in Func<T?> value, in Func<Func> ifTrue, out object
+#if CS8
+                ?
+#endif
+                result) where T : struct => Run(value(), ifTrue, out result);
+            #endregion FB1
+
+            #region FB2
+            public static bool Run<T>(in T? value, in Func ifTrue, in Func ifFalse, out object result) where T : struct => BoolChecks.Run(value.HasValue, ifTrue, ifFalse, out result);
+
+            public static bool Run<T>(in Func<T?> value, in Func ifTrue, in Func ifFalse, out object result) where T : struct => Run(value(), ifTrue, ifFalse, out result);
+
+            public static bool Run<T>(in T? value, in Func<Func> ifTrue, in Func<Func> ifFalse, out object result) where T : struct => Run(value, ifTrue.GetFunc(), ifFalse.GetFunc(), out result);
+
+            public static bool Run<T>(in Func<T?> value, in Func<Func> ifTrue, in Func<Func> ifFalse, out object result) where T : struct => Run(value(), ifTrue, ifFalse, out result);
+            #endregion FB2
+
+            #region FO1
+            public static object
+#if CS8
+                ?
+#endif
+                Run<T>(in T? value, in Func ifTrue) where T : struct => BoolChecks.Run(value.HasValue, ifTrue);
+
+            public static object
+#if CS8
+                ?
+#endif
+                Run<T>(in Func<T?> value, in Func ifTrue) where T : struct => Run(value(), ifTrue);
+
+            public static object
+#if CS8
+                ?
+#endif
+                Run<T>(in T? value, in Func<Func> ifTrue) where T : struct => Run(value, ifTrue.GetFunc());
+
+            public static object
+#if CS8
+                ?
+#endif
+                Run<T>(in Func<T?> value, in Func<Func> ifTrue) where T : struct => Run(value(), ifTrue);
+            #endregion FO1
+
+            #region FO2
+            public static object Run<T>(in T? value, in Func ifTrue, in Func ifFalse) where T : struct => BoolChecks.Run(value.HasValue, ifTrue, ifFalse);
+
+            public static object Run<T>(in Func<T?> value, in Func ifTrue, in Func ifFalse) where T : struct => Run(value(), ifTrue, ifFalse);
+
+            public static object Run<T>(in T? value, in Func<Func> ifTrue, in Func<Func> ifFalse) where T : struct => Run(value, ifTrue.GetFunc(), ifFalse.GetFunc());
+
+            public static object Run<T>(in Func<T?> value, in Func<Func> ifTrue, in Func<Func> ifFalse) where T : struct => Run(value(), ifTrue, ifFalse);
+            #endregion FO2
+            #endregion Func
+
+#if CS8
+            #region FuncNull
+            #region FBN1
+            public static bool Run<T>(in T? value, in FuncNull ifTrue, out object? result) where T : struct => BoolChecks.Run(value.HasValue, ifTrue, out result);
+
+            public static bool Run<T>(in Func<T?> value, in FuncNull ifTrue, out object? result) where T : struct => Run<T>(value(), ifTrue, out result);
+
+            public static bool Run<T>(in T? value, in Func<FuncNull> ifTrue, out object? result) where T : struct => Run<T>(value, ifTrue.GetFuncNull(), out result);
+
+            public static bool Run<T>(in Func<T?> value, in Func<FuncNull> ifTrue, out object? result) where T : struct => Run<T>(value(), ifTrue, out result);
+            #endregion FBN1
+
+            #region FBN2
+            public static bool Run<T>(in T? value, in FuncNull ifTrue, in FuncNull ifFalse, out object? result) where T : struct => BoolChecks.Run(value.HasValue, ifTrue, ifFalse, out result);
+
+            public static bool Run<T>(in Func<T?> value, in FuncNull ifTrue, in FuncNull ifFalse, out object? result) where T : struct => Run<T>(value(), ifTrue, ifFalse, out result);
+
+            public static bool Run<T>(in T? value, in Func<FuncNull> ifTrue, in Func<FuncNull> ifFalse, out object? result) where T : struct => Run<T>(value, ifTrue.GetFuncNull(), ifFalse.GetFuncNull(), out result);
+
+            public static bool Run<T>(in Func<T?> value, in Func<FuncNull> ifTrue, in Func<FuncNull> ifFalse, out object? result) where T : struct => Run<T>(value(), ifTrue, ifFalse, out result);
+            #endregion FBN2
+
+            #region FON1
+            public static object? Run<T>(in T? value, in FuncNull ifTrue) where T : struct => BoolChecks.Run(value.HasValue, ifTrue);
+
+            public static object? Run<T>(in Func<T?> value, in FuncNull ifTrue) where T : struct => Run<T>(value(), ifTrue);
+
+            public static object? Run<T>(in T? value, in Func<FuncNull> ifTrue) where T : struct => Run<T>(value, ifTrue.GetFuncNull());
+
+            public static object? Run<T>(in Func<T?> value, in Func<FuncNull> ifTrue) where T : struct => Run<T>(value(), ifTrue);
+            #endregion FON1
+
+            #region FON2
+            public static object? Run<T>(in T? value, in FuncNull ifTrue, in FuncNull ifFalse) where T : struct => BoolChecks.Run(value.HasValue, ifTrue, ifFalse);
+
+            public static object? Run<T>(in Func<T?> value, in FuncNull ifTrue, in FuncNull ifFalse) where T : struct => Run<T>(value(), ifTrue, ifFalse);
+
+            public static object? Run<T>(in T? value, in Func<FuncNull> ifTrue, in Func<FuncNull> ifFalse) where T : struct => Run<T>(value, ifTrue.GetFuncNull(), ifFalse.GetFuncNull());
+
+            public static object? Run<T>(in Func<T?> value, in Func<FuncNull> ifTrue, in Func<FuncNull> ifFalse) where T : struct => Run<T>(value(), ifTrue, ifFalse);
+            #endregion FON2
+            #endregion FuncNull
+#endif
+
+            #region Generic Func
+            #region FBG1.1
+            public static bool Run<TIn, TOut>(in TIn? value, in Func<TOut> ifTrue, out TOut
+#if CS9
+                ?
+#endif
+                result) where TIn : struct => BoolChecks.Run(value.HasValue, ifTrue, out result);
+
+            public static bool Run<TIn, TOut>(in Func<TIn?> value, in Func<TOut> ifTrue, out TOut
+#if CS9
+                ?
+#endif
+                result) where TIn : struct => Run(value(), ifTrue, out result);
+
+            public static bool Run<TIn, TOut>(in TIn? value, in Func<Func<TOut>> ifTrue, out TOut
+#if CS9
+                ?
+#endif
+                result) where TIn : struct => Run(value, ifTrue.GetFunc(), out result);
+
+            public static bool Run<TIn, TOut>(in Func<TIn?> value, in Func<Func<TOut>> ifTrue, out TOut
+#if CS9
+                ?
+#endif
+                result) where TIn : struct => Run(value(), ifTrue, out result);
+            #endregion FBG1.1
+
+            #region FBG1.2.1
+            public static bool Run<T>(in T? value, in Func<T> ifTrue, out T result) where T : struct => Run<T, T>(value, ifTrue, out result);
+
+            public static bool Run<T>(in Func<T?> value, in Func<T> ifTrue, out T result) where T : struct => Run<T>(value(), ifTrue, out result);
+
+            public static bool Run<T>(in T? value, in Func<Func<T>> ifTrue, out T result) where T : struct => Run<T>(value, ifTrue.GetFunc(), out result);
+
+            public static bool Run<T>(in Func<T?> value, in Func<Func<T>> ifTrue, out T result) where T : struct => Run<T>(value(), ifTrue, out result);
+            #endregion FBG1.2.1
+
+            #region FBG1.2.2
+            public static bool Run<T>(in T? value, in Func<T> ifTrue, out T? result) where T : struct
+            {
+                if (Run<T, T>(value, ifTrue, out T _result))
+                {
+                    result = _result;
+
+                    return true;
+                }
+
+                result = null;
+
+                return false;
+            }
+
+            public static bool Run<T>(in Func<T?> value, in Func<T> ifTrue, out T? result) where T : struct => Run(value(), ifTrue, out result);
+
+            public static bool Run<T>(in T? value, in Func<Func<T>> ifTrue, out T? result) where T : struct => Run(value, ifTrue.GetFunc(), out result);
+
+            public static bool Run<T>(in Func<T?> value, in Func<Func<T>> ifTrue, out T? result) where T : struct => Run(value(), ifTrue, out result);
+            #endregion FBG1.2.2
+
+            #region FBG2.1
+            public static bool Run<TIn, TOut>(in TIn? value, in Func<TOut> ifTrue, in Func<TOut> ifFalse, out TOut result) where TIn : struct => BoolChecks.Run(value.HasValue, ifTrue, ifFalse, out result);
+
+            public static bool Run<TIn, TOut>(in Func<TIn?> value, in Func<TOut> ifTrue, in Func<TOut> ifFalse, out TOut result) where TIn : struct => Run(value(), ifTrue, ifFalse, out result);
+
+            public static bool Run<TIn, TOut>(in TIn? value, in Func<Func<TOut>> ifTrue, in Func<Func<TOut>> ifFalse, out TOut result) where TIn : struct => Run(value, ifTrue.GetFunc(), ifFalse.GetFunc(), out result);
+
+            public static bool Run<TIn, TOut>(in Func<TIn?> value, in Func<Func<TOut>> ifTrue, in Func<Func<TOut>> ifFalse, out TOut result) where TIn : struct => Run(value(), ifTrue, ifFalse, out result);
+            #endregion FBG2.1
+
+            #region FBG2.2.1
+            public static bool Run<T>(in T? value, in Func<T> ifTrue, in Func<T> ifFalse, out T result) where T : struct => Run<T, T>(value, ifTrue, ifFalse, out result);
+
+            public static bool Run<T>(in Func<T?> value, in Func<T> ifTrue, in Func<T> ifFalse, out T result) where T : struct => Run<T>(value(), ifTrue, ifFalse, out result);
+
+            public static bool Run<T>(in T? value, in Func<Func<T>> ifTrue, in Func<Func<T>> ifFalse, out T result) where T : struct => Run<T>(value, ifTrue.GetFunc(), ifFalse.GetFunc(), out result);
+
+            public static bool Run<T>(in Func<T?> value, in Func<Func<T>> ifTrue, in Func<Func<T>> ifFalse, out T result) where T : struct => Run<T>(value(), ifTrue, ifFalse, out result);
+            #endregion FBG2.2.1
+
+            #region FBG2.2.2
+            public static bool Run<T>(in T? value, in Func<T> ifTrue, in Func<T> ifFalse, out T? result) where T : struct
+            {
+                if (Run<T, T>(value, ifTrue, ifFalse, out T _result))
+                {
+                    result = _result;
+
+                    return true;
+                }
+
+                result = null;
+
+                return false;
+            }
+
+            public static bool Run<T>(in Func<T?> value, in Func<T> ifTrue, in Func<T> ifFalse, out T? result) where T : struct => Run(value(), ifTrue, ifFalse, out result);
+
+            public static bool Run<T>(in T? value, in Func<Func<T>> ifTrue, in Func<Func<T>> ifFalse, out T? result) where T : struct => Run(value, ifTrue.GetFunc(), ifFalse.GetFunc(), out result);
+
+            public static bool Run<T>(in Func<T?> value, in Func<Func<T>> ifTrue, in Func<Func<T>> ifFalse, out T? result) where T : struct => Run(value(), ifTrue, ifFalse, out result);
+            #endregion FBG2.2.2
+
+            #region FT1.1
+            public static TOut
+#if CS9
+                ?
+#endif
+                Run<TIn, TOut>(in TIn? value, in Func<TOut> ifTrue) where TIn : struct => BoolChecks.Run(value.HasValue, ifTrue);
+
+            public static TOut
+#if CS9
+                ?
+#endif
+                Run<TIn, TOut>(in Func<TIn?> value, in Func<TOut> ifTrue) where TIn : struct => Run(value(), ifTrue);
+
+            public static TOut
+#if CS9
+                ?
+#endif
+                Run<TIn, TOut>(in TIn? value, in Func<Func<TOut>> ifTrue) where TIn : struct => Run(value, ifTrue.GetFunc());
+
+            public static TOut
+#if CS9
+                ?
+#endif
+                Run<TIn, TOut>(in Func<TIn?> value, in Func<Func<TOut>> ifTrue) where TIn : struct => Run(value(), ifTrue);
+            #endregion FT1.1
+
+            #region FT1.2.1
+            public static T Run<T>(in T? value, in Func<T> ifTrue) where T : struct => Run<T, T>(value, ifTrue);
+
+            public static T Run<T>(in Func<T?> value, in Func<T> ifTrue) where T : struct => Run<T>(value(), ifTrue);
+
+            public static T Run<T>(in T? value, in Func<Func<T>> ifTrue) where T : struct => Run<T>(value, ifTrue.GetFunc());
+
+            public static T Run<T>(in Func<T?> value, in Func<Func<T>> ifTrue) where T : struct => Run<T>(value(), ifTrue);
+            #endregion FT1.2.1
+
+            #region FT1.2.2
+            public static T? RunNull<T>(in T? value, in Func<T> ifTrue) where T : struct => Run(value, ifTrue, out T? result) ? result : null;
+
+            public static T? RunNull<T>(in Func<T?> value, in Func<T> ifTrue) where T : struct => RunNull(value(), ifTrue);
+
+            public static T? RunNull<T>(in T? value, in Func<Func<T>> ifTrue) where T : struct => RunNull(value, ifTrue.GetFunc());
+
+            public static T? RunNull<T>(in Func<T?> value, in Func<Func<T>> ifTrue) where T : struct => RunNull(value(), ifTrue);
+            #endregion FT1.2.2
+
+            #region FT2.1
+            public static TOut Run<TIn, TOut>(in TIn? value, in Func<TOut> ifTrue, in Func<TOut> ifFalse) where TIn : struct => BoolChecks.Run(value.HasValue, ifTrue, ifFalse);
+
+            public static TOut Run<TIn, TOut>(in Func<TIn?> value, in Func<TOut> ifTrue, in Func<TOut> ifFalse) where TIn : struct => Run(value(), ifTrue, ifFalse);
+
+            public static TOut Run<TIn, TOut>(in TIn? value, in Func<Func<TOut>> ifTrue, in Func<Func<TOut>> ifFalse) where TIn : struct => Run(value, ifTrue.GetFunc(), ifFalse.GetFunc());
+
+            public static TOut Run<TIn, TOut>(in Func<TIn?> value, in Func<Func<TOut>> ifTrue, in Func<Func<TOut>> ifFalse) where TIn : struct => Run(value(), ifTrue, ifFalse);
+            #endregion FT2.1
+
+            #region FT2.2.1
+            public static T Run<T>(in T? value, in Func<T> ifTrue, in Func<T> ifFalse) where T : struct => Run<T, T>(value, ifTrue, ifFalse);
+
+            public static T Run<T>(in Func<T?> value, in Func<T> ifTrue, in Func<T> ifFalse) where T : struct => Run<T>(value(), ifTrue, ifFalse);
+
+            public static T Run<T>(in T? value, in Func<Func<T>> ifTrue, in Func<Func<T>> ifFalse) where T : struct => Run<T>(value, ifTrue.GetFunc(), ifFalse.GetFunc());
+
+            public static T Run<T>(in Func<T?> value, in Func<Func<T>> ifTrue, in Func<Func<T>> ifFalse) where T : struct => Run<T>(value(), ifTrue, ifFalse);
+            #endregion FT2.2.1
+
+            #region FT2.2.2
+            public static T? RunNull<T>(in T? value, in Func<T> ifTrue, in Func<T> ifFalse) where T : struct => Run<T, T>(value, ifTrue, ifFalse);
+
+            public static T? RunNull<T>(in Func<T?> value, in Func<T> ifTrue, in Func<T> ifFalse) where T : struct => RunNull(value(), ifTrue, ifFalse);
+
+            public static T? RunNull<T>(in T? value, in Func<Func<T>> ifTrue, in Func<Func<T>> ifFalse) where T : struct => RunNull(value, ifTrue.GetFunc(), ifFalse.GetFunc());
+
+            public static T? RunNull<T>(in Func<T?> value, in Func<Func<T>> ifTrue, in Func<Func<T>> ifFalse) where T : struct => RunNull(value(), ifTrue, ifFalse);
+            #endregion FT2.2.2
+            #endregion Generic Func
+        }
+
+        public static class TypeChecks
+        {
+            #region Action
+            #region AB1
+            public static bool Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, in Action ifTrue) => BoolChecks.Run(value is T, ifTrue);
+
+            public static bool Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Action ifTrue) => Run<T>(value(), ifTrue);
+
+            public static bool Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, in Func<Action> ifTrue) => Run<T>(value, ifTrue.GetAction());
+
+            public static bool Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Func<Action> ifTrue) => Run<T>(value(), ifTrue);
+            #endregion AB1
+
+            #region AB2
+            public static bool Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, in Action ifTrue, in Action ifFalse) => BoolChecks.Run(value is T, ifTrue, ifFalse);
+
+            public static bool Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Action ifTrue, in Action ifFalse) => Run<T>(value(), ifTrue, ifFalse);
+
+            public static bool Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, in Func<Action> ifTrue, in Func<Action> ifFalse) => Run<T>(value, ifTrue.GetAction(), ifFalse.GetAction());
+
+            public static bool Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Func<Action> ifTrue, in Func<Action> ifFalse) => Run<T>(value(), ifTrue, ifFalse);
+            #endregion AB2
+
+            #region ABA1
+            public static bool Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, Action<T> ifTrue)
+            {
+                if (value is T _value)
+                {
+                    ifTrue(_value);
+
+                    return true;
+                }
+
+                return false;
+            }
+
+            public static bool Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Action<T> ifTrue) => Run(value(), ifTrue);
+
+            public static bool Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, in Func<Action<T>> ifTrue) => Run(value, ifTrue.GetAction());
+
+            public static bool Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Func<Action<T>> ifTrue) => Run(value(), ifTrue);
+            #endregion ABA1
+
+            #region ABA2
+            public static bool Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, Action<T> ifTrue, in Action ifFalse)
+            {
+                if (value is T _value)
+                {
+                    ifTrue(_value);
+
+                    return true;
+                }
+
+                ifFalse();
+
+                return false;
+            }
+
+            public static bool Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Action<T> ifTrue, in Action ifFalse) => Run(value(), ifTrue, ifFalse);
+
+            public static bool Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, in Func<Action<T>> ifTrue, in Func<Action> ifFalse) => Run(value, ifTrue.GetAction(), ifFalse.GetAction());
+
+            public static bool Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Func<Action<T>> ifTrue, in Func<Action> ifFalse) => Run(value(), ifTrue, ifFalse);
+            #endregion ABA2
+
+            #region ABAI1
+            public static bool Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, ActionIn<T> ifTrue)
+            {
+                if (value is T _value)
+                {
+                    ifTrue(_value);
+
+                    return true;
+                }
+
+                return false;
+            }
+
+            public static bool Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in ActionIn<T> ifTrue) => Run(value(), ifTrue);
+
+            public static bool Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, in Func<ActionIn<T>> ifTrue) => Run(value, ifTrue.GetAction());
+
+            public static bool Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Func<ActionIn<T>> ifTrue) => Run(value(), ifTrue);
+            #endregion ABAI1
+
+            #region ABAI2
+            public static bool Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, ActionIn<T> ifTrue, in Action ifFalse)
+            {
+                if (value is T _value)
+                {
+                    ifTrue(_value);
+
+                    return true;
+                }
+
+                ifFalse();
+
+                return false;
+            }
+
+            public static bool Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in ActionIn<T> ifTrue, in Action ifFalse) => Run(value(), ifTrue, ifFalse);
+
+            public static bool Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, in Func<ActionIn<T>> ifTrue, in Func<Action> ifFalse) => Run(value, ifTrue.GetAction(), ifFalse.GetAction());
+
+            public static bool Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Func<ActionIn<T>> ifTrue, in Func<Action> ifFalse) => Run(value(), ifTrue, ifFalse);
+            #endregion ABAI2
+
+            #region ABF1
+            public static bool Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, Func<T, bool> ifTrue) => value is T _value ? ifTrue(_value) : false;
+
+            public static bool Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Func<T, bool> ifTrue) => Run(value(), ifTrue);
+
+            public static bool Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, in Func<Func<T, bool>> ifTrue) => Run(value, ifTrue.GetFunc());
+
+            public static bool Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Func<Func<T, bool>> ifTrue) => Run(value(), ifTrue);
+            #endregion ABF1
+
+            #region ABF2
+            public static bool Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, Func<T, bool> ifTrue, in Func<bool> ifFalse) => value is T _value ? ifTrue(_value) : ifFalse();
+
+            public static bool Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Func<T, bool> ifTrue, in Func<bool> ifFalse) => Run(value(), ifTrue, ifFalse);
+
+            public static bool Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, in Func<Func<T, bool>> ifTrue, in Func<Func<bool>> ifFalse) => Run(value, ifTrue.GetFunc(), ifFalse.GetFunc());
+
+            public static bool Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Func<Func<T, bool>> ifTrue, in Func<Func<bool>> ifFalse) => Run(value(), ifTrue, ifFalse);
+            #endregion ABF2
+
+            #region ABFI1
+            public static bool Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, FuncIn<T, bool> ifTrue) => value is T _value ? ifTrue(_value) : false;
+
+            public static bool Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in FuncIn<T, bool> ifTrue) => Run(value(), ifTrue);
+
+            public static bool Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, in Func<FuncIn<T, bool>> ifTrue) => Run(value, ifTrue.GetFunc());
+
+            public static bool Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Func<FuncIn<T, bool>> ifTrue) => Run(value(), ifTrue);
+            #endregion ABFI1
+
+            #region ABFI2
+            public static bool Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, FuncIn<T, bool> ifTrue, in Func<bool> ifFalse) => value is T _value ? ifTrue(_value) : ifFalse();
+
+            public static bool Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in FuncIn<T, bool> ifTrue, in Func<bool> ifFalse) => Run(value(), ifTrue, ifFalse);
+
+            public static bool Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, in Func<FuncIn<T, bool>> ifTrue, in Func<Func<bool>> ifFalse) => Run(value, ifTrue.GetFunc(), ifFalse.GetFunc());
+
+            public static bool Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Func<FuncIn<T, bool>> ifTrue, in Func<Func<bool>> ifFalse) => Run(value(), ifTrue, ifFalse);
+            #endregion ABFI2
+            #endregion Action
+
+            #region Func
+            #region FB1
+            public static bool Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, in Func ifTrue, out object
+#if CS8
+                ?
+#endif
+                result) => BoolChecks.Run(value is T, ifTrue, out result);
+
+            public static bool Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Func ifTrue, out object
+#if CS8
+                ?
+#endif
+                result) => Run<T>(value(), ifTrue, out result);
+
+            public static bool Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, in Func<Func> ifTrue, out object
+#if CS8
+                ?
+#endif
+                result) => Run<T>(value, ifTrue.GetFunc(), out result);
+
+            public static bool Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Func<Func> ifTrue, out object
+#if CS8
+                ?
+#endif
+                result) => Run<T>(value(), ifTrue, out result);
+            #endregion FB1
+
+            #region FB2
+            public static bool Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, in Func ifTrue, in Func ifFalse, out object result) => BoolChecks.Run(value is T, ifTrue, ifFalse, out result);
+
+            public static bool Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Func ifTrue, in Func ifFalse, out object result) => Run<T>(value(), ifTrue, ifFalse, out result);
+
+            public static bool Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, in Func<Func> ifTrue, in Func<Func> ifFalse, out object result) => Run<T>(value, ifTrue.GetFunc(), ifFalse.GetFunc(), out result);
+
+            public static bool Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Func<Func> ifTrue, in Func<Func> ifFalse, out object result) => Run<T>(value(), ifTrue, ifFalse, out result);
+            #endregion FB2
+
+            #region FO1
+            public static object
+#if CS8
+                ?
+#endif
+                Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, in Func ifTrue) => BoolChecks.Run(value is T, ifTrue);
+
+            public static object
+#if CS8
+                ?
+#endif
+                Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Func ifTrue) => Run<T>(value(), ifTrue);
+
+            public static object
+#if CS8
+                ?
+#endif
+                Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, in Func<Func> ifTrue) => Run<T>(value, ifTrue.GetFunc());
+
+            public static object
+#if CS8
+                ?
+#endif
+                Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Func<Func> ifTrue) => Run<T>(value(), ifTrue);
+            #endregion FO1
+
+            #region FO2
+            public static object Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, in Func ifTrue, in Func ifFalse) => BoolChecks.Run(value is T, ifTrue, ifFalse);
+
+            public static object Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Func ifTrue, in Func ifFalse) => Run<T>(value(), ifTrue, ifFalse);
+
+            public static object Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, in Func<Func> ifTrue, in Func<Func> ifFalse) => Run<T>(value, ifTrue.GetFunc(), ifFalse.GetFunc());
+
+            public static object Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Func<Func> ifTrue, in Func<Func> ifFalse) => Run<T>(value(), ifTrue, ifFalse);
+            #endregion FO2
+            #endregion Func
+
+#if CS8
+            #region FuncNull
+            #region FBN1
+            public static bool Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, in FuncNull ifTrue, out object
+#if CS8
+                ?
+#endif
+                result) => BoolChecks.Run(value is T, ifTrue, out result);
+
+            public static bool Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in FuncNull ifTrue, out object
+#if CS8
+                ?
+#endif
+                result) => Run<T>(value(), ifTrue, out result);
+
+            public static bool Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, in Func<FuncNull> ifTrue, out object
+#if CS8
+                ?
+#endif
+                result) => Run<T>(value, ifTrue.GetFuncNull(), out result);
+
+            public static bool Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Func<FuncNull> ifTrue, out object
+#if CS8
+                ?
+#endif
+                result) => Run<T>(value(), ifTrue, out result);
+            #endregion FBN1
+
+            #region FBN2
+            public static bool Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, in FuncNull ifTrue, in FuncNull ifFalse, out object
+#if CS8
+                ?
+#endif
+                result) => BoolChecks.Run(value is T, ifTrue, ifFalse, out result);
+
+            public static bool Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in FuncNull ifTrue, in FuncNull ifFalse, out object
+#if CS8
+                ?
+#endif
+                result) => Run<T>(value(), ifTrue, ifFalse, out result);
+
+            public static bool Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, in Func<FuncNull> ifTrue, in Func<FuncNull> ifFalse, out object
+#if CS8
+                ?
+#endif
+                result) => Run<T>(value, ifTrue.GetFuncNull(), ifFalse.GetFuncNull(), out result);
+
+            public static bool Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Func<FuncNull> ifTrue, in Func<FuncNull> ifFalse, out object
+#if CS8
+                ?
+#endif
+                result) => Run<T>(value(), ifTrue, ifFalse, out result);
+            #endregion FBN2
+
+            #region FON1
+            public static object
+#if CS8
+                ?
+#endif
+                Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, in FuncNull ifTrue) => BoolChecks.Run(value is T, ifTrue);
+
+            public static object
+#if CS8
+                ?
+#endif
+                Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in FuncNull ifTrue) => Run<T>(value(), ifTrue);
+
+            public static object
+#if CS8
+                ?
+#endif
+                Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, in Func<FuncNull> ifTrue) => Run<T>(value, ifTrue.GetFuncNull());
+
+            public static object
+#if CS8
+                ?
+#endif
+                Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Func<FuncNull> ifTrue) => Run<T>(value(), ifTrue);
+            #endregion FON1
+
+            #region FON2
+            public static object
+#if CS8
+                ?
+#endif
+                Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, in FuncNull ifTrue, in FuncNull ifFalse) => BoolChecks.Run(value is T, ifTrue, ifFalse);
+
+            public static object
+#if CS8
+                ?
+#endif
+                Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in FuncNull ifTrue, in FuncNull ifFalse) => Run<T>(value(), ifTrue, ifFalse);
+
+            public static object
+#if CS8
+                ?
+#endif
+                Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, in Func<FuncNull> ifTrue, in Func<FuncNull> ifFalse) => Run<T>(value, ifTrue.GetFuncNull(), ifFalse.GetFuncNull());
+
+            public static object
+#if CS8
+                ?
+#endif
+                Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Func<FuncNull> ifTrue, in Func<FuncNull> ifFalse) => Run<T>(value(), ifTrue, ifFalse);
+            #endregion FON2
+            #endregion FuncNull
+#endif
+
+            #region Generic Func
+            #region FBG1.1
+            public static bool Run<TIn, TOut>(in object
+#if CS8
+                ?
+#endif
+                value, in Func<TOut> ifTrue, out TOut
+#if CS9
+                ?
+#endif
+                result) => BoolChecks.Run(value is TIn, ifTrue, out result);
+
+            public static bool Run<TIn, TOut>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Func<TOut> ifTrue, out TOut
+#if CS9
+                ?
+#endif
+                result) => Run(value(), ifTrue, out result);
+
+            public static bool Run<TIn, TOut>(in object
+#if CS8
+                ?
+#endif
+                value, in Func<Func<TOut>> ifTrue, out TOut
+#if CS9
+                ?
+#endif
+                result) => Run(value, ifTrue.GetFunc(), out result);
+
+            public static bool Run<TIn, TOut>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Func<Func<TOut>> ifTrue, out TOut
+#if CS9
+                ?
+#endif
+                result) => Run(value(), ifTrue, out result);
+            #endregion FBG1.1
+
+            #region FBG1.2
+            public static bool Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, in Func<T> ifTrue, out T
+#if CS9
+                ?
+#endif
+                result) => BoolChecks.Run(value is T, ifTrue, out result);
+
+            public static bool Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Func<T> ifTrue, out T
+#if CS9
+                ?
+#endif
+                result) => Run(value(), ifTrue, out result);
+
+            public static bool Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, in Func<Func<T>> ifTrue, out T
+#if CS9
+                ?
+#endif
+                result) => Run(value, ifTrue.GetFunc(), out result);
+
+            public static bool Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Func<Func<T>> ifTrue, out T
+#if CS9
+                ?
+#endif
+                result) => Run(value(), ifTrue, out result);
+            #endregion FBG1.2
+
+            #region FBG2.1
+            public static bool Run<TIn, TOut>(in object
+#if CS8
+                ?
+#endif
+                value, in Func<TOut> ifTrue, in Func<TOut> ifFalse, out TOut
+#if CS9
+                ?
+#endif
+                result) => BoolChecks.Run(value is TIn, ifTrue, ifFalse, out result);
+
+            public static bool Run<TIn, TOut>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Func<TOut> ifTrue, in Func<TOut> ifFalse, out TOut
+#if CS9
+                ?
+#endif
+                result) => Run(value(), ifTrue, ifFalse, out result);
+
+            public static bool Run<TIn, TOut>(in object
+#if CS8
+                ?
+#endif
+                value, in Func<Func<TOut>> ifTrue, in Func<Func<TOut>> ifFalse, out TOut
+#if CS9
+                ?
+#endif
+                result) => Run(value, ifTrue.GetFunc(), ifFalse.GetFunc(), out result);
+
+            public static bool Run<TIn, TOut>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Func<Func<TOut>> ifTrue, in Func<Func<TOut>> ifFalse, out TOut
+#if CS9
+                ?
+#endif
+                result) => Run(value(), ifTrue, ifFalse, out result);
+            #endregion FBG2.1
+
+            #region FBG2.2
+            public static bool Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, in Func<T> ifTrue, in Func<T> ifFalse, out T
+#if CS9
+                ?
+#endif
+                result) => Run<T, T>(value, ifTrue, ifFalse, out result);
+
+            public static bool Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Func<T> ifTrue, in Func<T> ifFalse, out T
+#if CS9
+                ?
+#endif
+                result) => Run(value(), ifTrue, ifFalse, out result);
+
+            public static bool Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, in Func<Func<T>> ifTrue, in Func<Func<T>> ifFalse, out T
+#if CS9
+                ?
+#endif
+                result) => Run(value, ifTrue.GetFunc(), ifFalse.GetFunc(), out result);
+
+            public static bool Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Func<Func<T>> ifTrue, in Func<Func<T>> ifFalse, out T
+#if CS9
+                ?
+#endif
+                result) => Run(value(), ifTrue, ifFalse, out result);
+            #endregion FBG2.2
+
+            #region FT1.1
+            public static TOut
+#if CS9
+                ?
+#endif
+                Run<TIn, TOut>(in object
+#if CS8
+                ?
+#endif
+                value, in Func<TOut> ifTrue) => BoolChecks.Run(value is TIn, ifTrue);
+
+            public static TOut
+#if CS9
+                ?
+#endif
+                Run<TIn, TOut>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Func<TOut> ifTrue) => Run<TIn, TOut>(value(), ifTrue);
+
+            public static TOut
+#if CS9
+                ?
+#endif
+                Run<TIn, TOut>(in object
+#if CS8
+                ?
+#endif
+                value, in Func<Func<TOut>> ifTrue) => Run<TIn, TOut>(value, ifTrue.GetFunc());
+
+            public static TOut
+#if CS9
+                ?
+#endif
+                Run<TIn, TOut>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Func<Func<TOut>> ifTrue) => Run<TIn, TOut>(value(), ifTrue);
+            #endregion FT1.1
+
+            #region FT1.2
+            public static T
+#if CS9
+                ?
+#endif
+                Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, in Func<T> ifTrue) => Run(value, ifTrue, out T
+#if CS9
+                ?
+#endif
+                result) ? result : default;
+
+            public static T
+#if CS9
+                ?
+#endif
+                Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Func<T> ifTrue) => Run(value(), ifTrue);
+
+            public static T
+#if CS9
+                ?
+#endif
+                Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, in Func<Func<T>> ifTrue) => Run(value, ifTrue.GetFunc());
+
+            public static T
+#if CS9
+                ?
+#endif
+                Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Func<Func<T>> ifTrue) => Run(value(), ifTrue);
+            #endregion FT1.2
+
+            #region FT2.1
+            public static TOut Run<TIn, TOut>(in object
+#if CS8
+                ?
+#endif
+                value, in Func<TOut> ifTrue, in Func<TOut> ifFalse) => BoolChecks.Run(value is TIn, ifTrue, ifFalse);
+
+            public static TOut Run<TIn, TOut>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Func<TOut> ifTrue, in Func<TOut> ifFalse) => Run<TIn, TOut>(value(), ifTrue, ifFalse);
+
+            public static TOut Run<TIn, TOut>(in object
+#if CS8
+                ?
+#endif
+                value, in Func<Func<TOut>> ifTrue, in Func<Func<TOut>> ifFalse) => Run<TIn, TOut>(value, ifTrue.GetFunc(), ifFalse.GetFunc());
+
+            public static TOut Run<TIn, TOut>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Func<Func<TOut>> ifTrue, in Func<Func<TOut>> ifFalse) => Run<TIn, TOut>(value(), ifTrue, ifFalse);
+            #endregion FT2.1
+
+            #region FT2.2
+            public static T
+#if CS9
+                ?
+#endif
+                Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, in Func<T> ifTrue, in Func<T> ifFalse) => Run<T, T>(value, ifTrue, ifFalse);
+
+            public static T
+#if CS9
+                ?
+#endif
+                Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Func<T> ifTrue, in Func<T> ifFalse) => Run(value(), ifTrue, ifFalse);
+
+            public static T
+#if CS9
+                ?
+#endif
+                Run<T>(in object
+#if CS8
+                ?
+#endif
+                value, in Func<Func<T>> ifTrue, in Func<Func<T>> ifFalse) => Run(value, ifTrue.GetFunc(), ifFalse.GetFunc());
+
+            public static T
+#if CS9
+                ?
+#endif
+                Run<T>(in
+#if CS8
+                FuncNull
+#else
+                Func
+#endif
+                value, in Func<Func<T>> ifTrue, in Func<Func<T>> ifFalse) => Run(value(), ifTrue, ifFalse);
+            #endregion FT2.2
+            #endregion Generic Func
+        }
     }
 }

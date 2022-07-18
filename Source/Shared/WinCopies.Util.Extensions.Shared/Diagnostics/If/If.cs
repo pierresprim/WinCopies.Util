@@ -45,9 +45,19 @@ namespace WinCopies.Diagnostics
 {
     public static class IfHelpers
     {
-        public static KeyValuePair<TKey, TValue> GetKeyValuePair<TKey, TValue>(in TKey key, in TValue value) => new KeyValuePair<TKey, TValue>(key, value);
+#if !WinCopies3
+        public static KeyValuePair<TKey, TValue> GetKeyValuePair<TKey, TValue>(in TKey key, in TValue value) => new
+#if !CS9
+            KeyValuePair<TKey, TValue>
+#endif
+            (key, value);
 
-        public static KeyValuePair<TKey, Func<bool>> GetIfKeyValuePairPredicate<TKey>(in TKey key, in Func<bool> predicate) => new KeyValuePair<TKey, Func<bool>>(key, predicate);
+        public static KeyValuePair<TKey, Func<bool>> GetIfKeyValuePairPredicate<TKey>(in TKey key, in Func<bool> predicate) => new
+#if !CS9
+            KeyValuePair<TKey, Func<bool>>
+#endif
+            (key, predicate);
+#endif
 
         private static bool IfInternal(in IfCT comparisonType, in IfCM comparisonMode, CheckIfComparisonDelegate comparisonDelegate, in IIfValuesEnumerable values)
         {
@@ -55,70 +65,69 @@ namespace WinCopies.Diagnostics
 
             // We check the comparison type for the 'and' comparison.
 
-            if (comparisonType == IfCT.And)
+            switch (comparisonType)
             {
-                for (int i = 0; i < values.Array.Length; i++)
+                case IfCT.And:
 
-                    if (!checkIfComparison(values.GetValue(i)))
-                    {
-                        if (comparisonMode == IfCM.Binary)
+                    for (int i = 0; i < values.Array.Length; i++)
 
+                        if (!checkIfComparison(values.GetValue(i)))
+                        {
+                            if (comparisonMode == IfCM.Binary)
+
+                                for (i++; i < values.Array.Length; i++)
+
+                                    _ = checkIfComparison(values.GetValue(i));
+
+                            return false;
+                        }
+
+                    return true;
+
+                // We check the comparison type for the 'or' comparison.
+
+                case IfCT.Or:
+
+                    for (int i = 0; i < values.Array.Length; i++)
+
+                        if (checkIfComparison(values.GetValue(i)))
+                        {
+                            if (comparisonMode == IfCM.Binary)
+
+                                for (i++; i < values.Array.Length; i++)
+
+                                    _ = checkIfComparison(values.GetValue(i));
+
+                            return true;
+                        }
+
+                    return false;
+
+                // We check the comparison type for the 'xor' comparison.
+
+                default:
+
+                    for (int i = 0; i < values.Array.Length; i++)
+
+                        if (checkIfComparison(values.GetValue(i)))
+                        {
                             for (i++; i < values.Array.Length; i++)
 
-                                _ = checkIfComparison(values.GetValue(i));
+                                if (checkIfComparison(values.GetValue(i)))
+                                {
+                                    if (comparisonMode == IfCM.Binary)
 
-                        return false;
-                    }
+                                        for (i++; i < values.Array.Length; i++)
 
-                return true;
-            }
+                                            _ = checkIfComparison(values.GetValue(i));
 
-            // We check the comparison type for the 'or' comparison.
+                                    return false;
+                                }
 
-            else if (comparisonType == IfCT.Or)
-            {
-                for (int i = 0; i < values.Array.Length; i++)
+                            return true;
+                        }
 
-                    if (checkIfComparison(values.GetValue(i)))
-                    {
-                        if (comparisonMode == IfCM.Binary)
-
-                            for (i++; i < values.Array.Length; i++)
-
-                                _ = checkIfComparison(values.GetValue(i));
-
-                        return true;
-                    }
-
-                return false;
-            }
-
-            // We check the comparison type for the 'xor' comparison.
-
-            else
-            {
-                for (int i = 0; i < values.Array.Length; i++)
-
-                    if (checkIfComparison(values.GetValue(i)))
-                    {
-                        for (i++; i < values.Array.Length; i++)
-
-                            if (checkIfComparison(values.GetValue(i)))
-                            {
-                                if (comparisonMode == IfCM.Binary)
-
-                                    for (i++; i < values.Array.Length; i++)
-
-                                        _ = checkIfComparison(values.GetValue(i));
-
-                                return false;
-                            }
-
-                        return true;
-                    }
-
-                return false;
-
+                    return false;
             }
         }
 
@@ -130,95 +139,95 @@ namespace WinCopies.Diagnostics
 
             // We check the comparison type for the 'and' comparison.
 
-            if (comparisonType == IfCT.And)
+            switch (comparisonType)
             {
-                for (int i = 0; i < values.Array.Length; i++)
-                {
-                    _value = values.GetValue(i);
+                case IfCT.And:
 
-                    if (!checkIfComparison(_value.Value))
+                    for (int i = 0; i < values.Array.Length; i++)
                     {
-                        if (comparisonMode == IfCM.Binary)
+                        _value = values.GetValue(i);
 
-                            for (i++; i < values.Array.Length; i++)
-
-                                _ = checkIfComparison(_value.Value);
-
-                        key = _value.Key;
-
-                        return false;
-                    }
-                }
-
-                key = null;
-
-                return true;
-            }
-
-            // We check the comparison type for the 'or' comparison.
-
-            else if (comparisonType == IfCT.Or)
-            {
-                for (int i = 0; i < values.Array.Length; i++)
-                {
-                    _value = values.GetValue(i);
-
-                    if (checkIfComparison(_value.Value))
-                    {
-                        if (comparisonMode == IfCM.Binary)
-
-                            for (i++; i < values.Array.Length; i++)
-
-                                _ = checkIfComparison(_value.Value);
-
-                        key = _value.Key;
-
-                        return true;
-                    }
-                }
-
-                key = null;
-
-                return false;
-            }
-
-            // We check the comparison type for the 'xor' comparison.
-
-            else
-            {
-                for (int i = 0; i < values.Array.Length; i++)
-                {
-                    _value = values.GetValue(i);
-
-                    if (checkIfComparison(_value.Value))
-                    {
-                        for (i++; i < values.Array.Length; i++)
+                        if (!checkIfComparison(_value.Value))
                         {
-                            _value = values.GetValue(i);
+                            if (comparisonMode == IfCM.Binary)
 
-                            if (checkIfComparison(_value.Value))
-                            {
-                                if (comparisonMode == IfCM.Binary)
+                                for (i++; i < values.Array.Length; i++)
 
-                                    for (i++; i < values.Array.Length; i++)
+                                    _ = checkIfComparison(_value.Value);
 
-                                        _ = checkIfComparison(values.GetValue(i).Value);
+                            key = _value.Key;
 
-                                key = _value.Key;
-
-                                return false;
-                            }
+                            return false;
                         }
-
-                        key = _value.Key;
-
-                        return true;
                     }
-                }
 
-                key = null;
+                    key = null;
 
-                return false;
+                    return true;
+
+                // We check the comparison type for the 'or' comparison.
+
+                case IfCT.Or:
+
+                    for (int i = 0; i < values.Array.Length; i++)
+                    {
+                        _value = values.GetValue(i);
+
+                        if (checkIfComparison(_value.Value))
+                        {
+                            if (comparisonMode == IfCM.Binary)
+
+                                for (i++; i < values.Array.Length; i++)
+
+                                    _ = checkIfComparison(_value.Value);
+
+                            key = _value.Key;
+
+                            return true;
+                        }
+                    }
+
+                    key = null;
+
+                    return false;
+
+                // We check the comparison type for the 'xor' comparison.
+
+                default:
+
+                    for (int i = 0; i < values.Array.Length; i++)
+                    {
+                        _value = values.GetValue(i);
+
+                        if (checkIfComparison(_value.Value))
+                        {
+                            for (i++; i < values.Array.Length; i++)
+                            {
+                                _value = values.GetValue(i);
+
+                                if (checkIfComparison(_value.Value))
+                                {
+                                    if (comparisonMode == IfCM.Binary)
+
+                                        for (i++; i < values.Array.Length; i++)
+
+                                            _ = checkIfComparison(values.GetValue(i).Value);
+
+                                    key = _value.Key;
+
+                                    return false;
+                                }
+                            }
+
+                            key = _value.Key;
+
+                            return true;
+                        }
+                    }
+
+                    key = null;
+
+                    return false;
             }
         }
 
@@ -228,69 +237,69 @@ namespace WinCopies.Diagnostics
 
             // We check the comparison type for the 'and' comparison.
 
-            if (comparisonType == IfCT.And)
+            switch (comparisonType)
             {
-                for (int i = 0; i < values.Array.Length; i++)
+                case IfCT.And:
 
-                    if (!checkIfComparison(values.GetValue(i)))
-                    {
-                        if (comparisonMode == IfCM.Binary)
+                    for (int i = 0; i < values.Array.Length; i++)
 
+                        if (!checkIfComparison(values.GetValue(i)))
+                        {
+                            if (comparisonMode == IfCM.Binary)
+
+                                for (i++; i < values.Array.Length; i++)
+
+                                    _ = checkIfComparison(values.GetValue(i));
+
+                            return false;
+                        }
+
+                    return true;
+
+                // We check the comparison type for the 'or' comparison.
+
+                case IfCT.Or:
+
+                    for (int i = 0; i < values.Array.Length; i++)
+
+                        if (checkIfComparison(values.GetValue(i)))
+                        {
+                            if (comparisonMode == IfCM.Binary)
+
+                                for (i++; i < values.Array.Length; i++)
+
+                                    _ = checkIfComparison(values.GetValue(i));
+
+                            return true;
+                        }
+
+                    return false;
+
+                // We check the comparison type for the 'xor' comparison.
+
+                default:
+
+                    for (int i = 0; i < values.Array.Length; i++)
+
+                        if (checkIfComparison(values.GetValue(i)))
+                        {
                             for (i++; i < values.Array.Length; i++)
 
-                                _ = checkIfComparison(values.GetValue(i));
+                                if (checkIfComparison(values.GetValue(i)))
+                                {
+                                    if (comparisonMode == IfCM.Binary)
 
-                        return false;
-                    }
+                                        for (i++; i < values.Array.Length; i++)
 
-                return true;
-            }
+                                            _ = checkIfComparison(values.GetValue(i));
 
-            // We check the comparison type for the 'or' comparison.
+                                    return false;
+                                }
 
-            else if (comparisonType == IfCT.Or)
-            {
-                for (int i = 0; i < values.Array.Length; i++)
+                            return true;
+                        }
 
-                    if (checkIfComparison(values.GetValue(i)))
-                    {
-                        if (comparisonMode == IfCM.Binary)
-
-                            for (i++; i < values.Array.Length; i++)
-
-                                _ = checkIfComparison(values.GetValue(i));
-
-                        return true;
-                    }
-
-                return false;
-            }
-
-            // We check the comparison type for the 'xor' comparison.
-
-            else
-            {
-                for (int i = 0; i < values.Array.Length; i++)
-
-                    if (checkIfComparison(values.GetValue(i)))
-                    {
-                        for (i++; i < values.Array.Length; i++)
-
-                            if (checkIfComparison(values.GetValue(i)))
-                            {
-                                if (comparisonMode == IfCM.Binary)
-
-                                    for (i++; i < values.Array.Length; i++)
-
-                                        _ = checkIfComparison(values.GetValue(i));
-
-                                return false;
-                            }
-
-                        return true;
-                    }
-
-                return false;
+                    return false;
             }
         }
 
@@ -302,103 +311,101 @@ namespace WinCopies.Diagnostics
 
             // We check the comparison type for the 'and' comparison.
 
-            if (comparisonType == IfCT.And)
+            switch (comparisonType)
             {
-                for (int i = 0; i < values.Array.Length; i++)
-                {
-                    _value = values.GetValue(i);
+                case IfCT.And:
 
-                    if (!checkIfComparison(_value.Value))
+                    for (int i = 0; i < values.Array.Length; i++)
                     {
-                        if (comparisonMode == IfCM.Binary)
+                        _value = values.GetValue(i);
 
-                            for (i++; i < values.Array.Length; i++)
-
-                                _ = checkIfComparison(_value.Value);
-
-                        key = _value.Key;
-
-                        return false;
-                    }
-                }
-
-                key = default;
-
-                return true;
-            }
-
-            // We check the comparison type for the 'or' comparison.
-
-            else if (comparisonType == IfCT.Or)
-            {
-                for (int i = 0; i < values.Array.Length; i++)
-                {
-                    _value = values.GetValue(i);
-
-                    if (checkIfComparison(_value.Value))
-
-                    {
-                        if (comparisonMode == IfCM.Binary)
-
-                            for (i++; i < values.Array.Length; i++)
-
-                                _ = checkIfComparison(_value.Value);
-
-                        key = _value.Key;
-
-                        return true;
-                    }
-                }
-
-                key = default;
-
-                return false;
-            }
-
-            // We check the comparison type for the 'xor' comparison.
-
-            else
-            {
-                for (int i = 0; i < values.Array.Length; i++)
-                {
-                    _value = values.GetValue(i);
-
-                    if (checkIfComparison(_value.Value))
-                    {
-                        for (i++; i < values.Array.Length; i++)
+                        if (!checkIfComparison(_value.Value))
                         {
-                            _value = values.GetValue(i);
+                            if (comparisonMode == IfCM.Binary)
 
-                            if (checkIfComparison(_value.Value))
-                            {
-                                if (comparisonMode == IfCM.Binary)
+                                for (i++; i < values.Array.Length; i++)
 
-                                    for (i++; i < values.Array.Length; i++)
+                                    _ = checkIfComparison(_value.Value);
 
-                                        _ = checkIfComparison(values.GetValue(i).Value);
+                            key = _value.Key;
 
-                                key = _value.Key;
-
-                                return false;
-                            }
+                            return false;
                         }
-
-                        key = _value.Key;
-
-                        return true;
                     }
-                }
 
-                key = default;
+                    key = default;
 
-                return false;
+                    return true;
+
+                // We check the comparison type for the 'or' comparison.
+
+                case IfCT.Or:
+
+                    for (int i = 0; i < values.Array.Length; i++)
+                    {
+                        _value = values.GetValue(i);
+
+                        if (checkIfComparison(_value.Value))
+
+                        {
+                            if (comparisonMode == IfCM.Binary)
+
+                                for (i++; i < values.Array.Length; i++)
+
+                                    _ = checkIfComparison(_value.Value);
+
+                            key = _value.Key;
+
+                            return true;
+                        }
+                    }
+
+                    key = default;
+
+                    return false;
+
+                // We check the comparison type for the 'xor' comparison.
+
+                default:
+
+                    for (int i = 0; i < values.Array.Length; i++)
+                    {
+                        _value = values.GetValue(i);
+
+                        if (checkIfComparison(_value.Value))
+                        {
+                            for (i++; i < values.Array.Length; i++)
+                            {
+                                _value = values.GetValue(i);
+
+                                if (checkIfComparison(_value.Value))
+                                {
+                                    if (comparisonMode == IfCM.Binary)
+
+                                        for (i++; i < values.Array.Length; i++)
+
+                                            _ = checkIfComparison(values.GetValue(i).Value);
+
+                                    key = _value.Key;
+
+                                    return false;
+                                }
+                            }
+
+                            key = _value.Key;
+
+                            return true;
+                        }
+                    }
+
+                    key = default;
+
+                    return false;
             }
         }
 
-#region Non generic methods
-
-#region Comparisons without key notification
-
+        #region Non generic methods
+        #region Comparisons without key notification
         /// <summary>
         /// Performs a comparison by testing a value compared to an array of values.
         /// </summary>
@@ -408,7 +415,11 @@ namespace WinCopies.Diagnostics
         /// <param name="value">The value to compare the values of the table with.</param>
         /// <param name="values">The values to compare.</param>
         /// <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
-        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, in object value, params object[] values) => If(comparisonType, comparisonMode, comparison, System.Collections.Generic.EqualityComparer<object>.Default, GetCommonPredicate(), value, values);
+        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, in object
+#if CS8
+            ?
+#endif
+            value, params object[] values) => If(comparisonType, comparisonMode, comparison, System.Collections.Generic.EqualityComparer<object>.Default, GetCommonPredicate(), value, values);
 
         ///// <summary>
         ///// Performs a comparison by testing a value compared to an array of values using a custom <see cref="System.Collections.Generic.IComparer{T}"/> and <see cref="Predicate{T}"/>.
@@ -542,11 +553,9 @@ namespace WinCopies.Diagnostics
 
             return IfInternal(comparisonType, comparisonMode, (in object _value, in Func<bool> _predicate) => CheckEqualityComparison(comparison, _value, value, _predicate, comparisonDelegate), new IfKeyValuePairEnumerable(values));
         }
+        #endregion
 
-#endregion
-
-#region Comparisons with key notification
-
+        #region Comparisons with key notification
         /// <summary>
         /// Performs a comparison by testing a value compared to an array of objects or values.
         /// </summary>
@@ -629,15 +638,11 @@ namespace WinCopies.Diagnostics
 
             return IfInternal(comparisonType, comparisonMode, (in object _value, in Func<bool> _predicate) => CheckEqualityComparison(comparison, _value, value, _predicate, comparisonDelegate), out key, new IfKeyKeyValuePairEnumerable(values));
         }
+        #endregion
+        #endregion
 
-#endregion
-
-#endregion
-
-#region Generic methods
-
-#region Comparisons without key notification
-
+        #region Generic methods
+        #region Comparisons without key notification
         /// <summary>
         /// Performs a comparison by testing a value compared to an array of objects or values.
         /// </summary>
@@ -661,7 +666,6 @@ namespace WinCopies.Diagnostics
         public static bool If<T>(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, System.Collections.Generic.IComparer<T> comparer, in Predicate<T> predicate, in T value, params T[] values) => If(comparisonType, comparisonMode, comparison, (T x, T y) => comparer.Compare(x, y), predicate, value, values);
 
         public static bool If<T>(in IfCT comparisonType, in IfCM comparisonMode, IfComp comparison, Comparison<T> comparisonDelegate, in Predicate<T> predicate, T value, params T[] values)
-
         {
             // First, we check if comparisonType and comparison are in the required value range.
 
@@ -698,11 +702,9 @@ namespace WinCopies.Diagnostics
 
             return IfInternal(comparisonType, comparisonMode, (in T _value, in Func<bool> _predicate) => CheckEqualityComparison(comparison, _value, value, _predicate, comparisonDelegate), new IfKeyValuePairEnumerable<T>(values));
         }
+        #endregion
 
-#endregion
-
-#region Comparisons with key notification
-
+        #region Comparisons with key notification
         /// <summary>
         /// Performs a comparison by testing a value compared to an array of objects or values.
         /// </summary>
@@ -760,10 +762,8 @@ namespace WinCopies.Diagnostics
 
             return IfInternal(comparisonType, comparisonMode, (in TValue _value, in Func<bool> _predicate) => CheckEqualityComparison(comparison, _value, value, _predicate, comparisonDelegate), out key, new IfKeyKeyValuePairEnumerable<TKey, TValue>(values));
         }
-
-#endregion
-
-#endregion
+        #endregion
+        #endregion
     }
 }
 #endif

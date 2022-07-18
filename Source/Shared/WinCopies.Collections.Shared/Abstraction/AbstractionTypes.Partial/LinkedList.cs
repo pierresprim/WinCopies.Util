@@ -205,7 +205,11 @@ namespace WinCopies.Collections.AbstractionInterop.Generic
 
                 System.Collections.Generic.IEnumerator<ILinkedListNode<TDestination>> System.Collections.Generic.IEnumerable<ILinkedListNode<TDestination>>.GetEnumerator() => GetNodeEnumerator(EnumerationDirection.FIFO);
 
-                System.Collections.Generic.IEnumerator<ILinkedListNode<TDestination>> Collections.Generic.IEnumerable<ILinkedListNode<TDestination>>.GetReversedEnumerator() => GetNodeEnumerator(EnumerationDirection.LIFO);
+                System.Collections.Generic.IEnumerator<ILinkedListNode<TDestination>> Collections.
+#if WinCopies3
+                    Extensions.
+#endif
+                    Generic.IEnumerable<ILinkedListNode<TDestination>>.GetReversedEnumerator() => GetNodeEnumerator(EnumerationDirection.LIFO);
 
                 System.Collections.IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetEnumerator(EnumerationDirection.LIFO);
 
@@ -289,9 +293,9 @@ namespace WinCopies.Collections.AbstractionInterop.Generic
 #if !CS8
                 bool ICollectionBase<TDestination>.IsReadOnly => false;
 
-                System.Collections.Generic.IEnumerator<TDestination> System.Collections.Generic.IEnumerable<TDestination>.GetEnumerator() => GetEnumerator(EnumerationDirection.FIFO);
+                System.Collections.Generic.IEnumerator<TDestination> IEnumerable<TDestination>.GetEnumerator() => GetEnumerator(EnumerationDirection.FIFO);
 
-                System.Collections.Generic.IEnumerator<TDestination> Collections.Generic.IEnumerable<TDestination>.GetReversedEnumerator() => GetEnumerator(EnumerationDirection.LIFO);
+                System.Collections.Generic.IEnumerator<TDestination> Extensions.Generic.IEnumerable<TDestination>.GetReversedEnumerator() => GetEnumerator(EnumerationDirection.LIFO);
 
                 IUIntCountableEnumerator<TDestination> IReadOnlyLinkedList2<TDestination>.GetEnumerator() => GetEnumerator3(EnumerationDirection.FIFO);
 

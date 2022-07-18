@@ -31,11 +31,11 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Windows;
 
+namespace WinCopies.
 #if !WinCopies3
-namespace WinCopies.Util.Commands
-#else
-namespace WinCopies.Commands
+Util.
 #endif
+Commands
 {
     public class CommandBehaviorCollection
     {
@@ -43,7 +43,6 @@ namespace WinCopies.Commands
         private const string StyleBehaviors = "StyleBehaviors";
 
         #region Behaviors
-
         /// <summary>
         /// Behaviors Read-Only Dependency Property
         /// As you can see the Attached readonly property has a name registered different (BehaviorsInternal) than the property name, this is a tricks os that we can construct the collection as we want
@@ -62,16 +61,21 @@ namespace WinCopies.Commands
         /// </summary>
         public static BehaviorBindingCollection GetBehaviors(DependencyObject d)
         {
-            if (d == null)
-
-                throw new InvalidOperationException("The dependency object trying to attach to is set to null");
-
-            if (!(d.GetValue(BehaviorsProperty) is BehaviorBindingCollection collection))
+            if (
+#if !CS9
+                !(
+#endif
+                (d ?? throw new InvalidOperationException("The dependency object trying to attach to is set to null")).GetValue(BehaviorsProperty) is
+#if CS9
+                not
+#endif
+                BehaviorBindingCollection collection
+#if !CS9
+                )
+#endif
+                )
             {
-                collection = new BehaviorBindingCollection
-                {
-                    Owner = d
-                };
+                collection = new BehaviorBindingCollection { Owner = d };
 
                 SetBehaviors(d, collection);
             }
@@ -80,8 +84,7 @@ namespace WinCopies.Commands
         }
 
         /// <summary>
-        /// Provides a secure method for setting the Behaviors property.  
-        /// This dependency property indicates ....
+        /// Provides a secure method for setting the Behaviors property.
         /// </summary>
         private static void SetBehaviors(DependencyObject d, BehaviorBindingCollection value)
         {
@@ -90,9 +93,15 @@ namespace WinCopies.Commands
             ((INotifyCollectionChanged)value).CollectionChanged += CollectionChanged;
         }
 
-        static int GetId(BehaviorBindingCollection sourceCollection) => sourceCollection.Count == 1 ? 1 : sourceCollection[sourceCollection.Count - 1].Id + 1;
+        private static int GetId(BehaviorBindingCollection sourceCollection) => sourceCollection.Count == 1 ? 1 : sourceCollection[
+#if CS8
+            ^
+#else
+            sourceCollection.Count -
+#endif
+            1].Id + 1;
 
-        static void CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private static void CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             var sourceCollection = (BehaviorBindingCollection)sender;
 
@@ -178,10 +187,6 @@ namespace WinCopies.Commands
                     }
 
                     break;
-
-                default:
-
-                    break;
             }
         }
 
@@ -193,21 +198,20 @@ namespace WinCopies.Commands
 
         private static void StyleBehaviorsChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
-            if (obj != null)
+            if (obj == null) return;
+
+            if (e.OldValue != null)
             {
-                if (e.OldValue != null)
-                {
-                    ((INotifyCollectionChanged)e.OldValue).CollectionChanged -= StyleCollectionChanged;
+                ((INotifyCollectionChanged)e.OldValue).CollectionChanged -= StyleCollectionChanged;
 
-                    TryRemoveStyleBehaviors(GetBehaviors(obj), e.OldValue as FreezableCollection<Behavior>, false);
-                }
+                TryRemoveStyleBehaviors(GetBehaviors(obj), e.OldValue as FreezableCollection<Behavior>, false);
+            }
 
-                if (e.NewValue != null)
-                {
-                    ((INotifyCollectionChanged)e.NewValue).CollectionChanged += StyleCollectionChanged;
+            if (e.NewValue != null)
+            {
+                ((INotifyCollectionChanged)e.NewValue).CollectionChanged += StyleCollectionChanged;
 
-                    AddStyleBehaviors(GetBehaviors(obj), e.NewValue as FreezableCollection<Behavior>);
-                }
+                AddStyleBehaviors(GetBehaviors(obj), e.NewValue as FreezableCollection<Behavior>);
             }
         }
 
@@ -217,7 +221,7 @@ namespace WinCopies.Commands
             {
                 var _behavior = behavior.Clone() as Behavior;
 
-                behaviors.Add(_behavior as Behavior);
+                behaviors.Add(_behavior);
 
                 behavior.Id = _behavior.Id;
             }
@@ -301,13 +305,8 @@ namespace WinCopies.Commands
                 case NotifyCollectionChangedAction.Move:
 
                     throw new InvalidOperationException("Move is not supported for style behaviors");
-
-                default:
-
-                    break;
             }
         }
-
         #endregion
     }
 

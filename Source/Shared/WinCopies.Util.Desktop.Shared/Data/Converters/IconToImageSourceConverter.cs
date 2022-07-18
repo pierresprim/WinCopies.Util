@@ -31,15 +31,51 @@ using static WinCopies.Util.Data.ConverterHelper;
 namespace WinCopies.Util.Data
 {
     [ValueConversion(typeof(Icon), typeof(ImageSource))]
-    public class IconToImageSourceConverter : AlwaysConvertibleTwoWayConverter<Icon, object, ImageSource>
+    public class IconToImageSourceConverter : AlwaysConvertibleTwoWayConverter<Icon
+#if CS8
+            ?
+#endif
+            , object
+#if CS8
+            ?
+#endif
+            , ImageSource
+#if CS8
+            ?
+#endif
+            >
     {
-        public override IReadOnlyConversionOptions ConvertOptions => ParameterCanBeNull;
+        public override IReadOnlyConversionOptions ConvertOptions => AllowNull;
 
-        public override IReadOnlyConversionOptions ConvertBackOptions => ParameterCanBeNull;
+        public override IReadOnlyConversionOptions ConvertBackOptions => AllowNull;
 
-        protected override ImageSource Convert(Icon value, object parameter, CultureInfo culture) => value.ToImageSource();
+        protected override ImageSource
+#if CS8
+            ?
+#endif
+            Convert(Icon
+#if CS8
+            ?
+#endif
+            value, object
+#if CS8
+            ?
+#endif
+            parameter, CultureInfo culture) => value?.ToImageSource();
 
-        protected override Icon ConvertBack(ImageSource value, object parameter, CultureInfo culture) => Icon.FromHandle(((BitmapSource)value).ToBitmap().GetHicon());
+        protected override Icon
+#if CS8
+            ?
+#endif
+            ConvertBack(ImageSource
+#if CS8
+            ?
+#endif
+            value, object
+#if CS8
+            ?
+#endif
+            parameter, CultureInfo culture) => value == null ? null : Icon.FromHandle(((BitmapSource)value).ToBitmap().GetHicon());
     }
 }
 #endif

@@ -20,6 +20,7 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)'=='Release'">
+		<DocumentationFile>$(PackageId).xml</DocumentationFile>
 		<!-- SourceLink related properties https://github.com/dotnet/SourceLink#using-sourcelink -->
 		<!-- Optional: Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -54,6 +55,7 @@
 
 	<PropertyGroup Condition="'$(TargetFramework.TrimEnd(`0123456789-windows`))' == 'net7.'">
 		<DefineConstants>CS4;CS5;CS6;CS7;CS8;CS9;CS10;CS11;$(DefineConstants)</DefineConstants>
+		<LangVersion>preview</LangVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(TargetFramework)'=='net35'">

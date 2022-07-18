@@ -271,7 +271,7 @@
             Initializes a new instance of the <see cref="T:System.Collections.Generic.LinkedList`1"/> class that is empty.
             </summary>
         </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.LinkedList`1.#ctor(System.Collections.Generic.IEnumerable{`0})">
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.LinkedList`1.#ctor(System.Collections.Generic.IEnumerable{`0}@)">
             <summary>
             Initializes a new instance of the <see cref="T:System.Collections.Generic.LinkedList`1"/> class that contains elements copied from the specified <see cref="T:System.Collections.IEnumerable"/> and has sufficient capacity to accommodate the number of elements copied.
             </summary>
@@ -665,9 +665,9 @@
             When overridden in a derived class, gets the item in the collection at the current position of the enumerator.
             </summary>
         </member>
-        <member name="P:WinCopies.Collections.Generic.EnumeratorInfo`1.CurrentOverride">
+        <member name="P:WinCopies.Collections.Generic.EnumeratorInfo`2.CurrentOverride">
             <summary>
-            When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            Gets the item in the collection at the current position of the enumerator.
             </summary>
         </member>
         <member name="M:WinCopies.Collections.Generic.Enumerator`3.#ctor(`1)">

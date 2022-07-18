@@ -21,6 +21,8 @@ using System.Collections;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
+using WinCopies.Collections.DotNetFix.Generic;
+
 #if WinCopies3
 using System.Collections.Generic;
 using System.Linq;
@@ -40,6 +42,13 @@ using System.Runtime.Serialization;
 namespace WinCopies.Collections.DotNetFix
 {
 #if CS7
+    public static class LinkedList
+    {
+        public static ILinkedList<T> GetLinkedList<T>() => new Generic.LinkedList<T>();
+        public static ILinkedList<T> GetLinkedList<T>(in System.Collections.Generic.IEnumerable<T> collection) => new Generic.LinkedList<T>(collection);
+        public static ILinkedList<T> GetLinkedList<T>(params T[] items) => new Generic.LinkedList<T>(items);
+    }
+
 #if WinCopies3
     namespace Generic
     {
@@ -74,7 +83,11 @@ namespace WinCopies.Collections.DotNetFix
             /// </summary>
             /// <param name="collection">The <see cref="IEnumerable"/> whose elements are copied to the new <see cref="System.Collections.Generic.LinkedList{T}"/>.</param>
             /// <exception cref="ArgumentNullException"><paramref name="collection"/> is <see langword="null"/>.</exception>
-            public LinkedList(System.Collections.Generic.IEnumerable<T> collection)
+            public LinkedList(
+#if WinCopies3
+                in
+#endif
+                System.Collections.Generic.IEnumerable<T> collection)
 #if !WinCopies3
 : base(collection)
 #endif
@@ -441,13 +454,16 @@ namespace WinCopies.Collections.DotNetFix
 
                     Weld(node, First);
 
-#if CS8
-                Last ??= node;
-#else
+#if !CS8
                 if (Last == null)
-
-                    Last = node;
 #endif
+                Last
+#if CS8
+                    ??=
+#else
+                    =
+#endif
+                    node;
 
                 First = node;
             });
@@ -481,13 +497,16 @@ namespace WinCopies.Collections.DotNetFix
                     Last.Next = node;
                 }
 
-#if CS8
-                First ??= node;
-#else
+#if !CS8
                 if (First == null)
-
-                    First = node;
 #endif
+                First
+#if CS8
+                    ??=
+#else
+                    =
+#endif
+                    node;
 
                 Last = node;
             });
@@ -569,9 +588,9 @@ namespace WinCopies.Collections.DotNetFix
 
             System.Collections.Generic.IEnumerator<ILinkedListNode<T>> System.Collections.Generic.IEnumerable<ILinkedListNode<T>>.GetEnumerator() => GetNodeEnumerator(EnumerationDirection.FIFO);
 
-            System.Collections.Generic.IEnumerator<ILinkedListNode<T>> Collections.Generic.IEnumerable<ILinkedListNode<T>>.GetReversedEnumerator() => GetNodeEnumerator(EnumerationDirection.LIFO);
+            System.Collections.Generic.IEnumerator<ILinkedListNode<T>> Extensions.Generic.IEnumerable<ILinkedListNode<T>>.GetReversedEnumerator() => GetNodeEnumerator(EnumerationDirection.LIFO);
 
-            System.Collections.Generic.IEnumerator<T> Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => GetReversedEnumerator();
+            System.Collections.Generic.IEnumerator<T> Extensions.Generic.IEnumerable<T>.GetReversedEnumerator() => GetReversedEnumerator();
 
             public IUIntCountableEnumeratorInfo<T> GetUIntCountableEnumeratorInfoEnumerator() => new UIntCountableEnumeratorInfo<T>(new EnumeratorInfo<T>(GetEnumerator()), () => Count);
 
@@ -1012,7 +1031,7 @@ namespace WinCopies.Collections.DotNetFix
             void IPrependableExtensibleEnumerable<T>.Prepend(T item) => AddFirst(item);
 
             void IPrependableExtensibleEnumerable<T>.PrependRange(System.Collections.Generic.IEnumerable<T> items) => AddRangeFirst(items);
-#endregion
+            #endregion
 
             ~LinkedList() => Clear();
 #endif

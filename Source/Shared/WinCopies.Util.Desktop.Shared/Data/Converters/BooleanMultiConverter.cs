@@ -2,8 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-
-using WinCopies.Linq;
+using System.Linq;
 
 using static WinCopies.ThrowHelper;
 
@@ -101,7 +100,7 @@ namespace WinCopies.Util.Data
 #else
                     return predicate
 #endif
-                        (values.To<bool>())
+                        (values.Cast<bool>())
 #if CS8
                     :
 #else

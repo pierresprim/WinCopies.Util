@@ -18,6 +18,7 @@
 #if WinCopies3 && CS7
 using WinCopies.Collections.DotNetFix;
 using WinCopies.Collections.DotNetFix.Generic;
+using WinCopies.Collections.Extensions.Generic;
 
 namespace WinCopies.Collections.Generic
 {

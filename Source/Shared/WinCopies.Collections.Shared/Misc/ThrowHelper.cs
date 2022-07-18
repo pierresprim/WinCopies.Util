@@ -153,9 +153,9 @@ ThrowIfEmptyListOrCollection
             ("The given nodes are equal.");
 
 #if WinCopies3
-        public static void ThrowIfEnumeratorNotStartedOrDisposedException(in WinCopies.Collections.IDisposableEnumeratorInfo enumerator)
+        public static void ThrowIfEnumeratorNotStartedOrDisposedException(in IDisposableEnumeratorInfo enumerator)
         {
-            if (Extensions.IsEnumeratorNotStartedOrDisposed(enumerator))
+            if (enumerator.IsEnumeratorNotStartedOrDisposed())
 
                 throw GetEnumeratorNotStartedOrDisposedException();
         }

@@ -19,10 +19,10 @@
 using System;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
 using System.Text;
 
 using WinCopies.Collections.DotNetFix.Generic;
+using WinCopies.Collections.Generic;
 
 using static WinCopies.ThrowHelper;
 
@@ -30,7 +30,7 @@ namespace WinCopies.Collections
 {
     public static class StringExtensions
     {
-        #region Split
+#region Split
 #if CS5
         private static void Split(this string s, in bool skipEmptyValues, in StringBuilder stringBuilder, in Action<string> action, params char[] separators)
         {
@@ -242,6 +242,7 @@ namespace WinCopies.Collections
                     append();
                 }
             }
+
             finally
             {
                 enumerator.Dispose();

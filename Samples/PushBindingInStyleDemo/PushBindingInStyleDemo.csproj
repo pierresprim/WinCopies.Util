@@ -15,8 +15,8 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <Version>1.0.1.1</Version>
     <PackageReleaseNotes>See Changelog</PackageReleaseNotes>
-    <PackageProjectUrl>https://github.com/pierresprim/PushBinding</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/pierresprim/PushBinding.git</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/pierresprim/WinCopies.Util</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/pierresprim/WinCopies.Util.git</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
     <PackageTags>OneWayToSource Binding; PushBinding</PackageTags>
   </PropertyGroup>
@@ -31,5 +31,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Source\3.x\WinCopies.Util.Desktop\WinCopies.Util.Desktop.csproj" />
   </ItemGroup>
+
+	<Import Project="..\Shared\PushBindingInStyleDemo.Shared\PushBindingInStyleDemo.Shared.projitems" Label="Shared" />
 
 </Project>

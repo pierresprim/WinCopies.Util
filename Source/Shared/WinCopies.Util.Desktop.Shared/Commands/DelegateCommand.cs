@@ -33,6 +33,7 @@ using System.Windows.Input;
 using WinCopies.
 #if WinCopies3
     Desktop;
+using WinCopies.Util;
 #else
     Util;
 #endif
@@ -45,11 +46,12 @@ Util.
 {
     public abstract class DelegateCommandRoot
     {
-        public event EventHandler CanExecuteChanged
-        {
-            add => CommandManager.RequerySuggested += value;
-            remove => CommandManager.RequerySuggested -= value;
-        }
+        public event EventHandler
+#if CS8
+            ?
+#endif
+            CanExecuteChanged
+        { add => CommandManager.RequerySuggested += value; remove => CommandManager.RequerySuggested -= value; }
     }
 
     public abstract class DelegateCommandBase : DelegateCommandRoot
@@ -57,16 +59,33 @@ Util.
         /// <summary>
         /// Gets or sets the Predicate to execute when the CanExecute of the command gets called
         /// </summary>
-        public Predicate CanExecuteDelegate { get; set; }
+        public
+#if CS8 && WinCopies3
+            PredicateNull
+#else
+            Predicate
+#endif
+            CanExecuteDelegate
+        { get; set; }
 
-        public DelegateCommandBase(Predicate canExecuteDelegate) => CanExecuteDelegate = canExecuteDelegate;
+        public DelegateCommandBase(
+#if CS8 && WinCopies3
+            PredicateNull
+#else
+            Predicate
+#endif
+            canExecuteDelegate) => CanExecuteDelegate = canExecuteDelegate;
 
         /// <summary>
         /// Checks if the command Execute method can run
         /// </summary>
         /// <param name="parameter">THe command parameter to be passed</param>
         /// <returns>Returns true if the command can execute. By default true is returned so that if the user of SimpleCommand does not specify a CanExecuteCommand delegate the command still executes.</returns>
-        public bool CanExecute(object parameter) => CanExecuteDelegate == null || CanExecuteDelegate(parameter); // if there is no can execute default to true
+        public bool CanExecute(object
+#if CS8
+            ?
+#endif
+            parameter) => CanExecuteDelegate == null || CanExecuteDelegate(parameter); // if there is no can execute default to true
     }
 
     /// <summary>
@@ -77,15 +96,34 @@ Util.
         /// <summary>
         /// Gets or sets the action to be called when the Execute method of the command gets called
         /// </summary>
-        public Action<object> ExecuteDelegate { get; set; }
+        public Action<object
+#if CS8
+            ?
+#endif
+            > ExecuteDelegate
+        { get; set; }
 
-        public DelegateCommand(Predicate canExecuteDelegate, Action<object> executeDelegate) : base(canExecuteDelegate) => ExecuteDelegate = executeDelegate;
+        public DelegateCommand(
+#if CS8 && WinCopies3
+            PredicateNull
+#else
+            Predicate
+#endif
+            canExecuteDelegate, Action<object
+#if CS8
+            ?
+#endif
+            > executeDelegate) : base(canExecuteDelegate) => ExecuteDelegate = executeDelegate;
 
         /// <summary>
         /// Executes the actual command
         /// </summary>
         /// <param name="parameter">The command parameter to be passed</param>
-        public void Execute(object parameter) => ExecuteDelegate?.Invoke(parameter);
+        public void Execute(object
+#if CS8
+            ?
+#endif
+            parameter) => ExecuteDelegate?.Invoke(parameter);
     }
 
     public interface ICommand<T> : ICommand
@@ -95,39 +133,83 @@ Util.
         /// </summary>
         /// <param name="parameter">Data used by the command. If the command does not require data to be passed, this object can be set to null.</param>
         /// <returns><see langword="true"/> if this command can be executed; otherwise, <see langword="false"/>.</returns>
-        bool CanExecute(T parameter);
+        bool CanExecute(T
+#if CS9
+            ?
+#endif
+            parameter);
 
         /// <summary>
         /// Defines the method to be called when the command is invoked.
         /// </summary>
         /// <param name="parameter">Data used by the command. If the command does not require data to be passed, this object can be set to null.</param>
-        void Execute(T parameter);
+        void Execute(T
+#if CS9
+            ?
+#endif
+            parameter);
 
 #if CS8
-        bool ICommand.CanExecute(object parameter) => this.CanExecuteCommand(parameter);
+        bool ICommand.CanExecute(object
+#if CS8
+            ?
+#endif
+            parameter) => this.CanExecuteCommand(parameter);
 
-        void ICommand.Execute(object parameter) => this.TryExecuteCommand(parameter);
+        void ICommand.Execute(object
+#if CS8
+            ?
+#endif
+            parameter) => this.TryExecuteCommand(parameter);
 #endif
     }
 
     public interface IQueryCommand<T> : ICommand
     {
-        new T Execute(object parameter);
+        new T
+#if CS9
+            ?
+#endif
+            Execute(object
+#if CS8
+            ?
+#endif
+            parameter);
     }
 
     public interface IQueryRoutedCommand<T> : IQueryCommand<T>
     {
-        new T Execute(object parameter, IInputElement commandTarget);
+        new T Execute(object
+#if CS8
+            ?
+#endif
+            parameter, IInputElement
+#if CS8
+            ?
+#endif
+            commandTarget);
     }
 
     public interface IQueryCommand<TParam, TResult> : ICommand<TParam>, IQueryCommand<TResult>
     {
-        new TResult Execute(TParam parameter);
+        new TResult Execute(TParam
+#if CS9
+            ?
+#endif
+            parameter);
     }
 
     public interface IQueryRoutedCommand<TParam, TResult> : IQueryCommand<TParam, TResult>, IQueryRoutedCommand<TResult>
     {
-        new TResult Execute(TParam parameter, IInputElement commandTarget);
+        new TResult Execute(TParam
+#if CS9
+            ?
+#endif
+            parameter, IInputElement
+#if CS8
+            ?
+#endif
+            commandTarget);
     }
 
     public abstract class DelegateCommandBase<T> : DelegateCommandRoot
@@ -135,16 +217,29 @@ Util.
         /// <summary>
         /// Gets or sets the Predicate to execute when the CanExecute of the command gets called
         /// </summary>
-        public Predicate<T> CanExecuteDelegate { get; set; }
+        public Predicate<T
+#if CS9
+            ?
+#endif
+            > CanExecuteDelegate
+        { get; set; }
 
-        public DelegateCommandBase(Predicate<T> canExecuteDelegate) => CanExecuteDelegate = canExecuteDelegate;
+        public DelegateCommandBase(Predicate<T
+#if CS9
+            ?
+#endif
+            > canExecuteDelegate) => CanExecuteDelegate = canExecuteDelegate;
 
         /// <summary>
         /// Checks if the command Execute method can run
         /// </summary>
         /// <param name="parameter">The command parameter to be passed</param>
         /// <returns>Returns true if the command can execute. By default true is returned so that if the user of SimpleCommand does not specify a CanExecuteCommand delegate the command still executes.</returns>
-        public bool CanExecute(T parameter) => CanExecuteDelegate == null || CanExecuteDelegate(parameter); // if there is no can execute default to true
+        public bool CanExecute(T
+#if CS9
+            ?
+#endif
+            parameter) => CanExecuteDelegate == null || CanExecuteDelegate(parameter); // if there is no can execute default to true
     }
 
     /// <summary>
@@ -155,15 +250,32 @@ Util.
         /// <summary>
         /// Gets or sets the action to be called when the Execute method of the command gets called
         /// </summary>
-        public Action<T> ExecuteDelegate { get; set; }
+        public Action<T
+#if CS9
+            ?
+#endif
+            > ExecuteDelegate
+        { get; set; }
 
-        public DelegateCommand(Predicate<T> canExecuteDelegate, Action<T> executeDelegate) : base(canExecuteDelegate) => ExecuteDelegate = executeDelegate;
+        public DelegateCommand(Predicate<T
+#if CS9
+            ?
+#endif
+            > canExecuteDelegate, Action<T
+#if CS9
+            ?
+#endif
+            > executeDelegate) : base(canExecuteDelegate) => ExecuteDelegate = executeDelegate;
 
         /// <summary>
         /// Executes the actual command
         /// </summary>
         /// <param name="parameter">The command parameter to be passed</param>
-        public void Execute(T parameter) => ExecuteDelegate?.Invoke(parameter);
+        public void Execute(T
+#if CS9
+            ?
+#endif
+            parameter) => ExecuteDelegate?.Invoke(parameter);
 
 #if !CS8
         bool ICommand.CanExecute(object parameter) => this.CanExecuteCommand(parameter);
@@ -174,26 +286,86 @@ Util.
 
     public class DelegateQueryCommand<T> : DelegateCommandBase, IQueryCommand<T>
     {
-        public Func<object, T> ExecuteDelegate { get; set; }
+        public Func<object
+#if CS8
+            ?
+#endif
+            , T> ExecuteDelegate
+        { get; set; }
 
-        public DelegateQueryCommand(Predicate canExecuteDelegate, Func<object, T> executeDelegate) : base(canExecuteDelegate) => ExecuteDelegate = executeDelegate;
+        public DelegateQueryCommand(
+#if CS8 && WinCopies3
+            PredicateNull
+#else
+            Predicate
+#endif
+            canExecuteDelegate, Func<object
+#if CS8
+            ?
+#endif
+            , T> executeDelegate) : base(canExecuteDelegate) => ExecuteDelegate = executeDelegate;
 
-        public T Execute(object parameter) => ExecuteDelegate == null ? default : ExecuteDelegate(parameter);
+        public T
+#if CS9
+            ?
+#endif
+            Execute(object
+#if CS8
+            ?
+#endif
+            parameter) => ExecuteDelegate == null ? default : ExecuteDelegate(parameter);
 
-        void ICommand.Execute(object parameter) => Execute(parameter);
+        void ICommand.Execute(object
+#if CS8
+            ?
+#endif
+            parameter) => Execute(parameter);
     }
 
     public class DelegateQueryCommand<TParam, TResult> : DelegateCommandBase<TParam>, IQueryCommand<TParam, TResult>
     {
-        public Func<TParam, TResult> ExecuteDelegate { get; set; }
+        public Func<TParam
+#if CS9
+            ?
+#endif
+            , TResult> ExecuteDelegate
+        { get; set; }
 
-        public DelegateQueryCommand(Predicate<TParam> canExecuteDelegate, Func<TParam, TResult> executeDelegate) : base(canExecuteDelegate) => ExecuteDelegate = executeDelegate;
+        public DelegateQueryCommand(Predicate<TParam
+#if CS9
+            ?
+#endif
+            > canExecuteDelegate, Func<TParam
+#if CS9
+            ?
+#endif
+            , TResult> executeDelegate) : base(canExecuteDelegate) => ExecuteDelegate = executeDelegate;
 
-        public TResult Execute(TParam parameter) => ExecuteDelegate == null ? default : ExecuteDelegate(parameter);
+        public TResult
+#if CS9
+            ?
+#endif
+            Execute(TParam
+#if CS9
+            ?
+#endif
+            parameter) => ExecuteDelegate == null ? default : ExecuteDelegate(parameter);
 
-        void ICommand<TParam>.Execute(TParam parameter) => Execute(parameter);
+        void ICommand<TParam>.Execute(TParam
+#if CS9
+            ?
+#endif
+            parameter) => Execute(parameter);
 
-        TResult IQueryCommand<TResult>.Execute(object parameter) => Execute((TParam)parameter);
+        TResult
+#if CS9
+            ?
+#endif
+            IQueryCommand<TResult>.Execute(object
+#if CS8
+            ?
+#endif
+            parameter) => Execute(parameter.TryCast<TParam>());
 
 #if !CS8
         bool ICommand.CanExecute(object parameter) => this.CanExecuteCommand(parameter);
@@ -219,13 +391,21 @@ Util.
         /// </summary>
         /// <param name="parameter">THe command parameter to be passed.</param>
         /// <returns>Returns true if the command can execute. By default true is returned so that if the user of SimpleCommand does not specify a CanExecuteCommand delegate the command still executes.</returns>
-        public bool CanExecute(object parameter) => true;
+        public bool CanExecute(object
+#if CS8
+            ?
+#endif
+            parameter) => true;
 
         /// <summary>
         /// Executes the actual command.
         /// </summary>
         /// <param name="parameter">The command parameter to be passed.</param>
-        public void Execute(object parameter) => ExecuteDelegate?.Invoke();
+        public void Execute(object
+#if CS8
+            ?
+#endif
+            parameter) => ExecuteDelegate?.Invoke();
     }
 
     /// <summary>
@@ -236,22 +416,39 @@ Util.
         /// <summary>
         /// Gets or sets the action to be called when the Execute method of the command gets called.
         /// </summary>
-        public Action<T> ExecuteDelegate { get; set; }
+        public Action<T
+#if CS9
+            ?
+#endif
+            > ExecuteDelegate
+        { get; set; }
 
-        public DelegateCommand3(in Action<T> executeDelegate) => ExecuteDelegate = executeDelegate;
+        public DelegateCommand3(in Action<T
+#if CS9
+            ?
+#endif
+            > executeDelegate) => ExecuteDelegate = executeDelegate;
 
         /// <summary>
         /// Checks if the command Execute method can run.
         /// </summary>
         /// <param name="parameter">THe command parameter to be passed.</param>
         /// <returns>Returns true if the command can execute. By default true is returned so that if the user of SimpleCommand does not specify a CanExecuteCommand delegate the command still executes.</returns>
-        public bool CanExecute(T parameter) => true;
+        public bool CanExecute(T
+#if CS9
+            ?
+#endif
+            parameter) => true;
 
         /// <summary>
         /// Executes the actual command.
         /// </summary>
         /// <param name="parameter">The command parameter to be passed.</param>
-        public void Execute(T parameter) => ExecuteDelegate?.Invoke(parameter);
+        public void Execute(T
+#if CS9
+            ?
+#endif
+            parameter) => ExecuteDelegate?.Invoke(parameter);
 
 #if !CS8
         bool ICommand.CanExecute(object parameter) => this.CanExecuteCommand(parameter);
@@ -260,8 +457,16 @@ Util.
 #endif
     }
 
-    public class DelegateCommand3 : DelegateCommand3<object>
+    public class DelegateCommand3 : DelegateCommand3<object
+#if CS9
+            ?
+#endif
+            >
     {
-        public DelegateCommand3(in Action<object> executeDelegate) : base(executeDelegate) { /* Left empty. */ }
+        public DelegateCommand3(in Action<object
+#if CS8
+            ?
+#endif
+            > executeDelegate) : base(executeDelegate) { /* Left empty. */ }
     }
 }

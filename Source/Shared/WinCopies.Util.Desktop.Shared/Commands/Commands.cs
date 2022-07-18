@@ -24,15 +24,16 @@ using WinCopies.Util.Data;
 using static WinCopies.
 #if WinCopies3
     ThrowHelper;
+using EventArgs = System.EventArgs;
 #else
     Util.Util;
 #endif
 
+namespace WinCopies.
 #if !WinCopies3
-namespace WinCopies.Util.Commands
-#else
-namespace WinCopies.Commands
+Util.
 #endif
+Commands
 {
     public interface ICommandSource<T> : ICommandSource
     {
@@ -70,11 +71,11 @@ namespace WinCopies.Commands
 
     public class CommandSource : CommandSourceBase, ICommandSource
     {
-        public System.Windows.Input.ICommand Command { get; }
+        public ICommand Command { get; }
 
         public object CommandParameter { get; set; }
 
-        public CommandSource(in System.Windows.Input.ICommand command) => Command = command;
+        public CommandSource(in ICommand command) => Command = command;
     }
 
     public class CommandSource<T> : CommandSourceBase, ICommandSource<T>
@@ -86,7 +87,7 @@ namespace WinCopies.Commands
         public CommandSource(in ICommand<T> command) => Command = command;
 
 #if !CS8
-        System.Windows.Input.ICommand ICommandSource.Command => Command;
+        ICommand ICommandSource.Command => Command;
 
         object ICommandSource.CommandParameter => CommandParameter;
 #endif
@@ -101,7 +102,7 @@ namespace WinCopies.Commands
 
     public class CommandSourceViewModel : CommandSourceViewModelBase<CommandSource>, ICommandSource
     {
-        public System.Windows.Input.ICommand Command => ModelGeneric.Command;
+        public ICommand Command => ModelGeneric.Command;
 
         public object CommandParameter { get => ModelGeneric.CommandParameter; set { ModelGeneric.CommandParameter = value; OnPropertyChanged(nameof(CommandParameter)); } }
 
@@ -117,7 +118,7 @@ namespace WinCopies.Commands
         public CommandSourceViewModel(in CommandSource<T> commandSource) : base(commandSource) { /* Left empty. */ }
 
 #if !CS8
-        System.Windows.Input.ICommand ICommandSource.Command => Command;
+        ICommand ICommandSource.Command => Command;
 
         object ICommandSource.CommandParameter => CommandParameter;
 #endif
@@ -148,18 +149,18 @@ namespace WinCopies.Commands
             _RunActionOrThrowIfNull(e, eventArgsParamName, action2);
         }
 
-        private static void RunActionOrThrowIfNull<T>(Action<T> action1, in string actionParamName, T parameter, in EventArgs e, in string eventArgsParamName, in Action action2)
+        private static void RunActionOrThrowIfNull<T>(Action<T> action1, in string actionParamName, in EventArgs e, in string eventArgsParamName, in Action action2)
         {
             ThrowIfNull(action1, actionParamName);
 
-            _RunActionOrThrowIfNull(e, eventArgsParamName, () => action1(parameter));
+            _RunActionOrThrowIfNull(e, eventArgsParamName, action2);
         }
 
-        private static void RunActionOrThrowIfNull<T>(ActionIn<T> action1, in string actionParamName, T parameter, in EventArgs e, in string eventArgsParamName, in Action action2)
+        private static void RunActionOrThrowIfNull<T>(ActionIn<T> action1, in string actionParamName, in EventArgs e, in string eventArgsParamName, in Action action2)
         {
             ThrowIfNull(action1, actionParamName);
 
-            _RunActionOrThrowIfNull(e, eventArgsParamName, () => action1(parameter));
+            _RunActionOrThrowIfNull(e, eventArgsParamName, action2);
         }
 
         public static void TryExecuteRoutedCommand(Action action, ExecutedRoutedEventArgs e) => RunActionOrThrowIfNull(action, nameof(action), e, nameof(e), () =>
@@ -176,51 +177,51 @@ namespace WinCopies.Commands
             });
 
         public static void ExecuteRoutedCommand(Action action, ExecutedRoutedEventArgs e) => RunActionOrThrowIfNull(action, nameof(action), e, nameof(e), () =>
-      {
-          action();
+            {
+                action();
 
-          OnRoutedCommandExecuted(e);
-      });
+                OnRoutedCommandExecuted(e);
+            });
 
-        public static void TryExecuteRoutedCommand<T>(Action<T> action, T parameter, ExecutedRoutedEventArgs e) => RunActionOrThrowIfNull(action, nameof(action), parameter, e, nameof(e), () =>
-     {
-         try
-         {
-             action(parameter);
-         }
+        public static void TryExecuteRoutedCommand<T>(Action<T> action, T parameter, ExecutedRoutedEventArgs e) => RunActionOrThrowIfNull(action, nameof(action), e, nameof(e), () =>
+            {
+                try
+                {
+                    action(parameter);
+                }
 
-         finally
-         {
-             OnRoutedCommandExecuted(e);
-         }
-     });
+                finally
+                {
+                    OnRoutedCommandExecuted(e);
+                }
+            });
 
-        public static void ExecuteRoutedCommand<T>(Action<T> action, T parameter, ExecutedRoutedEventArgs e) => RunActionOrThrowIfNull(action, nameof(action), parameter, e, nameof(e), () =>
-     {
-         action(parameter);
+        public static void ExecuteRoutedCommand<T>(Action<T> action, T parameter, ExecutedRoutedEventArgs e) => RunActionOrThrowIfNull(action, nameof(action), e, nameof(e), () =>
+            {
+                action(parameter);
 
-         OnRoutedCommandExecuted(e);
-     });
+                OnRoutedCommandExecuted(e);
+            });
 
-        public static void TryExecuteRoutedCommand<T>(ActionIn<T> action, T parameter, ExecutedRoutedEventArgs e) => RunActionOrThrowIfNull(action, nameof(action), parameter, e, nameof(e), () =>
-     {
-         try
-         {
-             action(parameter);
-         }
+        public static void TryExecuteRoutedCommand<T>(ActionIn<T> action, T parameter, ExecutedRoutedEventArgs e) => RunActionOrThrowIfNull(action, nameof(action), e, nameof(e), () =>
+            {
+                try
+                {
+                    action(parameter);
+                }
 
-         finally
-         {
-             OnRoutedCommandExecuted(e);
-         }
-     });
+                finally
+                {
+                    OnRoutedCommandExecuted(e);
+                }
+            });
 
-        public static void ExecuteRoutedCommand<T>(ActionIn<T> action, T parameter, ExecutedRoutedEventArgs e) => RunActionOrThrowIfNull(action, nameof(action), parameter, e, nameof(e), () =>
-     {
-         action(parameter);
+        public static void ExecuteRoutedCommand<T>(ActionIn<T> action, T parameter, ExecutedRoutedEventArgs e) => RunActionOrThrowIfNull(action, nameof(action), e, nameof(e), () =>
+            {
+                action(parameter);
 
-         OnRoutedCommandExecuted(e);
-     });
+                OnRoutedCommandExecuted(e);
+            });
 
         public static void CanRunCommand(Action<CanExecuteRoutedEventArgs> action, CanExecuteRoutedEventArgs e)
         {

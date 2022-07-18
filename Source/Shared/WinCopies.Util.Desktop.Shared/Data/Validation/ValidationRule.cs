@@ -24,6 +24,17 @@ namespace WinCopies.Util.Data
     public abstract class ValidationRule<T> : ValidationRule
     {
         /// <summary>
+        /// Gets a value indicating whether <see langword="null"/> values are allowed. When this property is set to <see langword="false"/>, validation will fail for <see langword="null"/> values.
+        /// </summary>
+        public abstract bool
+#if WinCopies3
+            AllowNullValue
+#else
+            AllowNullValueOverride
+#endif
+        { get; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ValidationRule"/> class.
         /// </summary>
         protected ValidationRule() { /* Left empty. */ }
@@ -34,11 +45,6 @@ namespace WinCopies.Util.Data
         /// <param name="validationStep">One of the enumeration values that specifies when the validation rule runs.</param>
         /// <param name="validatesOnTargetUpdated"><see langword="true"/> to have the validation rule run when the target of the <see cref="Binding"/> is updated; otherwise, <see langword="false"/>.</param>
         protected ValidationRule(ValidationStep validationStep, bool validatesOnTargetUpdated) : base(validationStep, validatesOnTargetUpdated) { /* Left empty. */ }
-
-        /// <summary>
-        /// Gets a value indicating whether null values are allowed. When this property is set to <see langword="false"/>, validation will fail for null values.
-        /// </summary>
-        public abstract bool AllowNullValueOverride { get; }
 
         /// <summary>
         /// When overridden in a derived class, performs validation checks on a value.
@@ -54,6 +60,12 @@ namespace WinCopies.Util.Data
         /// <param name="value">The value from the binding target to check.</param>
         /// <param name="cultureInfo">The culture to use in this rule.</param>
         /// <returns>A <see cref="ValidationResult"/> object.</returns>
-        public sealed override ValidationResult Validate(object value, CultureInfo cultureInfo) => value == null ? AllowNullValueOverride ? ValidationResult.ValidResult : new ValidationResult(false, "The value cannot be null or empty.") : value is T _value ? Validate(_value, cultureInfo): new ValidationResult(false, $"The value is not a {typeof(T).Name} value.");
+        public sealed override ValidationResult Validate(object value, CultureInfo cultureInfo) => value == null ?
+#if WinCopies3
+            AllowNullValue
+#else
+            AllowNullValueOverride
+#endif
+            ? ValidationResult.ValidResult : new ValidationResult(false, "The value cannot be null or empty.") : value is T _value ? Validate(_value, cultureInfo): new ValidationResult(false, $"The value is not a {typeof(T).Name} value.");
     }
 }

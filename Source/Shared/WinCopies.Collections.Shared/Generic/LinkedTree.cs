@@ -32,7 +32,11 @@ using static WinCopies.Collections.Resources.ExceptionMessages;
 
 namespace WinCopies.Collections.Generic
 {
-    public interface ILinkedTreeNode<T> : ILinkedListNode<T>, ILinkedList3<T>, Collections.Generic.IEnumerable<ILinkedTreeNode<T>>, Collections.Generic.IEnumerableInfo<ILinkedTreeNode<T>>
+    public interface ILinkedTreeNode<T> : ILinkedListNode<T>, ILinkedList3<T>,
+#if WinCopies3
+        Extensions.
+#endif
+        Generic.IEnumerable<ILinkedTreeNode<T>>, IEnumerableInfo<ILinkedTreeNode<T>>
     {
         new ILinkedTreeNode<T> Previous { get; }
 
@@ -230,7 +234,7 @@ namespace WinCopies.Collections.Generic
 
             node.Parent = this;
 
-            action((node._node = new DotNetFix.Generic.LinkedList<LinkedTreeNode<T>>.LinkedListNode(node)));
+            action(node._node = new DotNetFix.Generic.LinkedList<LinkedTreeNode<T>>.LinkedListNode(node));
         }
 
         private void Remove(in LinkedTreeNode<T> node, in Action<DotNetFix.Generic.LinkedList<LinkedTreeNode<T>>.LinkedListNode> action, in string argumentName)
@@ -444,7 +448,7 @@ namespace WinCopies.Collections.Generic
 
 
 
-        public void Remove(in LinkedTreeNode<T> node) => Remove(node, _node => _list.Remove(_node), nameof(node));
+        public void Remove(in LinkedTreeNode<T> node) => Remove(node, _list.Remove, nameof(node));
 
         private void _Remove(in ILinkedListNode<T> node) => Remove(node is LinkedTreeNode<T> _node ? _node : throw GetNodeIsNotLinkedTreeNodeException(nameof(node)));
 
@@ -526,9 +530,17 @@ namespace WinCopies.Collections.Generic
 
         System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        System.Collections.Generic.IEnumerator<T> WinCopies.Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => GetReversedEnumerator();
+        System.Collections.Generic.IEnumerator<T> Collections.
+#if WinCopies3
+            Extensions.
+#endif
+            Generic.IEnumerable<T>.GetReversedEnumerator() => GetReversedEnumerator();
 
-        System.Collections.Generic.IEnumerator<ILinkedListNode<T>> IEnumerable<ILinkedListNode<T>>.GetReversedEnumerator() => GetNodeEnumerator(EnumerationDirection.LIFO);
+        System.Collections.Generic.IEnumerator<ILinkedListNode<T>>
+#if WinCopies3
+            Extensions.Generic.
+#endif
+            IEnumerable<ILinkedListNode<T>>.GetReversedEnumerator() => GetNodeEnumerator(EnumerationDirection.LIFO);
 
         System.Collections.Generic.IEnumerator<ILinkedListNode<T>> System.Collections.Generic.IEnumerable<ILinkedListNode<T>>.GetEnumerator() => GetNodeEnumerator(EnumerationDirection.FIFO);
 
@@ -613,9 +625,13 @@ namespace WinCopies.Collections.Generic
 
         IEnumeratorInfo<T> DotNetFix.Generic.IEnumerable<T, IEnumeratorInfo<T>>.GetEnumerator() => GetEnumerator();
 
-        System.Collections.Generic.IEnumerator<ILinkedTreeNode<T>> System.Collections.Generic.IEnumerable<ILinkedTreeNode<T>>.GetEnumerator() => GetNodeEnumerator();
+        System.Collections.Generic.IEnumerator<ILinkedTreeNode<T>> IEnumerable<ILinkedTreeNode<T>>.GetEnumerator() => GetNodeEnumerator();
 
-        System.Collections.Generic.IEnumerator<ILinkedTreeNode<T>> IEnumerable<ILinkedTreeNode<T>>.GetReversedEnumerator() => GetReversedNodeEnumerator();
+        System.Collections.Generic.IEnumerator<ILinkedTreeNode<T>>
+#if WinCopies3
+            Extensions.Generic.
+#endif
+            IEnumerable<ILinkedTreeNode<T>>.GetReversedEnumerator() => GetReversedNodeEnumerator();
 
         void ICollectionBase<T>.Add(T item) => AddLast(item);
 

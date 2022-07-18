@@ -122,18 +122,18 @@ InnerList
         public IUIntCountableEnumerator<T> GetReversedEnumerator() => InnerList.GetReversedEnumerator();
 
         //System.Collections.Generic.IEnumerator<ILinkedListNode<T>> GetNodeEnumerator() => throw GetReadOnlyListOrCollectionException();
-
+        
         System.Collections.Generic.IEnumerator<ILinkedListNode<T>> System.Collections.Generic.IEnumerable<ILinkedListNode<T>>.GetEnumerator() => throw GetReadOnlyListOrCollectionException();
 
-        System.Collections.Generic.IEnumerator<ILinkedListNode<T>> Collections.Generic.IEnumerable<ILinkedListNode<T>>.GetReversedEnumerator() => throw GetReadOnlyListOrCollectionException();
+        System.Collections.Generic.IEnumerator<ILinkedListNode<T>> Extensions.Generic.IEnumerable<ILinkedListNode<T>>.GetReversedEnumerator() => throw GetReadOnlyListOrCollectionException();
 
         IUIntCountableEnumerator<ILinkedListNode<T>> ILinkedList<T>.GetNodeEnumerator() => throw GetReadOnlyListOrCollectionException();
 
         IUIntCountableEnumerator<ILinkedListNode<T>> ILinkedList<T>.GetReversedNodeEnumerator() => throw GetReadOnlyListOrCollectionException();
 
-        System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => throw GetReadOnlyListOrCollectionException();
+        System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => InnerList.GetEnumerator();
 
-        System.Collections.Generic.IEnumerator<T> Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => throw GetReadOnlyListOrCollectionException();
+        System.Collections.Generic.IEnumerator<T> Extensions.Generic.IEnumerable<T>.GetReversedEnumerator() => InnerList.GetReversedEnumerator();
 
 #if !CS8
         System.Collections.IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
@@ -148,10 +148,9 @@ InnerList
 
         void System.Collections.Generic.ICollection<T>.Clear() => throw GetReadOnlyListOrCollectionException();
 
-        bool System.Collections.Generic.ICollection<T>.Remove(T item) => throw GetReadOnlyListOrCollectionException
-            ();
+        bool System.Collections.Generic.ICollection<T>.Remove(T item) => throw GetReadOnlyListOrCollectionException();
 
-        void ICollection.CopyTo(Array array, int index) => ((ICollection)InnerList).CopyTo(array, index);
+        void ICollection.CopyTo(Array array, int index) => InnerList.CopyTo(array, index);
 
 #if WinCopies3
         void ILinkedList<T>.Clear() => throw GetReadOnlyListOrCollectionException();

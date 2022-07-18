@@ -17,6 +17,7 @@
 
 using System;
 using System.Globalization;
+using System.Linq;
 
 using WinCopies.Collections;
 using WinCopies.Linq;
@@ -37,7 +38,7 @@ namespace WinCopies.Util.Data
     {
         public override IReadOnlyConversionOptions ConvertOptions => ConverterHelper.AllowNull;
 
-        protected override string Convert(object[] values, string parameter, CultureInfo culture) => values?.To<string>().Join(false, parameter);
+        protected override string Convert(object[] values, string parameter, CultureInfo culture) => values?.Cast<string>().Join(false, parameter);
     }
 #else
         MultiConverterBase

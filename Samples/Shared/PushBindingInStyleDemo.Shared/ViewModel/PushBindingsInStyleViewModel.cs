@@ -26,27 +26,33 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 For more information, please refer to <http://unlicense.org> */
 
-using System.ComponentModel;
+using System.Collections.ObjectModel;
 
 namespace PushBindingInStyleDemo.ViewModel
 {
-    public abstract class ViewModelBase : INotifyPropertyChanged
+    public class PushBindingsInStyleViewModel : ViewModelBase
     {
-        private string m_displayName;
+        private double m_height;
+        private double m_width;
+        private ObservableCollection<ListItemViewModel> m_myItems;
 
-        public string DisplayName
+        #region Properties
+        public double Height { get => m_height; set => UpdateValue(ref m_height, value, nameof(Height)); }
+
+        public double Width { get => m_width; set => UpdateValue(ref m_width, value, nameof(Width)); }
+
+        public ObservableCollection<ListItemViewModel> MyItems { get => m_myItems; set => UpdateValue(ref m_myItems, value, nameof(MyItems)); }
+        #endregion Properties
+
+        public PushBindingsInStyleViewModel()
         {
-            get => m_displayName;
+            DisplayName = "PushBinding in Style Examples";
 
-            set
-            {
-                m_displayName = value;
-                OnPropertyChanged(nameof(DisplayName));
-            }
+            MyItems = new ObservableCollection<ListItemViewModel>();
+
+            for (int i = 1; i < 6; i++)
+
+                MyItems.Add(new ListItemViewModel { Name = $"ListItem {i}" });
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

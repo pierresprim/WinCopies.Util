@@ -29,6 +29,13 @@ namespace WinCopies.Markup
         public override object ProvideValue(IServiceProvider serviceProvider) => Value;
     }
 
+    public class ValueMarkupExtension : MarkupExtension
+    {
+        public object Value { get; set; }
+
+        public override object ProvideValue(IServiceProvider serviceProvider) => Value;
+    }
+
     public class Boolean : ValueMarkupExtension<bool>
     {
         public Boolean(in bool value) : base(value) { /* Left empty. */ }

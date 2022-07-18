@@ -16,7 +16,6 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if WinCopies3
-
 using System;
 
 namespace WinCopies.PropertySystem
@@ -63,6 +62,60 @@ namespace WinCopies.PropertySystem
     {
         new T PropertyGroup { get; }
     }
-}
 
+    public struct PropertyInfo<T>
+    {
+        public string Name { get; }
+
+        public string DisplayName { get; }
+
+        public string Description { get; }
+
+        public T PropertyGroup { get; }
+
+        public object Value { get; }
+
+        public PropertyInfo(in string name, in string displayName, in string description, in T propertyGroup, in object value)
+        {
+            Name = name;
+            DisplayName = displayName;
+            Description = description;
+            PropertyGroup = propertyGroup;
+            Value = value;
+        }
+
+        public ReadOnlyProperty<T> GetProperty() => new
+#if !CS9
+            ReadOnlyProperty<T>
+#endif
+            (this);
+    }
+
+    public struct ReadOnlyProperty<T> : IProperty<T>
+    {
+        private readonly PropertyInfo<T> _propertyInfo;
+
+        public bool IsReadOnly => true;
+
+        public bool IsEnabled => true;
+
+        public string Name => _propertyInfo.Name;
+
+        public string DisplayName => _propertyInfo.DisplayName;
+
+        public string Description => _propertyInfo.Description;
+
+        public string EditInvitation => null;
+
+        public T PropertyGroup => _propertyInfo.PropertyGroup;
+
+        object IReadOnlyProperty.PropertyGroup => PropertyGroup;
+
+        public object Value => _propertyInfo.Value;
+
+        public Type Type => Value?.GetType();
+
+        public ReadOnlyProperty(in PropertyInfo<T> propertyInfo) => _propertyInfo = propertyInfo;
+    }
+}
 #endif

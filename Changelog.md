@@ -6,6 +6,19 @@ The WinCopies® software framework
 CHANGELOG
 ---------
 
+### 07/18/2022 2.19
+
+- WinCopies.Collections.DotNetFix.ReadOnlyObservableLinkedCollection\<T> : inherits from DisposableBase
+- WinCopies.Collections.Enumerable
+- New types and static and extension methods.
+- Update syntax of Attached Command Behavior and Push Binding features.
+- WinCopies.Util.Data:
+	- BitmapToImageSourceConverter: no longer throws NullReferenceExceptions when receiving null arguments.
+	- NamedObjectBase.ToString() returns the value of the Name.
+- InterfaceDataTemplateSelector: new properties.
+- Add new delegates that can be used for nullable objects.
+- Minor code updates.
+
 ### 05/17/2022 2.18.1
 
 - Add new static and extension methods and types.

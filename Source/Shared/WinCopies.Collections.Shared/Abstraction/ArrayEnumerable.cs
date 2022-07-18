@@ -20,7 +20,7 @@ using System;
 
 using WinCopies.Collections.DotNetFix;
 using WinCopies.Collections.DotNetFix.Generic;
-using WinCopies.Collections.Generic;
+using WinCopies.Collections.Extensions.Generic;
 
 namespace WinCopies.Collections.Abstraction.Generic
 {

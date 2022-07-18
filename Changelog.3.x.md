@@ -6,6 +6,49 @@ The WinCopies® software framework
 CHANGELOG
 ---------
 
+### 07/18/2022 3.18-preview
+
+- WinCopies.PropertySystem.IPropertySystemCollection\<TPropertyId, TPropertyGroup> no longer implements:
+	- ICountableEnumerableInfo\<IProperty>,
+	- IEnumerableInfo\<IProperty>;
+	but CS8+ versions implement WinCopies.Collections.DotNetFix.Generic:
+	- IEnumerable<IProperty>
+	- IEnumerable<KeyValuePair<TPropertyId, IProperty>>.
+- WinCopies.Collections:
+	- Extensions: name changed to CommonExtensions.
+	- EnumeratorInfoBase: re-designed to call a new method, MoveNext2() that returns a value from the MoveNextResult enumeration.
+	- DotNetFix.Generic.LinkedList\<T>.LinkedList(System.Collections.Generic.IEnumerable<T> collection): collection has the 'in' modifier.
+	- Remove ArrayExtensions.ToEnumerable method.
+	- Generic:
+		- ReadOnlyArray\<T>.ReadOnlyArray(T[] array): array has the 'params' modifier.
+		- IDisposableEnumerable\<T>: CS8: implements WinCopies.Collections.DotNetFix.Generic.IEnumerable
+		- Enumerable\<T>: remove GetEnumerator static methods. Moved to non-generic version (WinCopies.Collections.Enumerable).
+		- Moved to WinCopies.Collections.Extensions.Generic:
+			- IEnumerable\<T>,
+			- IReadOnlyList/3\<T>
+		- EnumeratorInfo\<T> inherits from the new type WinCopies.Collections.Generic.EnumeratorInfo\<TItems, TEnumerator>.
+		- CountableEnumeratorInfo\<T>: new constructors.
+		- Remove TypeConverterEnumerator\<T>.
+- CS10+: WinCopies:
+	- CreateInstanceCore() return type is BehaviorBinding instead of Freezable in:
+		- Commands.BehaviorBinding
+		- Util.Data:
+			- FreezableBinding
+			- PushBinding
+- Replaced with the new type WinCopies.Util.Data.DecimalRangeRule: WinCopies.Util.Data:
+	- IntRangeRule
+	- IntConversionResult/ToStringConverter
+- WinCopies.Util.Data:
+	- IconToImageSourceConverter: no longer throws NullReferenceExceptions when receiving null arguments.
+	- ValidationRule\<T>.AllowNullValueOverride renamed to AllowNullValue.
+	- Some types from Checkable/NamedObject and event-related features have moved to WinCopies.Util package.
+	- Collection/ViewModel/\<T> constructor:
+		- add 'in' modifier
+		- add null check.
+- WinCopies.Util.Desktop.UtilHelpers.RegisterRoutedEvent renamed to Register.
+- New delegates that can be used for nullable objects have been added to the WinCopies.Util package starting with version 2.19, released at the same time as the current one. Some item types that were previously the non-nullable delegate type versions have now been updated to these new nullable versions where applicable.
+- Add some nullable attributes.
+
 ### 05/17/2022 3.17.1-preview
 
 - Add new types.

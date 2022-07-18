@@ -19,18 +19,20 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 using WinCopies.Linq;
-
-using static WinCopies.Diagnostics.IfHelpers;
-
-using IfCT = WinCopies.Diagnostics.ComparisonType;
-using IfCM = WinCopies.Diagnostics.ComparisonMode;
-using IfComp = WinCopies.Diagnostics.Comparison;
 
 #if !WinCopies3
 using WinCopies.Util;
 #endif
+
+using static WinCopies.Diagnostics.IfHelpers;
+using static WinCopies.UtilHelpers;
+
+using IfCT = WinCopies.Diagnostics.ComparisonType;
+using IfCM = WinCopies.Diagnostics.ComparisonMode;
+using IfComp = WinCopies.Diagnostics.Comparison;
 
 namespace WinCopies.Extensions // To avoid name conflicts.
 {
@@ -64,7 +66,7 @@ namespace WinCopies.Extensions // To avoid name conflicts.
 
                 return;
 
-            _RunAction(enumerable.To<T>(), action);
+            _RunAction(enumerable.Cast<T>(), action);
         }
 
         public static IEnumerable<T> GetFieldValues<T>(this Type t, object obj)
@@ -76,15 +78,11 @@ namespace WinCopies.Extensions // To avoid name conflicts.
 
         public static bool ContainsFieldValue<T>(in Type t, in object obj, T value)
         {
-            Predicate<T> p;
-
-            if (value == null)
-
-                p = _value => _value == null;
-
-            else
-
-                p = _value => value.Equals(_value);
+            Predicate<T> p = value == null ? (_value => _value == null) :
+#if !CS9
+                (Predicate<T>)
+#endif
+                (_value => value.Equals(_value));
 
             foreach (T _value in t.GetFieldValues<T>(obj))
 

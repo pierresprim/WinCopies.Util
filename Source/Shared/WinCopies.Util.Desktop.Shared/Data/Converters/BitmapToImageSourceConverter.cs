@@ -34,15 +34,51 @@ namespace WinCopies.Util.Data
     [ValueConversion(typeof(Bitmap), typeof(ImageSource))]
     public class
 #if WinCopies3
-        BitmapToImageSourceConverter : AlwaysConvertibleTwoWayConverter<Bitmap, object, ImageSource>
+        BitmapToImageSourceConverter : AlwaysConvertibleTwoWayConverter<Bitmap
+#if CS8
+            ?
+#endif
+            , object
+#if CS8
+            ?
+#endif
+            , ImageSource
+#if CS8
+            ?
+#endif
+            >
     {
-        public override IReadOnlyConversionOptions ConvertOptions => ParameterCanBeNull;
+        public override IReadOnlyConversionOptions ConvertOptions => AllowNull;
 
-        public override IReadOnlyConversionOptions ConvertBackOptions => ParameterCanBeNull;
+        public override IReadOnlyConversionOptions ConvertBackOptions => AllowNull;
 
-        protected override ImageSource Convert(Bitmap value, object parameter, CultureInfo culture) => value.ToImageSource();
+        protected override ImageSource
+#if CS8
+            ?
+#endif
+            Convert(Bitmap
+#if CS8
+            ?
+#endif
+            value, object
+#if CS8
+            ?
+#endif
+            parameter, CultureInfo culture) => value?.ToImageSource();
 
-        protected override Bitmap ConvertBack(ImageSource value, object parameter, CultureInfo culture) => ((BitmapSource)value).ToBitmap();
+        protected override Bitmap
+#if CS8
+            ?
+#endif
+            ConvertBack(ImageSource
+#if CS8
+            ?
+#endif
+            value, object
+#if CS8
+            ?
+#endif
+            parameter, CultureInfo culture) => value == null ? null : ((BitmapSource)value).ToBitmap();
 #else
         IconToImageSourceConverter : ConverterBase
     {

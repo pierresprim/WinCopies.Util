@@ -57,9 +57,17 @@ namespace WinCopies.Util
 {
     public static class Extensions
     {
-        public static bool CanExecuteCommand<T>(this ICommand<T> command, in object parameter) => (parameter is T _parameter && command.CanExecute(_parameter)) || (parameter == null && !typeof(T).IsValueType && command.CanExecute(default));
+        public static bool CanExecuteCommand<T>(this ICommand<T> command, in object
+#if CS8
+            ?
+#endif
+            parameter) => (parameter is T _parameter && command.CanExecute(_parameter)) || (parameter == null && !typeof(T).IsValueType && command.CanExecute(default));
 
-        public static bool TryExecuteCommand<T>(this ICommand<T> command, in object parameter)
+        public static bool TryExecuteCommand<T>(this ICommand<T> command, in object
+#if CS8
+            ?
+#endif
+            parameter)
         {
             if (parameter is T _parameter)
             {
@@ -68,7 +76,7 @@ namespace WinCopies.Util
                 return true;
             }
 
-            if ((parameter == null && !typeof(T).IsValueType))
+            if (parameter == null && !typeof(T).IsValueType)
             {
                 command.Execute(default);
 
@@ -78,27 +86,48 @@ namespace WinCopies.Util
             return false;
         }
 
-        public static void OverrideFrameworkPropertyMetadata<T>(this DependencyProperty property) => property.OverrideMetadata(typeof(T), new FrameworkPropertyMetadata(typeof(T)));
+        public static void OverrideMetadata<T>(this DependencyProperty property, in PropertyMetadata metadata) => property.OverrideMetadata(typeof(T), metadata);
 
-        public static T GetChild<T>(this DependencyObject parent, in bool lookForDirectChildOnly, out bool isDirectChild) where T : Visual
+        public static void OverrideMetadata<T>(this DependencyProperty property, in object value) => property.OverrideMetadata<T>(new PropertyMetadata(value));
+
+        public static void OverrideFrameworkPropertyMetadata<T>(this DependencyProperty property, in object value) => property.OverrideMetadata<T>(new FrameworkPropertyMetadata(value));
+
+        public static void
+#if WinCopies3
+            OverrideDefaultStyleKey
+#else
+            OverrideFrameworkPropertyMetadata
+#endif
+            <T>(this DependencyProperty property) => property.OverrideFrameworkPropertyMetadata<T>(typeof(T));
+
+        public static T
+#if CS9
+                ?
+#endif
+                GetChild<T>(this DependencyObject parent, in bool lookForDirectChildOnly, out bool isDirectChild) where T : Visual
         {
-            T child = default;
+            T
+#if CS9
+                ?
+#endif
+                child = default;
             int count = VisualTreeHelper.GetChildrenCount(parent);
 
             for (int i = 0; i < count; i++)
             {
-                var visual = (Visual)VisualTreeHelper.GetChild(parent, i);
+                var visual = VisualTreeHelper.GetChild(parent, i) as Visual;
                 child = visual as T;
 
                 if (child == null)
                 {
-                    if (!lookForDirectChildOnly && child == null)
-
+                    if (!(lookForDirectChildOnly || visual == null) && child == null)
+                    {
                         child = GetChild<T>(visual, false, out _);
 
-                    if (child != null)
+                        if (child != null)
 
-                        break;
+                            break;
+                    }
                 }
 
                 else
@@ -114,7 +143,11 @@ namespace WinCopies.Util
             return child;
         }
 
-        public static Panel GetItemsPanel(this DependencyObject itemsControl)
+        public static Panel
+#if CS8
+            ?
+#endif
+            GetItemsPanel(this DependencyObject itemsControl)
         {
             ItemsPresenter itemsPresenter = itemsControl.GetChild<ItemsPresenter>(false, out _);
 
@@ -139,7 +172,11 @@ namespace WinCopies.Util
             }
         }
 
-        private static bool TryGet<T>(in IList itemCollection, in int i, ref bool checkContent, out T item) where T : Visual
+        private static bool TryGet<T>(in IList itemCollection, in int i, ref bool checkContent, out T
+#if CS9
+            ?
+#endif
+            item) where T : Visual
         {
 #if CS8
             static
@@ -151,22 +188,21 @@ namespace WinCopies.Util
                 return false;
             }
 
-            object obj = itemCollection[i];
+            object
+#if CS8
+            ?
+#endif
+            obj = itemCollection[i];
 
             if (obj is T _item)
 
                 return onItemFound(_item, out item);
 
-            else if (checkContent && obj is ContentPresenter contentPresenter)
+            else if (checkContent && obj is ContentPresenter contentPresenter && (_item = contentPresenter.GetChild<T>(true, out _)) != null)
             {
-                _item = contentPresenter.GetChild<T>(true, out _);
+                checkContent = true;
 
-                if (_item != null)
-                {
-                    checkContent = true;
-
-                    return onItemFound(_item, out item);
-                }
+                return onItemFound(_item, out item);
             }
 
             item = default;
@@ -280,11 +316,13 @@ namespace WinCopies.Util
 
         public static void AddCommandBinding(this UIElement obj, in ICommand command, Action _delegate) => obj.CommandBindings.Add(command, _delegate);
 
-        public static void Execute(this ICommand command, object commandParameter, IInputElement commandTarget)
+        public static void Execute(this ICommand command, object
+#if CS8
+            ?
+#endif
+            commandParameter, IInputElement commandTarget)
         {
-            ThrowIfNull(command, nameof(command));
-
-            if (command is RoutedCommand _command)
+            if ((command ?? throw GetArgumentNullException(nameof(command))) is RoutedCommand _command)
 
                 _command.Execute(commandParameter, commandTarget);
 
@@ -301,7 +339,15 @@ namespace WinCopies.Util
         /// <remarks>
         /// This method only evaluates the commands of the common <see cref="ICommand"/> type. To evaluate a command of the <see cref="RoutedCommand"/> type, consider using the <see cref="TryExecute(RoutedCommand, object, IInputElement)"/> method. If you are not sure of the type of your command, so consider using the <see cref="TryExecute(ICommand, object, IInputElement)"/> method.
         /// </remarks>
-        public static bool TryExecute(this ICommand command, object commandParameter)
+        public static bool TryExecute(this ICommand
+#if CS8
+            ?
+#endif
+            command, object
+#if CS8
+            ?
+#endif
+            commandParameter)
         {
             if (command?.CanExecute(commandParameter) == true)
             {
@@ -313,7 +359,15 @@ namespace WinCopies.Util
             return false;
         }
 
-        public static bool TryExecute(this RoutedCommand command, object commandParameter, IInputElement commandTarget)
+        public static bool TryExecute(this RoutedCommand
+#if CS8
+            ?
+#endif
+            command, object
+#if CS8
+            ?
+#endif
+            commandParameter, IInputElement commandTarget)
         {
             if (command?.CanExecute(commandParameter, commandTarget) == true)
             {
@@ -334,7 +388,19 @@ namespace WinCopies.Util
             return false;
         }
 
-        public static bool TryExecute<T>(this IQueryCommand<T> command, object commandParameter, out T result)
+        public static bool TryExecute<T>(this IQueryCommand<T>
+#if CS8
+            ?
+#endif
+            command, object
+#if CS8
+            ?
+#endif
+            commandParameter, out T
+#if CS9
+            ?
+#endif
+            result)
         {
             if (command?.CanExecute(commandParameter) == true)
             {
@@ -348,7 +414,19 @@ namespace WinCopies.Util
             return false;
         }
 
-        public static bool TryExecute<T>(this IQueryRoutedCommand<T> command, object commandParameter, IInputElement commandTarget, out T result)
+        public static bool TryExecute<T>(this IQueryRoutedCommand<T>
+#if CS8
+            ?
+#endif
+            command, object
+#if CS8
+            ?
+#endif
+            commandParameter, IInputElement commandTarget, out T
+#if CS9
+            ?
+#endif
+            result)
         {
             if (command?.CanExecute(commandParameter, commandTarget) == true)
             {
@@ -371,20 +449,76 @@ namespace WinCopies.Util
             return false;
         }
 
-        public static bool TryExecute(this ICommand command, object commandParameter, IInputElement commandTarget) => command is RoutedCommand _command
+        public static bool TryExecute(this ICommand
+#if CS8
+            ?
+#endif
+            command, object
+#if CS8
+            ?
+#endif
+            commandParameter, IInputElement commandTarget) => command is RoutedCommand _command
                 ? _command.TryExecute(commandParameter, commandTarget)
                 : command.TryExecute(commandParameter);
 
-        public static bool TryExecute2(this ICommand command, ICommandSource commandSource) => command.TryExecute(commandSource.CommandParameter, commandSource.CommandTarget);
+        public static bool TryExecute2(this ICommand
+#if CS8
+            ?
+#endif
+            command, ICommandSource commandSource) => command.TryExecute(commandSource.CommandParameter, commandSource.CommandTarget);
 
-        public static bool TryExecute<T>(this IQueryCommand<T> command, object commandParameter, IInputElement commandTarget, out T result) => command is IQueryRoutedCommand<T> _command
+        public static bool TryExecute<T>(this IQueryCommand<T>
+#if CS8
+            ?
+#endif
+            command, object
+#if CS8
+            ?
+#endif
+            commandParameter, IInputElement commandTarget, out T
+#if CS9
+            ?
+#endif
+            result) => command is IQueryRoutedCommand<T> _command
                 ? _command.TryExecute(commandParameter, commandTarget, out result)
                 : command.TryExecute(commandParameter, out result);
 
-        public static bool TryExecute<T>(this IQueryCommand<T> command, ICommandSource commandSource, out T result) => command.TryExecute(commandSource.CommandParameter, commandSource.CommandTarget, out result);
+        public static bool TryExecute<T>(this IQueryCommand<T>
+#if CS8
+            ?
+#endif
+            command, ICommandSource
+#if CS8
+            ?
+#endif
+            commandSource, out T
+#if CS9
+            ?
+#endif
+            result)
+        {
+            if (command == null || commandSource == null)
+            {
+                result = default;
 
-        public static bool CanExecute(this ICommand command, object commandParameter, IInputElement commandTarget) => command is RoutedCommand routedCommand
+                return false;
+            }
+
+            return command.TryExecute(commandSource.CommandParameter, commandSource.CommandTarget, out result);
+        }
+
+        public static bool CanExecute(this ICommand
+#if CS8
+            ?
+#endif
+            command, object
+#if CS8
+            ?
+#endif
+            commandParameter, IInputElement commandTarget) => command is RoutedCommand routedCommand
                 ? routedCommand.CanExecute(commandParameter, commandTarget)
+                : command == null
+                ? false
                 : command.CanExecute(commandParameter);
 
         ///// <summary>

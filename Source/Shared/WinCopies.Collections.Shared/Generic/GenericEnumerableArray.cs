@@ -1,10 +1,12 @@
 ﻿#if WinCopies3
 using System;
 using System.Collections;
+using System.Linq;
 
 using WinCopies.Collections.DotNetFix.Generic;
 using WinCopies.Collections.Enumeration.Generic;
 using WinCopies.Linq;
+using WinCopies.Util;
 
 namespace WinCopies.Collections.Generic
 {
@@ -14,9 +16,11 @@ namespace WinCopies.Collections.Generic
 #endif
         IReadOnlyCollection<T>,
 #if CS5
-        System.Collections.Generic.
+        System.Collections.
+#else
+        Extensions.
 #endif
-        IReadOnlyList<T>, IAsEnumerable<T>, ICloneable, IList, ICollection, ICountable, IIndexable
+        Generic.IReadOnlyList<T>, IAsEnumerable<T>, ICloneable, IList, ICollection, ICountable, IIndexable
     {
         // Left empty.
     }
@@ -25,13 +29,11 @@ namespace WinCopies.Collections.Generic
 #if CS5
         Generic.
 #endif
-        IReadOnlyCollection<T>,
-#if CS5
-        Generic.
-#endif
-        IReadOnlyList<T>
+        IReadOnlyCollection<T>, Extensions.Generic.IReadOnlyList<T>
     {
         protected Array Array { get; }
+
+        protected IList List => Array.AsFromType<IList>();
 
         public bool IsReadOnly => Array.IsReadOnly;
 
@@ -51,7 +53,7 @@ namespace WinCopies.Collections.Generic
 
         public GenericEnumerableArray(in Array array) => Array = array;
 
-        public System.Collections.Generic.IEnumerable<T> AsEnumerable() => Array.To<T>();
+        public System.Collections.Generic.IEnumerable<T> AsEnumerable() => Array.Cast<T>();
 
         public System.Collections.Generic.IEnumerator<T> GetEnumerator() => AsEnumerable().GetEnumerator();
 
@@ -59,30 +61,30 @@ namespace WinCopies.Collections.Generic
 
         public object Clone() => Array.Clone();
 
-        int IList.Add(object value) => ((IList)Array).Add(value);
+        int IList.Add(object value) => List.Add(value);
 
-        public bool Contains(T value) => ((IList)Array).Contains(value);
+        public bool Contains(T value) => List.Contains(value);
 
-        bool IList.Contains(object value) => ((IList)Array).Contains(value);
+        bool IList.Contains(object value) => List.Contains(value);
 
-        public void Clear() => ((IList)Array).Clear();
+        public void Clear() => List.Clear();
 
-        public int IndexOf(object value) => ((IList)Array).IndexOf(value);
+        public int IndexOf(object value) => List.IndexOf(value);
 
-        public void Insert(int index, object value) => ((IList)Array).Insert(index, value);
+        public void Insert(int index, object value) => List.Insert(index, value);
 
-        public void Remove(object value) => ((IList)Array).Remove(value);
+        public void Remove(object value) => List.Remove(value);
 
-        public void RemoveAt(int index) => ((IList)Array).RemoveAt(index);
+        public void RemoveAt(int index) => List.RemoveAt(index);
 
         public void CopyTo(Array array, int index) => Array.CopyTo(array, index);
 
 #if CS5
-        public int CompareTo(object other, System.Collections.IComparer comparer) => ((IStructuralComparable)Array).CompareTo(other, comparer);
+        public int CompareTo(object other, System.Collections.IComparer comparer) => Array.AsFromType<IStructuralComparable>().CompareTo(other, comparer);
 
-        public bool Equals(object other, IEqualityComparer comparer) => ((IStructuralEquatable)Array).Equals(other, comparer);
+        public bool Equals(object other, IEqualityComparer comparer) => Array.AsFromType<IStructuralEquatable>().Equals(other, comparer);
 
-        public int GetHashCode(IEqualityComparer comparer) => ((IStructuralEquatable)Array).GetHashCode(comparer);
+        public int GetHashCode(IEqualityComparer comparer) => Array.AsFromType<IStructuralEquatable>().GetHashCode(comparer);
 #else
         object IReadOnlyList.this[int index] => Array.GetValue(index);
 #endif
@@ -93,7 +95,11 @@ namespace WinCopies.Collections.Generic
 #endif
             (GetEnumerator(), () => Array.Length);
 
-        ICountableEnumerator<T> Generic.IReadOnlyList<T>.GetEnumerator() => GetCountableEnumerator();
+        ICountableEnumerator<T>
+#if WinCopies3
+            Extensions.
+#endif
+            Generic.IReadOnlyList<T>.GetEnumerator() => GetCountableEnumerator();
 
         ICountableEnumerator<T> ICountableEnumerable<T, ICountableEnumerator<T>>.GetEnumerator() => GetCountableEnumerator();
 

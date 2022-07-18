@@ -117,6 +117,11 @@ namespace WinCopies
 
     public delegate bool PredicateIn(in object obj);
 
+#if CS8
+    public delegate bool PredicateNull(object? value);
+    public delegate bool PredicateInNull(in object? obj);
+#endif
+
     public delegate bool PredicateIn<T>(in T value);
 
     public delegate bool PredicateOut<TIn, TOut>(TIn param, out TOut result);
@@ -133,6 +138,8 @@ namespace WinCopies
 
     public delegate TOut ConverterIn<TIn, out TOut>(in TIn value);
 
+    public delegate TOut ConverterRef<TIn, out TOut>(ref TIn value);
+
     public delegate void EventHandler<T>(T sender, EventArgs e);
 
     public delegate void EventHandler<TSender, TEventArgs>(TSender sender, TEventArgs e);
@@ -140,6 +147,11 @@ namespace WinCopies
 
 
     public delegate void ActionParams(params object[] args);
+#if CS8
+    public delegate void ActionParamsNullValue(params object?[] args);
+    public delegate void ActionParamsNullArray(params object[]? args);
+    public delegate void ActionParamsNull(params object?[]? args);
+#endif
 
     public delegate void ActionParams<in T>(params T[] args);
 
@@ -148,10 +160,15 @@ namespace WinCopies
     /// </summary>
     /// <returns>Any object.</returns>
     public delegate object Func();
-
     public delegate object FuncParams(params object[] args);
-
     public delegate TOut FuncParams<in TParams, out TOut>(params TParams[] args);
+
+#if CS8
+    public delegate object? FuncNull();
+    public delegate object? FuncParamsNullValue(params object?[] args);
+    public delegate object? FuncParamsNullArray(params object[]? args);
+    public delegate object? FuncParamsNull(params object?[]? args);
+#endif
 
     public delegate T FuncIn<T>(in T param);
     public delegate TOut FuncIn<T1, out TOut>(in T1 p1);

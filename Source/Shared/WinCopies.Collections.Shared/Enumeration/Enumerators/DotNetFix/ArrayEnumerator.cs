@@ -69,7 +69,9 @@ namespace WinCopies.Collections.DotNetFix
         {
             private
 #if CS7
-            System.Collections.Generic.
+                System.Collections.Generic.
+#else
+                Extensions.Generic.
 #endif
             IReadOnlyList<T> _array;
             private int _currentIndex;
@@ -79,7 +81,9 @@ namespace WinCopies.Collections.DotNetFix
 
             protected
 #if CS7
-            System.Collections.Generic.
+                System.Collections.Generic.
+#else
+                Extensions.Generic.
 #endif
             IReadOnlyList<T> Array => IsDisposed ? throw GetExceptionForDispose(false) : _array;
 
@@ -89,7 +93,9 @@ namespace WinCopies.Collections.DotNetFix
 
             public ArrayEnumerator(in
 #if CS7
-            System.Collections.Generic.
+                System.Collections.Generic.
+#else
+                Extensions.Generic.
 #endif
             IReadOnlyList<T> array, in bool reverse = false, in int? startIndex = null)
             {

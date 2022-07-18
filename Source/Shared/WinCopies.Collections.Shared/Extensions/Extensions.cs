@@ -16,6 +16,7 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if WinCopies3
+#region Usings
 #region System
 using System;
 using System.Collections;
@@ -33,19 +34,20 @@ using WinCopies.Util;
 #endregion WinCopies
 
 using static WinCopies.ThrowHelper;
+#endregion Usings
 
 namespace WinCopies.Collections
 {
-    public static class Extensions
+    public static class CommonExtensions
     {
 #if CS5
-        public static System.Collections.Generic.IEnumerable<T> GetEnumerable<T>(this System.Collections.Generic.IReadOnlyList<T> array, in int start, in int length) => Enumerable.GetEnumerable(new SkipEnumerator<T>(array, start, length));
+        public static System.Collections.Generic.IEnumerable<T> GetEnumerable<T>(this System.Collections.Generic.IReadOnlyList<T> array, in int start, in int length) => Enumerable.FromEnumerator(new SkipEnumerator<T>(array, start, length));
 
-        public static System.Collections.Generic.IEnumerable<T> GetEnumerable<T>(this System.Collections.Generic.IReadOnlyList<T> array, in int start) => Enumerable.GetEnumerable(new SkipEnumerator<T>(array, start));
+        public static System.Collections.Generic.IEnumerable<T> GetEnumerable<T>(this System.Collections.Generic.IReadOnlyList<T> array, in int start) => Enumerable.FromEnumerator(new SkipEnumerator<T>(array, start));
 #else
-        public static T First<T>(this WinCopies.Collections.Generic.IReadOnlyList<T> list) => list[0];
+        public static T First<T>(this Extensions.Generic.IReadOnlyList<T> list) => list[0];
 
-        public static T Last<T>(this WinCopies.Collections.Generic.IReadOnlyList<T> list) => list[list.Count - 1];
+        public static T Last<T>(this Extensions.Generic.IReadOnlyList<T> list) => list[list.Count - 1];
 #endif
 
 #if CS7
@@ -110,156 +112,135 @@ namespace WinCopies.Collections
 
         // todo:
 
-        //#region Contains methods
+        /*#region Contains methods
+        // public static bool Contains(this IEnumerable array, object value) => array.Contains(value, EqualityComparer<object>.Default);
 
-        //// public static bool Contains(this IEnumerable array, object value) => array.Contains(value, EqualityComparer<object>.Default);
+        public static bool Contains(this IEnumerable array, object value, IEqualityComparer comparer)
+        {
+            foreach (object _value in array)
 
-        //public static bool Contains(this IEnumerable array, object value, IEqualityComparer comparer)
+                if (comparer.Equals(_value, value)) return true;
 
-        //{
+            return false;
+        }
 
-        //    foreach (object _value in array)
+        public static bool Contains(this IEnumerable array, object value, System.Collections.Generic.IComparer comparer) => array.Contains(value, (object x, object y) => comparer.Compare(x, y));
 
-        //        if (comparer.Equals(_value, value)) return true;
+        public static bool Contains(this IEnumerable array, object value, Comparison comparison)
+        {
+            foreach (object _value in array)
 
-        //    return false;
+                if (comparison(_value, value) == 0) return true;
 
-        //}
+            return false;
+        }
 
-        //public static bool Contains(this IEnumerable array, object value, System.Collections.Generic.IComparer comparer) => array.Contains(value, (object x, object y) => comparer.Compare(x, y));
+        // todo: to add methods for the LongLength's Array property gesture.
 
-        //public static bool Contains(this IEnumerable array, object value, Comparison comparison)
+        public static bool Contains(this object[] array, object value, out int index) => array.Contains(value, EqualityComparer<object>.Default, out index);
 
-        //{
+        public static bool Contains(this object[] array, object value, IEqualityComparer comparer, out int index)
+        {
+            for (int i = 0; i < array.Length; i++)
 
-        //    foreach (object _value in array)
+                if (comparer.Equals(array[i], value))
+                {
+                    index = i;
 
-        //        if (comparison(_value, value) == 0) return true;
+                    return true;
+                }
 
-        //    return false;
+            index = -1;
 
-        //}
+            return false;
+        }
 
-        //// todo: to add methods for the LongLength's Array property gesture.
+        public static bool Contains(this object[] array, object value, System.Collections.Generic.IComparer comparer, out int index) => array.Contains(value, (object x, object y) => comparer.Compare(x, y), out index);
 
-        //public static bool Contains(this object[] array, object value, out int index) => array.Contains(value, EqualityComparer<object>.Default, out index);
+        public static bool Contains(this object[] array, object value, Comparison comparison, out int index)
+        {
+            for (int i = 0; i < array.Length; i++)
 
-        //public static bool Contains(this object[] array, object value, IEqualityComparer comparer, out int index)
+                if (comparison(array[i], value) == 0)
+                {
+                    index = i;
 
-        //{
+                    return true;
+                }
 
-        //    for (int i = 0; i < array.Length; i++)
+            index = -1;
 
-        //        if (comparer.Equals(array[i], value))
+            return false;
+        }
 
-        //        {
+        public static bool ContainsRange(this IEnumerable array, params object[] values);
 
-        //            index = i;
+        public static bool ContainsRange(this IEnumerable array, IEnumerable values);
 
-        //            return true;
+        public static bool ContainsRange(this IEnumerable array, IEqualityComparer comparer, params object[] values);
 
-        //        }
+        public static bool ContainsRange(this IEnumerable array, IEqualityComparer comparer, IEnumerable values);
 
-        //    index = -1;
+        public static bool ContainsRange(this IEnumerable array, System.Collections.Generic.IComparer comparer, params object[] values);
 
-        //    return false;
+        public static bool ContainsRange(this IEnumerable array, System.Collections.Generic.IComparer comparer, IEnumerable values);
 
-        //}
+        public static bool ContainsRange(this IEnumerable array, Comparison comparison, params object[] values);
 
-        //public static bool Contains(this object[] array, object value, System.Collections.Generic.IComparer comparer, out int index) => array.Contains(value, (object x, object y) => comparer.Compare(x, y), out index);
+        public static bool ContainsRange(this IEnumerable array, Comparison comparison, IEnumerable values);
 
-        //public static bool Contains(this object[] array, object value, Comparison comparison, out int index)
+        public static bool ContainsRange(this IEnumerable array, out int index, params object[] values);
 
-        //{
+        public static bool ContainsRange(this IEnumerable array, out int index, IEnumerable values);
 
-        //    for (int i = 0; i < array.Length; i++)
+        public static bool ContainsRange(this IEnumerable array, IEqualityComparer comparer, out int index, params object[] values);
 
-        //        if (comparison(array[i], value) == 0)
+        public static bool ContainsRange(this IEnumerable array, IEqualityComparer comparer, out int index, IEnumerable values);
 
-        //        {
+        public static bool ContainsRange(this IEnumerable array, System.Collections.Generic.IComparer comparer, out int index, params object[] values);
 
-        //            index = i;
+        public static bool ContainsRange(this IEnumerable array, System.Collections.Generic.IComparer comparer, out int index, IEnumerable values);
 
-        //            return true;
+        public static bool ContainsRange(this IEnumerable array, Comparison comparison, out int index, params object[] values);
 
-        //        }
+        public static bool ContainsRange(this IEnumerable array, Comparison comparison, out int index, IEnumerable values);
 
-        //    index = -1;
+        public static bool Contains<T>(this System.Collections.Generic.IEnumerable<T> array, T value);
 
-        //    return false;
+        public static bool Contains<T>(this System.Collections.Generic.IEnumerable<T> array, T value, IEqualityComparer comparer);
 
-        //}
+        public static bool Contains<T>(this System.Collections.Generic.IEnumerable<T> array, T value, System.Collections.Generic.IComparer comparer);
 
-        //public static bool ContainsRange(this IEnumerable array, params object[] values);
+        public static bool Contains<T>(this System.Collections.Generic.IEnumerable<T> array, T value, Comparison comparison);
 
-        //public static bool ContainsRange(this IEnumerable array, IEnumerable values);
+        public static bool Contains<T>(this System.Collections.Generic.IEnumerable<T> array, T value, out int index);
 
-        //public static bool ContainsRange(this IEnumerable array, IEqualityComparer comparer, params object[] values);
+        public static bool Contains<T>(this System.Collections.Generic.IEnumerable<T> array, T value, IEqualityComparer comparer, out int index);
 
-        //public static bool ContainsRange(this IEnumerable array, IEqualityComparer comparer, IEnumerable values);
+        public static bool Contains<T>(this System.Collections.Generic.IEnumerable<T> array, T value, System.Collections.Generic.IComparer comparer, out int index);
 
-        //public static bool ContainsRange(this IEnumerable array, System.Collections.Generic.IComparer comparer, params object[] values);
+        public static bool Contains<T>(this System.Collections.Generic.IEnumerable<T> array, T value, Comparison comparison, out int index);
 
-        //public static bool ContainsRange(this IEnumerable array, System.Collections.Generic.IComparer comparer, IEnumerable values);
+        public static bool ContainsRange<T>(this System.Collections.Generic.IEnumerable<T> array, params T[] values);
 
-        //public static bool ContainsRange(this IEnumerable array, Comparison comparison, params object[] values);
+        public static bool ContainsRange<T>(this System.Collections.Generic.IEnumerable<T> array, IEqualityComparer comparer, params T[] values);
 
-        //public static bool ContainsRange(this IEnumerable array, Comparison comparison, IEnumerable values);
+        public static bool ContainsRange<T>(this System.Collections.Generic.IEnumerable<T> array, System.Collections.Generic.IComparer comparer, params T[] values);
 
-        //public static bool ContainsRange(this IEnumerable array, out int index, params object[] values);
+        public static bool ContainsRange<T>(this System.Collections.Generic.IEnumerable<T> array, Comparison comparison, params T[] values);
 
-        //public static bool ContainsRange(this IEnumerable array, out int index, IEnumerable values);
+        public static bool ContainsRange<T>(this System.Collections.Generic.IEnumerable<T> array, out int index, params T[] values);
 
-        //public static bool ContainsRange(this IEnumerable array, IEqualityComparer comparer, out int index, params object[] values);
+        public static bool ContainsRange<T>(this System.Collections.Generic.IEnumerable<T> array, IEqualityComparer comparer, out int index, params T[] values);
 
-        //public static bool ContainsRange(this IEnumerable array, IEqualityComparer comparer, out int index, IEnumerable values);
+        public static bool ContainsRange<T>(this System.Collections.Generic.IEnumerable<T> array, System.Collections.Generic.IComparer comparer, out int index, params T[] values);
 
-        //public static bool ContainsRange(this IEnumerable array, System.Collections.Generic.IComparer comparer, out int index, params object[] values);
-
-        //public static bool ContainsRange(this IEnumerable array, System.Collections.Generic.IComparer comparer, out int index, IEnumerable values);
-
-        //public static bool ContainsRange(this IEnumerable array, Comparison comparison, out int index, params object[] values);
-
-        //public static bool ContainsRange(this IEnumerable array, Comparison comparison, out int index, IEnumerable values);
-
-        //public static bool Contains<T>(this System.Collections.Generic.IEnumerable<T> array, T value);
-
-        //public static bool Contains<T>(this System.Collections.Generic.IEnumerable<T> array, T value, IEqualityComparer comparer);
-
-        //public static bool Contains<T>(this System.Collections.Generic.IEnumerable<T> array, T value, System.Collections.Generic.IComparer comparer);
-
-        //public static bool Contains<T>(this System.Collections.Generic.IEnumerable<T> array, T value, Comparison comparison);
-
-        //public static bool Contains<T>(this System.Collections.Generic.IEnumerable<T> array, T value, out int index);
-
-        //public static bool Contains<T>(this System.Collections.Generic.IEnumerable<T> array, T value, IEqualityComparer comparer, out int index);
-
-        //public static bool Contains<T>(this System.Collections.Generic.IEnumerable<T> array, T value, System.Collections.Generic.IComparer comparer, out int index);
-
-        //public static bool Contains<T>(this System.Collections.Generic.IEnumerable<T> array, T value, Comparison comparison, out int index);
-
-        //public static bool ContainsRange<T>(this System.Collections.Generic.IEnumerable<T> array, params T[] values);
-
-        //public static bool ContainsRange<T>(this System.Collections.Generic.IEnumerable<T> array, IEqualityComparer comparer, params T[] values);
-
-        //public static bool ContainsRange<T>(this System.Collections.Generic.IEnumerable<T> array, System.Collections.Generic.IComparer comparer, params T[] values);
-
-        //public static bool ContainsRange<T>(this System.Collections.Generic.IEnumerable<T> array, Comparison comparison, params T[] values);
-
-        //public static bool ContainsRange<T>(this System.Collections.Generic.IEnumerable<T> array, out int index, params T[] values);
-
-        //public static bool ContainsRange<T>(this System.Collections.Generic.IEnumerable<T> array, IEqualityComparer comparer, out int index, params T[] values);
-
-        //public static bool ContainsRange<T>(this System.Collections.Generic.IEnumerable<T> array, System.Collections.Generic.IComparer comparer, out int index, params T[] values);
-
-        //public static bool ContainsRange<T>(this System.Collections.Generic.IEnumerable<T> array, Comparison comparison, out int index, params T[] values);
-
-        //#endregion
+        public static bool ContainsRange<T>(this System.Collections.Generic.IEnumerable<T> array, Comparison comparison, out int index, params T[] values);
+        #endregion*/
 
         // todo: Add-, Insert-, Remove-If(Not)Contains methods: add parameters like the Contains methods
 
         #region Add(Range)IfNotContains methods
-
         /// <summary>
         /// Tries to add a value to an <see cref="IList"/> if it does not contain it already.
         /// </summary>
@@ -361,11 +342,9 @@ namespace WinCopies.Collections
 
             return true;
         }
-
         #endregion
 
         #region Insert(Range)IfNotContains methods
-
         /// <summary>
         /// Inserts a value at the specified index in a given collection if the value does not already exists in the collection.
         /// </summary>
@@ -438,11 +417,9 @@ namespace WinCopies.Collections
             return addedValues.ToArray();
         }
 #endif
-
         #endregion
 
         #region Remove(Range)IfContains methods
-
         public static bool RemoveIfContains(this IList collection, in object value)
         {
             if ((collection ?? throw GetArgumentNullException(nameof(collection))).Contains(value))
@@ -508,11 +485,9 @@ namespace WinCopies.Collections
             return removedValues.ToArray();
         }
 #endif
-
         #endregion
 
         #region AddRange methods
-
         public static void AddRange(this IList collection, params object[] values) => collection.AddRange((IEnumerable)values);
 
         public static void AddRange(this IList collection, in IEnumerable array)
@@ -1164,7 +1139,7 @@ namespace WinCopies.Collections
             return array;
         }
 
-        public static T[] ToArray<T>(this System.Collections.Generic.IList<T> arrayList, in int startIndex, in int length)
+        public static T[] ToArray<T>(this IList<T> arrayList, in int startIndex, in int length)
         {
             ThrowIfNull(arrayList, nameof(arrayList));
 
@@ -1208,7 +1183,7 @@ namespace WinCopies.Collections
         {
             ThrowIfNull(oc, nameof(oc));
 
-            System.Collections.Generic.IList<T> sorted = oc.OrderBy(x => x).ToList<T>();
+            IList<T> sorted = oc.OrderBy(x => x).ToList<T>();
 
             for (int i = 0; i < sorted.Count; i++)
 
@@ -1225,7 +1200,7 @@ namespace WinCopies.Collections
         {
             ThrowIfNull(oc, nameof(oc));
 
-            System.Collections.Generic.IList<T> sorted = oc.OrderBy(x => x, comparer).ToList<T>();
+            IList<T> sorted = oc.OrderBy(x => x, comparer).ToList<T>();
 
             for (int i = 0; i < sorted.Count; i++)
 
@@ -1234,11 +1209,8 @@ namespace WinCopies.Collections
 #endif
 
         #region Contains methods
-
         #region Non generic methods
-
         #region ContainsOneValue overloads
-
         public static bool ContainsOneValue(this IEnumerable array, in EqualityComparison comparison, out bool containsMoreThanOneValue, in object[] values)
         {
             ThrowIfNull(array, nameof(array));
@@ -1335,7 +1307,6 @@ namespace WinCopies.Collections
         #endregion
 
         #region ContainsOneOrMoreValues with notification whether contains more than one values overloads
-
         public static bool ContainsOneOrMoreValues(IEnumerable array, in EqualityComparison comparison, out bool containsMoreThanOneValue, object[] values)
         {
             ThrowIfNull(array, nameof(array));
@@ -1419,7 +1390,6 @@ namespace WinCopies.Collections
         #endregion
 
         #region ContainsOneOrMoreValues without notification whether contains more than one values overloads
-
         public static bool ContainsOneOrMoreValues(IEnumerable array, in Func<object, object, bool> comparison, object[] values)
         {
             ThrowIfNull(array, nameof(array));
@@ -1487,7 +1457,6 @@ namespace WinCopies.Collections
         #endregion
 
         #region Contains array overloads
-
         public static bool Contains(IEnumerable array, in EqualityComparison comparison, object[] values)
         {
             ThrowIfNull(array, nameof(array));
@@ -1569,7 +1538,6 @@ namespace WinCopies.Collections
         #region Generic methods
 
         #region ContainsOneValue overloads
-
         public static bool ContainsOneValue<T>(System.Collections.Generic.IEnumerable<T> array, in EqualityComparison<T> comparison, out bool containsMoreThanOneValue, in T[] values)
         {
             ThrowIfNull(array, nameof(array));
@@ -1652,7 +1620,6 @@ namespace WinCopies.Collections
         #endregion
 
         #region ContainsOneOrMoreValues with notification whether contains more than one values overloads
-
         public static bool ContainsOneOrMoreValues<T>(System.Collections.Generic.IEnumerable<T> array, in EqualityComparison<T> comparison, out bool containsMoreThanOneValue, in T[] values)
         {
             ThrowIfNull(array, nameof(array));
@@ -1736,7 +1703,6 @@ namespace WinCopies.Collections
         #endregion
 
         #region ContainsOneOrMoreValues without notification whether contains more than one values overloads
-
         public static bool ContainsOneOrMoreValues<T>(System.Collections.Generic.IEnumerable<T> array, in EqualityComparison<T> comparison, in T[] values)
         {
             ThrowIfNull(array, nameof(array));
@@ -1804,7 +1770,6 @@ namespace WinCopies.Collections
         #endregion
 
         #region Contains array overloads
-
         public static bool Contains<T>(System.Collections.Generic.IEnumerable<T> array, in EqualityComparison<T> comparison, in T[] values)
         {
             ThrowIfNull(array, nameof(array));
@@ -1882,7 +1847,6 @@ namespace WinCopies.Collections
             return Contains(array, (T value, T _value) => equalityComparer.Equals(value, _value), values);
         }
         #endregion
-
         #endregion
         #endregion
 
@@ -1977,7 +1941,7 @@ namespace WinCopies.Collections
                 if (collection[0] == itemToKeep)
                 {
                     if (onlyOne)
-                    {
+
                         while (collection.Count != 1)
                         {
                             if (collection[1] == itemToKeep)
@@ -1999,7 +1963,7 @@ namespace WinCopies.Collections
 
                             return true;
                         }
-                    }
+
 
                     while (collection.Count != 1)
 
@@ -2021,7 +1985,7 @@ namespace WinCopies.Collections
                 if (collection[0]?.Equals(itemToKeep) == true)
                 {
                     if (onlyOne)
-                    {
+                   
                         while (collection.Count != 1)
                         {
                             if (collection[1]?.Equals(itemToKeep) == true)
@@ -2043,7 +2007,6 @@ namespace WinCopies.Collections
 
                             return true;
                         }
-                    }
 
                     while (collection.Count != 1)
 
@@ -2061,12 +2024,11 @@ namespace WinCopies.Collections
         public static bool RemoveAll<T>(this IList<T> collection, in T itemToKeep, in Comparison<T> comparison, in bool onlyOne, in bool throwIfMultiple)
         {
             while (collection.Count != 1)
-
             {
                 if (comparison(collection[0], itemToKeep) == 0)
                 {
                     if (onlyOne)
-                    {
+                  
                         while (collection.Count != 1)
                         {
                             if (comparison(collection[1], itemToKeep) == 0)
@@ -2089,7 +2051,6 @@ namespace WinCopies.Collections
                             return true;
 
                         }
-                    }
 
                     while (collection.Count != 1)
 
@@ -2108,19 +2069,14 @@ namespace WinCopies.Collections
         {
             while (collection.Count != 1)
             {
-
                 if (comparer.Compare(collection[0], itemToKeep) == 0)
                 {
-
                     if (onlyOne)
-                    {
-
+                   
                         while (collection.Count != 1)
                         {
-
                             if (comparer.Compare(collection[1], itemToKeep) == 0)
                             {
-
                                 if (throwIfMultiple)
 
                                     throw GetMoreThanOneOccurencesWereFoundException();
@@ -2137,9 +2093,7 @@ namespace WinCopies.Collections
                             collection.RemoveAt(1);
 
                             return true;
-
                         }
-                    }
 
                     while (collection.Count != 1)
 
@@ -2153,7 +2107,6 @@ namespace WinCopies.Collections
 
             return false;
         }
-
         #endregion
 
 #if CS7

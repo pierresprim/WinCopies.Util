@@ -15,12 +15,14 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
+#if !WinCopies3
 using System;
 using System.Globalization;
 using System.Windows.Controls;
 
 namespace WinCopies.Util.Data
 {
+    [Obsolete("Use WinCopies.Util.Data.DecimalRangeRule instead.")]
     public class IntRangeRule : ValidationRule<IntConversionResult>
     {
         private int _min = int.MinValue;
@@ -45,3 +47,4 @@ namespace WinCopies.Util.Data
             : new ValidationResult(false, "Illegal characters.");
     }
 }
+#endif

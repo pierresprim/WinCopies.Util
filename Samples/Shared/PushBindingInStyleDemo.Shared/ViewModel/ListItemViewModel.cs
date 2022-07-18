@@ -26,33 +26,30 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 For more information, please refer to <http://unlicense.org> */
 
-using System.Collections.ObjectModel;
-
 namespace PushBindingInStyleDemo.ViewModel
 {
-    public class MainWindowViewModel : ViewModelBase
+    public class ListItemViewModel : ViewModelBase
     {
-        public MainWindowViewModel() => PushBindingExamples = new ObservableCollection<ViewModelBase>
-            {
-                new PushBindingsViewModel(),
-                new PushBindingsInStyleViewModel()
-            };
+        private string
+#if CS8
+            ?
+#endif
+            m_name;
+        private double m_width;
+        private double m_height;
+        private bool m_focused;
 
-        #region Properties
+        public string
+#if CS8
+            ?
+#endif
+            Name
+        { get => m_name; set => UpdateValue(ref m_name, value, nameof(Name)); }
 
-        private ObservableCollection<ViewModelBase> m_pushBindingExamples;
+        public double Width { get => m_width; set => UpdateValue(ref m_width, value, nameof(Width)); }
 
-        public ObservableCollection<ViewModelBase> PushBindingExamples
-        {
-            get => m_pushBindingExamples;
+        public double Height { get => m_height; set => UpdateValue(ref m_height, value, nameof(Height)); }
 
-            set
-            {
-                m_pushBindingExamples = value;
-                OnPropertyChanged(nameof(PushBindingExamples));
-            }
-        }
-
-        #endregion // Properties
+        public bool Focused { get => m_focused; set => UpdateValue(ref m_focused, value, nameof(Focused)); }
     }
 }

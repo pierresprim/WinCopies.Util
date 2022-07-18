@@ -1,4 +1,21 @@
-﻿using System;
+﻿/* Copyright © Pierre Sprimont, 2022
+ *
+ * This file is part of the WinCopies Framework.
+ *
+ * The WinCopies Framework is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * The WinCopies Framework is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
+
+using System;
 using System.Diagnostics;
 using System.Reflection;
 using System.Text;
@@ -6,6 +23,8 @@ using System.Text;
 #if !WinCopies3
 using WinCopies.Util;
 #endif
+
+using static WinCopies.Delegates;
 
 namespace WinCopies.Diagnostics
 {
@@ -28,14 +47,10 @@ namespace WinCopies.Diagnostics
         }
 
         private static bool CheckNullity(in object[] items, out int index, in bool mustBeNull, in bool @default = false) => CheckItems(items, out index, mustBeNull ?
-#if !CS9
-                (PredicateIn)(
+#if !CS9    
+            (PredicateIn)
 #endif
-                (in object obj) => obj != null
-#if !CS9
-                )
-#endif
-                : (in object _obj) => _obj == null, @default);
+            CheckIfNotEqualsNullIn : CheckIfEqualsNullIn, @default);
 
         private static bool CheckType(Type t, in object[] items, out int index, in bool mustBeOfType, in bool @default = false)
         {
@@ -74,8 +89,16 @@ namespace WinCopies.Diagnostics
 
 
 
-        public static bool AreNull(out int index, params object[] items) => CheckNullity(items, out index, true);
-        public static bool AreNull(params object[] items) => AreNull(out _, items);
+        public static bool AreNull(out int index, params object
+#if CS8
+            ?
+#endif
+            [] items) => CheckNullity(items, out index, true);
+        public static bool AreNull(params object
+#if CS8
+            ?
+#endif
+            [] items) => AreNull(out _, items);
 
         public static bool AreOfType(in Type t, out int index, params object[] items) => CheckType(t, items, out index, true);
         public static bool AreOfType(in Type t, params object[] items) => AreOfType(t, out _, items, true);
@@ -84,8 +107,16 @@ namespace WinCopies.Diagnostics
 
 
 
-        public static bool AreNotNull(out int index, params object[] items) => CheckNullity(items, out index, false);
-        public static bool AreNotNull(params object[] items) => AreNotNull(out _, items);
+        public static bool AreNotNull(out int index, params object
+#if CS8
+            ?
+#endif
+            [] items) => CheckNullity(items, out index, false);
+        public static bool AreNotNull(params object
+#if CS8
+            ?
+#endif
+            [] items) => AreNotNull(out _, items);
 
         public static bool AreNotOfType(in Type t, out int index, params object[] items) => CheckType(t, items, out index, false);
         public static bool AreNotOfType(in Type t, params object[] items) => AreNotOfType(t, out _, items);
@@ -94,8 +125,27 @@ namespace WinCopies.Diagnostics
 
 
 
-        public static bool OneOrMoreNull(out int index, params object[] items) => CheckNullity(items, out index, true, true);
-        public static bool OneOrMoreNull(params object[] items) => OneOrMoreNull(out _, items);
+        public static bool OneOrMoreNull(out int index, params object
+#if CS8
+            ?
+#endif
+            [] items) => CheckNullity(items, out index, false, true);
+        public static bool OneOrMoreNull(params object
+#if CS8
+            ?
+#endif
+            [] items) => OneOrMoreNull(out _, items);
+
+        public static bool OneOrMoreNotNull(out int index, params object
+#if CS8
+            ?
+#endif
+            [] items) => CheckNullity(items, out index, false, true);
+        public static bool OneOrMoreNotNull(params object
+#if CS8
+            ?
+#endif
+            [] items) => OneOrMoreNotNull(out _, items);
 
         public static bool OneOrMoreOfType(in Type t, out int index, params object[] items) => CheckType(t, items, out index, true, true);
         public static bool OneOrMoreOfType(in Type t, params object[] items) => OneOrMoreOfType(t, out _, items);

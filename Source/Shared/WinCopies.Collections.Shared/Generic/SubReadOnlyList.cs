@@ -22,6 +22,7 @@ using System.Diagnostics;
 using System.Linq;
 
 using WinCopies.Collections.DotNetFix.Generic;
+using WinCopies.Collections.Extensions.Generic;
 using WinCopies.Util;
 
 using static WinCopies.ThrowHelper;

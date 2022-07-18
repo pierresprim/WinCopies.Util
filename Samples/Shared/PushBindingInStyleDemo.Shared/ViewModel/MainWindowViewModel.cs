@@ -30,60 +30,19 @@ using System.Collections.ObjectModel;
 
 namespace PushBindingInStyleDemo.ViewModel
 {
-    public class PushBindingsInStyleViewModel : ViewModelBase
+    public abstract class ViewModelBase : WinCopies.Util.Data.ViewModelBase
     {
-        public PushBindingsInStyleViewModel()
-        {
-            DisplayName = "PushBinding in Style Examples";
+        private string m_displayName;
 
-            MyItems = new ObservableCollection<ListItemViewModel>();
+        public string DisplayName { get => m_displayName; set => UpdateValue(ref m_displayName, value, nameof(DisplayName)); }
+    }
 
-            for (int i = 1; i < 6; i++)
+    public class MainWindowViewModel : ViewModelBase
+    {
+        private ObservableCollection<ViewModelBase> m_pushBindingExamples;
 
-                MyItems.Add(new ListItemViewModel { Name = $"ListItem {i}" });
-        }
+        public ObservableCollection<ViewModelBase> PushBindingExamples { get => m_pushBindingExamples; set => UpdateValue(ref m_pushBindingExamples, value, nameof(PushBindingExamples)); }
 
-        #region Properties
-
-        private double m_height;
-
-        public double Height
-        {
-            get => m_height;
-
-            set
-            {
-                m_height = value;
-                OnPropertyChanged(nameof(Height));
-            }
-        }
-
-        private double m_width;
-
-        public double Width
-        {
-            get => m_width;
-
-            set
-            {
-                m_width = value;
-                OnPropertyChanged(nameof(Width));
-            }
-        }
-
-        private ObservableCollection<ListItemViewModel> m_myItems;
-
-        public ObservableCollection<ListItemViewModel> MyItems
-        {
-            get => m_myItems;
-
-            set
-            {
-                m_myItems = value;
-                OnPropertyChanged(nameof(MyItems));
-            }
-        }
-
-        #endregion // Properties
+        public MainWindowViewModel() => PushBindingExamples = new ObservableCollection<ViewModelBase> { new PushBindingsViewModel(), new PushBindingsInStyleViewModel() };
     }
 }

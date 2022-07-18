@@ -19,6 +19,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 using WinCopies.Linq;
 
@@ -27,18 +28,18 @@ using static WinCopies.Collections.Util;
 
 namespace WinCopies.Collections.Generic
 {
-    public interface IPrependableExtensibleEnumerable<T> : System.Collections.Generic.IEnumerable<T>
+    public interface IPrependableExtensibleEnumerable<T> : IEnumerable<T>
     {
         void Prepend(T item);
 
-        void PrependRange(System.Collections.Generic.IEnumerable<T> items);
+        void PrependRange(IEnumerable<T> items);
     }
 
     public interface IAppendableExtensibleEnumerable<T>
     {
         void Append(T item);
 
-        void AppendRange(System.Collections.Generic.IEnumerable<T> items);
+        void AppendRange(IEnumerable<T> items);
     }
 
     public interface IExtensibleEnumerable<T> : IPrependableExtensibleEnumerable<T>, IAppendableExtensibleEnumerable<T>
@@ -53,10 +54,10 @@ namespace WinCopies.Collections.Generic
         protected ExtensibleEnumerableBase(IExtensibleEnumerable<TIn> enumerable) => InnerEnumerable = enumerable;
 
         public abstract void Prepend(TOut item);
-        public abstract void PrependRange(System.Collections.Generic.IEnumerable<TOut> items);
+        public abstract void PrependRange(IEnumerable<TOut> items);
 
         public abstract void Append(TOut item);
-        public abstract void AppendRange(System.Collections.Generic.IEnumerable<TOut> items);
+        public abstract void AppendRange(IEnumerable<TOut> items);
 
         public abstract IEnumerator<TOut> GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
@@ -68,17 +69,17 @@ namespace WinCopies.Collections.Generic
 
         protected void PerformAction(in TOut parameter, in string paramName, in Action<TIn> action) => PerformAction<TIn, TOut>(parameter, paramName, action);
 
-        protected void PerformAction(in System.Collections.Generic.IEnumerable<TOut> parameters, in Action<System.Collections.Generic.IEnumerable<TIn>> action) => PerformAction<TIn, TOut>(parameters, action);
+        protected void PerformAction(in IEnumerable<TOut> parameters, in Action<System.Collections.Generic.IEnumerable<TIn>> action) => PerformAction<TIn, TOut>(parameters, action);
 
         public override void Append(TOut item) => PerformAction(item, nameof(item), InnerEnumerable.Append);
 
-        public override void AppendRange(System.Collections.Generic.IEnumerable<TOut> items) => PerformAction(items, InnerEnumerable.AppendRange);
+        public override void AppendRange(IEnumerable<TOut> items) => PerformAction(items, InnerEnumerable.AppendRange);
 
         public override void Prepend(TOut item) => PerformAction(item, nameof(item), InnerEnumerable.Prepend);
 
-        public override void PrependRange(System.Collections.Generic.IEnumerable<TOut> items) => PerformAction(items, InnerEnumerable.PrependRange);
+        public override void PrependRange(IEnumerable<TOut> items) => PerformAction(items, InnerEnumerable.PrependRange);
 
-        public override IEnumerator<TOut> GetEnumerator() => InnerEnumerable.To<TOut>().GetEnumerator();
+        public override IEnumerator<TOut> GetEnumerator() => InnerEnumerable.Cast<TOut>().GetEnumerator();
     }
 }
 #endif

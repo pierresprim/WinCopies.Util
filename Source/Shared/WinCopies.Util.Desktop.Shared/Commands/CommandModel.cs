@@ -17,11 +17,14 @@
 
 using System;
 using System.Windows.Input;
-using WinCopies.Util.Commands.Primitives;
 
 namespace WinCopies.Commands
 {
-    public class CommandModel<T> :  Util.Commands.Primitives.ICommand, System.Windows.Input.ICommand where T : Util.Commands.Primitives.ICommand
+    public class CommandModel<T> : Util.Commands.Primitives.ICommand,
+#if !WinCopies3
+        System.Windows.Input.
+#endif
+        ICommand where T : Util.Commands.Primitives.ICommand
     {
         protected T Command { get; }
 
@@ -29,11 +32,7 @@ namespace WinCopies.Commands
 
         public string Description => Command.Description;
 
-        public event EventHandler CanExecuteChanged
-        {
-            add => CommandManager.RequerySuggested += value;
-            remove => CommandManager.RequerySuggested -= value;
-        }
+        public event EventHandler CanExecuteChanged { add => CommandManager.RequerySuggested += value; remove => CommandManager.RequerySuggested -= value; }
 
         public CommandModel(in T command) => Command = command;
 
@@ -42,11 +41,11 @@ namespace WinCopies.Commands
         public void Execute(object parameter) => Command.Execute(parameter);
     }
 
-    public class CommandModel<TCommand, TParameter> : CommandModel<TCommand>, Util.Commands.Primitives.ICommand<TParameter>, WinCopies.
+    public class CommandModel<TCommand, TParameter> : CommandModel<TCommand>, Util.Commands.Primitives.ICommand<TParameter>, 
 #if !WinCopies3
-        Util.
+        WinCopies.Util.Commands.
 #endif
-        Commands.ICommand<TParameter> where TCommand : Util.Commands.Primitives.ICommand<TParameter>
+        ICommand<TParameter> where TCommand : Util.Commands.Primitives.ICommand<TParameter>
     {
         public CommandModel(in TCommand command) : base(command) { /* Left empty. */ }
 

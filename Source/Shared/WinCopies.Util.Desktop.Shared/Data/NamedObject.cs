@@ -19,6 +19,7 @@ using System;
 
 namespace WinCopies.Util.Data
 {
+#if !WinCopies3
     /// <summary>
     /// Provides an object that defines a value with an associated name and notifies of the name or value change.
     /// </summary>
@@ -34,6 +35,7 @@ namespace WinCopies.Util.Data
     /// Provides an object that defines a value with an associated name and notifies of the name or value change.
     /// </summary>
     public interface INamedObject<T> : INamedObject, IValueObject<T> { }
+#endif
 
     public abstract class NamedObjectBase : ViewModelBase,
 #if WinCopies3
@@ -45,16 +47,18 @@ namespace WinCopies.Util.Data
     {
         private string _name = null;
 
-        public bool IsReadOnly => false;
-
         /// <summary>
         /// Gets or sets the name of the object.
         /// </summary>
         public string Name { get => _name; set => UpdateValue(ref _name, value, nameof(Name)); }
 
+        public bool IsReadOnly => false;
+
         public NamedObjectBase() { /* Left empty. */ }
 
         public NamedObjectBase(in string name) => _name = name;
+
+        public override string ToString() => Name;
 
         #region IDisposable Support
         public bool IsDisposed
@@ -149,11 +153,7 @@ in
         /// </summary>
         /// <param name="obj">Object to compare to the current object.</param>
         /// <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
-        public bool Equals(WinCopies.
-#if !WinCopies3
-            Util.
-#endif
-            IReadOnlyValueObject obj) => new ValueObjectEqualityComparer().Equals(this, obj);
+        public bool Equals(IReadOnlyValueObject obj) => new ValueObjectEqualityComparer().Equals(this, obj);
 
         protected override void
 #if WinCopies3
@@ -208,7 +208,7 @@ in
         /// <summary>
         /// Initializes a new instance of the <see cref="NamedObject{T}"/> class.
         /// </summary>
-        public NamedObject() { }
+        public NamedObject() { /* Left empty. */ }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NamedObject{T}"/> class using custom values.
@@ -228,11 +228,7 @@ in
         /// </summary>
         /// <param name="obj">Object to compare to the current object.</param>
         /// <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
-        public bool Equals(WinCopies.
-#if !WinCopies3
-            Util.
-#endif
-            IReadOnlyValueObject obj) => new ValueObjectEqualityComparer().Equals(this, obj);
+        public bool Equals(IReadOnlyValueObject obj) => new ValueObjectEqualityComparer().Equals(this, obj);
 
         /// <summary>
         /// Determines whether this object is equal to a given object.
@@ -250,11 +246,7 @@ in
         /// </summary>
         /// <param name="obj">Object to compare to the current object.</param>
         /// <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
-        public bool Equals(WinCopies.
-#if !WinCopies3
-            Util.
-#endif
-            IReadOnlyValueObject<T> obj) => new ValueObjectEqualityComparer().Equals(this, obj);
+        public bool Equals(IReadOnlyValueObject<T> obj) => new ValueObjectEqualityComparer().Equals(this, obj);
 
         /// <summary>
         /// Removes the unmanaged resources and the managed resources if needed. If you override this method, you should call this implementation of this method in your override implementation to avoid unexpected results when using this object laater.
@@ -287,5 +279,4 @@ in
 #endif
         }
     }
-
 }

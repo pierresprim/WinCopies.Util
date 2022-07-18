@@ -20,11 +20,19 @@ namespace WinCopies
     .Util
 #endif
 {
-    public interface IDisposable :
-#if !WinCopies3
-        WinCopies.Util.DotNetFix.IDisposable
+    public interface ICloneable<T> : System.ICloneable
+    {
+        T Clone();
+#if CS8
+        object System.ICloneable.Clone() => Clone();
+#endif
+    }
+
+    public interface IDisposable : WinCopies.
+#if WinCopies3
+        DotNetFix.IDisposable
 #else
-        WinCopies.DotNetFix.IDisposable
+        Util.DotNetFix.IDisposable
 #endif
     {
         bool IsDisposing { get; }

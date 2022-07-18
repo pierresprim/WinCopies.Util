@@ -31,7 +31,11 @@ using static WinCopies.ThrowHelper;
 
 namespace WinCopies.PropertySystem
 {
-    public interface IPropertySystemCollection<TPropertyId, TPropertyGroup> : System.Collections.Generic.IReadOnlyCollection<IProperty>, System.Collections.Generic.IReadOnlyList<IProperty>, System.Collections.Generic.IReadOnlyDictionary<TPropertyId, IProperty>, ICountableEnumerableInfo<IProperty>, IEnumerableInfo<KeyValuePair<TPropertyId, IProperty>>, IEnumerableInfo<IProperty> where TPropertyId : IPropertyId<TPropertyGroup>
+    public interface IPropertySystemCollection<TPropertyId, TPropertyGroup> : System.Collections.Generic.IReadOnlyCollection<IProperty>, IReadOnlyList<IProperty>, System.Collections.Generic.IReadOnlyDictionary<TPropertyId, IProperty>, IEnumerableInfo<KeyValuePair<TPropertyId, IProperty>>
+#if CS8
+        , Collections.DotNetFix.Generic.IEnumerable<IProperty>, Collections.DotNetFix.Generic.IEnumerable<KeyValuePair<TPropertyId, IProperty>>
+#endif
+        where TPropertyId : IPropertyId<TPropertyGroup>
     {
         // Left empty.
     }
@@ -44,9 +48,9 @@ namespace WinCopies.PropertySystem
 
         public abstract int Count { get; }
 
-        public abstract System.Collections.Generic.IReadOnlyList<TPropertyId> Keys { get; }
+        public abstract IReadOnlyList<TPropertyId> Keys { get; }
 
-        public abstract System.Collections.Generic.IReadOnlyList<IProperty> Values { get; }
+        public abstract IReadOnlyList<IProperty> Values { get; }
 
         System.Collections.Generic.IEnumerable<TPropertyId> System.Collections.Generic.IReadOnlyDictionary<TPropertyId, IProperty>.Keys => Keys;
 
@@ -62,8 +66,6 @@ namespace WinCopies.PropertySystem
 
         public ICountableEnumeratorInfo<IProperty> GetEnumerator() => new CountableEnumeratorInfo<IProperty>(GetKeyValuePairEnumerator().SelectConverter(GetValue), () => Count);
 
-        IEnumeratorInfo<IProperty> Collections.DotNetFix.Generic.IEnumerable<IProperty, IEnumeratorInfo<IProperty>>.GetEnumerator() => GetEnumerator();
-
         public IEnumeratorInfo<IProperty> GetReversedEnumerator() => GetReversedKeyValuePairEnumerator().SelectConverter(GetValue);
 
         IEnumeratorInfo<KeyValuePair<TPropertyId, IProperty>> Collections.DotNetFix.Generic.IEnumerable<KeyValuePair<TPropertyId, IProperty>, IEnumeratorInfo<KeyValuePair<TPropertyId, IProperty>>>.GetEnumerator() => GetKeyValuePairEnumerator();
@@ -72,21 +74,21 @@ namespace WinCopies.PropertySystem
 
         System.Collections.Generic.IEnumerator<KeyValuePair<TPropertyId, IProperty>> System.Collections.Generic.IEnumerable<KeyValuePair<TPropertyId, IProperty>>.GetEnumerator() => GetKeyValuePairEnumerator();
 
-        System.Collections.Generic.IEnumerator<KeyValuePair<TPropertyId, IProperty>> Collections.Generic.IEnumerable<KeyValuePair<TPropertyId, IProperty>>.GetReversedEnumerator() => GetReversedKeyValuePairEnumerator();
+        System.Collections.Generic.IEnumerator<KeyValuePair<TPropertyId, IProperty>> Collections.
+#if WinCopies3
+            Extensions.
+#endif
+            Generic.IEnumerable<KeyValuePair<TPropertyId, IProperty>>.GetReversedEnumerator() => GetReversedKeyValuePairEnumerator();
 
         System.Collections.Generic.IEnumerator<IProperty> System.Collections.Generic.IEnumerable<IProperty>.GetEnumerator() => GetEnumerator();
 
-        System.Collections.Generic.IEnumerator<IProperty> Collections.Generic.IEnumerable<IProperty>.GetReversedEnumerator() => GetReversedEnumerator();
-
-        System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         public bool TryGetValue(TPropertyId key,
 #if CS8
             [MaybeNullWhen(false)]
 #endif
-        out IProperty value) => (value = new Enumerable<KeyValuePair<TPropertyId, IProperty>>(() => GetKeyValuePairEnumerator()).FirstOrDefault(keyValuePair => key == null ? keyValuePair.Key == null : key.Equals(keyValuePair.Key)).Value) != null;
-
-        ICountableEnumeratorInfo<IProperty> Collections.Generic.IEnumerable<IProperty, ICountableEnumeratorInfo<IProperty>>.GetReversedEnumerator() => new CountableEnumeratorInfo<IProperty>(GetReversedEnumerator(), () => Count);
+        out IProperty value) => (value = new Enumerable<KeyValuePair<TPropertyId, IProperty>>(GetKeyValuePairEnumerator).FirstOrDefault(keyValuePair => key == null ? keyValuePair.Key == null : key.Equals(keyValuePair.Key)).Value) != null;
 
         IEnumerator Collections.Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
 
@@ -94,12 +96,12 @@ namespace WinCopies.PropertySystem
         {
             public override bool? IsResetSupported => true;
 
-            public Enumerator(in System.Collections.Generic.IReadOnlyList<KeyValuePair<TPropertyId, IProperty>> properties) : base(properties) { /* Left empty. */ }
+            public Enumerator(in IReadOnlyList<KeyValuePair<TPropertyId, IProperty>> properties) : base(properties) { /* Left empty. */ }
         }
 
         public class ReversedEnumerator : Enumerator<KeyValuePair<TPropertyId, IProperty>>
         {
-            private System.Collections.Generic.IReadOnlyList<KeyValuePair<TPropertyId, IProperty>> _properties;
+            private IReadOnlyList<KeyValuePair<TPropertyId, IProperty>> _properties;
             private int _index = -1;
             private Func<bool> _moveNext;
 
@@ -107,7 +109,7 @@ namespace WinCopies.PropertySystem
 
             protected override KeyValuePair<TPropertyId, IProperty> CurrentOverride => _properties[_index];
 
-            public ReversedEnumerator(in System.Collections.Generic.IReadOnlyList<KeyValuePair<TPropertyId, IProperty>> properties)
+            public ReversedEnumerator(in IReadOnlyList<KeyValuePair<TPropertyId, IProperty>> properties)
             {
                 _properties = properties ?? throw GetArgumentNullException(nameof(properties));
 

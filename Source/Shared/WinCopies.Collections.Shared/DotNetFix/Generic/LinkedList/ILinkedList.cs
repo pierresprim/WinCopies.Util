@@ -35,7 +35,11 @@ namespace WinCopies.Collections.DotNetFix
     public interface ILinkedList<T> :
         // TODO:
 #if WinCopies3
-        IReadOnlyLinkedList2<T>, Collections.Generic.IEnumerable<ILinkedListNode<T>>, IUIntCollection<T>,
+        IReadOnlyLinkedList2<T>, Collections.
+#if WinCopies3
+            Extensions.
+#endif
+            Generic.IEnumerable<ILinkedListNode<T>>, IUIntCollection<T>,
 #else
         ISerializable, IDeserializationCallback, System.Collections.Generic.IEnumerable<T>,
 #endif

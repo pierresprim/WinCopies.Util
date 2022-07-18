@@ -296,15 +296,15 @@ namespace WinCopies.Collections
     namespace Generic
     {
 #endif
-        public interface IReadOnlyList : ICountableEnumerable
+    public interface IReadOnlyList : ICountableEnumerable
 #if WinCopies3
-        , IIndexableR
+    , IIndexableR
 #endif
-        {
+    {
 #if !(WinCopies3 && CS7)
-            object this[int index] { get; }
+        object this[int index] { get; }
 #endif
-        }
+    }
 #if !WinCopies3
     }
 #endif
@@ -373,6 +373,12 @@ namespace WinCopies.Collections
         }
 #endif
 
+#if WinCopies3
+    }
+
+    namespace Extensions.Generic
+    {
+#endif
         public interface IReadOnlyList<
 #if CS5
             out
@@ -438,8 +444,17 @@ namespace WinCopies.Collections
         {
             // Left empty.
         }
+#if WinCopies3
+    }
 
-        public class CountableEnumerableArray<T> : IReadOnlyList<T>
+    namespace Generic
+    {
+#endif
+        public class CountableEnumerableArray<T> :
+#if WinCopies3
+            Extensions.Generic.
+#endif
+            IReadOnlyList<T>
         {
             protected T[] Array { get; }
 
@@ -462,7 +477,7 @@ namespace WinCopies.Collections
 #if WinCopies3
             ICountableEnumeratorInfo<T>
 #else
-        System.Collections.Generic.IEnumerator<T>
+            System.Collections.Generic.IEnumerator<T>
 #endif
             GetEnumerator() => new ArrayEnumerator<T>(
 #if WinCopies3 && !CS7
@@ -479,7 +494,11 @@ namespace WinCopies.Collections
 
             System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetEnumerator();
 
-            ICountableEnumerator<T> IReadOnlyList<T>.GetEnumerator() => GetEnumerator();
+            ICountableEnumerator<T>
+#if WinCopies3
+            Extensions.Generic.
+#endif
+            IReadOnlyList<T>.GetEnumerator() => GetEnumerator();
 
 #if !CS8
             ICountableEnumerator<T> Enumeration.DotNetFix.IEnumerable<ICountableEnumerator<T>>.GetEnumerator() => GetEnumerator();

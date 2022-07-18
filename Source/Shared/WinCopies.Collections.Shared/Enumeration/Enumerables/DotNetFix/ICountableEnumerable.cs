@@ -17,7 +17,6 @@
 
 using System.Collections;
 
-using WinCopies.Collections.DotNetFix.Generic;
 using WinCopies.Collections.Generic;
 
 namespace WinCopies.Collections.DotNetFix
@@ -64,7 +63,7 @@ namespace WinCopies.Collections.DotNetFix
     namespace Generic
     {
 #endif
-    public interface ICountableEnumerable
+        public interface ICountableEnumerable
 #if WinCopies3
         <
 #if CS5
@@ -144,7 +143,11 @@ namespace WinCopies.Collections.DotNetFix
         T this[int index] { get; }
     }
 
-    public interface IArray<T> : Collections.Generic.IReadOnlyList<T>
+    public interface IArray<T> : Collections.
+#if WinCopies3
+            Extensions.
+#endif
+            Generic.IReadOnlyList<T>
 #if WinCopies3
             , IReadOnlyArray<T>
 #endif

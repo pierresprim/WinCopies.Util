@@ -17,14 +17,25 @@
 
 using System.Windows.Input;
 
-#if !WinCopies3
+#if WinCopies3
+namespace WinCopies.Commands
+#else
 using System;
 
 namespace WinCopies.Util.Commands
-#else
-namespace WinCopies.Commands
 #endif
 {
+    public static class UICommands
+    {
+        private static RoutedUICommand GetCommand(in string text, in string name) => new
+#if !CS9
+            RoutedUICommand
+#endif
+            (text, name, typeof(ApplicationCommands));
+
+        public static RoutedUICommand PickColor { get; } = GetCommand("Open the Color Picker Dialog", nameof(PickColor));
+    }
+
     /// <summary>
     /// Provides some standard commands for application commands.
     /// </summary>
@@ -42,7 +53,7 @@ namespace WinCopies.Commands
 #endif
             (text, name, typeof(ApplicationCommands), inputGestures);
 
-        public static RoutedUICommand OpenOrLaunch { get; } = GetCommand("Open selected items.", nameof(OpenOrLaunch));
+        public static RoutedUICommand OpenOrLaunch { get; } = GetCommand("Open selected items", nameof(OpenOrLaunch));
 
         public static RoutedUICommand OpenInNewTab { get; } = GetCommand("Open in new tab", nameof(OpenInNewTab));
 

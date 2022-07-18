@@ -19,6 +19,7 @@ using
 #if WinCopies3
 System;
 using System.Collections.Generic;
+using System.Linq;
 
 using WinCopies.Collections.DotNetFix;
 using WinCopies.Collections.DotNetFix.Generic;
@@ -45,13 +46,35 @@ namespace WinCopies.Collections
         }
     }
 
-#if WinCopies3
     /// <summary>
     /// Collection-oriented helper methods.
     /// </summary>
     public static class Util
     {
-        public static void PerformAction<TIn, TOut>(in System.Collections.Generic.IEnumerable<TOut> parameters, in Action<System.Collections.Generic.IEnumerable<TIn>> action) => action(parameters.To<TIn>());
+        public static bool Equals<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in System.Collections.Generic.IEnumerable<T> compareWith, in T delimiter)
+        {
+            using
+#if !CS8
+                (
+#endif
+                System.Collections.Generic.IEnumerator<T> enumerator = compareWith.GetEnumerator()
+#if CS8
+                ;
+#else
+                )
+#endif
+
+            foreach (T value in Enumerable.FromEnumerator(new PredicateEnumerator<T>(enumerable, Delegates.GetAreNotEqualPredicate(delimiter))))
+
+                if (!(enumerator.MoveNext() && Equals(enumerator.Current, value)))
+
+                    return false;
+
+            return true;
+        }
+
+#if WinCopies3
+        public static void PerformAction<TIn, TOut>(in System.Collections.Generic.IEnumerable<TOut> parameters, in Action<System.Collections.Generic.IEnumerable<TIn>> action) => action(parameters.Cast<TIn>());
 
 #if CS5
         public static ILinkedListNode<KeyValuePair<TKey,TValue>> Find<TDictionary, TKey, TValue>( in TDictionary dictionary, in TKey key) where TDictionary : DotNetFix.Generic.IDictionary<TKey, TValue>, ILinkedList3<KeyValuePair<TKey, TValue>>
@@ -181,6 +204,6 @@ namespace WinCopies.Collections
 
             return result < 0 ? lower() : result > 0 ? greater() : equals();
         }
-    }
 #endif
-}
+    }
+    }

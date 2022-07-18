@@ -26,15 +26,33 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 For more information, please refer to <http://unlicense.org> */
 
-using System.Windows;
+using System.Collections.ObjectModel;
 
-namespace PushBindingInStyleDemo
+namespace PushBindingInStyleDemo.ViewModel
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
+    public class PushBindingsViewModel : ViewModelBase
     {
-        public MainWindow() => InitializeComponent();
+        private double m_height;
+        private double m_width;
+        private ObservableCollection<ListItemViewModel> m_myItems;
+
+        #region Properties
+        public double Height { get => m_height; set => UpdateValue(ref m_height, value, nameof(Height)); }
+
+        public double Width { get => m_width; set => UpdateValue(ref m_width, value, nameof(Width)); }
+
+        public ObservableCollection<ListItemViewModel> MyItems { get => m_myItems; set => UpdateValue(ref m_myItems, value, nameof(MyItems)); }
+        #endregion Properties
+
+        public PushBindingsViewModel()
+        {
+            DisplayName = "PushBinding Examples";
+
+            MyItems = new ObservableCollection<ListItemViewModel>();
+
+            for (int i = 1; i < 6; i++)
+
+                MyItems.Add(new ListItemViewModel { Name = $"ListItem {i}" });
+        }
     }
 }

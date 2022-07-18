@@ -18,12 +18,18 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Reflection;
+#if NETCORE || NET
+using System.Runtime.Loader;
+#endif
 
 using static WinCopies.
 #if WinCopies3
     ThrowHelper;
+using static WinCopies.UtilHelpers;
 
 using WinCopies.Util;
+using System.Linq;
 #else
     Util.Util;
 
@@ -35,6 +41,20 @@ namespace WinCopies
     .Util
 #endif
 {
+#if NETCORE || NET
+    public class AssemblyLoadContext : System.Runtime.Loader.AssemblyLoadContext
+    {
+        protected AssemblyDependencyResolver Resolver { get; }
+        public string Path { get; }
+
+        public AssemblyLoadContext(string path, bool isCollectible = false) : base(isCollectible) => Resolver = new AssemblyDependencyResolver(Path = path);
+
+        protected override Assembly Load(AssemblyName assemblyName) => PerformActionIfNotNull(Resolver.ResolveAssemblyToPath(assemblyName), LoadFromAssemblyPath);
+
+        protected override IntPtr LoadUnmanagedDll(string unmanagedDllName) => PerformActionIfNull(Resolver.ResolveUnmanagedDllToPath(unmanagedDllName), IntPtr.Zero, LoadUnmanagedDllFromPath);
+    }
+#endif
+
     public static class Convert
     {
 #if CS8
@@ -186,6 +206,36 @@ namespace WinCopies
         OneTrueResult = 1
     }
 
+    public abstract class DisposableBase : DotNetFix.IDisposable
+    {
+        public abstract bool IsDisposed { get; }
+
+        protected abstract void DisposeManaged();
+        protected abstract void DisposeUnmanaged();
+
+        public void Dispose()
+        {
+            if (IsDisposed)
+
+                return;
+
+            DisposeUnmanaged();
+            DisposeManaged();
+            GC.SuppressFinalize(this);
+        }
+
+        ~DisposableBase() => DisposeUnmanaged();
+    }
+
+    public abstract class Disposable : DisposableBase
+    {
+        private bool _isDisposed;
+
+        public override bool IsDisposed => _isDisposed;
+
+        protected override void DisposeManaged() => _isDisposed = true;
+    }
+
     public abstract class DisposableValue<T> : System.IDisposable where T :
 #if !WinCopies3
         WinCopies.Util.
@@ -233,15 +283,54 @@ namespace WinCopies
 
     public sealed class NullableReference<T> where T : class
     {
-        public T Value { get; }
+        public T
+#if CS9
+            ?
+#endif
+            Value
+        { get; }
 
-        public NullableReference(T value) => Value = value;
+        public NullableReference(T
+#if CS9
+            ?
+#endif
+            value) => Value = value;
     }
 
-    public struct Nullable : IEquatable<Nullable>
+    public interface INullableBase
+    {
+        bool HasValue { get; }
+
+        object
+#if CS8
+            ?
+#endif
+            Value
+        { get; }
+    }
+
+    public interface INullable : INullableBase, IEquatable<INullableBase>
+    {
+        // Left empty.
+    }
+
+    public static class NullableHelper
+    {
+        public static string ToString(in INullableBase nullable) => nullable.HasValue ? nullable.Value?.ToString() ?? "<Null value>" : "<Null>";
+
+        public static bool Equals<T>(in INullableBase nullable, in T other, in Func<bool> func) => other == null ? !nullable.HasValue : func();
+
+        public static bool Equals(INullableBase nullable, INullableBase other) => Equals(nullable, other, () => nullable.HasValue ? other.HasValue && (nullable.Value == null ? other.Value == null : other.Value?.Equals(nullable.Value) == true) : !other.HasValue);
+
+        public static bool Equals<T>(INullableBase nullable, object obj) => Equals(nullable, obj, () => (obj is INullableBase _nullable && Equals(nullable, _nullable)) || (obj is T _obj && nullable.Value is T value && value.Equals(_obj)));
+
+        public static int GetHashCode(in INullableBase nullable) => nullable.HasValue && nullable.Value != null ? nullable.Value.GetHashCode() : nullable.AsFromType<object>().GetHashCode();
+    }
+
+    public struct Nullable : INullable
     {
         private readonly object
-#if CS9
+#if CS8
             ?
 #endif
             _value;
@@ -249,13 +338,13 @@ namespace WinCopies
         public bool HasValue { get; }
 
         public object
-#if CS9
+#if CS8
             ?
 #endif
             Value => HasValue ? _value : throw new InvalidOperationException("This instance does not contain any value.");
 
         public Nullable(in object
-#if CS9
+#if CS8
             ?
 #endif
             value)
@@ -265,16 +354,54 @@ namespace WinCopies
             HasValue = true;
         }
 
-        public override string ToString() => HasValue ? Value?.ToString() ?? "<Null value>" : "<Null>";
+        public override string ToString() => NullableHelper.ToString(this);
 
-        public bool Equals(Nullable other) => HasValue ? other.HasValue && other.Value?.Equals(Value) == true : !other.HasValue;
+        public bool Equals(INullableBase other) => NullableHelper.Equals(this, other);
+        public override bool Equals(object obj) => NullableHelper.Equals<object>(this, obj);
 
-        public override bool Equals(object obj) => obj is Nullable nullable && Equals(nullable);
-
-        public override int GetHashCode() => HasValue && Value != null ? Value.GetHashCode() : base.GetHashCode();
+        public override int GetHashCode() => NullableHelper.GetHashCode(this);
     }
 
-    public struct Nullable<T>
+    public interface IAsEquatable<T>
+    {
+        IEquatable<T
+#if CS9
+            ?
+#endif
+            > AsEquatable();
+    }
+
+    public interface INullable<T> : INullableBase, IEquatable<INullable<T
+#if CS9
+            ?
+#endif
+            >
+#if CS8
+            ?
+#endif
+            >, IEquatable<T
+#if CS9
+            ?
+#endif
+            >, IAsEquatable<INullableBase
+#if CS8
+            ?
+#endif
+            >
+    {
+        T
+#if CS9
+            ?
+#endif
+            Value
+        { get; }
+    }
+
+    public struct Nullable<T> : INullable<T
+#if CS9
+            ?
+#endif
+            >
     {
         private readonly T
 #if CS9
@@ -290,6 +417,12 @@ namespace WinCopies
 #endif
             Value => HasValue ? _value : throw new InvalidOperationException("This instance does not contain any value.");
 
+        object
+#if CS8
+            ?
+#endif
+            INullableBase.Value => Value;
+
         public Nullable(
 #if CS8 && (!CS9)
             [AllowNull]
@@ -304,6 +437,56 @@ namespace WinCopies
 
             HasValue = true;
         }
+
+        public override string ToString() => NullableHelper.ToString(this);
+
+        public bool Equals(INullable other) => NullableHelper.Equals(this, other);
+        public bool Equals(INullable<T
+#if CS9
+            ?
+#endif
+            > other) => NullableHelper.Equals<T>(this, other);
+        public bool Equals(T
+#if CS9
+            ?
+#endif
+            other) => Equals(Value, other);
+        public override bool Equals(object obj) => NullableHelper.Equals<object>(this, obj);
+
+        public IEquatable<INullableBase
+#if CS8
+            ?
+#endif
+            > AsEquatable() => new Nullable(Value);
+
+        public override int GetHashCode() => NullableHelper.GetHashCode(this);
+
+        public static implicit operator Nullable<T
+#if CS9
+            ?
+#endif
+            >(T
+#if CS9
+            ?
+#endif
+            value) => new
+#if !CS9
+            Nullable<T
+#if CS9
+            ?
+#endif
+            >
+#endif
+            (value);
+        public static explicit operator T
+#if CS9
+            ?
+#endif
+            (Nullable<T
+#if CS9
+            ?
+#endif
+            > value) => value.Value;
     }
 
     public delegate bool TaskAwaiterPredicate(ref bool cancel);

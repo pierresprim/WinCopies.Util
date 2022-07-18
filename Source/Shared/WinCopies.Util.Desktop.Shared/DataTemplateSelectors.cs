@@ -23,6 +23,7 @@ using System.Windows;
 using System.Windows.Controls;
 
 using WinCopies.Extensions;
+using WinCopies.Util;
 
 #if WinCopies3
 using WinCopies.Collections.Generic;
@@ -44,11 +45,28 @@ namespace WinCopies
             // Left empty.
         }
 
-        public bool IgnoreGenerics { get; set; } = true;
+        private byte _bools = 0b111;
 
-        public bool DirectTypeOnly { get; set; } = true;
+        public bool IgnoreGenerics { get => GetBit(0); set => SetBit(0, value); }
 
-        public bool IgnoreFirstTypesWithoutInterfaces { get; } = true;
+        public bool IgnoreFirstTypesWithoutInterfaces { get => GetBit(1); set => SetBit(1, value); }
+
+        public bool DirectInterfacesOnly { get => GetBit(2); set => SetBit(2, value); }
+
+        public bool DirectTypeOnly { get => GetBit(3); set => SetBit(3, value); }
+
+        public bool IgnoreClassType { get => GetBit(4); set => SetBit(4, value); }
+
+        public InterfaceDataTemplateSelector() { /* Left empty. */ }
+
+        private bool GetBit(in byte pos) => _bools.GetBit(pos);
+        private void SetBit(in byte pos, in bool value) =>
+#if WinCopies3
+            UtilHelpers
+#else
+            Util
+#endif
+            .SetBit(ref _bools, pos, value);
 
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
@@ -70,12 +88,9 @@ namespace WinCopies
 
             Type itemType = item.GetType();
 
-            return
-#if !WinCopies3
-                System.Linq.
-#endif
-                Enumerable.Repeat(itemType, 1).Concat(itemType.GetDirectInterfaces(IgnoreGenerics, DirectTypeOnly, IgnoreFirstTypesWithoutInterfaces, t => t.CustomAttributes.FirstOrDefault(_t => typeof(Ignore).IsAssignableFrom(_t.AttributeType)) == null))
-                .FirstOrDefault<DataTemplate>(t => containerElement.TryFindResource(new DataTemplateKey(t))) ?? base.SelectTemplate(item, container);
+            System.Collections.Generic.IEnumerable<Type> types = DirectInterfacesOnly ? itemType.GetDirectInterfaces(IgnoreGenerics, DirectTypeOnly, IgnoreFirstTypesWithoutInterfaces, t => t.CustomAttributes.FirstOrDefault(_t => typeof(Ignore).IsAssignableFrom(_t.AttributeType)) == null) : itemType.GetInterfaces();
+
+            return (IgnoreClassType ? types : types.Prepend(itemType)).FirstOrDefault<DataTemplate>(t => containerElement.TryFindResource(new DataTemplateKey(t))) ?? base.SelectTemplate(item, container);
         }
     }
 
@@ -93,7 +108,18 @@ namespace WinCopies
 
     public class AttributeDataTemplateSelector : DataTemplateSelector
     {
-        public override DataTemplate SelectTemplate(object item, DependencyObject container) => item == null || !(container is FrameworkElement containerElement)
+        public override DataTemplate SelectTemplate(object item, DependencyObject container) => item == null ||
+#if !CS9
+            !(
+#endif
+            container is
+#if CS9
+            not
+#endif
+            FrameworkElement containerElement
+#if !CS9
+        )
+#endif
                 ? base.SelectTemplate(item, container)
                 : ((TypeForDataTemplateAttribute[])item.GetType().GetCustomAttributes(typeof(TypeForDataTemplateAttribute), false))
                     .FirstOrDefault<TypeForDataTemplateAttribute, DataTemplate>(t => containerElement.TryFindResource(new DataTemplateKey(t.Type))) ?? base.SelectTemplate(item, container);

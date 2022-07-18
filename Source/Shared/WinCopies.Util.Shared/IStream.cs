@@ -261,4 +261,84 @@ IStream
 
         ~Stream() => Dispose(false);
     }
+
+    namespace DotNetFix
+    {
+        public interface IWriterStream : System.IDisposable
+        {
+            ulong Length { get; }
+
+            void Write(byte[] buffer, uint offset, uint count);
+#if CS8
+            void Write(ReadOnlySpan<byte> buffer);
+#endif
+        }
+
+        public interface IDeleteableWriterStream : IWriterStream
+        {
+            bool CanDelete { get; }
+
+            void Delete();
+        }
+
+        public abstract class ExtendedStream : System.IO.Stream, IWriterStream
+        {
+            public abstract bool CanDelete { get; }
+
+            ulong IWriterStream.Length => (ulong)Length;
+
+            void IWriterStream.Write(byte[] buffer, uint offset, uint count) => Write(buffer, (int)offset, (int)count);
+#if CS8
+            void IWriterStream.Write(ReadOnlySpan<byte> buffer) => Write(buffer);
+#endif
+
+            public abstract void Delete();
+        }
+
+        public abstract class ReadOnlyStream : ExtendedStream
+        {
+            public override bool CanRead => true;
+            public override bool CanWrite => false;
+            public override bool CanDelete => false;
+
+            public override void Delete() => throw new NotSupportedException("This stream does not support deletion.");
+        }
+
+        public abstract class Stream : ExtendedStream
+        {
+            protected System.IO.Stream InnerStream { get; }
+
+            public override bool CanSeek => InnerStream.CanSeek;
+            public override bool CanRead => InnerStream.CanRead;
+            public override bool CanWrite => InnerStream.CanWrite;
+            public override long Length => InnerStream.Length;
+            public override long Position { get => InnerStream.Position; set => InnerStream.Position = value; }
+
+            protected Stream(in System.IO.Stream stream) => InnerStream = stream;
+
+            public override void Flush() => InnerStream.Flush();
+            public override int Read(byte[] buffer, int offset, int count) => InnerStream.Read(buffer, offset, count);
+            public override long Seek(long offset, SeekOrigin origin) => InnerStream.Seek(offset, origin);
+            public override void SetLength(long value) => InnerStream.SetLength(value);
+            public override void Write(byte[] buffer, int offset, int count) => InnerStream.Write(buffer, offset, count);
+
+            protected override void Dispose(bool disposing)
+            {
+                InnerStream.Dispose();
+
+                base.Dispose(disposing);
+            }
+        }
+
+        public class FileStream : Stream
+        {
+            public string Path { get; }
+
+            public override bool CanDelete => true;
+
+            public FileStream(in string path, in System.IO.FileStream fileStream) : base(fileStream) => Path = path;
+
+            public override void Delete() => File.Delete(Path);
+        }
+    }
 }

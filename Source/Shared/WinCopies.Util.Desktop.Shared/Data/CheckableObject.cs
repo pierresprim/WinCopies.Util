@@ -15,12 +15,42 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if !WinCopies3
-
 using System;
 
 namespace WinCopies.Util.Data
 {
+#if WinCopies3
+    public class CheckableNamedObjectViewModel<T> : ViewModel<T>, ICheckableNamedObject where T : ICheckableNamedObject
+    {
+        public bool IsChecked { get => ModelGeneric.IsChecked; set { ModelGeneric.IsChecked = value; OnStatusChanged(); } }
+        public string Name { get => ModelGeneric.Name; set { ModelGeneric.Name = value; OnNameChanged(); } }
+
+        public CheckableNamedObjectViewModel(in T checkableNamedObject) : base(checkableNamedObject) { /* Left empty. */ }
+
+        protected virtual void OnNameChanged() => OnPropertyChanged(nameof(Name));
+
+        protected virtual void OnStatusChanged() => OnPropertyChanged(nameof(IsChecked));
+    }
+
+    public class CheckableNamedObjectViewModel : CheckableNamedObjectViewModel<ICheckableNamedObject>, ICheckableNamedObject
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CheckableObject"/> class.
+        /// </summary>
+        public CheckableNamedObjectViewModel() : base(new CheckableNamedObject()) { /* Left empty. */ }
+        public CheckableNamedObjectViewModel(in bool isChecked) : base(new CheckableNamedObject(isChecked)) { /* Left empty. */ }
+        public CheckableNamedObjectViewModel(in string name) : base(new CheckableNamedObject(name)) { /* Left empty. */ }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CheckableObject"/> class using custom values.
+        /// </summary>
+        /// <param name="isChecked">A value that indicates if this object is checked by default.</param>
+        /// <param name="name">The name of the object.</param>
+        public CheckableNamedObjectViewModel(in bool isChecked, in string name) : base(new CheckableNamedObject(isChecked, name)) { /* Left empty. */ }
+
+        public CheckableNamedObjectViewModel(in ICheckableNamedObject checkableNamedObject) : base(checkableNamedObject) { /* Left empty. */ }
+    }
+#else
     /// <summary>
     /// Provides an object that defines a value that can be checked and notifies of the checked status or value change. For example, this interface can be used in a view for items that can be selected.
     /// </summary>
@@ -86,7 +116,7 @@ namespace WinCopies.Util.Data
         /// <summary>
         /// Initializes a new instance of the <see cref="CheckableObject"/> class.
         /// </summary>
-        public CheckableObject() { }
+        public CheckableObject() { /* Left empty. */ }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CheckableObject"/> class using custom values.
@@ -100,13 +130,11 @@ namespace WinCopies.Util.Data
         /// </summary>
         /// <param name="obj">Object to compare to the current object.</param>
         /// <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
-        public bool Equals(
+        public bool Equals(WinCopies.
 #if !WinCopies3
-            WinCopies.Util.IValueObject
-#else
-            WinCopies.IValueObject
+            Util.
 #endif
-            obj) => new ValueObjectEqualityComparer().Equals(this, obj);
+            IValueObject obj) => new ValueObjectEqualityComparer().Equals(this, obj);
 
         /// <summary>
         /// Determines whether this object is equal to a given object.
@@ -149,19 +177,17 @@ namespace WinCopies.Util.Data
 
         object IReadOnlyValueObject.Value => _value;
 
-        object
+        object WinCopies.
 #if !WinCopies3
-            WinCopies.Util.IValueObject
-#else
-            WinCopies.IValueObject
+            Util.
 #endif
-            .Value
+            IValueObject.Value
         { get => _value; set => Value = value is T _value ? _value : throw new ArgumentException("Invalid type.", nameof(value)); }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CheckableObject{T}"/> class.
         /// </summary>
-        public CheckableObject() { }
+        public CheckableObject() { /* Left empty. */ }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CheckableObject{T}"/> class using custom values.
@@ -175,13 +201,11 @@ namespace WinCopies.Util.Data
         /// </summary>
         /// <param name="obj">Object to compare to the current object.</param>
         /// <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
-        public bool Equals(
+        public bool Equals(WinCopies.
 #if !WinCopies3
-            WinCopies.Util.IValueObject
-#else
-            WinCopies.IValueObject
+            Util.
 #endif
-        obj) => new ValueObjectEqualityComparer().Equals(this, obj);
+            IValueObject obj) => new ValueObjectEqualityComparer().Equals(this, obj);
 
         /// <summary>
         /// Determines whether this object is equal to a given object.
@@ -202,13 +226,11 @@ namespace WinCopies.Util.Data
         /// </summary>
         /// <param name="obj">Object to compare to the current object.</param>
         /// <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
-        public bool Equals(
+        public bool Equals(WinCopies.
 #if !WinCopies3
-            WinCopies.Util.IValueObject<T>
-#else
-            WinCopies.IValueObject<T>
+            Util.
 #endif
-            obj) => new ValueObjectEqualityComparer<T>().Equals(this, obj);
+            IValueObject<T> obj) => new ValueObjectEqualityComparer<T>().Equals(this, obj);
 
         /// <summary>
         /// Removes the unmanaged resources and the managed resources if needed. If you override this method, you should call this implementation of this method in your override implementation to avoid unexpected results when using this object laater.
@@ -227,44 +249,37 @@ namespace WinCopies.Util.Data
             IsDisposed = true;
         }
 
-        //private void SetProperty(string propertyName, string fieldName, object newValue)
+        /*private void SetProperty(string propertyName, string fieldName, object newValue)
+        {
+            //BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic |
+            //             BindingFlags.Static | BindingFlags.Instance |
+            //             BindingFlags.DeclaredOnly;
+            //this.GetType().GetField(fieldName, flags).SetValue(this, newValue);
 
-        //{
+            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName, previousValue, newValue));
 
-        //    //BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic |
-        //    //             BindingFlags.Static | BindingFlags.Instance |
-        //    //             BindingFlags.DeclaredOnly;
-        //    //this.GetType().GetField(fieldName, flags).SetValue(this, newValue);
+            BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic |
+                         BindingFlags.Static | BindingFlags.Instance |
+                         BindingFlags.DeclaredOnly;
 
-        //    //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName, previousValue, newValue));
+            object previousValue = null;
 
-        //    BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic |
-        //                 BindingFlags.Static | BindingFlags.Instance |
-        //                 BindingFlags.DeclaredOnly;
+            FieldInfo field = GetType().GetField(fieldName, flags);
 
-        //    object previousValue = null;
+            previousValue = field.GetValue(this);
 
-        //    FieldInfo field = GetType().GetField(fieldName, flags);
+            if (!newValue.Equals(previousValue))
+            {
+                field.SetValue(this, newValue);
 
-        //    previousValue = field.GetValue(this);
+                //BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic |
+                //             BindingFlags.Static | BindingFlags.Instance |
+                //             BindingFlags.DeclaredOnly;
+                //this.GetType().GetField(fieldName, flags).SetValue(this, newValue);
 
-        //    if (!newValue.Equals(previousValue))
-
-        //    {
-
-        //        field.SetValue(this, newValue);
-
-        //        //BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic |
-        //        //             BindingFlags.Static | BindingFlags.Instance |
-        //        //             BindingFlags.DeclaredOnly;
-        //        //this.GetType().GetField(fieldName, flags).SetValue(this, newValue);
-
-        //        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName, previousValue, newValue));
-
-        //    } 
-
-        //}
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName, previousValue, newValue));
+            } 
+        }*/
     }
-}
-
 #endif
+}

@@ -17,6 +17,8 @@
 
 #if CS7
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
@@ -38,10 +40,40 @@ using InvalidEnumArgumentException = WinCopies.Util.InvalidEnumArgumentException
 
 namespace WinCopies.Extensions // To avoid name conflicts.
 {
+    public class EmbeddedResourcesDictionary : IReadOnlyDictionary<string, System.IO.Stream>
+#if WinCopies3 && CS8
+        , Collections.DotNetFix.Generic.IEnumerable<KeyValuePair<string, System.IO.Stream>>
+#endif
+    {
+        protected Assembly Assembly { get; }
+
+        public System.IO.Stream this[string key] => TryGetValue(key, out System.IO.Stream stream) ? stream : throw new KeyNotFoundException();
+
+        public System.Collections.Generic.IReadOnlyList<string> Keys { get; }
+
+        public System.Collections.Generic.IEnumerable<System.IO.Stream> Values => this.Select(item => item.Value);
+
+        public int Count => Keys.Count;
+
+        System.Collections.Generic.IEnumerable<string> IReadOnlyDictionary<string, System.IO.Stream>.Keys => Keys;
+
+        public EmbeddedResourcesDictionary() => Keys = new ReadOnlyArray<string>(Assembly.GetManifestResourceNames());
+
+        public bool ContainsKey(string key) => TryGetValue(key, out _);
+        public IEnumerator<KeyValuePair<string, System.IO.Stream>> GetEnumerator() => Assembly.EnumerateEmbeddedResources().GetEnumerator();
+        public System.IO.Stream
+#if CS8
+            ?
+#endif
+            TryGetValue(string key) => Assembly.GetManifestResourceStream(key);
+        public bool TryGetValue(string key, out System.IO.Stream value) => (value = TryGetValue(key)) != null;
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    }
+
     public static class Extensions
     {
 #if WinCopies3
-        public static System.Collections.Generic.IReadOnlyList<Type> GetRealGenericParameters(this Type type)
+        public static IReadOnlyList<Type> GetRealGenericParameters(this Type type)
         {
             Type[] array = type.GetGenericArguments();
 
@@ -58,7 +90,7 @@ namespace WinCopies.Extensions // To avoid name conflicts.
         }
 #endif
 
-        public static bool HasFlag(this Enum @enum, System.Collections.Generic.IEnumerable<Enum> values)
+        public static bool HasFlag(this Enum @enum, IEnumerable<Enum> values)
         {
             foreach (Enum value in values)
 
@@ -69,9 +101,9 @@ namespace WinCopies.Extensions // To avoid name conflicts.
             return false;
         }
 
-        public static bool HasFlag(this Enum @enum, params Enum[] values) => @enum.HasFlag((System.Collections.Generic.IEnumerable<Enum>)values);
+        public static bool HasFlag(this Enum @enum, params Enum[] values) => @enum.HasFlag((IEnumerable<Enum>)values);
 
-        public static bool HasAllFlags(this Enum @enum, System.Collections.Generic.IEnumerable<Enum> values)
+        public static bool HasAllFlags(this Enum @enum, IEnumerable<Enum> values)
         {
             foreach (Enum value in values)
 
@@ -82,7 +114,7 @@ namespace WinCopies.Extensions // To avoid name conflicts.
             return true;
         }
 
-        public static bool HasAllFlags(this Enum @enum, params Enum[] values) => @enum.HasAllFlags((System.Collections.Generic.IEnumerable<Enum>)values);
+        public static bool HasAllFlags(this Enum @enum, params Enum[] values) => @enum.HasAllFlags((IEnumerable<Enum>)values);
 
         public static bool IsValidFlagsEnumValue<T>(this T value, in IfCT comparisonType, in string argumentName, params T[] values) where T : Enum
         {
@@ -140,7 +172,11 @@ namespace WinCopies.Extensions // To avoid name conflicts.
             }
         }
 
-        public static System.Collections.Generic.IEnumerable<Type> GetDirectInterfaces(this Type t, bool ignoreGenerics, bool directTypeOnly, bool ignoreFirstTypesWithoutInterfaces = true, Predicate<Type> predicate = null)
+        public static IEnumerable<Type> GetDirectInterfaces(this Type t, bool ignoreGenerics, bool directTypeOnly, bool ignoreFirstTypesWithoutInterfaces = true, Predicate<Type>
+#if CS8
+            ?
+#endif
+            predicate = null)
         {
             var interfaces = new ArrayBuilder<Type>();
             var subInterfaces = new ArrayBuilder<Type>();
@@ -189,15 +225,11 @@ namespace WinCopies.Extensions // To avoid name conflicts.
 
             bool _predicate(Type _t) => _t.GetDirectInterfaces(ignoreGenerics, true, false).GetEnumerator().MoveNext();
 
-            Predicate<Type> __predicate;
-
-            if (predicate == null)
-
-                __predicate = _predicate;
-
-            else
-
-                __predicate = _t => predicate(_t) && _predicate(_t);
+            Predicate<Type> __predicate = predicate == null ?
+#if !CS9
+                (Predicate<Type>)
+#endif
+                _predicate : (_t => predicate(_t) && _predicate(_t));
 
             void addBaseTypesInterfaces(Action<Type> _action)
             {
@@ -249,7 +281,7 @@ namespace WinCopies.Extensions // To avoid name conflicts.
                     addBaseTypesInterfaces(addSubInterfaces);
             }
 
-            return ((System.Collections.Generic.IEnumerable<Type>)interfaces).Except(subInterfaces);
+            return ((IEnumerable<Type>)interfaces).Except(subInterfaces);
         }
     }
 }

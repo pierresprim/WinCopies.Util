@@ -34,13 +34,35 @@ namespace WinCopies.Collections
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-#if WinCopies3
-        public static System.Collections.Generic.IEnumerable<T> GetEnumerable<T>(System.Collections.Generic.IEnumerator<T> enumerator) => new Generic.Enumerable<T>(() => enumerator);
+        public static System.Collections.Generic.IEnumerator<T> GetEnumerator<T>(params T[] items)
+        {
+            foreach (T item in items)
 
+                yield return item;
+        }
+
+        public static System.Collections.Generic.IEnumerable<T> GetEnumerable<T>(params T[] items) => new
+#if WinCopies3
+            Generic.
+#endif
+            Enumerable<T>(() => GetEnumerator(items));
+
+        public static System.Collections.Generic.IEnumerable<T> FromEnumerator<T>(System.Collections.Generic.IEnumerator<T> enumerator) => new
+#if WinCopies3
+            Generic.
+#endif
+            Enumerable<T>(() => enumerator);
+
+#if WinCopies3
         public static System.Collections.Generic.IEnumerable<T> GetNullCheckWhileEnumerable<T>(T first, Converter<T, T> converter) => new Generic.Enumerable<T>(() => Enumerator.GetNullCheckWhileEnumerator(first, converter));
 
-        public static System.Collections.Generic.IEnumerable<T> GetNullCheckWhileEnumerableC<T>(T first, Converter<T, T> converter) => GetEnumerable(Enumerator.GetNullCheckWhileEnumerator(first, converter));
+        public static System.Collections.Generic.IEnumerable<T> GetNullCheckWhileEnumerableC<T>(T first, Converter<T, T> converter) => FromEnumerator(Enumerator.GetNullCheckWhileEnumerator(first, converter));
 #endif
+    }
+
+    public interface IDisposableEnumerable : IEnumerable, System.IDisposable
+    {
+        // Left empty.
     }
 
 #if WinCopies3
@@ -65,7 +87,7 @@ namespace WinCopies.Collections
         {
             new TEnumerator GetEnumerator();
 
-#if CS8 && WinCopies3
+#if CS8
             System.Collections.Generic.IEnumerator<TItems> System.Collections.Generic.IEnumerable<TItems>.GetEnumerator() => GetEnumerator();
 #endif
         }
@@ -129,16 +151,17 @@ namespace WinCopies.Collections
     namespace Generic
     {
 #endif
-    public interface IDisposableEnumerable : IEnumerable, System.IDisposable
-        {
-            // Left empty.
-        }
-
         public interface IDisposableEnumerable<
 #if CS5
             out
 #endif
-             T> : System.Collections.Generic.IEnumerable<T>, System.IDisposable
+             T> :
+#if WinCopies3 && CS8
+            DotNetFix
+#else
+            System.Collections
+#endif
+            .Generic.IEnumerable<T>, System.IDisposable
         {
             // Left empty.
         }
@@ -164,6 +187,8 @@ namespace WinCopies.Collections
         {
             public Enumerable(in Func<System.Collections.Generic.IEnumerator<T>> enumeratorFunc) : base(enumeratorFunc) { /* Left empty. */ }
 
+#if !WinCopies3
+        [Obsolete("Moved to WinCopies.Collections.Enumerable.")]
             public static System.Collections.Generic.IEnumerator<T> GetEnumerator(params T[] items)
             {
                 foreach (T item in items)
@@ -171,7 +196,9 @@ namespace WinCopies.Collections
                     yield return item;
             }
 
-            public static System.Collections.Generic.IEnumerable<T> GetEnumerable(params T[] items) => new Enumerable<T>(() => GetEnumerator(items));
+        [Obsolete("Moved to WinCopies.Collections.Enumerable.")]
+        public static System.Collections.Generic.IEnumerable<T> GetEnumerable(params T[] items) => new Enumerable<T>(() => GetEnumerator(items));
+#endif
         }
 
 #if WinCopies3
@@ -199,7 +226,11 @@ namespace WinCopies.Collections
 
             IEnumeratorInfo<TItems> DotNetFix.Generic.IEnumerable<TItems, IEnumeratorInfo<TItems>>.GetEnumerator() => EnumeratorFunc();
 
-            System.Collections.Generic.IEnumerator<TItems> IEnumerable<TItems>.GetReversedEnumerator() => GetReversedEnumerator(); // We call this method and not the delegate directly because we have to make a null-check.
+            System.Collections.Generic.IEnumerator<TItems>
+#if WinCopies3
+            Extensions.Generic.
+#endif
+            IEnumerable<TItems>.GetReversedEnumerator() => GetReversedEnumerator(); // We call this method and not the delegate directly because we have to make a null-check.
 
             IEnumeratorInfo<TItems> IEnumerable<TItems, IEnumeratorInfo<TItems>>.GetReversedEnumerator() => GetReversedEnumerator();
 
@@ -225,6 +256,12 @@ namespace WinCopies.Collections
             }
         }
 
+#if WinCopies3
+    }
+
+    namespace Extensions.Generic
+    {
+#endif
         /// <summary>
         /// A collection that can be enumerated.
         /// </summary>
@@ -264,17 +301,31 @@ namespace WinCopies.Collections
             /// </remarks>
             System.Collections.Generic.IEnumerator<T> GetReversedEnumerator();
         }
+#if WinCopies3
+    }
+
+    namespace Generic
+    {
+#endif
 
         public interface IEnumerable<
 #if CS5
             out
 #endif
-             TItems, out TEnumerator> : DotNetFix.Generic.IEnumerable<TItems, TEnumerator>, IEnumerable<TItems> where TEnumerator : System.Collections.Generic.IEnumerator<TItems>
+             TItems, out TEnumerator> : DotNetFix.Generic.IEnumerable<TItems, TEnumerator>,
+#if WinCopies3
+            Extensions.Generic.
+#endif
+            IEnumerable<TItems> where TEnumerator : System.Collections.Generic.IEnumerator<TItems>
         {
             new TEnumerator GetReversedEnumerator();
 
 #if CS8
-            System.Collections.Generic.IEnumerator<TItems> IEnumerable<TItems>.GetReversedEnumerator() => GetReversedEnumerator();
+            System.Collections.Generic.IEnumerator<TItems>
+#if WinCopies3
+            Extensions.Generic.
+#endif
+            IEnumerable<TItems>.GetReversedEnumerator() => GetReversedEnumerator();
 #endif
         }
 
@@ -298,23 +349,35 @@ namespace WinCopies.Collections
     }
 #endif
 
-    //public sealed class EmptyCheckEnumerable : IEnumerable
-    //{
-    //    private Func<EmptyCheckEnumerator> _func;
+    namespace DotNetFix.Generic
+    {
+        public interface IDisposableEnumerable<
+#if CS5
+            out
+#endif
+             T> : Collections.Generic.IDisposableEnumerable<T>, WinCopies.DotNetFix.IDisposable
+        {
+            // Left empty.
+        }
+    }
 
-    //    public EmptyCheckEnumerable(Func<EmptyCheckEnumerator> func) => _func = func;
+    /*public sealed class EmptyCheckEnumerable : IEnumerable
+    {
+        private Func<EmptyCheckEnumerator> _func;
 
-    //    public System.Collections.IEnumerator GetEnumerator() => _func();
-    //}
+        public EmptyCheckEnumerable(Func<EmptyCheckEnumerator> func) => _func = func;
 
-    //public sealed class EmptyCheckEnumerable<T> : System.Collections.Generic.IEnumerable<T>
-    //{
-    //    private readonly Func<EmptyCheckEnumerator<T>> _func;
+        public System.Collections.IEnumerator GetEnumerator() => _func();
+    }
 
-    //    public EmptyCheckEnumerable(Func<EmptyCheckEnumerator<T>> func) => _func = func;
+    public sealed class EmptyCheckEnumerable<T> : System.Collections.Generic.IEnumerable<T>
+    {
+        private readonly Func<EmptyCheckEnumerator<T>> _func;
 
-    //    public System.Collections.Generic.IEnumerator<T> GetEnumerator() => _func();
+        public EmptyCheckEnumerable(Func<EmptyCheckEnumerator<T>> func) => _func = func;
 
-    //    System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-    //}
+        public System.Collections.Generic.IEnumerator<T> GetEnumerator() => _func();
+
+        System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    }*/
 }

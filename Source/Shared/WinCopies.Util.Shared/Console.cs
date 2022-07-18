@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 
 using WinCopies.Util;
 
@@ -44,6 +45,226 @@ namespace WinCopies
         ?
 #endif
         server, bool? increment, ConsoleColor? consoleColor = null);
+
+    namespace Extensions
+    {
+        public enum LoggingLevel
+        {
+            Normal = 0,
+            Information,
+            Success,
+            Warning,
+            Error
+        }
+
+        public interface ILogger
+        {
+            byte TabsCount { get; }
+
+            void WriteLine(string
+#if CS8
+                ?
+#endif
+                msg, bool? increment, LoggingLevel level);
+        }
+
+        public abstract class LoggerBase : ILogger
+        {
+            public byte TabsCount { get; private set; }
+
+            public LoggerBase(in byte initialTabsCount = 0) => TabsCount = (byte)(initialTabsCount + 1);
+
+            protected abstract void WriteLineOverride(string
+#if CS8
+                ?
+#endif
+                msg, LoggingLevel level);
+
+            public void WriteLine(string
+#if CS8
+                ?
+#endif
+                msg, bool? increment, LoggingLevel level) => WriteLineOverride($"{DateTime.Now}{new string('\t', increment.HasValue ? increment.Value ? ++TabsCount : TabsCount-- : TabsCount)}{msg}", level);
+        }
+
+        public class ConsoleLogger : LoggerBase
+        {
+            public ConsoleLogger(in byte initialTabsCount = 0) : base(initialTabsCount) { /* Left empty. */ }
+
+            public static Logger GetLogger(in byte initialTabsCount = 0) => new ConsoleLogger(initialTabsCount).WriteLine;
+
+            protected override void WriteLineOverride(string
+#if CS8
+                ?
+#endif
+                msg, LoggingLevel level)
+            {
+                void writeLine() => System.Console.WriteLine(msg);
+
+                void onNormalLevel()
+                {
+                    ResetColor();
+
+                    writeLine();
+                }
+
+                if (level == LoggingLevel.Normal)
+
+                    onNormalLevel();
+
+                else
+                {
+                    ConsoleColor? getColor()
+#if CS8
+                        =>
+#else
+                {
+                    switch (
+#endif
+                        level
+#if CS8
+                            switch
+#else
+                    )
+#endif
+                        {
+#if !CS8
+                        case
+#endif
+                            LoggingLevel.Information
+#if CS8
+                                    =>
+#else
+                    :
+                            return
+#endif
+                                    ConsoleColor.Blue
+#if CS8
+                                ,
+#else
+                            ;
+                        case
+#endif
+                            LoggingLevel.Success
+#if CS8
+                            =>
+#else
+                    :
+                            return
+#endif
+                            ConsoleColor.DarkGreen
+#if CS8
+                                ,
+#else
+                            ;
+                        case
+#endif
+                            LoggingLevel.Warning
+#if CS8
+                                    =>
+#else
+                    :
+                            return
+#endif
+                                    ConsoleColor.DarkYellow
+#if CS8
+                                ,
+#else
+                            ;
+                        case
+#endif
+                            LoggingLevel.Error
+#if CS8
+                                    =>
+#else
+                    :
+                            return
+#endif
+                                    ConsoleColor.DarkRed
+#if CS8
+                                ,
+                            _ =>
+#else
+                            ;
+                        default:
+                            return
+#endif
+                    null
+#if CS8
+                        };
+#else
+                    ;
+                    }
+                }
+#endif
+                    ConsoleColor? consoleColor = getColor();
+
+                    if (consoleColor.HasValue)
+                    {
+                        ForegroundColor = consoleColor.Value;
+
+                        writeLine();
+
+                        ResetColor();
+                    }
+
+                    else
+
+                        onNormalLevel();
+                }
+            }
+        }
+
+        public class FileLogger : LoggerBase
+        {
+            public StreamWriter Writer { get; }
+
+            public FileLogger(in StreamWriter writer, in byte initialTabsCount = 0) : base(initialTabsCount) => Writer = writer;
+            public FileLogger(in string path, in byte initialTabsCount = 0) : this(new StreamWriter(path), initialTabsCount) { /* Left empty. */ }
+
+#if CS5
+            public FileLogger(in byte initialTabsCount = 0) : this(GetPath(), initialTabsCount) { /* Left empty. */ }
+
+            private static string GetPath()
+            {
+                string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), UtilHelpers.GetAssemblyName(), "logs");
+
+                _ = Directory.CreateDirectory(path);
+
+                return Path.Combine(path, $"{Guid.NewGuid()}.log");
+            }
+#endif
+
+            public static Logger GetLogger(in StreamWriter writer, in byte initialTabsCount = 0) => new FileLogger(writer, initialTabsCount).WriteLineAndFlush;
+            public static Logger GetLogger(in string path, in byte initialTabsCount = 0) => new FileLogger(path, initialTabsCount).WriteLineAndFlush;
+#if CS5
+            public static Logger GetLogger(in byte initialTabsCount = 0) => new FileLogger(initialTabsCount).WriteLineAndFlush;
+#endif
+
+            protected override void WriteLineOverride(string
+#if CS8
+                ?
+#endif
+                msg, LoggingLevel level) => Writer.WriteLine($"[{level.ToChar()}] {msg}");
+
+            public void WriteLineAndFlush(string
+#if CS8
+                ?
+#endif
+                msg, bool? increment, LoggingLevel level)
+            {
+                WriteLine(msg, increment, level);
+
+                Writer.Flush();
+            }
+        }
+
+        public delegate void Logger(string
+#if CS8
+            ?
+#endif
+            message, bool? increment, LoggingLevel level);
+    }
 
     public static class Console
     {
@@ -96,7 +317,7 @@ namespace WinCopies
 #endif
                 ReadLine(in string msg)
         {
-            System.Console.WriteLine(msg);
+            WriteLine(msg);
 
             return System.Console.ReadLine();
         }
@@ -122,7 +343,7 @@ namespace WinCopies
 
             while ((result = converter(ReadLine(msg))) == null)
 
-                System.Console.WriteLine(errorMessage);
+                WriteLine(errorMessage);
 
             return result;
         }
@@ -143,7 +364,7 @@ namespace WinCopies
         {
             for (int i = 0; i < menu.Count; i++)
 
-                System.Console.WriteLine($"{i}: {menu[i].Key}");
+                WriteLine($"{i}: {menu[i].Key}");
         }
 
         public static void HandleMenu(
@@ -158,11 +379,11 @@ namespace WinCopies
             {
                 if (clear)
 
-                    System.Console.Clear();
+                    Clear();
 
                 if (!string.IsNullOrEmpty(msg))
 
-                    System.Console.WriteLine(msg);
+                    WriteLine(msg);
 
                 WriteMenu(menu);
             }

@@ -160,81 +160,6 @@
               Looks up a localized string similar to &apos;{0}&apos; is empty or white space..
             </summary>
         </member>
-        <member name="T:WinCopies.Diagnostics.ComparisonType">
-            <summary>
-            Comparison types for the If functions.
-            </summary>
-        </member>
-        <member name="F:WinCopies.Diagnostics.ComparisonType.And">
-            <summary>
-            Check if all conditions are checked.
-            </summary>
-        </member>
-        <member name="F:WinCopies.Diagnostics.ComparisonType.Or">
-            <summary>
-            Check if at least one condition is checked.
-            </summary>
-        </member>
-        <member name="F:WinCopies.Diagnostics.ComparisonType.Xor">
-            <summary>
-            Check if exactly one condition is checked.
-            </summary>
-        </member>
-        <member name="T:WinCopies.Diagnostics.ComparisonMode">
-            <summary>
-            Comparison modes for the If functions.
-            </summary>
-        </member>
-        <member name="F:WinCopies.Diagnostics.ComparisonMode.Binary">
-            <summary>
-            Use a binary comparison
-            </summary>
-        </member>
-        <member name="F:WinCopies.Diagnostics.ComparisonMode.Logical">
-            <summary>
-            Use a logical comparison
-            </summary>
-        </member>
-        <member name="T:WinCopies.Diagnostics.Comparison">
-            <summary>
-            Comparison to perform.
-            </summary>
-        </member>
-        <member name="F:WinCopies.Diagnostics.Comparison.Equal">
-            <summary>
-            Check for values equality
-            </summary>
-        </member>
-        <member name="F:WinCopies.Diagnostics.Comparison.NotEqual">
-            <summary>
-            Check for values non-equality
-            </summary>
-        </member>
-        <member name="F:WinCopies.Diagnostics.Comparison.Less">
-            <summary>
-            Check if a value is lesser than a given value. This field only works for methods that use lesser/greater/equal comparers.
-            </summary>
-        </member>
-        <member name="F:WinCopies.Diagnostics.Comparison.LessOrEqual">
-            <summary>
-            Check if a value is lesser than or equal to a given value. This field only works for methods that use lesser/greater/equal comparers.
-            </summary>
-        </member>
-        <member name="F:WinCopies.Diagnostics.Comparison.Greater">
-            <summary>
-            Check if a value is greater than a given value. This field only works for methods that use lesser/greater/equal comparers.
-            </summary>
-        </member>
-        <member name="F:WinCopies.Diagnostics.Comparison.GreaterOrEqual">
-            <summary>
-            Check if a value is greater than or equal to a given value. This field only works for methods that use lesser/greater/equal comparers.
-            </summary>
-        </member>
-        <member name="F:WinCopies.Diagnostics.Comparison.ReferenceEqual">
-            <summary>
-            Check if an object reference is equal to a given object reference. This field only works for methods that use equality comparers (not lesser/greater ones).
-            </summary>
-        </member>
         <member name="T:WinCopies.Util.Extensions">
             <summary>
             Provides some static extension methods.
@@ -456,6 +381,81 @@
             <param name="y">The right operand.</param>
             <returns><see langword="true"/> if <paramref name="d"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
         </member>
+        <member name="T:WinCopies.Diagnostics.ComparisonType">
+            <summary>
+            Comparison types for the If functions.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Diagnostics.ComparisonType.And">
+            <summary>
+            Check if all conditions are checked.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Diagnostics.ComparisonType.Or">
+            <summary>
+            Check if at least one condition is checked.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Diagnostics.ComparisonType.Xor">
+            <summary>
+            Check if exactly one condition is checked.
+            </summary>
+        </member>
+        <member name="T:WinCopies.Diagnostics.ComparisonMode">
+            <summary>
+            Comparison modes for the If functions.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Diagnostics.ComparisonMode.Binary">
+            <summary>
+            Use a binary comparison
+            </summary>
+        </member>
+        <member name="F:WinCopies.Diagnostics.ComparisonMode.Logical">
+            <summary>
+            Use a logical comparison
+            </summary>
+        </member>
+        <member name="T:WinCopies.Diagnostics.Comparison">
+            <summary>
+            Comparison to perform.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Diagnostics.Comparison.Equal">
+            <summary>
+            Check for values equality
+            </summary>
+        </member>
+        <member name="F:WinCopies.Diagnostics.Comparison.NotEqual">
+            <summary>
+            Check for values non-equality
+            </summary>
+        </member>
+        <member name="F:WinCopies.Diagnostics.Comparison.Less">
+            <summary>
+            Check if a value is lesser than a given value. This field only works for methods that use lesser/greater/equal comparers.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Diagnostics.Comparison.LessOrEqual">
+            <summary>
+            Check if a value is lesser than or equal to a given value. This field only works for methods that use lesser/greater/equal comparers.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Diagnostics.Comparison.Greater">
+            <summary>
+            Check if a value is greater than a given value. This field only works for methods that use lesser/greater/equal comparers.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Diagnostics.Comparison.GreaterOrEqual">
+            <summary>
+            Check if a value is greater than or equal to a given value. This field only works for methods that use lesser/greater/equal comparers.
+            </summary>
+        </member>
+        <member name="F:WinCopies.Diagnostics.Comparison.ReferenceEqual">
+            <summary>
+            Check if an object reference is equal to a given object reference. This field only works for methods that use equality comparers (not lesser/greater ones).
+            </summary>
+        </member>
         <member name="T:WinCopies.Collections.Comparison">
             <summary>
             Delegate for a non-generic comparison.
@@ -632,6 +632,17 @@
         <member name="F:WinCopies.StreamCommit.Consolidate">
             <summary>
             Windows 2000 and Windows XP: Indicates that a storage should be consolidated after it is committed, resulting in a smaller file on disk. This flag is valid only on the outermost storage object that has been opened in transacted mode. It is not valid for streams. The <see cref="F:WinCopies.StreamCommit.Consolidate"/> flag can be combined with any other <see cref="T:WinCopies.StreamCommit"/> flags.
+            </summary>
+        </member>
+        <member name="T:WinCopies.DotNetFix.IDisposable">
+            <summary>
+            Provides a mechanism for releasing unmanaged resources.
+            </summary>
+            <seealso cref="T:System.IDisposable"/>
+        </member>
+        <member name="P:WinCopies.DotNetFix.IDisposable.IsDisposed">
+            <summary>
+            Gets a value that indicates whether the current object is disposed.
             </summary>
         </member>
         <member name="T:WinCopies.Result">
@@ -870,17 +881,6 @@
             <param name="preserveIds">Whether to preserve IDs, if any.</param>
             <returns>A deep clone of the current object or value.</returns>
         </member>
-        <member name="T:WinCopies.DotNetFix.IDisposable">
-            <summary>
-            Provides a mechanism for releasing unmanaged resources.
-            </summary>
-            <seealso cref="T:System.IDisposable"/>
-        </member>
-        <member name="P:WinCopies.DotNetFix.IDisposable.IsDisposed">
-            <summary>
-            Gets a value that indicates whether the current object is disposed.
-            </summary>
-        </member>
         <member name="T:WinCopies.ObjectDisposingException">
             <summary>
             The exception that is thrown when an operation is performed on a disposing object.
@@ -934,6 +934,15 @@
             <summary>
             Provides some static helper methods.
             </summary>
+        </member>
+        <member name="M:WinCopies.UtilHelpers.InitializeStruct``1(System.Nullable{``0}@,System.Func{``0}@)">
+            <summary>
+            Creates a new instance of a given type if <paramref name="value"/> is null and update <paramref name="value"/> with that value; then returns the value of <paramref name="value"/>.
+            </summary>
+            <typeparam name="T">The type from which to create a new value, if applicable, and of the value to return.</typeparam>
+            <param name="value">The reference of the variable to read from and to write to the new value, if applicable.</param>
+            <param name="func">The <see cref="T:System.Func`1"/> that provides a new value to assign to <paramref name="value"/>.</param>
+            <returns>A new value from <typeparamref name="T"/> if <paramref name="value"/> is null; otherwise the value of <paramref name="value"/>.</returns>
         </member>
         <member name="M:WinCopies.UtilHelpers.GetCommonPredicate">
             <summary>
@@ -1010,6 +1019,81 @@
             <summary>
             Gets or sets the value of the object.
             </summary>
+        </member>
+        <member name="P:WinCopies.INamedObjectBase.Name">
+            <summary>
+            Gets or sets the name of this object.
+            </summary>
+        </member>
+        <member name="P:WinCopies.INamedObjectBase2.Name">
+            <summary>
+            Gets or sets the name of this object.
+            </summary>
+        </member>
+        <member name="T:WinCopies.INamedObject">
+            <summary>
+            Provides an object that defines a value with an associated name and notifies of the name or value change.
+            </summary>
+        </member>
+        <member name="T:WinCopies.INamedObject`1">
+            <summary>
+            Provides an object that defines a value with an associated name and notifies of the name or value change.
+            </summary>
+        </member>
+        <member name="T:WinCopies.ICheckableObject">
+            <summary>
+            Provides an object that defines a value that can be checked and notifies of the checked status or value change. For example, this interface can be used in a view for items that can be selected.
+            </summary>
+        </member>
+        <member name="P:WinCopies.ICheckableObject.IsChecked">
+            <summary>
+            Gets or sets a value that indicates whether this object is checked.
+            </summary>
+        </member>
+        <member name="P:WinCopies.CheckableObject.IsChecked">
+            <inheritdoc/>
+        </member>
+        <member name="P:WinCopies.CheckableObject2.IsChecked">
+            <inheritdoc/>
+        </member>
+        <member name="T:WinCopies.CheckableNamedObject">
+            <summary>
+            Provides an object that defines a value that can be checked and notifies of the checked status or value change. For example, this class can be used in a view for items that can be selected.
+            </summary>
+        </member>
+        <member name="P:WinCopies.CheckableNamedObject.Name">
+            <inheritdoc/>
+        </member>
+        <member name="M:WinCopies.CheckableNamedObject.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.CheckableObject"/> class.
+            </summary>
+        </member>
+        <member name="M:WinCopies.CheckableNamedObject.#ctor(System.Boolean@,System.String@)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.CheckableObject"/> class using custom values.
+            </summary>
+            <param name="isChecked">A value that indicates if this object is checked by default.</param>
+            <param name="name">The name of the object.</param>
+        </member>
+        <member name="T:WinCopies.CheckableNamedObject2">
+            <summary>
+            Provides an object that defines a value that can be checked and notifies of the checked status or value change. For example, this class can be used in a view for items that can be selected.
+            </summary>
+        </member>
+        <member name="P:WinCopies.CheckableNamedObject2.Name">
+            <inheritdoc/>
+        </member>
+        <member name="M:WinCopies.CheckableNamedObject2.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.CheckableObject"/> class.
+            </summary>
+        </member>
+        <member name="M:WinCopies.CheckableNamedObject2.#ctor(System.Nullable{System.Boolean}@,System.String@)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.CheckableObject"/> class using custom values.
+            </summary>
+            <param name="name">The name of the object.</param>
         </member>
         <member name="T:WinCopies.ValueObjectEqualityComparer">
             <summary>

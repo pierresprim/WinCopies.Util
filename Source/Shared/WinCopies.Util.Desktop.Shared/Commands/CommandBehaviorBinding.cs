@@ -26,33 +26,31 @@
  * For more information, please refer to <http://unlicense.org> */
 
 using System;
-using System.Diagnostics;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
 
+namespace WinCopies.
 #if !WinCopies3
-namespace WinCopies.Util.Commands
-#else
-namespace WinCopies.Commands
+    Util.
 #endif
+    Commands
 {
     /// <summary>
     /// Defines the command behavior binding
     /// </summary>
-    public class CommandBehaviorBinding : System.IDisposable
+    public class CommandBehaviorBinding : DotNetFix.IDisposable
     {
         #region Properties
-
         /// <summary>
-        /// Get the owner of the CommandBinding ex: a Button
-        /// This property can only be set from the BindEvent Method
+        /// Get the owner of the <see cref="CommandBinding"/> ex: a Button
+        /// This property can only be set from the <see cref="BindEvent"/> Method
         /// </summary>
         public DependencyObject Owner { get; private set; }
 
         /// <summary>
         /// The event name to hook up to
-        /// This property can only be set from the BindEvent Method
+        /// This property can only be set from the <see cref="BindEvent"/> Method
         /// </summary>
         public string EventName { get; private set; }
 
@@ -67,51 +65,39 @@ namespace WinCopies.Commands
         public Delegate EventHandler { get; private set; }
 
         #region Execution
-
         //stores the strategy of how to execute the event handler
-        IExecutionStrategy strategy;
+        IExecutionStrategy _strategy;
+        ICommand _command;
+        Action<object> _action;
 
         /// <summary>
         /// Gets or sets a CommandParameter
         /// </summary>
         public object CommandParameter { get; set; }
 
-        ICommand command;
         /// <summary>
-        /// The command to execute when the specified event is raised
+        /// The command to execute when the specified event is raised.
         /// </summary>
-        public ICommand Command
-        {
-            get => command;
-            set
-            {
-                command = value;
-                //set the execution strategy to execute the command
-                strategy = new CommandExecutionStrategy { Behavior = this };
-            }
-        }
-
-        Action<object> action;
+        public ICommand Command { get => _command; set => UpdateValue(ref _command, value, new CommandExecutionStrategy()); }
 
         /// <summary>
         /// Gets or sets the Action
         /// </summary>
-        public Action<object> Action
-        {
-            get => action;
-            set
-            {
-                action = value;
-                // set the execution strategy to execute the action
-                strategy = new ActionExecutionStrategy { Behavior = this };
-            }
-        }
-        #endregion
+        public Action<object> Action { get => _action; set => UpdateValue(ref _action, value, new ActionExecutionStrategy()); }
+        #endregion Execution
+        #endregion Properties
 
-        #endregion
+        #region Methods
+        private void UpdateValue<TValue>(ref TValue value, in TValue newValue, IExecutionStrategy executionStrategy)
+        {
+            value = newValue;
+            // set the execution strategy to execute the command or action
+            executionStrategy.Behavior = this;
+            _strategy = executionStrategy;
+        }
 
         /// <summary>
-        /// Creates an <see cref="System. EventHandler"/> on runtime and registers that handler to the Event specified
+        /// Creates an <see cref="System.EventHandler"/> on runtime and registers that handler to the Event specified
         /// </summary>
         /// <param name="owner">The <see cref="DependencyObject"/> owner</param>
         /// <param name="eventName">The event name</param>
@@ -119,11 +105,13 @@ namespace WinCopies.Commands
         {
             EventName = eventName;
             Owner = owner;
-            Event = Owner.GetType().GetEvent(EventName, BindingFlags.Public | BindingFlags.Instance);
+            EventInfo
+#if CS8
+                ?
+#endif
+                @event = Owner.GetType().GetEvent(EventName, BindingFlags.Public | BindingFlags.Instance);
 
-            if (Event == null)
-
-                throw new InvalidOperationException(string.Format("Could not resolve event name {0}", EventName));
+            Event = @event ?? throw new InvalidOperationException(string.Format("Could not resolve event name {0}", EventName));
 
             //Create an event handler for the event that will call the ExecuteCommand method
             EventHandler = EventHandlerGenerator.CreateDelegate(
@@ -135,25 +123,22 @@ namespace WinCopies.Commands
         /// <summary>
         /// Executes the strategy
         /// </summary>
-        public void Execute() => strategy.Execute(CommandParameter);
+        public void Execute() => _strategy.Execute(CommandParameter);
+        #endregion Methods
 
         #region IDisposable Members
-
-        bool disposed = false;
+        public bool IsDisposed { get; private set; }
 
         /// <summary>
         /// Unregisters the <see cref="EventHandler"/> from the <see cref="Event"/>
         /// </summary>
         public void Dispose()
         {
-            if (disposed)
-
-                return;
+            if (IsDisposed) return;
 
             Event.RemoveEventHandler(Owner, EventHandler);
-            disposed = true;
+            IsDisposed = true;
         }
-
-        #endregion
+        #endregion IDisposable Members
     }
 }

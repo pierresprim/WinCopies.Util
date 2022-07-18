@@ -24,6 +24,9 @@ using System.Reflection;
 using System.Text;
 
 using WinCopies.Collections;
+using WinCopies.Extensions;
+
+using static WinCopies.XOrResult;
 
 #if WinCopies3
 using WinCopies.Collections.Generic;
@@ -58,6 +61,460 @@ namespace WinCopies.Util
         /// </summary>
         public static class Extensions
         {
+            public static Action GetAction(this Func<Action> func) => () => func()();
+            public static Action<T> GetAction<T>(this Func<Action<T>> func) => value => func()(value);
+            public static ActionIn<T> GetAction<T>(this Func<ActionIn<T>> func) => (in T value) => func()(value);
+            public static Func GetFunc(this Func<Func> func) => () => func()();
+            public static Func<TIn, TOut> GetFunc<TIn, TOut>(this Func<Func<TIn, TOut>> func) => value => func()(value);
+            public static FuncIn<TIn, TOut> GetFunc<TIn, TOut>(this Func<FuncIn<TIn, TOut>> func) => (in TIn value) => func()(value);
+#if CS8
+            public static FuncNull GetFuncNull(this Func<FuncNull> func) => () => func()();
+#endif
+            public static Func<T> GetFunc<T>(this Func<Func<T>> func) => () => func()();
+
+            private static bool TryGet<T>(in int index, in Func<int> func, Func<T> _func, out T
+#if CS9
+                ?
+#endif
+                result)
+            {
+                if (index.Between(0, func(), true, false))
+                {
+                    result = _func();
+
+                    return true;
+                }
+
+                result = default;
+
+                return false;
+            }
+
+            public static bool TryGet(this Array array, int index, out object result) => TryGet(index, () => array.Length, () => array.GetValue(index), out result);
+            public static object TryGet(this Array array, int index) => array.TryGet(index, out object result) ? result : null;
+
+            public static bool TryGet<T>(this
+#if CS5
+                IReadOnlyList<T>
+#else
+                T[]
+#endif
+                array, int index, out T result) => TryGet(index, () => array.
+#if CS5
+                Count
+#else
+                Length
+#endif
+                , () => array[index], out result);
+            public static T TryGet<T>(this
+#if CS5
+                IReadOnlyList<T>
+#else
+                T[]
+#endif
+                array, int index) => array.TryGet(index, out T result) ? result : default;
+
+            public static bool TryGetFromLast(this Array array, int index, out object result) => TryGet(index, () => array.Length, () => array.GetFromLast(index), out result);
+            public static object TryGetFromLast(this Array array, int index) => array.TryGet(index, out object result) ? result : null;
+
+            public static bool TryGetFromLast<T>(this
+#if CS5
+                IReadOnlyList<T>
+#else
+                T[]
+#endif
+                array, int index, out T result) => TryGet(index, () => array.
+#if CS5
+                Count
+#else
+                Length
+#endif
+                , () => array.GetFromLast(index), out result);
+            public static T TryGetFromLast<T>(this
+#if CS5
+                IReadOnlyList<T>
+#else
+                T[]
+#endif
+                array, int index) => array.TryGet(index, out T result) ? result : default;
+
+#if !CS5
+            public static T GetCustomAttribute<T>(this Type type, in bool inherit) => (T)type.GetCustomAttributes(typeof(T), inherit).TryGet(0);
+#endif
+
+            public static IEnumerable<KeyValuePair<string, System.IO.Stream>> EnumerateEmbeddedResources(this Assembly assembly)
+            {
+                foreach (string resourceName in assembly.GetManifestResourceNames())
+
+                    yield return new KeyValuePair<string, System.IO.Stream>(resourceName, assembly.GetManifestResourceStream(resourceName));
+            }
+
+            public static T
+#if CS9
+                ?
+#endif
+                TryCast<T>(this object
+#if CS8
+                    ?
+#endif
+                value, out bool succeeded)
+            {
+                if (value is T _value)
+                {
+                    succeeded = true;
+
+                    return _value;
+                }
+
+                succeeded = false;
+
+                return default;
+            }
+
+            public static T
+#if CS9
+                ?
+#endif
+                TryCast<T>(this object
+#if CS8
+                    ?
+#endif
+                value) => value.TryCast<T>(out _);
+
+            public static char ToChar(this LoggingLevel level)
+#if CS8
+                =>
+#else
+            {
+                switch (
+#endif
+                level
+#if CS8
+                switch
+#else
+                )
+#endif
+                {
+#if !CS8
+                    case
+#endif
+                    LoggingLevel.Information
+#if CS8
+                    =>
+#else
+                :
+                        return
+#endif
+                                   'I'
+#if CS8
+                        ,
+#else
+                               ;
+                    case
+#endif
+                    LoggingLevel.Success
+#if CS8
+            =>
+#else
+                :
+                        return
+#endif
+                           'S'
+#if CS8
+                        ,
+#else
+                               ;
+                    case
+#endif
+                    LoggingLevel.Warning
+#if CS8
+                    =>
+#else
+                :
+                        return
+#endif
+                                   'W'
+#if CS8
+                        ,
+#else
+                               ;
+                    case
+#endif
+                    LoggingLevel.Error
+#if CS8
+                    =>
+#else
+                :
+                        return
+#endif
+                                   'E'
+#if CS8
+                        ,
+                    _ =>
+#else
+                               ;
+                    default:
+                        return
+#endif
+            'N'
+#if CS8
+                };
+#else
+                    ;
+                }
+            }
+#endif
+
+            public static string GetAssemblyName(this Assembly assembly)
+            {
+                AssemblyName assemblyName = assembly.GetName();
+                string
+#if CS8
+                    ?
+#endif
+                    name = assemblyName.Name;
+
+                return
+#if CS5
+                    IsNullEmptyOrWhiteSpace
+#else
+                    string.IsNullOrEmpty
+#endif
+                    (name) ? assemblyName.FullName : name;
+            }
+
+            #region Bitwise Action
+            private static void BitwiseAction(in byte pos, in byte limit, in Action action)
+            {
+                if (pos >= 0 && pos <= limit)
+
+                    action();
+
+                else
+
+                    throw new IndexOutOfRangeException();
+            }
+
+            #region UI8
+            private static bool GetBit(in byte pos, byte mask, Func<int> func)
+            {
+                bool b = false;
+
+                BitwiseAction(pos, 7, () => b = (func() & mask) != 0);
+
+                return b;
+            }
+
+            public static bool GetBitFromLeft(this byte b, byte pos) => GetBit(pos, MSBMask, () => b << pos);
+            public static bool GetBit(this byte b, byte pos) => GetBit(pos, LSBMask, () => b >> pos);
+
+            private static byte SetBit(in byte pos, Func<int> func)
+            {
+                byte b = 0;
+
+                BitwiseAction(pos, 7, () => b = (byte)func());
+
+                return b;
+            }
+
+            public static byte ToggleBitFromLeft(this byte b, byte pos) => SetBit(pos, () => b ^ (MSBMask >> pos));
+
+            public static byte SetBitFromLeft(this byte b, byte pos) => SetBit(pos, () => b | (MSBMask >> pos));
+
+            public static byte UnsetBitFromLeft(this byte b, byte pos) => SetBit(pos, () => b & ~(MSBMask >> pos));
+
+            public static byte SetBitFromLeft(this byte b, in byte pos, in bool value) => value ? b.SetBitFromLeft(pos) : b.UnsetBitFromLeft(pos);
+
+            public static byte ToggleBit(this byte b, byte pos) => SetBit(pos, () => b ^ (LSBMask << pos));
+
+            public static byte SetBit(this byte b, byte pos) => SetBit(pos, () => b | (LSBMask << pos));
+
+            public static byte UnsetBit(this byte b, byte pos) => SetBit(pos, () => b & ~(LSBMask << pos));
+
+            public static byte SetBit(this byte b, in byte pos, in bool value) => value ? b.SetBit(pos) : b.UnsetBit(pos);
+            #endregion UI8
+
+            #region UI16
+            private static bool GetBit16(in byte pos, ushort mask, Func<int> func)
+            {
+                bool b = false;
+
+                BitwiseAction(pos, 15, () => b = (func() & mask) != 0);
+
+                return b;
+            }
+
+            public static bool GetBitFromLeft(this ushort b, byte pos) => GetBit16(pos, MSBMask16, () => b << pos);
+            public static bool GetBit(this ushort b, byte pos) => GetBit16(pos, LSBMask, () => b >> pos);
+
+            private static ushort SetBit16(in byte pos, Func<int> func)
+            {
+                ushort b = 0;
+
+                BitwiseAction(pos, 15, () => b = (ushort)func());
+
+                return b;
+            }
+
+            public static ushort ToggleBitFromLeft(this ushort b, byte pos) => SetBit16(pos, () => b ^ (MSBMask16 >> pos));
+
+            public static ushort SetBitFromLeft(this ushort b, byte pos) => SetBit16(pos, () => b | (MSBMask16 >> pos));
+
+            public static ushort UnsetBitFromLeft(this ushort b, byte pos) => SetBit16(pos, () => b & ~(MSBMask16 >> pos));
+
+            public static ushort SetBitFromLeft(this ushort b, in byte pos, in bool value) => value ? b.SetBitFromLeft(pos) : b.UnsetBitFromLeft(pos);
+
+            public static ushort ToggleBit(this ushort b, byte pos) => SetBit16(pos, () => b ^ (LSBMask << pos));
+
+            public static ushort SetBit(this ushort b, byte pos) => SetBit16(pos, () => b | (LSBMask << pos));
+
+            public static ushort UnsetBit(this ushort b, byte pos) => SetBit16(pos, () => b & ~(LSBMask << pos));
+
+            public static ushort SetBit(this ushort b, in byte pos, in bool value) => value ? b.SetBit(pos) : b.UnsetBit(pos);
+            #endregion UI16
+            #endregion Bitwise Action
+
+#if CS5
+            private static void _For<T>(in IReadOnlyList<T> values, in Action<T> action)
+            {
+                for (int i = 0; i < values.Count; i++)
+
+                    action(values[i]);
+            }
+
+            private static void _For<T>(in IReadOnlyList<T> values, in ActionIn<T> action)
+            {
+                for (int i = 0; i < values.Count; i++)
+
+                    action(values[i]);
+            }
+
+            private static void For<TItems, TAction>(in IReadOnlyList<TItems> values, in TAction action, in ActionIn<IReadOnlyList<TItems>, TAction> _action) => _action(values ?? throw GetArgumentNullException(nameof(values)), action
+#if CS8
+                ??
+#else
+                == null ?
+#endif
+                throw GetArgumentNullException(nameof(action))
+#if !CS8
+                : action
+#endif
+                );
+
+            public static void For<T>(this IReadOnlyList<T> values, in Action<T> action) => For(values, action, _For);
+
+            public static void For<T>(this IReadOnlyList<T> values, in ActionIn<T> action) => For(values, action, _For);
+
+            public delegate void ForAction<T>(ref T
+#if CS9
+                    ?
+#endif
+                    value, T current);
+            public delegate void ForActionIn<T>(ref T
+#if CS9
+                    ?
+#endif
+                    value, in T current);
+
+            public static T
+#if CS9
+                    ?
+#endif
+                    For<T>(in IReadOnlyList<T> values, ForAction<T> action)
+            {
+                ThrowIfNull(values, nameof(values));
+                ThrowIfNull(action, nameof(action));
+
+                T
+#if CS9
+                    ?
+#endif
+                    result = default;
+
+                _For(values, (in T value) => action(ref result, value));
+
+                return result;
+            }
+
+            public static T
+#if CS9
+                    ?
+#endif
+                    For<T>(this IReadOnlyList<T> values, ForActionIn<T> action)
+            {
+                ThrowIfNull(values, nameof(values));
+                ThrowIfNull(action, nameof(action));
+
+                T
+#if CS9
+                    ?
+#endif
+                    result = default;
+
+                _For(values, (in T value) => action(ref result, value));
+
+                return result;
+            }
+#endif
+
+#if CS11
+            private static void And<T>(ref T result, in T b) where T : struct, IBitwiseOperators<T, T, T> => result &= b;
+            private static void Or<T>(ref T result, in T b) where T : struct, IBitwiseOperators<T, T, T> => result |= b;
+            private static void XOr<T>(ref T result, in T b) where T : struct, IBitwiseOperators<T, T, T> => result ^= b;
+
+            public static T And<T>(this IEnumerable<T> bytes) where T : struct, IBitwiseOperators<T, T, T> => bytes.ForEach(And);
+            public static T Or<T>(this IEnumerable<T> bytes) where T : struct, IBitwiseOperators<T, T, T> => bytes.ForEach(Or);
+            public static T XOr<T>(this IEnumerable<T> bytes) where T : struct, IBitwiseOperators<T, T, T> => bytes.ForEach(XOr);
+
+            public static T And<T>(this IReadOnlyList<T> bytes) where T : struct, IBitwiseOperators<T, T, T> => bytes.For(And);
+            public static T Or<T>(this IReadOnlyList<T> bytes) where T : struct, IBitwiseOperators<T, T, T> => bytes.For(Or);
+            public static T XOr<T>(this IReadOnlyList<T> bytes) where T : struct, IBitwiseOperators<T, T, T> => bytes.For(XOr);
+#endif
+
+            public static Func<object, bool> Reverse(this Func<object, bool> func) => obj => !func(obj);
+            public static Predicate Reverse(this Predicate predicate) => obj => !predicate(obj);
+
+            public static Func<T, bool> Reverse<T>(this Func<T, bool> func) => obj => !func(obj);
+            public static Predicate<T> Reverse<T>(this Predicate<T> predicate) => obj => !predicate(obj);
+
+            public static void PerformAllActions(this IEnumerable<Action> actions)
+            {
+                foreach (Action action in actions)
+
+                    action();
+            }
+
+            public static string ToString<TKey, TValue>(this KeyValuePair<TKey, TValue> keyValuePair, in object middle, in bool replaceNull = false)
+            {
+                Converter<object
+#if CS8
+                    ?
+#endif
+                    , string
+#if CS8
+                    ?
+#endif
+                    > converter = replaceNull ? value => value == null ? "<Null>" : value.ToString() :
+#if !CS9
+                    (Converter<object
+#if CS8
+                    ?
+#endif
+                    , string
+#if CS8
+                    ?
+#endif
+                    >)(
+#endif
+                    value => value?.ToString()
+#if !CS9
+                    )
+#endif
+                    ;
+
+                return $"{converter(keyValuePair.Key)}{converter(middle)}{converter(keyValuePair.Value)}";
+            }
+
             public static Action<T> ToParameterizedAction<T>(this Action action) => value => action();
 
             public static Action ToConditionalAction(this Action action, bool condition) => () =>
@@ -83,7 +540,7 @@ namespace WinCopies.Util
                     action(value);
             };
 
-            public static Action<T1,T2> ToConditionalAction2<T1,T2>(this Action<T1> action, Predicate<T2> predicate) => (T1 value1,T2 value2) =>
+            public static Action<T1, T2> ToConditionalAction2<T1, T2>(this Action<T1> action, Predicate<T2> predicate) => (T1 value1, T2 value2) =>
             {
                 if (predicate(value2))
 
@@ -147,6 +604,12 @@ namespace WinCopies.Util
 
             public static Predicate<T> GetPredicate<T>(this EqualityComparison<T> comparison, T obj) => GetOrThrowIfNull(comparison, nameof(comparison), () => GetOrThrowIfNull<object, Predicate<T>>(obj, nameof(obj), () => _obj => comparison(obj, _obj)));
 
+            public static bool IsConstant(this FieldInfo f) => f.IsStatic && f.IsLiteral && !f.IsInitOnly;
+
+            public static IEnumerable<FieldInfo> GetConstants(this Type type) => type.GetFields().Where(IsConstant);
+
+            public static IEnumerable<FieldInfo> GetRealFields(this Type type) => type.GetFields().Where(f => !f.IsConstant());
+
             public static string GetRealName(this Type type) => type.GetRealGenericTypeParameterLength() == 0 ? type.Name : type.Name.Remove(type.Name.IndexOf('`'));
 
             public static byte GetRealGenericTypeParameterLength(this Type type)
@@ -170,6 +633,8 @@ namespace WinCopies.Util
 
             public static bool IsTypeNestedFamily(this Type type) => type.IsNestedFamily || type.IsNestedFamORAssem;
 
+            public static ConstructorInfo GetTypeConstructor(this Type type, params Type[] types) => type.GetConstructor(types);
+
             public static ConstructorInfo
 #if CS8
                 ?
@@ -177,6 +642,16 @@ namespace WinCopies.Util
                 TryGetConstructor(this Type t, params Type[] types) => t.GetConstructor(types);
 
             public static ConstructorInfo AssertGetConstructor(this Type t, params Type[] types) => t.TryGetConstructor(types) ?? throw new InvalidOperationException("There is no such constructor for this type.");
+
+            public static object
+#if CS8
+                ?
+#endif
+                AsObject(this object
+#if CS8
+                ?
+#endif
+                obj) => obj;
 
             public static U AsFromType<T, U>(this T obj) where T : U => obj;
 
@@ -219,11 +694,89 @@ namespace WinCopies.Util
                     action(item);
             }
 
+#if CS5
+            public static T
+#if CS9
+                ?
+#endif
+                ForEach<T>(this IEnumerable<T> enumerable, in ForAction<T> action)
+            {
+                T
+#if CS9
+                ?
+#endif
+                result = default;
+
+                foreach (T item in enumerable)
+
+                    action(ref result, item);
+
+                return result;
+            }
+#endif
+
+            public static void ForEach<T>(this IEnumerable<T> enumerable, in Func<T, bool> predicate, in Action<T> action)
+            {
+                foreach (T item in enumerable)
+
+                    if (predicate(item))
+
+                        action(item);
+            }
+
+            public static void ForEachPredicate<T>(this IEnumerable<T> enumerable, in Predicate<T> predicate, in Action<T> action)
+            {
+                foreach (T item in enumerable)
+
+                    if (predicate(item))
+
+                        action(item);
+            }
+
             public static void ForEach<T>(this IEnumerable<T> enumerable, in ActionIn<T> action)
             {
                 foreach (T item in enumerable)
 
                     action(item);
+            }
+
+#if CS5
+            public static T
+#if CS9
+                ?
+#endif
+                ForEach<T>(this IEnumerable<T> enumerable, in ForActionIn<T> action)
+            {
+                T
+#if CS9
+                ?
+#endif
+                result = default;
+
+                foreach (T item in enumerable)
+
+                    action(ref result, item);
+
+                return result;
+            }
+#endif
+
+            public static void ForEach<T>(this IEnumerable<T> enumerable, in FuncIn<T, bool> predicate, in ActionIn<T> action)
+            {
+                foreach (T item in enumerable)
+
+                    if (predicate(item))
+
+                        action(item);
+            }
+
+            public static void ForEachPredicate<T>(this IEnumerable<T> enumerable, in PredicateIn<T> predicate, in ActionIn<T> action)
+            {
+                foreach (T item in enumerable)
+
+                    if (predicate(item))
+
+                        action(item);
             }
 
 #if !CS5
@@ -272,8 +825,8 @@ namespace WinCopies.Util
                     ? @long.HasFlag((long)flag.GetNumValue())
                     : _value is ulong @ulong
                     ? @ulong.HasFlag((ulong)flag.GetNumValue())
-                    : _value is byte @byte 
-                    ? @byte.HasFlag((byte)flag.GetNumValue()) 
+                    : _value is byte @byte
+                    ? @byte.HasFlag((byte)flag.GetNumValue())
                     : ((sbyte)_value).HasFlag((sbyte)flag.GetNumValue());
             }
 #endif
@@ -774,82 +1327,78 @@ namespace WinCopies.Util
 
             public static XOrResult GetXOrResult(this bool? value, bool other) => ToBool(value)
                 ? other
-                    ? XOrResult.MoreThanOneTrueResult
-                    : XOrResult.OneTrueResult
+                    ? MoreThanOneTrueResult
+                    : OneTrueResult
                 : other
-                    ? XOrResult.OneTrueResult
-                : XOrResult.NoTrueResult;
+                    ? OneTrueResult
+                : NoTrueResult;
 
             public static XOrResult GetXOrResult(this bool? value, Func<bool> other) => ToBool(value)
                 ? other()
-                    ? XOrResult.MoreThanOneTrueResult
-                    : XOrResult.OneTrueResult
+                    ? MoreThanOneTrueResult
+                    : OneTrueResult
                 : other()
-                    ? XOrResult.OneTrueResult
-                : XOrResult.NoTrueResult;
+                    ? OneTrueResult
+                : NoTrueResult;
 
             public static XOrResult GetXOrResult(this bool? value, bool? other) => ToBool(value)
                 ? ToBool(other)
-                    ? XOrResult.MoreThanOneTrueResult
-                    : XOrResult.OneTrueResult
+                    ? MoreThanOneTrueResult
+                    : OneTrueResult
                 : ToBool(other)
-                    ? XOrResult.OneTrueResult
-                    : XOrResult.NoTrueResult;
+                    ? OneTrueResult
+                    : NoTrueResult;
 
             public static XOrResult GetXOrResult(this bool? value, Func<bool?> other) => ToBool(value)
                 ? ToBool(other())
-                    ? XOrResult.MoreThanOneTrueResult
-                    : XOrResult.OneTrueResult
+                    ? MoreThanOneTrueResult
+                    : OneTrueResult
                 : ToBool(other())
-                    ? XOrResult.OneTrueResult
-                    : XOrResult.NoTrueResult;
+                    ? OneTrueResult
+                    : NoTrueResult;
 
             public static XOrResult GetXOrResultIgnoreNull(this bool? value, bool other) => ToBool(value)
                 ? other
-                    ? XOrResult.MoreThanOneTrueResult
-                    : XOrResult.OneTrueResult
+                    ? MoreThanOneTrueResult
+                    : OneTrueResult
                 : other
-                    ? XOrResult.OneTrueResult
-                    : XOrResult.NoTrueResult;
+                    ? OneTrueResult
+                    : NoTrueResult;
 
             public static XOrResult GetXOrResultIgnoreNull(this bool? value, Func<bool> other) => ToBool(value)
                 ? other()
-                    ? XOrResult.MoreThanOneTrueResult
-                    : XOrResult.OneTrueResult
+                    ? MoreThanOneTrueResult
+                    : OneTrueResult
                 : other()
-                    ? XOrResult.OneTrueResult
-                    : XOrResult.NoTrueResult;
+                    ? OneTrueResult
+                    : NoTrueResult;
 
             public static XOrResult GetXOrResultIgnoreValue(this bool? value, bool? other) => ToBool(value)
                 ? ToBool(other)
-                    ? XOrResult.MoreThanOneTrueResult
-                    : XOrResult.OneTrueResult
+                    ? MoreThanOneTrueResult
+                    : OneTrueResult
                 : ToBool(other)
-                    ? XOrResult.OneTrueResult
-                    : XOrResult.NoTrueResult;
+                    ? OneTrueResult
+                    : NoTrueResult;
 
             public static XOrResult GetXOrResultIgnoreValue(this bool? value, Func<bool?> other) => ToBool(value)
                 ? ToBool(other())
-                    ? XOrResult.MoreThanOneTrueResult
-                    : XOrResult.OneTrueResult
+                    ? MoreThanOneTrueResult
+                    : OneTrueResult
                 : ToBool(other())
-                    ? XOrResult.OneTrueResult
-                    : XOrResult.NoTrueResult;
+                    ? OneTrueResult
+                    : NoTrueResult;
 
             public static void CopyTo(this BitArray source, in BitArray array, in int startIndex)
             {
                 ThrowIfNull(source, nameof(source));
                 ThrowIfNull(array, nameof(array));
 
-                if (array.Length > source.Length)
-
-                    throw new ArgumentOutOfRangeException(nameof(array));
-
-                if (startIndex < 0 || startIndex + array.Length > source.Length)
-
-                    throw new IndexOutOfRangeException($"{nameof(startIndex)} is out of range.");
-
-                for (int i = 0; i < source.Length; i++)
+                for (int i = array.Length > source.Length
+                        ? throw new ArgumentOutOfRangeException(nameof(array))
+                        : startIndex < 0 || startIndex + array.Length > source.Length
+                        ? throw new IndexOutOfRangeException($"{nameof(startIndex)} is out of range.")
+                        : 0; i < source.Length; i++)
 
                     array[startIndex + i] = source[i];
             }
@@ -858,29 +1407,18 @@ namespace WinCopies.Util
             {
                 long length = bytes.Length * 8;
 
-                if (length > array.Length)
-
-                    throw new ArgumentOutOfRangeException(nameof(bytes));
-
-                if (startIndex < 0 || startIndex + length > array.Length)
-
-                    throw new IndexOutOfRangeException($"{nameof(startIndex)} is out of range.");
-
-                new BitArray(bytes).CopyTo(array, startIndex);
+                new BitArray(length > array.Length
+                    ? throw new ArgumentOutOfRangeException(nameof(bytes))
+                    : startIndex < 0 || startIndex + length > array.Length
+                    ? throw new IndexOutOfRangeException($"{nameof(startIndex)} is out of range.")
+                    : bytes).CopyTo(array, startIndex);
             }
 
-            public static void SetMultipleBits(this BitArray array, in BitArray bits, in int startIndex)
-            {
-                if (bits.Length > array.Length)
-
-                    throw new ArgumentOutOfRangeException(nameof(bits));
-
-                if (startIndex < 0 || startIndex + bits.Length > array.Length)
-
-                    throw new IndexOutOfRangeException($"{nameof(startIndex)} is out of range.");
-
-                new BitArray(bits).CopyTo(array, startIndex);
-            }
+            public static void SetMultipleBits(this BitArray array, in BitArray bits, in int startIndex) => new BitArray(bits.Length > array.Length
+                ? throw new ArgumentOutOfRangeException(nameof(bits))
+                : startIndex < 0 || startIndex + bits.Length > array.Length
+                ? throw new IndexOutOfRangeException($"{nameof(startIndex)} is out of range.")
+                : bits).CopyTo(array, startIndex);
 
             public static bool And<T>(this IEnumerable<T> enumerable, in Predicate<T> predicate)
             {
@@ -944,7 +1482,7 @@ namespace WinCopies.Util
                     {
                         if (found)
 
-                            return XOrResult.MoreThanOneTrueResult;
+                            return MoreThanOneTrueResult;
 
                         found = true;
                     }
@@ -956,13 +1494,21 @@ namespace WinCopies.Util
             {
                 Type objType = obj.GetType();
 
-                if (typeEquality)
+                return typeEquality ?
+#if !CS9
+                    (Predicate<Type>)
+#endif
+                    (t => objType == t) : (t => t.IsAssignableFrom(objType));
+            }
 
-                    return t => objType == t;
+            // TODO: obj should be able to be null
 
-                else
+            public static bool Is(this object obj, in bool typeEquality, in IEnumerable<Type> types)
+            {
+                ThrowIfNull(obj, nameof(obj));
+                ThrowIfNull(types, nameof(types));
 
-                    return t => t.IsAssignableFrom(objType);
+                return types.Or(GetIsCheckPredicate(obj, typeEquality));
             }
 
             /// <summary>
@@ -972,15 +1518,9 @@ namespace WinCopies.Util
             /// <param name="typeEquality"><see langword="true"/> to preserve type equality, regardless of the type inheritance, otherwise <see langword="false"/></param>
             /// <param name="types">The types to compare</param>
             /// <returns><see langword="true"/> if the current object is assignable from at least one of the given types, otherwise <see langword="false"/>.</returns>
-            public static bool Is(this object obj, in bool typeEquality, params Type[] types)
-            {
-                ThrowIfNull(obj, nameof(obj));
-                ThrowIfNull(types, nameof(types));
+            public static bool Is(this object obj, in bool typeEquality, params Type[] types) => obj.Is(typeEquality, types.AsEnumerable());
 
-                return types.Or(GetIsCheckPredicate(obj, typeEquality));
-            }
-
-            public static bool IsAND(this object obj, params Type[] types)
+            public static bool IsAND(this object obj, in IEnumerable<Type> types)
             {
                 ThrowIfNull(obj, nameof(obj));
                 ThrowIfNull(types, nameof(types));
@@ -988,13 +1528,17 @@ namespace WinCopies.Util
                 return types.And(GetIsCheckPredicate(obj, false));
             }
 
-            public static bool IsXOR(this object obj, params Type[] types)
+            public static bool IsAND(this object obj, params Type[] types) => obj.IsAND(types.AsEnumerable());
+
+            public static bool IsXOR(this object obj, in IEnumerable<Type> types)
             {
                 ThrowIfNull(obj, nameof(obj));
                 ThrowIfNull(types, nameof(types));
 
                 return types.XOr(GetIsCheckPredicate(obj, false));
             }
+
+            public static bool IsXOR(this object obj, params Type[] types) => obj.IsXOR(types.AsEnumerable());
 
             public static bool IsType(this Type t, in IEnumerable<Type> types)
             {
@@ -1004,7 +1548,7 @@ namespace WinCopies.Util
                 return types.Or(item => t == item);
             }
 
-            public static bool IsType(this Type t, params Type[] types) => IsType(t, (IEnumerable<Type>)types);
+            public static bool IsType(this Type t, params Type[] types) => IsType(t, types.AsEnumerable());
 
             public static bool IsAssignableFrom<T>(this Type t) => (t ?? throw GetArgumentNullException(nameof(t))).IsAssignableFrom(typeof(T));
             /*{
@@ -1044,10 +1588,7 @@ namespace WinCopies.Util
 
             public static bool IsAssignableTo<T>(this Type t) => (t ?? throw GetArgumentNullException(nameof(t))).IsAssignableTo(typeof(T));
 
-            public static bool IsAssignableFrom(this Type t, in IEnumerable<Type> enumerable)
-            {
-                return (enumerable ?? throw GetArgumentNullException(nameof(enumerable))).Or((t ?? throw GetArgumentNullException(nameof(t))).IsAssignableFrom);
-            }
+            public static bool IsAssignableFrom(this Type t, in IEnumerable<Type> enumerable) => (enumerable ?? throw GetArgumentNullException(nameof(enumerable))).Or((t ?? throw GetArgumentNullException(nameof(t))).IsAssignableFrom);
 
             public static bool IsAssignableFromAND(this Type t, in IEnumerable<Type> enumerable)
             {
@@ -1138,9 +1679,13 @@ namespace WinCopies.Util
 
                 PropertyInfo property = propertyObjectType.GetProperty(propertyName, bindingFlags) ?? throw GetFieldOrPropertyNotFoundException(propertyName, propertyObjectType);
 
-                MethodBase method = new StackFrame(skipFrames).GetMethod();
+                MethodBase
+#if CS8
+                    ?
+#endif
+                    method = new StackFrame(skipFrames).GetMethod();
 
-                methodName = method.Name;
+                methodName = method?.Name;
 
                 //#if DEBUG 
 
@@ -1152,7 +1697,7 @@ namespace WinCopies.Util
 
                 // todo: tuple and check DeclaringTypeNotCorrespond throws
 
-                return (property.CanWrite && property.GetSetMethod() != null) || property.DeclaringType == method.DeclaringType;
+                return (property.CanWrite && property.GetSetMethod() != null) || (method == null ? false : property.DeclaringType == method.DeclaringType);
             }
 
             internal static FieldInfo GetField(in string fieldName, in Type objectType, in BindingFlags bindingFlags) => objectType.GetField(fieldName, bindingFlags) ?? throw GetFieldOrPropertyNotFoundException(fieldName, objectType);

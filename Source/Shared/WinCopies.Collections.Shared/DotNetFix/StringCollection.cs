@@ -15,28 +15,53 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-using WinCopies.Collections.DotNetFix.Generic;
-using WinCopies.Collections.Generic;
-
+using WinCopies.Collections.
 #if WinCopies3
-using WinCopies.Collections.Enumeration.Generic;
+    Enumeration.Generic;
+    using WinCopies.Collections.DotNetFix.Generic;
+    using WinCopies.Collections.Extensions.
 #endif
+    Generic;
 
 namespace WinCopies.Collections.DotNetFix
 {
-    public class StringCollection : IReadOnlyList<string>
+    public class StringCollection : IReadOnlyList<string
+#if CS8
+        ?
+#endif
+        >
     {
         private readonly System.Collections.Specialized.StringCollection _sc;
 
-        public string this[int index] => _sc[index];
+        public string
+#if CS8
+            ?
+#endif
+            this[int index] => _sc[index];
 
 #if CS7
-        int System.Collections.Generic.IReadOnlyCollection<string>.Count => _sc.Count;
+        int System.Collections.Generic.IReadOnlyCollection<string
+#if CS8
+            ?
+#endif
+            >.Count => _sc.Count;
 
 #if WinCopies3
-        int IReadOnlyList<string>.Count => _sc.Count;
+        int IReadOnlyList<string
+#if CS8
+            ?
+#endif
+            >.Count => _sc.Count;
 
-        int ICountableEnumerable<string, Generic.ICountableEnumerator<string>>.Count => _sc.Count;
+        int ICountableEnumerable<string
+#if CS8
+            ?
+#endif
+            , Generic.ICountableEnumerator<string
+#if CS8
+            ?
+#endif
+            >>.Count => _sc.Count;
 #else
         int ICountableEnumerable.Count => _sc.Count;
 #endif
@@ -50,16 +75,32 @@ namespace WinCopies.Collections.DotNetFix
 #endif
         .GetArgumentNullException(nameof(sc));
 
-        private System.Collections.Generic.IEnumerator<string> GetEnumerator() => new Collections.StringEnumerator(_sc, Collections.DotNetFix.EnumerationDirection.FIFO);
+        private System.Collections.Generic.IEnumerator<string> GetEnumerator() => new StringEnumerator(_sc, EnumerationDirection.FIFO);
 
-        System.Collections.Generic.IEnumerator<string> System.Collections.Generic.IEnumerable<string>.GetEnumerator() => GetEnumerator();
+        System.Collections.Generic.IEnumerator<string> System.Collections.Generic.IEnumerable<string
+#if CS8
+            ?
+#endif
+            >.GetEnumerator() => GetEnumerator();
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
 
 #if WinCopies3
-        ICountableEnumerator<string> IReadOnlyList<string>.GetEnumerator() => GetCountableEnumerator();
+        ICountableEnumerator<string> IReadOnlyList<string
+#if CS8
+            ?
+#endif
+            >.GetEnumerator() => GetCountableEnumerator();
 
-        ICountableEnumerator<string> ICountableEnumerable<string, ICountableEnumerator<string>>.GetEnumerator() => GetCountableEnumerator();
+        ICountableEnumerator<string> ICountableEnumerable<string
+#if CS8
+            ?
+#endif
+            , ICountableEnumerator<string
+#if CS8
+            ?
+#endif
+            >>.GetEnumerator() => GetCountableEnumerator();
 
         private ICountableEnumerator<string> GetCountableEnumerator() => new CountableEnumerator<System.Collections.Generic.IEnumerator<string>, string>(GetEnumerator(), () => _sc.Count);
 #elif !CS7

@@ -142,7 +142,7 @@ namespace WinCopies.Util.Data
 
             if (obj != null && !(obj is T))
 
-                throw new ArgumentException($"{argumentName} must be null or from {typeof(T).Name}. {argumentName} is {(obj == null ? "null" : obj.GetType().Name)}.");
+                throw new ArgumentException($"{argumentName} must be null or an instance of {typeof(T).Name}. {argumentName} is {(obj == null ? "null" : obj.GetType().Name)}.");
         }
     }
 

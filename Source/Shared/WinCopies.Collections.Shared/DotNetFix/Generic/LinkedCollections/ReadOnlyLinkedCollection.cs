@@ -37,11 +37,11 @@ namespace WinCopies.Collections.DotNetFix
     {
 #endif
         [Serializable]
-        public class ReadOnlyLinkedCollection<T> : System.Collections.Generic.ICollection<T>, System.Collections.Generic.IEnumerable<T>, IEnumerable, System.Collections.Generic.IReadOnlyCollection<T>, ICollection
+        public class ReadOnlyLinkedCollection<T> : ICollection<T>, IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ICollection
 #if WinCopies3
-, IReadOnlyLinkedList2<T>
+            , IReadOnlyLinkedList2<T>
 #else
-, IDeserializationCallback, ISerializable
+            , IDeserializationCallback, ISerializable
 #endif
         {
             protected
@@ -61,12 +61,12 @@ int
 #endif
                 Count => InnerList.Count;
 
-            int System.Collections.Generic.ICollection<T>.Count => (int)Count;
+            int ICollection<T>.Count => (int)Count;
 
 #if WinCopies3
             int ICollection.Count => (int)Count;
 
-            int System.Collections.Generic.IReadOnlyCollection<T>.Count => (int)Count;
+            int IReadOnlyCollection<T>.Count => (int)Count;
 
             public T FirstValue => InnerList.FirstValue;
 
@@ -115,7 +115,7 @@ int
 
             public void CopyTo(T[] array, int arrayIndex) => InnerList.CopyTo(array, arrayIndex);
 
-            System.Collections.IEnumerator IEnumerable.GetEnumerator() => InnerList.AsFromType<IEnumerable>().GetEnumerator();
+            System.Collections.IEnumerator IEnumerable.GetEnumerator() => InnerList.GetEnumerator();
 
             void ICollection<T>.Add(T item) => throw GetReadOnlyListOrCollectionException();
 
@@ -130,10 +130,10 @@ int
 
             public IUIntCountableEnumerator<T> GetReversedEnumerator() => InnerList.GetReversedEnumerator();
 
-            System.Collections.Generic.IEnumerator<T> Collections.Generic.IEnumerable<T>.GetReversedEnumerator() => InnerList.AsFromType<Collections.Generic.IEnumerable<T>>().GetReversedEnumerator();
+            System.Collections.Generic.IEnumerator<T> Extensions.Generic.IEnumerable<T>.GetReversedEnumerator() => InnerList.GetReversedEnumerator();
 
 #if !CS8
-            System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetEnumerator();
+            System.Collections.Generic.IEnumerator<T> IEnumerable<T>.GetEnumerator() => GetEnumerator();
 
             System.Collections.IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
 #endif
@@ -151,7 +151,6 @@ int
         public System.Collections.Generic.IEnumerator<T> GetEnumerator() => InnerList.GetEnumerator();
 #endif
         }
-
 #if WinCopies3
     }
 #endif

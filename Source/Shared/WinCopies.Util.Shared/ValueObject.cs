@@ -16,8 +16,10 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Reflection;
 
 using static WinCopies
@@ -55,7 +57,7 @@ namespace WinCopies
     /// </summary>
     public interface IValueObject : IReadOnlyValueObject,
 #if WinCopies3
-        WinCopies.DotNetFix
+        DotNetFix
 #else
         System
 #endif
@@ -75,12 +77,235 @@ namespace WinCopies
         new T Value { get; set; }
     }
 
+#if WinCopies3
+    public interface INamedObjectBase
+    {
+        /// <summary>
+        /// Gets or sets the name of this object.
+        /// </summary>
+        string Name { get; }
+    }
+
+    public interface INamedObjectBase2 : INamedObjectBase
+    {
+        /// <summary>
+        /// Gets or sets the name of this object.
+        /// </summary>
+        new string Name { get; set; }
+    }
+
+    /// <summary>
+    /// Provides an object that defines a value with an associated name and notifies of the name or value change.
+    /// </summary>
+    public interface INamedObject : INamedObjectBase2, IValueObject
+    {
+        // Left empty.
+    }
+
+    /// <summary>
+    /// Provides an object that defines a value with an associated name and notifies of the name or value change.
+    /// </summary>
+    public interface INamedObject<T> : INamedObject, IValueObject<T> { /* Left empty. */ }
+
+    public class NamedObject : INamedObjectBase
+    {
+        public string Name { get; }
+
+        public NamedObject(in string name) => Name = name;
+    }
+
+    public class NamedObject2 : INamedObjectBase
+    {
+        public string Name { get; set; }
+
+        public NamedObject2() { /* Left empty. */ }
+
+        public NamedObject2(in string name) => Name = name;
+    }
+
+    /// <summary>
+    /// Provides an object that defines a value that can be checked and notifies of the checked status or value change. For example, this interface can be used in a view for items that can be selected.
+    /// </summary>
+    public interface ICheckableObject
+    {
+        /// <summary>
+        /// Gets or sets a value that indicates whether this object is checked.
+        /// </summary>
+        bool IsChecked { get; set; }
+    }
+
+    public interface ICheckableObject2
+    {
+        bool? IsChecked { get; set; }
+    }
+
+    public class CheckableObject : ICheckableObject
+    {
+        /// <inheritdoc/>
+        public bool IsChecked { get; set; }
+
+        public CheckableObject() { /* Left empty. */ }
+
+        public CheckableObject(in bool isChecked) => IsChecked = isChecked;
+    }
+
+    public class CheckableObject2 : ICheckableObject2
+    {
+        /// <inheritdoc/>
+        public bool? IsChecked { get; set; }
+
+        public CheckableObject2() { /* Left empty. */ }
+
+        public CheckableObject2(in bool? isChecked) => IsChecked = isChecked;
+    }
+
+    public interface ICheckableNamedObject : ICheckableObject, INamedObjectBase2 { }
+
+    public interface ICheckableNamedObject2 : ICheckableObject2, INamedObjectBase2 { }
+
+    public interface ICheckableEnumerable<
+#if CS5
+        out
+#endif
+        T> : ICheckableObject, IEnumerable<T>
+    {
+        // Left empty.
+    }
+
+    public interface ICheckableEnumerable2<
+#if CS5
+    out
+#endif
+    T> : ICheckableObject2, IEnumerable<T>
+    {
+        // Left empty.
+    }
+
+    public interface ICheckableNamedEnumerable<
+#if CS5
+        out
+#endif
+        T> : ICheckableNamedObject, ICheckableEnumerable<T>
+    {
+        // Left empty.
+    }
+
+    public interface ICheckableNamedEnumerable2<
+#if CS5
+        out
+#endif
+        T> : ICheckableNamedObject2, ICheckableEnumerable2<T>
+    {
+        // Left empty.
+    }
+
+    /// <summary>
+    /// Provides an object that defines a value that can be checked and notifies of the checked status or value change. For example, this class can be used in a view for items that can be selected.
+    /// </summary>
+    public class CheckableNamedObject : CheckableObject, ICheckableNamedObject
+    {
+        /// <inheritdoc/>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CheckableObject"/> class.
+        /// </summary>
+        public CheckableNamedObject() { /* Left empty. */ }
+        public CheckableNamedObject(in bool isChecked) : base(isChecked) { /* Left empty. */ }
+        public CheckableNamedObject(in string name) => Name = name;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CheckableObject"/> class using custom values.
+        /// </summary>
+        /// <param name="isChecked">A value that indicates if this object is checked by default.</param>
+        /// <param name="name">The name of the object.</param>
+        public CheckableNamedObject(in bool isChecked, in string name) : base(isChecked) => Name = name;
+    }
+
+    /// <summary>
+    /// Provides an object that defines a value that can be checked and notifies of the checked status or value change. For example, this class can be used in a view for items that can be selected.
+    /// </summary>
+    public class CheckableNamedObject2 : CheckableObject2, ICheckableNamedObject2
+    {
+        /// <inheritdoc/>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CheckableObject"/> class.
+        /// </summary>
+        public CheckableNamedObject2() { /* Left empty. */ }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CheckableObject"/> class using custom values.
+        /// </summary>
+        /// <param name="name">The name of the object.</param>
+        public CheckableNamedObject2(in bool? isChecked, in string name) : base(isChecked) => Name = name;
+    }
+
+    public class CheckableNamedEnumerableBase<TCollection, TItems, TIsChecked> : IEnumerable, INamedObjectBase where TCollection : IEnumerable<TItems>
+    {
+        public string Name { get; set; }
+
+        public TIsChecked IsChecked { get; set; }
+
+        public TCollection
+#if CS9
+            ?
+#endif
+            Items
+        { get; set; }
+
+#if !CS8
+        string INamedObjectBase.Name => Name;
+#endif
+
+        internal CheckableNamedEnumerableBase() { }
+
+        public IEnumerator<TItems> GetEnumerator() => (Items
+#if CS8
+            ??
+#else
+            == null ?
+#endif
+            Enumerable.Empty<TItems>()
+#if !CS8
+            : Items
+#endif
+            ).GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    }
+
+    public class CheckableNamedEnumerable<TCollection, TItems> : CheckableNamedEnumerableBase<TCollection, TItems, bool>, ICheckableNamedEnumerable<TItems> where TCollection : IEnumerable<TItems>
+    {
+        // Left empty.
+    }
+
+    public class CheckableNamedEnumerable<T> : CheckableNamedEnumerable<IEnumerable<T>, T>
+    {
+        // Left empty.
+    }
+
+    public class CheckableNamedEnumerable2<TCollection, TItems> : CheckableNamedEnumerableBase<TCollection, TItems, bool?>, ICheckableNamedEnumerable2<TItems> where TCollection : IEnumerable<TItems>
+    {
+        // Left empty.
+    }
+
+    public class CheckableNamedEnumerable2<T> : CheckableNamedEnumerable2<IEnumerable<T>, T>
+    {
+        // Left empty.
+    }
+#endif
+
     public sealed class PropertyValueObject : IValueObject, IEquatable<PropertyValueObject>
     {
         private PropertyInfo _property;
         private object _obj;
 
-        public object Value
+        public object
+#if CS8
+            ?
+#endif
+            Value
         {
             get => _property.GetValue(_obj
 #if !CS5
@@ -192,7 +417,7 @@ namespace WinCopies
         /// </summary>
         /// <param name="obj">The <see cref="IReadOnlyValueObject"/> for which to return the hash code.</param>
         /// <returns>The hash code of <paramref name="obj"/>'s <see cref="IReadOnlyValueObject.Value"/> if <paramref name="obj"/> has a value, otherwise the <paramref name="obj"/>'s hash code.</returns>
-        public int GetHashCode(IReadOnlyValueObject obj) => (obj.Value is object ? obj.Value : obj).GetHashCode();
+        public int GetHashCode(IReadOnlyValueObject obj) => (obj.Value is null ? obj : obj.Value).GetHashCode();
     }
 
     /// <summary>
@@ -217,15 +442,15 @@ namespace WinCopies
     }
 
     [Serializable]
-    public struct ValueObjectEnumerator<T> : System.Collections.Generic.IEnumerator<T>, System.Collections.IEnumerator
+    public struct ValueObjectEnumerator<T> : IEnumerator<T>, IEnumerator
     {
-        private System.Collections.Generic.IEnumerator<IReadOnlyValueObject<T>> _enumerator;
+        private IEnumerator<IReadOnlyValueObject<T>> _enumerator;
 
         public T Current { get; private set; }
 
-        object System.Collections.IEnumerator.Current => Current;
+        object IEnumerator.Current => Current;
 
-        public ValueObjectEnumerator(System.Collections.Generic.IEnumerator<IReadOnlyValueObject<T>> enumerator)
+        public ValueObjectEnumerator(IEnumerator<IReadOnlyValueObject<T>> enumerator)
         {
             _enumerator = enumerator;
 

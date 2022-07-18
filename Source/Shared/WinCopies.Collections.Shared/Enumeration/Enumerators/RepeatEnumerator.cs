@@ -31,17 +31,47 @@ using static WinCopies.Util.Util;
 
 namespace WinCopies.Collections.Generic
 {
-    public class ConditionalEnumerator<T> : Enumerator<T>,
+    public class ConditionalEnumerator<T> : Enumerator<T
+#if CS9
+            ?
+#endif
+            >,
 #if WinCopies3
-IEnumerable<T, ConditionalEnumerator<T>>
+        IEnumerable<T
+#if CS9
+            ?
+#endif
+            , ConditionalEnumerator<T
+#if CS9
+            ?
+#endif
+            >>
 #else
-        System.Collections.Generic.IEnumerable<T>
+        System.Collections.Generic.IEnumerable<T
+#if CS9
+            ?
+#endif
+            >
 #endif
     {
-        private NullableGeneric<T> _value;
+        private
+#if WinCopies3
+            Nullable
+#else
+            NullableGeneric
+#endif
+            <T
+#if CS9
+            ?
+#endif
+            > _value;
         private Func<bool> _condition;
 
-        protected T Value => GetValueIfNotDisposed(_value).Value;
+        protected T
+#if CS9
+            ?
+#endif
+             Value => GetValueIfNotDisposed(_value).Value;
 
         protected Func<bool> Condition => GetValueIfNotDisposed(_condition);
 
@@ -53,18 +83,69 @@ IEnumerable<T, ConditionalEnumerator<T>>
         public bool SupportsReversedEnumeration => GetValueIfNotDisposed(true);
 #endif
 
-        public ConditionalEnumerator(in NullableGeneric<T> value, in Func<bool> condition)
+        public ConditionalEnumerator(in
+#if WinCopies3
+            Nullable
+#else
+            NullableGeneric
+#endif
+            <T
+#if CS9
+            ?
+#endif
+            > value, in Func<bool> condition)
         {
             _value = value;
 
             _condition = condition ?? throw GetArgumentNullException(nameof(condition));
         }
 
-        public ConditionalEnumerator(in T value, in Func<bool> condition) : this(new NullableGeneric<T>(value), condition) { /* Left empty. */ }
+        public ConditionalEnumerator(in T
+#if CS9
+            ?
+#endif
+            value, in Func<bool> condition) : this(
+#if WinCopies3
+            (Nullable
+#else
+            new NullableGeneric
+#endif
+            <T
+#if CS9
+                ?
+#endif
+                >
+#if WinCopies3
+            )
+#endif
+            (value), condition)
+        { /* Left empty. */ }
 
-        protected TValue GetValueIfNotDisposed<TValue>(in TValue value) => _value == null ? throw GetExceptionForDispose(false) : value;
+        protected TValue
+#if CS9
+            ?
+#endif
+            GetValueIfNotDisposed<TValue>(in TValue
+#if CS9
+            ?
+#endif
+            value) => _value
+#if WinCopies3
+            .HasValue
+#else
+            == null
+#endif
+            ?
+#if WinCopies3
+            value :
+#endif
+            throw GetExceptionForDispose(false)
+#if !WinCopies3
+            : value
+#endif
+            ;
 
-        protected sealed override bool MoveNextOverride() => _value == null ? throw GetExceptionForDispose(false) : _condition();
+        protected sealed override bool MoveNextOverride() => GetValueIfNotDisposed(_condition)();
 
         protected override void
 #if WinCopies3
@@ -79,7 +160,13 @@ IEnumerable<T, ConditionalEnumerator<T>>
             if (disposing)
             {
 #endif
-            _value = null;
+            _value =
+#if WinCopies3
+                new Nullable<T>()
+#else
+                    null
+#endif
+                ;
             _condition = null;
 #if !WinCopies3
             }
@@ -89,18 +176,46 @@ IEnumerable<T, ConditionalEnumerator<T>>
 #if WinCopies3
         protected override void ResetOverride2() { /* Left empty. */ }
 
-        private ConditionalEnumerator<T> GetEnumerator() => GetValueIfNotDisposed(this);
+        private ConditionalEnumerator<T
+#if CS9
+            ?
+#endif
+            > GetEnumerator() => GetValueIfNotDisposed(this);
 
-        ConditionalEnumerator<T> DotNetFix.Generic.IEnumerable<T, ConditionalEnumerator<T>>.GetEnumerator() => GetEnumerator();
+        ConditionalEnumerator<T
+#if CS9
+            ?
+#endif
+            > DotNetFix.Generic.IEnumerable<T
+#if CS9
+            ?
+#endif
+            , ConditionalEnumerator<T
+#if CS9
+            ?
+#endif
+            >>.GetEnumerator() => GetEnumerator();
 
-        ConditionalEnumerator<T> IEnumerable<T, ConditionalEnumerator<T>>.GetReversedEnumerator() => GetEnumerator();
+        ConditionalEnumerator<T
+#if CS9
+            ?
+#endif
+            > IEnumerable<T
+#if CS9
+            ?
+#endif
+            , ConditionalEnumerator<T
+#if CS9
+            ?
+#endif
+            >>.GetReversedEnumerator() => GetEnumerator();
 
 #if !CS8
-        System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetEnumerator();
+        System.Collections.Generic.IEnumerator<T> IEnumerable<T>.GetEnumerator() => GetEnumerator();
 
-        System.Collections.Generic.IEnumerator<T> IEnumerable<T>.GetReversedEnumerator() => GetEnumerator();
+        System.Collections.Generic.IEnumerator<T> Extensions.Generic.IEnumerable<T>.GetReversedEnumerator() => GetEnumerator();
 
-        IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetEnumerator();
 #endif
@@ -177,11 +292,29 @@ Enumerator<T>, System.Collections.Generic.IEnumerable<T>
 #endif
 
 #if WinCopies3
-        private RepeatEnumerator(in NullableGeneric<T> value, in Condition condition) : base(value, condition.GetCondition) => _condition = condition;
+        private RepeatEnumerator(in
+#if WinCopies3
+            Nullable
+#else
+            NullableGeneric
+#endif
+            <T> value, in Condition condition) : base(value, condition.GetCondition) => _condition = condition;
 
-        private RepeatEnumerator(in T value, in Condition condition) : base(new NullableGeneric<T>(value), condition.GetCondition) => _condition = condition;
+        private RepeatEnumerator(in T value, in Condition condition) : base(new
+#if WinCopies3
+            Nullable
+#else
+            NullableGeneric
+#endif
+            <T>(value), condition.GetCondition) => _condition = condition;
 
-        public static RepeatEnumerator<T> Get(in NullableGeneric<T> value, uint count) => new
+        public static RepeatEnumerator<T> Get(in
+#if WinCopies3
+            Nullable
+#else
+            NullableGeneric
+#endif
+            <T> value, uint count) => new
 #if !CS9
             RepeatEnumerator<T>
 #endif
@@ -226,14 +359,14 @@ Enumerator<T>, System.Collections.Generic.IEnumerable<T>
         public RepeatEnumerator(in NullableGeneric<T> value, in uint count)
         {
             _value = value;
-
             _count = count;
         }
 
-        public RepeatEnumerator(in T value, in uint count) : this(new NullableGeneric<T>(value), count)
-        {
-            // Left empty.
-        }
+        public RepeatEnumerator(in T value, in uint count) : this(new NullableGeneric<T>(value), count) { /* Left empty. */ }
+
+        System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetValueIfNotDisposed(this);
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetValueIfNotDisposed(this);
 #endif
 
         protected override void
@@ -252,11 +385,32 @@ Enumerator<T>, System.Collections.Generic.IEnumerable<T>
             _i = _value == null ? throw GetExceptionForDispose(false) : 0u;
 #endif
         }
+    }
 
-#if !WinCopies3
-        System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetValueIfNotDisposed(this);
+    public abstract class PredicateEnumerator<TItems, TEnumerator> : EnumeratorInfo<TItems, TEnumerator> where TEnumerator : System.Collections.Generic.IEnumerator<TItems>
+    {
+        public Predicate<TItems> Predicate { get; }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetValueIfNotDisposed(this);
-#endif
+        public PredicateEnumerator(in TEnumerator enumerator, in Predicate<TItems> predicate) : base(enumerator) => Predicate = predicate;
+        public PredicateEnumerator(in IEnumerable<TItems, TEnumerator> enumerable, in Predicate<TItems> predicate) : this(GetEnumerator(enumerable, nameof(enumerable)), predicate) { /* Left empty. */ }
+
+        protected override bool MoveNextOverride() => base.MoveNextOverride() && Predicate(CurrentOverride);
+    }
+
+    public class PredicateEnumerator<T> : PredicateEnumerator<T, System.Collections.Generic.IEnumerator<T>>
+    {
+        public override bool? IsResetSupported => null;
+
+        public PredicateEnumerator(in System.Collections.Generic.IEnumerator<T> enumerator, in Predicate<T> predicate) : base(enumerator, predicate) { /* Left empty. */ }
+        public PredicateEnumerator(in System.Collections.Generic.IEnumerable<T> enumerable, in Predicate<T> predicate) : this(GetEnumerator(enumerable, nameof(enumerable)), predicate) { /* Left empty. */ }
+    }
+
+    public class PredicateEnumeratorInfo<T> : PredicateEnumerator<T, IEnumeratorInfo<T>>
+    {
+        public override bool? IsResetSupported => InnerEnumerator.IsResetSupported;
+
+        public PredicateEnumeratorInfo(in IEnumeratorInfo<T> enumerator, in Predicate<T> predicate) : base(enumerator, predicate) { /* Left empty. */ }
+
+        public PredicateEnumeratorInfo(in IEnumerable<T, IEnumeratorInfo<T>> enumerable, in Predicate<T> predicate) : base(GetEnumerator(enumerable, nameof(enumerable)), predicate) { /* Left empty. */ }
     }
 }
