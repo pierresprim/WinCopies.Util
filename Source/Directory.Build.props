@@ -99,10 +99,6 @@
 		<DefineConstants>WIN64;$(DefineConstants)</DefineConstants>
 	</PropertyGroup>
 
-	<!--End Constants-->
-
-	<!--Source Control-->
-
 	<ItemGroup>
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0">
 			<PrivateAssets>all</PrivateAssets>
@@ -141,8 +137,6 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 	</ItemGroup>
-
-	<!--End Source Control-->
 
 	<ItemGroup>
 		<None Include="..\..\..\LICENSE" Pack="true" PackagePath="" />
