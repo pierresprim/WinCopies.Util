@@ -36,8 +36,6 @@ using static WinCopies.
     Delegates;
 
 #if WinCopies3
-using System.ComponentModel;
-
 using WinCopies.Util;
 
 using static WinCopies.ThrowHelper;
@@ -626,7 +624,7 @@ namespace WinCopies.Util
                 )
 #endif
 
-            action(obj);
+                action(obj);
         }
 
         public static void UsingIn<T>(in Func<T> func, in ActionIn<T> action) where T : System.IDisposable
@@ -645,7 +643,7 @@ namespace WinCopies.Util
                 )
 #endif
 
-            action(obj);
+                action(obj);
         }
 
         public static TOut Using2<TIn, TOut>(in Func<TIn> func, Func<TIn, TOut> action) where TIn : System.IDisposable
@@ -1586,11 +1584,23 @@ namespace WinCopies.Util
 
         private static bool _TruncateIfLonger(ref string s, int index, string replace, FuncIn2<string, int, string, string> func) => _TruncateIfLonger(ref s, index, (string _s, in int _index) => func(_s, _index, replace));
 
-        public static bool TruncateIfLonger(ref string s, int index, string replace) => _TruncateIfLonger(ref s, index, replace, Extensions.Truncate);
+        public static bool TruncateIfLonger(ref string s, int index, string replace) => _TruncateIfLonger(ref s, index, replace,
+#if WinCopies3
+            Util.
+#endif
+            Extensions.Truncate);
 
-        public static bool TruncateIfLonger2(ref string s, in int index, in string replace) => _TruncateIfLonger(ref s, index, replace, Extensions.Truncate2);
+        public static bool TruncateIfLonger2(ref string s, in int index, in string replace) => _TruncateIfLonger(ref s, index, replace,
+#if WinCopies3
+            Util.
+#endif
+            Extensions.Truncate2);
 
-        public static bool TruncateIfLonger(ref string s, in int index) => _TruncateIfLonger(ref s, index, Extensions.Truncate);
+        public static bool TruncateIfLonger(ref string s, in int index) => _TruncateIfLonger(ref s, index,
+#if WinCopies3
+            Util.
+#endif
+            Extensions.Truncate);
 
 #if !CS5
         public static Type GetEnumUnderlyingType<T>() where T : Enum => typeof(T)._GetEnumUnderlyingType();
@@ -1624,7 +1634,7 @@ namespace WinCopies.Util
                 }
 
                 catch { return _succeeded = false; }
-            }, 
+            },
             postIterationAction);
 
             succeeded = _succeeded;
@@ -1771,8 +1781,8 @@ namespace WinCopies.Util
             (key, predicate);
 
 #if !WinCopies3 && CS6
-        #region 'If' methods
-        #region Enums
+#region 'If' methods
+#region Enums
 
         /// <summary>
         /// Comparison types for the If functions.
@@ -1852,9 +1862,9 @@ namespace WinCopies.Util
             ReferenceEqual = 6
         }
 
-        #endregion
+#endregion
 
-        #region 'Throw' methods
+#region 'Throw' methods
 #if CS6
         private static void ThrowOnInvalidIfMethodArg(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison)
         {
@@ -1898,9 +1908,9 @@ namespace WinCopies.Util
             if (comparison == IfComp.ReferenceEqual && typeof(T).IsValueType) throw new InvalidOperationException("ReferenceEqual comparison is only valid with non-value types.");
         }
 #endif
-        #endregion
+#endregion
 
-        #region 'Check comparison' methods
+#region 'Check comparison' methods
 
         private static bool CheckIfComparison(in IfComp comparison, in Func<bool> predicateResult, in int result)
         {
@@ -2043,9 +2053,9 @@ namespace WinCopies.Util
 
         private delegate bool CheckIfComparisonDelegate<T>(in T value, in Func<bool> predicate);
 
-        #endregion
+#endregion
 
-        #region Enumerables
+#region Enumerables
 
         private interface IIfValuesEnumerable
         {
@@ -2220,7 +2230,7 @@ namespace WinCopies.Util
             public KeyValuePair<TKey, KeyValuePair<TValue, Func<bool>>> GetValue(in int index) => Array[index];
         }
 
-        #endregion
+#endregion
 
         private static bool IfInternal(in IfCT comparisonType, in IfCM comparisonMode, CheckIfComparisonDelegate comparisonDelegate, in IIfValuesEnumerable values)
         {
@@ -2568,9 +2578,9 @@ namespace WinCopies.Util
             }
         }
 
-        #region Non generic methods
+#region Non generic methods
 
-        #region Comparisons without key notification
+#region Comparisons without key notification
 
         /// <summary>
         /// Performs a comparison by testing a value compared to an array of values.
@@ -2716,9 +2726,9 @@ namespace WinCopies.Util
             return IfInternal(comparisonType, comparisonMode, (in object _value, in Func<bool> _predicate) => CheckEqualityComparison(comparison, _value, value, _predicate, comparisonDelegate), new IfKeyValuePairEnumerable(values));
         }
 
-        #endregion
+#endregion
 
-        #region Comparisons with key notification
+#region Comparisons with key notification
 
         /// <summary>
         /// Performs a comparison by testing a value compared to an array of objects or values.
@@ -2803,13 +2813,13 @@ namespace WinCopies.Util
             return IfInternal(comparisonType, comparisonMode, (in object _value, in Func<bool> _predicate) => CheckEqualityComparison(comparison, _value, value, _predicate, comparisonDelegate), out key, new IfKeyKeyValuePairEnumerable(values));
         }
 
-        #endregion
+#endregion
 
-        #endregion
+#endregion
 
-        #region Generic methods
+#region Generic methods
 
-        #region Comparisons without key notification
+#region Comparisons without key notification
 
         /// <summary>
         /// Performs a comparison by testing a value compared to an array of objects or values.
@@ -2872,9 +2882,9 @@ namespace WinCopies.Util
             return IfInternal(comparisonType, comparisonMode, (in T _value, in Func<bool> _predicate) => CheckEqualityComparison(comparison, _value, value, _predicate, comparisonDelegate), new IfKeyValuePairEnumerable<T>(values));
         }
 
-        #endregion
+#endregion
 
-        #region Comparisons with key notification
+#region Comparisons with key notification
         /// <summary>
         /// Performs a comparison by testing a value compared to an array of objects or values.
         /// </summary>
@@ -2932,9 +2942,9 @@ namespace WinCopies.Util
 
             return IfInternal(comparisonType, comparisonMode, (in TValue _value, in Func<bool> _predicate) => CheckEqualityComparison(comparison, _value, value, _predicate, comparisonDelegate), out key, new IfKeyKeyValuePairEnumerable<TKey, TValue>(values));
         }
-        #endregion
-        #endregion
-        #endregion
+#endregion
+#endregion
+#endregion
 #endif
 
 #if CS5
@@ -3461,8 +3471,8 @@ where T : Enum
     {
         public static class BoolChecks
         {
-            #region Action
-            #region AB1
+#region Action
+#region AB1
             public static bool Run(in bool value, in Action ifTrue)
             {
                 if (value)
@@ -3480,9 +3490,9 @@ where T : Enum
             public static bool Run(in bool value, in Func<Action> ifTrue) => Run(value, ifTrue.GetAction());
 
             public static bool Run(in Func<bool> value, in Func<Action> ifTrue) => Run(value(), ifTrue);
-            #endregion AB1
+#endregion AB1
 
-            #region AB2
+#region AB2
             public static bool Run(in bool value, in Action ifTrue, in Action ifFalse)
             {
                 if (value)
@@ -3502,9 +3512,9 @@ where T : Enum
             public static bool Run(in bool value, in Func<Action> ifTrue, in Func<Action> ifFalse) => Run(value, ifTrue.GetAction(), ifFalse.GetAction());
 
             public static bool Run(in Func<bool> value, in Func<Action> ifTrue, in Func<Action> ifFalse) => Run(value(), ifTrue, ifFalse);
-            #endregion AB2
+#endregion AB2
 
-            #region ABF1
+#region ABF1
             public static bool Run(in bool value, in Func<bool> ifTrue) => value ? ifTrue() : false;
 
             public static bool Run(in Func<bool> value, in Func<bool> ifTrue) => Run(value(), ifTrue);
@@ -3512,9 +3522,9 @@ where T : Enum
             public static bool Run(in bool value, in Func<Func<bool>> ifTrue) => Run(value, ifTrue.GetFunc());
 
             public static bool Run(in Func<bool> value, in Func<Func<bool>> ifTrue) => Run(value(), ifTrue);
-            #endregion ABF1
+#endregion ABF1
 
-            #region ABF2
+#region ABF2
             public static bool Run(in bool value, in Func<bool> ifTrue, in Func<bool> ifFalse) => value ? ifTrue() : ifFalse();
 
             public static bool Run(in Func<bool> value, in Func<bool> ifTrue, in Func<bool> ifFalse) => Run(value(), ifTrue, ifFalse);
@@ -3522,11 +3532,11 @@ where T : Enum
             public static bool Run(in bool value, in Func<Func<bool>> ifTrue, in Func<Func<bool>> ifFalse) => Run(value, ifTrue.GetFunc(), ifFalse.GetFunc());
 
             public static bool Run(in Func<bool> value, in Func<Func<bool>> ifTrue, in Func<Func<bool>> ifFalse) => Run(value(), ifTrue, ifFalse);
-            #endregion ABF2
-            #endregion Action
+#endregion ABF2
+#endregion Action
 
-            #region Func
-            #region FB1
+#region Func
+#region FB1
             public static bool Run(in bool value, in Func ifTrue, out object
 #if CS8
                 ?
@@ -3562,9 +3572,9 @@ where T : Enum
                 ?
 #endif
                 result) => Run(value(), ifTrue, out result);
-            #endregion FB1
+#endregion FB1
 
-            #region FB2
+#region FB2
             public static bool Run(in bool value, in Func ifTrue, in Func ifFalse, out object result)
             {
                 if (value)
@@ -3584,9 +3594,9 @@ where T : Enum
             public static bool Run(in bool value, in Func<Func> ifTrue, in Func<Func> ifFalse, out object result) => Run(value, ifTrue.GetFunc(), ifFalse.GetFunc(), out result);
 
             public static bool Run(in Func<bool> value, in Func<Func> ifTrue, in Func<Func> ifFalse, out object result) => Run(value(), ifTrue, ifFalse, out result);
-            #endregion FB2
+#endregion FB2
 
-            #region FO1
+#region FO1
             public static object
 #if CS8
                 ?
@@ -3610,9 +3620,9 @@ where T : Enum
                 ?
 #endif
                 Run(in Func<bool> value, in Func<Func> ifTrue) => Run(value(), ifTrue);
-            #endregion FO1
+#endregion FO1
 
-            #region FO2
+#region FO2
             public static object Run(in bool value, in Func ifTrue, in Func ifFalse) => (value ? ifTrue : ifFalse)();
 
             public static object Run(in Func<bool> value, in Func ifTrue, in Func ifFalse) => Run(value(), ifTrue, ifFalse);
@@ -3620,12 +3630,12 @@ where T : Enum
             public static object Run(in bool value, in Func<Func> ifTrue, in Func<Func> ifFalse) => Run(value, ifTrue.GetFunc(), ifFalse.GetFunc());
 
             public static object Run(in Func<bool> value, in Func<Func> ifTrue, in Func<Func> ifFalse) => Run(value(), ifTrue, ifFalse);
-            #endregion FO2
-            #endregion Func
+#endregion FO2
+#endregion Func
 
 #if CS8
-            #region FuncNull
-            #region FBN1
+#region FuncNull
+#region FBN1
             public static bool Run(in bool value, in FuncNull ifTrue, out object? result)
             {
                 if (value)
@@ -3645,9 +3655,9 @@ where T : Enum
             public static bool Run(in bool value, in Func<FuncNull> ifTrue, out object? result) => Run(value, ifTrue.GetFuncNull(), out result);
 
             public static bool Run(in Func<bool> value, in Func<FuncNull> ifTrue, out object? result) => Run(value(), ifTrue, out result);
-            #endregion FBN1
+#endregion FBN1
 
-            #region FBN2
+#region FBN2
             public static bool Run(in bool value, in FuncNull ifTrue, in FuncNull ifFalse, out object? result)
             {
                 if (value)
@@ -3667,9 +3677,9 @@ where T : Enum
             public static bool Run(in bool value, in Func<FuncNull> ifTrue, in Func<FuncNull> ifFalse, out object? result) => Run(value, ifTrue.GetFuncNull(), ifFalse.GetFuncNull(), out result);
 
             public static bool Run(in Func<bool> value, in Func<FuncNull> ifTrue, in Func<FuncNull> ifFalse, out object? result) => Run(value(), ifTrue, ifFalse, out result);
-            #endregion FBN2
+#endregion FBN2
 
-            #region FON1
+#region FON1
             public static object? Run(in bool value, in FuncNull ifTrue) => value ? ifTrue() : null;
 
             public static object? Run(in Func<bool> value, in FuncNull ifTrue) => Run(value(), ifTrue);
@@ -3677,9 +3687,9 @@ where T : Enum
             public static object? Run(in bool value, in Func<FuncNull> ifTrue) => Run(value, ifTrue.GetFuncNull());
 
             public static object? Run(in Func<bool> value, in Func<FuncNull> ifTrue) => Run(value(), ifTrue);
-            #endregion FON1
+#endregion FON1
 
-            #region FON2
+#region FON2
             public static object? Run(in bool value, in FuncNull ifTrue, in FuncNull ifFalse) => (value ? ifTrue : ifFalse)();
 
             public static object? Run(in Func<bool> value, in FuncNull ifTrue, in FuncNull ifFalse) => Run(value(), ifTrue, ifFalse);
@@ -3687,12 +3697,12 @@ where T : Enum
             public static object? Run(in bool value, in Func<FuncNull> ifTrue, in Func<FuncNull> ifFalse) => Run(value, ifTrue.GetFuncNull(), ifFalse.GetFuncNull());
 
             public static object? Run(in Func<bool> value, in Func<FuncNull> ifTrue, in Func<FuncNull> ifFalse) => Run(value(), ifTrue, ifFalse);
-            #endregion FON2
-            #endregion FuncNull
+#endregion FON2
+#endregion FuncNull
 #endif
 
-            #region Func<T>
-            #region FBG1
+#region Func<T>
+#region FBG1
             public static bool Run<T>(in bool value, in Func<T> ifTrue, out T
 #if CS9
                 ?
@@ -3728,9 +3738,9 @@ where T : Enum
                 ?
 #endif
                 result) => Run(value(), ifTrue, out result);
-            #endregion FBG1
+#endregion FBG1
 
-            #region FBG2
+#region FBG2
             public static bool Run<T>(in bool value, in Func<T> ifTrue, in Func<T> ifFalse, out T result)
             {
                 if (value)
@@ -3750,9 +3760,9 @@ where T : Enum
             public static bool Run<T>(in bool value, in Func<Func<T>> ifTrue, in Func<Func<T>> ifFalse, out T result) => Run(value, ifTrue.GetFunc(), ifFalse.GetFunc(), out result);
 
             public static bool Run<T>(in Func<bool> value, in Func<Func<T>> ifTrue, in Func<Func<T>> ifFalse, out T result) => Run(value(), ifTrue, ifFalse, out result);
-            #endregion FBG2
+#endregion FBG2
 
-            #region FT1
+#region FT1
             public static T
 #if CS9
                 ?
@@ -3776,9 +3786,9 @@ where T : Enum
                 ?
 #endif
                 Run<T>(in Func<bool> value, in Func<Func<T>> ifTrue) => Run(value(), ifTrue);
-            #endregion FT1
+#endregion FT1
 
-            #region FT2
+#region FT2
             public static T Run<T>(in bool value, in Func<T> ifTrue, in Func<T> ifFalse) => (value ? ifTrue : ifFalse)();
 
             public static T Run<T>(in Func<bool> value, in Func<T> ifTrue, in Func<T> ifFalse) => Run(value(), ifTrue, ifFalse);
@@ -3786,14 +3796,14 @@ where T : Enum
             public static T Run<T>(in bool value, in Func<Func<T>> ifTrue, in Func<Func<T>> ifFalse) => Run(value, ifTrue.GetFunc(), ifFalse.GetFunc());
 
             public static T Run<T>(in Func<bool> value, in Func<Func<T>> ifTrue, in Func<Func<T>> ifFalse) => Run(value(), ifTrue, ifFalse);
-            #endregion FT2
-            #endregion Func<T>
+#endregion FT2
+#endregion Func<T>
         }
 
         public static class ValueChecks
         {
-            #region Action
-            #region AB1
+#region Action
+#region AB1
             public static bool Run<T>(in T? value, in Action ifTrue) where T : struct => BoolChecks.Run(value.HasValue, ifTrue);
 
             public static bool Run<T>(in Func<T?> value, in Action ifTrue) where T : struct => Run(value(), ifTrue);
@@ -3801,9 +3811,9 @@ where T : Enum
             public static bool Run<T>(in T? value, in Func<Action> ifTrue) where T : struct => Run(value, ifTrue.GetAction());
 
             public static bool Run<T>(in Func<T?> value, in Func<Action> ifTrue) where T : struct => Run(value(), ifTrue);
-            #endregion AB1
+#endregion AB1
 
-            #region AB2
+#region AB2
             public static bool Run<T>(in T? value, in Action ifTrue, in Action ifFalse) where T : struct => BoolChecks.Run(value.HasValue, ifTrue, ifFalse);
 
             public static bool Run<T>(in Func<T?> value, in Action ifTrue, in Action ifFalse) where T : struct => Run(value(), ifTrue, ifFalse);
@@ -3811,9 +3821,9 @@ where T : Enum
             public static bool Run<T>(in T? value, in Func<Action> ifTrue, in Func<Action> ifFalse) where T : struct => Run(value, ifTrue.GetAction(), ifFalse.GetAction());
 
             public static bool Run<T>(in Func<T?> value, in Func<Action> ifTrue, in Func<Action> ifFalse) where T : struct => Run(value(), ifTrue, ifFalse);
-            #endregion AB2
+#endregion AB2
 
-            #region ABA1
+#region ABA1
             public static bool Run<T>(T? value, Action<T> ifTrue) where T : struct => BoolChecks.Run(value.HasValue, () => ifTrue(value.Value));
 
             public static bool Run<T>(in Func<T?> value, in Action<T> ifTrue) where T : struct => Run(value(), ifTrue);
@@ -3821,9 +3831,9 @@ where T : Enum
             public static bool Run<T>(in T? value, in Func<Action<T>> ifTrue) where T : struct => Run(value, ifTrue.GetAction());
 
             public static bool Run<T>(in Func<T?> value, in Func<Action<T>> ifTrue) where T : struct => Run(value(), ifTrue);
-            #endregion ABA1
+#endregion ABA1
 
-            #region ABA2
+#region ABA2
             public static bool Run<T>(T? value, Action<T> ifTrue, in Action ifFalse) where T : struct => BoolChecks.Run(value.HasValue, () => ifTrue(value.Value), ifFalse);
 
             public static bool Run<T>(in Func<T?> value, in Action<T> ifTrue, in Action ifFalse) where T : struct => Run(value(), ifTrue, ifFalse);
@@ -3831,9 +3841,9 @@ where T : Enum
             public static bool Run<T>(in T? value, in Func<Action<T>> ifTrue, in Func<Action> ifFalse) where T : struct => Run(value, ifTrue.GetAction(), ifFalse.GetAction());
 
             public static bool Run<T>(in Func<T?> value, in Func<Action<T>> ifTrue, in Func<Action> ifFalse) where T : struct => Run(value(), ifTrue, ifFalse);
-            #endregion ABA2
+#endregion ABA2
 
-            #region ABAI1
+#region ABAI1
             public static bool Run<T>(T? value, ActionIn<T> ifTrue) where T : struct => BoolChecks.Run(value.HasValue, () => ifTrue(value.Value));
 
             public static bool Run<T>(in Func<T?> value, in ActionIn<T> ifTrue) where T : struct => Run(value(), ifTrue);
@@ -3841,9 +3851,9 @@ where T : Enum
             public static bool Run<T>(in T? value, in Func<ActionIn<T>> ifTrue) where T : struct => Run(value, ifTrue.GetAction());
 
             public static bool Run<T>(in Func<T?> value, in Func<ActionIn<T>> ifTrue) where T : struct => Run(value(), ifTrue);
-            #endregion ABAI1
+#endregion ABAI1
 
-            #region ABAI2
+#region ABAI2
             public static bool Run<T>(T? value, ActionIn<T> ifTrue, in Action ifFalse) where T : struct => BoolChecks.Run(value.HasValue, () => ifTrue(value.Value), ifFalse);
 
             public static bool Run<T>(in Func<T?> value, in ActionIn<T> ifTrue, in Action ifFalse) where T : struct => Run(value(), ifTrue, ifFalse);
@@ -3851,9 +3861,9 @@ where T : Enum
             public static bool Run<T>(in T? value, in Func<ActionIn<T>> ifTrue, in Func<Action> ifFalse) where T : struct => Run(value, ifTrue.GetAction(), ifFalse.GetAction());
 
             public static bool Run<T>(in Func<T?> value, in Func<ActionIn<T>> ifTrue, in Func<Action> ifFalse) where T : struct => Run(value(), ifTrue, ifFalse);
-            #endregion ABAI2
+#endregion ABAI2
 
-            #region ABF1
+#region ABF1
             public static bool Run<T>(T? value, Func<T, bool> ifTrue) where T : struct => BoolChecks.Run(value.HasValue, () => ifTrue(value.Value));
 
             public static bool Run<T>(in Func<T?> value, in Func<T, bool> ifTrue) where T : struct => Run(value(), ifTrue);
@@ -3861,9 +3871,9 @@ where T : Enum
             public static bool Run<T>(in T? value, in Func<Func<T, bool>> ifTrue) where T : struct => Run(value, ifTrue.GetFunc());
 
             public static bool Run<T>(in Func<T?> value, in Func<Func<T, bool>> ifTrue) where T : struct => Run(value(), ifTrue);
-            #endregion ABF1
+#endregion ABF1
 
-            #region ABF2
+#region ABF2
             public static bool Run<T>(T? value, Func<T, bool> ifTrue, in Func<bool> ifFalse) where T : struct => BoolChecks.Run(value.HasValue, () => ifTrue(value.Value), ifFalse);
 
             public static bool Run<T>(in Func<T?> value, in Func<T, bool> ifTrue, in Func<bool> ifFalse) where T : struct => Run(value(), ifTrue, ifFalse);
@@ -3871,9 +3881,9 @@ where T : Enum
             public static bool Run<T>(in T? value, in Func<Func<T, bool>> ifTrue, in Func<Func<bool>> ifFalse) where T : struct => Run(value, ifTrue.GetFunc(), ifFalse.GetFunc());
 
             public static bool Run<T>(in Func<T?> value, in Func<Func<T, bool>> ifTrue, in Func<Func<bool>> ifFalse) where T : struct => Run(value(), ifTrue, ifFalse);
-            #endregion ABF2
+#endregion ABF2
 
-            #region ABFI1
+#region ABFI1
             public static bool Run<T>(T? value, FuncIn<T, bool> ifTrue) where T : struct => BoolChecks.Run(value.HasValue, () => ifTrue(value.Value));
 
             public static bool Run<T>(in Func<T?> value, in FuncIn<T, bool> ifTrue) where T : struct => Run(value(), ifTrue);
@@ -3881,9 +3891,9 @@ where T : Enum
             public static bool Run<T>(in T? value, in Func<FuncIn<T, bool>> ifTrue) where T : struct => Run(value, ifTrue.GetFunc());
 
             public static bool Run<T>(in Func<T?> value, in Func<FuncIn<T, bool>> ifTrue) where T : struct => Run(value(), ifTrue);
-            #endregion ABFI1
+#endregion ABFI1
 
-            #region ABFI2
+#region ABFI2
             public static bool Run<T>(T? value, FuncIn<T, bool> ifTrue, in Func<bool> ifFalse) where T : struct => BoolChecks.Run(value.HasValue, () => ifTrue(value.Value), ifFalse);
 
             public static bool Run<T>(in Func<T?> value, in FuncIn<T, bool> ifTrue, in Func<bool> ifFalse) where T : struct => Run(value(), ifTrue, ifFalse);
@@ -3891,11 +3901,11 @@ where T : Enum
             public static bool Run<T>(in T? value, in Func<FuncIn<T, bool>> ifTrue, in Func<Func<bool>> ifFalse) where T : struct => Run(value, ifTrue.GetFunc(), ifFalse.GetFunc());
 
             public static bool Run<T>(in Func<T?> value, in Func<FuncIn<T, bool>> ifTrue, in Func<Func<bool>> ifFalse) where T : struct => Run(value(), ifTrue, ifFalse);
-            #endregion ABFI2
-            #endregion Action
+#endregion ABFI2
+#endregion Action
 
-            #region Func
-            #region FB1
+#region Func
+#region FB1
             public static bool Run<T>(in T? value, in Func ifTrue, out object
 #if CS8
                 ?
@@ -3919,9 +3929,9 @@ where T : Enum
                 ?
 #endif
                 result) where T : struct => Run(value(), ifTrue, out result);
-            #endregion FB1
+#endregion FB1
 
-            #region FB2
+#region FB2
             public static bool Run<T>(in T? value, in Func ifTrue, in Func ifFalse, out object result) where T : struct => BoolChecks.Run(value.HasValue, ifTrue, ifFalse, out result);
 
             public static bool Run<T>(in Func<T?> value, in Func ifTrue, in Func ifFalse, out object result) where T : struct => Run(value(), ifTrue, ifFalse, out result);
@@ -3929,9 +3939,9 @@ where T : Enum
             public static bool Run<T>(in T? value, in Func<Func> ifTrue, in Func<Func> ifFalse, out object result) where T : struct => Run(value, ifTrue.GetFunc(), ifFalse.GetFunc(), out result);
 
             public static bool Run<T>(in Func<T?> value, in Func<Func> ifTrue, in Func<Func> ifFalse, out object result) where T : struct => Run(value(), ifTrue, ifFalse, out result);
-            #endregion FB2
+#endregion FB2
 
-            #region FO1
+#region FO1
             public static object
 #if CS8
                 ?
@@ -3955,9 +3965,9 @@ where T : Enum
                 ?
 #endif
                 Run<T>(in Func<T?> value, in Func<Func> ifTrue) where T : struct => Run(value(), ifTrue);
-            #endregion FO1
+#endregion FO1
 
-            #region FO2
+#region FO2
             public static object Run<T>(in T? value, in Func ifTrue, in Func ifFalse) where T : struct => BoolChecks.Run(value.HasValue, ifTrue, ifFalse);
 
             public static object Run<T>(in Func<T?> value, in Func ifTrue, in Func ifFalse) where T : struct => Run(value(), ifTrue, ifFalse);
@@ -3965,12 +3975,12 @@ where T : Enum
             public static object Run<T>(in T? value, in Func<Func> ifTrue, in Func<Func> ifFalse) where T : struct => Run(value, ifTrue.GetFunc(), ifFalse.GetFunc());
 
             public static object Run<T>(in Func<T?> value, in Func<Func> ifTrue, in Func<Func> ifFalse) where T : struct => Run(value(), ifTrue, ifFalse);
-            #endregion FO2
-            #endregion Func
+#endregion FO2
+#endregion Func
 
 #if CS8
-            #region FuncNull
-            #region FBN1
+#region FuncNull
+#region FBN1
             public static bool Run<T>(in T? value, in FuncNull ifTrue, out object? result) where T : struct => BoolChecks.Run(value.HasValue, ifTrue, out result);
 
             public static bool Run<T>(in Func<T?> value, in FuncNull ifTrue, out object? result) where T : struct => Run<T>(value(), ifTrue, out result);
@@ -3978,9 +3988,9 @@ where T : Enum
             public static bool Run<T>(in T? value, in Func<FuncNull> ifTrue, out object? result) where T : struct => Run<T>(value, ifTrue.GetFuncNull(), out result);
 
             public static bool Run<T>(in Func<T?> value, in Func<FuncNull> ifTrue, out object? result) where T : struct => Run<T>(value(), ifTrue, out result);
-            #endregion FBN1
+#endregion FBN1
 
-            #region FBN2
+#region FBN2
             public static bool Run<T>(in T? value, in FuncNull ifTrue, in FuncNull ifFalse, out object? result) where T : struct => BoolChecks.Run(value.HasValue, ifTrue, ifFalse, out result);
 
             public static bool Run<T>(in Func<T?> value, in FuncNull ifTrue, in FuncNull ifFalse, out object? result) where T : struct => Run<T>(value(), ifTrue, ifFalse, out result);
@@ -3988,9 +3998,9 @@ where T : Enum
             public static bool Run<T>(in T? value, in Func<FuncNull> ifTrue, in Func<FuncNull> ifFalse, out object? result) where T : struct => Run<T>(value, ifTrue.GetFuncNull(), ifFalse.GetFuncNull(), out result);
 
             public static bool Run<T>(in Func<T?> value, in Func<FuncNull> ifTrue, in Func<FuncNull> ifFalse, out object? result) where T : struct => Run<T>(value(), ifTrue, ifFalse, out result);
-            #endregion FBN2
+#endregion FBN2
 
-            #region FON1
+#region FON1
             public static object? Run<T>(in T? value, in FuncNull ifTrue) where T : struct => BoolChecks.Run(value.HasValue, ifTrue);
 
             public static object? Run<T>(in Func<T?> value, in FuncNull ifTrue) where T : struct => Run<T>(value(), ifTrue);
@@ -3998,9 +4008,9 @@ where T : Enum
             public static object? Run<T>(in T? value, in Func<FuncNull> ifTrue) where T : struct => Run<T>(value, ifTrue.GetFuncNull());
 
             public static object? Run<T>(in Func<T?> value, in Func<FuncNull> ifTrue) where T : struct => Run<T>(value(), ifTrue);
-            #endregion FON1
+#endregion FON1
 
-            #region FON2
+#region FON2
             public static object? Run<T>(in T? value, in FuncNull ifTrue, in FuncNull ifFalse) where T : struct => BoolChecks.Run(value.HasValue, ifTrue, ifFalse);
 
             public static object? Run<T>(in Func<T?> value, in FuncNull ifTrue, in FuncNull ifFalse) where T : struct => Run<T>(value(), ifTrue, ifFalse);
@@ -4008,12 +4018,12 @@ where T : Enum
             public static object? Run<T>(in T? value, in Func<FuncNull> ifTrue, in Func<FuncNull> ifFalse) where T : struct => Run<T>(value, ifTrue.GetFuncNull(), ifFalse.GetFuncNull());
 
             public static object? Run<T>(in Func<T?> value, in Func<FuncNull> ifTrue, in Func<FuncNull> ifFalse) where T : struct => Run<T>(value(), ifTrue, ifFalse);
-            #endregion FON2
-            #endregion FuncNull
+#endregion FON2
+#endregion FuncNull
 #endif
 
-            #region Generic Func
-            #region FBG1.1
+#region Generic Func
+#region FBG1.1
             public static bool Run<TIn, TOut>(in TIn? value, in Func<TOut> ifTrue, out TOut
 #if CS9
                 ?
@@ -4037,9 +4047,9 @@ where T : Enum
                 ?
 #endif
                 result) where TIn : struct => Run(value(), ifTrue, out result);
-            #endregion FBG1.1
+#endregion FBG1.1
 
-            #region FBG1.2.1
+#region FBG1.2.1
             public static bool Run<T>(in T? value, in Func<T> ifTrue, out T result) where T : struct => Run<T, T>(value, ifTrue, out result);
 
             public static bool Run<T>(in Func<T?> value, in Func<T> ifTrue, out T result) where T : struct => Run<T>(value(), ifTrue, out result);
@@ -4047,9 +4057,9 @@ where T : Enum
             public static bool Run<T>(in T? value, in Func<Func<T>> ifTrue, out T result) where T : struct => Run<T>(value, ifTrue.GetFunc(), out result);
 
             public static bool Run<T>(in Func<T?> value, in Func<Func<T>> ifTrue, out T result) where T : struct => Run<T>(value(), ifTrue, out result);
-            #endregion FBG1.2.1
+#endregion FBG1.2.1
 
-            #region FBG1.2.2
+#region FBG1.2.2
             public static bool Run<T>(in T? value, in Func<T> ifTrue, out T? result) where T : struct
             {
                 if (Run<T, T>(value, ifTrue, out T _result))
@@ -4069,9 +4079,9 @@ where T : Enum
             public static bool Run<T>(in T? value, in Func<Func<T>> ifTrue, out T? result) where T : struct => Run(value, ifTrue.GetFunc(), out result);
 
             public static bool Run<T>(in Func<T?> value, in Func<Func<T>> ifTrue, out T? result) where T : struct => Run(value(), ifTrue, out result);
-            #endregion FBG1.2.2
+#endregion FBG1.2.2
 
-            #region FBG2.1
+#region FBG2.1
             public static bool Run<TIn, TOut>(in TIn? value, in Func<TOut> ifTrue, in Func<TOut> ifFalse, out TOut result) where TIn : struct => BoolChecks.Run(value.HasValue, ifTrue, ifFalse, out result);
 
             public static bool Run<TIn, TOut>(in Func<TIn?> value, in Func<TOut> ifTrue, in Func<TOut> ifFalse, out TOut result) where TIn : struct => Run(value(), ifTrue, ifFalse, out result);
@@ -4079,9 +4089,9 @@ where T : Enum
             public static bool Run<TIn, TOut>(in TIn? value, in Func<Func<TOut>> ifTrue, in Func<Func<TOut>> ifFalse, out TOut result) where TIn : struct => Run(value, ifTrue.GetFunc(), ifFalse.GetFunc(), out result);
 
             public static bool Run<TIn, TOut>(in Func<TIn?> value, in Func<Func<TOut>> ifTrue, in Func<Func<TOut>> ifFalse, out TOut result) where TIn : struct => Run(value(), ifTrue, ifFalse, out result);
-            #endregion FBG2.1
+#endregion FBG2.1
 
-            #region FBG2.2.1
+#region FBG2.2.1
             public static bool Run<T>(in T? value, in Func<T> ifTrue, in Func<T> ifFalse, out T result) where T : struct => Run<T, T>(value, ifTrue, ifFalse, out result);
 
             public static bool Run<T>(in Func<T?> value, in Func<T> ifTrue, in Func<T> ifFalse, out T result) where T : struct => Run<T>(value(), ifTrue, ifFalse, out result);
@@ -4089,9 +4099,9 @@ where T : Enum
             public static bool Run<T>(in T? value, in Func<Func<T>> ifTrue, in Func<Func<T>> ifFalse, out T result) where T : struct => Run<T>(value, ifTrue.GetFunc(), ifFalse.GetFunc(), out result);
 
             public static bool Run<T>(in Func<T?> value, in Func<Func<T>> ifTrue, in Func<Func<T>> ifFalse, out T result) where T : struct => Run<T>(value(), ifTrue, ifFalse, out result);
-            #endregion FBG2.2.1
+#endregion FBG2.2.1
 
-            #region FBG2.2.2
+#region FBG2.2.2
             public static bool Run<T>(in T? value, in Func<T> ifTrue, in Func<T> ifFalse, out T? result) where T : struct
             {
                 if (Run<T, T>(value, ifTrue, ifFalse, out T _result))
@@ -4111,9 +4121,9 @@ where T : Enum
             public static bool Run<T>(in T? value, in Func<Func<T>> ifTrue, in Func<Func<T>> ifFalse, out T? result) where T : struct => Run(value, ifTrue.GetFunc(), ifFalse.GetFunc(), out result);
 
             public static bool Run<T>(in Func<T?> value, in Func<Func<T>> ifTrue, in Func<Func<T>> ifFalse, out T? result) where T : struct => Run(value(), ifTrue, ifFalse, out result);
-            #endregion FBG2.2.2
+#endregion FBG2.2.2
 
-            #region FT1.1
+#region FT1.1
             public static TOut
 #if CS9
                 ?
@@ -4137,9 +4147,9 @@ where T : Enum
                 ?
 #endif
                 Run<TIn, TOut>(in Func<TIn?> value, in Func<Func<TOut>> ifTrue) where TIn : struct => Run(value(), ifTrue);
-            #endregion FT1.1
+#endregion FT1.1
 
-            #region FT1.2.1
+#region FT1.2.1
             public static T Run<T>(in T? value, in Func<T> ifTrue) where T : struct => Run<T, T>(value, ifTrue);
 
             public static T Run<T>(in Func<T?> value, in Func<T> ifTrue) where T : struct => Run<T>(value(), ifTrue);
@@ -4147,9 +4157,9 @@ where T : Enum
             public static T Run<T>(in T? value, in Func<Func<T>> ifTrue) where T : struct => Run<T>(value, ifTrue.GetFunc());
 
             public static T Run<T>(in Func<T?> value, in Func<Func<T>> ifTrue) where T : struct => Run<T>(value(), ifTrue);
-            #endregion FT1.2.1
+#endregion FT1.2.1
 
-            #region FT1.2.2
+#region FT1.2.2
             public static T? RunNull<T>(in T? value, in Func<T> ifTrue) where T : struct => Run(value, ifTrue, out T? result) ? result : null;
 
             public static T? RunNull<T>(in Func<T?> value, in Func<T> ifTrue) where T : struct => RunNull(value(), ifTrue);
@@ -4157,9 +4167,9 @@ where T : Enum
             public static T? RunNull<T>(in T? value, in Func<Func<T>> ifTrue) where T : struct => RunNull(value, ifTrue.GetFunc());
 
             public static T? RunNull<T>(in Func<T?> value, in Func<Func<T>> ifTrue) where T : struct => RunNull(value(), ifTrue);
-            #endregion FT1.2.2
+#endregion FT1.2.2
 
-            #region FT2.1
+#region FT2.1
             public static TOut Run<TIn, TOut>(in TIn? value, in Func<TOut> ifTrue, in Func<TOut> ifFalse) where TIn : struct => BoolChecks.Run(value.HasValue, ifTrue, ifFalse);
 
             public static TOut Run<TIn, TOut>(in Func<TIn?> value, in Func<TOut> ifTrue, in Func<TOut> ifFalse) where TIn : struct => Run(value(), ifTrue, ifFalse);
@@ -4167,9 +4177,9 @@ where T : Enum
             public static TOut Run<TIn, TOut>(in TIn? value, in Func<Func<TOut>> ifTrue, in Func<Func<TOut>> ifFalse) where TIn : struct => Run(value, ifTrue.GetFunc(), ifFalse.GetFunc());
 
             public static TOut Run<TIn, TOut>(in Func<TIn?> value, in Func<Func<TOut>> ifTrue, in Func<Func<TOut>> ifFalse) where TIn : struct => Run(value(), ifTrue, ifFalse);
-            #endregion FT2.1
+#endregion FT2.1
 
-            #region FT2.2.1
+#region FT2.2.1
             public static T Run<T>(in T? value, in Func<T> ifTrue, in Func<T> ifFalse) where T : struct => Run<T, T>(value, ifTrue, ifFalse);
 
             public static T Run<T>(in Func<T?> value, in Func<T> ifTrue, in Func<T> ifFalse) where T : struct => Run<T>(value(), ifTrue, ifFalse);
@@ -4177,9 +4187,9 @@ where T : Enum
             public static T Run<T>(in T? value, in Func<Func<T>> ifTrue, in Func<Func<T>> ifFalse) where T : struct => Run<T>(value, ifTrue.GetFunc(), ifFalse.GetFunc());
 
             public static T Run<T>(in Func<T?> value, in Func<Func<T>> ifTrue, in Func<Func<T>> ifFalse) where T : struct => Run<T>(value(), ifTrue, ifFalse);
-            #endregion FT2.2.1
+#endregion FT2.2.1
 
-            #region FT2.2.2
+#region FT2.2.2
             public static T? RunNull<T>(in T? value, in Func<T> ifTrue, in Func<T> ifFalse) where T : struct => Run<T, T>(value, ifTrue, ifFalse);
 
             public static T? RunNull<T>(in Func<T?> value, in Func<T> ifTrue, in Func<T> ifFalse) where T : struct => RunNull(value(), ifTrue, ifFalse);
@@ -4187,14 +4197,14 @@ where T : Enum
             public static T? RunNull<T>(in T? value, in Func<Func<T>> ifTrue, in Func<Func<T>> ifFalse) where T : struct => RunNull(value, ifTrue.GetFunc(), ifFalse.GetFunc());
 
             public static T? RunNull<T>(in Func<T?> value, in Func<Func<T>> ifTrue, in Func<Func<T>> ifFalse) where T : struct => RunNull(value(), ifTrue, ifFalse);
-            #endregion FT2.2.2
-            #endregion Generic Func
+#endregion FT2.2.2
+#endregion Generic Func
         }
 
         public static class TypeChecks
         {
-            #region Action
-            #region AB1
+#region Action
+#region AB1
             public static bool Run<T>(in object
 #if CS8
                 ?
@@ -4222,9 +4232,9 @@ where T : Enum
                 Func
 #endif
                 value, in Func<Action> ifTrue) => Run<T>(value(), ifTrue);
-            #endregion AB1
+#endregion AB1
 
-            #region AB2
+#region AB2
             public static bool Run<T>(in object
 #if CS8
                 ?
@@ -4252,9 +4262,9 @@ where T : Enum
                 Func
 #endif
                 value, in Func<Action> ifTrue, in Func<Action> ifFalse) => Run<T>(value(), ifTrue, ifFalse);
-            #endregion AB2
+#endregion AB2
 
-            #region ABA1
+#region ABA1
             public static bool Run<T>(in object
 #if CS8
                 ?
@@ -4292,9 +4302,9 @@ where T : Enum
                 Func
 #endif
                 value, in Func<Action<T>> ifTrue) => Run(value(), ifTrue);
-            #endregion ABA1
+#endregion ABA1
 
-            #region ABA2
+#region ABA2
             public static bool Run<T>(in object
 #if CS8
                 ?
@@ -4334,9 +4344,9 @@ where T : Enum
                 Func
 #endif
                 value, in Func<Action<T>> ifTrue, in Func<Action> ifFalse) => Run(value(), ifTrue, ifFalse);
-            #endregion ABA2
+#endregion ABA2
 
-            #region ABAI1
+#region ABAI1
             public static bool Run<T>(in object
 #if CS8
                 ?
@@ -4374,9 +4384,9 @@ where T : Enum
                 Func
 #endif
                 value, in Func<ActionIn<T>> ifTrue) => Run(value(), ifTrue);
-            #endregion ABAI1
+#endregion ABAI1
 
-            #region ABAI2
+#region ABAI2
             public static bool Run<T>(in object
 #if CS8
                 ?
@@ -4416,9 +4426,9 @@ where T : Enum
                 Func
 #endif
                 value, in Func<ActionIn<T>> ifTrue, in Func<Action> ifFalse) => Run(value(), ifTrue, ifFalse);
-            #endregion ABAI2
+#endregion ABAI2
 
-            #region ABF1
+#region ABF1
             public static bool Run<T>(in object
 #if CS8
                 ?
@@ -4446,9 +4456,9 @@ where T : Enum
                 Func
 #endif
                 value, in Func<Func<T, bool>> ifTrue) => Run(value(), ifTrue);
-            #endregion ABF1
+#endregion ABF1
 
-            #region ABF2
+#region ABF2
             public static bool Run<T>(in object
 #if CS8
                 ?
@@ -4476,9 +4486,9 @@ where T : Enum
                 Func
 #endif
                 value, in Func<Func<T, bool>> ifTrue, in Func<Func<bool>> ifFalse) => Run(value(), ifTrue, ifFalse);
-            #endregion ABF2
+#endregion ABF2
 
-            #region ABFI1
+#region ABFI1
             public static bool Run<T>(in object
 #if CS8
                 ?
@@ -4506,9 +4516,9 @@ where T : Enum
                 Func
 #endif
                 value, in Func<FuncIn<T, bool>> ifTrue) => Run(value(), ifTrue);
-            #endregion ABFI1
+#endregion ABFI1
 
-            #region ABFI2
+#region ABFI2
             public static bool Run<T>(in object
 #if CS8
                 ?
@@ -4536,11 +4546,11 @@ where T : Enum
                 Func
 #endif
                 value, in Func<FuncIn<T, bool>> ifTrue, in Func<Func<bool>> ifFalse) => Run(value(), ifTrue, ifFalse);
-            #endregion ABFI2
-            #endregion Action
+#endregion ABFI2
+#endregion Action
 
-            #region Func
-            #region FB1
+#region Func
+#region FB1
             public static bool Run<T>(in object
 #if CS8
                 ?
@@ -4584,9 +4594,9 @@ where T : Enum
                 ?
 #endif
                 result) => Run<T>(value(), ifTrue, out result);
-            #endregion FB1
+#endregion FB1
 
-            #region FB2
+#region FB2
             public static bool Run<T>(in object
 #if CS8
                 ?
@@ -4614,9 +4624,9 @@ where T : Enum
                 Func
 #endif
                 value, in Func<Func> ifTrue, in Func<Func> ifFalse, out object result) => Run<T>(value(), ifTrue, ifFalse, out result);
-            #endregion FB2
+#endregion FB2
 
-            #region FO1
+#region FO1
             public static object
 #if CS8
                 ?
@@ -4660,9 +4670,9 @@ where T : Enum
                 Func
 #endif
                 value, in Func<Func> ifTrue) => Run<T>(value(), ifTrue);
-            #endregion FO1
+#endregion FO1
 
-            #region FO2
+#region FO2
             public static object Run<T>(in object
 #if CS8
                 ?
@@ -4690,12 +4700,12 @@ where T : Enum
                 Func
 #endif
                 value, in Func<Func> ifTrue, in Func<Func> ifFalse) => Run<T>(value(), ifTrue, ifFalse);
-            #endregion FO2
-            #endregion Func
+#endregion FO2
+#endregion Func
 
 #if CS8
-            #region FuncNull
-            #region FBN1
+#region FuncNull
+#region FBN1
             public static bool Run<T>(in object
 #if CS8
                 ?
@@ -4739,9 +4749,9 @@ where T : Enum
                 ?
 #endif
                 result) => Run<T>(value(), ifTrue, out result);
-            #endregion FBN1
+#endregion FBN1
 
-            #region FBN2
+#region FBN2
             public static bool Run<T>(in object
 #if CS8
                 ?
@@ -4785,9 +4795,9 @@ where T : Enum
                 ?
 #endif
                 result) => Run<T>(value(), ifTrue, ifFalse, out result);
-            #endregion FBN2
+#endregion FBN2
 
-            #region FON1
+#region FON1
             public static object
 #if CS8
                 ?
@@ -4831,9 +4841,9 @@ where T : Enum
                 Func
 #endif
                 value, in Func<FuncNull> ifTrue) => Run<T>(value(), ifTrue);
-            #endregion FON1
+#endregion FON1
 
-            #region FON2
+#region FON2
             public static object
 #if CS8
                 ?
@@ -4877,12 +4887,12 @@ where T : Enum
                 Func
 #endif
                 value, in Func<FuncNull> ifTrue, in Func<FuncNull> ifFalse) => Run<T>(value(), ifTrue, ifFalse);
-            #endregion FON2
-            #endregion FuncNull
+#endregion FON2
+#endregion FuncNull
 #endif
 
-            #region Generic Func
-            #region FBG1.1
+#region Generic Func
+#region FBG1.1
             public static bool Run<TIn, TOut>(in object
 #if CS8
                 ?
@@ -4926,9 +4936,9 @@ where T : Enum
                 ?
 #endif
                 result) => Run(value(), ifTrue, out result);
-            #endregion FBG1.1
+#endregion FBG1.1
 
-            #region FBG1.2
+#region FBG1.2
             public static bool Run<T>(in object
 #if CS8
                 ?
@@ -4972,9 +4982,9 @@ where T : Enum
                 ?
 #endif
                 result) => Run(value(), ifTrue, out result);
-            #endregion FBG1.2
+#endregion FBG1.2
 
-            #region FBG2.1
+#region FBG2.1
             public static bool Run<TIn, TOut>(in object
 #if CS8
                 ?
@@ -5018,9 +5028,9 @@ where T : Enum
                 ?
 #endif
                 result) => Run(value(), ifTrue, ifFalse, out result);
-            #endregion FBG2.1
+#endregion FBG2.1
 
-            #region FBG2.2
+#region FBG2.2
             public static bool Run<T>(in object
 #if CS8
                 ?
@@ -5064,9 +5074,9 @@ where T : Enum
                 ?
 #endif
                 result) => Run(value(), ifTrue, ifFalse, out result);
-            #endregion FBG2.2
+#endregion FBG2.2
 
-            #region FT1.1
+#region FT1.1
             public static TOut
 #if CS9
                 ?
@@ -5110,9 +5120,9 @@ where T : Enum
                 Func
 #endif
                 value, in Func<Func<TOut>> ifTrue) => Run<TIn, TOut>(value(), ifTrue);
-            #endregion FT1.1
+#endregion FT1.1
 
-            #region FT1.2
+#region FT1.2
             public static T
 #if CS9
                 ?
@@ -5160,9 +5170,9 @@ where T : Enum
                 Func
 #endif
                 value, in Func<Func<T>> ifTrue) => Run(value(), ifTrue);
-            #endregion FT1.2
+#endregion FT1.2
 
-            #region FT2.1
+#region FT2.1
             public static TOut Run<TIn, TOut>(in object
 #if CS8
                 ?
@@ -5190,9 +5200,9 @@ where T : Enum
                 Func
 #endif
                 value, in Func<Func<TOut>> ifTrue, in Func<Func<TOut>> ifFalse) => Run<TIn, TOut>(value(), ifTrue, ifFalse);
-            #endregion FT2.1
+#endregion FT2.1
 
-            #region FT2.2
+#region FT2.2
             public static T
 #if CS9
                 ?
@@ -5236,8 +5246,8 @@ where T : Enum
                 Func
 #endif
                 value, in Func<Func<T>> ifTrue, in Func<Func<T>> ifFalse) => Run(value(), ifTrue, ifFalse);
-            #endregion FT2.2
-            #endregion Generic Func
+#endregion FT2.2
+#endregion Generic Func
         }
     }
 }

@@ -819,15 +819,15 @@ namespace WinCopies
         public static void ThrowIfNotType<T>(in object obj, in string argumentName) where T : struct
         {
             if (
-#if !CS8
+#if !CS9
                 !(
 #endif
                 obj is
-#if CS8        
+#if CS9
                 not
 #endif
                 T
-#if !CS8
+#if !CS9
                 )
 #endif
                 )

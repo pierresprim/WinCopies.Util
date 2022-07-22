@@ -387,6 +387,7 @@ Enumerator<T>, System.Collections.Generic.IEnumerable<T>
         }
     }
 
+#if WinCopies3
     public abstract class PredicateEnumerator<TItems, TEnumerator> : EnumeratorInfo<TItems, TEnumerator> where TEnumerator : System.Collections.Generic.IEnumerator<TItems>
     {
         public Predicate<TItems> Predicate { get; }
@@ -413,4 +414,5 @@ Enumerator<T>, System.Collections.Generic.IEnumerable<T>
 
         public PredicateEnumeratorInfo(in IEnumerable<T, IEnumeratorInfo<T>> enumerable, in Predicate<T> predicate) : base(GetEnumerator(enumerable, nameof(enumerable)), predicate) { /* Left empty. */ }
     }
+#endif
 }

@@ -54,10 +54,11 @@ ConverterBase
         /// <param name="culture">The culture used for the conversion. This parameter isn't evaluated in this converter.</param>
         /// <returns><see cref="Visibility.Visible"/> if the value to convert is <see langword="true"/>, if not, the value of the parameter if it is not null, otherwise <see cref="Visibility.Collapsed"/>.</returns>
 #if WinCopies3
-        protected override Visibility Convert(bool value, Visibility? parameter, CultureInfo culture)
+        protected override Visibility Convert(bool value, Visibility?
 #else
-        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public override object Convert(object value, Type targetType, object
 #endif
+            parameter, CultureInfo culture)
         {
             if (parameter != null &&
 #if WinCopies3
@@ -73,13 +74,19 @@ ConverterBase
 
                 // todo:
 
-                throw ThrowHelper.GetArgumentMustBeFromEnumAndNotValueException(nameof(parameter), $"{nameof(System)}.{nameof(System.Windows)}.{nameof(Visibility)}", parameter
+                throw ThrowHelper.GetArgumentMustBeFromEnumAndNotValueException(nameof(parameter), $"{nameof(System)}.{nameof(System.Windows)}.{nameof(Visibility)}",
 #if WinCopies3
-                    .Value
+                    parameter.Value
+#else
+                    (Visibility)parameter
 #endif
                     , Visibility.Visible);
 
-            return value ? Visibility.Visible : parameter ?? Visibility.Collapsed;
+            return
+#if !WinCopies3
+                (bool)
+#endif
+                value ? Visibility.Visible : parameter ?? Visibility.Collapsed;
         }
 
         /// <summary>
@@ -98,23 +105,18 @@ ConverterBase
             value == Visibility.Visible;
     }
 
+#if WinCopies3
     [ValueConversion(typeof(bool?), typeof(bool), ParameterType = typeof(bool))]
-    public class NullableBooleanToBooleanConverter :
-#if WinCopies3
-        AlwaysConvertibleTwoWayConverter<bool?, bool, bool>
-#else
-ConverterBase
-#endif
+    public class NullableBooleanToBooleanConverter : AlwaysConvertibleTwoWayConverter<bool?, bool, bool>
     {
-#if WinCopies3
         public override IReadOnlyConversionOptions ConvertOptions => ValueCanBeNull;
 
         public override IReadOnlyConversionOptions ConvertBackOptions => ValueCanBeNull;
-#endif
 
         protected override bool Convert(bool? value, bool parameter, CultureInfo culture) => value ?? parameter;
         protected override bool? ConvertBack(bool value, bool parameter, CultureInfo culture) => value;
     }
+#endif
 
     [ValueConversion(typeof(bool), typeof(Visibility), ParameterType = typeof(Visibility))]
     public class ReversedBooleanToVisibilityConverter :

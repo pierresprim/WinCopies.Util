@@ -51,6 +51,7 @@ namespace WinCopies.Collections
     /// </summary>
     public static class Util
     {
+#if WinCopies3
         public static bool Equals<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in System.Collections.Generic.IEnumerable<T> compareWith, in T delimiter)
         {
             using
@@ -73,7 +74,6 @@ namespace WinCopies.Collections
             return true;
         }
 
-#if WinCopies3
         public static void PerformAction<TIn, TOut>(in System.Collections.Generic.IEnumerable<TOut> parameters, in Action<System.Collections.Generic.IEnumerable<TIn>> action) => action(parameters.Cast<TIn>());
 
 #if CS5

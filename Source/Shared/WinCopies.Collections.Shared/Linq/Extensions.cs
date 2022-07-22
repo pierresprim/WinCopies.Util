@@ -326,7 +326,7 @@ namespace WinCopies.Linq
             ThrowIfNull(func, nameof(func));
 
 #if CS7
-            if (enumerable is IReadOnlyList<T> list)
+            if (enumerable is System.Collections.Generic.IReadOnlyList<T> list)
 
                 return list.Count > 0 ? list[0] : func();
 #endif
@@ -392,7 +392,7 @@ namespace WinCopies.Linq
             ThrowIfNull(func, nameof(func));
 
 #if CS7
-            if (enumerable is IReadOnlyList<T> list)
+            if (enumerable is System.Collections.Generic.IReadOnlyList<T> list)
             {
                 if (list.Count > 0)
                 {

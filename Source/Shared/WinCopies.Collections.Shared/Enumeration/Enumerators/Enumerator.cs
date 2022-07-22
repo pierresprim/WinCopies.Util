@@ -342,24 +342,24 @@ namespace WinCopies.Collections
     namespace Generic
     {
 #endif
-        public abstract class Enumerator<T> :
+    public abstract class Enumerator<T> :
 #if WinCopies3
                 EnumeratorInfoBase, IDisposableEnumerator<T>, IDisposableEnumeratorInfo, IEnumeratorInfo2<T>
 #else
-        System.Collections.Generic.IEnumerator<T>, WinCopies.Util.DotNetFix.IDisposable
+    System.Collections.Generic.IEnumerator<T>, WinCopies.Util.DotNetFix.IDisposable
 #endif
-        {
+    {
 #if !WinCopies3
         private T _current;
 
         public bool IsDisposed { get; private set; }
 #endif
 
-            /// <summary>
-            /// Gets the element in the collection at the current position of the enumerator.
-            /// </summary>
-            /// <exception cref="InvalidOperationException">The enumerator is disposed.</exception>
-            public T Current
+        /// <summary>
+        /// Gets the element in the collection at the current position of the enumerator.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">The enumerator is disposed.</exception>
+        public T Current
 #if !WinCopies3
         {
             get
@@ -382,27 +382,27 @@ namespace WinCopies.Collections
         }
 #endif
 
-            /// <summary>
-            /// When overridden in a derived class, gets the item in the collection at the current position of the enumerator.
-            /// </summary>
+        /// <summary>
+        /// When overridden in a derived class, gets the item in the collection at the current position of the enumerator.
+        /// </summary>
 #if !WinCopies3
         [Obsolete("This property is not by this class in WinCopies 2, so it is now virtual. This property is abstract in WinCopies 3.")]
 #endif
-            protected
+        protected
 #if WinCopies3
     abstract
 #else
             virtual
 #endif
     T CurrentOverride
-            { get; }
+        { get; }
 
-            object System.Collections.IEnumerator.Current => Current;
+        object System.Collections.IEnumerator.Current => Current;
 
 #if !WinCopies3
         private bool _enumerationStarted = false;
 
-        protected TValue GetOrThrowIfDisposed<TValue>(in TValue value) => Util.ThrowHelper.GetOrThrowIfDisposed(this, value);
+        protected TValue GetOrThrowIfDisposed<TValue>(in TValue value) => WinCopies.Util.ThrowHelper.GetOrThrowIfDisposed(this, value);
 
         protected abstract bool MoveNextOverride();
 
@@ -455,7 +455,7 @@ namespace WinCopies.Collections
             }
         }
 #endif
-        }
+    }
 
 #if WinCopies3
         public interface IEnumeratorInfo2<
@@ -607,25 +607,25 @@ namespace WinCopies.Collections
         }
 #endif
 
-        public abstract class Enumerator<TSource, TEnumSource, TDestination
+    public abstract class Enumerator<TSource, TEnumSource, TDestination
 #if !WinCopies3
-        , TEnumDestination
+    , TEnumDestination
 #endif
-            > :
+        > :
 #if WinCopies3
                 Enumerator<TDestination>
 #else
-        System.Collections.Generic.IEnumerator<TDestination>, WinCopies.Util.DotNetFix.IDisposable
+    System.Collections.Generic.IEnumerator<TDestination>, WinCopies.Util.DotNetFix.IDisposable
 
 #endif
-            where TEnumSource : System.Collections.Generic.IEnumerator<TSource>
+        where TEnumSource : System.Collections.Generic.IEnumerator<TSource>
 #if !WinCopies3
-        where TEnumDestination : System.Collections.Generic.IEnumerator<TDestination>
+    where TEnumDestination : System.Collections.Generic.IEnumerator<TDestination>
 #endif
-        {
-            private TEnumSource _innerEnumerator;
+    {
+        private TEnumSource _innerEnumerator;
 
-            protected TEnumSource InnerEnumerator => IsDisposed ? throw GetExceptionForDispose(false) : _innerEnumerator;
+        protected TEnumSource InnerEnumerator => IsDisposed ? throw GetExceptionForDispose(false) : _innerEnumerator;
 
 #if !WinCopies3
         private TDestination _current;
@@ -667,38 +667,38 @@ namespace WinCopies.Collections
         }
 #endif
 
-            /// <summary>
-            /// When overridden in a derived class, initializes a new instance of the <see cref="Enumerator{TSource, TDestination}"/> class.
-            /// </summary>
-            /// <param name="enumerator">The enumerator to enumerate.</param>
-            public Enumerator(TEnumSource enumerator)
+        /// <summary>
+        /// When overridden in a derived class, initializes a new instance of the <see cref="Enumerator{TSource, TDestination}"/> class.
+        /// </summary>
+        /// <param name="enumerator">The enumerator to enumerate.</param>
+        public Enumerator(TEnumSource enumerator)
 #if CS8
                 => _innerEnumerator = enumerator ?? throw GetArgumentNullException(nameof(enumerator));
 #else
-            {
-                if (enumerator == null)
+        {
+            if (enumerator == null)
 
-                    throw GetArgumentNullException(nameof(enumerator));
+                throw GetArgumentNullException(nameof(enumerator));
 
-                _innerEnumerator = enumerator;
-            }
+            _innerEnumerator = enumerator;
+        }
 #endif
 
-            protected
+        protected
 #if WinCopies3
                     override void ResetOverride2
 #else
-            virtual void ResetOverride
+        virtual void ResetOverride
 #endif
-            ()
-            {
+        ()
+        {
 #if !WinCopies3
             _current = default;
 #endif
-                InnerEnumerator.Reset();
-            }
+            InnerEnumerator.Reset();
+        }
 
-            protected
+        protected
 #if WinCopies3
                     override void DisposeManaged()
             {
@@ -709,28 +709,28 @@ namespace WinCopies.Collections
                 _innerEnumerator = default;
             }
 #else
-        virtual void Dispose(bool disposing) => _innerEnumerator = default;
+    virtual void Dispose(bool disposing) => _innerEnumerator = default;
 #endif
-        }
+    }
 
-        public abstract class Enumerator<TSource, TDestination> : Enumerator<TSource, System.Collections.Generic.IEnumerator<TSource>, TDestination
+    public abstract class Enumerator<TSource, TDestination> : Enumerator<TSource, System.Collections.Generic.IEnumerator<TSource>, TDestination
 #if !WinCopies3
-        , System.Collections.Generic.IEnumerator<TDestination>
+    , System.Collections.Generic.IEnumerator<TDestination>
 #endif
-            >
-        {
-            /// <summary>
-            /// When overridden in a derived class, initializes a new instance of the <see cref="Enumerator{TSource, TDestination}"/> class.
-            /// </summary>
-            /// <param name="enumerable">An enumerable from which to get an enumerator to enumerate.</param>
-            public Enumerator(System.Collections.Generic.IEnumerable<TSource> enumerable) : base((enumerable ?? throw GetArgumentNullException(nameof(enumerable))).GetEnumerator()) { /* Left empty. */ }
+        >
+    {
+        /// <summary>
+        /// When overridden in a derived class, initializes a new instance of the <see cref="Enumerator{TSource, TDestination}"/> class.
+        /// </summary>
+        /// <param name="enumerable">An enumerable from which to get an enumerator to enumerate.</param>
+        public Enumerator(System.Collections.Generic.IEnumerable<TSource> enumerable) : base((enumerable ?? throw GetArgumentNullException(nameof(enumerable))).GetEnumerator()) { /* Left empty. */ }
 
-            /// <summary>
-            /// When overridden in a derived class, initializes a new instance of the <see cref="Enumerator{TSource, TDestination}"/> class.
-            /// </summary>
-            /// <param name="enumerator">The enumerator to enumerate.</param>
-            public Enumerator(System.Collections.Generic.IEnumerator<TSource> enumerator) : base(enumerator ?? throw GetArgumentNullException(nameof(enumerator))) { /* Left empty. */ }
-        }
+        /// <summary>
+        /// When overridden in a derived class, initializes a new instance of the <see cref="Enumerator{TSource, TDestination}"/> class.
+        /// </summary>
+        /// <param name="enumerator">The enumerator to enumerate.</param>
+        public Enumerator(System.Collections.Generic.IEnumerator<TSource> enumerator) : base(enumerator ?? throw GetArgumentNullException(nameof(enumerator))) { /* Left empty. */ }
+    }
 
 #if WinCopies3
         public abstract class ExtensionEnumerator<TItems, TEnumerator> : DotNetFix.IDisposableEnumeratorInfo, IEnumeratorBase, IDisposableEnumerator<TItems>, IDisposableEnumeratorInfo, IEnumeratorInfo2<TItems> where TEnumerator : IEnumeratorInfo<TItems>
@@ -868,13 +868,13 @@ namespace WinCopies.Collections
                 if (IsResetSupported != false)
                 {
 #endif
-                    Reset();
+                Reset();
 
-                    _current = IsDisposed ? throw GetExceptionForDispose(false) : value;
+                _current = IsDisposed ? throw GetExceptionForDispose(false) : value;
 
-                    _move = true;
+                _move = true;
 
-                    return true;
+                return true;
 #if WinCopies3
                 }
 

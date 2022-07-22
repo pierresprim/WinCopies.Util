@@ -40,8 +40,9 @@ using InvalidEnumArgumentException = WinCopies.Util.InvalidEnumArgumentException
 
 namespace WinCopies.Extensions // To avoid name conflicts.
 {
+#if WinCopies3
     public class EmbeddedResourcesDictionary : IReadOnlyDictionary<string, System.IO.Stream>
-#if WinCopies3 && CS8
+#if CS8
         , Collections.DotNetFix.Generic.IEnumerable<KeyValuePair<string, System.IO.Stream>>
 #endif
     {
@@ -69,6 +70,7 @@ namespace WinCopies.Extensions // To avoid name conflicts.
         public bool TryGetValue(string key, out System.IO.Stream value) => (value = TryGetValue(key)) != null;
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
+#endif
 
     public static class Extensions
     {

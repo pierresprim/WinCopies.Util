@@ -41,7 +41,7 @@ namespace WinCopies
     .Util
 #endif
 {
-#if NETCORE || NET
+#if CS8 && !NETSTANDARD
     public class AssemblyLoadContext : System.Runtime.Loader.AssemblyLoadContext
     {
         protected AssemblyDependencyResolver Resolver { get; }

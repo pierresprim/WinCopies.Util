@@ -2,17 +2,13 @@
 
 	<PropertyGroup>
 		<PackageId>WinCopies.Collections</PackageId>
-		<AssemblyName>WinCopies.Collections</AssemblyName>
-		<Title>WinCopies.Collections</Title>
 		<TargetFrameworks>net35;net472;net48;netcoreapp3.0;netcoreapp3.1;net5.0;net6.0;net7.0;netstandard2.0;netstandard2.1</TargetFrameworks>
-		<DocumentationFile>WinCopies.Collections.xml</DocumentationFile>
 		<PackageTags>WinCopies</PackageTags>
 		<VersionPrefix>3.17.1</VersionPrefix>
 		<VersionSuffix>preview</VersionSuffix>
 		<AssemblyVersion>3.17.1</AssemblyVersion>
 		<FileVersion>3.17.1</FileVersion>
 		<RootNamespace>WinCopies.Collections</RootNamespace>
-		<AssemblyOriginatorKeyFile>WinCopies.Collections.snk</AssemblyOriginatorKeyFile>
 		<DefineConstants>WinCopies3;$(DefineConstants)</DefineConstants>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>

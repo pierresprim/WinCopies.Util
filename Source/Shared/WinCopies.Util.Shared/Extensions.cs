@@ -26,7 +26,11 @@ using System.Text;
 using WinCopies.Collections;
 using WinCopies.Extensions;
 
-using static WinCopies.XOrResult;
+using static WinCopies.
+#if !WinCopies3
+    Util.
+#endif
+    XOrResult;
 
 #if WinCopies3
 using WinCopies.Collections.Generic;
@@ -283,7 +287,7 @@ namespace WinCopies.Util
                     (name) ? assemblyName.FullName : name;
             }
 
-            #region Bitwise Action
+#region Bitwise Action
             private static void BitwiseAction(in byte pos, in byte limit, in Action action)
             {
                 if (pos >= 0 && pos <= limit)
@@ -295,7 +299,7 @@ namespace WinCopies.Util
                     throw new IndexOutOfRangeException();
             }
 
-            #region UI8
+#region UI8
             private static bool GetBit(in byte pos, byte mask, Func<int> func)
             {
                 bool b = false;
@@ -332,9 +336,9 @@ namespace WinCopies.Util
             public static byte UnsetBit(this byte b, byte pos) => SetBit(pos, () => b & ~(LSBMask << pos));
 
             public static byte SetBit(this byte b, in byte pos, in bool value) => value ? b.SetBit(pos) : b.UnsetBit(pos);
-            #endregion UI8
+#endregion UI8
 
-            #region UI16
+#region UI16
             private static bool GetBit16(in byte pos, ushort mask, Func<int> func)
             {
                 bool b = false;
@@ -371,8 +375,8 @@ namespace WinCopies.Util
             public static ushort UnsetBit(this ushort b, byte pos) => SetBit16(pos, () => b & ~(LSBMask << pos));
 
             public static ushort SetBit(this ushort b, in byte pos, in bool value) => value ? b.SetBit(pos) : b.UnsetBit(pos);
-            #endregion UI16
-            #endregion Bitwise Action
+#endregion UI16
+#endregion Bitwise Action
 
 #if CS5
             private static void _For<T>(in IReadOnlyList<T> values, in Action<T> action)
@@ -2268,9 +2272,9 @@ namespace WinCopies.Util
             public static bool Between(this decimal d, in decimal x, in decimal y) => d >= x && d <= y;
 
 #if !WinCopies3
-            #region Enumerables extension methods
+#region Enumerables extension methods
         // todo:
-            #region Contains methods
+#region Contains methods
         /*public static bool Contains(this IEnumerable array, object value) => array.Contains(value, EqualityComparer<object>.Default);
 
         public static bool Contains(this IEnumerable array, object value, IEqualityComparer comparer)
@@ -2393,11 +2397,11 @@ namespace WinCopies.Util
         public static bool ContainsRange<T>(this System.Collections.Generic.IEnumerable<T> array, System.Collections.Generic.IComparer comparer, out int index, params T[] values);
 
         public static bool ContainsRange<T>(this System.Collections.Generic.IEnumerable<T> array, Comparison comparison, out int index, params T[] values);*/
-            #endregion
+#endregion
 
         // todo: Add-, Insert-, Remove-If(Not)Contains methods: add parameters like the Contains methods
 
-            #region Add(Range)IfNotContains methods
+#region Add(Range)IfNotContains methods
         /// <summary>
         /// Tries to add a value to an <see cref="IList"/> if it does not contain it already.
         /// </summary>
@@ -2447,9 +2451,9 @@ namespace WinCopies.Util
         /// <returns><see langword="true"/> if the value has been added to the collection, otherwise <see langword="false"/>.</returns>
         public static T[] AddRangeIfNotContains<T>(this System.Collections.Generic.ICollection<T> collection, params T[] values) => collection.AddRangeIfNotContains((System.Collections.Generic.IEnumerable<T>)values);
 #endif
-            #endregion
+#endregion
 
-            #region Insert(Range)IfNotContains methods
+#region Insert(Range)IfNotContains methods
         /// <summary>
         /// Inserts a value at the specified index in a given collection if the value does not already exists in the collection.
         /// </summary>
@@ -2482,9 +2486,9 @@ namespace WinCopies.Util
 #if CS7
         public static T[] InsertRangeIfNotContains<T>(this System.Collections.Generic.IList<T> collection, in int index, params T[] values) => collection.InsertRangeIfNotContains(index, (System.Collections.Generic.IEnumerable<T>)values);
 #endif
-            #endregion
+#endregion
 
-            #region Remove(Range)IfContains methods
+#region Remove(Range)IfContains methods
         public static bool RemoveIfContains(this IList collection, in object value)
         {
             if ((collection ?? throw GetArgumentNullException(nameof(collection))).Contains(value))
@@ -2504,9 +2508,9 @@ namespace WinCopies.Util
 #if CS7
         public static T[] RemoveRangeIfContains<T>(this IList<T> collection, params T[] values) => collection.RemoveRangeIfContains((System.Collections.Generic.IEnumerable<T>)values);
 #endif
-            #endregion
+#endregion
 
-            #region AddRange methods
+#region AddRange methods
         public static void AddRange(this IList collection, params object[] values) => collection.AddRange((IEnumerable)values);
 
         public static void AddRange(this IList collection, in IEnumerable array)
@@ -2808,7 +2812,7 @@ namespace WinCopies.Util
 
                 collection.AddRangeBefore(node.Next, array);
         }
-            #endregion
+#endregion
 
 #if CS7
         public static ArrayList ToList(this IEnumerable array) => array.ToList(0);
@@ -3050,9 +3054,9 @@ namespace WinCopies.Util
         }
 #endif
 
-            #region Contains methods
-            #region Non generic methods
-            #region ContainsOneValue overloads
+#region Contains methods
+#region Non generic methods
+#region ContainsOneValue overloads
         public static bool ContainsOneValue(this IEnumerable array, in EqualityComparison comparison, out bool containsMoreThanOneValue, in object[] values)
         {
             ThrowIfNull(array, nameof(array));
@@ -3146,9 +3150,9 @@ namespace WinCopies.Util
 
             return ContainsOneValue(array, (object value, object _value) => equalityComparer.Equals(value, _value), out containsMoreThanOneValue, values);
         }
-            #endregion
+#endregion
 
-            #region ContainsOneOrMoreValues with notification whether contains more than one values overloads
+#region ContainsOneOrMoreValues with notification whether contains more than one values overloads
         public static bool ContainsOneOrMoreValues(IEnumerable array, in EqualityComparison comparison, out bool containsMoreThanOneValue, object[] values)
         {
             ThrowIfNull(array, nameof(array));
@@ -3229,9 +3233,9 @@ namespace WinCopies.Util
 
             return ContainsOneOrMoreValues(array, (object value, object _value) => equalityComparer.Equals(value, _value), out containsMoreThanOneValue, values);
         }
-            #endregion
+#endregion
 
-            #region ContainsOneOrMoreValues without notification whether contains more than one values overloads
+#region ContainsOneOrMoreValues without notification whether contains more than one values overloads
         public static bool ContainsOneOrMoreValues(IEnumerable array, in Func<object, object, bool> comparison, object[] values)
         {
             ThrowIfNull(array, nameof(array));
@@ -3296,9 +3300,9 @@ namespace WinCopies.Util
 
             return ContainsOneOrMoreValues(array, (object value, object _value) => equalityComparer.Equals(value, _value), values);
         }
-            #endregion
+#endregion
 
-            #region Contains array overloads
+#region Contains array overloads
         public static bool Contains(IEnumerable array, in EqualityComparison comparison, object[] values)
         {
             ThrowIfNull(array, nameof(array));
@@ -3375,11 +3379,11 @@ namespace WinCopies.Util
 
             return Contains(array, (object value, object _value) => equalityComparer.Equals(value, _value), values);
         }
-            #endregion
-            #endregion
+#endregion
+#endregion
 
-            #region Generic methods
-            #region ContainsOneValue overloads
+#region Generic methods
+#region ContainsOneValue overloads
         public static bool ContainsOneValue<T>(System.Collections.Generic.IEnumerable<T> array, in EqualityComparison<T> comparison, out bool containsMoreThanOneValue, in T[] values)
         {
             ThrowIfNull(array, nameof(array));
@@ -3459,9 +3463,9 @@ namespace WinCopies.Util
 
             return ContainsOneValue(array, (T value, T _value) => equalityComparer.Equals(value, _value), out containsMoreThanOneValue, values); ;
         }
-            #endregion
+#endregion
 
-            #region ContainsOneOrMoreValues with notification whether contains more than one values overloads
+#region ContainsOneOrMoreValues with notification whether contains more than one values overloads
         public static bool ContainsOneOrMoreValues<T>(System.Collections.Generic.IEnumerable<T> array, in EqualityComparison<T> comparison, out bool containsMoreThanOneValue, in T[] values)
         {
             ThrowIfNull(array, nameof(array));
@@ -3542,9 +3546,9 @@ namespace WinCopies.Util
 
             return ContainsOneOrMoreValues(array, (T value, T _value) => equalityComparer.Equals(value, _value), out containsMoreThanOneValue, values);
         }
-            #endregion
+#endregion
 
-            #region ContainsOneOrMoreValues without notification whether contains more than one values overloads
+#region ContainsOneOrMoreValues without notification whether contains more than one values overloads
         public static bool ContainsOneOrMoreValues<T>(System.Collections.Generic.IEnumerable<T> array, in EqualityComparison<T> comparison, in T[] values)
         {
             ThrowIfNull(array, nameof(array));
@@ -3609,9 +3613,9 @@ namespace WinCopies.Util
 
             return ContainsOneOrMoreValues(array, (T value, T _value) => equalityComparer.Equals(value, _value), values);
         }
-            #endregion
+#endregion
 
-            #region Contains array overloads
+#region Contains array overloads
         public static bool Contains<T>(System.Collections.Generic.IEnumerable<T> array, in EqualityComparison<T> comparison, in T[] values)
         {
             ThrowIfNull(array, nameof(array));
@@ -3688,9 +3692,9 @@ namespace WinCopies.Util
 
             return Contains(array, (T value, T _value) => equalityComparer.Equals(value, _value), values);
         }
-            #endregion
-            #endregion
-            #endregion
+#endregion
+#endregion
+#endregion
 
         public static string ToString(this IEnumerable array, in bool parseSubEnumerables, in bool parseStrings = false)
         {
@@ -4118,7 +4122,7 @@ namespace WinCopies.Util
 
             return false;
         }
-            #endregion
+#endregion
 
         /// <summary>
         /// Gets the numeric value for an enum.
@@ -5199,8 +5203,8 @@ namespace WinCopies.Util
 
         public static IEnumerable<T> Join<T>(this IEnumerable<IEnumerable<T>> enumerable, bool keepEmptyEnumerables, params T[] join) => new Enumerable<T>(() => new JoinEnumerator<T>(enumerable, keepEmptyEnumerables, join));
 
-            #region String extension methods
-            #region Split
+#region String extension methods
+#region Split
 #if CS5
         private static void Split(this string s, in bool skipEmptyValues, in StringBuilder stringBuilder, in Action<string> action, params char[] separators)
         {
@@ -5361,7 +5365,7 @@ namespace WinCopies.Util
             return list;
         }
 #endif
-            #endregion
+#endregion
 
         public static string Join(this IEnumerable<string> enumerable, in bool keepEmptyValues, params char[] join) => Join(enumerable, keepEmptyValues, new string(join));
 
@@ -5564,7 +5568,7 @@ namespace WinCopies.Util
 
             return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
         }
-            #endregion
+#endregion
 
         internal static void ThrowIfDisposedInternal(this DotNetFix.IDisposable obj, in string objectName)
         {

@@ -24,7 +24,11 @@ using System.Text;
 using WinCopies.Util;
 #endif
 
-using static WinCopies.Delegates;
+using static WinCopies.
+#if !WinCopies3
+    Util.
+#endif
+    Delegates;
 
 namespace WinCopies.Diagnostics
 {

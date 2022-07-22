@@ -83,7 +83,7 @@ namespace WinCopies.Collections
 #if WinCopies3
             ThrowHelper
 #else
-            Util.Util
+            WinCopies.Util.Util
 #endif
             .GetArgumentNullException(nameof(comparison));
 

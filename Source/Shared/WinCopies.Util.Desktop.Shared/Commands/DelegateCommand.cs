@@ -60,7 +60,7 @@ Util.
         /// Gets or sets the Predicate to execute when the CanExecute of the command gets called
         /// </summary>
         public
-#if CS8 && WinCopies3
+#if CS8 && WinCopies4
             PredicateNull
 #else
             Predicate
@@ -69,7 +69,7 @@ Util.
         { get; set; }
 
         public DelegateCommandBase(
-#if CS8 && WinCopies3
+#if CS8 && WinCopies4
             PredicateNull
 #else
             Predicate
@@ -104,7 +104,7 @@ Util.
         { get; set; }
 
         public DelegateCommand(
-#if CS8 && WinCopies3
+#if CS8 && WinCopies4
             PredicateNull
 #else
             Predicate
@@ -294,7 +294,7 @@ Util.
         { get; set; }
 
         public DelegateQueryCommand(
-#if CS8 && WinCopies3
+#if CS8 && WinCopies4
             PredicateNull
 #else
             Predicate

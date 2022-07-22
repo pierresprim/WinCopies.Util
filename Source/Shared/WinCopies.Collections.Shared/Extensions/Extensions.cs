@@ -109,11 +109,10 @@ namespace WinCopies.Collections
         public static bool IsEnumeratorNotStartedOrDisposed(this IDisposableEnumeratorInfo enumerator) => (enumerator ?? throw GetArgumentNullException(nameof(enumerator))).IsDisposed || !enumerator.IsStarted;
 
         #region Enumerables extension methods
-
         // todo:
 
-        /*#region Contains methods
-        // public static bool Contains(this IEnumerable array, object value) => array.Contains(value, EqualityComparer<object>.Default);
+        #region Contains methods
+        /*// public static bool Contains(this IEnumerable array, object value) => array.Contains(value, EqualityComparer<object>.Default);
 
         public static bool Contains(this IEnumerable array, object value, IEqualityComparer comparer)
         {
@@ -235,8 +234,8 @@ namespace WinCopies.Collections
 
         public static bool ContainsRange<T>(this System.Collections.Generic.IEnumerable<T> array, System.Collections.Generic.IComparer comparer, out int index, params T[] values);
 
-        public static bool ContainsRange<T>(this System.Collections.Generic.IEnumerable<T> array, Comparison comparison, out int index, params T[] values);
-        #endregion*/
+        public static bool ContainsRange<T>(this System.Collections.Generic.IEnumerable<T> array, Comparison comparison, out int index, params T[] values);*/
+        #endregion
 
         // todo: Add-, Insert-, Remove-If(Not)Contains methods: add parameters like the Contains methods
 
@@ -1536,7 +1535,6 @@ namespace WinCopies.Collections
         #endregion
         #endregion
         #region Generic methods
-
         #region ContainsOneValue overloads
         public static bool ContainsOneValue<T>(System.Collections.Generic.IEnumerable<T> array, in EqualityComparison<T> comparison, out bool containsMoreThanOneValue, in T[] values)
         {

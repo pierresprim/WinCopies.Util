@@ -6,7 +6,7 @@ The WinCopies® software framework
 CHANGELOG
 ---------
 
-### 07/18/2022 2.19
+### 07/2022 2.19
 
 - WinCopies.Collections.DotNetFix.ReadOnlyObservableLinkedCollection\<T> : inherits from DisposableBase
 - WinCopies.Collections.Enumerable

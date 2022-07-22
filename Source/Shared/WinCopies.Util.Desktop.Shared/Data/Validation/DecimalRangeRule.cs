@@ -96,7 +96,13 @@ namespace WinCopies.Util.Data
             Data
         { get; set; }
 
-        public override bool AllowNullValue => false;
+        public override bool
+#if WinCopies3
+            AllowNullValue
+#else
+            AllowNullValueOverride
+#endif
+            => false;
 
         public event PropertyChangedEventHandler PropertyChanged;
 

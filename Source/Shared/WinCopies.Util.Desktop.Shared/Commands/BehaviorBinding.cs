@@ -211,7 +211,7 @@ namespace WinCopies.
             Freezable
 #endif
             CreateInstanceCore() => new
-#if !CS10
+#if !(WinCopies3 && CS10)
             BehaviorBinding
 #endif
             ();

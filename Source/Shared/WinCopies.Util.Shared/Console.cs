@@ -7,9 +7,13 @@ using WinCopies.Util;
 
 using static System.Console;
 
+using static WinCopies.
+#if WinCopies3
+    UtilHelpers;
 using static WinCopies
-#if !WinCopies3
-    .Util
+#else
+    Util.Util;
+using static WinCopies.Util
 #endif
     .ThrowHelper;
 
@@ -45,7 +49,12 @@ namespace WinCopies
         ?
 #endif
         server, bool? increment, ConsoleColor? consoleColor = null);
+#if !WinCopies3
+}
 
+namespace WinCopies
+{
+#endif
     namespace Extensions
     {
         public enum LoggingLevel
@@ -118,84 +127,84 @@ namespace WinCopies
 #if CS8
                         =>
 #else
-                {
-                    switch (
+                    {
+                        switch (
 #endif
-                        level
+                            level
 #if CS8
                             switch
 #else
-                    )
+                        )
 #endif
                         {
 #if !CS8
-                        case
+                            case
 #endif
-                            LoggingLevel.Information
+                                LoggingLevel.Information
 #if CS8
                                     =>
 #else
-                    :
-                            return
+                        :
+                                return
 #endif
-                                    ConsoleColor.Blue
+                                        ConsoleColor.Blue
 #if CS8
                                 ,
 #else
-                            ;
-                        case
+                                ;
+                            case
 #endif
-                            LoggingLevel.Success
+                                LoggingLevel.Success
 #if CS8
                             =>
 #else
-                    :
-                            return
+                        :
+                                return
 #endif
-                            ConsoleColor.DarkGreen
+                                ConsoleColor.DarkGreen
 #if CS8
                                 ,
 #else
-                            ;
-                        case
+                                ;
+                            case
 #endif
-                            LoggingLevel.Warning
+                                LoggingLevel.Warning
 #if CS8
                                     =>
 #else
-                    :
-                            return
+                        :
+                                return
 #endif
-                                    ConsoleColor.DarkYellow
+                                        ConsoleColor.DarkYellow
 #if CS8
                                 ,
 #else
-                            ;
-                        case
+                                ;
+                            case
 #endif
-                            LoggingLevel.Error
+                                LoggingLevel.Error
 #if CS8
                                     =>
 #else
-                    :
-                            return
+                        :
+                                return
 #endif
-                                    ConsoleColor.DarkRed
+                                        ConsoleColor.DarkRed
 #if CS8
                                 ,
                             _ =>
 #else
-                            ;
-                        default:
-                            return
+                                ;
+                            default:
+                                return
 #endif
-                    null
+                        null
 #if CS8
                         };
 #else
-                    ;
+                        ;
+                        }
                     }
-                }
 #endif
                     ConsoleColor? consoleColor = getColor();
 
@@ -227,7 +236,7 @@ namespace WinCopies
 
             private static string GetPath()
             {
-                string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), UtilHelpers.GetAssemblyName(), "logs");
+                string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), GetAssemblyName(), "logs");
 
                 _ = Directory.CreateDirectory(path);
 
@@ -265,7 +274,12 @@ namespace WinCopies
 #endif
             message, bool? increment, LoggingLevel level);
     }
+#if !WinCopies3
+}
 
+namespace WinCopies.Util
+{
+#endif
     public static class Console
     {
         public static unsafe void ReadLines(params IValueObject<string

@@ -355,7 +355,15 @@ namespace WinCopies.Collections
 #if CS5
             out
 #endif
-             T> : Collections.Generic.IDisposableEnumerable<T>, WinCopies.DotNetFix.IDisposable
+             T> : Collections.
+#if WinCopies3
+            Generic.
+#endif
+            IDisposableEnumerable<T>, WinCopies.
+#if !WinCopies3
+            Util.
+#endif
+            DotNetFix.IDisposable
         {
             // Left empty.
         }

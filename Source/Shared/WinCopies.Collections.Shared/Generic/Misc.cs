@@ -21,7 +21,16 @@ using System.Linq;
 using WinCopies.Collections.DotNetFix;
 using WinCopies.Collections.DotNetFix.Generic;
 
-using static WinCopies.ThrowHelper;
+using static WinCopies.
+#if WinCopies3
+    ThrowHelper
+#else
+    Util.Util;
+using static WinCopies.Util.ThrowHelper;
+
+using WinCopies.Util
+#endif
+    ;
 
 namespace WinCopies.Collections
 {

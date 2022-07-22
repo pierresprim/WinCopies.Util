@@ -109,7 +109,7 @@ namespace WinCopies.Collections.DotNetFix
 #if WinCopies3
             WinCopies.Collections.Enumerator
 #else
-            IEnumerator, Util.DotNetFix.IDisposable
+            IEnumerator, WinCopies.Util.DotNetFix.IDisposable
 #endif
         {
             private EnumerableQueue _queue;
@@ -177,7 +177,7 @@ namespace WinCopies.Collections.DotNetFix
             protected override bool MoveNextOverride()
             {
 #endif
-                ThrowIfVersionHasChanged(_queue.EnumerableVersion, _version);
+                    ThrowIfVersionHasChanged(_queue.EnumerableVersion, _version);
 
 #if !WinCopies3
                 if (_currentNode == null)

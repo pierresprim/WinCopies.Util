@@ -44,54 +44,66 @@ namespace WinCopies.Collections.DotNetFix
 #if CS7
     public static class LinkedList
     {
-        public static ILinkedList<T> GetLinkedList<T>() => new Generic.LinkedList<T>();
-        public static ILinkedList<T> GetLinkedList<T>(in System.Collections.Generic.IEnumerable<T> collection) => new Generic.LinkedList<T>(collection);
-        public static ILinkedList<T> GetLinkedList<T>(params T[] items) => new Generic.LinkedList<T>(items);
+        public static ILinkedList<T> GetLinkedList<T>() => new
+#if WinCopies3
+            Generic.
+#endif
+            LinkedList<T>();
+        public static ILinkedList<T> GetLinkedList<T>(in System.Collections.Generic.IEnumerable<T> collection) => new
+#if WinCopies3
+            Generic.
+#endif
+            LinkedList<T>(collection);
+        public static ILinkedList<T> GetLinkedList<T>(params T[] items) => new
+#if WinCopies3
+            Generic.
+#endif
+            LinkedList<T>(items);
     }
 
 #if WinCopies3
     namespace Generic
     {
 #endif
-        [DebuggerDisplay("Count = {Count}")]
-        [Serializable]
-        public class LinkedList<T> :
+    [DebuggerDisplay("Count = {Count}")]
+    [Serializable]
+    public class LinkedList<T> :
 #if WinCopies3
             IEnumerableInfoLinkedList<T>, ISortable<T>, IExtensibleEnumerable<T>
 #else
-            System.Collections.Generic.LinkedList<T>, ILinkedList2<T>
+        System.Collections.Generic.LinkedList<T>, ILinkedList2<T>
 #endif
-        {
-            #region Properties
-            public bool IsReadOnly => false;
+    {
+        #region Properties
+        public bool IsReadOnly => false;
 
-            public bool SupportsReversedEnumeration => true;
-            #endregion
+        public bool SupportsReversedEnumeration => true;
+        #endregion
 
-            #region Constructors
-            /// <summary>
-            /// Initializes a new instance of the <see cref="System.Collections.Generic.LinkedList{T}"/> class that is empty.
-            /// </summary>
-            public LinkedList()
+        #region Constructors
+        /// <summary>
+        /// Initializes a new instance of the <see cref="System.Collections.Generic.LinkedList{T}"/> class that is empty.
+        /// </summary>
+        public LinkedList()
 #if !WinCopies3
-            : base()
+        : base()
 #endif
-            { /* Left empty. */ }
+        { /* Left empty. */ }
 
-            /// <summary>
-            /// Initializes a new instance of the <see cref="System.Collections.Generic.LinkedList{T}"/> class that contains elements copied from the specified <see cref="IEnumerable"/> and has sufficient capacity to accommodate the number of elements copied.
-            /// </summary>
-            /// <param name="collection">The <see cref="IEnumerable"/> whose elements are copied to the new <see cref="System.Collections.Generic.LinkedList{T}"/>.</param>
-            /// <exception cref="ArgumentNullException"><paramref name="collection"/> is <see langword="null"/>.</exception>
-            public LinkedList(
+        /// <summary>
+        /// Initializes a new instance of the <see cref="System.Collections.Generic.LinkedList{T}"/> class that contains elements copied from the specified <see cref="IEnumerable"/> and has sufficient capacity to accommodate the number of elements copied.
+        /// </summary>
+        /// <param name="collection">The <see cref="IEnumerable"/> whose elements are copied to the new <see cref="System.Collections.Generic.LinkedList{T}"/>.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="collection"/> is <see langword="null"/>.</exception>
+        public LinkedList(
 #if WinCopies3
                 in
 #endif
-                System.Collections.Generic.IEnumerable<T> collection)
+            System.Collections.Generic.IEnumerable<T> collection)
 #if !WinCopies3
 : base(collection)
 #endif
-            {
+        {
 #if !WinCopies3
             // Left empty.
 #else
@@ -99,7 +111,7 @@ namespace WinCopies.Collections.DotNetFix
 
                     AddLast(item);
 #endif
-            }
+        }
 
 #if !WinCopies3
         /// <summary>
@@ -112,7 +124,7 @@ namespace WinCopies.Collections.DotNetFix
             // Left empty.
         }
 #endif
-            #endregion
+        #endregion
 
 #if WinCopies3
             public class LinkedListNode : ILinkedListNode<T, LinkedListNode, LinkedList<T>>, ILinkedListNode<T>
@@ -252,13 +264,13 @@ namespace WinCopies.Collections.DotNetFix
                 public UIntCountableEnumeratorInfo(in IEnumeratorInfo2<ILinkedListNode<T>> enumerator, in LinkedList<T> list) : base(enumerator, list) { /* Left empty. */ }
             }
 
-            #region Fields
+        #region Fields
             private uint _enumeratorsCount = 0;
             private object _syncRoot;
             private uint _enumerableVersion = 0;
-            #endregion
+        #endregion
 
-            #region Properties
+        #region Properties
             public LinkedListNode First { get; private set; }
 
             public T FirstValue => (First ?? throw GetEmptyListOrCollectionException()).Value;
@@ -292,9 +304,9 @@ namespace WinCopies.Collections.DotNetFix
                     return _syncRoot;
                 }
             }
-            #endregion
+        #endregion
 
-            #region Methods
+        #region Methods
             private void IncrementEnumeratorsCount() => _enumeratorsCount++;
 
             private void DecrementEnumeratorsCount()
@@ -922,7 +934,7 @@ namespace WinCopies.Collections.DotNetFix
 
             void ILinkedList<T>.Add(T item) => AddLast(item);
 
-            #region ISortable implementation
+        #region ISortable implementation
             public void Sort() => Sort(System.Collections.Generic.Comparer<T>.Default.Compare);
 
             void ISortable.Sort(Comparison comparison) => Sort((T x, T y) => comparison(x, y));
@@ -973,7 +985,7 @@ namespace WinCopies.Collections.DotNetFix
                     }
                 }
             }
-            #endregion
+        #endregion
 
 
 
@@ -1031,11 +1043,11 @@ namespace WinCopies.Collections.DotNetFix
             void IPrependableExtensibleEnumerable<T>.Prepend(T item) => AddFirst(item);
 
             void IPrependableExtensibleEnumerable<T>.PrependRange(System.Collections.Generic.IEnumerable<T> items) => AddRangeFirst(items);
-            #endregion
+        #endregion
 
             ~LinkedList() => Clear();
 #endif
-        }
+    }
 #if WinCopies3
     }
 #endif

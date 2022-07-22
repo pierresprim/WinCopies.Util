@@ -1,4 +1,4 @@
-﻿#if CS5
+﻿#if CS5 && WinCopies3
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,6 +6,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 using WinCopies.Linq;
+using WinCopies.Util;
+
+using static WinCopies.UtilHelpers;
 
 namespace WinCopies.Collections.Generic
 {
@@ -36,7 +39,7 @@ namespace WinCopies.Collections.Generic
 
             public TValue this[int index] { get => InnerDictionary.Values[Index, index]; set => InnerDictionary.Values[Index, index] = value; }
 
-            KeyValuePair<TKey, TValue> IReadOnlyList<KeyValuePair<TKey, TValue>>.this[int index] => new
+            KeyValuePair<TKey, TValue> System.Collections.Generic.IReadOnlyList<KeyValuePair<TKey, TValue>>.this[int index] => new
 #if !CS9
                 KeyValuePair<TKey, TValue>
 #endif
@@ -77,7 +80,7 @@ namespace WinCopies.Collections.Generic
                 return -1;
             }
 
-            public int GetIndex(in TKey key) => UtilHelpers.GetValue(TryGetIndex(key), index => index >= 0, () => new KeyNotFoundException());
+            public int GetIndex(in TKey key) => GetValue(TryGetIndex(key), index => index >= 0, () => new KeyNotFoundException());
 
             public bool Contains(KeyValuePair<TKey, TValue> item)
             {

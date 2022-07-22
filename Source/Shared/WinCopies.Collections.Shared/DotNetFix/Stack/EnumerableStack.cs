@@ -104,7 +104,7 @@ namespace WinCopies.Collections.DotNetFix
 #if WinCopies3
 Collections.Enumerator
 #else
-IEnumerator, Util.DotNetFix.IDisposable
+IEnumerator, WinCopies.Util.DotNetFix.IDisposable
 #endif
         {
             private EnumerableStack _stack;
