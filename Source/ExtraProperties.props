@@ -22,4 +22,21 @@
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
+
+	<Target Name="CopyNuGetPackage" AfterTargets="AfterBuild" Condition="'$(Configuration)'=='Release'">
+		<PropertyGroup>
+			<NuGetDirectory>$(ProjectDir)$(OutDir)..\*.</NuGetDirectory>
+			<NuPkg>$(NuGetDirectory)nupkg</NuPkg>
+			<SNuPkg>$(NuGetDirectory)snupkg</SNuPkg>
+			<NuGetDestination>$(SolutionDir)bin</NuGetDestination>
+		</PropertyGroup>
+		<ItemGroup>
+			<NuGetSources Include="$(NuPkg)" />
+			<NuGetSources Include="$(SNuPkg)" />
+		</ItemGroup>
+		<Message Importance="high" Text="Copying output NuGet packages in the solution directory project output directory. -- $(AssemblyName)" />
+		<Message Importance="high" Text="Copying $(NuGetSource) to $(NuGetDestination)." />
+		<Copy SourceFiles="@(NuGetSources)" DestinationFolder="$(NuGetDestination)" SkipUnchangedFiles="false" />
+		<Message Importance="high" Text="Output NuGet packages copied." />
+	</Target>
 </Project>

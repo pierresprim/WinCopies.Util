@@ -9,8 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\Changelog.3.x.md = ..\Changelog.3.x.md
 		..\Changelog.md = ..\Changelog.md
 		Directory.Build.props = Directory.Build.props
-		..\LICENSE = ..\LICENSE
 		ExtraProperties.props = ExtraProperties.props
+		..\LICENSE = ..\LICENSE
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
@@ -34,10 +34,6 @@ EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "WinCopies.Util.Extensions.Tests.Shared", "..\Tests\WinCopies.Util.Extensions.Tests.Shared\WinCopies.Util.Extensions.Tests.Shared.shproj", "{FAF3A1F6-04BB-4869-9375-21335873B371}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{A9190466-9158-4BA1-8854-3A1E38C382D3}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AttachedCommandBehaviorDemo", "..\Samples\AttachedCommandBehaviorDemo\AttachedCommandBehaviorDemo.csproj", "{4FB44B33-9AD3-4CF4-A647-CDF0E0DC3013}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PushBindingInStyleDemo", "..\Samples\PushBindingInStyleDemo\PushBindingInStyleDemo.csproj", "{6059BDCA-B570-4136-8CFA-2E36C929D447}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{60C327AB-BFEC-40EB-AC04-31D259937D82}"
 EndProject
@@ -71,6 +67,14 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "PushBindingInStyleDemo.Shar
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "AttachedCommandBehaviorDemo.Shared", "..\Samples\Shared\AttachedCommandBehaviorDemo.Shared\AttachedCommandBehaviorDemo.Shared.shproj", "{9B0217ED-FC74-4764-9DE4-7825E09A2743}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.x", "1.x", "{94892FCB-1943-4368-B5AD-B5EA91988EF4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AttachedCommandBehaviorDemo", "..\Samples\1.x\AttachedCommandBehaviorDemo\AttachedCommandBehaviorDemo.csproj", "{BACD1C05-BD0B-49FC-8DB2-78D70474D08B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PushBindingInStyleDemo", "..\Samples\1.x\PushBindingInStyleDemo\PushBindingInStyleDemo.csproj", "{4BAEFAEC-636C-4F47-9399-3CDA666094B5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{A40C609C-C466-459D-9ECD-337D8C002349}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,14 +97,6 @@ Global
 		{02632237-A279-4811-8E16-695015578677}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02632237-A279-4811-8E16-695015578677}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02632237-A279-4811-8E16-695015578677}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4FB44B33-9AD3-4CF4-A647-CDF0E0DC3013}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4FB44B33-9AD3-4CF4-A647-CDF0E0DC3013}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4FB44B33-9AD3-4CF4-A647-CDF0E0DC3013}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4FB44B33-9AD3-4CF4-A647-CDF0E0DC3013}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6059BDCA-B570-4136-8CFA-2E36C929D447}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6059BDCA-B570-4136-8CFA-2E36C929D447}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6059BDCA-B570-4136-8CFA-2E36C929D447}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6059BDCA-B570-4136-8CFA-2E36C929D447}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0B7CBC0C-AB74-45B2-A95E-41423A77AB58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0B7CBC0C-AB74-45B2-A95E-41423A77AB58}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B7CBC0C-AB74-45B2-A95E-41423A77AB58}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -125,6 +121,14 @@ Global
 		{26AF7EB8-D61C-43B8-A1A1-77397A08093B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{26AF7EB8-D61C-43B8-A1A1-77397A08093B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{26AF7EB8-D61C-43B8-A1A1-77397A08093B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BACD1C05-BD0B-49FC-8DB2-78D70474D08B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BACD1C05-BD0B-49FC-8DB2-78D70474D08B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BACD1C05-BD0B-49FC-8DB2-78D70474D08B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BACD1C05-BD0B-49FC-8DB2-78D70474D08B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BAEFAEC-636C-4F47-9399-3CDA666094B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BAEFAEC-636C-4F47-9399-3CDA666094B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BAEFAEC-636C-4F47-9399-3CDA666094B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BAEFAEC-636C-4F47-9399-3CDA666094B5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -137,8 +141,9 @@ Global
 		{02632237-A279-4811-8E16-695015578677} = {56C3C1DB-0654-4FAF-84B7-9E3DD335B51D}
 		{7CF8EBD0-34A6-4D44-A153-A77C74518CE7} = {56C3C1DB-0654-4FAF-84B7-9E3DD335B51D}
 		{FAF3A1F6-04BB-4869-9375-21335873B371} = {56C3C1DB-0654-4FAF-84B7-9E3DD335B51D}
-		{4FB44B33-9AD3-4CF4-A647-CDF0E0DC3013} = {A9190466-9158-4BA1-8854-3A1E38C382D3}
-		{6059BDCA-B570-4136-8CFA-2E36C929D447} = {A9190466-9158-4BA1-8854-3A1E38C382D3}
+		{60C327AB-BFEC-40EB-AC04-31D259937D82} = {A40C609C-C466-459D-9ECD-337D8C002349}
+		{60A717F3-70BC-491C-8D89-F7E43768884C} = {A40C609C-C466-459D-9ECD-337D8C002349}
+		{E71AAA59-006A-4228-BA0E-A361E052FCDE} = {A40C609C-C466-459D-9ECD-337D8C002349}
 		{E2160F13-964F-409C-9A4F-1FDBBDA1B76C} = {60C327AB-BFEC-40EB-AC04-31D259937D82}
 		{0B7CBC0C-AB74-45B2-A95E-41423A77AB58} = {60A717F3-70BC-491C-8D89-F7E43768884C}
 		{3D66E138-384C-4474-9D43-9707B20AA009} = {60A717F3-70BC-491C-8D89-F7E43768884C}
@@ -152,6 +157,9 @@ Global
 		{11DC7E3A-268B-4E33-83E1-DFC62C257830} = {A9190466-9158-4BA1-8854-3A1E38C382D3}
 		{531757DF-C980-4A93-937F-7EABE0F134AE} = {11DC7E3A-268B-4E33-83E1-DFC62C257830}
 		{9B0217ED-FC74-4764-9DE4-7825E09A2743} = {11DC7E3A-268B-4E33-83E1-DFC62C257830}
+		{94892FCB-1943-4368-B5AD-B5EA91988EF4} = {A9190466-9158-4BA1-8854-3A1E38C382D3}
+		{BACD1C05-BD0B-49FC-8DB2-78D70474D08B} = {94892FCB-1943-4368-B5AD-B5EA91988EF4}
+		{4BAEFAEC-636C-4F47-9399-3CDA666094B5} = {94892FCB-1943-4368-B5AD-B5EA91988EF4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AC8E2D74-F33E-4845-A513-58D1E7556181}
@@ -168,17 +176,17 @@ Global
 		Shared\WinCopies.Util.Desktop.Shared\WinCopies.Util.Desktop.Shared.projitems*{26af7eb8-d61c-43b8-a1a1-77397a08093b}*SharedItemsImports = 5
 		..\Tests\WinCopies.Util.Extensions.Tests.Shared\WinCopies.Util.Extensions.Tests.Shared.projitems*{324f290d-7d29-4ecb-bc9c-2a5b856057b1}*SharedItemsImports = 5
 		Shared\WinCopies.Util.Desktop.Shared\WinCopies.Util.Desktop.Shared.projitems*{3d66e138-384c-4474-9d43-9707b20aa009}*SharedItemsImports = 5
+		..\Samples\Shared\PushBindingInStyleDemo.Shared\PushBindingInStyleDemo.Shared.projitems*{4baefaec-636c-4f47-9399-3cda666094b5}*SharedItemsImports = 5
 		Shared\WinCopies.Util.Shared\WinCopies.Util.Shared.projitems*{4dbaf179-7b48-4bd1-98fc-cffc54d8233f}*SharedItemsImports = 5
-		..\Samples\Shared\AttachedCommandBehaviorDemo.Shared\AttachedCommandBehaviorDemo.Shared.projitems*{4fb44b33-9ad3-4cf4-a647-cdf0e0dc3013}*SharedItemsImports = 5
 		..\Samples\Shared\PushBindingInStyleDemo.Shared\PushBindingInStyleDemo.Shared.projitems*{531757df-c980-4a93-937f-7eabe0f134ae}*SharedItemsImports = 13
 		Shared\WinCopies.Collections.Shared\WinCopies.Collections.Shared.projitems*{5839bfd6-19f9-4ad3-9f4d-765845899521}*SharedItemsImports = 5
-		..\Samples\Shared\PushBindingInStyleDemo.Shared\PushBindingInStyleDemo.Shared.projitems*{6059bdca-b570-4136-8cfa-2e36c929d447}*SharedItemsImports = 5
 		..\Tests\WinCopies.Collections.Tests.Shared\WinCopies.Collections.Tests.Shared.projitems*{6db5c78e-c82a-472b-977c-adc2c91fb922}*SharedItemsImports = 13
 		Shared\WinCopies.Util.Extensions.Shared\WinCopies.Util.Extensions.Shared.projitems*{77efe22b-6abb-4538-bc73-dcf90512f0ea}*SharedItemsImports = 5
 		..\Tests\WinCopies.Util.Tests.Shared\WinCopies.Util.Tests.Shared.projitems*{7cf8ebd0-34a6-4d44-a153-a77c74518ce7}*SharedItemsImports = 13
 		Shared\WinCopies.Collections.Shared\WinCopies.Collections.Shared.projitems*{7da3a3b3-f01d-42c6-95a1-22dcfd180188}*SharedItemsImports = 13
 		..\Samples\Shared\AttachedCommandBehaviorDemo.Shared\AttachedCommandBehaviorDemo.Shared.projitems*{9b0217ed-fc74-4764-9de4-7825e09a2743}*SharedItemsImports = 13
 		..\Tests\WinCopies.Collections.Tests.Shared\WinCopies.Collections.Tests.Shared.projitems*{a462ceb6-6bdd-4793-9572-32c7e232eb45}*SharedItemsImports = 5
+		..\Samples\Shared\AttachedCommandBehaviorDemo.Shared\AttachedCommandBehaviorDemo.Shared.projitems*{bacd1c05-bd0b-49fc-8db2-78d70474d08b}*SharedItemsImports = 5
 		Shared\WinCopies.Util.Extensions.Shared\WinCopies.Util.Extensions.Shared.projitems*{d27f795e-c5ae-4031-9499-d9b6182f9512}*SharedItemsImports = 13
 		Shared\WinCopies.Util.Shared\WinCopies.Util.Shared.projitems*{e2160f13-964f-409c-9a4f-1fdbbda1b76c}*SharedItemsImports = 13
 		..\Tests\WinCopies.Util.Extensions.Tests.Shared\WinCopies.Util.Extensions.Tests.Shared.projitems*{faf3a1f6-04bb-4869-9375-21335873b371}*SharedItemsImports = 13
