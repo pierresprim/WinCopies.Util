@@ -13,6 +13,8 @@
 		<RootNamespace>WinCopies.Util.Desktop</RootNamespace>
 	</PropertyGroup>
 
+	<Import Project="$(SolutionDir)\ExtraProperties.props" />
+
 	<Import Project="..\..\Shared\WinCopies.Util.Desktop.Shared\WinCopies.Util.Desktop.Shared.projitems" Label="Shared" />
 
 	<ItemGroup Condition="$(DefineConstants.Contains('CS7'))">

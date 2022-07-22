@@ -633,12 +633,12 @@
         </member>
         <member name="P:WinCopies.Util.Commands.BehaviorBinding.Behavior">
             <summary>
-            Stores the Command Behavior Binding
+            Stores the <see cref="T:WinCopies.Util.Commands.CommandBehaviorBinding"/>.
             </summary>
         </member>
         <member name="F:WinCopies.Util.Commands.BehaviorBinding.CommandProperty">
             <summary>
-            Command Dependency Property
+            <see cref="P:WinCopies.Util.Commands.BehaviorBinding.Command"/> Dependency Property
             </summary>
         </member>
         <member name="P:WinCopies.Util.Commands.BehaviorBinding.Command">
@@ -658,7 +658,7 @@
         </member>
         <member name="F:WinCopies.Util.Commands.BehaviorBinding.ActionProperty">
             <summary>
-            Action Dependency Property
+            <see cref="P:WinCopies.Util.Commands.BehaviorBinding.Action"/> Dependency Property
             </summary>
         </member>
         <member name="P:WinCopies.Util.Commands.BehaviorBinding.Action">
@@ -678,7 +678,7 @@
         </member>
         <member name="F:WinCopies.Util.Commands.BehaviorBinding.CommandParameterProperty">
             <summary>
-            CommandParameter Dependency Property
+            <see cref="P:WinCopies.Util.Commands.BehaviorBinding.CommandParameter"/> Dependency Property
             </summary>
         </member>
         <member name="P:WinCopies.Util.Commands.BehaviorBinding.CommandParameter">
@@ -698,12 +698,12 @@
         </member>
         <member name="F:WinCopies.Util.Commands.BehaviorBinding.EventProperty">
             <summary>
-            Event Dependency Property
+            <see cref="P:WinCopies.Util.Commands.BehaviorBinding.Event"/> Dependency Property
             </summary>
         </member>
         <member name="P:WinCopies.Util.Commands.BehaviorBinding.Event">
             <summary>
-            Gets or sets the Event property.  
+            Gets or sets the Event property.
             </summary>
         </member>
         <member name="M:WinCopies.Util.Commands.BehaviorBinding.OnEventChanged(System.Windows.DependencyObject,System.Windows.DependencyPropertyChangedEventArgs)">
@@ -723,7 +723,7 @@
         </member>
         <member name="T:WinCopies.Util.Commands.CommandBehavior">
             <summary>
-            Defines the attached properties to create a CommandBehaviorBinding
+            Defines the attached properties to create a <see cref="T:WinCopies.Util.Commands.CommandBehaviorBinding"/>.
             </summary>
         </member>
         <member name="F:WinCopies.Util.Commands.CommandBehavior.BehaviorProperty">
@@ -808,14 +808,12 @@
         </member>
         <member name="M:WinCopies.Util.Commands.CommandBehavior.GetEvent(System.Windows.DependencyObject)">
             <summary>
-            Gets the Event property.  This dependency property 
-            indicates ....
+            Gets the Event property.
             </summary>
         </member>
         <member name="M:WinCopies.Util.Commands.CommandBehavior.SetEvent(System.Windows.DependencyObject,System.String)">
             <summary>
-            Sets the Event property.  This dependency property 
-            indicates ....
+            Sets the Event property.
             </summary>
         </member>
         <member name="M:WinCopies.Util.Commands.CommandBehavior.OnEventChanged(System.Windows.DependencyObject,System.Windows.DependencyPropertyChangedEventArgs)">
@@ -830,14 +828,14 @@
         </member>
         <member name="P:WinCopies.Util.Commands.CommandBehaviorBinding.Owner">
             <summary>
-            Get the owner of the CommandBinding ex: a Button
-            This property can only be set from the BindEvent Method
+            Get the owner of the <see cref="T:System.Windows.Input.CommandBinding"/> ex: a Button
+            This property can only be set from the <see cref="M:WinCopies.Util.Commands.CommandBehaviorBinding.BindEvent(System.Windows.DependencyObject,System.String)"/> Method
             </summary>
         </member>
         <member name="P:WinCopies.Util.Commands.CommandBehaviorBinding.EventName">
             <summary>
             The event name to hook up to
-            This property can only be set from the BindEvent Method
+            This property can only be set from the <see cref="M:WinCopies.Util.Commands.CommandBehaviorBinding.BindEvent(System.Windows.DependencyObject,System.String)"/> Method
             </summary>
         </member>
         <member name="P:WinCopies.Util.Commands.CommandBehaviorBinding.Event">
@@ -857,7 +855,7 @@
         </member>
         <member name="P:WinCopies.Util.Commands.CommandBehaviorBinding.Command">
             <summary>
-            The command to execute when the specified event is raised
+            The command to execute when the specified event is raised.
             </summary>
         </member>
         <member name="P:WinCopies.Util.Commands.CommandBehaviorBinding.Action">
@@ -897,8 +895,7 @@
         </member>
         <member name="M:WinCopies.Util.Commands.CommandBehaviorCollection.SetBehaviors(System.Windows.DependencyObject,WinCopies.Util.Commands.BehaviorBindingCollection)">
             <summary>
-            Provides a secure method for setting the Behaviors property.  
-            This dependency property indicates ....
+            Provides a secure method for setting the Behaviors property.
             </summary>
         </member>
         <member name="T:WinCopies.Util.Commands.BehaviorBindingCollection">
@@ -1056,13 +1053,13 @@
         </member>
         <member name="M:WinCopies.Util.Commands.EventHandlerGenerator.CreateDelegate(System.Type,System.Reflection.MethodInfo,System.Object)">
             <summary>
-            Generates a delegate with a matching signature of the supplied eventHandlerType
-            This method only supports Events that have a delegate of type void
+            Generates a delegate with a matching signature of the supplied eventHandlerType.
+            This method only supports Events that have a delegate of type void.
             </summary>
-            <param name="eventHandlerType">The delegate type to wrap. Note that this must always be a void delegate</param>
-            <param name="methodToInvoke">The method to invoke</param>
-            <param name="methodInvoker">The object where the method resides</param>
-            <returns>Returns a delegate with the same signature as eventHandlerType that calls the methodToInvoke inside</returns>
+            <param name="eventHandlerType">The delegate type to wrap. Note that this must always be a <see langword="void"/> delegate.</param>
+            <param name="methodToInvoke">The method to invoke.</param>
+            <param name="methodInvoker">The object where the method resides.</param>
+            <returns>Returns a delegate with the same signature as <paramref name="eventHandlerType"/> that calls the methodToInvoke inside.</returns>
         </member>
         <member name="T:WinCopies.Util.Commands.IExecutionStrategy">
             <summary>
@@ -1141,6 +1138,41 @@
             <summary>
             Gets the <b>DeletePermanently</b> command.
             </summary>
+        </member>
+        <member name="T:WinCopies.Util.Data.BindingProxy`1">
+            <summary>
+            Represents a <see cref="T:System.Windows.Freezable"/> object that can be used as a <see cref="T:System.Windows.Data.Binding"/> proxy. See the Remarks section.
+            </summary>
+            <typeparam name="T">The type of the data context bound to this proxy. This value is stored in the <see cref="P:WinCopies.Util.Data.BindingProxy`1.DataContext"/> property.</typeparam>
+            <remarks><para><b>Usage:</b> This class can be used in XAML when a <see cref="T:System.Windows.Data.Binding"/> must be used to link two properties when a (relative) source must be set to a <see cref="T:System.Windows.Data.Binding"/> object but when this (relative) source is not inherited via the visual tree, for example when binding a property of a class for which the instanciated object is assigned as the value of a property declared in a <see cref="T:System.Windows.Controls.ValidationRule"/> object. In that case, because the <see cref="T:System.Windows.Controls.ValidationRule"/> is not added to the visual tree, it does not inherit the data context. Then, a <see cref="T:WinCopies.Util.Data.BindingProxy`1"/> can be added as a resource for the control that is concerned by the validation and thus can be used as the source of the <see cref="T:System.Windows.Data.Binding"/>, that is why this class is called <see cref="T:WinCopies.Util.Data.BindingProxy`1"/>. However, be careful the path you use for the <see cref="T:System.Windows.Data.Binding"/> is like following: <see cref="P:WinCopies.Util.Data.BindingProxy`1.DataContext"/>.&lt;the path starting from your data context&gt; because the real source is not your data context directly, but the <see cref="P:WinCopies.Util.Data.BindingProxy`1.DataContext"/> property of this class.</para>
+            <para><b>More info:</b> When you have to use a proxy for your <see cref="T:System.Windows.Data.Binding"/> object, it is easier to use a non-generic type. A default one exists for this class : <see cref="T:WinCopies.Util.Data.BindingProxy"/>, where <typeparamref name="T"/> is sealed to <see cref="T:System.Object"/>, so that this class overload can handle every .Net object.</para>
+            </remarks>
+            <seealso cref="T:WinCopies.Util.Data.BindingProxy"/>
+        </member>
+        <member name="F:WinCopies.Util.Data.BindingProxy`1.DataContextProperty">
+            <summary>
+            Identifies the <see cref="P:WinCopies.Util.Data.BindingProxy`1.DataContext"/> property.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Util.Data.BindingProxy`1.DataContext">
+            <summary>
+            Gets or sets the data context of this binding proxy.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Util.Data.BindingProxy`1.CreateInstanceCore">
+            <summary>
+            Creates a new instance of the <see cref="T:WinCopies.Util.Data.BindingProxy`1"/> class.
+            </summary>
+            <returns>The new instance.</returns>
+        </member>
+        <member name="M:WinCopies.Util.Data.BindingProxy`1.CloneCore(System.Windows.Freezable)">
+            <inheritdoc/>
+        </member>
+        <member name="T:WinCopies.Util.Data.BindingProxy">
+            <summary>
+            Non-generic class overload of <see cref="T:WinCopies.Util.Data.BindingProxy`1"/>. See the doc for this type for more information.
+            </summary>
+            <seealso cref="T:WinCopies.Util.Data.BindingProxy`1"/>
         </member>
         <member name="T:WinCopies.Util.Data.BooleanToVisibilityConverter">
             <summary>
@@ -1534,6 +1566,11 @@
             Provides data for the <see cref="E:System.ComponentModel.INotifyPropertyChanged.PropertyChanged"/> event.
             </summary>
         </member>
+        <member name="P:WinCopies.Util.Data.ValidationRule`1.AllowNullValueOverride">
+            <summary>
+            Gets a value indicating whether <see langword="null"/> values are allowed. When this property is set to <see langword="false"/>, validation will fail for <see langword="null"/> values.
+            </summary>
+        </member>
         <member name="M:WinCopies.Util.Data.ValidationRule`1.#ctor">
             <summary>
             Initializes a new instance of the <see cref="T:System.Windows.Controls.ValidationRule"/> class.
@@ -1545,11 +1582,6 @@
             </summary>
             <param name="validationStep">One of the enumeration values that specifies when the validation rule runs.</param>
             <param name="validatesOnTargetUpdated"><see langword="true"/> to have the validation rule run when the target of the <see cref="T:System.Windows.Data.Binding"/> is updated; otherwise, <see langword="false"/>.</param>
-        </member>
-        <member name="P:WinCopies.Util.Data.ValidationRule`1.AllowNullValueOverride">
-            <summary>
-            Gets a value indicating whether null values are allowed. When this property is set to <see langword="false"/>, validation will fail for null values.
-            </summary>
         </member>
         <member name="M:WinCopies.Util.Data.ValidationRule`1.Validate(`0,System.Globalization.CultureInfo)">
             <summary>
@@ -2330,7 +2362,7 @@
             <li><see cref="P:System.Windows.RoutedEventArgs.Handled"/> defaults to <see langword="false"/>.</li>
             <li><see cref="P:System.Windows.RoutedEventArgs.Source"/> defaults to <see langword="null"/>.</li>
             <li><see cref="P:System.Windows.RoutedEventArgs.OriginalSource"/> defaults to <see langword="null"/>.</li></ul>
-            Null values for <see cref="P:System.Windows.RoutedEventArgs.Source"/> and <see cref="P:System.Windows.RoutedEventArgs.OriginalSource"/> only mean that the <see cref="T:System.Windows.RoutedEventArgs"/> data makes no attempt to specify the source. When this instance is used in a call to <see cref="M:System.Windows.UIElement.RaiseEvent(System.Windows.RoutedEventArgs)"/>, the <see cref="P:System.Windows.RoutedEventArgs.Source"/> and <see cref="P:System.Windows.RoutedEventArgs.OriginalSource"/> values are populated based on the element that raised the event and are passed on to listeners through the routing.
+            <see langword="null"/> values for <see cref="P:System.Windows.RoutedEventArgs.Source"/> and <see cref="P:System.Windows.RoutedEventArgs.OriginalSource"/> only mean that the <see cref="T:System.Windows.RoutedEventArgs"/> data makes no attempt to specify the source. When this instance is used in a call to <see cref="M:System.Windows.UIElement.RaiseEvent(System.Windows.RoutedEventArgs)"/>, the <see cref="P:System.Windows.RoutedEventArgs.Source"/> and <see cref="P:System.Windows.RoutedEventArgs.OriginalSource"/> values are populated based on the element that raised the event and are passed on to listeners through the routing.
             </remarks>
             <seealso cref="P:System.Windows.RoutedEventArgs.RoutedEvent"/>
         </member>

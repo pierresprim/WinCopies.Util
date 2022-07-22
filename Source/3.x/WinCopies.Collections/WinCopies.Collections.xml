@@ -149,15 +149,7 @@
             </summary>
             <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`2.TryPeek(`1@)"/>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`2.TryPeek(`1@)">
-            <summary>
-            Tries to peek the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> without removing it.
-            </summary>
-            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
-            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been retrieved.</returns>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`2.Peek"/>
+            <seealso cref="!:TryPeek(out TItems)"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyEnumerableQueueCollection`2.Contains(`1)">
             <summary>
@@ -200,14 +192,6 @@
             <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.StackCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.Generic.StackCollection`1"/> is empty.</exception>
             <seealso cref="!:TryPeek(out T)"/>
-        </member>
-        <member name="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyStackCollection`2.TryPeek(`1@)">
-            <summary>
-            Tries to peek the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.StackCollection`1"/> without removing it.
-            </summary>
-            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.StackCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
-            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been retrieved.</returns>
-            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyStackCollection`2.Peek"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyEnumerableStackCollection`2.Contains(`1)">
             <summary>
@@ -584,7 +568,7 @@
         </member>
         <member name="M:WinCopies.Collections.Generic.ArrayBuilder`1.#ctor(System.Collections.Generic.IEnumerable{`0}@)">
             <summary>
-            Initializes a new instance of the <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> class with a given <see cref="T:WinCopies.Collections.Generic.IEnumerable`1"/>.
+            Initializes a new instance of the <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> class with a given <see cref="T:System.Collections.Generic.IEnumerable`1"/>.
             </summary>
             <param name="enumerable">An enumerable from which to add values.</param>
         </member>
@@ -623,7 +607,7 @@
             </summary>
             <returns>A reversed enumerator for the current collection.</returns>
             <exception cref="T:System.InvalidOperationException"><see cref="P:WinCopies.Collections.Enumeration.IEnumerable.SupportsReversedEnumeration"/> is set to <see langword="false"/>.</exception>
-            <seealso cref="M:WinCopies.Collections.Generic.IEnumerable`1.GetReversedEnumerator"/>
+            <seealso cref="!:IEnumerable&lt;T&gt;.GetReversedEnumerator"/>
         </member>
         <member name="M:WinCopies.Collections.Generic.EnumerableInfo`1.#ctor(System.Func{WinCopies.Collections.Generic.IEnumeratorInfo{`0}}@,System.Func{WinCopies.Collections.Generic.IEnumeratorInfo{`0}}@)">
             <summary>
@@ -632,22 +616,6 @@
             <param name="enumeratorFunc">The func that provides the enumerators.</param>
             <param name="reversedEnumeratorFunc">The func that provides the reversed enumerators. This parameter can be null.</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="enumeratorFunc"/> is null.</exception>
-        </member>
-        <member name="T:WinCopies.Collections.Generic.IEnumerable`1">
-            <summary>
-            A collection that can be enumerated.
-            </summary>
-            <typeparam name="T">The item type of the collection.</typeparam>
-        </member>
-        <member name="M:WinCopies.Collections.Generic.IEnumerable`1.GetReversedEnumerator">
-            <summary>
-            Returns a reversed enumerator for the current collection. See the Remarks section.
-            </summary>
-            <returns>A reversed enumerator for the current collection.</returns>
-            <exception cref="T:System.InvalidOperationException"><see cref="!:SupportsReversedEnumeration"/> is set to <see langword="false"/>.</exception>
-            <remarks>
-            This method returns an enumerator that enumerates in the reversed direction that the enumerator returned by the <see cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/> method. So, for a queue, the <see cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/> method will return an enumerator that will enumerate through the queue using the FIFO direction and the <see cref="M:WinCopies.Collections.Generic.IEnumerable`1.GetReversedEnumerator"/> will throw an exception, because any reversed enumerator can be returned while a queue only supports the FIFO direction. However, a stack, which only supports the LIFO direction, will return a LIFO-enumerator as its main enumerator and throw an exception if we ask it to return a reversed enumerator. A linked list that supports the two directions, but which stores items using the FIFO direction by default, will return a FIFO-enumerator as its main enumerator and a LIFO-enumerator as its reversed enumerator.
-            </remarks>
         </member>
         <member name="P:WinCopies.Collections.Generic.EmptyCheckEnumerator`1.CurrentOverride">
             <summary>
@@ -667,7 +635,7 @@
         </member>
         <member name="P:WinCopies.Collections.Generic.EnumeratorInfo`2.CurrentOverride">
             <summary>
-            Gets the item in the collection at the current position of the enumerator.
+            When overridden in a derived class, gets the item in the collection at the current position of the enumerator.
             </summary>
         </member>
         <member name="M:WinCopies.Collections.Generic.Enumerator`3.#ctor(`1)">
@@ -721,7 +689,7 @@
         </member>
         <member name="M:WinCopies.Collections.Generic.ArrayMerger`1.#ctor(System.Collections.Generic.IEnumerable{WinCopies.Collections.DotNetFix.Generic.IUIntCountableEnumerable{`0}}@)">
             <summary>
-            Initializes a new instance of the <see cref="T:WinCopies.Collections.Generic.ArrayMerger`1"/> class with a given <see cref="T:WinCopies.Collections.Generic.IEnumerable`1"/>.
+            Initializes a new instance of the <see cref="T:WinCopies.Collections.Generic.ArrayMerger`1"/> class with a given <see cref="T:System.Collections.Generic.IEnumerable`1"/>.
             </summary>
             <param name="enumerable">An enumerable from which to add values.</param>
         </member>
@@ -819,6 +787,22 @@
             This method returns an enumerator that enumerates in the reversed direction that the enumerator returned by the <see cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/> method. So, for a queue, the <see cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/> method will return an enumerator that will enumerate through the queue using the FIFO direction and the <see cref="M:WinCopies.Collections.Enumeration.IEnumerable.GetReversedEnumerator"/> will throw an exception, because any reversed enumerator can be returned while a queue only supports the FIFO direction. However, a stack, which only supports the LIFO direction, will return a LIFO-enumerator as its main enumerator and throw an exception if we ask it to return a reversed enumerator. A linked list that supports the two directions, but which stores items using the FIFO direction by default, will return a FIFO-enumerator as its main enumerator and a LIFO-enumerator as its reversed enumerator.
             </remarks>
         </member>
+        <member name="T:WinCopies.Collections.Extensions.Generic.IEnumerable`1">
+            <summary>
+            A collection that can be enumerated.
+            </summary>
+            <typeparam name="T">The item type of the collection.</typeparam>
+        </member>
+        <member name="M:WinCopies.Collections.Extensions.Generic.IEnumerable`1.GetReversedEnumerator">
+            <summary>
+            Returns a reversed enumerator for the current collection. See the Remarks section.
+            </summary>
+            <returns>A reversed enumerator for the current collection.</returns>
+            <exception cref="T:System.InvalidOperationException"><see cref="!:SupportsReversedEnumeration"/> is set to <see langword="false"/>.</exception>
+            <remarks>
+            This method returns an enumerator that enumerates in the reversed direction that the enumerator returned by the <see cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/> method. So, for a queue, the <see cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/> method will return an enumerator that will enumerate through the queue using the FIFO direction and the <see cref="M:WinCopies.Collections.Extensions.Generic.IEnumerable`1.GetReversedEnumerator"/> will throw an exception, because any reversed enumerator can be returned while a queue only supports the FIFO direction. However, a stack, which only supports the LIFO direction, will return a LIFO-enumerator as its main enumerator and throw an exception if we ask it to return a reversed enumerator. A linked list that supports the two directions, but which stores items using the FIFO direction by default, will return a FIFO-enumerator as its main enumerator and a LIFO-enumerator as its reversed enumerator.
+            </remarks>
+        </member>
         <member name="P:WinCopies.Collections.EmptyCheckEnumerator.CurrentOverride">
             <summary>
             When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
@@ -892,7 +876,7 @@
             </summary>
             <param name="array">The source table.</param>
             <param name="arrays">The tables to concatenate.</param>
-            <returns></returns>
+            <returns>The concatenatd array.</returns>
         </member>
         <member name="T:WinCopies.Collections.TreeNode`1">
             <summary>
@@ -1075,7 +1059,7 @@
             </summary>
             <seealso cref="M:WinCopies.Collections.TreeNode`1.ClearItems"/>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.AddIfNotContains(System.Collections.IList,System.Object@)">
+        <member name="M:WinCopies.Collections.CommonExtensions.AddIfNotContains(System.Collections.IList,System.Object@)">
             <summary>
             Tries to add a value to an <see cref="T:System.Collections.IList"/> if it does not contain it already.
             </summary>
@@ -1083,7 +1067,7 @@
             <param name="value">The value to try to add to the collection</param>
             <returns><see langword="true"/> if the value has been added to the collection, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.AddRangeIfNotContains(System.Collections.IList,System.Object[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeIfNotContains(System.Collections.IList,System.Object[])">
             <summary>
             Tries to add multiple values to an <see cref="T:System.Collections.IList"/> if it does not contain them already.
             </summary>
@@ -1091,7 +1075,7 @@
             <param name="values">The values to try to add to the collection</param>
             <returns><see langword="true"/> if the value has been added to the collection, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.AddRangeIfNotContains(System.Collections.IList,System.Collections.IEnumerable@)">
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeIfNotContains(System.Collections.IList,System.Collections.IEnumerable@)">
             <summary>
             Tries to add multiple values to an <see cref="T:System.Collections.IList"/> if it does not contain them already.
             </summary>
@@ -1100,7 +1084,7 @@
             <param name="values">The values to try to add to the collection</param>
             <returns><see langword="true"/> if the value has been added to the collection, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.AddRangeIfNotContains``1(System.Collections.Generic.ICollection{``0},System.Collections.Generic.IEnumerable{``0}@)">
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeIfNotContains``1(System.Collections.Generic.ICollection{``0},System.Collections.Generic.IEnumerable{``0}@)">
             <summary>
             Tries to add multiple values to an <see cref="T:WinCopies.Collections.Generic.ICollection`1"/> if it does not contain them already.
             </summary>
@@ -1109,7 +1093,7 @@
             <param name="values">The values to try to add to the collection</param>
             <returns><see langword="true"/> if the value has been added to the collection, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.AddRangeIfNotContains``1(System.Collections.Generic.ICollection{``0},``0[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeIfNotContains``1(System.Collections.Generic.ICollection{``0},``0[])">
             <summary>
             Tries to add multiple values to an <see cref="T:WinCopies.Collections.Generic.ICollection`1"/> if it does not contain them already.
             </summary>
@@ -1118,7 +1102,7 @@
             <param name="values">The values to try to add to the collection</param>
             <returns><see langword="true"/> if the value has been added to the collection, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.AddIfNotContains``1(System.Collections.Generic.ICollection{``0},``0@)">
+        <member name="M:WinCopies.Collections.CommonExtensions.AddIfNotContains``1(System.Collections.Generic.ICollection{``0},``0@)">
             <summary>
             Tries to add a value to an <see cref="T:WinCopies.Collections.Generic.ICollection`1"/> if it does not contain it already.
             </summary>
@@ -1127,7 +1111,7 @@
             <param name="value">The value to try to add to the collection</param>
             <returns><see langword="true"/> if the value has been added to the collection, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.InsertIfNotContains(System.Collections.IList,System.Int32@,System.Object@)">
+        <member name="M:WinCopies.Collections.CommonExtensions.InsertIfNotContains(System.Collections.IList,System.Int32@,System.Object@)">
             <summary>
             Inserts a value at the specified index in a given collection if the value does not already exists in the collection.
             </summary>
@@ -1136,7 +1120,7 @@
             <param name="value">The value to add in the collection.</param>
             <returns><see langword="true"/> if the value is added to the collection, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.AddRangeFirst``1(System.Collections.Generic.LinkedList{``0},``0[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeFirst``1(System.Collections.Generic.LinkedList{``0},``0[])">
             <summary>
             Add multiple values at the top of a <see cref="T:System.Collections.Generic.LinkedList`1"/>. For better performance, use the <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> class.
             </summary>
@@ -1144,7 +1128,7 @@
             <param name="values">The values to add to this <see cref="T:System.Collections.Generic.LinkedList`1"/></param>
             <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.AddRangeFirst``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.IEnumerable{``0}@)">
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeFirst``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.IEnumerable{``0}@)">
             <summary>
             Add multiple values at the top of a <see cref="T:System.Collections.Generic.LinkedList`1"/>. For better performance, use the <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> class.
             </summary>
@@ -1152,21 +1136,21 @@
             <param name="array">The values to add to this <see cref="T:System.Collections.Generic.LinkedList`1"/></param>
             <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.AddRangeFirst``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.LinkedListNode{``0}[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeFirst``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.LinkedListNode{``0}[])">
             <summary>
             Add multiple <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s at the top of a <see cref="T:System.Collections.Generic.LinkedList`1"/>.
             </summary>
             <param name="collection">The <see cref="T:System.Collections.Generic.LinkedList`1"/> into which add the values.</param>
             <param name="nodes">The <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s to add to a <see cref="T:System.Collections.Generic.LinkedList`1"/></param>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.AddRangeFirst``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.IEnumerable{System.Collections.Generic.LinkedListNode{``0}}@)">
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeFirst``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.IEnumerable{System.Collections.Generic.LinkedListNode{``0}}@)">
             <summary>
             Add multiple <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s at the top of a <see cref="T:System.Collections.Generic.LinkedList`1"/>. For better performance, use the <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> class.
             </summary>
             <param name="collection">The <see cref="T:System.Collections.Generic.LinkedList`1"/> into which add the values.</param>
             <param name="array">The <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s to add to a <see cref="T:System.Collections.Generic.LinkedList`1"/></param>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.AddRangeLast``1(System.Collections.Generic.LinkedList{``0},``0[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeLast``1(System.Collections.Generic.LinkedList{``0},``0[])">
             <summary>
             Add multiple values at the end of a <see cref="T:System.Collections.Generic.LinkedList`1"/>. For better performance, use the <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> class.
             </summary>
@@ -1174,7 +1158,7 @@
             <param name="values">The values to add to a <see cref="T:System.Collections.Generic.LinkedList`1"/></param>
             <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.AddRangeLast``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.IEnumerable{``0}@)">
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeLast``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.IEnumerable{``0}@)">
             <summary>
             Add multiple values at the end of a <see cref="T:System.Collections.Generic.LinkedList`1"/>. For better performance, use the <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> class.
             </summary>
@@ -1182,7 +1166,7 @@
             <param name="array">The values to add to a <see cref="T:System.Collections.Generic.LinkedList`1"/></param>
             <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.AddRangeLast``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.LinkedListNode{``0}[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeLast``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.LinkedListNode{``0}[])">
             <summary>
             Add multiple <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s at the end of a <see cref="T:System.Collections.Generic.LinkedList`1"/>.
             </summary>
@@ -1190,14 +1174,14 @@
             <param name="nodes">The <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s to add to a <see cref="T:System.Collections.Generic.LinkedList`1"/></param>
             <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.AddRangeLast``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.IEnumerable{System.Collections.Generic.LinkedListNode{``0}}@)">
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeLast``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.IEnumerable{System.Collections.Generic.LinkedListNode{``0}}@)">
             <summary>
             Add multiple <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s at the end of a <see cref="T:System.Collections.Generic.LinkedList`1"/>.
             </summary>
             <param name="collection">The <see cref="T:System.Collections.Generic.LinkedList`1"/> into which add the values.</param>
             <param name="array">The <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s to add to a <see cref="T:System.Collections.Generic.LinkedList`1"/></param>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.AddRangeBefore``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.LinkedListNode{``0}@,``0[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeBefore``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.LinkedListNode{``0}@,``0[])">
             <summary>
             Add multiple values before a specified node in a <see cref="T:System.Collections.Generic.LinkedList`1"/>. For better performance, use the <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> class.
             </summary>
@@ -1206,7 +1190,7 @@
             <param name="values">The values to add to a <see cref="T:System.Collections.Generic.LinkedList`1"/></param>
             <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.AddRangeBefore``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.LinkedListNode{``0}@,System.Collections.Generic.IEnumerable{``0}@)">
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeBefore``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.LinkedListNode{``0}@,System.Collections.Generic.IEnumerable{``0}@)">
             <summary>
             Add multiple values before a specified node in a <see cref="T:System.Collections.Generic.LinkedList`1"/>. For better performance, use the <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> class.
             </summary>
@@ -1215,7 +1199,7 @@
             <param name="array">The values to add to a <see cref="T:System.Collections.Generic.LinkedList`1"/></param>
             <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.AddRangeBefore``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.LinkedListNode{``0}@,System.Collections.Generic.LinkedListNode{``0}[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeBefore``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.LinkedListNode{``0}@,System.Collections.Generic.LinkedListNode{``0}[])">
             <summary>
             Add multiple values before a specified node in a <see cref="T:System.Collections.Generic.LinkedList`1"/>.
             </summary>
@@ -1223,7 +1207,7 @@
             <param name="node">The node before which to add the values</param>
             <param name="nodes">The <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s to add to a <see cref="T:System.Collections.Generic.LinkedList`1"/></param>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.AddRangeBefore``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.LinkedListNode{``0}@,System.Collections.Generic.IEnumerable{System.Collections.Generic.LinkedListNode{``0}}@)">
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeBefore``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.LinkedListNode{``0}@,System.Collections.Generic.IEnumerable{System.Collections.Generic.LinkedListNode{``0}}@)">
             <summary>
             Add multiple values before a specified node in a <see cref="T:System.Collections.Generic.LinkedList`1"/>.
             </summary>
@@ -1231,7 +1215,7 @@
             <param name="node">The node before which to add the values</param>
             <param name="array">The values to add to a <see cref="T:System.Collections.Generic.LinkedList`1"/></param>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.AddRangeAfter``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.LinkedListNode{``0}@,``0[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeAfter``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.LinkedListNode{``0}@,``0[])">
             <summary>
             Add multiple values after a specified node in a <see cref="T:System.Collections.Generic.LinkedList`1"/>. For better performance, use the <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> class.
             </summary>
@@ -1240,7 +1224,7 @@
             <param name="values">The values to add to a <see cref="T:System.Collections.Generic.LinkedList`1"/></param>
             <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.AddRangeAfter``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.LinkedListNode{``0}@,System.Collections.Generic.IEnumerable{``0}@)">
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeAfter``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.LinkedListNode{``0}@,System.Collections.Generic.IEnumerable{``0}@)">
             <summary>
             Add multiple values after a specified node in a <see cref="T:System.Collections.Generic.LinkedList`1"/>. For better performance, use the <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> class.
             </summary>
@@ -1249,7 +1233,7 @@
             <param name="array">The values to add to a <see cref="T:System.Collections.Generic.LinkedList`1"/></param>
             <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.AddRangeAfter``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.LinkedListNode{``0}@,System.Collections.Generic.LinkedListNode{``0}[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeAfter``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.LinkedListNode{``0}@,System.Collections.Generic.LinkedListNode{``0}[])">
             <summary>
             Add multiple values after a specified node in a <see cref="T:System.Collections.Generic.LinkedList`1"/>.
             </summary>
@@ -1257,7 +1241,7 @@
             <param name="node">The node after which to add the values</param>
             <param name="nodes">The values to add to a <see cref="T:System.Collections.Generic.LinkedList`1"/></param>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.AddRangeAfter``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.LinkedListNode{``0}@,System.Collections.Generic.IEnumerable{System.Collections.Generic.LinkedListNode{``0}}@)">
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeAfter``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.LinkedListNode{``0}@,System.Collections.Generic.IEnumerable{System.Collections.Generic.LinkedListNode{``0}}@)">
             <summary>
             Add multiple values after a specified node in a <see cref="T:System.Collections.Generic.LinkedList`1"/>.
             </summary>
@@ -1265,7 +1249,7 @@
             <param name="node">The node after which to add the values</param>
             <param name="array">The values to add to a <see cref="T:System.Collections.Generic.LinkedList`1"/></param>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.AddRangeAfter``1(WinCopies.Collections.DotNetFix.Generic.ILinkedList{``0},WinCopies.Collections.DotNetFix.Generic.ILinkedListNode{``0}@,``0[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeAfter``1(WinCopies.Collections.DotNetFix.Generic.ILinkedList{``0},WinCopies.Collections.DotNetFix.Generic.ILinkedListNode{``0}@,``0[])">
             <summary>
             Add multiple values after a specified node in a <see cref="T:WinCopies.Collections.DotNetFix.Generic.ILinkedList`1"/>. For better performance, use the <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> class.
             </summary>
@@ -1274,7 +1258,7 @@
             <param name="values">The values to add to a <see cref="T:WinCopies.Collections.DotNetFix.Generic.ILinkedList`1"/></param>
             <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.AddRangeAfter``1(WinCopies.Collections.DotNetFix.Generic.ILinkedList{``0},WinCopies.Collections.DotNetFix.Generic.ILinkedListNode{``0}@,System.Collections.Generic.IEnumerable{``0}@)">
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeAfter``1(WinCopies.Collections.DotNetFix.Generic.ILinkedList{``0},WinCopies.Collections.DotNetFix.Generic.ILinkedListNode{``0}@,System.Collections.Generic.IEnumerable{``0}@)">
             <summary>
             Add multiple values after a specified node in a <see cref="T:WinCopies.Collections.DotNetFix.Generic.ILinkedList`1"/>. For better performance, use the <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> class.
             </summary>
@@ -1283,7 +1267,7 @@
             <param name="array">The values to add to a <see cref="T:WinCopies.Collections.DotNetFix.Generic.ILinkedList`1"/></param>
             <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.AddRangeFirst``1(WinCopies.Collections.DotNetFix.Generic.ILinkedList{``0},``0[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeFirst``1(WinCopies.Collections.DotNetFix.Generic.ILinkedList{``0},``0[])">
             <summary>
             Add multiple values at the top of a <see cref="T:WinCopies.Collections.DotNetFix.Generic.ILinkedList`1"/>. For better performance, use the <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> class.
             </summary>
@@ -1291,7 +1275,7 @@
             <param name="values">The values to add to this <see cref="T:WinCopies.Collections.DotNetFix.Generic.ILinkedList`1"/></param>
             <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.AddRangeFirst``1(WinCopies.Collections.DotNetFix.Generic.ILinkedList{``0},System.Collections.Generic.IEnumerable{``0}@)">
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeFirst``1(WinCopies.Collections.DotNetFix.Generic.ILinkedList{``0},System.Collections.Generic.IEnumerable{``0}@)">
             <summary>
             Add multiple values at the top of a <see cref="T:WinCopies.Collections.DotNetFix.Generic.ILinkedList`1"/>. For better performance, use the <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> class.
             </summary>
@@ -1299,7 +1283,7 @@
             <param name="array">The values to add to this <see cref="T:WinCopies.Collections.DotNetFix.Generic.ILinkedList`1"/></param>
             <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.AddRangeLast``1(WinCopies.Collections.DotNetFix.Generic.ILinkedList{``0},``0[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeLast``1(WinCopies.Collections.DotNetFix.Generic.ILinkedList{``0},``0[])">
             <summary>
             Add multiple values at the end of a <see cref="T:WinCopies.Collections.DotNetFix.Generic.ILinkedList`1"/>. For better performance, use the <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> class.
             </summary>
@@ -1307,7 +1291,7 @@
             <param name="values">The values to add to a <see cref="T:WinCopies.Collections.DotNetFix.Generic.ILinkedList`1"/></param>
             <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.AddRangeLast``1(WinCopies.Collections.DotNetFix.Generic.ILinkedList{``0},System.Collections.Generic.IEnumerable{``0}@)">
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeLast``1(WinCopies.Collections.DotNetFix.Generic.ILinkedList{``0},System.Collections.Generic.IEnumerable{``0}@)">
             <summary>
             Add multiple values at the end of a <see cref="T:WinCopies.Collections.DotNetFix.Generic.ILinkedList`1"/>. For better performance, use the <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> class.
             </summary>
@@ -1315,7 +1299,7 @@
             <param name="array">The values to add to a <see cref="T:WinCopies.Collections.DotNetFix.Generic.ILinkedList`1"/></param>
             <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.AddRangeBefore``1(WinCopies.Collections.DotNetFix.Generic.ILinkedList{``0},WinCopies.Collections.DotNetFix.Generic.ILinkedListNode{``0}@,``0[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeBefore``1(WinCopies.Collections.DotNetFix.Generic.ILinkedList{``0},WinCopies.Collections.DotNetFix.Generic.ILinkedListNode{``0}@,``0[])">
             <summary>
             Add multiple values before a specified node in a <see cref="T:WinCopies.Collections.DotNetFix.Generic.ILinkedList`1"/>. For better performance, use the <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> class.
             </summary>
@@ -1324,7 +1308,7 @@
             <param name="values">The values to add to a <see cref="T:WinCopies.Collections.DotNetFix.Generic.ILinkedList`1"/></param>
             <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.AddRangeBefore``1(WinCopies.Collections.DotNetFix.Generic.ILinkedList{``0},WinCopies.Collections.DotNetFix.Generic.ILinkedListNode{``0}@,System.Collections.Generic.IEnumerable{``0}@)">
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeBefore``1(WinCopies.Collections.DotNetFix.Generic.ILinkedList{``0},WinCopies.Collections.DotNetFix.Generic.ILinkedListNode{``0}@,System.Collections.Generic.IEnumerable{``0}@)">
             <summary>
             Add multiple values before a specified node in a <see cref="T:WinCopies.Collections.DotNetFix.Generic.ILinkedList`1"/>. For better performance, use the <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> class.
             </summary>
@@ -1333,7 +1317,7 @@
             <param name="array">The values to add to a <see cref="T:WinCopies.Collections.DotNetFix.Generic.ILinkedList`1"/></param>
             <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.RemoveRange(System.Collections.IList,System.Int32@,System.Int32@)">
+        <member name="M:WinCopies.Collections.CommonExtensions.RemoveRange(System.Collections.IList,System.Int32@,System.Int32@)">
             <summary>
             Removes multiple items in an <see cref="T:System.Collections.IList"/> collection, from a given start index for a given length.
             </summary>
@@ -1341,14 +1325,14 @@
             <param name="start">The start index in the collection from which delete the items.</param>
             <param name="length">The length to remove.</param>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.Sort``1(System.Collections.ObjectModel.ObservableCollection{``0})">
+        <member name="M:WinCopies.Collections.CommonExtensions.Sort``1(System.Collections.ObjectModel.ObservableCollection{``0})">
             <summary>
             Sorts an <see cref="T:System.Collections.ObjectModel.ObservableCollection`1"/>.
             </summary>
             <typeparam name="T">The type of the values in the <see cref="T:System.Collections.ObjectModel.ObservableCollection`1"/>.</typeparam>
             <param name="oc">The <see cref="T:System.Collections.ObjectModel.ObservableCollection`1"/> to sort.</param>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.Sort``1(System.Collections.ObjectModel.ObservableCollection{``0},System.Collections.Generic.IComparer{``0}@)">
+        <member name="M:WinCopies.Collections.CommonExtensions.Sort``1(System.Collections.ObjectModel.ObservableCollection{``0},System.Collections.Generic.IComparer{``0}@)">
             <summary>
             Sorts an <see cref="T:System.Collections.ObjectModel.ObservableCollection`1"/> with a user-defined comparer.
             </summary>
@@ -1356,7 +1340,7 @@
             <param name="oc">The <see cref="T:System.Collections.ObjectModel.ObservableCollection`1"/> to sort.</param>
             <param name="comparer">An <see cref="T:System.Collections.Generic.IComparer`1"/> providing comparison for sorting the <see cref="T:System.Collections.ObjectModel.ObservableCollection`1"/>.</param>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.ContainsOneValue(System.Collections.IEnumerable,System.Boolean@,System.Object[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneValue(System.Collections.IEnumerable,System.Boolean@,System.Object[])">
             <summary>
             Checks whether an array contains <i>exactly</i> one value of a given array.
             </summary>
@@ -1365,7 +1349,7 @@
             <param name="values">The values to compare</param>
             <returns><see langword="true"/> if <i>exactly</i> one value has been found, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.ContainsOneValue(System.Collections.IEnumerable,System.Collections.IComparer,System.Boolean@,System.Object[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneValue(System.Collections.IEnumerable,System.Collections.IComparer,System.Boolean@,System.Object[])">
             <summary>
             Checks whether an array contains <i>exactly</i> one value of a given array using a custom comparer.
             </summary>
@@ -1375,7 +1359,7 @@
             <param name="values">The values to compare</param>
             <returns><see langword="true"/> if <i>exactly</i> one value has been found, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.ContainsOneValue(System.Collections.IEnumerable,WinCopies.Collections.Comparison,System.Boolean@,System.Object[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneValue(System.Collections.IEnumerable,WinCopies.Collections.Comparison,System.Boolean@,System.Object[])">
             <summary>
             Checks whether an array contains <i>exactly</i> one value of a given array using a custom comparer.
             </summary>
@@ -1385,7 +1369,7 @@
             <param name="values">The values to compare</param>
             <returns><see langword="true"/> if <i>exactly</i> one value has been found, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.ContainsOneValue(System.Collections.IEnumerable,System.Collections.IEqualityComparer,System.Boolean@,System.Object[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneValue(System.Collections.IEnumerable,System.Collections.IEqualityComparer,System.Boolean@,System.Object[])">
             <summary>
             Checks whether an array contains <i>exactly</i> one value of a given array using a custom equality comparer.
             </summary>
@@ -1395,7 +1379,7 @@
             <param name="values">The values to compare</param>
             <returns><see langword="true"/> if <i>exactly</i> one value has been found, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.ContainsOneOrMoreValues(System.Collections.IEnumerable,System.Boolean@,System.Object[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneOrMoreValues(System.Collections.IEnumerable,System.Boolean@,System.Object[])">
             <summary>
             Checks whether an array contains at least one value of a given array.
             </summary>
@@ -1404,7 +1388,7 @@
             <param name="values">The values to compare</param>
             <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.ContainsOneOrMoreValues(System.Collections.IEnumerable,System.Collections.IComparer,System.Boolean@,System.Object[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneOrMoreValues(System.Collections.IEnumerable,System.Collections.IComparer,System.Boolean@,System.Object[])">
             <summary>
             Checks whether an array contains at least one value of a given array using a custom comparer.
             </summary>
@@ -1414,7 +1398,7 @@
             <param name="values">The values to compare</param>
             <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.ContainsOneOrMoreValues(System.Collections.IEnumerable,System.Comparison{System.Object},System.Boolean@,System.Object[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneOrMoreValues(System.Collections.IEnumerable,System.Comparison{System.Object},System.Boolean@,System.Object[])">
             <summary>
             Checks whether an array contains at least one value of a given array using a custom comparer.
             </summary>
@@ -1424,7 +1408,7 @@
             <param name="values">The values to compare</param>
             <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.ContainsOneOrMoreValues(System.Collections.IEnumerable,System.Collections.IEqualityComparer,System.Boolean@,System.Object[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneOrMoreValues(System.Collections.IEnumerable,System.Collections.IEqualityComparer,System.Boolean@,System.Object[])">
             <summary>
             Checks whether an array contains at least one value of a given array using a custom equality comparer.
             </summary>
@@ -1434,7 +1418,7 @@
             <param name="values">The values to compare</param>
             <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.ContainsOneOrMoreValues(System.Collections.IEnumerable,System.Object[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneOrMoreValues(System.Collections.IEnumerable,System.Object[])">
             <summary>
             Checks whether an array contains at least one value of a given array.
             </summary>
@@ -1442,7 +1426,7 @@
             <param name="values">The values to compare</param>
             <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.ContainsOneOrMoreValues(System.Collections.IEnumerable,System.Collections.IComparer,System.Object[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneOrMoreValues(System.Collections.IEnumerable,System.Collections.IComparer,System.Object[])">
             <summary>
             Checks whether an array contains at least one value of a given array using a custom comparer.
             </summary>
@@ -1451,7 +1435,7 @@
             <param name="values">The values to compare</param>
             <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.ContainsOneOrMoreValues(System.Collections.IEnumerable,System.Comparison{System.Object},System.Object[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneOrMoreValues(System.Collections.IEnumerable,System.Comparison{System.Object},System.Object[])">
             <summary>
             Checks whether an array contains at least one value of a given array using a custom comparer.
             </summary>
@@ -1460,7 +1444,7 @@
             <param name="values">The values to compare</param>
             <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.ContainsOneOrMoreValues(System.Collections.IEnumerable,System.Collections.IEqualityComparer,System.Object[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneOrMoreValues(System.Collections.IEnumerable,System.Collections.IEqualityComparer,System.Object[])">
             <summary>
             Checks whether an array contains at least one value of a given array using a custom comparer.
             </summary>
@@ -1469,7 +1453,7 @@
             <param name="values">The values to compare</param>
             <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.Contains(System.Collections.IEnumerable,System.Object[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.Contains(System.Collections.IEnumerable,System.Object[])">
             <summary>
             Checks whether an array contains all values of a given array.
             </summary>
@@ -1477,7 +1461,7 @@
             <param name="values">The values to compare</param>
             <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.Contains(System.Collections.IEnumerable,System.Collections.IComparer,System.Object[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.Contains(System.Collections.IEnumerable,System.Collections.IComparer,System.Object[])">
             <summary>
             Checks whether an array contains all values of a given array using a custom comparer.
             </summary>
@@ -1486,7 +1470,7 @@
             <param name="values">The values to compare</param>
             <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.Contains(System.Collections.IEnumerable,System.Comparison{System.Object},System.Object[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.Contains(System.Collections.IEnumerable,System.Comparison{System.Object},System.Object[])">
             <summary>
             Checks whether an array contains all values of a given array using a custom comparer.
             </summary>
@@ -1495,7 +1479,7 @@
             <param name="values">The values to compare</param>
             <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.Contains(System.Collections.IEnumerable,System.Collections.IEqualityComparer,System.Object[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.Contains(System.Collections.IEnumerable,System.Collections.IEqualityComparer,System.Object[])">
             <summary>
             Checks whether an array contains all values of a given array using a custom comparer.
             </summary>
@@ -1504,7 +1488,7 @@
             <param name="values">The values to compare</param>
             <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.ContainsOneValue``1(System.Collections.Generic.IEnumerable{``0},System.Boolean@,``0[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneValue``1(System.Collections.Generic.IEnumerable{``0},System.Boolean@,``0[])">
             <summary>
             Checks whether an array contains <i>exactly</i> one value of a given array.
             </summary>
@@ -1513,7 +1497,7 @@
             <param name="values">The values to compare</param>
             <returns><see langword="true"/> if <i>exactly</i> one value has been found, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.ContainsOneValue``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IComparer{``0},System.Boolean@,``0[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneValue``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IComparer{``0},System.Boolean@,``0[])">
             <summary>
             Checks whether an array contains <i>exactly</i> one value of a given array using a custom comparer.
             </summary>
@@ -1523,7 +1507,7 @@
             <param name="values">The values to compare</param>
             <returns><see langword="true"/> if <i>exactly</i> one value has been found, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.ContainsOneValue``1(System.Collections.Generic.IEnumerable{``0},System.Comparison{``0},System.Boolean@,``0[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneValue``1(System.Collections.Generic.IEnumerable{``0},System.Comparison{``0},System.Boolean@,``0[])">
             <summary>
             Checks whether an array contains <i>exactly</i> one value of a given array using a custom comparer.
             </summary>
@@ -1533,7 +1517,7 @@
             <param name="values">The values to compare</param>
             <returns><see langword="true"/> if <i>exactly</i> one value has been found, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.ContainsOneValue``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEqualityComparer{``0},System.Boolean@,``0[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneValue``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEqualityComparer{``0},System.Boolean@,``0[])">
             <summary>
             Checks whether an array contains <i>exactly</i> one value of a given array using a custom comparer.
             </summary>
@@ -1543,7 +1527,7 @@
             <param name="values">The values to compare</param>
             <returns><see langword="true"/> if <i>exactly</i> one value has been found, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.ContainsOneOrMoreValues``1(System.Collections.Generic.IEnumerable{``0},System.Boolean@,``0[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneOrMoreValues``1(System.Collections.Generic.IEnumerable{``0},System.Boolean@,``0[])">
             <summary>
             Checks whether an array contains at least one value of a given array.
             </summary>
@@ -1552,7 +1536,7 @@
             <param name="values">The values to compare</param>
             <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.ContainsOneOrMoreValues``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IComparer{``0},System.Boolean@,``0[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneOrMoreValues``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IComparer{``0},System.Boolean@,``0[])">
             <summary>
             Checks whether an array contains at least one value of a given array using a custom comparer.
             </summary>
@@ -1562,7 +1546,7 @@
             <param name="values">The values to compare</param>
             <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.ContainsOneOrMoreValues``1(System.Collections.Generic.IEnumerable{``0},System.Comparison{``0},System.Boolean@,``0[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneOrMoreValues``1(System.Collections.Generic.IEnumerable{``0},System.Comparison{``0},System.Boolean@,``0[])">
             <summary>
             Checks whether an array contains at least one value of a given array using a custom comparer.
             </summary>
@@ -1572,7 +1556,7 @@
             <param name="values">The values to compare</param>
             <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.ContainsOneOrMoreValues``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEqualityComparer{``0},System.Boolean@,``0[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneOrMoreValues``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEqualityComparer{``0},System.Boolean@,``0[])">
             <summary>
             Checks whether an array contains at least one value of a given array using a custom comparer.
             </summary>
@@ -1582,7 +1566,7 @@
             <param name="values">The values to compare</param>
             <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.ContainsOneOrMoreValues``1(System.Collections.Generic.IEnumerable{``0},``0[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneOrMoreValues``1(System.Collections.Generic.IEnumerable{``0},``0[])">
             <summary>
             Checks whether an array contains at least one value of a given array.
             </summary>
@@ -1590,7 +1574,7 @@
             <param name="values">The values to compare</param>
             <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.ContainsOneOrMoreValues``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IComparer{``0},``0[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneOrMoreValues``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IComparer{``0},``0[])">
             <summary>
             Checks whether an array contains at least one value of a given array using a custom comparer.
             </summary>
@@ -1599,7 +1583,7 @@
             <param name="values">The values to compare</param>
             <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.ContainsOneOrMoreValues``1(System.Collections.Generic.IEnumerable{``0},System.Comparison{``0},``0[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneOrMoreValues``1(System.Collections.Generic.IEnumerable{``0},System.Comparison{``0},``0[])">
             <summary>
             Checks whether an array contains at least one value of a given array using a custom comparer.
             </summary>
@@ -1608,7 +1592,7 @@
             <param name="values">The values to compare</param>
             <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.ContainsOneOrMoreValues``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEqualityComparer{``0},``0[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneOrMoreValues``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEqualityComparer{``0},``0[])">
             <summary>
             Checks whether an array contains at least one value of a given array using a custom comparer.
             </summary>
@@ -1617,7 +1601,7 @@
             <param name="values">The values to compare</param>
             <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.Contains``1(System.Collections.Generic.IEnumerable{``0},``0[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.Contains``1(System.Collections.Generic.IEnumerable{``0},``0[])">
             <summary>
             Checks whether an array contains all values of a given array.
             </summary>
@@ -1625,7 +1609,7 @@
             <param name="values">The values to compare</param>
             <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.Contains``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IComparer{``0},``0[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.Contains``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IComparer{``0},``0[])">
             <summary>
             Checks whether an array contains all values of a given array using a custom comparer.
             </summary>
@@ -1634,7 +1618,7 @@
             <param name="values">The values to compare</param>
             <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.Contains``1(System.Collections.Generic.IEnumerable{``0},System.Comparison{``0},``0[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.Contains``1(System.Collections.Generic.IEnumerable{``0},System.Comparison{``0},``0[])">
             <summary>
             Checks whether an array contains all values of a given array using a custom comparer.
             </summary>
@@ -1643,7 +1627,7 @@
             <param name="values">The values to compare</param>
             <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
         </member>
-        <member name="M:WinCopies.Collections.Extensions.Contains``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEqualityComparer{``0},``0[])">
+        <member name="M:WinCopies.Collections.CommonExtensions.Contains``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEqualityComparer{``0},``0[])">
             <summary>
             Checks whether an array contains all values of a given array using a custom comparer.
             </summary>
@@ -1711,29 +1695,10 @@
         </member>
         <member name="M:WinCopies.Linq.Extensions.AsObjectEnumerable(System.Collections.IEnumerable)">
             <summary>
-            Yield returns each object of an <see cref="T:System.Collections.IEnumerable"/>, so the given <see cref="T:System.Collections.IEnumerable"/> will be considered as an <see cref="T:WinCopies.Collections.Generic.IEnumerable`1"/>.
+            Yield returns each object of an <see cref="T:System.Collections.IEnumerable"/>, so the given <see cref="T:System.Collections.IEnumerable"/> will be considered as an <see cref="T:System.Collections.Generic.IEnumerable`1"/>.
             </summary>
-            <param name="enumerable">An <see cref="T:System.Collections.IEnumerable"/> to consider as a <see cref="T:WinCopies.Collections.Generic.IEnumerable`1"/>.</param>
-            <returns>Yield returns the same enumerable as the given <paramref name="enumerable"/>, as an <see cref="T:WinCopies.Collections.Generic.IEnumerable`1"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Linq.Extensions.As``1(System.Collections.IEnumerable)">
-            <summary>
-            Iterates through a given <see cref="T:System.Collections.IEnumerable"/> and tries to convert the items to a given generic type parameter. If an item cannot be converted, it is ignored in the resulting enumerable.
-            </summary>
-            <typeparam name="T">The generic type parameter for the resulting enumerable. Only the items that can be converted to this type will be present in the resulting enumerable.</typeparam>
-            <param name="enumerable">The source enumerable.</param>
-            <returns>An enumerable containing all the items from <paramref name="enumerable"/> that could be converted to <typeparamref name="T"/>.</returns>
-            <seealso cref="M:WinCopies.Linq.Extensions.To``1(System.Collections.IEnumerable)"/>
-        </member>
-        <member name="M:WinCopies.Linq.Extensions.To``1(System.Collections.IEnumerable)">
-            <summary>
-            Iterates through a given <see cref="T:System.Collections.IEnumerable"/> and directly converts the items to a given generic type parameter. An <see cref="T:System.InvalidCastException"/> is thrown when an item cannot be converted.
-            </summary>
-            <typeparam name="T">The generic type parameter for the resulting enumerable. All items in <paramref name="enumerable"/> will be converted to this type.</typeparam>
-            <param name="enumerable">The source enumerable.</param>
-            <returns>An enumerable containing the same items as they from <paramref name="enumerable"/>, with these items converted to <typeparamref name="T"/>.</returns>
-            <exception cref="T:System.InvalidCastException">An item could not be converted.</exception>
-            <seealso cref="M:WinCopies.Linq.Extensions.As``1(System.Collections.IEnumerable)"/>
+            <param name="enumerable">An <see cref="T:System.Collections.IEnumerable"/> to consider as a <see cref="T:System.Collections.Generic.IEnumerable`1"/>.</param>
+            <returns>Yield returns the same enumerable as the given <paramref name="enumerable"/>, as an <see cref="T:System.Collections.Generic.IEnumerable`1"/>.</returns>
         </member>
         <member name="M:WinCopies.Linq.Extensions.FirstOrDefault``1(System.Collections.IEnumerable)">
             <summary>

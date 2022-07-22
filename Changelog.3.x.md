@@ -6,7 +6,7 @@ The WinCopies® software framework
 CHANGELOG
 ---------
 
-### 07/18/2022 3.18-preview
+### 07/2022 3.18-preview
 
 - WinCopies.PropertySystem.IPropertySystemCollection\<TPropertyId, TPropertyGroup> no longer implements:
 	- ICountableEnumerableInfo\<IProperty>,

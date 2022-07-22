@@ -13,34 +13,8 @@
 		<ProduceReferenceAssembly>true</ProduceReferenceAssembly>
 	</PropertyGroup>
 
-	<!--Constants-->
-
 	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
 		<DefineConstants>TRACE;$(DefineConstants)</DefineConstants>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)'=='Release'">
-		<AssemblyName>$(PackageId)</AssemblyName>
-		<Title>$(PackageId)</Title>
-		<DocumentationFile>$(PackageId).xml</DocumentationFile>
-		<PackageLicenseFile>LICENSE</PackageLicenseFile>
-		<PackageIcon>WinCopies.png</PackageIcon>
-		<SignAssembly>true</SignAssembly>
-		<AssemblyOriginatorKeyFile>$(PackageId).snk</AssemblyOriginatorKeyFile>
-		<!-- SourceLink related properties https://github.com/dotnet/SourceLink#using-sourcelink -->
-		<!-- Optional: Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
-		<PublishRepositoryUrl>true</PublishRepositoryUrl>
-
-		<!-- Optional: Embed source files that are not tracked by the source control manager in the PDB -->
-		<EmbedUntrackedSources>true</EmbedUntrackedSources>
-
-		<!-- Optional: Build symbol package (.snupkg) to distribute the PDB containing Source Link -->
-		<IncludeSymbols>true</IncludeSymbols>
-		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
 
 	<ItemGroup Condition="'$(Configuration)'=='Release'">

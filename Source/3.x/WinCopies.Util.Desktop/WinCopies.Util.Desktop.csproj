@@ -6,13 +6,15 @@
 		<UseWPF>true</UseWPF>
 		<Description>WinCopies framework desktop utilities</Description>
 		<PackageTags>WinCopies</PackageTags>
-		<VersionPrefix>3.17</VersionPrefix>
+		<VersionPrefix>3.18</VersionPrefix>
 		<VersionSuffix>preview</VersionSuffix>
-		<AssemblyVersion>3.17</AssemblyVersion>
-		<FileVersion>3.17</FileVersion>
+		<AssemblyVersion>3.18</AssemblyVersion>
+		<FileVersion>3.18</FileVersion>
 		<RootNamespace>WinCopies.Desktop</RootNamespace>
 		<DefineConstants>WinCopies3;$(DefineConstants)</DefineConstants>
 	</PropertyGroup>
+
+	<Import Project="$(SolutionDir)\ExtraProperties.props" />
 
 	<Import Project="..\..\Shared\WinCopies.Util.Desktop.Shared\WinCopies.Util.Desktop.Shared.projitems" Label="Shared" />
 

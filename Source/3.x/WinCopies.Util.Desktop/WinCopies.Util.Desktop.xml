@@ -1058,14 +1058,12 @@
         </member>
         <member name="M:WinCopies.Commands.CommandBehavior.GetEvent(System.Windows.DependencyObject)">
             <summary>
-            Gets the Event property.  This dependency property 
-            indicates ....
+            Gets the Event property.
             </summary>
         </member>
         <member name="M:WinCopies.Commands.CommandBehavior.SetEvent(System.Windows.DependencyObject,System.String)">
             <summary>
-            Sets the Event property.  This dependency property 
-            indicates ....
+            Sets the Event property.
             </summary>
         </member>
         <member name="M:WinCopies.Commands.CommandBehavior.OnEventChanged(System.Windows.DependencyObject,System.Windows.DependencyPropertyChangedEventArgs)">
@@ -1147,8 +1145,7 @@
         </member>
         <member name="M:WinCopies.Commands.CommandBehaviorCollection.SetBehaviors(System.Windows.DependencyObject,WinCopies.Commands.BehaviorBindingCollection)">
             <summary>
-            Provides a secure method for setting the Behaviors property.  
-            This dependency property indicates ....
+            Provides a secure method for setting the Behaviors property.
             </summary>
         </member>
         <member name="T:WinCopies.Commands.BehaviorBindingCollection">
@@ -1723,6 +1720,11 @@
             Provides data for the <see cref="E:System.ComponentModel.INotifyPropertyChanged.PropertyChanged"/> event.
             </summary>
         </member>
+        <member name="P:WinCopies.Util.Data.ValidationRule`1.AllowNullValue">
+            <summary>
+            Gets a value indicating whether <see langword="null"/> values are allowed. When this property is set to <see langword="false"/>, validation will fail for <see langword="null"/> values.
+            </summary>
+        </member>
         <member name="M:WinCopies.Util.Data.ValidationRule`1.#ctor">
             <summary>
             Initializes a new instance of the <see cref="T:System.Windows.Controls.ValidationRule"/> class.
@@ -1734,11 +1736,6 @@
             </summary>
             <param name="validationStep">One of the enumeration values that specifies when the validation rule runs.</param>
             <param name="validatesOnTargetUpdated"><see langword="true"/> to have the validation rule run when the target of the <see cref="T:System.Windows.Data.Binding"/> is updated; otherwise, <see langword="false"/>.</param>
-        </member>
-        <member name="P:WinCopies.Util.Data.ValidationRule`1.AllowNullValue">
-            <summary>
-            Gets a value indicating whether null values are allowed. When this property is set to <see langword="false"/>, validation will fail for null values.
-            </summary>
         </member>
         <member name="M:WinCopies.Util.Data.ValidationRule`1.Validate(`0,System.Globalization.CultureInfo)">
             <summary>
@@ -2249,7 +2246,7 @@
             <li><see cref="P:System.Windows.RoutedEventArgs.Handled"/> defaults to <see langword="false"/>.</li>
             <li><see cref="P:System.Windows.RoutedEventArgs.Source"/> defaults to <see langword="null"/>.</li>
             <li><see cref="P:System.Windows.RoutedEventArgs.OriginalSource"/> defaults to <see langword="null"/>.</li></ul>
-            Null values for <see cref="P:System.Windows.RoutedEventArgs.Source"/> and <see cref="P:System.Windows.RoutedEventArgs.OriginalSource"/> only mean that the <see cref="T:System.Windows.RoutedEventArgs"/> data makes no attempt to specify the source. When this instance is used in a call to <see cref="M:System.Windows.UIElement.RaiseEvent(System.Windows.RoutedEventArgs)"/>, the <see cref="P:System.Windows.RoutedEventArgs.Source"/> and <see cref="P:System.Windows.RoutedEventArgs.OriginalSource"/> values are populated based on the element that raised the event and are passed on to listeners through the routing.
+            <see langword="null"/> values for <see cref="P:System.Windows.RoutedEventArgs.Source"/> and <see cref="P:System.Windows.RoutedEventArgs.OriginalSource"/> only mean that the <see cref="T:System.Windows.RoutedEventArgs"/> data makes no attempt to specify the source. When this instance is used in a call to <see cref="M:System.Windows.UIElement.RaiseEvent(System.Windows.RoutedEventArgs)"/>, the <see cref="P:System.Windows.RoutedEventArgs.Source"/> and <see cref="P:System.Windows.RoutedEventArgs.OriginalSource"/> values are populated based on the element that raised the event and are passed on to listeners through the routing.
             </remarks>
             <seealso cref="P:System.Windows.RoutedEventArgs.RoutedEvent"/>
         </member>
