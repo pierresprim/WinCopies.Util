@@ -18,7 +18,7 @@
 			<NuGetSources Include="$(SNuPkg)" />
 		</ItemGroup>
 		<Message Importance="high" Text="Copying output NuGet packages in the solution directory project output directory. -- $(AssemblyName)" />
-		<Message Importance="high" Text="Copying $(NuGetSource) to $(NuGetDestination)." />
+		<Message Importance="high" Text="Copying @(NuGetSources) to $(NuGetDestination)." />
 		<Copy SourceFiles="@(NuGetSources)" DestinationFolder="$(NuGetDestination)" SkipUnchangedFiles="false" />
 		<Message Importance="high" Text="Output NuGet packages copied." />
 	</Target>
