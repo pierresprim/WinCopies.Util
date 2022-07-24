@@ -6,7 +6,7 @@
     <SharedGUID>02122768-dc6a-467c-a5f5-ae5bf2669308</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>WinCopies.Util.Desktop.Shared</Import_RootNamespace>
+    <Import_RootNamespace>WinCopies.Desktop</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)BackgroundWorker.cs" />

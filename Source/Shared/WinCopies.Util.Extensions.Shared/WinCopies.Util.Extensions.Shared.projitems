@@ -6,7 +6,7 @@
     <SharedGUID>d27f795e-c5ae-4031-9499-d9b6182f9512</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>WinCopies.Util.Extensions.Shared</Import_RootNamespace>
+    <Import_RootNamespace>WinCopies</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)CheckedUInt64.cs" />

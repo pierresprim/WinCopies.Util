@@ -16,7 +16,6 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if !WinCopies3
-
 using System;
 using System.Diagnostics.CodeAnalysis;
 

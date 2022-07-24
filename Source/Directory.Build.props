@@ -6,9 +6,6 @@
 		<RepositoryType>Git</RepositoryType>
 		<PackageReleaseNotes>See https://github.com/pierresprim/WinCopies.Util/blob/master/Changelog.md</PackageReleaseNotes>
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
-		<SignAssembly>true</SignAssembly>
-		<PackageLicenseFile>LICENSE</PackageLicenseFile>
-		<PackageIcon>WinCopies.png</PackageIcon>
 		<Copyright>Copyright © 2022 Pierre Sprimont</Copyright>
 		<ProduceReferenceAssembly>true</ProduceReferenceAssembly>
 	</PropertyGroup>
