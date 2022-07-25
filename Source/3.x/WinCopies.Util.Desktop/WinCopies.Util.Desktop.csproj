@@ -14,7 +14,7 @@
 		<DefineConstants>WinCopies3;$(DefineConstants)</DefineConstants>
 	</PropertyGroup>
 
-	<Import Project="$(SolutionDir)\ExtraProperties.props" />
+	<Import Project="$(SolutionDir)\ExtraProperties.props" Condition="'$(Configuration)'=='Release'" />
 
 	<Import Project="..\..\Shared\WinCopies.Util.Desktop.Shared\WinCopies.Util.Desktop.Shared.projitems" Label="Shared" />
 

@@ -13,7 +13,7 @@
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 
-	<Import Project="$(SolutionDir)\ExtraProperties.props" />
+	<Import Project="$(SolutionDir)\ExtraProperties.props" Condition="'$(Configuration)'=='Release'" />
 
 	<Import Project="..\..\Shared\WinCopies.Util.Shared\WinCopies.Util.Shared.projitems" Label="Shared" />
 
