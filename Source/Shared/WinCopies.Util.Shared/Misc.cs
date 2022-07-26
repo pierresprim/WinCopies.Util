@@ -128,7 +128,14 @@ namespace WinCopies
         public ArrayValueProvider2(in ArrayValueProvider<T> values, in int length)
         {
             _values = values;
-            Length = length;
+            Count = 0;
+            Length = length > values.Items.
+#if CS5
+                Count
+#else
+                Length
+#endif
+                - values.CurrentIndex ? throw new ArgumentOutOfRangeException(nameof(length)) : length;
         }
 
         public ArrayValueProvider2(in
