@@ -6,6 +6,10 @@ The WinCopies® software framework
 CHANGELOG
 ---------
 
+### 07/2022 3.18.1-preview
+
+- See 2.19.1.
+
 ### 07/2022 3.18-preview
 
 - WinCopies.PropertySystem.IPropertySystemCollection\<TPropertyId, TPropertyGroup> no longer implements:

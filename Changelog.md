@@ -6,6 +6,10 @@ The WinCopies® software framework
 CHANGELOG
 ---------
 
+### 07/2022 2.19.1
+
+- Add new types: I/ArrayValueProvider/2\<T>
+
 ### 07/2022 2.19
 
 - WinCopies.Collections.DotNetFix.ReadOnlyObservableLinkedCollection\<T> : inherits from DisposableBase

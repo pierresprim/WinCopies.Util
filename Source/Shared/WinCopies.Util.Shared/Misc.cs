@@ -41,6 +41,113 @@ namespace WinCopies
     .Util
 #endif
 {
+    public interface IArrayValueProvider<T>
+    {
+#if CS5
+        System.Collections.Generic.IReadOnlyList<T>
+#else
+        T[]
+#endif
+        Items
+        { get; }
+
+        int CurrentIndex { get; }
+
+        T CurrentValue { get; }
+    }
+
+    public struct ArrayValueProvider<T> : IArrayValueProvider<T>
+    {
+        public
+#if CS5
+            System.Collections.Generic.IReadOnlyList<T>
+#else
+            T[]
+#endif
+            Items
+        { get; }
+
+        public int CurrentIndex { get; private set; }
+
+        public T CurrentValue => Items[CurrentIndex++];
+
+        public ArrayValueProvider(in
+#if CS5
+            System.Collections.Generic.IReadOnlyList<T>
+#else
+            T[]
+#endif
+            items, in int startIndex)
+        {
+            Items = items;
+            CurrentIndex = startIndex;
+        }
+
+        public ArrayValueProvider(in
+#if CS5
+            System.Collections.Generic.IReadOnlyList<T>
+#else
+            T[]
+#endif
+            items) : this(items, 0) { /* Left empty. */ }
+    }
+
+    public struct ArrayValueProvider2<T> : IArrayValueProvider<T>
+    {
+        private ArrayValueProvider<T> _values;
+
+        public
+#if CS5
+            System.Collections.Generic.IReadOnlyList<T>
+#else
+            T[]
+#endif
+            Items => _values.Items;
+
+        public int CurrentIndex => _values.CurrentIndex;
+
+        public T CurrentValue
+        {
+            get
+            {
+                if (Count < Length)
+                {
+                    Count++;
+
+                    return _values.CurrentValue;
+                }
+
+                throw new IndexOutOfRangeException();
+            }
+        }
+
+        public int Count { get; private set; }
+
+        public int Length { get; }
+
+        public ArrayValueProvider2(in ArrayValueProvider<T> values, in int length)
+        {
+            _values = values;
+            Length = length;
+        }
+
+        public ArrayValueProvider2(in
+#if CS5
+            System.Collections.Generic.IReadOnlyList<T>
+#else
+            T[]
+#endif
+            items, in int startIndex, in int length) : this(new ArrayValueProvider<T>(items, startIndex), length) { /* Left empty. */ }
+
+        public ArrayValueProvider2(in
+#if CS5
+            System.Collections.Generic.IReadOnlyList<T>
+#else
+            T[]
+#endif
+            items, in int length) : this(new ArrayValueProvider<T>(items), length) { /* Left empty. */ }
+    }
+
 #if CS8 && !NETSTANDARD
     public class AssemblyLoadContext : System.Runtime.Loader.AssemblyLoadContext
     {
