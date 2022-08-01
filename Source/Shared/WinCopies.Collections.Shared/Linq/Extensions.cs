@@ -26,16 +26,29 @@ using WinCopies.Util;
 
 using static WinCopies.Collections.ThrowHelper;
 
+using static
 #if WinCopies3
-using static WinCopies.ThrowHelper;
+WinCopies.ThrowHelper;
 #else
-using WinCopies.Util;
-
-using static WinCopies.Util.Util;
+WinCopies.Util.Util;
 #endif
 
 namespace WinCopies.Linq
 {
+    public static class Enumerable
+    {
+        public static IEnumerable<TResult> ForEachIfNotNull<TIn, TOut, TResult>(TIn value, Converter<TIn, IEnumerable<TOut>> converter, ExtendedConverter<TOut, TResult> extendedConverter)
+        {
+            if (value != null)
+
+                foreach (TOut item in converter(value))
+
+                    if (extendedConverter(item, out TResult result))
+
+                        yield return result;
+        }
+    }
+
     public static class Extensions
     {
         public static TOut[] Convert<TIn, TOut>(this TIn[] values, in Converter<TIn, TOut> converter)

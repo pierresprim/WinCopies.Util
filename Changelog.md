@@ -6,6 +6,10 @@ The WinCopies® software framework
 CHANGELOG
 ---------
 
+### 08/2022 2.20
+
+- Add new items.
+
 ### 07/2022 2.19.1
 
 - Add new types: I/ArrayValueProvider/2\<T>

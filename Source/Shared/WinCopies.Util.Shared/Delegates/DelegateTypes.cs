@@ -140,6 +140,8 @@ namespace WinCopies
 
     public delegate TOut ConverterRef<TIn, out TOut>(ref TIn value);
 
+    public delegate bool ExtendedConverter<TIn, TOut>(TIn value, out TOut result);
+
     public delegate void EventHandler<T>(T sender, EventArgs e);
 
     public delegate void EventHandler<TSender, TEventArgs>(TSender sender, TEventArgs e);

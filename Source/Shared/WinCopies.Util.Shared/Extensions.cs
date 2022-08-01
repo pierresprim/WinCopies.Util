@@ -36,8 +36,8 @@ using static WinCopies.
 using WinCopies.Collections.Generic;
 
 using static WinCopies.Consts;
-using static WinCopies.UtilHelpers;
 using static WinCopies.ThrowHelper;
+using static WinCopies.UtilHelpers;
 
 namespace WinCopies
 #else
