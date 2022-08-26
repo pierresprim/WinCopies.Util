@@ -6,9 +6,9 @@
 		<UseWPF>true</UseWPF>
 		<Description>WinCopies framework desktop utilities</Description>
 		<PackageTags>WinCopies</PackageTags>
-		<VersionPrefix>2.19</VersionPrefix>
-		<AssemblyVersion>2.19</AssemblyVersion>
-		<FileVersion>2.19</FileVersion>
+		<VersionPrefix>2.21</VersionPrefix>
+		<AssemblyVersion>2.21</AssemblyVersion>
+		<FileVersion>2.21</FileVersion>
 		<DefineConstants>WinCopies2;$(DefineConstants)</DefineConstants>
 		<RootNamespace>WinCopies.Util.Desktop</RootNamespace>
 	</PropertyGroup>

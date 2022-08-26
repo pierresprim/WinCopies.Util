@@ -6,10 +6,10 @@
 		<UseWPF>true</UseWPF>
 		<Description>WinCopies framework desktop utilities</Description>
 		<PackageTags>WinCopies</PackageTags>
-		<VersionPrefix>3.18</VersionPrefix>
+		<VersionPrefix>3.20</VersionPrefix>
 		<VersionSuffix>preview</VersionSuffix>
-		<AssemblyVersion>3.18</AssemblyVersion>
-		<FileVersion>3.18</FileVersion>
+		<AssemblyVersion>3.20</AssemblyVersion>
+		<FileVersion>3.20</FileVersion>
 		<RootNamespace>WinCopies.Desktop</RootNamespace>
 		<DefineConstants>WinCopies3;$(DefineConstants)</DefineConstants>
 	</PropertyGroup>

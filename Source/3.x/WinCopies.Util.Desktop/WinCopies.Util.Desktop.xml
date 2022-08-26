@@ -55,6 +55,11 @@
               Looks up a localized string similar to _Deselect all.
             </summary>
         </member>
+        <member name="P:WinCopies.Desktop.Resources.Commands.WPF.ApplicationCommands.DuplicateTab">
+            <summary>
+              Looks up a localized string similar to _Duplicate tab.
+            </summary>
+        </member>
         <member name="P:WinCopies.Desktop.Resources.Commands.WPF.ApplicationCommands.Empty">
             <summary>
               Looks up a localized string similar to Empt_y.
@@ -832,6 +837,11 @@
         <member name="P:WinCopies.Commands.ApplicationCommands.NewWindowInNewInstance">
             <summary>
             Gets the <b>NewWindowInNewInstance</b> command.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Commands.ApplicationCommands.DuplicateTab">
+            <summary>
+            Gets the <b>DuplicateTab</b> command.
             </summary>
         </member>
         <member name="P:WinCopies.Commands.ApplicationCommands.CloseTab">

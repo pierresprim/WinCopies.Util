@@ -149,7 +149,15 @@
             </summary>
             <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> is empty.</exception>
-            <seealso cref="!:TryPeek(out TItems)"/>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`2.TryPeek(`1@)"/>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`2.TryPeek(`1@)">
+            <summary>
+            Tries to peek the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/> without removing it.
+            </summary>
+            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.QueueCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been retrieved.</returns>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyQueueCollection`2.Peek"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyEnumerableQueueCollection`2.Contains(`1)">
             <summary>
@@ -192,6 +200,14 @@
             <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.StackCollection`1"/>.</returns>
             <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.Generic.StackCollection`1"/> is empty.</exception>
             <seealso cref="!:TryPeek(out T)"/>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyStackCollection`2.TryPeek(`1@)">
+            <summary>
+            Tries to peek the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.StackCollection`1"/> without removing it.
+            </summary>
+            <param name="result">The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.Generic.StackCollection`1"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
+            <returns>A <see cref="T:System.Boolean"/> value that indicates whether a value has actually been retrieved.</returns>
+            <seealso cref="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyStackCollection`2.Peek"/>
         </member>
         <member name="M:WinCopies.Collections.DotNetFix.Generic.ReadOnlyEnumerableStackCollection`2.Contains(`1)">
             <summary>
@@ -555,44 +571,6 @@
             </summary>
             <param name="index">The index of the value to remove.</param>
         </member>
-        <member name="T:WinCopies.Collections.Generic.ArrayBuilder`1">
-            <summary>
-            Builds arrays and lists by sizing them only when required. This class can be used to initialize your array or list before adding or removing values to it.
-            </summary>
-            <typeparam name="T">The type of the items.</typeparam>
-        </member>
-        <member name="M:WinCopies.Collections.Generic.ArrayBuilder`1.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> class.
-            </summary>
-        </member>
-        <member name="M:WinCopies.Collections.Generic.ArrayBuilder`1.#ctor(System.Collections.Generic.IEnumerable{`0}@)">
-            <summary>
-            Initializes a new instance of the <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> class with a given <see cref="T:System.Collections.Generic.IEnumerable`1"/>.
-            </summary>
-            <param name="enumerable">An enumerable from which to add values.</param>
-        </member>
-        <member name="M:WinCopies.Collections.Generic.ArrayBuilder`1.ToArray(System.Boolean@)">
-            <summary>
-            Returns an array with the items of this <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/>.
-            </summary>
-            <param name="remove">Indicates whether items have to be removed from the current <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> after they has been added to the new list.</param>
-            <returns>An array with the items of this <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.Generic.ArrayBuilder`1.ToArrayList(System.Boolean@)">
-            <summary>
-            Returns an <see cref="T:System.Collections.ArrayList"/> with the items of this <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/>.
-            </summary>
-            <param name="remove">Indicates whether items have to be removed from the current <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> after they has been added to the new list.</param>
-            <returns>An <see cref="T:System.Collections.ArrayList"/> with the items of this <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/>.</returns>
-        </member>
-        <member name="M:WinCopies.Collections.Generic.ArrayBuilder`1.ToList(System.Boolean@)">
-            <summary>
-            Returns a <see cref="T:System.Collections.Generic.List`1"/> with the items of this <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/>.
-            </summary>
-            <param name="remove">Indicates whether items have to be removed from the current <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> after they has been added to the new list.</param>
-            <returns>A <see cref="T:System.Collections.Generic.List`1"/> with the items of this <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/>.</returns>
-        </member>
         <member name="M:WinCopies.Collections.Generic.EnumerableInfoBase`2.#ctor(System.Func{`1}@,System.Func{`1}@)">
             <summary>
             Initializes a new instance of the <see cref="T:WinCopies.Collections.Generic.EnumerableInfoBase`2"/> class.
@@ -616,6 +594,44 @@
             <param name="enumeratorFunc">The func that provides the enumerators.</param>
             <param name="reversedEnumeratorFunc">The func that provides the reversed enumerators. This parameter can be null.</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="enumeratorFunc"/> is null.</exception>
+        </member>
+        <member name="T:WinCopies.Collections.Generic.ArrayBuilder`1">
+            <summary>
+            Builds arrays and lists by sizing them only when required. This class can be used to initialize your array or list before adding or removing values to it.
+            </summary>
+            <typeparam name="T">The type of the items.</typeparam>
+        </member>
+        <member name="M:WinCopies.Collections.Generic.ArrayBuilder`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> class.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Collections.Generic.ArrayBuilder`1.#ctor(System.Collections.Generic.IEnumerable{`0}@)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> class with a given <see cref="T:WinCopies.Collections.DotNetFix.Generic.IEnumerable`1"/>.
+            </summary>
+            <param name="enumerable">An enumerable from which to add values.</param>
+        </member>
+        <member name="M:WinCopies.Collections.Generic.ArrayBuilder`1.ToArray(System.Boolean@)">
+            <summary>
+            Returns an array with the items of this <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/>.
+            </summary>
+            <param name="remove">Indicates whether items have to be removed from the current <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> after they has been added to the new list.</param>
+            <returns>An array with the items of this <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.Generic.ArrayBuilder`1.ToArrayList(System.Boolean@)">
+            <summary>
+            Returns an <see cref="T:System.Collections.ArrayList"/> with the items of this <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/>.
+            </summary>
+            <param name="remove">Indicates whether items have to be removed from the current <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> after they has been added to the new list.</param>
+            <returns>An <see cref="T:System.Collections.ArrayList"/> with the items of this <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.Generic.ArrayBuilder`1.ToList(System.Boolean@)">
+            <summary>
+            Returns a <see cref="T:System.Collections.Generic.List`1"/> with the items of this <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/>.
+            </summary>
+            <param name="remove">Indicates whether items have to be removed from the current <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/> after they has been added to the new list.</param>
+            <returns>A <see cref="T:System.Collections.Generic.List`1"/> with the items of this <see cref="T:WinCopies.Collections.Generic.ArrayBuilder`1"/>.</returns>
         </member>
         <member name="P:WinCopies.Collections.Generic.EmptyCheckEnumerator`1.CurrentOverride">
             <summary>
@@ -689,7 +705,7 @@
         </member>
         <member name="M:WinCopies.Collections.Generic.ArrayMerger`1.#ctor(System.Collections.Generic.IEnumerable{WinCopies.Collections.DotNetFix.Generic.IUIntCountableEnumerable{`0}}@)">
             <summary>
-            Initializes a new instance of the <see cref="T:WinCopies.Collections.Generic.ArrayMerger`1"/> class with a given <see cref="T:System.Collections.Generic.IEnumerable`1"/>.
+            Initializes a new instance of the <see cref="T:WinCopies.Collections.Generic.ArrayMerger`1"/> class with a given <see cref="T:WinCopies.Collections.DotNetFix.Generic.IEnumerable`1"/>.
             </summary>
             <param name="enumerable">An enumerable from which to add values.</param>
         </member>
@@ -714,11 +730,6 @@
             <param name="remove">Indicates whether items have to be removed from the current <see cref="T:WinCopies.Collections.Generic.ArrayMerger`1"/> after they has been added to the new list.</param>
             <returns>A <see cref="T:System.Collections.Generic.List`1"/> with the items of this <see cref="T:WinCopies.Collections.Generic.ArrayMerger`1"/>.</returns>
         </member>
-        <member name="P:WinCopies.Collections.Generic.EnumerableHelper`1.LinkedList.Enumerator.CurrentOverride">
-            <summary>
-            When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
-            </summary>
-        </member>
         <member name="P:WinCopies.Collections.Generic.LinkedTreeNode`1.Enumerator.CurrentOverride">
             <summary>
             When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
@@ -728,6 +739,42 @@
             <summary>
             When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
             </summary>
+        </member>
+        <member name="T:WinCopies.Collections.Enumeration.IEnumerable">
+            <summary>
+            A collection that can be enumerated.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Collections.Enumeration.IEnumerable.SupportsReversedEnumeration">
+            <summary>
+            Gets a value indicating whether this collection can be enumerated in the two directions (FIFO and LIFO).
+            </summary>
+        </member>
+        <member name="M:WinCopies.Collections.Enumeration.IEnumerable.GetReversedEnumerator">
+            <summary>
+            Returns a reversed enumerator for the current collection. See the Remarks section.
+            </summary>
+            <returns>A reversed enumerator for the current collection.</returns>
+            <exception cref="T:System.InvalidOperationException"><see cref="P:WinCopies.Collections.Enumeration.IEnumerable.SupportsReversedEnumeration"/> is set to <see langword="false"/>.</exception>
+            <remarks>
+            This method returns an enumerator that enumerates in the reversed direction that the enumerator returned by the <see cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/> method. So, for a queue, the <see cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/> method will return an enumerator that will enumerate through the queue using the FIFO direction and the <see cref="M:WinCopies.Collections.Enumeration.IEnumerable.GetReversedEnumerator"/> will throw an exception, because any reversed enumerator can be returned while a queue only supports the FIFO direction. However, a stack, which only supports the LIFO direction, will return a LIFO-enumerator as its main enumerator and throw an exception if we ask it to return a reversed enumerator. A linked list that supports the two directions, but which stores items using the FIFO direction by default, will return a FIFO-enumerator as its main enumerator and a LIFO-enumerator as its reversed enumerator.
+            </remarks>
+        </member>
+        <member name="T:WinCopies.Collections.Extensions.Generic.IEnumerable`1">
+            <summary>
+            A collection that can be enumerated.
+            </summary>
+            <typeparam name="T">The item type of the collection.</typeparam>
+        </member>
+        <member name="M:WinCopies.Collections.Extensions.Generic.IEnumerable`1.GetReversedEnumerator">
+            <summary>
+            Returns a reversed enumerator for the current collection. See the Remarks section.
+            </summary>
+            <returns>A reversed enumerator for the current collection.</returns>
+            <exception cref="T:System.InvalidOperationException"><see cref="!:SupportsReversedEnumeration"/> is set to <see langword="false"/>.</exception>
+            <remarks>
+            This method returns an enumerator that enumerates in the reversed direction that the enumerator returned by the <see cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/> method. So, for a queue, the <see cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/> method will return an enumerator that will enumerate through the queue using the FIFO direction and the <see cref="M:WinCopies.Collections.Extensions.Generic.IEnumerable`1.GetReversedEnumerator"/> will throw an exception, because any reversed enumerator can be returned while a queue only supports the FIFO direction. However, a stack, which only supports the LIFO direction, will return a LIFO-enumerator as its main enumerator and throw an exception if we ask it to return a reversed enumerator. A linked list that supports the two directions, but which stores items using the FIFO direction by default, will return a FIFO-enumerator as its main enumerator and a LIFO-enumerator as its reversed enumerator.
+            </remarks>
         </member>
         <member name="M:WinCopies.Collections.EnumerableExtensions.ToList(System.Collections.IEnumerable,System.Int32@,System.Nullable{System.Int32}@)">
             <summary>
@@ -766,42 +813,6 @@
             <summary>
             Represents a <see cref="T:System.UInt64"/>-countable item.
             </summary>
-        </member>
-        <member name="T:WinCopies.Collections.Enumeration.IEnumerable">
-            <summary>
-            A collection that can be enumerated.
-            </summary>
-        </member>
-        <member name="P:WinCopies.Collections.Enumeration.IEnumerable.SupportsReversedEnumeration">
-            <summary>
-            Gets a value indicating whether this collection can be enumerated in the two directions (FIFO and LIFO).
-            </summary>
-        </member>
-        <member name="M:WinCopies.Collections.Enumeration.IEnumerable.GetReversedEnumerator">
-            <summary>
-            Returns a reversed enumerator for the current collection. See the Remarks section.
-            </summary>
-            <returns>A reversed enumerator for the current collection.</returns>
-            <exception cref="T:System.InvalidOperationException"><see cref="P:WinCopies.Collections.Enumeration.IEnumerable.SupportsReversedEnumeration"/> is set to <see langword="false"/>.</exception>
-            <remarks>
-            This method returns an enumerator that enumerates in the reversed direction that the enumerator returned by the <see cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/> method. So, for a queue, the <see cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/> method will return an enumerator that will enumerate through the queue using the FIFO direction and the <see cref="M:WinCopies.Collections.Enumeration.IEnumerable.GetReversedEnumerator"/> will throw an exception, because any reversed enumerator can be returned while a queue only supports the FIFO direction. However, a stack, which only supports the LIFO direction, will return a LIFO-enumerator as its main enumerator and throw an exception if we ask it to return a reversed enumerator. A linked list that supports the two directions, but which stores items using the FIFO direction by default, will return a FIFO-enumerator as its main enumerator and a LIFO-enumerator as its reversed enumerator.
-            </remarks>
-        </member>
-        <member name="T:WinCopies.Collections.Extensions.Generic.IEnumerable`1">
-            <summary>
-            A collection that can be enumerated.
-            </summary>
-            <typeparam name="T">The item type of the collection.</typeparam>
-        </member>
-        <member name="M:WinCopies.Collections.Extensions.Generic.IEnumerable`1.GetReversedEnumerator">
-            <summary>
-            Returns a reversed enumerator for the current collection. See the Remarks section.
-            </summary>
-            <returns>A reversed enumerator for the current collection.</returns>
-            <exception cref="T:System.InvalidOperationException"><see cref="!:SupportsReversedEnumeration"/> is set to <see langword="false"/>.</exception>
-            <remarks>
-            This method returns an enumerator that enumerates in the reversed direction that the enumerator returned by the <see cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/> method. So, for a queue, the <see cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/> method will return an enumerator that will enumerate through the queue using the FIFO direction and the <see cref="M:WinCopies.Collections.Extensions.Generic.IEnumerable`1.GetReversedEnumerator"/> will throw an exception, because any reversed enumerator can be returned while a queue only supports the FIFO direction. However, a stack, which only supports the LIFO direction, will return a LIFO-enumerator as its main enumerator and throw an exception if we ask it to return a reversed enumerator. A linked list that supports the two directions, but which stores items using the FIFO direction by default, will return a FIFO-enumerator as its main enumerator and a LIFO-enumerator as its reversed enumerator.
-            </remarks>
         </member>
         <member name="P:WinCopies.Collections.EmptyCheckEnumerator.CurrentOverride">
             <summary>
