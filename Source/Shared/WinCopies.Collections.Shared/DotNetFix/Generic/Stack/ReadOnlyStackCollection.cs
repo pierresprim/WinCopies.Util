@@ -102,45 +102,41 @@ namespace WinCopies.Collections.DotNetFix
 #endif
                  Peek() => InnerStack.Peek();
 
+#if CS8
             /// <summary>
             /// Tries to peek the object at the beginning of the <see cref="StackCollection{T}"/> without removing it.
             /// </summary>
             /// <param name="result">The object at the beginning of the <see cref="StackCollection{T}"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
             /// <returns>A <see cref="bool"/> value that indicates whether a value has actually been retrieved.</returns>
             /// <seealso cref="Peek"/>
-            public bool TryPeek(
-#if CS8
-                [MaybeNullWhen(false)]
-#endif
-                out
+            public bool TryPeek([MaybeNullWhen(false)] out
 #if WinCopies3
                 TItems
 #else
                 T
 #endif
-                 result) => InnerStack.TryPeek(out result);
+                result) => InnerStack.TryPeek(out result);
+#endif
 
 #if WinCopies3
-            void IStack<TItems>.Clear() => throw GetReadOnlyListOrCollectionException();
-
             void IStackBase<TItems>.Push(TItems item) => throw GetReadOnlyListOrCollectionException();
 
             TItems IStackBase<TItems>.Pop() => throw GetReadOnlyListOrCollectionException();
 
-            bool IStackBase<TItems>.TryPop(out TItems result)
+            bool IStackBase<TItems>.TryPop(out TItems
+#if CS9
+                ?
+#endif
+                result)
             {
                 result = default;
 
                 return false;
             }
 
-            bool IStackBase<TItems>.TryPeek(out TItems result) => InnerStack.TryPeek(out result);
-
-            void IStackBase<TItems>.Clear() => throw GetReadOnlyListOrCollectionException();
-
             bool IPeekable<TItems>.TryPeek(out TItems result) => InnerStack.TryPeek(out result);
 
-            void ISimpleLinkedListBase2.Clear() => throw GetReadOnlyListOrCollectionException();
+            void ISimpleLinkedListBase.Clear() => throw GetReadOnlyListOrCollectionException();
 
             object ISimpleLinkedListBase2.SyncRoot => InnerStack.SyncRoot;
 

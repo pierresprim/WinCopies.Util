@@ -37,7 +37,11 @@ using static WinCopies.
 #if WinCopies3
 using WinCopies.Collections.Generic;
 
-using static WinCopies.Consts.Common;
+using static WinCopies.Consts
+#if WinCopies4
+    .Common
+#endif
+    ;
 using static WinCopies.ThrowHelper;
 using static WinCopies.UtilHelpers;
 

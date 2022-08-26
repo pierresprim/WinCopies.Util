@@ -103,47 +103,41 @@ TQueue
 #endif
                  Peek() => InnerQueue.Peek();
 
+#if CS8
             /// <summary>
             /// Tries to peek the object at the beginning of the <see cref="QueueCollection{T}"/> without removing it.
             /// </summary>
             /// <param name="result">The object at the beginning of the <see cref="QueueCollection{T}"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
             /// <returns>A <see cref="bool"/> value that indicates whether a value has actually been retrieved.</returns>
             /// <seealso cref="Peek"/>
-            public bool TryPeek(
-#if CS8
-                [MaybeNullWhen(false)]
-#endif
-                out
+            public bool TryPeek([MaybeNullWhen(false)] out
 #if WinCopies3
                 TItems
 #else
                 T
 #endif
-                 result) => InnerQueue.TryPeek(out result);
+                result) => InnerQueue.TryPeek(out result);
+#endif
 
 #if WinCopies3
-            bool IQueue<TItems>.TryPeek(out TItems result) => InnerQueue.TryPeek(out result);
-
-            void IQueue<TItems>.Clear() => throw GetReadOnlyListOrCollectionException();
-
             void IQueueBase<TItems>.Enqueue(TItems item) => throw GetReadOnlyListOrCollectionException();
 
             TItems IQueueBase<TItems>.Dequeue() => throw GetReadOnlyListOrCollectionException();
 
-            bool IQueueBase<TItems>.TryDequeue(out TItems result)
+            bool IQueueBase<TItems>.TryDequeue(out TItems
+#if CS9
+                ?
+#endif
+                result)
             {
                 result = default;
 
                 return false;
             }
 
-            bool IQueueBase<TItems>.TryPeek(out TItems result) => InnerQueue.TryPeek(out result);
-
-            void IQueueBase<TItems>.Clear() => throw GetReadOnlyListOrCollectionException();
-
             bool IPeekable<TItems>.TryPeek(out TItems result) => InnerQueue.TryPeek(out result);
 
-            void ISimpleLinkedListBase2.Clear() => throw GetReadOnlyListOrCollectionException();
+            void ISimpleLinkedListBase.Clear() => throw GetReadOnlyListOrCollectionException();
 
             object ISimpleLinkedListBase2.SyncRoot => InnerQueue.SyncRoot;
 

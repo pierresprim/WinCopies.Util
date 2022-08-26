@@ -24,7 +24,11 @@ namespace WinCopies.Collections.DotNetFix
         object Pop();
 
 #if WinCopies3
-        bool TryPop(out object result);
+        bool TryPop(out object
+#if CS8
+            ?
+#endif
+            result);
 #endif
     }
 

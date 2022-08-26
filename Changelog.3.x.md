@@ -10,7 +10,11 @@ CHANGELOG
 
 - New routed command: DuplicateTab.
 - WinCopies.Collections:
-	- DotNetFix.Generic.IQueue/StackBase\<T> implement IPeekable\<T>.
+	- DotNetFix:
+		- ISimpleLinkedListBase2: the method Clear() has been moved to ISimpleLinkedListBase.
+		- Generic:
+			- IQueue/StackBase\<T> implement IPeekable\<T>.
+			- IQueue/Stack\<T>: remove all items.
 	- Generic.EnumerableHelper\<T>:
 		- ILinkedList and IEnumerableLinkedList have new items.
 		- IEnumerableLinkedList implements IAsEnumerable\<ILinkedListNode>.

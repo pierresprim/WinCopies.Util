@@ -35,26 +35,16 @@ namespace WinCopies.Collections.DotNetFix.Generic
         T Pop();
 
 #if WinCopies3
-        bool TryPop(out T result);
-
-        // These methods are defined here because the Peek operation of the Stack is not the same as the Queue one.
-
-        T Peek();
-
-        bool TryPeek(out T result);
-
-        void Clear();
+        bool TryPop(out T
+#if CS9
+            ?
+#endif
+            result);
     }
 
     public interface IStack<T> : ISimpleLinkedList<T>, IStackBase<T>
     {
-        // This method is re-defined to avoid amibguous calls.
-
-        new T Peek();
-
-        new bool TryPeek(out T result);
-
-        new void Clear();
+        // Left empty.
 #endif
     }
 

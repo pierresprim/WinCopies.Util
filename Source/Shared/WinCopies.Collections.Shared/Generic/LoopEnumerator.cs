@@ -84,7 +84,7 @@ namespace WinCopies.Collections
 #endif
             (typeof(T), bindingFlags, predicate);
 
-        private static IReadOnlyList<PropertyInfo> GetArray(in IEnumerable<PropertyInfo> properties, in Predicate<PropertyInfo> predicate)
+        private static System.Collections.Generic.IReadOnlyList<PropertyInfo> GetArray(in IEnumerable<PropertyInfo> properties, in Predicate<PropertyInfo> predicate)
         {
             var builder = new ArrayBuilder<PropertyInfo>();
 
@@ -167,14 +167,7 @@ namespace WinCopies.Collections
 #endif
         public class ListLoopEnumerator<T> : IReadOnlyListLoopEnumerator, ILoopEnumerator<T>
         {
-            protected
-#if CS6
-            System.Collections.Generic.
-#else
-            
-#endif
-            IReadOnlyList<T> InnerArray
-            { get; }
+            protected System.Collections.Generic.IReadOnlyList<T> InnerArray { get; }
 
             public T Current => InnerArray[CurrentIndex];
 
@@ -182,7 +175,7 @@ namespace WinCopies.Collections
 
             public int CurrentIndex { get; protected set; }
 
-            public ListLoopEnumerator(in IReadOnlyList<T> array) => InnerArray = array;
+            public ListLoopEnumerator(in System.Collections.Generic.IReadOnlyList<T> array) => InnerArray = array;
 
             public void MovePrevious() => CurrentIndex = (CurrentIndex == 0 ? InnerArray.Count : CurrentIndex) - 1;
 
@@ -213,7 +206,7 @@ namespace WinCopies.Collections
 
             string ILoopEnumerator<string>.Current => CurrentOverride;
 
-            public StringLoopEnumerator(in IReadOnlyList<T> array) : base(array) { /* Left empty. */ }
+            public StringLoopEnumerator(in System.Collections.Generic.IReadOnlyList<T> array) : base(array) { /* Left empty. */ }
 
             public ILoopEnumerator<string> ToStringEnumerator() => new StringEnumerator(this);
         }
@@ -222,7 +215,7 @@ namespace WinCopies.Collections
         {
             protected override string CurrentOverride => Current.ToString();
 
-            public static IReadOnlyList<T> GetList()
+            public static System.Collections.Generic.IReadOnlyList<T> GetList()
             {
                 Array values = typeof(T).GetEnumValues();
 

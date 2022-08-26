@@ -40,11 +40,7 @@ namespace WinCopies.Collections.AbstractionInterop.Generic
 
             bool ISimpleLinkedListBase.HasItems => InnerQueue.HasItems;
 
-            bool IQueue<TDestination>.TryPeek(out TDestination result) => TryPeek(out result);
-
-            void IQueue<TDestination>.Clear() => throw GetReadOnlyListOrCollectionException();
-
-            void ISimpleLinkedListBase2.Clear() => throw GetReadOnlyListOrCollectionException();
+            void ISimpleLinkedListBase.Clear() => throw GetReadOnlyListOrCollectionException();
 
             private TDestination Peek() => InnerQueue.Peek();
 
@@ -58,15 +54,11 @@ namespace WinCopies.Collections.AbstractionInterop.Generic
 
             bool IQueueBase<TDestination>.TryDequeue(out TDestination result) => throw GetReadOnlyListOrCollectionException();
 
-            TDestination IQueueBase<TDestination>.Peek() => Peek();
-
-            bool IQueueBase<TDestination>.TryPeek(out TDestination result) => TryPeek(out result);
-
-            void IQueueBase<TDestination>.Clear() => throw GetReadOnlyListOrCollectionException();
-
-            TDestination IQueue<TDestination>.Peek() => Peek();
-
-            private bool TryPeek(out TDestination result)
+            private bool TryPeek(out TDestination
+#if CS9
+                ?
+#endif
+                result)
             {
                 if (InnerQueue.TryPeek(out TSource _result))
                 {

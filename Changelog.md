@@ -14,7 +14,6 @@ CHANGELOG
 - WinCopies.Collections
 	- Enumerable: new static method: IEnumerable\<T> FromEnumeratorFunc\<T>(in Func\<IEnumerator\<T>> func).
 	- EmptyCheckEnumerator\<T>: new constructor: EmptyCheckEnumerator(IEnumerable\<T> enumerable).
-	- DotNetFix.Generic.ReadOnlyQueue/StackCollection.TryPeek is available in all C# versions.
 
 ### 08/2022.1 2.20
 

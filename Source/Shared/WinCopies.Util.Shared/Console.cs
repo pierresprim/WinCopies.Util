@@ -278,11 +278,12 @@ namespace WinCopies
 }
 
 namespace WinCopies.Util
+{
 #elif WinCopies4
     namespace Util
-#endif
     {
-        public static class Console
+#endif
+    public static class Console
         {
             public static unsafe void ReadLines(params IValueObject<string
 #if CS8

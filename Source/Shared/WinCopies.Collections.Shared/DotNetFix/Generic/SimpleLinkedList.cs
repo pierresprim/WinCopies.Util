@@ -190,8 +190,8 @@ namespace WinCopies.Collections.DotNetFix.Generic
     {
         // Left empty.
     }
-        
-    public interface IPeekableEnumerableInfo<T> : IPeekableEnumerable<T>, IEnumerableInfo<T>
+
+    public interface IPeekableEnumerableInfo<T> : IPeekableEnumerable<T>, Collections.Generic.IEnumerableInfo<T>
     {
         // Left empty.
     }
@@ -301,11 +301,11 @@ namespace WinCopies.Collections.DotNetFix.Generic
         }
 
 #if WinCopies3
-#region ISimpleLinkedListNode implementation
+        #region ISimpleLinkedListNode implementation
         object ISimpleLinkedListNode.Value => Value;
 
         ISimpleLinkedListNode ISimpleLinkedListNode.Next => Next;
-#endregion
+        #endregion
 #endif
     }
 

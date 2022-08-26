@@ -48,7 +48,11 @@ namespace WinCopies.Collections
 #endif
             Enumerable<T>(() => GetEnumerator(items));
 
-        public static IEnumerable<T> FromEnumeratorFunc<T>(in Func<IEnumerator<T>> func) => new Generic.Enumerable<T>(func);
+        public static IEnumerable<T> FromEnumeratorFunc<T>(in Func<IEnumerator<T>> func) => new
+#if WinCopies3
+            Generic.
+#endif
+            Enumerable<T>(func);
 
         public static IEnumerable<T> FromEnumerator<T>(IEnumerator<T> enumerator) => new
 #if WinCopies3

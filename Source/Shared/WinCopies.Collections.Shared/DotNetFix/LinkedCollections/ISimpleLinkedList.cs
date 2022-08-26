@@ -21,10 +21,10 @@ namespace WinCopies.Collections.DotNetFix
     {
         object Value { get; }
 
-#if !WinCopies3
-        ISimpleLinkedListNode NextNode { get; }
-#else
+#if WinCopies3
         ISimpleLinkedListNode Next { get; }
+#else
+        ISimpleLinkedListNode NextNode { get; }
 #endif
     }
 
@@ -36,6 +36,9 @@ namespace WinCopies.Collections.DotNetFix
         bool IsReadOnly { get; }
 
         bool HasItems { get; }
+#if WinCopies3
+        void Clear();
+#endif
     }
 
     public interface ISimpleLinkedListBase2 : ISimpleLinkedListBase, IUIntCountable
@@ -44,10 +47,6 @@ namespace WinCopies.Collections.DotNetFix
         object SyncRoot { get; }
 
         bool IsSynchronized { get; }
-
-#if WinCopies3
-        void Clear();
-#endif
     }
 
     public interface ISimpleLinkedList :
@@ -57,10 +56,10 @@ namespace WinCopies.Collections.DotNetFix
              IUIntCountable
 #endif
     {
-#if !WinCopies3
-        bool IsReadOnly { get; }
-#else
+#if WinCopies3
         bool TryPeek(out object result);
+#else
+        bool IsReadOnly { get; }
 #endif
 
         object Peek();

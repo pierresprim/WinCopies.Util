@@ -35,32 +35,26 @@ namespace WinCopies.Collections.DotNetFix.Generic
         T Dequeue();
 
 #if WinCopies3
-        bool TryDequeue(out T result);
-
-        // These methods are defined here because the Peek operation of the Queue is not the same as the Stack one.
-
-        T Peek();
-
-        bool TryPeek(out T result);
-
-        void Clear();
+        bool TryDequeue(out T
+#if CS9
+            ?
+#endif
+            result);
     }
 
     public interface IQueue<T> : ISimpleLinkedList<T>, IQueueBase<T>
     {
-        // These methods are re-defined to avoid amibguous calls.
-
-        new T Peek();
-
-        new bool TryPeek(out T result);
-
-        new void Clear();
+        // Left empty.
 #endif
     }
 
     public class Queue<T> : SimpleLinkedList<T>, IQueue<T>
     {
-        private SimpleLinkedListNode<T> _lastItem;
+        private SimpleLinkedListNode<T>
+#if CS8
+            ?
+#endif
+            _lastItem;
 
 #if !WinCopies3
         public new uint Count => base.Count;

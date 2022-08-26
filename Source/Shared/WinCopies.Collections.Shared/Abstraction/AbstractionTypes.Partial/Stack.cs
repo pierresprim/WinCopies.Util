@@ -39,9 +39,11 @@ namespace WinCopies.Collections.AbstractionInterop.Generic
 
             private TDestination Peek() => InnerStack.Peek();
 
-            TDestination IStack<TDestination>.Peek() => Peek();
-
-            private bool TryPeek(out TDestination result)
+            private bool TryPeek(out TDestination
+#if CS9
+                ?
+#endif
+                result)
             {
                 if (InnerStack.TryPeek(out TSource _result))
                 {
@@ -55,11 +57,7 @@ namespace WinCopies.Collections.AbstractionInterop.Generic
                 return false;
             }
 
-            bool IStack<TDestination>.TryPeek(out TDestination result) => TryPeek(out result);
-
-            void IStack<TDestination>.Clear() => throw GetReadOnlyListOrCollectionException();
-
-            void ISimpleLinkedListBase2.Clear() => throw GetReadOnlyListOrCollectionException();
+            void ISimpleLinkedListBase.Clear() => throw GetReadOnlyListOrCollectionException();
 
             TDestination IPeekable<TDestination>.Peek() => Peek();
 
@@ -70,12 +68,6 @@ namespace WinCopies.Collections.AbstractionInterop.Generic
             TDestination IStackBase<TDestination>.Pop() => throw GetReadOnlyListOrCollectionException();
 
             bool IStackBase<TDestination>.TryPop(out TDestination result) => throw GetReadOnlyListOrCollectionException();
-
-            TDestination IStackBase<TDestination>.Peek() => Peek();
-
-            bool IStackBase<TDestination>.TryPeek(out TDestination result) => TryPeek(out result);
-
-            void IStackBase<TDestination>.Clear() => throw GetReadOnlyListOrCollectionException();
 
             TDestination ISimpleLinkedList<TDestination>.Peek() => Peek();
 

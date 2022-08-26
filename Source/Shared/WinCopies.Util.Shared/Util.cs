@@ -3662,25 +3662,25 @@ where T : Enum
         public static class Common
         {
 #endif
-            public const int NotSetIndex = -1;
-            public const int DefaultStartIndex = 0;
+        public const int NotSetIndex = -1;
+        public const int DefaultStartIndex = 0;
 
-            public const string NotApplicable = "N/A";
+        public const string NotApplicable = "N/A";
 
-            public const char PathFilterChar = '*';
-            public const char LikeStatementChar = '%';
+        public const char PathFilterChar = '*';
+        public const char LikeStatementChar = '%';
 
-            public const byte LSBMask = 1;
-            public const byte MSBMask = LSBMask << 7;
-            public const byte SetToFalseMask = byte.MaxValue;
+        public const byte LSBMask = 1;
+        public const byte MSBMask = LSBMask << 7;
+        public const byte SetToFalseMask = byte.MaxValue;
 
-            public const ushort MSBMask16 = LSBMask << 15;
-            public const ushort SetToFalseMask16 = ushort.MaxValue;
+        public const ushort MSBMask16 = LSBMask << 15;
+        public const ushort SetToFalseMask16 = ushort.MaxValue;
 
-            public const BindingFlags DefaultBindingFlagsForPropertySet = BindingFlags.Public | BindingFlags.NonPublic |
-                             BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly;
-        }
-#if WinCopies3
+        public const BindingFlags DefaultBindingFlagsForPropertySet = BindingFlags.Public | BindingFlags.NonPublic |
+                         BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly;
+#if WinCopies4
     }
 #endif
+    }
 }

@@ -194,10 +194,6 @@ namespace WinCopies.Collections.Generic
             bool ISimpleLinkedListBase.IsReadOnly => false;
 
             #region IQueueBase implementation
-            T IQueueBase<T>.Peek() => First;
-
-            bool IQueueBase<T>.TryPeek(out T result) => TryGetFirst(out result);
-
             void IQueueBase<T>.Enqueue(T item) => AddLast(item);
 
             T IQueueBase<T>.Dequeue() => GetAndRemoveFirst();
@@ -206,10 +202,6 @@ namespace WinCopies.Collections.Generic
             #endregion
 
             #region IStackBase implementation
-            T IStackBase<T>.Peek() => Last;
-
-            bool IStackBase<T>.TryPeek(out T result) => TryGetLast(out result);
-
             void IStackBase<T>.Push(T item) => AddFirst(item);
 
             T IStackBase<T>.Pop() => GetAndRemoveLast();

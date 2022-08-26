@@ -159,4 +159,7 @@
   <data name="CloseTabsToTheLeftOrRight" xml:space="preserve">
     <value>Closes tabs to the left or right of the current tab.</value>
   </data>
+  <data name="DuplicateTab" xml:space="preserve">
+    <value>_Duplicate tab</value>
+  </data>
 </root>

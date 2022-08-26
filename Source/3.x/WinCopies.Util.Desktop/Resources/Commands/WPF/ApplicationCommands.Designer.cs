@@ -124,6 +124,15 @@ namespace WinCopies.Desktop.Resources.Commands.WPF {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to _Duplicate tab.
+        /// </summary>
+        public static string DuplicateTab {
+            get {
+                return ResourceManager.GetString("DuplicateTab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Empt_y.
         /// </summary>
         public static string Empty {

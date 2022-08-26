@@ -99,14 +99,18 @@ IEnumerableStack
 #if WinCopies3
         bool ISimpleLinkedList.TryPeek(out object result) => InnerStack.TryPeek(out result);
 
-        bool IStack.TryPop(out object result)
+        bool IStack.TryPop(out object
+#if CS8
+            ?
+#endif
+            result)
         {
             result = null;
 
             return false;
         }
 
-        void ISimpleLinkedListBase2.Clear() => throw GetReadOnlyListOrCollectionException();
+        void ISimpleLinkedListBase.Clear() => throw GetReadOnlyListOrCollectionException();
 #endif
     }
 }
