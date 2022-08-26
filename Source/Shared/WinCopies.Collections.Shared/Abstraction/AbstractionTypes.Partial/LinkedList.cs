@@ -145,7 +145,9 @@ namespace WinCopies.Collections.AbstractionInterop.Generic
             {
                 protected TList InnerList { get; }
 
+#if !WinCopies4
                 bool ILinkedList2<TDestination>.IsReadOnly => false;
+#endif
 
                 ILinkedListNode<TDestination> ILinkedList<TDestination>.First => GetNode(InnerList.First);
 

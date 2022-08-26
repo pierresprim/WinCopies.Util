@@ -272,24 +272,72 @@ namespace WinCopies
         public static void EmptyVoid(object parameter) { }
         public static void EmptyVoid<T>(T parameter) { }
 
-        public static T GetDefault<T>() => default;
-        public static TOut GetDefault<TIn, TOut>(TIn value) => default;
+        public static T
+#if CS9
+            ?
+#endif
+            GetDefault<T>() => default;
+        public static TOut
+#if CS9
+            ?
+#endif
+            GetDefault<TIn, TOut>(TIn value) => default;
 
-        public static object Null(object parameter) => null;
-        public static object NullIn(in object parameter) => null;
+        public static object
+#if CS8
+            ?
+#endif
+            Null(object parameter) => null;
+        public static object
+#if CS8
+            ?
+#endif
+            NullIn(in object parameter) => null;
 
-        public static T Null<T>(T parameter) where T : class => null;
-        public static T NullIn<T>(in T parameter) where T : class => null;
+        public static T
+#if CS9
+            ?
+#endif
+            Null<T>(T parameter) where T : class => null;
+        public static T
+#if CS9
+            ?
+#endif
+            NullIn<T>(in T parameter) where T : class => null;
 
-        public static TOut Null<TIn, TOut>(TIn parameter) where TOut : class => null;
-        public static TOut NullIn<TIn, TOut>(in TIn parameter) where TOut : class => null;
+        public static TOut
+#if CS9
+            ?
+#endif
+            Null<TIn, TOut>(TIn parameter) where TOut : class => null;
+        public static TOut
+#if CS9
+            ?
+#endif
+            NullIn<TIn, TOut>(in TIn parameter) where TOut : class => null;
 
         public static T Self<T>(T value) => value;
         public static T SelfIn<T>(in T value) => value;
 
-        public static TOut Convert<TIn, TOut>(TIn value) where TOut : TIn => (TOut)value;
+        public static TOut
+#if CS9
+            ?
+#endif
+            Convert<TIn, TOut>(TIn value) where TOut : TIn => (TOut
+#if CS9
+            ?
+#endif
+            )value;
 
-        public static TOut ConvertIn<TIn, TOut>(in TIn value) where TOut : TIn => (TOut)value;
+        public static TOut
+#if CS9
+            ?
+#endif
+            ConvertIn<TIn, TOut>(in TIn value) where TOut : TIn => (TOut
+#if CS9
+            ?
+#endif
+            )value;
 
         public static TOut ConvertBack<TIn, TOut>(TIn value) where TIn : TOut => value;
 
@@ -311,7 +359,15 @@ namespace WinCopies
 
         public static bool CompareEqualityGeneric<T>(T x, T y) => CompareEqualityIn(x, y);
 
-        public static bool CompareHashCodeIn(in object x, in object y) => x == null ? y == null : y != null && x.GetHashCode() == y.GetHashCode();
+        public static bool CompareHashCodeIn(in object
+#if CS8
+            ?
+#endif
+            x, in object
+#if CS8
+            ?
+#endif
+            y) => x == null ? y == null : y != null && x.GetHashCode() == y.GetHashCode();
 
         public static bool CompareHashCode(object x, object y) => CompareHashCodeIn(x, y);
 

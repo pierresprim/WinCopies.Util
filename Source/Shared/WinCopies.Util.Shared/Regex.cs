@@ -1,7 +1,11 @@
 ﻿#if CS5
 using static WinCopies.
 #if WinCopies3
-    Consts;
+    Consts
+    #if WinCopies4
+    .Common
+    #endif
+    ;
 #else
     Util.Util;
 #endif

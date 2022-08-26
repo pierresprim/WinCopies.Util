@@ -51,10 +51,21 @@ namespace WinCopies.Diagnostics
         }
 
         private static bool CheckNullity(in object[] items, out int index, in bool mustBeNull, in bool @default = false) => CheckItems(items, out index, mustBeNull ?
-#if !CS9    
+#if !CS9
             (PredicateIn)
 #endif
-            CheckIfNotEqualsNullIn : CheckIfEqualsNullIn, @default);
+#if WinCopies4
+            NotEqualsNullIn
+#else
+            CheckIfNotEqualsNullIn
+#endif
+            :
+#if WinCopies4
+            EqualsNullIn
+#else
+            CheckIfEqualsNullIn
+#endif
+, @default);
 
         private static bool CheckType(Type t, in object[] items, out int index, in bool mustBeOfType, in bool @default = false)
         {

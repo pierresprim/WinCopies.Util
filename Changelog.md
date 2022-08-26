@@ -6,13 +6,23 @@ The WinCopies® software framework
 CHANGELOG
 ---------
 
-### 08/2022 2.20
+### 08/2022.2 2.21
 
-- Add new items.
+- Add nullable attribute for some items.
+- New types and static and extension methods.
+- Upgrade performance for some extension methods.
+- WinCopies.Collections
+	- Enumerable: new static method: IEnumerable\<T> FromEnumeratorFunc\<T>(in Func\<IEnumerator\<T>> func).
+	- EmptyCheckEnumerator\<T>: new constructor: EmptyCheckEnumerator(IEnumerable\<T> enumerable).
+	- DotNetFix.Generic.ReadOnlyQueue/StackCollection.TryPeek is available in all C# versions.
+
+### 08/2022.1 2.20
+
+Add new items.
 
 ### 07/2022 2.19.1
 
-- Add new types: I/ArrayValueProvider/2\<T>
+Add new types: I/ArrayValueProvider/2\<T>
 
 ### 07/2022 2.19
 

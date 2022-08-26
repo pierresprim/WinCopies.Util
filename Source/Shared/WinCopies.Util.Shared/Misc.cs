@@ -16,6 +16,7 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
@@ -28,8 +29,9 @@ using static WinCopies.
     ThrowHelper;
 using static WinCopies.UtilHelpers;
 
-using WinCopies.Util;
 using System.Linq;
+
+using WinCopies.Util;
 #else
     Util.Util;
 
@@ -44,7 +46,7 @@ namespace WinCopies
     public interface IArrayValueProvider<T>
     {
 #if CS5
-        System.Collections.Generic.IReadOnlyList<T>
+        IReadOnlyList<T>
 #else
         T[]
 #endif
@@ -60,7 +62,7 @@ namespace WinCopies
     {
         public
 #if CS5
-            System.Collections.Generic.IReadOnlyList<T>
+            IReadOnlyList<T>
 #else
             T[]
 #endif
@@ -73,7 +75,7 @@ namespace WinCopies
 
         public ArrayValueProvider(in
 #if CS5
-            System.Collections.Generic.IReadOnlyList<T>
+            IReadOnlyList<T>
 #else
             T[]
 #endif
@@ -85,7 +87,7 @@ namespace WinCopies
 
         public ArrayValueProvider(in
 #if CS5
-            System.Collections.Generic.IReadOnlyList<T>
+            IReadOnlyList<T>
 #else
             T[]
 #endif
@@ -98,7 +100,7 @@ namespace WinCopies
 
         public
 #if CS5
-            System.Collections.Generic.IReadOnlyList<T>
+            IReadOnlyList<T>
 #else
             T[]
 #endif
@@ -140,7 +142,7 @@ namespace WinCopies
 
         public ArrayValueProvider2(in
 #if CS5
-            System.Collections.Generic.IReadOnlyList<T>
+            IReadOnlyList<T>
 #else
             T[]
 #endif
@@ -148,7 +150,7 @@ namespace WinCopies
 
         public ArrayValueProvider2(in
 #if CS5
-            System.Collections.Generic.IReadOnlyList<T>
+            IReadOnlyList<T>
 #else
             T[]
 #endif
@@ -684,6 +686,6 @@ namespace WinCopies
 
     public interface IAsEnumerable<T>
     {
-        System.Collections.Generic.IEnumerable<T> AsEnumerable();
+        IEnumerable<T> AsEnumerable();
     }
 }

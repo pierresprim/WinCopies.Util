@@ -44,7 +44,11 @@ using
 WinCopies.DotNetFix;
 using WinCopies.Util;
 
-using static WinCopies.Consts;
+using static WinCopies.Consts
+#if WinCopies4
+    .Common
+#endif
+    ;
 using static WinCopies.ThrowHelper;
 using static WinCopies.UtilHelpers;
 

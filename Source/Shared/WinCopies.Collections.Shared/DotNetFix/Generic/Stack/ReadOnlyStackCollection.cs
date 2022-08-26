@@ -16,12 +16,13 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if CS7
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+
 using WinCopies.Collections.DotNetFix.Generic;
+using WinCopies.Util;
 
 using static WinCopies.Collections.ThrowHelper;
 
@@ -41,14 +42,14 @@ namespace WinCopies.Collections.DotNetFix
 #if WinCopies3
             IStack<TItems> where TStack : IStack<TItems>
 #else
-IEnumerableStack<T>, System.Collections.Generic.IReadOnlyCollection<T>, ICollection
+            IEnumerableStack<T>, System.Collections.Generic.IReadOnlyCollection<T>, ICollection
 #endif
         {
             protected
 #if !WinCopies3
-            System.Collections.Generic.Stack<T>
+                System.Collections.Generic.Stack<T>
 #else
-TStack
+                TStack
 #endif
             InnerStack
             { get; }
@@ -58,10 +59,10 @@ TStack
             /// </summary>
             /// <value>The number of elements contained in the <see cref="StackCollection{T}"/>.</value>
             public
-#if !WinCopies3
-int
-#else
+#if WinCopies3
                 uint
+#else
+                int
 #endif
                 Count => InnerStack.Count;
 
@@ -85,7 +86,7 @@ int
 #else
                 T
 #endif
-                > StackCollection) : this(StackCollection.InnerStack) { }
+                > StackCollection) : this(StackCollection.InnerStack) { /* Left empty. */ }
 
             /// <summary>
             /// Returns the object at the beginning of the <see cref="StackCollection{T}"/> without removing it.
@@ -101,25 +102,25 @@ int
 #endif
                  Peek() => InnerStack.Peek();
 
-#if CS8
             /// <summary>
             /// Tries to peek the object at the beginning of the <see cref="StackCollection{T}"/> without removing it.
             /// </summary>
             /// <param name="result">The object at the beginning of the <see cref="StackCollection{T}"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
             /// <returns>A <see cref="bool"/> value that indicates whether a value has actually been retrieved.</returns>
             /// <seealso cref="Peek"/>
-            public bool TryPeek([MaybeNullWhen(false)] out 
+            public bool TryPeek(
+#if CS8
+                [MaybeNullWhen(false)]
+#endif
+                out
 #if WinCopies3
                 TItems
 #else
                 T
 #endif
                  result) => InnerStack.TryPeek(out result);
-#endif
 
 #if WinCopies3
-            bool IStack<TItems>.TryPeek(out TItems result) => InnerStack.TryPeek(out result);
-
             void IStack<TItems>.Clear() => throw GetReadOnlyListOrCollectionException();
 
             void IStackBase<TItems>.Push(TItems item) => throw GetReadOnlyListOrCollectionException();
@@ -137,7 +138,7 @@ int
 
             void IStackBase<TItems>.Clear() => throw GetReadOnlyListOrCollectionException();
 
-            bool ISimpleLinkedListBase<TItems>.TryPeek(out TItems result) => InnerStack.TryPeek(out result);
+            bool IPeekable<TItems>.TryPeek(out TItems result) => InnerStack.TryPeek(out result);
 
             void ISimpleLinkedListBase2.Clear() => throw GetReadOnlyListOrCollectionException();
 
@@ -146,13 +147,10 @@ int
             bool ISimpleLinkedListBase2.IsSynchronized => InnerStack.IsSynchronized;
 
             bool ISimpleLinkedListBase.HasItems => InnerStack.HasItems;
-
-            TItems ISimpleLinkedList<TItems>.Peek() => ((ISimpleLinkedList<TItems>)InnerStack).Peek();
-
 #if !CS8
-            bool ISimpleLinkedList.TryPeek(out object result) => ((ISimpleLinkedList)InnerStack).TryPeek(out result);
+            bool ISimpleLinkedList.TryPeek(out object result) => InnerStack.TryPeek(out result);
 
-            object ISimpleLinkedList.Peek() => ((ISimpleLinkedList)InnerStack).Peek();
+            object ISimpleLinkedList.Peek() => InnerStack.Peek();
 #endif
 #else
         bool ICollection.IsSynchronized => ((ICollection)InnerStack).IsSynchronized;
@@ -209,15 +207,17 @@ int
             }
         }
 
-        public class ReadOnlyEnumerableStackCollection<TStack, TItems> : ReadOnlyStackCollection<TStack, TItems>, IEnumerableStack<TItems>, System.Collections.Generic.IReadOnlyCollection<TItems>, ICollection where TStack : IEnumerableStack<TItems>
+        public class ReadOnlyEnumerableStackCollection<TStack, TItems> : ReadOnlyStackCollection<TStack, TItems>, IEnumerableStack<TItems>, IReadOnlyCollection<TItems>, ICollection where TStack : IEnumerableStack<TItems>
         {
             int ICollection.Count => (int)Count;
 
-            int System.Collections.Generic.IReadOnlyCollection<TItems>.Count => (int)Count;
+            int IReadOnlyCollection<TItems>.Count => (int)Count;
 
-            bool ICollection.IsSynchronized => ((ICollection)InnerStack).IsSynchronized;
+            protected ICollection InnerCollection => InnerStack.AsFromType<ICollection>();
 
-            object ICollection.SyncRoot => ((ICollection)InnerStack).SyncRoot;
+            bool ICollection.IsSynchronized => InnerCollection.IsSynchronized;
+
+            object ICollection.SyncRoot => InnerCollection.SyncRoot;
 
             public ReadOnlyEnumerableStackCollection(in TStack Stack) : base(Stack)
             {
@@ -237,7 +237,7 @@ int
 #if WinCopies3
                 System.Collections.Generic.IEnumerator
 #else
-IUIntCountableEnumerator
+                IUIntCountableEnumerator
 #endif
                 <TItems> GetEnumerator() => InnerStack.GetEnumerator();
 
@@ -252,7 +252,7 @@ IUIntCountableEnumerator
             /// <returns><see langword="true"/> if <paramref name="item"/> is found in the Stack; otherwise, <see langword="false"/>.</returns>
             public bool Contains(TItems item) => InnerStack.Contains(item);
 
-            void ICollection.CopyTo(Array array, int index) => ((ICollection)InnerStack).CopyTo(array, index);
+            void ICollection.CopyTo(Array array, int index) => InnerStack.CopyTo(array, index);
 
             /// <summary>
             /// Copies the <see cref="StackCollection{T}"/> elements to an existing one-dimensional <see cref="System.Array"/>, starting at the specified array index.
@@ -267,18 +267,11 @@ IUIntCountableEnumerator
 
         public class ReadOnlyEnumerableStackCollection<T> : ReadOnlyEnumerableStackCollection<IEnumerableStack<T>, T>
         {
-            public ReadOnlyEnumerableStackCollection(in IEnumerableStack<T> Stack) : base(Stack)
-            {
-                // Left empty.
-            }
+            public ReadOnlyEnumerableStackCollection(in IEnumerableStack<T> Stack) : base(Stack) { /* Left empty. */ }
 
-            public ReadOnlyEnumerableStackCollection(in StackCollection<IEnumerableStack<T>, T> StackCollection) : this(StackCollection.InnerStack)
-            {
-                // Left empty.
-            }
+            public ReadOnlyEnumerableStackCollection(in StackCollection<IEnumerableStack<T>, T> StackCollection) : this(StackCollection.InnerStack) { /* Left empty. */ }
         }
     }
 #endif
 }
-
 #endif

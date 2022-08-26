@@ -63,6 +63,75 @@ namespace WinCopies.Collections
 
     namespace Generic
     {
+        public class ActionObservableEnumerator<TItems, TEnumerator> : System.Collections.Generic.IEnumerator<TItems> where TEnumerator : System.Collections.Generic.IEnumerator<TItems>
+        {
+            private Func<bool> _moveNext;
+
+            protected TEnumerator InnerEnumerator { get; }
+            protected Action Entering { get; }
+            protected Action Exiting { get; }
+
+            public TItems Current => InnerEnumerator.Current;
+
+            object
+#if CS8
+            ?
+#endif
+                System.Collections.IEnumerator.Current => Current;
+
+            public ActionObservableEnumerator(in TEnumerator enumerator, in Action entering, in Action exiting)
+            {
+                InnerEnumerator = enumerator;
+                Entering = entering;
+                Exiting = exiting;
+
+                ResetMoveNext();
+            }
+
+            private void ResetMoveNext() => _moveNext = () =>
+            {
+                if (InnerEnumerator.MoveNext())
+                {
+                    Entering();
+
+                    _moveNext = () =>
+                    {
+                        if (InnerEnumerator.MoveNext())
+
+                            return true;
+
+                        Exiting();
+
+                        return false;
+                    };
+
+                    return true;
+                }
+
+                return false;
+            };
+
+            public bool MoveNext() => _moveNext();
+            public void Reset() => ResetMoveNext();
+
+            protected virtual void Dispose(bool disposing) => InnerEnumerator.Dispose();
+
+            public void Dispose()
+            {
+                Dispose(true);
+                GC.SuppressFinalize(this);
+            }
+
+            ~ActionObservableEnumerator() => Dispose(false);
+        }
+
+        public class ActionObservableEnumerator<T> : ActionObservableEnumerator<T, System.Collections.Generic.IEnumerator<T>>
+        {
+            public ActionObservableEnumerator(in System.Collections.Generic.IEnumerator<T> enumerator, in Action entering, in Action exiting) : base(enumerator, entering, exiting) { /* Left empty. */ }
+
+            public ActionObservableEnumerator(in System.Collections.Generic.IEnumerable<T> enumerable, in Action entering, in Action exiting) : this(enumerable.GetEnumerator(), entering, exiting) { /* Left empty. */ }
+        }
+
         public abstract class DisposableEnumerableBase<T> : DotNetFix.Generic.IDisposableEnumerable<T>
         {
             public abstract bool IsDisposed { get; }

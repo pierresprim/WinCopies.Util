@@ -19,9 +19,15 @@ namespace WinCopies.Collections.DotNetFix.Generic
 {
     public interface
 #if WinCopies3
-        IStackBase<T> : ISimpleLinkedListBase
+        IStackBase
 #else
-        IStack<T> : ISimpleLinkedList<T>
+        IStack
+#endif
+        <T> :
+#if WinCopies3
+        ISimpleLinkedListBase, IPeekable<T>
+#else
+        ISimpleLinkedList<T>
 #endif
     {
         void Push(T item);

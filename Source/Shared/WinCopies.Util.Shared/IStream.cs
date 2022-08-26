@@ -262,6 +262,81 @@ IStream
         ~Stream() => Dispose(false);
     }
 
+    public abstract class Stream<T> : System.IO.Stream where T : System.IO.Stream
+    {
+        protected T InnerStream { get; }
+
+        public override bool CanRead => InnerStream.CanRead;
+
+        public override bool CanSeek => InnerStream.CanSeek;
+
+        public override bool CanWrite => InnerStream.CanWrite;
+
+        public override long Length => InnerStream.Length;
+
+        public override long Position
+        {
+            get => InnerStream.Position;
+
+            set
+            {
+                long old = InnerStream.Position;
+
+                InnerStream.Position = value;
+
+                OnPositionChanged(old, value);
+            }
+        }
+
+        public Stream(in T stream) => InnerStream = stream;
+
+        protected abstract void OnPositionChanged(in long old, in long @new);
+
+        public override void Flush() => InnerStream.Flush();
+
+        public override int Read(byte[] buffer, int offset, int count)
+        {
+            long old = Position;
+
+            int result = InnerStream.Read(buffer, offset, count);
+
+            OnPositionChanged(old, Position);
+
+            return result;
+        }
+
+        public override long Seek(long offset, SeekOrigin origin)
+        {
+            long old = Position;
+
+            long result = InnerStream.Seek(offset, origin);
+
+            OnPositionChanged(old, Position);
+
+            return result;
+        }
+
+        public override void SetLength(long value) => InnerStream.SetLength(value);
+
+        public override void Write(byte[] buffer, int offset, int count)
+        {
+            long old = Position;
+
+            InnerStream.Write(buffer, offset, count);
+
+            OnPositionChanged(old, Position);
+        }
+    }
+
+    public class ActionStream<T> : Stream<T> where T : System.IO.Stream
+    {
+        protected Action<long, long> Action { get; }
+
+        public ActionStream(in T stream, in Action<long, long> action) : base(stream) => Action = action;
+
+        protected override void OnPositionChanged(in long old, in long @new) => Action(old, @new);
+    }
+
     namespace DotNetFix
     {
         public interface IWriterStream : System.IDisposable
@@ -304,9 +379,23 @@ IStream
             public override void Delete() => throw new NotSupportedException("This stream does not support deletion.");
         }
 
-        public abstract class Stream : ExtendedStream
+        public abstract class Stream
+#if WinCopies3
+            <T>
+#endif
+            : ExtendedStream
+#if WinCopies3
+            where T : System.IO.Stream
+#endif
         {
-            protected System.IO.Stream InnerStream { get; }
+            protected
+#if WinCopies3
+                T
+#else
+                System.IO.Stream
+#endif
+                InnerStream
+            { get; }
 
             public override bool CanSeek => InnerStream.CanSeek;
             public override bool CanRead => InnerStream.CanRead;
@@ -314,7 +403,13 @@ IStream
             public override long Length => InnerStream.Length;
             public override long Position { get => InnerStream.Position; set => InnerStream.Position = value; }
 
-            protected Stream(in System.IO.Stream stream) => InnerStream = stream;
+            protected Stream(in
+#if WinCopies3
+                T
+#else
+                System.IO.Stream
+#endif
+                stream) => InnerStream = stream;
 
             public override void Flush() => InnerStream.Flush();
             public override int Read(byte[] buffer, int offset, int count) => InnerStream.Read(buffer, offset, count);
@@ -331,12 +426,29 @@ IStream
         }
 
         public class FileStream : Stream
+#if WinCopies3
+            <System.IO.FileStream>
+#endif
         {
-            public string Path { get; }
+            public string Path
+#if WinCopies3
+                => InnerStream.Name;
+#else
+            { get; }
+#endif
 
             public override bool CanDelete => true;
 
-            public FileStream(in string path, in System.IO.FileStream fileStream) : base(fileStream) => Path = path;
+            public FileStream(
+#if !WinCopies3
+                in string path,
+#endif
+                in System.IO.FileStream fileStream) : base(fileStream)
+#if WinCopies3
+                { /* Left empty. */ }
+#else
+                => Path = path;
+#endif
 
             public override void Delete() => File.Delete(Path);
         }

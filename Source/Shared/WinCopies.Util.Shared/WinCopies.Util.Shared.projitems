@@ -14,6 +14,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ActionRunners\ValueChecks.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Console.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Convertible.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\IProperty.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\ValueChangedEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\Assert.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CheckedUInt64.cs" />

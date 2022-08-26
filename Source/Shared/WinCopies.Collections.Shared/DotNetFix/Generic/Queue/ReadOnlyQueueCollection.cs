@@ -16,7 +16,6 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if CS7
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -61,10 +60,10 @@ TQueue
             /// </summary>
             /// <value>The number of elements contained in the <see cref="QueueCollection{T}"/>.</value>
             public
-#if !WinCopies3
-int
-#else
+#if WinCopies3
                 uint
+#else
+                int
 #endif
                 Count => InnerQueue.Count;
 
@@ -88,7 +87,7 @@ int
 #else
                 T
 #endif
-                > queueCollection) : this(queueCollection.InnerQueue) { }
+                > queueCollection) : this(queueCollection.InnerQueue) { /* Left empty. */ }
 
             /// <summary>
             /// Returns the object at the beginning of the <see cref="QueueCollection{T}"/> without removing it.
@@ -104,21 +103,23 @@ int
 #endif
                  Peek() => InnerQueue.Peek();
 
-#if CS8
             /// <summary>
             /// Tries to peek the object at the beginning of the <see cref="QueueCollection{T}"/> without removing it.
             /// </summary>
             /// <param name="result">The object at the beginning of the <see cref="QueueCollection{T}"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
             /// <returns>A <see cref="bool"/> value that indicates whether a value has actually been retrieved.</returns>
             /// <seealso cref="Peek"/>
-            public bool TryPeek([MaybeNullWhen(false)] out 
+            public bool TryPeek(
+#if CS8
+                [MaybeNullWhen(false)]
+#endif
+                out
 #if WinCopies3
                 TItems
 #else
                 T
 #endif
                  result) => InnerQueue.TryPeek(out result);
-#endif
 
 #if WinCopies3
             bool IQueue<TItems>.TryPeek(out TItems result) => InnerQueue.TryPeek(out result);
@@ -140,7 +141,7 @@ int
 
             void IQueueBase<TItems>.Clear() => throw GetReadOnlyListOrCollectionException();
 
-            bool ISimpleLinkedListBase<TItems>.TryPeek(out TItems result) => InnerQueue.TryPeek(out result);
+            bool IPeekable<TItems>.TryPeek(out TItems result) => InnerQueue.TryPeek(out result);
 
             void ISimpleLinkedListBase2.Clear() => throw GetReadOnlyListOrCollectionException();
 
@@ -213,7 +214,7 @@ int
             }
         }
 
-        public class ReadOnlyEnumerableQueueCollection<TQueue, TItems> : ReadOnlyQueueCollection<TQueue, TItems>, IEnumerableQueue<TItems>, System.Collections.Generic.IReadOnlyCollection<TItems>, ICollection where TQueue : IEnumerableQueue<TItems>
+        public class ReadOnlyEnumerableQueueCollection<TQueue, TItems> : ReadOnlyQueueCollection<TQueue, TItems>, IEnumerableQueue<TItems>, IReadOnlyCollection<TItems>, ICollection where TQueue : IEnumerableQueue<TItems>
         {
             int ICollection.Count => (int)Count;
 
@@ -274,5 +275,4 @@ int
     }
 #endif
 }
-
 #endif

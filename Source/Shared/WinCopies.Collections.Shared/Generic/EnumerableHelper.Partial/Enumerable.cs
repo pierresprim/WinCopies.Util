@@ -16,33 +16,49 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if WinCopies3
+using System.Collections.Generic;
+
 using WinCopies.Collections.DotNetFix;
+using WinCopies.Linq;
 
 namespace WinCopies.Collections.Generic
 {
     public static partial class EnumerableHelper<T>
     {
-        public interface IEnumerableLinkedList : ILinkedList, IEnumerableInfo<T>
+        public interface IEnumerableLinkedList : ILinkedList, IEnumerableInfo<T>, IAsEnumerable<ILinkedListNode>
         {
-            // Left empty.
+            ILinkedListNode FirstNode { get; }
+            ILinkedListNode LastNode { get; }
+
+            IEnumeratorInfo<ILinkedListNode> GetNodeEnumerator(EnumerationDirection enumerationDirection);
+
+            IEnumerable<ILinkedListNode> AsEnumerable(EnumerationDirection enumerationDirection);
         }
 
         internal class Enumerable : LinkedList, IEnumerableLinkedList, IEnumerableQueue, IEnumerableStack
         {
-            #region IEnumerableInfo implementation
             public bool SupportsReversedEnumeration => true;
 
-            public IEnumeratorInfo<T> GetEnumerator(EnumerationDirection enumerationDirection) => new Enumerator(this, enumerationDirection);
+            ILinkedListNode IEnumerableLinkedList.FirstNode => FirstNode;
+            ILinkedListNode IEnumerableLinkedList.LastNode => LastNode;
+
+            public IEnumeratorInfo<ILinkedListNode> GetNodeEnumerator(EnumerationDirection enumerationDirection) => new Enumerator(this, enumerationDirection);
+
+            public IEnumerable<ILinkedListNode> AsEnumerable(EnumerationDirection enumerationDirection) => Collections.Enumerable.FromEnumerator(GetNodeEnumerator(enumerationDirection));
+
+            public IEnumerable<ILinkedListNode> AsEnumerable() => AsEnumerable(EnumerationDirection.FIFO);
+
+            public IEnumeratorInfo<T> GetEnumerator(EnumerationDirection enumerationDirection) => GetNodeEnumerator(enumerationDirection).SelectConverter(node => node.Value);
 
             public IEnumeratorInfo<T> GetEnumerator() => GetEnumerator(EnumerationDirection.FIFO);
 
-            System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetEnumerator();
+            IEnumerator<T> IEnumerable<T>.GetEnumerator() => GetEnumerator();
 
             System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
 
             public IEnumeratorInfo<T> GetReversedEnumerator() => GetEnumerator(EnumerationDirection.LIFO);
 
-            System.Collections.Generic.IEnumerator<T>
+            IEnumerator<T>
 #if WinCopies3
                 Extensions.
 #endif
@@ -51,7 +67,6 @@ namespace WinCopies.Collections.Generic
 #if !CS8
             System.Collections.IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
 #endif
-            #endregion
         }
     }
 }

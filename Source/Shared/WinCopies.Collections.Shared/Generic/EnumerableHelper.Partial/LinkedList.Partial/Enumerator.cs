@@ -26,17 +26,14 @@ namespace WinCopies.Collections.Generic
     {
         internal partial class LinkedList
         {
-            internal class Enumerator : Enumerator<T>, IEnumeratorInfo2<T>
+            internal class Enumerator : Enumerator<ILinkedListNode>, IEnumeratorInfo2<ILinkedListNode>
             {
                 private Node _current;
                 private Func<Node> _reset;
                 private Func<Node> _moveNext;
                 private Action __moveNext;
 
-                /// <summary>
-                /// When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
-                /// </summary>
-                protected override T CurrentOverride => _current.Value;
+                protected override ILinkedListNode CurrentOverride => _current;
 
                 public override bool? IsResetSupported => true;
 
@@ -47,7 +44,6 @@ namespace WinCopies.Collections.Generic
                         case EnumerationDirection.FIFO:
 
                             _reset = () => enumerable.FirstNode;
-
                             _moveNext = () => _current.Next;
 
                             break;
@@ -55,7 +51,6 @@ namespace WinCopies.Collections.Generic
                         case EnumerationDirection.LIFO:
 
                             _reset = () => enumerable.LastNode;
-
                             _moveNext = () => _current.Previous;
 
                             break;
@@ -91,9 +86,7 @@ namespace WinCopies.Collections.Generic
                     base.DisposeManaged(); // _current is reset to null in the ResetCurrent() method, which is called in the call stack of the base DisposeManaged() method.
 
                     _reset = null;
-
                     _moveNext = null;
-
                     __moveNext = null;
                 }
             }

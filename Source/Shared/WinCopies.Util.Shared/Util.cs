@@ -36,6 +36,8 @@ using static WinCopies.
     Delegates;
 
 #if WinCopies3
+using System.ComponentModel;
+
 using WinCopies.Util;
 
 using static WinCopies.ThrowHelper;
@@ -101,6 +103,111 @@ namespace WinCopies.Util
         Util
 #endif
     {
+        private struct EmptyEnumerator<T> : IEnumerator<T>
+        {
+            public static IEnumerator<T> Instance { get; }
+
+            public T Current => default;
+            object IEnumerator.Current => Current;
+
+            bool IEnumerator.MoveNext() => false;
+            void IEnumerator.Reset() { /* Left empty. */ }
+            void System.IDisposable.Dispose() { /* Left empty. */ }
+        }
+
+        public static IEnumerator<T> GetEmptyEnumerator<T>() => EmptyEnumerator<T>.Instance;
+
+        public static IEnumerable<T> EnumerateUntilNull<T>(T
+#if CS9
+            ?
+#endif
+            first, Converter<T, T
+#if CS9
+            ?
+#endif
+            > nextItemProvider)
+        {
+        CONDITION:
+            if (first == null)
+
+                yield break;
+
+            yield return first;
+
+            first = nextItemProvider(first);
+
+            goto CONDITION;
+        }
+
+        public static void While(in Action action, ref bool condition)
+        {
+            while (condition)
+
+                action();
+        }
+
+        public static void DoWhile(in Action action, ref bool condition)
+        {
+            action();
+
+            While(action, ref condition);
+        }
+
+        public static void Until(in Action action, ref bool condition)
+        {
+        CONDITION:
+            if (condition)
+
+                return;
+
+            action();
+
+            goto CONDITION;
+        }
+
+        public static void DoUntil(in Action action, ref bool condition)
+        {
+            action();
+
+            Until(action, ref condition);
+        }
+
+        public static IEnumerable<T> EnumerateRecursively<T>(T item, Converter<T, IEnumerable<T>> func)
+        {
+            IEnumerable<T> enumerate(T _item)
+            {
+                yield return _item;
+
+                foreach (T __item in func(_item))
+
+                    foreach (T ___item in enumerate(__item))
+
+                        yield return ___item;
+            }
+
+            foreach (T _item in enumerate(item))
+
+                yield return _item;
+        }
+
+#if CS8
+        public static long? GetHttpFileSize(in string url, in System.Net.Http.HttpClient client)
+        {
+            using System.Net.Http.HttpResponseMessage resp = client.
+#if CS9
+                Send
+#else
+                SendAsync
+#endif
+                (new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Head, url))
+#if !CS9
+                .GetAwaiter().GetResult()
+#endif
+                ;
+
+            return resp.Content.Headers.ContentLength;
+        }
+#endif
 #if !CS5
         public static TAttribute GetCustomAttribute<TType, TAttribute>(in bool inherit) => (TAttribute)typeof(TType).GetCustomAttributes(typeof(TAttribute), inherit).TryGet(0);
 #endif
@@ -624,7 +731,7 @@ namespace WinCopies.Util
                 )
 #endif
 
-                action(obj);
+            action(obj);
         }
 
         public static void UsingIn<T>(in Func<T> func, in ActionIn<T> action) where T : System.IDisposable
@@ -643,7 +750,7 @@ namespace WinCopies.Util
                 )
 #endif
 
-                action(obj);
+            action(obj);
         }
 
         public static TOut Using2<TIn, TOut>(in Func<TIn> func, Func<TIn, TOut> action) where TIn : System.IDisposable
@@ -744,7 +851,13 @@ namespace WinCopies.Util
 #if CS9
             ?
 #endif
-            obj) where T : System.IDisposable => TryDispose(ref obj, CheckIfEqualsNullIn);
+            obj) where T : System.IDisposable => TryDispose(ref obj,
+#if WinCopies4
+            EqualsNullIn
+#else
+            CheckIfEqualsNullIn
+#endif
+                );
 
         public static bool TryDispose2<T>(ref T
 #if CS9
@@ -1066,7 +1179,13 @@ namespace WinCopies.Util
 #if CS9
             ?
 #endif
-            result) => PerformActionIfNotValidated(param, CheckIfEqualsNull, converter, out result);
+            result) => PerformActionIfNotValidated(param,
+#if WinCopies4
+            EqualsNull
+#else
+            CheckIfEqualsNull
+#endif
+            , converter, out result);
 
         public static TOut PerformActionIfNotNull<TIn, TOut>(TIn
 #if CS9
@@ -1102,7 +1221,13 @@ namespace WinCopies.Util
 #if CS9
             ?
 #endif
-            param, Converter<TIn, TOut> converter, out TOut result) => PerformActionIf(param, CheckIfEqualsNull, converter, out result);
+            param, Converter<TIn, TOut> converter, out TOut result) => PerformActionIf(param,
+#if WinCopies4
+            EqualsNull
+#else
+            CheckIfEqualsNull
+#endif
+            , converter, out result);
 
         public static TOut
 #if CS9
@@ -1138,7 +1263,13 @@ namespace WinCopies.Util
 #if CS9
             ?
 #endif
-            param, Converter<TIn, TOut> ifTrue, Converter<TIn, TOut> ifFalse, out TOut result) => PerformActionIf(param, CheckIfEqualsNull, ifTrue, ifFalse, out result);
+            param, Converter<TIn, TOut> ifTrue, Converter<TIn, TOut> ifFalse, out TOut result) => PerformActionIf(param,
+#if WinCopies4
+            EqualsNull
+#else
+            CheckIfEqualsNull
+#endif
+            , ifTrue, ifFalse, out result);
 
         public static TOut
 #if CS9
@@ -1154,7 +1285,13 @@ namespace WinCopies.Util
 #if CS9
             ?
 #endif
-            param, Converter<TIn, TOut> ifTrue, Converter<TIn, TOut> ifFalse, out TOut result) => PerformActionIf(param, CheckIfEqualsNull, ifFalse, ifTrue, out result);
+            param, Converter<TIn, TOut> ifTrue, Converter<TIn, TOut> ifFalse, out TOut result) => PerformActionIf(param,
+#if WinCopies4
+            EqualsNull
+#else
+            CheckIfEqualsNull
+#endif
+            , ifFalse, ifTrue, out result);
 
         public static TOut
 #if CS9
@@ -1184,7 +1321,13 @@ namespace WinCopies.Util
 #if CS9
             ?
 #endif
-            param, TOut ifTrue, Converter<TIn, TOut> ifFalse, out TOut result) => PerformActionIf(param, CheckIfEqualsNull, ifTrue, ifFalse, out result);
+            param, TOut ifTrue, Converter<TIn, TOut> ifFalse, out TOut result) => PerformActionIf(param,
+#if WinCopies4
+            EqualsNull
+#else
+            CheckIfEqualsNull
+#endif
+            , ifTrue, ifFalse, out result);
 
         public static TOut PerformActionIfNull<TIn, TOut>(TIn
 #if CS9
@@ -1196,7 +1339,13 @@ namespace WinCopies.Util
 #if CS9
             ?
 #endif
-            param, TOut ifTrue, Converter<TIn, TOut> ifFalse, out TOut result) => PerformActionIf(param, CheckIfEqualsNull, ifFalse, ifTrue, out result);
+            param, TOut ifTrue, Converter<TIn, TOut> ifFalse, out TOut result) => PerformActionIf(param,
+#if WinCopies4
+            EqualsNull
+#else
+            CheckIfEqualsNull
+#endif
+            , ifFalse, ifTrue, out result);
 
         public static TOut
 #if CS9
@@ -1226,7 +1375,13 @@ namespace WinCopies.Util
 #if CS9
             ?
 #endif
-            param, Converter<TIn, TOut> ifTrue, TOut ifFalse, out TOut result) => PerformActionIf(param, CheckIfEqualsNull, ifTrue, ifFalse, out result);
+            param, Converter<TIn, TOut> ifTrue, TOut ifFalse, out TOut result) => PerformActionIf(param,
+#if WinCopies4
+            EqualsNull
+#else
+            CheckIfEqualsNull
+#endif
+            , ifTrue, ifFalse, out result);
 
         public static TOut
 #if CS9
@@ -1242,7 +1397,13 @@ namespace WinCopies.Util
 #if CS9
             ?
 #endif
-            param, Converter<TIn, TOut> ifTrue, TOut ifFalse, out TOut result) => PerformActionIf(param, CheckIfEqualsNull, ifFalse, ifTrue, out result);
+            param, Converter<TIn, TOut> ifTrue, TOut ifFalse, out TOut result) => PerformActionIf(param,
+#if WinCopies4
+            EqualsNull
+#else
+            CheckIfEqualsNull
+#endif
+            , ifFalse, ifTrue, out result);
 
         public static TOut
 #if CS9
@@ -1766,6 +1927,8 @@ namespace WinCopies.Util
 #endif
             (key, value);
 
+        public static KeyValuePair<TKeyOut, TValueOut> GetKeyValuePair<TKeyIn, TKeyOut, TValueIn, TValueOut>(KeyValuePair<TKeyIn, TValueIn> item) where TKeyIn : TKeyOut where TValueIn : TValueOut => GetKeyValuePair<TKeyOut, TValueOut>(item.Key, item.Value);
+
         public static KeyValuePair<TKey, Func<bool>>
 #if WinCopies3
             GetKeyValuePairPredicate
@@ -1781,8 +1944,8 @@ namespace WinCopies.Util
             (key, predicate);
 
 #if !WinCopies3 && CS6
-#region 'If' methods
-#region Enums
+        #region 'If' methods
+        #region Enums
 
         /// <summary>
         /// Comparison types for the If functions.
@@ -1862,9 +2025,9 @@ namespace WinCopies.Util
             ReferenceEqual = 6
         }
 
-#endregion
+        #endregion
 
-#region 'Throw' methods
+        #region 'Throw' methods
 #if CS6
         private static void ThrowOnInvalidIfMethodArg(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison)
         {
@@ -1908,9 +2071,9 @@ namespace WinCopies.Util
             if (comparison == IfComp.ReferenceEqual && typeof(T).IsValueType) throw new InvalidOperationException("ReferenceEqual comparison is only valid with non-value types.");
         }
 #endif
-#endregion
+        #endregion
 
-#region 'Check comparison' methods
+        #region 'Check comparison' methods
 
         private static bool CheckIfComparison(in IfComp comparison, in Func<bool> predicateResult, in int result)
         {
@@ -2053,9 +2216,9 @@ namespace WinCopies.Util
 
         private delegate bool CheckIfComparisonDelegate<T>(in T value, in Func<bool> predicate);
 
-#endregion
+        #endregion
 
-#region Enumerables
+        #region Enumerables
 
         private interface IIfValuesEnumerable
         {
@@ -2230,7 +2393,7 @@ namespace WinCopies.Util
             public KeyValuePair<TKey, KeyValuePair<TValue, Func<bool>>> GetValue(in int index) => Array[index];
         }
 
-#endregion
+        #endregion
 
         private static bool IfInternal(in IfCT comparisonType, in IfCM comparisonMode, CheckIfComparisonDelegate comparisonDelegate, in IIfValuesEnumerable values)
         {
@@ -2578,9 +2741,9 @@ namespace WinCopies.Util
             }
         }
 
-#region Non generic methods
+        #region Non generic methods
 
-#region Comparisons without key notification
+        #region Comparisons without key notification
 
         /// <summary>
         /// Performs a comparison by testing a value compared to an array of values.
@@ -2726,9 +2889,9 @@ namespace WinCopies.Util
             return IfInternal(comparisonType, comparisonMode, (in object _value, in Func<bool> _predicate) => CheckEqualityComparison(comparison, _value, value, _predicate, comparisonDelegate), new IfKeyValuePairEnumerable(values));
         }
 
-#endregion
+        #endregion
 
-#region Comparisons with key notification
+        #region Comparisons with key notification
 
         /// <summary>
         /// Performs a comparison by testing a value compared to an array of objects or values.
@@ -2813,13 +2976,13 @@ namespace WinCopies.Util
             return IfInternal(comparisonType, comparisonMode, (in object _value, in Func<bool> _predicate) => CheckEqualityComparison(comparison, _value, value, _predicate, comparisonDelegate), out key, new IfKeyKeyValuePairEnumerable(values));
         }
 
-#endregion
+        #endregion
 
-#endregion
+        #endregion
 
-#region Generic methods
+        #region Generic methods
 
-#region Comparisons without key notification
+        #region Comparisons without key notification
 
         /// <summary>
         /// Performs a comparison by testing a value compared to an array of objects or values.
@@ -2882,9 +3045,9 @@ namespace WinCopies.Util
             return IfInternal(comparisonType, comparisonMode, (in T _value, in Func<bool> _predicate) => CheckEqualityComparison(comparison, _value, value, _predicate, comparisonDelegate), new IfKeyValuePairEnumerable<T>(values));
         }
 
-#endregion
+        #endregion
 
-#region Comparisons with key notification
+        #region Comparisons with key notification
         /// <summary>
         /// Performs a comparison by testing a value compared to an array of objects or values.
         /// </summary>
@@ -2942,9 +3105,9 @@ namespace WinCopies.Util
 
             return IfInternal(comparisonType, comparisonMode, (in TValue _value, in Func<bool> _predicate) => CheckEqualityComparison(comparison, _value, value, _predicate, comparisonDelegate), out key, new IfKeyKeyValuePairEnumerable<TKey, TValue>(values));
         }
-#endregion
-#endregion
-#endregion
+        #endregion
+        #endregion
+        #endregion
 #endif
 
 #if CS5
@@ -3443,27 +3606,81 @@ where T : Enum
 #endif
 #if WinCopies3
     }
-
-    public static class Consts
+#if WinCopies4
+    namespace
+#else
+    public static class
+#endif
+        Consts
     {
 #endif
-        public const int NotSetIndex = -1;
-        public const int DefaultStartIndex = 0;
+#if WinCopies4
+        namespace
+#else
+        public static class
+#endif
+            Symbols
+        {
+            public static class GeneralPunctuation
+            {
+                public const char EmDash = '\u2014';
+                public const char EnDash = '\u2013';
+                public const char Bullet = '\u2022';
+            }
 
+            public static class MathematicalOperators
+            {
+                public const char PlusMinus = '\u00B1';
+                public const char PerMille = '\u2030';
+                public const char PartialDifferential = '\u2202';
+                public const char Delta = '\u2206';
+                public const char Pi = '\u220F';
+                public const char Sigma = '\u2211';
+                public const char Minus = '\u2212';
+                public const char BulletMultiplication = '\u2219';
+                public const char SquareRoot = '\u221A';
+                public const char Division = '\u2215';
+                public const char Infinity = '\u221E';
+                public const char Integral = '\u222B';
+                public const char AlmostEqualTo = '\u2248';
+                public const char NotEqualTo = '\u2260';
+                public const char IdenticalTo = '\u2261';
+                public const char NotIdenticalTo = '\u2262';
+                public const char LessThanOrEqualTo = '\u2264';
+                public const char GreaterThanOrEqualTo = '\u2265';
+            }
 
-        public const string NotApplicable = "N/A";
+            public static class GeometricShapes
+            {
+                public const char TriangleUp = '\u25B2';
+                public const char TriangleRight = '\u25BA';
+                public const char TriangleDown = '\u25BC';
+                public const char TriangleLeft = '\u25C4';
+            }
+        }
+#if WinCopies4
+        public static class Common
+        {
+#endif
+            public const int NotSetIndex = -1;
+            public const int DefaultStartIndex = 0;
 
-        public const char PathFilterChar = '*';
-        public const char LikeStatementChar = '%';
+            public const string NotApplicable = "N/A";
 
-        public const byte LSBMask = 1;
-        public const byte MSBMask = LSBMask << 7;
-        public const byte SetToFalseMask = byte.MaxValue;
+            public const char PathFilterChar = '*';
+            public const char LikeStatementChar = '%';
 
-        public const ushort MSBMask16 = LSBMask << 15;
-        public const ushort SetToFalseMask16 = ushort.MaxValue;
+            public const byte LSBMask = 1;
+            public const byte MSBMask = LSBMask << 7;
+            public const byte SetToFalseMask = byte.MaxValue;
 
-        public const BindingFlags DefaultBindingFlagsForPropertySet = BindingFlags.Public | BindingFlags.NonPublic |
-                         BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly;
+            public const ushort MSBMask16 = LSBMask << 15;
+            public const ushort SetToFalseMask16 = ushort.MaxValue;
+
+            public const BindingFlags DefaultBindingFlagsForPropertySet = BindingFlags.Public | BindingFlags.NonPublic |
+                             BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly;
+        }
+#if WinCopies3
     }
+#endif
 }

@@ -65,9 +65,11 @@ namespace WinCopies.Collections.Generic
                 return true;
             }
 
+            private Node GetNode(in T value) => new Node(this, value);
+
             public void AddFirst(T item)
             {
-                FirstNode = FirstNode == null ? new Node(item) : (FirstNode.Previous = new Node(item) { Next = FirstNode });
+                FirstNode = FirstNode == null ? GetNode(item) : (FirstNode.Previous = new Node(this, item) { Next = FirstNode });
 
                 if (LastNode == null)
 
@@ -76,7 +78,7 @@ namespace WinCopies.Collections.Generic
 
             public void AddLast(T item)
             {
-                LastNode = LastNode == null ? new Node(item) : (LastNode.Next = new Node(item) { Previous = LastNode });
+                LastNode = LastNode == null ? GetNode(item) : (LastNode.Next = new Node(this, item) { Previous = LastNode });
 
                 if (FirstNode == null)
 
@@ -170,6 +172,25 @@ namespace WinCopies.Collections.Generic
                     RemoveFirst();
             }
 
+            internal void Remove(Node node)
+            {
+                if (node.Previous == null)
+
+                    FirstNode = node.Next;
+
+                else
+
+                    node.Previous.Next = node.Next;
+
+                if (node.Next == null)
+
+                    LastNode = node.Previous;
+
+                else
+
+                    node.Next.Previous = node.Previous;
+            }
+
             bool ISimpleLinkedListBase.IsReadOnly => false;
 
             #region IQueueBase implementation
@@ -195,6 +216,10 @@ namespace WinCopies.Collections.Generic
 
             bool IStackBase<T>.TryPop(out T result) => TryGetAndRemoveFirst(out result);
             #endregion
+#if !CS8
+            T IPeekable<T>.Peek() => First;
+            bool IPeekable<T>.TryPeek(out T value) => TryGetFirst(out value);
+#endif
         }
     }
 }

@@ -230,7 +230,9 @@ System.Collections.Generic.LinkedListNode
 #if WinCopies3
         int System.Collections.Generic.IReadOnlyCollection<T>.Count => (int)Count;
 
+#if !WinCopies4
         bool ILinkedList2<T>.IsReadOnly => true;
+#endif
 
         bool ICollectionBase<T>.IsReadOnly => true;
 

@@ -283,7 +283,13 @@ namespace WinCopies.Collections
 #if !CS9
             Generic.WhileEnumerator<T>
 #endif
-            (first, converter, Delegates.CheckIfNotEqualsNull);
+            (first, converter, Delegates.
+#if WinCopies4
+            NotEqualsNull
+#else
+            CheckIfNotEqualsNull
+#endif
+            );
     }
 
 #if WinCopies3

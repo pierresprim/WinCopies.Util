@@ -6,9 +6,26 @@ The WinCopies® software framework
 CHANGELOG
 ---------
 
+### 08/2022.2 3.20-preview
+
+- New routed command: DuplicateTab.
+- WinCopies.Collections:
+	- DotNetFix.Generic.IQueue/StackBase\<T> implement IPeekable\<T>.
+	- Generic.EnumerableHelper\<T>:
+		- ILinkedList and IEnumerableLinkedList have new items.
+		- IEnumerableLinkedList implements IAsEnumerable\<ILinkedListNode>.
+		- IEnumerableQueue/Stack implement the new interface IPeekableEnumerableInfo\<T>.
+	- Enumerable's constructor: the enumeratorFunc parameter has the 'in' modifier.
+	- DotNetFix.Generic: ISimpleLinkedListBase\<T> renamed to IPeekable\<T>.
+- WinCopies.DotNetFix.Stream is generic.
+
+### 08/2022.1 3.19-preview
+
+See 2.20.
+
 ### 07/2022 3.18.1-preview
 
-- See 2.19.1.
+See 2.19.1.
 
 ### 07/2022 3.18-preview
 

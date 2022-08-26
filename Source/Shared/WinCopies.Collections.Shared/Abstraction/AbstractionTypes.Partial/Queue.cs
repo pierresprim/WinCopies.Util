@@ -46,9 +46,11 @@ namespace WinCopies.Collections.AbstractionInterop.Generic
 
             void ISimpleLinkedListBase2.Clear() => throw GetReadOnlyListOrCollectionException();
 
-            TDestination ISimpleLinkedListBase<TDestination>.Peek() => InnerQueue.Peek();
+            private TDestination Peek() => InnerQueue.Peek();
 
-            bool ISimpleLinkedListBase<TDestination>.TryPeek(out TDestination result) => TryPeek(out result);
+            TDestination IPeekable<TDestination>.Peek() => Peek();
+
+            bool IPeekable<TDestination>.TryPeek(out TDestination result) => TryPeek(out result);
 
             void IQueueBase<TDestination>.Enqueue(TDestination item) => throw GetReadOnlyListOrCollectionException();
 
@@ -56,13 +58,13 @@ namespace WinCopies.Collections.AbstractionInterop.Generic
 
             bool IQueueBase<TDestination>.TryDequeue(out TDestination result) => throw GetReadOnlyListOrCollectionException();
 
-            TDestination IQueueBase<TDestination>.Peek() => InnerQueue.Peek();
+            TDestination IQueueBase<TDestination>.Peek() => Peek();
 
             bool IQueueBase<TDestination>.TryPeek(out TDestination result) => TryPeek(out result);
 
             void IQueueBase<TDestination>.Clear() => throw GetReadOnlyListOrCollectionException();
 
-            TDestination IQueue<TDestination>.Peek() => InnerQueue.Peek();
+            TDestination IQueue<TDestination>.Peek() => Peek();
 
             private bool TryPeek(out TDestination result)
             {
@@ -78,12 +80,12 @@ namespace WinCopies.Collections.AbstractionInterop.Generic
                 return false;
             }
 
-            TDestination ISimpleLinkedList<TDestination>.Peek() => ((ISimpleLinkedList<TSource>)InnerQueue).Peek();
+            TDestination ISimpleLinkedList<TDestination>.Peek() => Peek();
 
 #if !CS8
-            bool ISimpleLinkedList.TryPeek(out object result) => InnerQueue.TryPeek(out result);
+            object ISimpleLinkedList.Peek() => Peek();
 
-            object ISimpleLinkedList.Peek() => ((ISimpleLinkedList)InnerQueue).Peek();
+            bool ISimpleLinkedList.TryPeek(out object result) => InnerQueue.TryPeek(out result);
 #endif
 #else
             public void Enqueue(TDestination item) => throw GetReadOnlyListOrCollectionException();
@@ -100,10 +102,7 @@ namespace WinCopies.Collections.AbstractionInterop.Generic
 
         public class ReadOnlyQueue : ReadOnlyQueue<IQueue<TSource>>
         {
-            public ReadOnlyQueue(in IQueue<TSource> queue) : base(queue)
-            {
-                // Left empty.
-            }
+            public ReadOnlyQueue(in IQueue<TSource> queue) : base(queue) { /* Left empty. */ }
         }
     }
 }

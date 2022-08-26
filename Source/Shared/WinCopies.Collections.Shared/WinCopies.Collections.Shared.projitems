@@ -80,6 +80,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerables\DotNetFix\ILongCountableEnumerable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerables\ExtensibleEnumerable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerables\LinkedListEnumerable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerables\Misc.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerables\ReadOnlyEnumerable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerables\UIntCountableEnumerable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\DotNetFix\ArrayEnumerator.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\StringEnumerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\TypeConverterEnumerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\EnumerableExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\LinkedListExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\BuildersAndMergers\ArrayBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\LinkedCollections.cs" />

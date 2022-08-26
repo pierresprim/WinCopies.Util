@@ -37,7 +37,9 @@ namespace WinCopies.Collections.AbstractionInterop.Generic
 
             bool ISimpleLinkedListBase.HasItems => InnerStack.HasItems;
 
-            TDestination IStack<TDestination>.Peek() => InnerStack.Peek();
+            private TDestination Peek() => InnerStack.Peek();
+
+            TDestination IStack<TDestination>.Peek() => Peek();
 
             private bool TryPeek(out TDestination result)
             {
@@ -59,9 +61,9 @@ namespace WinCopies.Collections.AbstractionInterop.Generic
 
             void ISimpleLinkedListBase2.Clear() => throw GetReadOnlyListOrCollectionException();
 
-            TDestination ISimpleLinkedListBase<TDestination>.Peek() => InnerStack.Peek();
+            TDestination IPeekable<TDestination>.Peek() => Peek();
 
-            bool ISimpleLinkedListBase<TDestination>.TryPeek(out TDestination result) => TryPeek(out result);
+            bool IPeekable<TDestination>.TryPeek(out TDestination result) => TryPeek(out result);
 
             void IStackBase<TDestination>.Push(TDestination item) => throw GetReadOnlyListOrCollectionException();
 
@@ -69,18 +71,18 @@ namespace WinCopies.Collections.AbstractionInterop.Generic
 
             bool IStackBase<TDestination>.TryPop(out TDestination result) => throw GetReadOnlyListOrCollectionException();
 
-            TDestination IStackBase<TDestination>.Peek() => InnerStack.Peek();
+            TDestination IStackBase<TDestination>.Peek() => Peek();
 
             bool IStackBase<TDestination>.TryPeek(out TDestination result) => TryPeek(out result);
 
             void IStackBase<TDestination>.Clear() => throw GetReadOnlyListOrCollectionException();
 
-            TDestination ISimpleLinkedList<TDestination>.Peek() => ((ISimpleLinkedList<TSource>)InnerStack).Peek();
+            TDestination ISimpleLinkedList<TDestination>.Peek() => Peek();
 
 #if !CS8
-            bool ISimpleLinkedList.TryPeek(out object result) => InnerStack.TryPeek(out result);
+            object ISimpleLinkedList.Peek() => InnerStack.Peek();
 
-            object ISimpleLinkedList.Peek() => ((ISimpleLinkedList)InnerStack).Peek();
+            bool ISimpleLinkedList.TryPeek(out object result) => InnerStack.TryPeek(out result);
 #endif
 #else
             public void Push(TDestination item) => throw GetReadOnlyListOrCollectionException();
@@ -97,10 +99,7 @@ namespace WinCopies.Collections.AbstractionInterop.Generic
 
         public class ReadOnlyStack : ReadOnlyStack<IStack<TSource>>
         {
-            public ReadOnlyStack(in IStack<TSource> stack) : base(stack)
-            {
-                // Left empty.
-            }
+            public ReadOnlyStack(in IStack<TSource> stack) : base(stack) { /* Left empty. */ }
         }
     }
 }

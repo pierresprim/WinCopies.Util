@@ -16,25 +16,57 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if WinCopies3
+using System;
 
 namespace WinCopies.Collections.Generic
 {
     public static partial class EnumerableHelper<T>
     {
+        public interface ILinkedListNode
+        {
+            ILinkedList List { get; }
+
+            T Value { get; }
+
+            ILinkedListNode Previous { get; }
+
+            ILinkedListNode Next { get; }
+
+            void Remove();
+        }
+
         internal partial class LinkedList
         {
-            internal class Node
+            internal class Node : ILinkedListNode
             {
+                private  LinkedList _list;
+
                 public T Value { get; set; }
 
                 public Node Previous { get; set; }
 
                 public Node Next { get; set; }
 
-                public Node(T value) => Value = value;
+                ILinkedList ILinkedListNode.List => _list;
+
+                ILinkedListNode ILinkedListNode.Previous => Previous;
+
+                ILinkedListNode ILinkedListNode.Next => Next;
+
+                public Node(in LinkedList list, in T value)
+                {
+                    _list = list;
+                    Value = value;
+                }
+
+                public void Remove()
+                {
+                    (_list ?? throw new InvalidOperationException("The current node is not registered by any list.")).Remove(this);
+
+                    _list = null;
+                }
             }
         }
     }
 }
-
 #endif

@@ -87,6 +87,15 @@ namespace WinCopies.Util.Commands
             Desktop.Resources.Commands.WPF.ApplicationCommands.NewWindowInNewInstance, nameof(NewWindowInNewInstance), new InputGestureCollection() { new KeyGesture(Key.W, ModifierKeys.Control | ModifierKeys.Shift) });
 
         /// <summary>
+        /// Gets the <b>DuplicateTab</b> command.
+        /// </summary>
+        public static RoutedUICommand DuplicateTab { get; } = GetCommand(
+#if !WinCopies3
+            WinCopies.Util.
+#endif
+            Desktop.Resources.Commands.WPF.ApplicationCommands.DuplicateTab, nameof(DuplicateTab));
+
+        /// <summary>
         /// Gets the <b>CloseTab</b> command.
         /// </summary>
         public static RoutedUICommand CloseTab { get; } = GetCommand(

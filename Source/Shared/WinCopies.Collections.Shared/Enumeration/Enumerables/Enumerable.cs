@@ -17,10 +17,7 @@
 
 using System;
 using System.Collections;
-
-#if WinCopies3
-using static WinCopies.ThrowHelper;
-#endif
+using System.Collections.Generic;
 
 namespace WinCopies.Collections
 {
@@ -28,364 +25,41 @@ namespace WinCopies.Collections
     {
         private readonly Func<IEnumerator> _enumeratorFunc;
 
-        public Enumerable(Func<IEnumerator> enumeratorFunc) => _enumeratorFunc = enumeratorFunc;
+        public Enumerable(
+#if WinCopies3
+            in
+#endif
+            Func<IEnumerator> enumeratorFunc) => _enumeratorFunc = enumeratorFunc;
 
         public IEnumerator GetEnumerator() => _enumeratorFunc();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        public static System.Collections.Generic.IEnumerator<T> GetEnumerator<T>(params T[] items)
+        public static IEnumerator<T> GetEnumerator<T>(params T[] items)
         {
             foreach (T item in items)
 
                 yield return item;
         }
 
-        public static System.Collections.Generic.IEnumerable<T> GetEnumerable<T>(params T[] items) => new
+        public static IEnumerable<T> GetEnumerable<T>(params T[] items) => new
 #if WinCopies3
             Generic.
 #endif
             Enumerable<T>(() => GetEnumerator(items));
 
-        public static System.Collections.Generic.IEnumerable<T> FromEnumerator<T>(System.Collections.Generic.IEnumerator<T> enumerator) => new
+        public static IEnumerable<T> FromEnumeratorFunc<T>(in Func<IEnumerator<T>> func) => new Generic.Enumerable<T>(func);
+
+        public static IEnumerable<T> FromEnumerator<T>(IEnumerator<T> enumerator) => new
 #if WinCopies3
             Generic.
 #endif
             Enumerable<T>(() => enumerator);
 
 #if WinCopies3
-        public static System.Collections.Generic.IEnumerable<T> GetNullCheckWhileEnumerable<T>(T first, Converter<T, T> converter) => new Generic.Enumerable<T>(() => Enumerator.GetNullCheckWhileEnumerator(first, converter));
+        public static IEnumerable<T> GetNullCheckWhileEnumerable<T>(T first, Converter<T, T> converter) => new Generic.Enumerable<T>(() => Enumerator.GetNullCheckWhileEnumerator(first, converter));
 
-        public static System.Collections.Generic.IEnumerable<T> GetNullCheckWhileEnumerableC<T>(T first, Converter<T, T> converter) => FromEnumerator(Enumerator.GetNullCheckWhileEnumerator(first, converter));
+        public static IEnumerable<T> GetNullCheckWhileEnumerableC<T>(T first, Converter<T, T> converter) => FromEnumerator(Enumerator.GetNullCheckWhileEnumerator(first, converter));
 #endif
     }
-
-    public interface IDisposableEnumerable : IEnumerable, System.IDisposable
-    {
-        // Left empty.
-    }
-
-#if WinCopies3
-    namespace DotNetFix.Generic
-    {
-#if CS8
-        public interface IEnumerable<out T> : System.Collections.Generic.IEnumerable<T>
-        {
-            System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-        }
-#endif
-
-        public interface IEnumerable<
-#if CS5
-            out
-#endif
-             TItems, out TEnumerator> :
-#if !CS8
-            System.Collections.Generic.
-#endif
-            IEnumerable<TItems> where TEnumerator : System.Collections.Generic.IEnumerator<TItems>
-        {
-            new TEnumerator GetEnumerator();
-
-#if CS8
-            System.Collections.Generic.IEnumerator<TItems> System.Collections.Generic.IEnumerable<TItems>.GetEnumerator() => GetEnumerator();
-#endif
-        }
-    }
-
-    namespace Enumeration
-    {
-        namespace DotNetFix
-        {
-            public interface IEnumerable<out TEnumerator> : System.Collections.IEnumerable where TEnumerator : IEnumerator
-            {
-                new TEnumerator GetEnumerator();
-
-#if CS8
-                IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
-#endif
-            }
-        }
-
-        /// <summary>
-        /// A collection that can be enumerated.
-        /// </summary>
-        public interface IEnumerable : System.Collections.IEnumerable
-        {
-            /// <summary>
-            /// Gets a value indicating whether this collection can be enumerated in the two directions (FIFO and LIFO).
-            /// </summary>
-            bool SupportsReversedEnumeration { get; }
-
-            /// <summary>
-            /// Returns a reversed enumerator for the current collection. See the Remarks section.
-            /// </summary>
-            /// <returns>A reversed enumerator for the current collection.</returns>
-            /// <exception cref="InvalidOperationException"><see cref="SupportsReversedEnumeration"/> is set to <see langword="false"/>.</exception>
-            /// <remarks>
-            /// This method returns an enumerator that enumerates in the reversed direction that the enumerator returned by the <see cref="System.Collections.Generic.IEnumerable{T}.GetEnumerator"/> method. So, for a queue, the <see cref="System.Collections.Generic.IEnumerable{T}.GetEnumerator"/> method will return an enumerator that will enumerate through the queue using the FIFO direction and the <see cref="GetReversedEnumerator"/> will throw an exception, because any reversed enumerator can be returned while a queue only supports the FIFO direction. However, a stack, which only supports the LIFO direction, will return a LIFO-enumerator as its main enumerator and throw an exception if we ask it to return a reversed enumerator. A linked list that supports the two directions, but which stores items using the FIFO direction by default, will return a FIFO-enumerator as its main enumerator and a LIFO-enumerator as its reversed enumerator.
-            /// </remarks>
-            IEnumerator GetReversedEnumerator();
-        }
-
-        public interface IEnumerable<out TEnumerator> : DotNetFix.IEnumerable<TEnumerator>, IEnumerable where TEnumerator : System.Collections.IEnumerator
-        {
-            new TEnumerator GetReversedEnumerator();
-
-#if CS8
-            IEnumerator IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
-#endif
-        }
-    }
-
-    public interface IEnumerableInfo<out TEnumerator> : Enumeration.IEnumerable<TEnumerator> where TEnumerator : IEnumeratorInfo
-    {
-        // Left empty.
-    }
-
-    public interface IEnumerableInfo : IEnumerableInfo<IEnumeratorInfo>
-    {
-        // Left empty.
-    }
-
-    namespace Generic
-    {
-#endif
-        public interface IDisposableEnumerable<
-#if CS5
-            out
-#endif
-             T> :
-#if WinCopies3 && CS8
-            DotNetFix
-#else
-            System.Collections
-#endif
-            .Generic.IEnumerable<T>, System.IDisposable
-        {
-            // Left empty.
-        }
-
-        public abstract class EnumerableBase<TItems, TEnumerator> : System.Collections.Generic.IEnumerable<TItems> where TEnumerator : System.Collections.Generic.IEnumerator<TItems>
-        {
-            protected Func<TEnumerator> EnumeratorFunc { get; }
-
-            protected EnumerableBase(in Func<TEnumerator> enumeratorFunc) => EnumeratorFunc = enumeratorFunc
-#if WinCopies3
-                ?? throw GetArgumentNullException(nameof(enumeratorFunc))
-#endif
-                ;
-
-            public TEnumerator GetEnumerator() => EnumeratorFunc();
-
-            System.Collections.Generic.IEnumerator<TItems> System.Collections.Generic.IEnumerable<TItems>.GetEnumerator() => EnumeratorFunc();
-
-            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-        }
-
-        public sealed class Enumerable<T> : EnumerableBase<T, System.Collections.Generic.IEnumerator<T>>
-        {
-            public Enumerable(in Func<System.Collections.Generic.IEnumerator<T>> enumeratorFunc) : base(enumeratorFunc) { /* Left empty. */ }
-
-#if !WinCopies3
-        [Obsolete("Moved to WinCopies.Collections.Enumerable.")]
-            public static System.Collections.Generic.IEnumerator<T> GetEnumerator(params T[] items)
-            {
-                foreach (T item in items)
-
-                    yield return item;
-            }
-
-        [Obsolete("Moved to WinCopies.Collections.Enumerable.")]
-        public static System.Collections.Generic.IEnumerable<T> GetEnumerable(params T[] items) => new Enumerable<T>(() => GetEnumerator(items));
-#endif
-        }
-
-#if WinCopies3
-        public abstract class EnumerableInfoBase<TItems, TEnumerator> : EnumerableBase<TItems, TEnumerator>, IEnumerableInfo<TItems> where TEnumerator : IEnumeratorInfo<TItems>
-        {
-            protected Func<TEnumerator> ReversedEnumeratorFunc { get; }
-
-            public bool SupportsReversedEnumeration => ReversedEnumeratorFunc != null;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="EnumerableInfoBase{TItems, TEnumerator}"/> class.
-            /// </summary>
-            /// <param name="enumeratorFunc">The func that provides the enumerators.</param>
-            /// <param name="reversedEnumeratorFunc">The func that provides the reversed enumerators. This parameter can be null.</param>
-            /// <exception cref="ArgumentNullException"><paramref name="enumeratorFunc"/> is null.</exception>
-            protected EnumerableInfoBase(in Func<TEnumerator> enumeratorFunc, in Func<TEnumerator> reversedEnumeratorFunc) : base(enumeratorFunc) => ReversedEnumeratorFunc = reversedEnumeratorFunc;
-
-            /// <summary>
-            /// Returns a reversed enumerator for the current collection.
-            /// </summary>
-            /// <returns>A reversed enumerator for the current collection.</returns>
-            /// <exception cref="InvalidOperationException"><see cref="Enumeration.IEnumerable.SupportsReversedEnumeration"/> is set to <see langword="false"/>.</exception>
-            /// <seealso cref="IEnumerable{T}.GetReversedEnumerator"/>
-            public TEnumerator GetReversedEnumerator() => (ReversedEnumeratorFunc ?? throw new InvalidOperationException("The current enumerable does not support reversed enumeration."))();
-
-            IEnumeratorInfo<TItems> DotNetFix.Generic.IEnumerable<TItems, IEnumeratorInfo<TItems>>.GetEnumerator() => EnumeratorFunc();
-
-            System.Collections.Generic.IEnumerator<TItems>
-#if WinCopies3
-            Extensions.Generic.
-#endif
-            IEnumerable<TItems>.GetReversedEnumerator() => GetReversedEnumerator(); // We call this method and not the delegate directly because we have to make a null-check.
-
-            IEnumeratorInfo<TItems> IEnumerable<TItems, IEnumeratorInfo<TItems>>.GetReversedEnumerator() => GetReversedEnumerator();
-
-            IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
-        }
-
-        public sealed class EnumerableInfo<T> : EnumerableInfoBase<T, IEnumeratorInfo<T>>
-        {
-            /// <summary>
-            /// Initializes a new instance of the <see cref="EnumerableInfo{T}"/> class.
-            /// </summary>
-            /// <param name="enumeratorFunc">The func that provides the enumerators.</param>
-            /// <param name="reversedEnumeratorFunc">The func that provides the reversed enumerators. This parameter can be null.</param>
-            /// <exception cref="ArgumentNullException"><paramref name="enumeratorFunc"/> is null.</exception>
-            public EnumerableInfo(in Func<IEnumeratorInfo<T>> enumeratorFunc, in Func<IEnumeratorInfo<T>> reversedEnumeratorFunc) : base(enumeratorFunc, reversedEnumeratorFunc)
-            {
-                // Left empty.
-            }
-
-            public EnumerableInfo(in IEnumerableInfo<T> enumerable) : base(enumerable.GetEnumerator, enumerable.GetReversedEnumerator)
-            {
-                // Left empty.
-            }
-        }
-
-#if WinCopies3
-    }
-
-    namespace Extensions.Generic
-    {
-#endif
-        /// <summary>
-        /// A collection that can be enumerated.
-        /// </summary>
-        /// <typeparam name="T">The item type of the collection.</typeparam>
-        public interface IEnumerable<
-#if CS5
-            out
-#endif
-             T> :
-#if CS8
-            DotNetFix
-#else
-            System.Collections
-#endif
-            .Generic.IEnumerable<T>
-#if WinCopies3
-            , Enumeration.IEnumerable
-        {
-#if CS8
-            IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
-#endif
-#else
-        {
-            /// <summary>
-            /// Gets a value indicating whether this collection can be enumerated in the two directions (FIFO and LIFO).
-            /// </summary>
-            bool SupportsReversedEnumeration { get; }
-#endif
-
-            /// <summary>
-            /// Returns a reversed enumerator for the current collection. See the Remarks section.
-            /// </summary>
-            /// <returns>A reversed enumerator for the current collection.</returns>
-            /// <exception cref="InvalidOperationException"><see cref="SupportsReversedEnumeration"/> is set to <see langword="false"/>.</exception>
-            /// <remarks>
-            /// This method returns an enumerator that enumerates in the reversed direction that the enumerator returned by the <see cref="System.Collections.Generic.IEnumerable{T}.GetEnumerator"/> method. So, for a queue, the <see cref="System.Collections.Generic.IEnumerable{T}.GetEnumerator"/> method will return an enumerator that will enumerate through the queue using the FIFO direction and the <see cref="GetReversedEnumerator"/> will throw an exception, because any reversed enumerator can be returned while a queue only supports the FIFO direction. However, a stack, which only supports the LIFO direction, will return a LIFO-enumerator as its main enumerator and throw an exception if we ask it to return a reversed enumerator. A linked list that supports the two directions, but which stores items using the FIFO direction by default, will return a FIFO-enumerator as its main enumerator and a LIFO-enumerator as its reversed enumerator.
-            /// </remarks>
-            System.Collections.Generic.IEnumerator<T> GetReversedEnumerator();
-        }
-#if WinCopies3
-    }
-
-    namespace Generic
-    {
-#endif
-
-        public interface IEnumerable<
-#if CS5
-            out
-#endif
-             TItems, out TEnumerator> : DotNetFix.Generic.IEnumerable<TItems, TEnumerator>,
-#if WinCopies3
-            Extensions.Generic.
-#endif
-            IEnumerable<TItems> where TEnumerator : System.Collections.Generic.IEnumerator<TItems>
-        {
-            new TEnumerator GetReversedEnumerator();
-
-#if CS8
-            System.Collections.Generic.IEnumerator<TItems>
-#if WinCopies3
-            Extensions.Generic.
-#endif
-            IEnumerable<TItems>.GetReversedEnumerator() => GetReversedEnumerator();
-#endif
-        }
-
-        public interface IEnumerableInfo<
-#if CS5
-            out
-#endif
-             TItems, out TEnumerator> : IEnumerable<TItems, TEnumerator> where TEnumerator : IEnumeratorInfo<TItems>
-        {
-            // Left empty.
-        }
-
-        public interface IEnumerableInfo<
-#if CS5
-            out
-#endif
-             T> : IEnumerableInfo<T, IEnumeratorInfo<T>>
-        {
-            // Left empty.
-        }
-    }
-#endif
-
-    namespace DotNetFix.Generic
-    {
-        public interface IDisposableEnumerable<
-#if CS5
-            out
-#endif
-             T> : Collections.
-#if WinCopies3
-            Generic.
-#endif
-            IDisposableEnumerable<T>, WinCopies.
-#if !WinCopies3
-            Util.
-#endif
-            DotNetFix.IDisposable
-        {
-            // Left empty.
-        }
-    }
-
-    /*public sealed class EmptyCheckEnumerable : IEnumerable
-    {
-        private Func<EmptyCheckEnumerator> _func;
-
-        public EmptyCheckEnumerable(Func<EmptyCheckEnumerator> func) => _func = func;
-
-        public System.Collections.IEnumerator GetEnumerator() => _func();
-    }
-
-    public sealed class EmptyCheckEnumerable<T> : System.Collections.Generic.IEnumerable<T>
-    {
-        private readonly Func<EmptyCheckEnumerator<T>> _func;
-
-        public EmptyCheckEnumerable(Func<EmptyCheckEnumerator<T>> func) => _func = func;
-
-        public System.Collections.Generic.IEnumerator<T> GetEnumerator() => _func();
-
-        System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-    }*/
 }

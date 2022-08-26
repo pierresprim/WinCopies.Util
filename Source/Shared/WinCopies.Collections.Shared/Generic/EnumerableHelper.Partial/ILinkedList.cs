@@ -16,7 +16,6 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if WinCopies3
-
 using WinCopies.Collections.DotNetFix.Generic;
 
 namespace WinCopies.Collections.Generic
@@ -48,8 +47,13 @@ namespace WinCopies.Collections.Generic
             T GetAndRemoveLast();
 
             bool TryGetAndRemoveLast(out T result);
+
+            new void Clear();
+#if CS8
+            T IPeekable<T>.Peek() => First;
+            bool IPeekable<T>.TryPeek(out T value) => TryGetFirst(out value);
+#endif
         }
     }
 }
-
 #endif

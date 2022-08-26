@@ -34,7 +34,11 @@ using static WinCopies.
     UtilHelpers;
 using static WinCopies.ThrowHelper;
 
-using static WinCopies.Consts;
+using static WinCopies.Consts
+#if WinCopies4
+    .Common
+#endif
+    ;
 #else
     Util.Util;
 

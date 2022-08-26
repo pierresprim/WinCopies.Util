@@ -166,25 +166,40 @@ namespace WinCopies.Collections.DotNetFix.Generic
     {
         new T Value { get; }
 
-#if !WinCopies3
-        new ISimpleLinkedListNode<T> NextNode { get; }
-#else
-        new ISimpleLinkedListNode<T> Next { get; }
+#if WinCopies3
+        new
 #endif
+        ISimpleLinkedListNode<T>
+#if WinCopies3
+        Next
+#else
+        NextNode
+#endif
+        { get; }
     }
 
 #if WinCopies3
-    public interface ISimpleLinkedListBase<T>
+    public interface IPeekable<T>
     {
         T Peek();
 
         bool TryPeek(out T result);
     }
+
+    public interface IPeekableEnumerable<T> : IPeekable<T>, IEnumerable<T>
+    {
+        // Left empty.
+    }
+        
+    public interface IPeekableEnumerableInfo<T> : IPeekableEnumerable<T>, IEnumerableInfo<T>
+    {
+        // Left empty.
+    }
 #endif
 
     public interface ISimpleLinkedList<T> :
 #if WinCopies3
-        ISimpleLinkedListBase2, ISimpleLinkedListBase<T>, ISimpleLinkedList
+        ISimpleLinkedListBase2, IPeekable<T>, ISimpleLinkedList
 #else
         IUIntCountable
 #endif

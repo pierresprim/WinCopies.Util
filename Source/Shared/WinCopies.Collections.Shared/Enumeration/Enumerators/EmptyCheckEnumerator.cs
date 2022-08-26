@@ -404,6 +404,8 @@ System.Collections.IEnumerator, WinCopies.Util.DotNetFix.IDisposable
                 : base(enumerator) => _emptyCheckEnumeratorHelper = new EmptyCheckEnumeratorHelper(this);
 #endif
 
+            public EmptyCheckEnumerator(System.Collections.Generic.IEnumerable<T> enumerable) : this(enumerable.GetEnumerator()) { /* Left empty. */ }
+
 #if !WinCopies3
         private void ResetCurrent() => _current = () => throw new InvalidOperationException("The enumeration has not been started or has completed.");
 

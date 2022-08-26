@@ -24,7 +24,7 @@ namespace WinCopies.Collections.Generic
 {
     public static partial class EnumerableHelper<T>
     {
-        public interface IEnumerableQueue : IQueueBase<T>, IEnumerableInfo<T>
+        public interface IEnumerableQueue : IQueueBase<T>, IPeekableEnumerableInfo<T>
         {
             // Left empty.
         }

@@ -19,9 +19,15 @@ namespace WinCopies.Collections.DotNetFix.Generic
 {
     public interface
 #if WinCopies3
-        IQueueBase<T> : ISimpleLinkedListBase
+        IQueueBase
 #else
-        IQueue<T> : ISimpleLinkedList<T>
+        IQueue
+#endif
+        <T> :
+#if WinCopies3
+        ISimpleLinkedListBase, IPeekable<T>
+#else
+        ISimpleLinkedList<T>
 #endif
     {
         void Enqueue(T item);

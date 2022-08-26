@@ -18,6 +18,10 @@
 #if CS6
 using System;
 using System.Collections.Generic;
+using System.Reflection;
+
+using WinCopies.Collections.Generic;
+using WinCopies.Linq;
 
 namespace WinCopies.Collections
 {
@@ -25,19 +29,72 @@ namespace WinCopies.Collections
     namespace Generic
     {
 #endif
-        public interface ILoopEnumerator
+    public interface ILoopEnumerator
+    {
+        object
+#if CS8
+            ?
+#endif
+            Current
+        { get; }
+
+        void MovePrevious();
+
+        void MoveNext();
+    }
+
+    public interface IReadOnlyListLoopEnumerator : ILoopEnumerator
+    {
+        int CurrentIndex { get; }
+    }
+
+    public class ReflectionLoopEnumerator : StringLoopEnumerator<PropertyInfo>
+    {
+        protected override string CurrentOverride => Current.Name;
+
+        public ReflectionLoopEnumerator(in Type type) : base(type.GetProperties()) { /* Left empty. */ }
+
+        public ReflectionLoopEnumerator(in Type type, in BindingFlags bindingFlags) : base(type.GetProperties(bindingFlags)) { /* Left empty. */ }
+
+        public ReflectionLoopEnumerator(in Type type, in Predicate<PropertyInfo> predicate) : base(GetArray(type.GetProperties(), predicate)) { /* Left empty. */ }
+
+        public ReflectionLoopEnumerator(in Type type, in BindingFlags bindingFlags, in Predicate<PropertyInfo> predicate) : base(GetArray(type.GetProperties(bindingFlags), predicate)) { /* Left empty. */ }
+
+        public static ReflectionLoopEnumerator Create<T>() => new
+#if !CS9
+            ReflectionLoopEnumerator
+#endif
+            (typeof(T));
+
+        public static ReflectionLoopEnumerator Create<T>(in BindingFlags bindingFlags) => new
+#if !CS9
+            ReflectionLoopEnumerator
+#endif
+            (typeof(T), bindingFlags);
+
+        public static ReflectionLoopEnumerator Create<T>(in Predicate<PropertyInfo> predicate) => new
+#if !CS9
+            ReflectionLoopEnumerator
+#endif
+            (typeof(T), predicate);
+
+        public static ReflectionLoopEnumerator Create<T>(in BindingFlags bindingFlags, in Predicate<PropertyInfo> predicate) => new
+#if !CS9
+            ReflectionLoopEnumerator
+#endif
+            (typeof(T), bindingFlags, predicate);
+
+        private static IReadOnlyList<PropertyInfo> GetArray(in IEnumerable<PropertyInfo> properties, in Predicate<PropertyInfo> predicate)
         {
-            object Current { get; }
+            var builder = new ArrayBuilder<PropertyInfo>();
 
-            void MovePrevious();
+            foreach (PropertyInfo p in properties.WherePredicate(predicate))
 
-            void MoveNext();
+                _ = builder.AddLast(p);
+
+            return builder.ToArray();
         }
-
-        public interface IReadOnlyListLoopEnumerator : ILoopEnumerator
-        {
-            int CurrentIndex { get; }
-        }
+    }
 
 #if WinCopies3
     namespace Generic
@@ -48,6 +105,66 @@ namespace WinCopies.Collections
             new T Current { get; }
         }
 
+#if WinCopies3
+    }
+#endif
+    namespace Abstraction.Generic
+    {
+        public abstract class LoopEnumerator<TEnumerator, TIn, TOut> : ILoopEnumerator<TOut> where TEnumerator : ILoopEnumerator<TIn>
+        {
+            protected TEnumerator Enumerator { get; }
+
+            public TOut Current => Convert(Enumerator.Current);
+
+            object
+#if CS8
+                ?
+#endif
+                ILoopEnumerator.Current => Current;
+
+            protected LoopEnumerator(in TEnumerator enumerator) => Enumerator = enumerator;
+
+            public void MovePrevious() => Enumerator.MovePrevious();
+            public void MoveNext() => Enumerator.MoveNext();
+
+            protected abstract TOut Convert(in TIn value);
+        }
+
+        public class LoopEnumeratorDelegate<TEnumerator, TIn, TOut> : LoopEnumerator<TEnumerator, TIn, TOut> where TEnumerator : ILoopEnumerator<TIn>
+        {
+            protected Converter<TIn, TOut> Selector { get; }
+
+            public LoopEnumeratorDelegate(in TEnumerator enumerator, in Converter<TIn, TOut> selector) : base(enumerator) => Selector = selector;
+
+            protected override TOut Convert(in TIn value) => Selector(value);
+        }
+    }
+
+    namespace AbstractionInterop.Generic
+    {
+        public abstract class LoopEnumerator<TEnumerator, TIn, TOut> : ILoopEnumerator<TOut> where TEnumerator : ILoopEnumerator<TIn> where TIn : TOut
+        {
+            protected TEnumerator Enumerator { get; }
+
+            public TOut Current => Enumerator.Current;
+
+            object
+#if CS8
+                ?
+#endif
+                ILoopEnumerator.Current => Current;
+
+            public LoopEnumerator(in TEnumerator enumerator) => Enumerator = enumerator;
+
+            public void MovePrevious() => Enumerator.MovePrevious();
+            public void MoveNext() => Enumerator.MoveNext();
+        }
+    }
+
+#if WinCopies3
+    namespace Generic
+    {
+#endif
         public class ListLoopEnumerator<T> : IReadOnlyListLoopEnumerator, ILoopEnumerator<T>
         {
             protected
@@ -65,18 +182,47 @@ namespace WinCopies.Collections
 
             public int CurrentIndex { get; protected set; }
 
-            public ListLoopEnumerator(in System.Collections.Generic.IReadOnlyList<T> array) => InnerArray = array;
+            public ListLoopEnumerator(in IReadOnlyList<T> array) => InnerArray = array;
 
             public void MovePrevious() => CurrentIndex = (CurrentIndex == 0 ? InnerArray.Count : CurrentIndex) - 1;
 
             public void MoveNext() => CurrentIndex = CurrentIndex == InnerArray.Count - 1 ? 0 : CurrentIndex + 1;
         }
 
-        public class EnumLoopEnumerator<T> : ListLoopEnumerator<T>, ILoopEnumerator<string>, IReadOnlyListLoopEnumerator where T : Enum
+        public abstract class StringLoopEnumerator<T> : ListLoopEnumerator<T>, ILoopEnumerator<string>, IReadOnlyListLoopEnumerator
         {
-            string ILoopEnumerator<string>.Current => Current.ToString();
+            protected class StringEnumerator : ILoopEnumerator<string>
+            {
+                protected ILoopEnumerator<string> Enumerator { get; }
 
-            public static System.Collections.Generic.IReadOnlyList<T> GetList()
+                public string Current => Enumerator.Current;
+
+                object
+#if CS8
+                    ?
+#endif
+                    ILoopEnumerator.Current => Current;
+
+                public StringEnumerator(in StringLoopEnumerator<T> enumerator) => Enumerator = enumerator;
+
+                public void MovePrevious() => Enumerator.MovePrevious();
+                public void MoveNext() => Enumerator.MoveNext();
+            }
+
+            protected abstract string CurrentOverride { get; }
+
+            string ILoopEnumerator<string>.Current => CurrentOverride;
+
+            public StringLoopEnumerator(in IReadOnlyList<T> array) : base(array) { /* Left empty. */ }
+
+            public ILoopEnumerator<string> ToStringEnumerator() => new StringEnumerator(this);
+        }
+
+        public class EnumLoopEnumerator<T> : StringLoopEnumerator<T> where T : Enum
+        {
+            protected override string CurrentOverride => Current.ToString();
+
+            public static IReadOnlyList<T> GetList()
             {
                 Array values = typeof(T).GetEnumValues();
 
