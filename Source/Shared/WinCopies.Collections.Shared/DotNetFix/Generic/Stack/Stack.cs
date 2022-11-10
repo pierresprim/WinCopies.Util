@@ -17,35 +17,80 @@
 
 namespace WinCopies.Collections.DotNetFix.Generic
 {
-    public interface
-#if WinCopies3
-        IStackBase
-#else
-        IStack
-#endif
-        <T> :
-#if WinCopies3
-        ISimpleLinkedListBase, IPeekable<T>
-#else
-        ISimpleLinkedList<T>
-#endif
+    public interface IStackCore<T> : IStackCore
     {
-        void Push(T item);
+        void Push(T
+#if CS9
+            ?
+#endif
+            item);
 
-        T Pop();
-
-#if WinCopies3
+        new T
+#if CS9
+            ?
+#endif
+            Pop();
         bool TryPop(out T
 #if CS9
             ?
 #endif
             result);
+#if CS8
+        void IStackCore.Push(object? value) => Push((T
+#if CS9
+            ?
+#endif
+            )value);
+        object? IStackCore.Pop() => Pop();
+        bool IStackCore.TryPop(out object? value)
+        {
+            if (TryPop(out T
+#if CS9
+                ?
+#endif
+                _value))
+            {
+                value = _value;
+
+                return true;
+            }
+
+            value = null;
+
+            return false;
+        }
+#endif
+    }
+
+    public interface IStackCommon<T> : ISimpleLinkedListCommon<T>, IStackCore<T>
+    {
+        // Left empty.
+    }
+
+    public interface IStackBase<T> : IStackBase, ISimpleLinkedListBase, ISimpleLinkedListCommon<T>, IStackCommon<T>
+    {
+#if CS8
+        void IListCommon<T>.Add(T
+#if CS9
+            ?
+#endif
+            item) => Push(item);
+        T
+#if CS9
+        ?
+#endif
+        IListCommon<T>.Remove() => Pop();
+        bool IListCommon<T>.TryRemove(out T
+#if CS9
+            ?
+#endif
+            item) => TryPop(out item);
+#endif
     }
 
     public interface IStack<T> : ISimpleLinkedList<T>, IStackBase<T>
     {
         // Left empty.
-#endif
     }
 
     public class Stack<T> : SimpleLinkedList<T>, IStack<T>
@@ -55,8 +100,11 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
         public new T Peek() => base.Peek();
 #endif
-
-        public void Push(T item) => Add(item);
+        public void Push(T
+#if CS9
+            ?
+#endif
+            item) => Add(item);
 
         protected sealed override SimpleLinkedListNode<T> AddItem(T item, out bool actionAfter)
         {
@@ -65,15 +113,37 @@ namespace WinCopies.Collections.DotNetFix.Generic
             return new SimpleLinkedListNode<T>(item) { Next = FirstItem };
         }
 
-        protected sealed override void OnItemAdded()
-        {
-            // Left empty.
-        }
+        protected sealed override void OnItemAdded() { /* Left empty. */ }
 
-        public T Pop() => Remove();
+        public T
+#if CS9
+            ?
+#endif
+            Pop() => Remove();
 
-        public bool TryPop(out T result) => TryRemove(out result);
+        public bool TryPop(out T
+#if CS9
+            ?
+#endif
+            result) => TryRemove(out result);
 
         protected sealed override SimpleLinkedListNode<T> RemoveItem() => FirstItem.Next;
+#if !CS8
+        void IStackCore.Push(object value) => Push((T)value);
+        object IStackCore.Pop() => Pop();
+        bool IStackCore.TryPop(out object value)
+        {
+            if (TryPop(out T _value))
+            {
+                value = _value;
+
+                return true;
+            }
+
+            value = null;
+
+            return false;
+        }
+#endif
     }
 }

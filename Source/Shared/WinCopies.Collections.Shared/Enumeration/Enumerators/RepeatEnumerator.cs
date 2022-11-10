@@ -20,23 +20,17 @@ using System.Collections;
 using System.Collections.Generic;
 
 using WinCopies.Collections.DotNetFix.Generic;
+using WinCopies.Collections.Enumeration.Generic;
 
-#if WinCopies3
 using static WinCopies.ThrowHelper;
-#else
-using WinCopies.Util;
-
-using static WinCopies.Util.Util;
-#endif
 
 namespace WinCopies.Collections.Generic
 {
     public class ConditionalEnumerator<T> : Enumerator<T
 #if CS9
-            ?
+        ?
 #endif
-            >,
-#if WinCopies3
+        >,
         IEnumerable<T
 #if CS9
             ?
@@ -46,21 +40,8 @@ namespace WinCopies.Collections.Generic
             ?
 #endif
             >>
-#else
-        System.Collections.Generic.IEnumerable<T
-#if CS9
-            ?
-#endif
-            >
-#endif
     {
-        private
-#if WinCopies3
-            Nullable
-#else
-            NullableGeneric
-#endif
-            <T
+        private Nullable<T
 #if CS9
             ?
 #endif
@@ -77,19 +58,11 @@ namespace WinCopies.Collections.Generic
 
         protected override T CurrentOverride => GetValueIfNotDisposed(_value.Value);
 
-#if WinCopies3
         public override bool? IsResetSupported => GetValueIfNotDisposed(true);
 
         public bool SupportsReversedEnumeration => GetValueIfNotDisposed(true);
-#endif
 
-        public ConditionalEnumerator(in
-#if WinCopies3
-            Nullable
-#else
-            NullableGeneric
-#endif
-            <T
+        public ConditionalEnumerator(in Nullable<T
 #if CS9
             ?
 #endif
@@ -104,21 +77,11 @@ namespace WinCopies.Collections.Generic
 #if CS9
             ?
 #endif
-            value, in Func<bool> condition) : this(
-#if WinCopies3
-            (Nullable
-#else
-            new NullableGeneric
-#endif
-            <T
+            value, in Func<bool> condition) : this((Nullable<T
 #if CS9
                 ?
 #endif
-                >
-#if WinCopies3
-            )
-#endif
-            (value), condition)
+                >)value, condition)
         { /* Left empty. */ }
 
         protected TValue
@@ -129,192 +92,44 @@ namespace WinCopies.Collections.Generic
 #if CS9
             ?
 #endif
-            value) => _value
-#if WinCopies3
-            .HasValue
-#else
-            == null
-#endif
-            ?
-#if WinCopies3
-            value :
-#endif
-            throw GetExceptionForDispose(false)
-#if !WinCopies3
-            : value
-#endif
-            ;
+            value) => _value.HasValue ? value : throw GetExceptionForDispose(false);
 
         protected sealed override bool MoveNextOverride() => GetValueIfNotDisposed(_condition)();
 
-        protected override void
-#if WinCopies3
-            DisposeManaged()
+        protected override void DisposeManaged()
         {
             base.DisposeManaged();
-#else
-            Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
 
-            if (disposing)
-            {
-#endif
-            _value =
-#if WinCopies3
-                new Nullable<T>()
-#else
-                    null
-#endif
-                ;
+            _value = new Nullable<T>();
             _condition = null;
-#if !WinCopies3
-            }
-#endif
         }
 
-#if WinCopies3
         protected override void ResetOverride2() { /* Left empty. */ }
 
-        private ConditionalEnumerator<T
+        public ConditionalEnumerator<T
 #if CS9
             ?
 #endif
             > GetEnumerator() => GetValueIfNotDisposed(this);
-
-        ConditionalEnumerator<T
-#if CS9
-            ?
-#endif
-            > DotNetFix.Generic.IEnumerable<T
-#if CS9
-            ?
-#endif
-            , ConditionalEnumerator<T
-#if CS9
-            ?
-#endif
-            >>.GetEnumerator() => GetEnumerator();
-
-        ConditionalEnumerator<T
-#if CS9
-            ?
-#endif
-            > IEnumerable<T
-#if CS9
-            ?
-#endif
-            , ConditionalEnumerator<T
-#if CS9
-            ?
-#endif
-            >>.GetReversedEnumerator() => GetEnumerator();
-
-#if !CS8
-        System.Collections.Generic.IEnumerator<T> IEnumerable<T>.GetEnumerator() => GetEnumerator();
-
-        System.Collections.Generic.IEnumerator<T> Extensions.Generic.IEnumerable<T>.GetReversedEnumerator() => GetEnumerator();
-
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-        IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetEnumerator();
-#endif
-#else
-        public IEnumerator<T> GetEnumerator() => GetValueIfNotDisposed(this);
-
-        IEnumerator IEnumerable.GetEnumerator() => GetValueIfNotDisposed(this);
+#if !CS8
+        IEnumerator<T> IEnumerable<T>.GetEnumerator() => GetEnumerator();
 #endif
     }
 
-    public sealed class RepeatEnumerator<T> :
-#if WinCopies3
-        ConditionalEnumerator<T>
-#else
-Enumerator<T>, System.Collections.Generic.IEnumerable<T>
-#endif
-        , IUIntCountableEnumerator<T>, ICountableEnumerator<T>
+    public sealed class RepeatEnumerator<T> : ConditionalEnumerator<T>, IUIntCountableEnumerator<T>, ICountableEnumerator<T>
     {
-#if WinCopies3
         private Condition _condition;
-#else
-        private NullableGeneric<T> _value;
-        private readonly uint _count;
-        private uint _i;
 
-        protected override T CurrentOverride => GetValueIfNotDisposed(_value.Value);
+        uint IUIntCountable.Count => GetValueIfNotDisposed(_condition).Count;
 
-        private TValue GetValueIfNotDisposed<TValue>(in TValue value) => _value == null ? throw GetExceptionForDispose(false) : value;
+        int ICountable.Count => GetValueIfNotDisposed(_condition).Count > int.MaxValue ? throw new InvalidOperationException($"The number of items is greater than {nameof(Int32)}.{nameof(int.MaxValue)}.") : (int)_condition.Count;
 
-        protected override bool MoveNextOverride()
-        {
-            if (_value == null)
+        private RepeatEnumerator(in Nullable<T> value, in Condition condition) : base(value, condition.GetCondition) => _condition = condition;
 
-                throw GetExceptionForDispose(false);
+        private RepeatEnumerator(in T value, in Condition condition) : base(new Nullable<T>(value), condition.GetCondition) => _condition = condition;
 
-            if (_i == _count)
-
-                return false;
-
-            else
-            {
-                _i++;
-
-                return true;
-            }
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-
-            _value = null;
-        }
-#endif
-
-        uint IUIntCountable.Count => GetValueIfNotDisposed(
-#if WinCopies3
-            _condition).Count;
-#else
-            _count);
-#endif
-
-        int ICountable.Count => GetValueIfNotDisposed(
-#if WinCopies3
-            _condition).Count
-#else
-            _count)
-#endif
-        > int.MaxValue ? throw new InvalidOperationException($"The number of items is greater than {nameof(Int32)}.{nameof(int.MaxValue)}.") : (int)
-#if WinCopies3
-        _condition.Count;
-#else
-            _count;
-#endif
-
-#if WinCopies3
-        private RepeatEnumerator(in
-#if WinCopies3
-            Nullable
-#else
-            NullableGeneric
-#endif
-            <T> value, in Condition condition) : base(value, condition.GetCondition) => _condition = condition;
-
-        private RepeatEnumerator(in T value, in Condition condition) : base(new
-#if WinCopies3
-            Nullable
-#else
-            NullableGeneric
-#endif
-            <T>(value), condition.GetCondition) => _condition = condition;
-
-        public static RepeatEnumerator<T> Get(in
-#if WinCopies3
-            Nullable
-#else
-            NullableGeneric
-#endif
-            <T> value, uint count) => new
+        public static RepeatEnumerator<T> Get(in Nullable<T> value, uint count) => new
 #if !CS9
             RepeatEnumerator<T>
 #endif
@@ -335,7 +150,6 @@ Enumerator<T>, System.Collections.Generic.IEnumerable<T>
             public Condition(in uint count)
             {
                 Count = count;
-
                 Index = 0;
             }
 
@@ -355,39 +169,10 @@ Enumerator<T>, System.Collections.Generic.IEnumerable<T>
 
             public void Reset() => Index = 0u;
         }
-#else
-        public RepeatEnumerator(in NullableGeneric<T> value, in uint count)
-        {
-            _value = value;
-            _count = count;
-        }
 
-        public RepeatEnumerator(in T value, in uint count) : this(new NullableGeneric<T>(value), count) { /* Left empty. */ }
-
-        System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetValueIfNotDisposed(this);
-
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetValueIfNotDisposed(this);
-#endif
-
-        protected override void
-#if WinCopies3
-            ResetOverride2
-#else
-            ResetOverride
-#endif
-            ()
-        {
-#if WinCopies3
-            GetValueIfNotDisposed(_condition).Reset();
-#else
-            base.ResetOverride();
-
-            _i = _value == null ? throw GetExceptionForDispose(false) : 0u;
-#endif
-        }
+        protected override void ResetOverride2() => GetValueIfNotDisposed(_condition).Reset();
     }
 
-#if WinCopies3
     public abstract class PredicateEnumerator<TItems, TEnumerator> : EnumeratorInfo<TItems, TEnumerator> where TEnumerator : System.Collections.Generic.IEnumerator<TItems>
     {
         public Predicate<TItems> Predicate { get; }
@@ -411,8 +196,6 @@ Enumerator<T>, System.Collections.Generic.IEnumerable<T>
         public override bool? IsResetSupported => InnerEnumerator.IsResetSupported;
 
         public PredicateEnumeratorInfo(in IEnumeratorInfo<T> enumerator, in Predicate<T> predicate) : base(enumerator, predicate) { /* Left empty. */ }
-
         public PredicateEnumeratorInfo(in IEnumerable<T, IEnumeratorInfo<T>> enumerable, in Predicate<T> predicate) : base(GetEnumerator(enumerable, nameof(enumerable)), predicate) { /* Left empty. */ }
     }
-#endif
 }

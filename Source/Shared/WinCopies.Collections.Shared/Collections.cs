@@ -60,12 +60,20 @@ namespace WinCopies.Collections
 
     public interface IIndexableR
     {
-        object this[int index] { get; }
+        object
+#if CS8
+            ?
+#endif
+            this[int index] { get; }
     }
 
     public interface IIndexableW
     {
-        object this[int index] { set; }
+        object
+#if CS8
+            ?
+#endif
+            this[int index] { set; }
     }
 
     public interface IIndexable : IIndexableR, IIndexableW

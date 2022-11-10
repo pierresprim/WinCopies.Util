@@ -68,29 +68,23 @@ namespace WinCopies.PropertySystem
 
         public IEnumeratorInfo<IProperty> GetReversedEnumerator() => GetReversedKeyValuePairEnumerator().SelectConverter(GetValue);
 
-        IEnumeratorInfo<KeyValuePair<TPropertyId, IProperty>> Collections.DotNetFix.Generic.IEnumerable<KeyValuePair<TPropertyId, IProperty>, IEnumeratorInfo<KeyValuePair<TPropertyId, IProperty>>>.GetEnumerator() => GetKeyValuePairEnumerator();
-
-        IEnumeratorInfo<KeyValuePair<TPropertyId, IProperty>> Collections.Generic.IEnumerable<KeyValuePair<TPropertyId, IProperty>, IEnumeratorInfo<KeyValuePair<TPropertyId, IProperty>>>.GetReversedEnumerator() => GetReversedKeyValuePairEnumerator();
-
         System.Collections.Generic.IEnumerator<KeyValuePair<TPropertyId, IProperty>> System.Collections.Generic.IEnumerable<KeyValuePair<TPropertyId, IProperty>>.GetEnumerator() => GetKeyValuePairEnumerator();
 
-        System.Collections.Generic.IEnumerator<KeyValuePair<TPropertyId, IProperty>> Collections.
-#if WinCopies3
-            Extensions.
-#endif
-            Generic.IEnumerable<KeyValuePair<TPropertyId, IProperty>>.GetReversedEnumerator() => GetReversedKeyValuePairEnumerator();
+        System.Collections.Generic.IEnumerator<KeyValuePair<TPropertyId, IProperty>> Collections.Extensions.Generic.IEnumerable<KeyValuePair<TPropertyId, IProperty>>.GetReversedEnumerator() => GetReversedKeyValuePairEnumerator();
 
         System.Collections.Generic.IEnumerator<IProperty> System.Collections.Generic.IEnumerable<IProperty>.GetEnumerator() => GetEnumerator();
-
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
+        IEnumeratorInfo<KeyValuePair<TPropertyId, IProperty>> Collections.Extensions.IEnumerable<IEnumeratorInfo<KeyValuePair<TPropertyId, IProperty>>>.GetReversedEnumerator() => GetReversedKeyValuePairEnumerator();
+        IEnumerator Collections.Extensions.IEnumerable.GetReversedEnumerator() => GetReversedKeyValuePairEnumerator();
+#if !CS8
+        IEnumeratorInfo<KeyValuePair<TPropertyId, IProperty>> Collections.Enumeration.IEnumerable<IEnumeratorInfo<KeyValuePair<TPropertyId, IProperty>>>.GetEnumerator() => GetKeyValuePairEnumerator();
+#endif
         public bool TryGetValue(TPropertyId key,
 #if CS8
             [MaybeNullWhen(false)]
 #endif
         out IProperty value) => (value = new Enumerable<KeyValuePair<TPropertyId, IProperty>>(GetKeyValuePairEnumerator).FirstOrDefault(keyValuePair => key == null ? keyValuePair.Key == null : key.Equals(keyValuePair.Key)).Value) != null;
-
-        IEnumerator Collections.Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
 
         public class Enumerator : EnumeratorInfo<KeyValuePair<TPropertyId, IProperty>>
         {

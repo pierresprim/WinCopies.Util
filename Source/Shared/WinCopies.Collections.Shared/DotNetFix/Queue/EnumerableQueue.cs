@@ -18,52 +18,55 @@
 using System;
 using System.Collections;
 
-#if !WinCopies3
-using static WinCopies.Util.Util;
-#endif
-
-using static WinCopies.
-#if !WinCopies3
-    Util.
-#endif
-    ThrowHelper;
-
 namespace WinCopies.Collections.DotNetFix
 {
-
-    public interface IEnumerableQueue : IQueue, IEnumerableSimpleLinkedList
+    public interface IEnumerableQueue : IQueue, IEnumerableSimpleLinkedList, ICollection
     {
         // Left empty.
     }
 
     [Serializable]
-    public class EnumerableQueue : EnumerableSimpleLinkedList, IEnumerableQueue
+    public class EnumerableQueue : EnumerableSimpleLinkedList<Queue>, IEnumerableQueue
     {
-        [NonSerialized]
-        private readonly Queue _queue;
+        protected override ISimpleLinkedListNode2 FirstNode => InnerList.FirstItem;
 
-#if !WinCopies3
-        public new bool IsReadOnly => base.IsReadOnly;
+        public EnumerableQueue() : base(new Queue()) { /* Left empty. */ }
+
+        public void Enqueue(object
+#if CS8
+            ?
 #endif
-
-        public sealed override uint Count => _queue.Count;
-
-        public EnumerableQueue() => _queue = new Queue();
-
-        public void Enqueue(object item)
+            item)
         {
-            _queue.Enqueue(item);
+            InnerList.Enqueue(item);
 
             UpdateEnumerableVersion();
         }
 
-        public sealed override object Peek() => _queue.Peek();
-
-        public sealed override bool TryPeek(out object result) => _queue.TryPeek(out result);
-
-        public bool TryDequeue(out object result)
+        public object
+#if CS8
+            ?
+#endif
+            Dequeue()
         {
-            if (_queue.TryDequeue(out result))
+            object
+#if CS8
+                ?
+#endif
+                result = InnerList.Dequeue();
+
+            UpdateEnumerableVersion();
+
+            return result;
+        }
+
+        public bool TryDequeue(out object
+#if CS8
+            ?
+#endif
+            result)
+        {
+            if (InnerList.TryDequeue(out result))
             {
                 UpdateEnumerableVersion();
 
@@ -71,181 +74,6 @@ namespace WinCopies.Collections.DotNetFix
             }
 
             return false;
-        }
-
-        public object Dequeue()
-        {
-            object result = _queue.Dequeue();
-
-            UpdateEnumerableVersion();
-
-            return result;
-        }
-
-        /// <summary>
-        /// Returns an <see cref="System.Collections.IEnumerator"/> for this <see cref="EnumerableQueue"/>.
-        /// </summary>
-        /// <returns>An <see cref="System.Collections.IEnumerator"/> for this <see cref="EnumerableQueue"/>.</returns>
-        public sealed override System.Collections.IEnumerator GetEnumerator()
-        {
-            var enumerator = new Enumerator(this);
-
-            IncrementEnumeratorCount();
-
-            return enumerator;
-        }
-
-        public sealed override void Clear()
-        {
-            _queue.Clear();
-
-            UpdateEnumerableVersion();
-        }
-
-#if !WinCopies3
-        [Serializable]
-#endif
-        public sealed class Enumerator :
-#if WinCopies3
-            WinCopies.Collections.Enumerator
-#else
-            IEnumerator, WinCopies.Util.DotNetFix.IDisposable
-#endif
-        {
-            private EnumerableQueue _queue;
-            private ISimpleLinkedListNode _currentNode;
-            private readonly uint _version;
-
-#if WinCopies3
-            private bool _first = true;
-
-            /// <summary>
-            /// When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
-            /// </summary>
-            protected override object CurrentOverride => _currentNode.Value;
-
-            public override bool? IsResetSupported => true;
-#else
-            public object Current => IsDisposed ? throw GetExceptionForDispose(false) : _currentNode.Value;
-
-            public bool IsDisposed { get; private set; }
-#endif
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="Enumerator"/> class.
-            /// </summary>
-            /// <param name="queue">The <see cref="EnumerableQueue"/> to enumerate.</param>
-            public Enumerator(in EnumerableQueue queue)
-            {
-                _queue = queue;
-
-                _version = queue.EnumerableVersion;
-
-#if WinCopies3
-                ResetOverride();
-#else
-                Reset();
-#endif
-            }
-
-#if !WinCopies3
-            public void Reset()
-            {
-                if (IsDisposed)
-
-                    throw GetExceptionForDispose(false);
-#else
-            protected override void ResetOverride2()
-            {
-                ThrowIfVersionHasChanged(_queue.EnumerableVersion, _version);
-
-                _first = true;
-#endif
-
-                _currentNode = _queue._queue.FirstItem;
-            }
-
-#if !WinCopies3
-            public bool MoveNext()
-            {
-                if (IsDisposed)
-
-                    throw GetExceptionForDispose(false);
-
-                if (_queue.EnumerableVersion != _version)
-#else
-            protected override bool MoveNextOverride()
-            {
-#endif
-                    ThrowIfVersionHasChanged(_queue.EnumerableVersion, _version);
-
-#if !WinCopies3
-                if (_currentNode == null)
-
-                    return false;
-
-                _currentNode = _currentNode.NextNode;
-
-                return true;
-#else
-                if (_first)
-                {
-                    _first = false;
-
-                    return _currentNode != null;
-                }
-
-                if (_currentNode.Next == null)
-                {
-                    _currentNode = null;
-
-                    return false;
-                }
-
-                _currentNode = _currentNode.Next;
-
-                return true;
-#endif
-            }
-
-#if WinCopies3
-            protected override void DisposeUnmanaged()
-            {
-                _queue.DecrementEnumeratorCount();
-                _queue = null;
-
-                base.DisposeUnmanaged();
-            }
-
-            protected override void DisposeManaged()
-            {
-                base.DisposeManaged();
-
-                _currentNode = null;
-            }
-#else
-            private void Dispose(bool disposing)
-            {
-                if (IsDisposed)
-
-                    return;
-
-                _queue.DecrementEnumeratorCount();
-
-                if (disposing)
-                {
-                    _queue = null;
-
-                    _currentNode = null;
-                }
-
-                IsDisposed = true;
-            }
-
-            public void Dispose() => Dispose(true);
-
-            ~Enumerator() => Dispose(false);
-#endif
         }
     }
 }

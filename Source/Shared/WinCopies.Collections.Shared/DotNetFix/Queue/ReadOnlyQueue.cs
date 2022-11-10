@@ -19,36 +19,31 @@ using static WinCopies.Collections.ThrowHelper;
 
 namespace WinCopies.Collections.DotNetFix
 {
-    public class ReadOnlyQueue : ReadOnlySimpleLinkedList, IQueue
+    public class ReadOnlyQueue : ReadOnlySimpleLinkedList<IQueue>, IQueue
     {
-        private readonly IQueue _queue;
+        public ReadOnlyQueue(in IQueue queue) : base(queue) { /* Left empty. */ }
 
-        public sealed override uint Count => _queue.Count;
-
-        public ReadOnlyQueue(IQueue queue) => _queue = queue;
-
-#if !WinCopies3
-        public ReadOnlyQueue(IStack stack)
-        {
-            // Left empty.
-        }
-#endif
-
-        public sealed override object Peek() => _queue.Peek();
-
-        void IQueue.Enqueue(object item) => GetReadOnlyListOrCollectionException();
-
-        object IQueue.Dequeue() => throw GetReadOnlyListOrCollectionException();
-
-#if WinCopies3
-        public sealed override bool TryPeek(out object result) => _queue.TryPeek(out result);
-
-        bool IQueue.TryDequeue(out object result)
+        void IQueueCore.Enqueue(object item) => throw GetReadOnlyListOrCollectionException();
+        object IQueueCore.Dequeue() => throw GetReadOnlyListOrCollectionException();
+        bool IQueueCore.TryDequeue(out object result)
         {
             result = null;
 
             return false;
         }
-#endif
+    }
+
+    public class ReadOnlyStack : ReadOnlySimpleLinkedList<IStack>, IStack
+    {
+        public ReadOnlyStack(in IStack stack) : base(stack) { /* Left empty. */ }
+
+        void IStackCore.Push(object item) => throw GetReadOnlyListOrCollectionException();
+        object IStackCore.Pop() => throw GetReadOnlyListOrCollectionException();
+        bool IStackCore.TryPop(out object result)
+        {
+            result = null;
+
+            return false;
+        }
     }
 }

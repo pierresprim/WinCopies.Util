@@ -21,20 +21,10 @@ using System.Linq;
 using WinCopies.Collections.DotNetFix;
 using WinCopies.Collections.DotNetFix.Generic;
 
-using static WinCopies.
-#if WinCopies3
-    ThrowHelper
-#else
-    Util.Util;
-using static WinCopies.Util.ThrowHelper;
-
-using WinCopies.Util
-#endif
-    ;
+using static WinCopies.ThrowHelper;
 
 namespace WinCopies.Collections
 {
-#if WinCopies3
     public interface IEnumeratorInfo2 : IEnumeratorInfo, DotNetFix.IDisposableEnumeratorInfo, IDisposableEnumerator
     {
         // Left empty.
@@ -59,7 +49,6 @@ namespace WinCopies.Collections
     {
         // Left empty.
     }
-#endif
 
     namespace Generic
     {
@@ -216,7 +205,7 @@ namespace WinCopies.Collections
             out
 #endif
              T> :
-#if WinCopies3 && CS8
+#if CS8
             DotNetFix
 #else
             System.Collections
@@ -239,21 +228,16 @@ namespace WinCopies.Collections
 #if CS5
             out
 #endif
-            T> : System.Collections.Generic.IEnumerator<T>, IEnumeratorInfo
+            T> :
+#if CS8
+            DotNetFix.Generic
+#else
+            System.Collections.Generic
+#endif
+            .IEnumerator<T>, IEnumeratorInfo
         {
             // Left empty.
         }
-
-#if !WinCopies3
-        public interface IDisposableEnumeratorInfo<
-#if CS5
-            out
-#endif
-             T> : IEnumeratorInfo<T>, IDisposableEnumeratorInfo
-        {
-            // Left empty.
-        }
-#endif
 
         public interface ICountableEnumeratorInfo<
 #if CS5
@@ -268,12 +252,7 @@ namespace WinCopies.Collections
 #if CS5
             out
 #endif
-             T> : ICountableDisposableEnumerator<T>, ICountableEnumeratorInfo<T>
-#if !WinCopies3
-, IDisposableEnumeratorInfo<T>
-#else
-        , IEnumeratorInfo<T>
-#endif
+             T> : ICountableDisposableEnumerator<T>, ICountableEnumeratorInfo<T>, IEnumeratorInfo<T>
         {
             // Left empty.
         }
@@ -291,12 +270,7 @@ namespace WinCopies.Collections
 #if CS5
             out
 #endif
-             T> : IUIntCountableDisposableEnumerator<T>, IUIntCountableEnumeratorInfo<T>
-#if !WinCopies3
-, IDisposableEnumeratorInfo<T>
-#else
-        , IEnumeratorInfo<T>
-#endif
+             T> : IUIntCountableDisposableEnumerator<T>, IUIntCountableEnumeratorInfo<T>, IEnumeratorInfo<T>
         {
             // Left empty.
         }

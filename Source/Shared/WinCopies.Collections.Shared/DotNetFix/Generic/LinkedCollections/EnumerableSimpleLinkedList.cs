@@ -19,49 +19,37 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
+using static WinCopies.ThrowHelper;
+
 namespace WinCopies.Collections.DotNetFix.Generic
 {
-    public abstract class EnumerableSimpleLinkedList<T> : EnumerableSimpleLinkedListBase, IEnumerableSimpleLinkedList<T>
+    public abstract class EnumerableSimpleLinkedList<T> : EnumerableSimpleLinkedListBase, IEnumerableSimpleLinkedList<T>, ISimpleLinkedListCommon<T>
     {
-#if WinCopies3
 #if CS7
-        int System.Collections.Generic.IReadOnlyCollection<T>.Count => (int)Count;
+        int IReadOnlyCollection<T>.Count => (int)Count;
 #endif
-
         int ICollection.Count => (int)Count;
+
+        public abstract T
+#if CS9
+            ?
 #endif
-
-        public abstract T Peek();
-
-        public abstract bool TryPeek(out T result);
-
-        public void CopyTo(T[] array, int arrayIndex) => WinCopies.
-#if !WinCopies3
-                Util.Extensions
-#else
-                Collections.EnumerableExtensions
+            Peek();
+        public abstract bool TryPeek(out T
+#if CS9
+            ?
 #endif
-                .CopyTo(this, array, arrayIndex, Count);
+            result);
+
+        public void CopyTo(T[] array, int arrayIndex) => WinCopies.Collections.EnumerableExtensions.CopyTo(this, array, arrayIndex, Count);
 
         System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetEnumerator();
 
-        System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-        public abstract
-#if WinCopies3
-IUIntCountableEnumerator
-#else
-System.Collections.Generic.IEnumerator
-#endif
-            <T> GetEnumerator();
+        public abstract IUIntCountableEnumerator<T> GetEnumerator();
 
         public T[] ToArray()
         {
-            if (Count > int.MaxValue)
-
-                throw new ArgumentOutOfRangeException("Too many items in list or collection.");
-
-            var result = new T[Count];
+            var result = Count > int.MaxValue ? throw new OverflowException("Too many items in list or collection.") : new T[Count];
 
             int i = -1;
 
@@ -72,30 +60,130 @@ System.Collections.Generic.IEnumerator
             return result;
         }
 
-        public void CopyTo(Array array, int index) => WinCopies.
-#if !WinCopies3
-                Util.Extensions
-#else
-                Collections.EnumerableExtensions
-#endif
-                .CopyTo(this, array, index, Count);
+        public void CopyTo(System.Array array, int index) => WinCopies.Collections.EnumerableExtensions.CopyTo(this, array, index, Count);
 
-#if WinCopies3 && !CS8
-        bool ISimpleLinkedList.TryPeek(out object result)
+        public abstract void Add(T
+#if CS9
+            ?
+#endif
+            item);
+        public abstract T
+#if CS9
+            ?
+#endif
+            Remove();
+        public abstract bool TryRemove(out T
+#if CS9
+            ?
+#endif
+            result);
+
+        void IListCommon.Add(object value) => Add((T)value);
+        object IListCommon.Remove() => Remove();
+        public bool TryRemove(out object result) => UtilHelpers.TryGetValue<T>(TryRemove, out result);
+#if !CS8
+        System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        object IPeekable.Peek() => Peek();
+        bool IPeekable.TryPeek(out object result) => UtilHelpers.TryGetValue<T>(TryPeek, out result);
+#endif
+    }
+
+    public abstract class EnumerableSimpleLinkedList<TItems, TList> : EnumerableSimpleLinkedList<TItems> where TList : IPeekable<TItems>, ISimpleLinkedListBase, IUIntCountable, ISimpleLinkedListCommon<TItems>
+    {
+        [NonSerialized]
+        private readonly TList _list;
+
+        protected TList List => _list;
+
+        public override uint Count => _list.Count;
+
+        public override bool HasItems => _list.HasItems;
+
+        protected abstract ISimpleLinkedListNode<TItems>
+#if CS8
+            ?
+#endif
+            FirstNode
+        { get; }
+
+        public EnumerableSimpleLinkedList(in TList list) => _list = list;
+
+        public sealed override TItems
+#if CS9
+            ?
+#endif
+            Peek() => _list.Peek();
+        public sealed override bool TryPeek(out TItems
+#if CS9
+            ?
+#endif
+            result) => _list.TryPeek(out result);
+
+        public override void Add(TItems
+#if CS9
+            ?
+#endif
+            item)
         {
-            if (TryPeek(out T _result))
+            _list.Add(item);
+
+            UpdateEnumerableVersion();
+        }
+        public override TItems
+#if CS9
+            ?
+#endif
+            Remove()
+        {
+            TItems
+#if CS9
+                ?
+#endif
+                result = _list.Remove();
+
+            UpdateEnumerableVersion();
+
+            return result;
+        }
+        public override bool TryRemove(out TItems
+#if CS9
+            ?
+#endif
+            result)
+        {
+            if (_list.TryRemove(out result))
             {
-                result = _result;
+                UpdateEnumerableVersion();
 
                 return true;
             }
 
-            result = null;
-
             return false;
         }
 
-        object ISimpleLinkedList.Peek() => Peek();
-#endif
+        public sealed override void Clear()
+        {
+            _list.Clear();
+
+            UpdateEnumerableVersion();
+        }
+
+        public sealed override IUIntCountableEnumerator<TItems> GetEnumerator()
+        {
+            IncrementEnumeratorCount();
+
+            return new Enumerator(this);
+        }
+
+        public sealed class Enumerator : Enumerator<TItems, ISimpleLinkedListNode<TItems>, EnumerableSimpleLinkedList<TItems, TList>>, IUIntCountableEnumerator<TItems>
+        {
+            protected override TItems CurrentOverride => CurrentNode.Value;
+
+            protected override ISimpleLinkedListNode<TItems> FirstNode => List.FirstNode;
+            protected override ISimpleLinkedListNode<TItems> NextNode => CurrentNode.Next;
+
+            public Enumerator(in EnumerableSimpleLinkedList<TItems, TList> list) : base(list) { /* Left empty. */ }
+        }
     }
 }

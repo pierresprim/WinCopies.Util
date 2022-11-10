@@ -17,31 +17,43 @@
 
 namespace WinCopies.Collections.DotNetFix
 {
-    public interface IStack : ISimpleLinkedList
+    public interface IStackCore
     {
-        void Push(object value);
+        void Push(object
+#if CS8
+            ?
+#endif
+            item);
 
-        object Pop();
+        object
+#if CS8
+            ?
+#endif
+            Pop();
 
-#if WinCopies3
         bool TryPop(out object
 #if CS8
             ?
 #endif
             result);
+    }
+
+    public interface IStackBase : ISimpleLinkedListBase, IPeekable, ISimpleLinkedListCommon, IStackCore
+    {
+#if CS8
+        void IListCommon.Add(object? item) => Push(item);
+        object? IListCommon.Remove() => Pop();
+        bool IListCommon.TryRemove(out object? item) => TryPop(out item);
 #endif
+    }
+
+    public interface IStack : ISimpleLinkedList, IStackBase
+    {
+        // Left empty.
     }
 
     public class Stack : SimpleLinkedList, IStack
     {
-#if !WinCopies3
-        public new bool IsReadOnly => base.IsReadOnly;
-
-        public new uint Count => base.Count;
-
-        public new object Peek() => base.Peek();
-#endif
-
         public void Push(object value) => Add(value);
 
         protected sealed override SimpleLinkedListNode AddItem(object value, out bool actionAfter)
@@ -51,10 +63,7 @@ namespace WinCopies.Collections.DotNetFix
             return new SimpleLinkedListNode(value) { Next = FirstItem };
         }
 
-        protected sealed override void OnItemAdded()
-        {
-            // Left empty.
-        }
+        protected sealed override void OnItemAdded() { /* Left empty. */ }
 
         public object Pop() => Remove();
 

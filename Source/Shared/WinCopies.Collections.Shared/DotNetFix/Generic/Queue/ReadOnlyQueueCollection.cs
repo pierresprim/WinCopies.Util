@@ -26,247 +26,137 @@ using WinCopies.Util;
 
 using static WinCopies.Collections.ThrowHelper;
 
-namespace WinCopies.Collections.DotNetFix
+namespace WinCopies.Collections.DotNetFix.Generic
 {
-#if WinCopies3
-    namespace Generic
+    [Serializable]
+    public class ReadOnlySimpleLinkedCollection<TList, TItems> : SimpleLinkedCollectionCore<TList>, ISimpleLinkedListBase2, IListCommon<TItems>, IPeekable<TItems> where TList : IUIntCountable, ISimpleLinkedListBase2, IPeekable<TItems>
     {
-#endif
-        [Serializable]
-        public class ReadOnlyQueueCollection<
-#if WinCopies3
-            TQueue, TItems
-#else
-            T
-#endif
-            > :
-#if WinCopies3
-            IQueue<TItems> where TQueue : IQueue<TItems>
-#else
-            IEnumerableQueue<T>, System.Collections.Generic.IReadOnlyCollection<T>, ICollection
-#endif
-        {
-            protected
-#if !WinCopies3
-            System.Collections.Generic.Queue<T>
-#else
-TQueue
-#endif
-            InnerQueue
-            { get; }
+        public sealed override bool IsReadOnly => true;
 
-            /// <summary>
-            /// Gets the number of elements contained in the <see cref="QueueCollection{T}"/>.
-            /// </summary>
-            /// <value>The number of elements contained in the <see cref="QueueCollection{T}"/>.</value>
-            public
-#if WinCopies3
-                uint
-#else
-                int
-#endif
-                Count => InnerQueue.Count;
+        object ISimpleLinkedListBase2.SyncRoot => InnerList.SyncRoot;
+        bool ISimpleLinkedListBase2.IsSynchronized => InnerList.IsSynchronized;
 
-            public bool IsReadOnly => true;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="QueueCollection{T}"/> class with a custom <see cref="System.Collections.Generic.Queue{T}"/>.
-            /// </summary>
-            /// <param name="queue">The inner <see cref="System.Collections.Generic.Queue{T}"/> for this <see cref="QueueCollection{T}"/>.</param>
-            public ReadOnlyQueueCollection(in
-#if WinCopies3
-                TQueue
-#else
-                System.Collections.Generic.Queue<T>
-#endif
-                queue) => InnerQueue = queue;
-
-            public ReadOnlyQueueCollection(in QueueCollection<
-#if WinCopies3
-                TQueue, TItems
-#else
-                T
-#endif
-                > queueCollection) : this(queueCollection.InnerQueue) { /* Left empty. */ }
-
-            /// <summary>
-            /// Returns the object at the beginning of the <see cref="QueueCollection{T}"/> without removing it.
-            /// </summary>
-            /// <returns>The object at the beginning of the <see cref="QueueCollection{T}"/>.</returns>
-            /// <exception cref="InvalidOperationException">The <see cref="QueueCollection{T}"/> is empty.</exception>
-            /// <seealso cref="TryPeek(out TItems)"/>
-            public
-#if WinCopies3
-                TItems
-#else
-                T
-#endif
-                 Peek() => InnerQueue.Peek();
-
-#if CS8
-            /// <summary>
-            /// Tries to peek the object at the beginning of the <see cref="QueueCollection{T}"/> without removing it.
-            /// </summary>
-            /// <param name="result">The object at the beginning of the <see cref="QueueCollection{T}"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
-            /// <returns>A <see cref="bool"/> value that indicates whether a value has actually been retrieved.</returns>
-            /// <seealso cref="Peek"/>
-            public bool TryPeek([MaybeNullWhen(false)] out
-#if WinCopies3
-                TItems
-#else
-                T
-#endif
-                result) => InnerQueue.TryPeek(out result);
-#endif
-
-#if WinCopies3
-            void IQueueBase<TItems>.Enqueue(TItems item) => throw GetReadOnlyListOrCollectionException();
-
-            TItems IQueueBase<TItems>.Dequeue() => throw GetReadOnlyListOrCollectionException();
-
-            bool IQueueBase<TItems>.TryDequeue(out TItems
-#if CS9
-                ?
-#endif
-                result)
-            {
-                result = default;
-
-                return false;
-            }
-
-            bool IPeekable<TItems>.TryPeek(out TItems result) => InnerQueue.TryPeek(out result);
-
-            void ISimpleLinkedListBase.Clear() => throw GetReadOnlyListOrCollectionException();
-
-            object ISimpleLinkedListBase2.SyncRoot => InnerQueue.SyncRoot;
-
-            bool ISimpleLinkedListBase2.IsSynchronized => InnerQueue.IsSynchronized;
-
-            bool ISimpleLinkedListBase.HasItems => InnerQueue.HasItems;
-
-            TItems ISimpleLinkedList<TItems>.Peek() => ((ISimpleLinkedList<TItems>)InnerQueue).Peek();
-
-#if !CS8
-            bool ISimpleLinkedList.TryPeek(out object result) => InnerQueue.TryPeek(out result);
-
-            object ISimpleLinkedList.Peek() => ((ISimpleLinkedList)InnerQueue).Peek();
-#endif
-#else
-        bool ICollection.IsSynchronized => ((ICollection)InnerQueue).IsSynchronized;
-
-        object ICollection.SyncRoot => ((ICollection)InnerQueue).SyncRoot;
-
-        uint IUIntCountable.Count => (uint)Count;
-
-        uint IUIntCountableEnumerable.Count => (uint)Count;
+        public ReadOnlySimpleLinkedCollection(in TList list) : base(list) { /* Left empty. */ }
 
         /// <summary>
-        /// Returns an enumerator that iterates through the <see cref="QueueCollection{T}"/>.
+        /// Returns the object at the beginning of the <see cref="ReadOnlySimpleLinkedCollection{TList, TItems}"/> without removing it.
         /// </summary>
-        /// <returns>An <see cref="System.Collections.Generic.IEnumerator{T}"/> for the <see cref="QueueCollection{T}"/>.</returns>
-        public System.Collections.Generic.IEnumerator<T> GetEnumerator() => InnerQueue.GetEnumerator();
+        /// <returns>The object at the beginning of the <see cref="ReadOnlySimpleLinkedCollection{TList, TItems}"/>.</returns>
+        /// <exception cref="InvalidOperationException">The <see cref="ReadOnlySimpleLinkedCollection{TList, TItems}"/> is empty.</exception>
+        /// <seealso cref="TryPeek(out TItems)"/>
+        public TItems
+#if CS9
+            ?
+#endif
+            Peek() => InnerList.Peek();
 
-        System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerQueue).GetEnumerator();
+        /// <summary>
+        /// Tries to peek the object at the beginning of the <see cref="ReadOnlySimpleLinkedCollection{TList, TItems}"/> without removing it.
+        /// </summary>
+        /// <param name="result">The object at the beginning of the <see cref="ReadOnlySimpleLinkedCollection{TList, TItems}"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
+        /// <returns>A <see cref="bool"/> value that indicates whether a value has actually been retrieved.</returns>
+        /// <seealso cref="Peek"/>
+        public bool TryPeek(
+#if CS8
+            [MaybeNullWhen(false)]
+#endif
+            out TItems result) => InnerList.TryPeek(out result);
+
+        void IClearable.Clear() => throw GetReadOnlyListOrCollectionException();
+
+        void IListCommon<TItems>.Add(TItems item) => throw GetReadOnlyListOrCollectionException();
+        TItems IListCommon<TItems>.Remove() => throw GetReadOnlyListOrCollectionException();
+        bool IListCommon<TItems>.TryRemove(out TItems result) => throw GetReadOnlyListOrCollectionException();
+
+        void IListCommon.Add(object item) => throw GetReadOnlyListOrCollectionException();
+        object IListCommon.Remove() => throw GetReadOnlyListOrCollectionException();
+        bool IListCommon.TryRemove(out object result) => throw GetReadOnlyListOrCollectionException();
+#if !CS8
+        object IPeekable.Peek() => Peek();
+        bool IPeekable.TryPeek(out object result) => UtilHelpers.TryGetValue<TItems>(TryPeek, out result);
+#endif
+    }
+
+    public class ReadOnlyQueueCollection<TQueue, TItems> : ReadOnlySimpleLinkedCollection<TQueue, TItems>, IQueue<TItems> where TQueue : IQueue<TItems>
+    {
+        public ReadOnlyQueueCollection(in TQueue queue) : base(queue) { /* Left empty. */ }
+        public ReadOnlyQueueCollection(in QueueCollection<TQueue, TItems> queueCollection) : this(queueCollection.InnerList) { /* Left empty. */ }
+
+        void IQueueCore<TItems>.Enqueue(TItems
+#if CS9
+            ?
+#endif
+            item) => throw GetReadOnlyListOrCollectionException();
+        TItems IQueueCore<TItems>.Dequeue() => throw GetReadOnlyListOrCollectionException();
+        bool IQueueCore<TItems>.TryDequeue(out TItems
+#if CS9
+            ?
+#endif
+            result)
+        {
+            result = default;
+
+            return false;
+        }
+#if !CS8
+        void IQueueCore.Enqueue(object item) => throw GetReadOnlyListOrCollectionException();
+        object IQueueCore.Dequeue() => throw GetReadOnlyListOrCollectionException();
+        bool IQueueCore.TryDequeue(out object result) => throw GetReadOnlyListOrCollectionException();
+#endif
+    }
+
+    public class ReadOnlyQueueCollection<T> : ReadOnlyQueueCollection<IQueue<T>, T>
+    {
+        public ReadOnlyQueueCollection(in IQueue<T> queue) : base(queue) { /* Left empty. */ }
+        public ReadOnlyQueueCollection(in QueueCollection<IQueue<T>, T> queueCollection) : this(queueCollection.InnerList) { /* Left empty. */ }
+    }
+
+    public class ReadOnlyEnumerableQueueCollection<TQueue, TItems> : ReadOnlyQueueCollection<TQueue, TItems>, IEnumerableQueue<TItems>, IReadOnlyCollection<TItems>, ICollection where TQueue : IEnumerableQueue<TItems>
+    {
+        protected ICollection InnerCollection => InnerList;
+
+        int ICollection.Count => (int)Count;
+        int IReadOnlyCollection<TItems>.Count => (int)Count;
+
+        bool ICollection.IsSynchronized => InnerCollection.IsSynchronized;
+        object ICollection.SyncRoot => InnerCollection.SyncRoot;
+
+        public ReadOnlyEnumerableQueueCollection(in TQueue queue) : base(queue) { /* Left empty. */ }
+        public ReadOnlyEnumerableQueueCollection(in QueueCollection<TQueue, TItems> queueCollection) : this(queueCollection.InnerList) { /* Left empty. */ }
+
+        void IEnumerableSimpleLinkedList<TItems>.CopyTo(TItems[] array, int index) => InnerList.CopyTo(array, index);
+
+        TItems[] IEnumerableSimpleLinkedList<TItems>.ToArray() => InnerList.ToArray();
+
+        public System.Collections.Generic.IEnumerator<TItems> GetEnumerator() => InnerList.GetEnumerator();
 
         /// <summary>
         /// Determines whether an element is in the <see cref="QueueCollection{T}"/>.
         /// </summary>
         /// <param name="item">The object to locate in the <see cref="QueueCollection{T}"/>. The value can be <see langword="null"/> for reference types.</param>
         /// <returns><see langword="true"/> if <paramref name="item"/> is found in the queue; otherwise, <see langword="false"/>.</returns>
-        public bool Contains(T item) => InnerQueue.Contains(item);
+        public bool Contains(TItems item) => InnerList.Contains(item);
 
-        void ICollection.CopyTo(Array array, int index) => ((ICollection)InnerQueue).CopyTo(array, index);
+        void ICollection.CopyTo(Array array, int index) => InnerList.CopyTo(array, index);
 
         /// <summary>
-        /// Copies the <see cref="QueueCollection{T}"/> elements to an existing one-dimensional <see cref="System.Array"/>, starting at the specified array index.
+        /// Copies the <see cref="QueueCollection{T}"/> elements to an existing one-dimensional <see cref="Array"/>, starting at the specified array index.
         /// </summary>
-        /// <param name="array">The one-dimensional <see cref="System.Array"/> that is the destination of the elements copied from <see cref="QueueCollection{T}"/>. The <see cref="System.Array"/> must have zero-based indexing.</param>
+        /// <param name="array">The one-dimensional <see cref="Array"/> that is the destination of the elements copied from <see cref="QueueCollection{T}"/>. The <see cref="Array"/> must have zero-based indexing.</param>
         /// <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
         /// <exception cref="ArgumentNullException"><paramref name="array"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="arrayIndex"/> is less than zero.</exception>
         /// <exception cref="ArgumentException">The number of elements in the source <see cref="QueueCollection{T}"/> is greater than the available space from <paramref name="arrayIndex"/> to the end of the destination array.</exception>
-        public void CopyTo(in T[] array, in int arrayIndex) => InnerQueue.CopyTo(array, arrayIndex);
-
-        void IQueue<T>.Enqueue(T item) => throw GetReadOnlyListOrCollectionException();
-
-        T IQueue<T>.Dequeue() => throw GetReadOnlyListOrCollectionException();
+        public void CopyTo(in TItems[] array, in int arrayIndex) => InnerList.CopyTo(array, arrayIndex);
+#if !CS8
+        System.Collections.IEnumerator IEnumerable.GetEnumerator() => InnerList.AsFromType<IEnumerable>().GetEnumerator();
 #endif
-        }
-
-#if WinCopies3
-        public class ReadOnlyQueueCollection<T> : ReadOnlyQueueCollection<IQueue<T>, T>
-        {
-            public ReadOnlyQueueCollection(in IQueue<T> queue) : base(queue)
-            {
-                // Left empty.
-            }
-
-            public ReadOnlyQueueCollection(in QueueCollection<IQueue<T>, T> queueCollection) : this(queueCollection.InnerQueue)
-            {
-                // Left empty.
-            }
-        }
-
-        public class ReadOnlyEnumerableQueueCollection<TQueue, TItems> : ReadOnlyQueueCollection<TQueue, TItems>, IEnumerableQueue<TItems>, IReadOnlyCollection<TItems>, ICollection where TQueue : IEnumerableQueue<TItems>
-        {
-            int ICollection.Count => (int)Count;
-
-            int IReadOnlyCollection<TItems>.Count => (int)Count;
-
-            bool ICollection.IsSynchronized => InnerQueue.AsFromType<ICollection>().IsSynchronized;
-
-            object ICollection.SyncRoot => InnerQueue.AsFromType<ICollection>().SyncRoot;
-
-            public ReadOnlyEnumerableQueueCollection(in TQueue queue) : base(queue) { /* Left empty. */ }
-
-            public ReadOnlyEnumerableQueueCollection(in QueueCollection<TQueue, TItems> queueCollection) : this(queueCollection.InnerQueue) { /* Left empty. */ }
-
-            void IEnumerableSimpleLinkedList<TItems>.CopyTo(TItems[] array, int index) => InnerQueue.CopyTo(array, index);
-
-            TItems[] IEnumerableSimpleLinkedList<TItems>.ToArray() => InnerQueue.ToArray();
-
-            public
-#if WinCopies3
-                System.Collections.Generic.IEnumerator
-#else
-                IUIntCountableEnumerator
-#endif
-                <TItems> GetEnumerator() => InnerQueue.GetEnumerator();
-
-#if !WinCopies3
-            System.Collections.Generic.IEnumerator<TItems> System.Collections.Generic.IEnumerable<TItems>.GetEnumerator() => GetEnumerator();
-#endif
-
-            System.Collections.IEnumerator IEnumerable.GetEnumerator() => InnerQueue.AsFromType<IEnumerable>().GetEnumerator();
-
-            /// <summary>
-            /// Determines whether an element is in the <see cref="QueueCollection{T}"/>.
-            /// </summary>
-            /// <param name="item">The object to locate in the <see cref="QueueCollection{T}"/>. The value can be <see langword="null"/> for reference types.</param>
-            /// <returns><see langword="true"/> if <paramref name="item"/> is found in the queue; otherwise, <see langword="false"/>.</returns>
-            public bool Contains(TItems item) => InnerQueue.Contains(item);
-
-            void ICollection.CopyTo(Array array, int index) => InnerQueue.CopyTo(array, index);
-
-            /// <summary>
-            /// Copies the <see cref="QueueCollection{T}"/> elements to an existing one-dimensional <see cref="Array"/>, starting at the specified array index.
-            /// </summary>
-            /// <param name="array">The one-dimensional <see cref="Array"/> that is the destination of the elements copied from <see cref="QueueCollection{T}"/>. The <see cref="Array"/> must have zero-based indexing.</param>
-            /// <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
-            /// <exception cref="ArgumentNullException"><paramref name="array"/> is <see langword="null"/>.</exception>
-            /// <exception cref="ArgumentOutOfRangeException"><paramref name="arrayIndex"/> is less than zero.</exception>
-            /// <exception cref="ArgumentException">The number of elements in the source <see cref="QueueCollection{T}"/> is greater than the available space from <paramref name="arrayIndex"/> to the end of the destination array.</exception>
-            public void CopyTo(in TItems[] array, in int arrayIndex) => InnerQueue.CopyTo(array, arrayIndex);
-        }
-
-        public class ReadOnlyEnumerableQueueCollection<T> : ReadOnlyEnumerableQueueCollection<IEnumerableQueue<T>, T>
-        {
-            public ReadOnlyEnumerableQueueCollection(in IEnumerableQueue<T> queue) : base(queue) { /* Left empty. */ }
-
-            public ReadOnlyEnumerableQueueCollection(in QueueCollection<IEnumerableQueue<T>, T> queueCollection) : this(queueCollection.InnerQueue) { /* Left empty. */ }
-        }
     }
-#endif
+
+    public class ReadOnlyEnumerableQueueCollection<T> : ReadOnlyEnumerableQueueCollection<IEnumerableQueue<T>, T>
+    {
+        public ReadOnlyEnumerableQueueCollection(in IEnumerableQueue<T> queue) : base(queue) { /* Left empty. */ }
+        public ReadOnlyEnumerableQueueCollection(in QueueCollection<IEnumerableQueue<T>, T> queueCollection) : this(queueCollection.InnerList) { /* Left empty. */ }
+    }
 }
 #endif

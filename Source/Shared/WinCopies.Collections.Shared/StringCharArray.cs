@@ -15,7 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if WinCopies3
 using System.Collections;
 
 using WinCopies.Collections.DotNetFix.Generic;
@@ -31,54 +30,34 @@ namespace WinCopies.Collections
         public int Count => _s.Length;
 
         public char this[int index] => _s[index];
-
 #if !CS8
         object IIndexableR.this[int index] => this[index];
-#endif
-
-        public bool SupportsReversedEnumeration => true;
-
-#if !(WinCopies3 && CS7)
+#if !CS7
         object IReadOnlyList.this[int index] => this[index];
 #endif
+#endif
+        public bool SupportsReversedEnumeration => true;
 
         public StringCharArray(in string s) => _s = s;
 
         public ICountableEnumeratorInfo<char> GetEnumerator() => new CountableEnumeratorInfo<char>(new EnumeratorInfo<char>(_s), () => Count);
-
+        ICountableEnumerator<char> IReadOnlyList<char>.GetEnumerator() => GetEnumerator();
         System.Collections.Generic.IEnumerator<char> System.Collections.Generic.IEnumerable<char>.GetEnumerator() => GetEnumerator();
-
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        public IEnumeratorInfo2<char> GetReversedEnumerator() => new ArrayEnumerator<char>(this, true);
-
-        System.Collections.Generic.IEnumerator<char>
-#if WinCopies3
-            Extensions. 
+        public ArrayEnumerator<char> GetReversedEnumerator() => new ArrayEnumerator<char>(this, DotNetFix.ArrayEnumerationOptions.Reverse);
+        ICountableEnumeratorInfo<char> Extensions.IEnumerable<ICountableEnumeratorInfo<char>>.GetReversedEnumerator() => GetReversedEnumerator();
+        System.Collections.Generic.IEnumerator<char> Extensions.Generic.IEnumerable<char>.GetReversedEnumerator() => GetReversedEnumerator();
+        IEnumerator Extensions.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
+#if !CS8
+        ICountableEnumerator<char> Enumeration.IEnumerable<ICountableEnumerator<char>>.GetEnumerator() => GetEnumerator();
+        DotNetFix.ICountableEnumerator Enumeration.IEnumerable<DotNetFix.ICountableEnumerator>.GetEnumerator() => GetEnumerator();
 #endif
-            Generic.IEnumerable<char>.GetReversedEnumerator() => GetReversedEnumerator();
 
-        ICountableEnumerator<char> IReadOnlyList<char>.GetEnumerator() => GetEnumerator();
-
-        private CountableEnumeratorInfo<char> _GetReversedEnumerator() => new
+        /*private CountableEnumeratorInfo<char> _GetReversedEnumerator() => new
 #if !CS9
             CountableEnumeratorInfo<char>
 #endif
-            (GetReversedEnumerator(), () => Count);
-
-        ICountableEnumerator<char> ICountableEnumerable<char, ICountableEnumerator<char>>.GetEnumerator() => _GetReversedEnumerator();
-
-        ICountableEnumeratorInfo<char> Generic.IEnumerable<char, ICountableEnumeratorInfo<char>>.GetReversedEnumerator() => _GetReversedEnumerator();
-
-#if !CS8
-        ICountableEnumerator<char> Enumeration.DotNetFix.IEnumerable<ICountableEnumerator<char>>.GetEnumerator() => GetEnumerator();
-
-        ICountableEnumerator<char> DotNetFix.Generic.IEnumerable<char, ICountableEnumerator<char>>.GetEnumerator() => GetEnumerator();
-
-        DotNetFix.ICountableEnumerator Enumeration.DotNetFix.IEnumerable<DotNetFix.ICountableEnumerator>.GetEnumerator() => GetEnumerator();
-
-        IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
-#endif
+            (GetReversedEnumerator(), () => Count);*/
     }
 }
-#endif

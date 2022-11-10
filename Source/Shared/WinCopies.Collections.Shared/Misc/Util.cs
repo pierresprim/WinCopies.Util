@@ -65,11 +65,11 @@ namespace WinCopies.Collections
                 )
 #endif
 
-            foreach (T value in Enumerable.FromEnumerator(new PredicateEnumerator<T>(enumerable, Delegates.GetAreNotEqualPredicate(delimiter))))
+                foreach (T value in Enumerable.FromEnumerator(new PredicateEnumerator<T>(enumerable, Delegates.GetAreNotEqualPredicate(delimiter))))
 
-                if (!(enumerator.MoveNext() && Equals(enumerator.Current, value)))
+                    if (!(enumerator.MoveNext() && Equals(enumerator.Current, value)))
 
-                    return false;
+                        return false;
 
             return true;
         }
@@ -77,7 +77,7 @@ namespace WinCopies.Collections
         public static void PerformAction<TIn, TOut>(in System.Collections.Generic.IEnumerable<TOut> parameters, in Action<System.Collections.Generic.IEnumerable<TIn>> action) => action(parameters.Cast<TIn>());
 
 #if CS5
-        public static ILinkedListNode<KeyValuePair<TKey,TValue>> Find<TDictionary, TKey, TValue>( in TDictionary dictionary, in TKey key) where TDictionary : DotNetFix.Generic.IDictionary<TKey, TValue>, ILinkedList3<KeyValuePair<TKey, TValue>>
+        public static ILinkedListNode<KeyValuePair<TKey, TValue>> Find<TDictionary, TKey, TValue>(in TDictionary dictionary, in TKey key) where TDictionary : DotNetFix.Generic.IDictionary<TKey, TValue>, ILinkedList3<KeyValuePair<TKey, TValue>>
         {
             var enumerable = new Enumerable<ILinkedListNode<KeyValuePair<TKey, TValue>>>(dictionary.GetNodeEnumerator);
 
@@ -92,7 +92,7 @@ namespace WinCopies.Collections
 
         public static bool Remove<TDictionary, TKey, TValue>(in TDictionary dictionary, in TKey key) where TDictionary : DotNetFix.Generic.IDictionary<TKey, TValue>, ILinkedList3<KeyValuePair<TKey, TValue>>
         {
-            ILinkedListNode<KeyValuePair<TKey, TValue>> node = Find<TDictionary,TKey,TValue>(dictionary,key);
+            ILinkedListNode<KeyValuePair<TKey, TValue>> node = Find<TDictionary, TKey, TValue>(dictionary, key);
 
             if (node == null)
 
@@ -206,4 +206,4 @@ namespace WinCopies.Collections
         }
 #endif
     }
-    }
+}

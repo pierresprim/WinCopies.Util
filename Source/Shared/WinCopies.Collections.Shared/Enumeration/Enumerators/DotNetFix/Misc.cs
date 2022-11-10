@@ -17,7 +17,6 @@
 
 namespace WinCopies.Collections.DotNetFix
 {
-#if WinCopies3
     public interface IEnumeratorBase
     {
         /// <summary>
@@ -55,28 +54,11 @@ namespace WinCopies.Collections.DotNetFix
 
     public interface IEnumerator : System.Collections.IEnumerator, IEnumeratorBase
     {
-#if WinCopies3
-        bool MoveNext();
-
-        void Reset();
-#else
         // Left empty.
-#endif
     }
-#endif
 
     namespace Generic
     {
-#if WinCopies3
-        public interface IEnumerator<
-#if CS5
-            out
-#endif
-             T> : System.Collections.Generic.IEnumerator<T>, IEnumeratorBase
-        {
-            // Left empty.
-        }
-
         public interface IDisposableEnumerator<
 #if CS5
             out
@@ -93,13 +75,11 @@ namespace WinCopies.Collections.DotNetFix
             private TValue GetOrThrowIfDisposed<TValue>(in TValue value) => WinCopies.ThrowHelper.GetOrThrowIfDisposed(this, value);
 
             public T Current => GetOrThrowIfDisposed(_enumerator).Current;
-
             object System.Collections.IEnumerator.Current => Current;
 
             public bool IsDisposed => _enumerator == null;
 
             public DisposableEnumerator(in System.Collections.Generic.IEnumerator<T> enumerator) => _enumerator = enumerator;
-
             public DisposableEnumerator(in System.Collections.Generic.IEnumerable<T> enumerable) : this(enumerable.GetEnumerator()) { /* Left empty. */ }
 
             public bool MoveNext() => GetOrThrowIfDisposed(_enumerator).MoveNext();
@@ -108,6 +88,5 @@ namespace WinCopies.Collections.DotNetFix
 
             public void Dispose() => _enumerator = null;
         }
-#endif
     }
 }

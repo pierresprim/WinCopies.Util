@@ -32,27 +32,24 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
     public interface IDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, TValue>, IUIntCollection<KeyValuePair<TKey, TValue>>, System.Collections.Generic.IEnumerable<KeyValuePair<TKey, TValue>>
     {
-        TValue this[TKey key] { get; set; }
+#if !WinCopies4
+        new TValue this[TKey key] { get; set; }
 
-        void Add(TKey key, TValue value);
+        new void Add(TKey key, TValue value);
 
-        bool Remove(TKey key);
+        new bool Remove(TKey key);
+#endif
     }
 
     public interface ILinkedDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IReadOnlyLinkedDictionary<TKey, TValue>
     {
-        ILinkedListNodeBase<KeyValuePair<TKey, TValue>> First { get; }
-
-        ILinkedListNodeBase<KeyValuePair<TKey, TValue>> Last { get; }
-
+        new ILinkedListNodeBase<KeyValuePair<TKey, TValue>> First { get; }
+        new ILinkedListNodeBase<KeyValuePair<TKey, TValue>> Last { get; }
 #if CS8
         IReadOnlyLinkedListNodeBase<KeyValuePair<TKey, TValue>> IReadOnlyLinkedDictionary<TKey, TValue>.First => First;
-
         IReadOnlyLinkedListNodeBase<KeyValuePair<TKey, TValue>> IReadOnlyLinkedDictionary<TKey, TValue>.Last => Last;
 #endif
-
-        KeyValuePair<TKey,TValue> RemoveFirst();
-
+        KeyValuePair<TKey, TValue> RemoveFirst();
         KeyValuePair<TKey, TValue> RemoveLast();
     }
 }

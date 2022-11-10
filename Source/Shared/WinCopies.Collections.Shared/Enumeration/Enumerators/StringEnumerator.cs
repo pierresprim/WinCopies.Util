@@ -19,20 +19,15 @@ using System;
 using System.Collections.Specialized;
 
 using WinCopies.Collections.DotNetFix;
+using WinCopies.Collections.DotNetFix.Generic;
 using WinCopies.Collections.Generic;
 using WinCopies.Util;
 
-using static WinCopies.
-#if WinCopies3
-    ThrowHelper
-#else
-    Util.Util
-#endif
-    ;
+using static WinCopies.ThrowHelper;
 
 namespace WinCopies.Collections
 {
-    public class StringEnumerator : Enumerator<string>
+    public class StringEnumerator : Enumerator<string>, ICountableEnumerator<string>
     {
         private int _currentIndex = -1;
         private Func<bool> _func;
@@ -41,14 +36,13 @@ namespace WinCopies.Collections
 
         public EnumerationDirection EnumerationDirection { get; }
 
-#if WinCopies3
         public override bool? IsResetSupported => true;
-#endif
+
+        public int Count => StringCollection.Count;
 
         public StringEnumerator(in System.Collections.Specialized.StringCollection stringCollection, in EnumerationDirection enumerationDirection)
         {
             StringCollection = stringCollection ?? throw GetArgumentNullException(nameof(stringCollection));
-
             EnumerationDirection = enumerationDirection;
 
             switch (enumerationDirection)
@@ -77,36 +71,15 @@ namespace WinCopies.Collections
 
         protected override bool MoveNextOverride() => _func();
 
-#if WinCopies3
         protected override void ResetOverride2() { /* Left empty. */ }
 
-        protected override void ResetCurrent() =>
-#else
-        protected override void ResetOverride()
-        {
-#endif
-            _currentIndex = -1;
+        protected override void ResetCurrent() => _currentIndex = -1;
 
-#if !WinCopies3
-            base.ResetOverride();
-        }
-
-        private static InvalidEnumArgumentException GetInvalidEnumArgumentException(in string argumentName, in Enum value) => new InvalidEnumArgumentException(argumentName, value);
-#endif
-
-#if WinCopies3
         protected override void DisposeManaged()
-#else
-        protected override void Dispose(bool disposing)
-#endif
         {
             _func = null;
 
-#if WinCopies3
             base.DisposeManaged();
-#else
-            base.Dispose(disposing);
-#endif
         }
     }
 }

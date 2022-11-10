@@ -15,15 +15,16 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if WinCopies3
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 using WinCopies.Collections.DotNetFix;
 using WinCopies.Collections.DotNetFix.Generic;
 using WinCopies.Collections.Generic;
+using WinCopies.Util;
 
 using static WinCopies.ThrowHelper;
 
@@ -39,12 +40,12 @@ namespace WinCopies.Collections
 
         public static DotNetFix.Generic.IUIntCountableEnumerable<TItems> GetUIntCountableEnumerable<TEnumerable, TItems>(this TEnumerable enumerable) where TEnumerable : IUIntCountable, System.Collections.Generic.IEnumerable<TItems> => enumerable as DotNetFix.Generic.IUIntCountableEnumerable<TItems> ?? new Enumeration.Generic.UIntCountableEnumerable<TEnumerable, TItems>(enumerable);
 
-        public static System.Collections.Generic.IEnumerator<T> GetEnumerator<T>(this Extensions.Generic.IEnumerable<T> enumerable, in EnumerationDirection enumerationDirection)
+        public static TEnumerator GetEnumerator<TItems, TEnumerator>(this Extensions.Generic.IEnumerable<TItems, TEnumerator> enumerable, in EnumerationDirection enumerationDirection) where TEnumerator : System.Collections.Generic.IEnumerator<TItems>
 #if CS8
             => enumerationDirection switch
             {
-                EnumerationDirection.FIFO => enumerable.GetEnumerator(),
-                EnumerationDirection.LIFO => enumerable.GetReversedEnumerator(),
+                EnumerationDirection.FIFO => enumerable.AsFromType<Extensions.IEnumerable<TEnumerator>>().GetEnumerator(),
+                EnumerationDirection.LIFO => enumerable.AsFromType<Extensions.IEnumerable<TEnumerator>>().GetReversedEnumerator(),
                 _ => throw new InvalidEnumArgumentException($"The given value for the {nameof(enumerationDirection)} parameter is not supported.", nameof(enumerationDirection), enumerationDirection),
             };
 #else
@@ -53,38 +54,11 @@ namespace WinCopies.Collections
             {
                 case EnumerationDirection.FIFO:
 
-                    return enumerable.GetEnumerator();
+                    return enumerable.AsFromType<Extensions.IEnumerable<TEnumerator>>().GetEnumerator();
 
                 case EnumerationDirection.LIFO:
 
-                    return enumerable.GetReversedEnumerator();
-
-                default:
-
-                    throw new InvalidEnumArgumentException($"The given value for the {nameof(enumerationDirection)} parameter is not supported.", nameof(enumerationDirection), enumerationDirection);
-            }
-        }
-#endif
-
-        public static TEnumerator GetEnumerator<TItems, TEnumerator>(this Generic.IEnumerable<TItems, TEnumerator> enumerable, in EnumerationDirection enumerationDirection) where TEnumerator : System.Collections.Generic.IEnumerator<TItems>
-#if CS8
-            => enumerationDirection switch
-            {
-                EnumerationDirection.FIFO => enumerable.GetEnumerator(),
-                EnumerationDirection.LIFO => enumerable.GetReversedEnumerator(),
-                _ => throw new InvalidEnumArgumentException($"The given value for the {nameof(enumerationDirection)} parameter is not supported.", nameof(enumerationDirection), enumerationDirection),
-            };
-#else
-        {
-            switch (enumerationDirection)
-            {
-                case EnumerationDirection.FIFO:
-
-                    return enumerable.GetEnumerator();
-
-                case EnumerationDirection.LIFO:
-
-                    return enumerable.GetReversedEnumerator();
+                    return enumerable.AsFromType<Extensions.IEnumerable<TEnumerator>>().GetReversedEnumerator();
 
                 default:
 
@@ -266,13 +240,13 @@ namespace WinCopies.Collections
             }
         }
 
-        private static void ThrowOnInvalidCopyToArrayParameters(in IEnumerable enumerable, in Array array)
+        private static void ThrowOnInvalidCopyToArrayParameters(in IEnumerable enumerable, in System.Array array)
         {
             ThrowIfNull(enumerable, nameof(enumerable));
             ThrowIfNull(array, nameof(array));
         }
 
-        public static void CopyTo(this IEnumerable enumerable, in Array array, in int arrayIndex, in int count)
+        public static void CopyTo(this IEnumerable enumerable, in System.Array array, in int arrayIndex, in int count)
         {
             ThrowOnInvalidCopyToArrayParameters(enumerable, array);
             ThrowOnInvalidCopyToArrayOperation(array, arrayIndex, count, nameof(array), nameof(arrayIndex));
@@ -289,9 +263,9 @@ namespace WinCopies.Collections
             }
         }
 
-        public static void CopyTo(this IEnumerable enumerable, in Array array) => CopyTo(enumerable, array, 0, array.Length);
+        public static void CopyTo(this IEnumerable enumerable, in System.Array array) => CopyTo(enumerable, array, 0, array.Length);
 
-        public static void CopyTo(this IEnumerable enumerable, in Array array, in int arrayIndex, in uint count)
+        public static void CopyTo(this IEnumerable enumerable, in System.Array array, in int arrayIndex, in uint count)
         {
             ThrowOnInvalidCopyToArrayParameters(enumerable, array);
             ThrowOnInvalidCopyToArrayOperation(array, arrayIndex, count, nameof(array), nameof(arrayIndex));
@@ -399,7 +373,6 @@ namespace WinCopies.Collections
 
         //    return arrayList;
         //}
-
 #if CS7
         /// <summary>
         /// Converts an <see cref="IEnumerable"/> to a <see cref="List{T}"/> from a given index for a given length.
@@ -470,7 +443,6 @@ namespace WinCopies.Collections
             return _array.ToArray();
         }
 #endif
-
         public static object[] ToArray(this IEnumerable array, in int startIndex, in int length)
         {
             ThrowIfNull(array, nameof(array));
@@ -525,71 +497,138 @@ namespace WinCopies.Collections
         //    return _array;
         //}
 
-        public static T[] ToArray<T>(this System.Collections.Generic.IEnumerable<T> array, in int startIndex, in int length)
+        public static TDestination[] ToArray<TSource, TDestination>(this System.Collections.Generic.IEnumerable<TSource> array, in int startIndex, in int length, in Converter<TSource, TDestination> converter)
         {
-            ThrowIfNull(array, nameof(array));
+            var _array = new TDestination[length];
 
-            var _array = new T[length];
-
-            int i = 0;
-
-            int count = 0;
-
-            foreach (T value in array)
-            {
-                if (i < startIndex)
-
-                    i++;
-
-                else
-
-                    _array[count++] = value;
-
-                if (count == length)
-
-                    break;
-            }
+            array.ToArray(_array, startIndex, length, converter);
 
             return _array;
         }
 
-        public static TDestination[] ToArray<TSource, TDestination>(this TSource[] array, Converter<TSource, TDestination> selector) => ToArray(array, 0, array.Length, selector);
-
-        public static TDestination[] ToArray<TSource, TDestination>(this TSource[] array, int startIndex, int length, Converter<TSource, TDestination> selector)
+        public static void ToArray<TSource, TDestination>(this System.Collections.Generic.IEnumerable<TSource> enumerables, in TDestination[] array, int startIndex, in int length, in Converter<TSource, TDestination> converter)
         {
-            ThrowIfNull(array, nameof(array));
-            ThrowIfNull(selector, nameof(selector));
-            ThrowOnInvalidCopyToArrayOperation(array, startIndex, length, nameof(array), nameof(startIndex));
+            foreach (TSource value in enumerables == null ? throw new ArgumentNullException(nameof(enumerables)) : array == null ? throw new ArgumentNullException(nameof(array)) : startIndex < 0 ? throw new ArgumentOutOfRangeException(nameof(startIndex)) : length < 0 || length > array.Length ? throw new ArgumentOutOfRangeException(nameof(length)) : enumerables)
+            {
+                array[startIndex++] = converter(value);
 
-            var result = new TDestination[array.Length];
+                if (startIndex == length)
 
-            for (int i = 0; i < length; i++)
-
-                result[i + startIndex] = selector(array[i]);
-
-            return result;
+                    break;
+            }
         }
 
-#if CS7
-        public static TDestination[] ToArray<TSource, TDestination>(this System.Collections.Generic.IReadOnlyList<TSource> list, Converter<TSource, TDestination> selector) => ToArray(list, 0, list.Count, selector);
+        public static T[] ToArray<T>(this System.Collections.Generic.IEnumerable<T> array, in int startIndex, in int length) => array.ToArray(startIndex, length, Delegates.Self);
 
-        public static TDestination[] ToArray<TSource, TDestination>(this System.Collections.Generic.IReadOnlyList<TSource> list, int startIndex, int length, Converter<TSource, TDestination> selector)
-        {
-            ThrowIfNull(list, nameof(list));
-            ThrowIfNull(selector, nameof(selector));
-            ThrowOnInvalidCopyToArrayOperation(list, startIndex, length, nameof(list), nameof(startIndex));
+        public static void ToArray<T>(this System.Collections.Generic.IEnumerable<T> enumerables, in T[] array, in int startIndex, in int length) => enumerables.ToArray(array, startIndex, length, Delegates.Self);
 
-            var result = new TDestination[list.Count];
-
-            for (int i = 0; i < length; i++)
-
-                result[i + startIndex] = selector(list[i]);
-
-            return result;
-        }
+        public static TDestination[] ToArray<TSource, TDestination>(this
+#if CS5
+            System.Collections.Generic.IReadOnlyList<
 #endif
+            TSource
+#if CS5
+                >
+#else
+            []
+#endif
+            list, in Converter<TSource, TDestination> selector) => list.ToArray(list.
+#if CS5
+                Count
+#else
+                Length
+#endif
+                , 0, selector);
 
-        static void Append(object _value, ref StringBuilder stringBuilder, in bool parseStrings, in bool parseSubEnumerables)
+        public static void ToArray<TSource, TDestination>(this
+#if CS5
+            System.Collections.Generic.IReadOnlyList<
+#endif
+            TSource
+#if CS5
+                >
+#else
+            []
+#endif
+            list, in TDestination[] array, in Converter<TSource, TDestination> selector) => list.ToArray(array, 0, list.
+#if CS5
+                Count
+#else
+                Length
+#endif
+                , selector);
+
+        public static TDestination[] ToArray<TSource, TDestination>(this
+#if CS5
+            System.Collections.Generic.IReadOnlyList<
+#endif
+            TSource
+#if CS5
+                >
+#else
+            []
+#endif
+            list, in int startIndex, in int length, in Converter<TSource, TDestination> selector)
+        {
+            var result = new TDestination[length];
+
+            list.ToArray(result, startIndex, length, selector);
+
+            return result;
+        }
+
+        public static void ToArray<TSource, TDestination>(this
+#if CS5
+            System.Collections.Generic.IReadOnlyList<
+#endif
+            TSource
+#if CS5
+                >
+#else
+            []
+#endif
+            list, in TDestination[] array, in int startIndex, in Converter<TSource, TDestination> selector) => list.ToArray(array, startIndex, list.
+#if CS5
+                Count
+#else
+                Length
+#endif
+                , selector);
+
+        public static void ToArray<TSource, TDestination>(this
+#if CS5
+            System.Collections.Generic.IReadOnlyList<
+#endif
+            TSource
+#if CS5
+                >
+#else
+            []
+#endif
+            list, in TDestination[] array, in int startIndex, in int length, in Converter<TSource, TDestination> selector)
+        {
+            for (int i = list == null ? throw new ArgumentNullException(nameof(list)) : array == null ? throw new ArgumentNullException(nameof(array)) : selector == null ? throw new ArgumentNullException(nameof(selector)) : startIndex < 0 ? throw new ArgumentOutOfRangeException(nameof(startIndex)) : length < 0 || length > list.
+#if CS5
+                Count
+#else
+                Length
+#endif
+                ? throw new ArgumentOutOfRangeException(nameof(length)) : array.Length - startIndex < length ? throw new ArgumentException("Not enough place.") : 0; i < length; i++)
+
+                array[i + startIndex] = selector(list[i]);
+        }
+#if CS5
+        public static TDestination[] ToArray<TSource, TDestination>(this TSource[] list, in Converter<TSource, TDestination> selector) => list.AsReadOnlyList().ToArray(selector);
+
+        public static void ToArray<TSource, TDestination>(this TSource[] list, in TDestination[] array, Converter<TSource, TDestination> selector) => list.AsReadOnlyList().ToArray(array, selector);
+
+        public static TDestination[] ToArray<TSource, TDestination>(this TSource[] list, in int startIndex, int length, Converter<TSource, TDestination> selector) => list.AsReadOnlyList().ToArray(length, startIndex, selector);
+
+        public static void ToArray<TSource, TDestination>(this TSource[] list, in TDestination[] array, in int startIndex, in Converter<TSource, TDestination> selector) => list.AsReadOnlyList().ToArray(array, startIndex, selector);
+
+        public static void ToArray<TSource, TDestination>(this TSource[] list, in TDestination[] array, in int startIndex, in int length, in Converter<TSource, TDestination> selector) => list.AsReadOnlyList().ToArray(array, startIndex, length, selector);
+#endif
+        public static void Append(object _value, ref StringBuilder stringBuilder, in bool parseStrings, in bool parseSubEnumerables)
         {
             ThrowIfNull(stringBuilder, nameof(stringBuilder));
 
@@ -653,4 +692,3 @@ namespace WinCopies.Collections
         public static string ConcatenateString2(this System.Collections.IEnumerable enumerable) => enumerable.ConcatenateString().ToString();
     }
 }
-#endif

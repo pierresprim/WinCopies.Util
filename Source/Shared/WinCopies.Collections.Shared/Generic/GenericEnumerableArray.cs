@@ -1,5 +1,4 @@
-﻿#if WinCopies3
-using System;
+﻿using System;
 using System.Collections;
 using System.Linq;
 
@@ -31,7 +30,7 @@ namespace WinCopies.Collections.Generic
 #endif
         IReadOnlyCollection<T>, Extensions.Generic.IReadOnlyList<T>
     {
-        protected Array Array { get; }
+        protected System.Array Array { get; }
 
         protected IList List => Array.AsFromType<IList>();
 
@@ -51,10 +50,9 @@ namespace WinCopies.Collections.Generic
 
         object IIndexableW.this[int index] { set => this[index] = (T)value; }
 
-        public GenericEnumerableArray(in Array array) => Array = array;
+        public GenericEnumerableArray(in System.Array array) => Array = array;
 
         public System.Collections.Generic.IEnumerable<T> AsEnumerable() => Array.Cast<T>();
-
         public System.Collections.Generic.IEnumerator<T> GetEnumerator() => AsEnumerable().GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
@@ -77,8 +75,7 @@ namespace WinCopies.Collections.Generic
 
         public void RemoveAt(int index) => List.RemoveAt(index);
 
-        public void CopyTo(Array array, int index) => Array.CopyTo(array, index);
-
+        public void CopyTo(System.Array array, int index) => Array.CopyTo(array, index);
 #if CS5
         public int CompareTo(object other, System.Collections.IComparer comparer) => Array.AsFromType<IStructuralComparable>().CompareTo(other, comparer);
 
@@ -95,25 +92,14 @@ namespace WinCopies.Collections.Generic
 #endif
             (GetEnumerator(), () => Array.Length);
 
-        ICountableEnumerator<T>
-#if WinCopies3
-            Extensions.
-#endif
-            Generic.IReadOnlyList<T>.GetEnumerator() => GetCountableEnumerator();
-
-        ICountableEnumerator<T> ICountableEnumerable<T, ICountableEnumerator<T>>.GetEnumerator() => GetCountableEnumerator();
+        ICountableEnumerator<T> Extensions.Generic.IReadOnlyList<T>.GetEnumerator() => GetCountableEnumerator();
 
         public void CopyTo(T[] array, int arrayIndex) => this.CopyTo(array, arrayIndex, Count);
 
+        ICountableEnumerator<T> Enumeration.IEnumerable<ICountableEnumerator<T>>.GetEnumerator() => GetCountableEnumerator();
+        DotNetFix.ICountableEnumerator Enumeration.IEnumerable<DotNetFix.ICountableEnumerator>.GetEnumerator() => GetCountableEnumerator();
 #if !CS8
         object IIndexableR.this[int index] => Array.GetValue(index);
-
-        ICountableEnumerator<T> Enumeration.DotNetFix.IEnumerable<ICountableEnumerator<T>>.GetEnumerator() => GetCountableEnumerator();
-
-        ICountableEnumerator<T> DotNetFix.Generic.IEnumerable<T, ICountableEnumerator<T>>.GetEnumerator() => GetCountableEnumerator();
-
-        DotNetFix.ICountableEnumerator Enumeration.DotNetFix.IEnumerable<DotNetFix.ICountableEnumerator>.GetEnumerator() => GetCountableEnumerator();
 #endif
     }
 }
-#endif

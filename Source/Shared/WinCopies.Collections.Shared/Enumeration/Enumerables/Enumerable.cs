@@ -35,6 +35,11 @@ namespace WinCopies.Collections
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
+        public static IEnumerable<T> GetEnumerable<T>(T item)
+        {
+            yield return item;
+        }
+
         public static IEnumerator<T> GetEnumerator<T>(params T[] items)
         {
             foreach (T item in items)
@@ -42,11 +47,7 @@ namespace WinCopies.Collections
                 yield return item;
         }
 
-        public static IEnumerable<T> GetEnumerable<T>(params T[] items) => new
-#if WinCopies3
-            Generic.
-#endif
-            Enumerable<T>(() => GetEnumerator(items));
+        public static IEnumerable<T> GetEnumerable<T>(params T[] items) => FromEnumeratorFunc(() => GetEnumerator(items));
 
         public static IEnumerable<T> FromEnumeratorFunc<T>(in Func<IEnumerator<T>> func) => new
 #if WinCopies3
@@ -54,11 +55,7 @@ namespace WinCopies.Collections
 #endif
             Enumerable<T>(func);
 
-        public static IEnumerable<T> FromEnumerator<T>(IEnumerator<T> enumerator) => new
-#if WinCopies3
-            Generic.
-#endif
-            Enumerable<T>(() => enumerator);
+        public static IEnumerable<T> FromEnumerator<T>(IEnumerator<T> enumerator) => FromEnumeratorFunc(() => enumerator);
 
 #if WinCopies3
         public static IEnumerable<T> GetNullCheckWhileEnumerable<T>(T first, Converter<T, T> converter) => new Generic.Enumerable<T>(() => Enumerator.GetNullCheckWhileEnumerator(first, converter));

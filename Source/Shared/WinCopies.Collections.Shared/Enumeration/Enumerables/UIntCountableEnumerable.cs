@@ -15,10 +15,10 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if WinCopies3
 using System.Collections;
 
 using WinCopies.Collections.DotNetFix.Generic;
+using WinCopies.Util;
 
 namespace WinCopies.Collections
 {
@@ -35,24 +35,18 @@ namespace WinCopies.Collections
         public abstract class UIntCountableEnumerable<TEnumerable, TEnumerator, TItems> : IUIntCountableEnumerable<TItems> where TEnumerable : ICountableEnumerable<TItems, TEnumerator> where TEnumerator : ICountableEnumerator<TItems>
         {
             protected TEnumerable Enumerable { get; }
+            protected ICountable Countable => Enumerable;
 
-            public uint Count => (uint)Enumerable.Count;
+            public uint Count => (uint)Countable.Count;
 
             public UIntCountableEnumerable(in TEnumerable enumerable) => Enumerable = enumerable;
 
-            public IUIntCountableEnumeratorInfo<TItems> GetEnumerator() => new UIntCountableEnumeratorInfo<TItems>(new EnumeratorInfo<TItems>(Enumerable), () => (uint)Enumerable.Count);
+            public IUIntCountableEnumeratorInfo<TItems> GetEnumerator() => new UIntCountableEnumeratorInfo<TItems>(new EnumeratorInfo<TItems>(Enumerable), () => (uint)Countable.Count);
 
             System.Collections.Generic.IEnumerator<TItems> System.Collections.Generic.IEnumerable<TItems>.GetEnumerator() => GetEnumerator();
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-            IUIntCountableEnumerator<TItems> IUIntCountableEnumerable<TItems, IUIntCountableEnumerator<TItems>>.GetEnumerator() => GetEnumerator();
-
-#if !CS8
-            IUIntCountableEnumerator<TItems> Enumeration.DotNetFix.IEnumerable<IUIntCountableEnumerator<TItems>>.GetEnumerator() => GetEnumerator();
-
-            IUIntCountableEnumerator<TItems> DotNetFix.Generic.IEnumerable<TItems, IUIntCountableEnumerator<TItems>>.GetEnumerator() => GetEnumerator();
-#endif
+            IUIntCountableEnumerator<TItems> Enumeration.IEnumerable<IUIntCountableEnumerator<TItems>>.GetEnumerator() => GetEnumerator();
         }
 
         public class UIntCountableEnumerable<T> : UIntCountableEnumerable<ICountableEnumerable<T>, ICountableEnumerator<T>, T>
@@ -65,6 +59,8 @@ namespace WinCopies.Collections
 
         public class UIntCountableEnumerableInfo<T> : UIntCountableEnumerable<ICountableEnumerableInfo<T>, ICountableEnumeratorInfo<T>, T>, IUIntCountableEnumerableInfo<T>
         {
+            protected Extensions.IEnumerable<System.Collections.Generic.IEnumerator<T>> Enumerable2 => Enumerable;
+
             public bool SupportsReversedEnumeration => Enumerable.SupportsReversedEnumeration;
 
             public UIntCountableEnumerableInfo(in ICountableEnumerableInfo<T> enumerable) : base(enumerable)
@@ -72,22 +68,9 @@ namespace WinCopies.Collections
                 // Left empty.
             }
 
-            // public IEnumeratorInfo2<T> GetReversedEnumerator() => Enumerable.GetReversedEnumerator();
-
-            public IUIntCountableEnumeratorInfo<T> GetReversedEnumerator() => new UIntCountableEnumeratorInfo<T>(new EnumeratorInfo<T>(Enumerable.GetReversedEnumerator()), () => (uint)Enumerable.Count);
-
-            System.Collections.Generic.IEnumerator<T> Collections.
-#if WinCopies3
-                Extensions.
-#endif
-                Generic.IEnumerable<T>.GetReversedEnumerator() => GetReversedEnumerator();
-
-            IUIntCountableEnumeratorInfo<T> IEnumerable<T, IUIntCountableEnumeratorInfo<T>>.GetReversedEnumerator() => GetReversedEnumerator();
-
-#if !CS8
-            IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
-#endif
+            public IUIntCountableEnumeratorInfo<T> GetReversedEnumerator() => new UIntCountableEnumeratorInfo<T>(new EnumeratorInfo<T>(Enumerable.AsFromType<Extensions.IEnumerable<ICountableEnumeratorInfo<T>>>().GetReversedEnumerator()), () => (uint)Countable.Count);
+            System.Collections.Generic.IEnumerator<T> Extensions.Generic.IEnumerable<T>.GetReversedEnumerator() => Enumerable2.GetReversedEnumerator();
+            IEnumerator Extensions.IEnumerable.GetReversedEnumerator() => Enumerable2.GetReversedEnumerator();
         }
     }
 }
-#endif

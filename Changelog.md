@@ -13,6 +13,7 @@ First release. In addition to the changes notified in Changelog.Preview.md:
 - Add and remove several static methods.
 - Add new types (including new delegates).
 - Some bug fixes and improvements.
+- Redesign linked/list/nodes, arrays, countables, collections, dictionaries, enumerables and enumerators related types. The new implementations should be easier to use.
 
 ### 08/2022.2 2.21
 

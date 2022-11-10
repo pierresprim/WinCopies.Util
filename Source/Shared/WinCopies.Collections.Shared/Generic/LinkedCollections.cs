@@ -16,144 +16,98 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if CS7
-
-#if WinCopies3
 using System.Collections;
-#endif
 
 using WinCopies.Collections.DotNetFix;
 using WinCopies.Collections.DotNetFix.Generic;
-
+using WinCopies.Util;
 
 namespace WinCopies.Collections.Generic
 {
+#if !CS8
+    internal static class SimpleLinkedListHelper
+    {
+        internal static bool TryGetValue<T>(this ICollection collection, in System.Func<T> func, out T result)
+        {
+            if (collection.Count > 0)
+            {
+                result = func();
+
+                return true;
+            }
+
+            result = default;
+
+            return false;
+        }
+
+        internal static bool TryPeekItem<TItems, TCollection>(this TCollection collection, out TItems result) where TCollection : IPeekable<TItems>, ICollection => collection.TryGetValue(collection.Peek, out result);
+        internal static bool TryPeekValue<T>(this IPeekable<T> collection, out object result) => UtilHelpers.TryGetValue<T>(collection.TryPeek, out result);
+    }
+#endif
     public class Stack<T> : System.Collections.Generic.Stack<T>, IEnumerableStack<T>
     {
-#if !WinCopies3
-        uint IUIntCountableEnumerable.Count => (uint)Count;
-#else
+        protected ICollection AsCollection => this;
+
         public bool IsReadOnly => false;
 
-        bool ISimpleLinkedListBase2.IsSynchronized => ((ICollection)this).IsSynchronized;
-
-        object ISimpleLinkedListBase2.SyncRoot => ((ICollection)this).SyncRoot;
-#endif
+        bool ISimpleLinkedListBase2.IsSynchronized => AsCollection.IsSynchronized;
+        object ISimpleLinkedListBase2.SyncRoot => AsCollection.SyncRoot;
 
         uint IUIntCountable.Count => (uint)Count;
 
         public bool HasItems => Count != 0;
 
-#if WinCopies3 && !CS8
-        bool ISimpleLinkedList.TryPeek(out object result)
-        {
-            if (TryPeek(out T _result))
-            {
-                result = _result;
+        void IListCommon.Add(object value) => Push((T)value);
+        object IListCommon.Remove() => Pop();
+        bool IListCommon.TryRemove(out object result) => UtilHelpers.TryGetValue<T>(TryPop, out result);
+#if !CS8
+        public bool TryPeek(out T result) => this.TryPeekItem(out result);
+        public bool TryPop(out T result) => this.TryGetValue(Pop, out result);
 
-                return true;
-            }
+        object IPeekable.Peek() => Peek();
+        public bool TryPeek(out object result) => this.TryPeekValue(out result);
 
-            result = null;
+        void IStackCore.Push(object item) => Push((T)item);
+        object IStackCore.Pop() => Pop();
+        public bool TryPop(out object result) => UtilHelpers.TryGetValue<T>(TryPop, out result);
 
-            return false;
-        }
-
-        object ISimpleLinkedList.Peek() => Peek();
-#endif
-
-#if CS7
-        public bool TryPeek(out T result)
-        {
-            if (Count > 0)
-            {
-                result = Peek();
-
-                return true;
-            }
-
-            result = default;
-
-            return false;
-        }
-
-        public  bool TryPop(out T result)
-        {
-            if (Count > 0)
-            {
-                result = Pop();
-
-                return true;
-            }
-
-            result = default;
-
-            return false;
-        }
+        void IListCommon<T>.Add(T value) => Push(value);
+        T IListCommon<T>.Remove() => Pop();
+        bool IListCommon<T>.TryRemove(out T result) => TryPop(out result);
 #endif
     }
 
     public class Queue<T> : System.Collections.Generic.Queue<T>, IEnumerableQueue<T>
     {
-#if !WinCopies3
-        uint IUIntCountableEnumerable.Count => (uint)Count;
-#else
+        protected ICollection AsCollection => this;
+
         public bool IsReadOnly => false;
 
-        bool ISimpleLinkedListBase2.IsSynchronized => ((ICollection)this).IsSynchronized;
-
-        object ISimpleLinkedListBase2.SyncRoot => ((ICollection)this).SyncRoot;
-#endif
+        bool ISimpleLinkedListBase2.IsSynchronized => AsCollection.IsSynchronized;
+        object ISimpleLinkedListBase2.SyncRoot => AsCollection.SyncRoot;
 
         uint IUIntCountable.Count => (uint)Count;
 
         public bool HasItems => Count != 0;
 
-#if WinCopies3 && !CS8
-        bool ISimpleLinkedList.TryPeek(out object result)
-        {
-            if (TryPeek(out T _result))
-            {
-                result = _result;
+        void IListCommon.Add(object value) => Enqueue((T)value);
+        object IListCommon.Remove() => Dequeue();
+        bool IListCommon.TryRemove(out object result) => UtilHelpers.TryGetValue<T>(TryDequeue, out result);
+#if !CS8
+        public bool TryPeek(out T result) => this.TryPeekItem(out result);
+        public bool TryDequeue(out T result) => this.TryGetValue(Dequeue, out result);
 
-                return true;
-            }
+        object IPeekable.Peek() => Peek();
+        public bool TryPeek(out object result) => this.TryPeekValue(out result);
 
-            result = null;
+        void IQueueCore.Enqueue(object item) => Enqueue((T)item);
+        object IQueueCore.Dequeue() => Dequeue();
+        public bool TryDequeue(out object result) => UtilHelpers.TryGetValue<T>(TryDequeue, out result);
 
-            return false;
-        }
-
-        object ISimpleLinkedList.Peek() => Peek();
-#endif
-
-#if CS7
-        public bool TryPeek(out T result)
-        {
-            if (Count > 0)
-            {
-                result = Peek();
-
-                return true;
-            }
-
-            result = default;
-
-            return false;
-        }
-
-        public bool TryDequeue(out T result)
-        {
-            if (Count > 0)
-            {
-                result = Dequeue();
-
-                return true;
-            }
-
-            result = default;
-
-            return false;
-        }
+        void IListCommon<T>.Add(T value) => Enqueue(value);
+        T IListCommon<T>.Remove() => Dequeue();
+        bool IListCommon<T>.TryRemove(out T result) => TryDequeue(out result);
 #endif
     }
 }

@@ -17,51 +17,124 @@
 
 namespace WinCopies.Collections.DotNetFix
 {
-    public interface ISimpleLinkedListNode
+    public interface IClearable
+    {
+        void Clear();
+    }
+
+    public interface ISimpleLinkedListNodeBase
+    {
+        ISimpleLinkedListNodeBase Next { get; }
+    }
+
+    public interface ISimpleLinkedListNodeBase2 : ISimpleLinkedListNodeBase
     {
         object Value { get; }
+    }
 
-#if WinCopies3
-        ISimpleLinkedListNode Next { get; }
-#else
-        ISimpleLinkedListNode NextNode { get; }
+    public interface ISimpleLinkedListNodeBase<T> : ISimpleLinkedListNodeBase2 where T : ISimpleLinkedListNodeBase2
+    {
+        new T Next { get; }
+#if CS8
+        ISimpleLinkedListNodeBase ISimpleLinkedListNodeBase.Next => Next;
 #endif
     }
 
-    public interface ISimpleLinkedListBase
-#if !WinCopies3
-: IUIntCountable
-#else
+    public interface ISimpleLinkedListNode : IClearable, ISimpleLinkedListNodeBase2
+    {
+        // Left empty.
+    }
+
+    public interface ISimpleLinkedListNode<T> : ISimpleLinkedListNodeBase<T>, ISimpleLinkedListNode where T : ISimpleLinkedListNode<T>
+    {
+        // Left empty.
+    }
+
+    public interface ISimpleLinkedListNode2 : ISimpleLinkedListNode<ISimpleLinkedListNode2>
+    {
+        // Left empty.
+    }
+
+    public interface ISimpleLinkedListCore
     {
         bool IsReadOnly { get; }
 
         bool HasItems { get; }
-#if WinCopies3
-        void Clear();
+    }
+
+    public interface ISimpleLinkedListBase : ISimpleLinkedListCore, IClearable
+    {
+        // Left empty.
+    }
+
+    public interface IListCommon
+    {
+        void Add(object
+#if CS8
+            ?
 #endif
+            value);
+        object
+#if CS8
+            ?
+#endif
+            Remove();
+        bool TryRemove(out object
+#if CS8
+            ?
+#endif
+            result);
+    }
+
+    public interface ISimpleLinkedListCommon : IListCommon, ISimpleLinkedListBase
+    {
+        // Left empty.
+    }
+
+    namespace Generic
+    {
+        public interface IListCommon<T> : IListCommon
+        {
+            void Add(T
+#if CS9
+                ?
+#endif
+                value);
+            new T
+#if CS9
+                ?
+#endif
+                Remove();
+            bool TryRemove(out T
+#if CS9
+                ?
+#endif
+                result);
+#if CS8
+            void IListCommon.Add(object? value) => Add((T
+#if CS9
+                ?
+#endif
+                )value);
+            object? IListCommon.Remove() => Remove();
+            bool IListCommon.TryRemove(out object? result) => UtilHelpers.TryGetValue<T>(TryRemove, out result);
+#endif
+        }
+
+        public interface ISimpleLinkedListCommon<T> : IPeekable<T>, IListCommon<T>, ISimpleLinkedListCommon
+        {
+            // Left empty.
+        }
     }
 
     public interface ISimpleLinkedListBase2 : ISimpleLinkedListBase, IUIntCountable
-#endif
     {
         object SyncRoot { get; }
-
         bool IsSynchronized { get; }
     }
 
-    public interface ISimpleLinkedList :
-#if WinCopies3
-             ISimpleLinkedListBase2
-#else
-             IUIntCountable
-#endif
+    public interface ISimpleLinkedList : ISimpleLinkedListBase2, IPeekable
     {
-#if WinCopies3
-        bool TryPeek(out object result);
-#else
-        bool IsReadOnly { get; }
-#endif
-
-        object Peek();
+        // Left empty.
     }
 }

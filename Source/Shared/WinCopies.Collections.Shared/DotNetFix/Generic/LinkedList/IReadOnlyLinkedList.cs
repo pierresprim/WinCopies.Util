@@ -16,76 +16,58 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if CS7
-
 using System.Collections;
 using System.Collections.Generic;
+
 using WinCopies.Collections.Generic;
 
-#if !WinCopies3
-using System.Runtime.Serialization;
-#endif
-
-namespace WinCopies.Collections.DotNetFix
-#if WinCopies3
-.Generic
-#endif
+namespace WinCopies.Collections.DotNetFix.Generic
 {
-    public interface IReadOnlyLinkedList<T> : System.Collections.Generic.ICollection<T>, ICollection, System.Collections.Generic.IReadOnlyCollection<T>,
-#if WinCopies3
-            IReadOnlyUIntCollection<T>, IUIntCountable, Collections.
-#if WinCopies3
-            Extensions.
-#endif
-            Generic.IEnumerable<T> /* In order to have the GetReversedEnumerator() method through the Collections.Generic.IEnumerable<T> interface. */
-#else
-            ICountableEnumerable<T>, ISerializable, IDeserializationCallback
-#endif
+    public interface IReadOnlyLinkedListCore<T>
     {
-#if WinCopies3
-        IReadOnlyLinkedListNode
-#else
-        System.Collections.Generic.LinkedListNode
+        bool HasItems { get; }
+
+        T FirstValue { get; }
+        T LastValue { get; }
+    }
+
+    public interface IReadOnlyLinkedListBase<T> : IReadOnlyLinkedListCore<T>, System.Collections.Generic.ICollection<T>, ICollection, System.Collections.Generic.IReadOnlyCollection<T>, IReadOnlyUIntCollection<T>, IUIntCountable
+    {
+        // Left empty.
+    }
+
+    public interface IReadOnlyLinkedListBase2<T>
+    {
+        T
+#if CS9
+            ?
 #endif
-                <T> First
+            First
         { get; }
-
-#if WinCopies3
-        IReadOnlyLinkedListNode
-#else
-        System.Collections.Generic.LinkedListNode
+        T
+#if CS9
+            ?
 #endif
-                <T> Last
+            Last
         { get; }
+    }
 
-#if WinCopies3
-        new bool SupportsReversedEnumeration { get; }
+    public interface IReadOnlyLinkedListBase<TValue, TNode> : IReadOnlyLinkedListBase<TValue>, IReadOnlyLinkedListBase2<TNode> where TNode : IReadOnlyLinkedListNode<TValue>
+    {
+        TNode
+#if CS9
+            ?
 #endif
-
-        new
-#if !WinCopies3
-int
-#else
-            uint
+            Find(TValue value);
+        TNode
+#if CS9
+            ?
 #endif
-                 Count
-        { get; }
+            FindLast(TValue value);
+    }
 
-
-#if !WinCopies3
-        System.Collections.Generic.LinkedListNode
-#else
-        IReadOnlyLinkedListNode
-#endif
-                <T> Find(T value);
-
-
-#if !WinCopies3
-        System.Collections.Generic.LinkedListNode
-#else
-        IReadOnlyLinkedListNode
-#endif
-                <T> FindLast(T value);
-
+    public interface IReadOnlyLinkedList<TValue, TNode> : IReadOnlyLinkedListBase<TValue, TNode>, Collections.Extensions.Generic.IEnumerable<TValue, IUIntCountableEnumeratorInfo<TValue>> /* In order to have the GetReversedEnumerator() method through the Collections.Generic.IEnumerable<T> interface. */ where TNode : IReadOnlyLinkedListNode<TValue>
+    {
 #if !WinCopies3
         new System.Collections.Generic.LinkedList<T>.Enumerator GetEnumerator();
 #else
@@ -95,48 +77,19 @@ int
 #endif
     }
 
-    public interface IReadOnlyLinkedList2<T> : IReadOnlyLinkedList<T>
-    {
-        T FirstValue { get; }
-
-        T LastValue { get; }
-
-#if WinCopies3
-        new IUIntCountableEnumerator<T> GetEnumerator();
-
-        new IUIntCountableEnumerator<T> GetReversedEnumerator();
-
-        new bool Contains(T value);
-
-        new void CopyTo(T[] array, int index);
-
-#if CS8
-        System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetEnumerator();
-
-        System.Collections.Generic.IEnumerator<T> Collections.
-#if WinCopies3
-            Extensions.
-#endif
-            Generic.IEnumerable<T>.GetReversedEnumerator() => GetReversedEnumerator();
-
-        bool System.Collections.Generic.ICollection<T>.Contains(T value) => Contains(value);
-
-        void System.Collections.Generic.ICollection<T>.CopyTo(T[] array, int index) => CopyTo(array, index);
-
-        bool IReadOnlyCollectionBase<T>.Contains(T value) => Contains(value);
-
-        void IReadOnlyCollectionBase<T>.CopyTo(T[] array, int index) => CopyTo(array, index);
-#endif
-#else
-        System.Collections.Generic.IEnumerator<T> GetEnumerator(EnumerationDirection enumerationDirection);
-#endif
-    }
-
-#if WinCopies3
-    public interface IReadOnlyEnumerableInfoLinkedList<T> : IReadOnlyLinkedList2<T>, Collections.Generic.IEnumerableInfo<T>
+    public interface IReadOnlyLinkedList<T> : IReadOnlyLinkedList<T, IReadOnlyLinkedListNode<T>>
     {
         // Left empty.
     }
-#endif
+
+    public interface IReadOnlyEnumerableInfoLinkedList<TValue, TNode> : IReadOnlyLinkedList<TValue, TNode>, IUIntCountableEnumerableInfo<TValue> where TNode : IReadOnlyLinkedListNode<TValue>
+    {
+        // Left empty.
+    }
+
+    public interface IReadOnlyEnumerableInfoLinkedList<T> : IReadOnlyEnumerableInfoLinkedList<T, IReadOnlyLinkedListNode<T>>, IReadOnlyLinkedList<T>
+    {
+        // Left empty.
+    }
 }
 #endif

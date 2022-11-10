@@ -17,32 +17,64 @@
 
 namespace WinCopies.Collections.DotNetFix
 {
-    public interface IQueue : ISimpleLinkedList
+    public interface IQueueCore
     {
-        void Enqueue(object item);
-
-        object Dequeue();
-
-#if WinCopies3
-        bool TryDequeue(out object result);
+        void Enqueue(object
+#if CS8
+            ?
 #endif
+            item);
+
+        object
+#if CS8
+            ?
+#endif
+            Dequeue();
+
+        bool TryDequeue(out object
+#if CS9
+            ?
+#endif
+            result);
+    }
+
+    public interface IQueueBase : ISimpleLinkedListBase, IPeekable, ISimpleLinkedListCommon, IQueueCore
+    {
+#if CS8
+        void IListCommon.Add(object? item) => Enqueue(item);
+        object? IListCommon.Remove() => Dequeue();
+        bool IListCommon.TryRemove(out object? item) => TryDequeue(out item);
+#endif
+    }
+
+    public interface IQueue : ISimpleLinkedList, IQueueBase
+    {
+        // Left empty.
     }
 
     public class Queue : SimpleLinkedList, IQueue
     {
-        private SimpleLinkedListNode _lastItem;
-
+        private SimpleLinkedListNode
+#if CS8
+            ?
+#endif
+            _lastItem;
 #if !WinCopies3
         public new bool IsReadOnly => base.IsReadOnly;
-
         public new uint Count => base.Count;
-
         public new object Peek() => base.Peek();
 #endif
+        public void Enqueue(object
+#if CS8
+            ?
+#endif
+            item) => Add(item);
 
-        public void Enqueue(object item) => Add(item);
-
-        protected sealed override SimpleLinkedListNode AddItem(object value, out bool actionAfter)
+        protected sealed override SimpleLinkedListNode AddItem(object
+#if CS8
+            ?
+#endif
+            value, out bool actionAfter)
         {
             if (FirstItem == null)
             {
@@ -69,9 +101,17 @@ namespace WinCopies.Collections.DotNetFix
 
         // public object Peek() => Count > 0 ? FirstItem.Value : throw GetExceptionForEmptyObject();
 
-        public object Dequeue() => Remove();
+        public object
+#if CS8
+            ?
+#endif
+            Dequeue() => Remove();
 
-        public bool TryDequeue(out object result) => TryRemove(out result);
+        public bool TryDequeue(out object
+#if CS8
+            ?
+#endif
+            result) => TryRemove(out result);
 
         protected sealed override SimpleLinkedListNode RemoveItem() => FirstItem.Next;
     }

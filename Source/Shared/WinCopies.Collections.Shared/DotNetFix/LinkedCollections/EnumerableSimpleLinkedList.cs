@@ -18,20 +18,15 @@
 using System;
 using System.Collections;
 
+using static WinCopies.ThrowHelper;
+
 namespace WinCopies.Collections.DotNetFix
 {
-    public interface IEnumerableSimpleLinkedList : ISimpleLinkedList,
-#if !WinCopies3
-            IUIntCountableEnumerable
-#else
-            IEnumerableSimpleLinkedListBase, IEnumerable
-#endif
+    public interface IEnumerableSimpleLinkedList : ISimpleLinkedList, IEnumerableSimpleLinkedListBase, IEnumerable
     {
-#if WinCopies3
-        void CopyTo(Array array, int index);
+        void CopyTo(System.Array array, int index);
 
         object[] ToArray();
-#endif
     }
 
     public abstract class EnumerableSimpleLinkedList : EnumerableSimpleLinkedListBase, IEnumerableSimpleLinkedList
@@ -42,21 +37,11 @@ namespace WinCopies.Collections.DotNetFix
 
         public abstract System.Collections.IEnumerator GetEnumerator();
 
-        public void CopyTo(Array array, int arrayIndex) =>
-#if !WinCopies3
-                WinCopies.Util.Extensions
-#else
-            EnumerableExtensions
-#endif
-                .CopyTo(this, array, arrayIndex, Count);
+        public void CopyTo(System.Array array, int arrayIndex) => EnumerableExtensions.CopyTo(this, array, arrayIndex, Count);
 
         public object[] ToArray()
         {
-            if (Count > int.MaxValue)
-
-                throw new ArgumentOutOfRangeException("Too many items in list or collection.");
-
-            object[] result = new object[Count];
+            object[] result = Count > int.MaxValue ? throw new InvalidOperationException("Too many items in list or collection.") : new object[Count];
 
             int i = -1;
 
@@ -65,6 +50,71 @@ namespace WinCopies.Collections.DotNetFix
                 result[++i] = value;
 
             return result;
+        }
+    }
+
+    public abstract class EnumerableSimpleLinkedList<T> : EnumerableSimpleLinkedList, IPeekable, ICollection, ISimpleLinkedListCore, IListCommon where T : IUIntCountable, IPeekable, IClearable, ISimpleLinkedListCore, IListCommon
+    {
+        [NonSerialized]
+        private readonly T _list;
+
+        protected T InnerList => _list;
+
+        public override uint Count => _list.Count;
+
+        int ICollection.Count => (int)Count;
+
+        public override bool HasItems => _list.HasItems;
+
+        protected abstract ISimpleLinkedListNode2
+#if CS8
+            ?
+#endif
+            FirstNode
+        { get; }
+
+        public EnumerableSimpleLinkedList(in T list) => _list = list;
+
+        public sealed override object Peek() => _list.Peek();
+        public sealed override bool TryPeek(out object result) => _list.TryPeek(out result);
+
+        public sealed override void Clear()
+        {
+            _list.Clear();
+
+            UpdateEnumerableVersion();
+        }
+
+        /// <summary>
+        /// Returns an <see cref="System.Collections.IEnumerator"/> for this <see cref="EnumerableSimpleLinkedList{T}"/>.
+        /// </summary>
+        /// <returns>An <see cref="System.Collections.IEnumerator"/> for this <see cref="EnumerableSimpleLinkedList{T}"/>.</returns>
+        public sealed override System.Collections.IEnumerator GetEnumerator()
+        {
+            var enumerator = new Enumerator(this);
+
+            IncrementEnumeratorCount();
+
+            return enumerator;
+        }
+
+        public void Add(object value) => InnerList.Add(value);
+        public object Remove() => InnerList.Remove();
+        public bool TryRemove(out object result) => InnerList.TryRemove(out result);
+
+        public sealed class Enumerator : Enumerator<object, ISimpleLinkedListNode2, EnumerableSimpleLinkedList<T>>
+        {
+            /// <summary>
+            /// When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            /// </summary>
+            protected override object CurrentOverride => CurrentNode.Value;
+
+            protected override ISimpleLinkedListNode2 FirstNode => List.FirstNode;
+            protected override ISimpleLinkedListNode2 NextNode => CurrentNode.Next;
+
+            public override bool? IsResetSupported => true;
+
+            public Enumerator(in EnumerableSimpleLinkedList<T> list) : base(list) { /* Left empty. */ }
         }
     }
 }

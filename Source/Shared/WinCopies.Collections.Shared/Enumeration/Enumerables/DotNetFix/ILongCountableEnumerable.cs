@@ -18,88 +18,47 @@
 using System.Collections;
 
 using WinCopies.Collections.DotNetFix.Generic;
+using WinCopies.Collections.Enumeration.Generic;
 using WinCopies.Collections.Generic;
+using WinCopies.Util;
 
 namespace WinCopies.Collections.DotNetFix
 {
-    public interface ILongCountableEnumerable
-#if WinCopies3
-<out TEnumerator> : Enumeration.DotNetFix.IEnumerable<TEnumerator>, ILongCountable where TEnumerator : ILongCountableEnumerator
-#else
-        : IEnumerable
-#endif
+    public interface ILongCountableEnumerable<out TEnumerator> : Enumeration.IEnumerable<TEnumerator>, ILongCountable where TEnumerator : ILongCountableEnumerator
     {
-#if WinCopies3
         // Left empty.
     }
 
     public interface ILongCountableEnumerable : ILongCountableEnumerable<ILongCountableEnumerator>
     {
         // Left empty.
-#else
-        int Count { get; }
-#endif
     }
 
-    public interface IULongCountableEnumerable
-#if WinCopies3
-    <out TEnumerator> : Enumeration.DotNetFix.IEnumerable<TEnumerator>, IULongCountable where TEnumerator : IULongCountableEnumerator
-#else
-: IEnumerable
-#endif
+    public interface IULongCountableEnumerable<out TEnumerator> : Enumeration.IEnumerable<TEnumerator>, IULongCountable where TEnumerator : IULongCountableEnumerator
     {
-#if WinCopies3
         // Left empty.
     }
 
     public interface IULongCountableEnumerable : IULongCountableEnumerable<IULongCountableEnumerator>
     {
         // Left empty.
-#else
-        uint Count { get; }
-#endif
     }
 
-#if WinCopies3
     namespace Generic
     {
-#endif
-    public interface ILongCountableEnumerable
-#if WinCopies3
-        <
+        public interface ILongCountableEnumerable
+            <
 #if CS5
             out
 #endif
-             TItems, out TEnumerator> : DotNetFix.ILongCountableEnumerable<TEnumerator>, IEnumerable<TItems, TEnumerator>
+            TItems, out TEnumerator> : DotNetFix.ILongCountableEnumerable<TEnumerator>, IEnumerable<TItems, TEnumerator>
 #if CS7
-, System.Collections.Generic.IReadOnlyCollection<TItems>
+            , System.Collections.Generic.IReadOnlyCollection<TItems>
 #endif
-             where TEnumerator : ILongCountableEnumerator<TItems>
-#else
-        <
-#if CS5
-            out
-#endif
-            T> : System.Collections.Generic.IEnumerable<T>, ILongCountableEnumerable
-#endif
-    {
-#if WinCopies3
-#if CS7
-            new int Count { get; }
-#endif
-
-            new TEnumerator GetEnumerator();
-
+            where TEnumerator : ILongCountableEnumerator<TItems>
+        {
 #if CS8
-            int System.Collections.Generic.IReadOnlyCollection<TItems>.Count => Count;
-
-            long ILongCountable.Count => Count;
-
-            TEnumerator IEnumerable<TItems, TEnumerator>.GetEnumerator() => GetEnumerator();
-
-            TEnumerator Enumeration.DotNetFix.IEnumerable<TEnumerator>.GetEnumerator() => GetEnumerator();
-
-            System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+            int System.Collections.Generic.IReadOnlyCollection<TItems>.Count => (int)this.AsFromType<ILongCountable>().Count;
 #endif
         }
 
@@ -127,35 +86,16 @@ namespace WinCopies.Collections.DotNetFix
 #endif
              T> : ILongCountableDisposableEnumerable<T, ILongCountableDisposableEnumerator<T>>
         {
-#endif
-        // Left empty.
-    }
+            // Left empty.
+        }
 
-    public interface IULongCountableEnumerable
-#if WinCopies3
-       <
+        public interface IULongCountableEnumerable<
 #if CS5
-            out
+                out
 #endif
-             TItems, out TEnumerator> : DotNetFix.IULongCountableEnumerable<TEnumerator>, IEnumerable<TItems, TEnumerator> where TEnumerator : IULongCountableEnumerator<TItems>
-#else
-<
-#if CS5
-            out
-#endif
-            T> : System.Collections.Generic.IEnumerable<T>, IULongCountableEnumerable
-#endif
-    {
-#if WinCopies3
-            new TEnumerator GetEnumerator();
-
-#if CS8
-            TEnumerator IEnumerable<TItems, TEnumerator>.GetEnumerator() => GetEnumerator();
-
-            TEnumerator Enumeration.DotNetFix.IEnumerable<TEnumerator>.GetEnumerator() => GetEnumerator();
-
-            System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-#endif
+                 TItems, out TEnumerator> : DotNetFix.IULongCountableEnumerable<TEnumerator>, IEnumerable<TItems, TEnumerator> where TEnumerator : IULongCountableEnumerator<TItems>
+        {
+            // Left empty.
         }
 
         public interface IULongCountableEnumerable<
@@ -182,11 +122,10 @@ namespace WinCopies.Collections.DotNetFix
 #endif
              T> : IULongCountableDisposableEnumerable<T, IULongCountableDisposableEnumerator<T>>
         {
-#endif
-        // Left empty.
-    }
+            // Left empty.
+        }
 
-    // TODO:
+        // TODO:
 #if ILongCountableEnumerableInfo
         public interface ILongCountableEnumerableInfo<out T> : ILongCountableEnumerable<T, ILongCountableEnumeratorInfo<T>>, IEnumerableInfo<T, ILongCountableEnumeratorInfo<T>>
         {
@@ -198,7 +137,5 @@ namespace WinCopies.Collections.DotNetFix
             // Left empty.
         }
 #endif
-#if WinCopies3
     }
-#endif
 }

@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if WinCopies3 && CS5
+#if CS5
 using System;
 using System.Collections.Generic;
 
@@ -23,13 +23,15 @@ namespace WinCopies.Collections.DotNetFix.Generic
 {
     public class SortedLinkedDictionary<TKey, TValue> : LinkedDictionary<TKey, TValue>
     {
+        protected IUIntCountable InnerCountable => InnerList;
+
         public bool Descending { get; }
 
         public SortedLinkedDictionary(in bool descending = false) : base() => Descending = descending;
 
         protected ILinkedListNode<KeyValuePair<TKey, TValue>> TryGetNearestNode(in TKey item)
         {
-            if (InnerList.Count > 0)
+            if (InnerCountable.Count > 0)
             {
 #if CS8
                 static
@@ -77,7 +79,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
         protected override void OnAdding(KeyValuePair<TKey, TValue> item)
         {
-            if (InnerList.Count > 0)
+            if (InnerCountable.Count > 0)
             {
                 ILinkedListNode<KeyValuePair<TKey, TValue>> node = TryGetNearestNode(item.Key);
 
@@ -86,12 +88,12 @@ namespace WinCopies.Collections.DotNetFix.Generic
                     _ = InnerList.AddBefore(node, item);
             }
 
-            InnerList.Add(item);
+            InnerCollection.Add(item);
         }
 
         public bool TryAddBeforeNearest(TKey key, Converter<KeyValuePair<TKey, TValue>, TValue> func, out KeyValuePair<TKey, TValue> nearestFound)
         {
-            if (InnerList.Count > 0)
+            if (InnerCountable.Count > 0)
             {
                 nearestFound = default;
 

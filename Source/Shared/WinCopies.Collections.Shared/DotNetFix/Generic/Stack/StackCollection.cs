@@ -16,7 +16,6 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if CS7
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -24,230 +23,64 @@ using System.Collections.Generic;
 using WinCopies.Collections.DotNetFix.Generic;
 using WinCopies.Collections.Generic;
 
+#if CS8
+using System.Diagnostics.CodeAnalysis;
+#endif
+
 namespace WinCopies.Collections.DotNetFix
 {
-#if WinCopies3
     namespace Generic
     {
-#endif
-        [Serializable]
-        public class StackCollection
-                <
-#if WinCopies3
-        TStack, TItems
-#else
-        T
-#endif
-       > :
-#if WinCopies3
-        IStack<TItems>, IUIntCountable
-#else
-        IEnumerableStack<T>, System.Collections.Generic.IReadOnlyCollection<
-#if WinCopies3
-TItems
-#else
-            T
-#endif
-            >, ICollection
-#endif
-#if WinCopies3
-            where TStack : IStack<TItems>
-#endif
+        public class StackCollection<TStack, TItems> : SimpleLinkedCollection<TStack, TItems>, IStack<TItems> where TStack : IStack<TItems>
         {
-            protected internal
-#if WinCopies3
-            TStack
-#else
-            System.Collections.Generic.Stack<T>
-#endif
-            InnerStack
-            { get; }
+            /// <summary>
+            /// Initializes a new instance of the <see cref="StackCollection{T}"/> class with a custom queue.
+            /// </summary>
+            /// <param name="stack">The inner queue for this <see cref="StackCollection{T}"/>.</param>
+            public StackCollection(in TStack stack) : base(stack) { /* Left empty. */ }
 
-            public
-#if !WinCopies3
-int
-#else
-                uint
-#endif
-                Count => InnerStack.Count;
+            /// <summary>
+            /// Adds an object to the end of the <see cref="StackCollection{T}"/>.
+            /// </summary>
+            /// <param name="item">The object to add to the <see cref="StackCollection{T}"/>. The value can be <see langword="null"/> for reference types.</param>
+            public virtual void Push(TItems item) => InnerList.Push(item);
 
-            public bool IsReadOnly => false;
+            /// <summary>
+            /// Removes and returns the object at the beginning of the <see cref="StackCollection{T}"/>.
+            /// </summary>
+            /// <returns>The object that is removed from the beginning of the <see cref="StackCollection{T}"/>.</returns>
+            /// <exception cref="InvalidOperationException">The <see cref="StackCollection{T}"/> is empty.</exception>
+            /// <seealso cref="TryPop(out TItems)"/>
+            public virtual TItems Pop() => InnerList.Pop();
 
-#if WinCopies3
-            bool ISimpleLinkedListBase2.IsSynchronized => InnerStack.IsSynchronized;
-
-            object ISimpleLinkedListBase2.SyncRoot => InnerStack.SyncRoot;
-
-            bool ISimpleLinkedListBase.HasItems => InnerStack.HasItems;
-#else
-            bool ICollection.IsSynchronized => ((ICollection)InnerStack).IsSynchronized;
-
-            object ICollection.SyncRoot => ((ICollection)InnerStack).SyncRoot;
-
-        uint IUIntCountable.Count => (uint)Count;
-
-        uint IUIntCountableEnumerable.Count => (uint)Count;
-
-            public StackCollection() : this(new
-#if !WinCopies3
-            System.Collections.Generic.Stack
-#else
-            EnumerableStack
-#endif
-            <T>())
-            { }
-#endif
-
-            public StackCollection(in
-#if WinCopies3
-                TStack
-#else
-            System.Collections.Generic.Stack<T>
-#endif
-     stack) => InnerStack = stack;
-
-            protected virtual void ClearItems() => InnerStack.Clear();
-
-            public void Clear() => ClearItems();
-
-            public
-#if WinCopies3
-TItems
-#else
-            T
-#endif
-            Peek() => InnerStack.Peek();
-
-            protected virtual
-#if WinCopies3
-TItems
-#else
-            T
-#endif
-            PopItem() => InnerStack.Pop();
-
-            public
-#if WinCopies3
-TItems
-#else
-            T
-#endif
-            Pop() => PopItem();
-
-            protected virtual void PushItem(
-#if WinCopies3
-TItems
-#else
-            T
-#endif
-            item) => InnerStack.Push(item);
-
-            public void Push(
-#if WinCopies3
-TItems
-#else
-            T
-#endif
-            item) => PushItem(item);
-
-#if !WinCopies3
-        public void Contains(T item) => InnerStack.Contains(item);
-
-        public T[] ToArray() => InnerStack.ToArray();
-
-        public void TrimExcess() => InnerStack.TrimExcess();
-
-        void ICollection.CopyTo(Array array, int index) => ((ICollection)InnerStack).CopyTo(array, index);
-
-        public void CopyTo(T[] array, int arrayIndex) => InnerStack.CopyTo(array, arrayIndex);
-
-        public System.Collections.Generic.IEnumerator<T> GetEnumerator() => InnerStack.GetEnumerator();
-
-        System.Collections.IEnumerator IEnumerable.GetEnumerator() => InnerStack.GetEnumerator();
-#endif
-
-            public bool TryPeek(out
-#if WinCopies3
-TItems
-#else
-            T
-#endif
-            result)
+            /// <summary>
+            /// Tries to remove and return the object at the beginning of the <see cref="StackCollection{T}"/>.
+            /// </summary>
+            /// <param name="result">The object at the beginning of the <see cref="StackCollection{T}"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
+            /// <returns>A <see cref="bool"/> value that indicates whether a value has actually been removed and retrieved.</returns>
+            /// <seealso cref="Pop"/>
+            public virtual bool TryPop(
 #if CS8
-            => InnerStack.TryPeek(out result);
-#else
-            {
-                if (Count == 0)
-                {
-                    result = default;
-
-                    return false;
-                }
-
-                result = InnerStack.Peek();
-
-                return true;
-            }
+                [MaybeNullWhen(false)]
 #endif
-
-            protected virtual bool TryPopItem(out
-#if WinCopies3
-TItems
-#else
-            T
-#endif
-            result)
-#if CS8
-            => InnerStack.TryPop(out result);
-#else
-            {
-                if (IsReadOnly || Count == 0)
-                {
-                    result = default;
-
-                    return false;
-                }
-
-                result = InnerStack.Pop();
-
-                return true;
-            }
-#endif
-
-            public bool TryPop(out
-#if WinCopies3
-TItems
-#else
-            T
-#endif
-            result) => TryPopItem(out result);
-
-#if WinCopies3 && !CS8
-            bool ISimpleLinkedList.TryPeek(out object result) => InnerStack.TryPeek(out result);
-
-            object ISimpleLinkedList.Peek() => ((ISimpleLinkedList)InnerStack).Peek();
+                out TItems result) => InnerList.TryPop(out result);
+#if !CS8
+            void IStackCore.Push(object item) => Push((TItems)item);
+            object IStackCore.Pop() => Pop();
+            public bool TryPop(out object result) => UtilHelpers.TryGetValue<TItems>(TryPop, out result);
 #endif
         }
 
-#if WinCopies3
         public class StackCollection<T> : StackCollection<IStack<T>, T>
         {
-            public StackCollection() : this(new Stack<T>())
-            {
-                // Left empty.
-            }
+            public StackCollection() : this(new Stack<T>()) { /* Left empty. */ }
 
             /// <summary>
             /// Initializes a new instance of the <see cref="StackCollection{T}"/> class with a custom Stack.
             /// </summary>
             /// <param name="stack">The inner stack for this <see cref="StackCollection{T}"/>.</param>
-            public StackCollection(in IStack<T> stack) : base(stack)
-            {
-                // Left empty.
-            }
+            public StackCollection(in IStack<T> stack) : base(stack) { /* Left empty. */ }
         }
     }
-#endif
 }
-
 #endif

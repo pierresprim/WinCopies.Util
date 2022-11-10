@@ -25,13 +25,7 @@ using WinCopies.Collections.Generic;
 using WinCopies.Util;
 
 using static WinCopies.Collections.ThrowHelper;
-
-using static
-#if WinCopies3
-WinCopies.ThrowHelper;
-#else
-WinCopies.Util.Util;
-#endif
+using static WinCopies.ThrowHelper;
 
 namespace WinCopies.Linq
 {
@@ -105,7 +99,7 @@ namespace WinCopies.Linq
             return -1;
         }
 #endif
-
+#if !WinCopies4
         public static IEnumerable<TOut> ForEach<TIn, TOut>(this IEnumerable<TIn> enumerable, Func<TIn, IEnumerable<TOut>> func)
         {
             foreach (TIn
@@ -122,8 +116,14 @@ namespace WinCopies.Linq
 
                     yield return _item;
         }
-
-        public static IEnumerable<TOut> ForEachConverter<TIn, TOut>(this IEnumerable<TIn> enumerable, Converter<TIn, IEnumerable<TOut>> func)
+#endif
+        public static IEnumerable<TOut>
+#if WinCopies4
+            SelectManyConverter
+#else
+            ForEachConverter
+#endif
+            <TIn, TOut>(this IEnumerable<TIn> enumerable, Converter<TIn, IEnumerable<TOut>> func)
         {
             foreach (TIn
 #if CS9
@@ -140,7 +140,25 @@ namespace WinCopies.Linq
                     yield return _item;
         }
 
-        public static IEnumerable<TOut> ForEachConverter<TIn, TOut>(this IEnumerable<TIn> enumerable, Converter<TIn, Func<IEnumerable<TOut>>> func) => enumerable.ForEachConverter(item => func(item)());
+        public static IEnumerable<TOut>
+#if WinCopies4
+            SelectManyConverter
+#else
+            ForEachConverter
+#endif
+            <TIn, TOut>(this IEnumerable<TIn> enumerable, Converter<TIn, Func<IEnumerable<TOut>>> func) => enumerable.SelectMany(item => func(item)());
+
+        public static IEnumerable<T> TakeUntil<T>(this IEnumerable<T> values, Func<T, bool> func)
+        {
+            foreach (T item in values)
+            {
+                if (func(item))
+
+                    break;
+
+                yield return item;
+            }
+        }
 
         public static T? FirstOrNull<T>(this IEnumerable<T> enumerable) where T : struct
         {
@@ -763,7 +781,7 @@ namespace WinCopies.Linq
 #if CS9
             ?
 #endif
-            PredicateFirstOrDefault<TIn, TOut>(this IEnumerable<TIn> enumerable, in Predicate<TOut> predicate)
+            FirstOrDefaultPredicate<TIn, TOut>(this IEnumerable<TIn> enumerable, in Predicate<TOut> predicate)
         {
             foreach (TIn item in enumerable ?? throw new ArgumentNullException(nameof(enumerable)))
 
@@ -838,43 +856,9 @@ namespace WinCopies.Linq
                 yield return item;
         }
 
-#if !WinCopies3
-        /// <summary>
-        /// Iterates through a given <see cref="IEnumerable"/> and tries to convert the items to a given generic type parameter. If an item cannot be converted, it is ignored in the resulting enumerable.
-        /// </summary>
-        /// <typeparam name="T">The generic type parameter for the resulting enumerable. Only the items that can be converted to this type will be present in the resulting enumerable.</typeparam>
-        /// <param name="enumerable">The source enumerable.</param>
-        /// <returns>An enumerable containing all the items from <paramref name="enumerable"/> that could be converted to <typeparamref name="T"/>.</returns>
-        /// <seealso cref="To{T}(IEnumerable)"/>
-        public static System.Collections.Generic.IEnumerable<T> As<T>(this IEnumerable enumerable) //=> new Enumerable<T>(() => new TypeConverterEnumerator<T>(enumerable));
-        {
-            foreach (object item in enumerable ?? throw new ArgumentNullException(nameof(enumerable)))
-
-                if (item is T _item)
-
-                    yield return _item;
-        }
-
-        /// <summary>
-        /// Iterates through a given <see cref="IEnumerable"/> and directly converts the items to a given generic type parameter. An <see cref="InvalidCastException"/> is thrown when an item cannot be converted.
-        /// </summary>
-        /// <typeparam name="T">The generic type parameter for the resulting enumerable. All items in <paramref name="enumerable"/> will be converted to this type.</typeparam>
-        /// <param name="enumerable">The source enumerable.</param>
-        /// <returns>An enumerable containing the same items as they from <paramref name="enumerable"/>, with these items converted to <typeparamref name="T"/>.</returns>
-        /// <exception cref="InvalidCastException">An item could not be converted.</exception>
-        /// <seealso cref="As{T}(IEnumerable)"/>
-        public static System.Collections.Generic.IEnumerable<T> To<T>(this IEnumerable enumerable) => enumerable.SelectConverter(value => (T)value);
-#endif
-
         public static IEnumerable<T> SelectMany<T>(this IEnumerable<IEnumerable<T>> enumerable) => enumerable.SelectMany(Delegates.Self);
 
-        public static
-#if WinCopies3
-            Collections.Generic.IEnumerableInfo
-#else
-            System.Collections.Generic.IEnumerable
-#endif
-            <T
+        public static Collections.Generic.IEnumerableInfo<T
 #if CS9
                 ?
 #endif
@@ -886,17 +870,7 @@ namespace WinCopies.Linq
 #if CS8
                 ?
 #endif
-                > enumerable, bool keepEmptyEnumerables, params T[] join) => new
-#if WinCopies3
-            EnumerableInfo
-#else
-            Enumerable
-#endif
-            <T>(() => new JoinEnumerator<T>(enumerable, keepEmptyEnumerables, join)
-#if WinCopies3
-            , null
-#endif
-            );
+                > enumerable, bool keepEmptyEnumerables, params T[] join) => new EnumerableInfo<T>(() => new JoinEnumerator<T>(enumerable, keepEmptyEnumerables, join), null);
 
         public static IEnumerable<T
 #if CS9
@@ -936,54 +910,13 @@ namespace WinCopies.Linq
                     yield return value;
         }
 
-#if !WinCopies3
-        [Obsolete("This method has been replaced by Select<TSource, TDestination>(this System.Collections.Generic.IEnumerator<TSource> enumerator, System.Converter<TSource, TDestination> func).")]
-        public static System.Collections.Generic.IEnumerator<TDestination> Select<TSource, TDestination>(this System.Collections.Generic.IEnumerator<TSource> enumerator, Func<TSource, TDestination> func) => new SelectEnumerator<TSource, TDestination>(enumerator, func);
-#endif
+        public static IEnumeratorInfo2<TDestination> SelectConverter<TSource, TDestination>(this IEnumerator<TSource> enumerator, Converter<TSource, TDestination> func) => new SelectEnumerator<TSource, TDestination>(enumerator, func);
 
-        public static
-#if !WinCopies3
-System.Collections.Generic.IEnumerator
-#else
-            IEnumeratorInfo2
-#endif
-            <TDestination>
-#if !WinCopies3
-Select
-#else
-            SelectConverter
-#endif
-            <TSource, TDestination>(this IEnumerator<TSource> enumerator, Converter<TSource, TDestination> func) => new SelectEnumerator<TSource, TDestination>(enumerator, func);
+        public static Collections.Generic.IEnumerableInfo<TOut> SelectConverter<TIn, TOut>(this IEnumerable<TIn> enumerable, Converter<TIn, TOut> selector) => new EnumerableInfo<TOut>(() => new SelectEnumerator<TIn, TOut>(enumerable, selector), null);
 
-        public static
-#if !WinCopies3
-System.Collections.Generic.IEnumerable
-#else
-            Collections.Generic.IEnumerableInfo
-#endif
-            <TOut>
-#if !WinCopies3
-Select
-#else
-            SelectConverter
-#endif
-            <TIn, TOut>(this IEnumerable<TIn> enumerable, Converter<TIn, TOut> selector)
-#if !WinCopies3
-        {
-            foreach (TIn item in enumerable ?? throw new ArgumentNullException(nameof(enumerable)))
+        public static Collections.Generic.IEnumerableInfo<TOut> SelectConverter<TIn, TOut>(this Collections.Generic.IEnumerableInfo<TIn> enumerable, Converter<TIn, TOut> selector) => new EnumerableInfo<TOut>(() => new SelectEnumerator<TIn, TOut>(enumerable, selector), () => new SelectEnumerator<TIn, TOut>(enumerable.AsFromType<Collections.Extensions.IEnumerable<IEnumeratorInfo<TIn>>>().GetReversedEnumerator(), selector));
 
-                yield return selector(item);
-        }
-#else
-            => new EnumerableInfo<TOut>(() => new SelectEnumerator<TIn, TOut>(enumerable, selector), null);
-
-        public static Collections.Generic.IEnumerableInfo<TOut> SelectConverter<TIn, TOut>(this Collections.Generic.IEnumerableInfo<TIn> enumerable, Converter<TIn, TOut> selector) => new EnumerableInfo<TOut>(() => new SelectEnumerator<TIn, TOut>(enumerable, selector), () => new SelectEnumerator<TIn, TOut>(enumerable.GetReversedEnumerator(), selector));
-
-        public static T Last<T>(this Collections.
-#if WinCopies3
-            Extensions.
-#endif
-            Generic.IEnumerable<T> enumerable)
+        public static T Last<T>(this Collections.Extensions.Generic.IEnumerable<T> enumerable)
         {
             if ((enumerable ?? throw GetArgumentNullException(nameof(enumerable))).SupportsReversedEnumeration)
             {
@@ -992,14 +925,10 @@ Select
                 return enumerator.MoveNext() ? enumerator.Current : throw new InvalidOperationException("The enumerable is empty.");
             }
 
-            return ((IEnumerable<T>)enumerable).Last();
+            return enumerable.Last();
         }
 
-        public static T PredicateLast<T>(this Collections.
-#if WinCopies3
-            Extensions.
-#endif
-            Generic.IEnumerable<T> enumerable, Predicate<T> predicate)
+        public static T LastPredicate<T>(this Collections.Extensions.Generic.IEnumerable<T> enumerable, Predicate<T> predicate)
         {
             ThrowIfNull(enumerable, nameof(enumerable));
             ThrowIfNull(predicate, nameof(predicate));
@@ -1020,11 +949,7 @@ Select
             return enumerable.Last(item => predicate(item));
         }
 
-        public static T LastOrDefault<T>(this Collections.
-#if WinCopies3
-            Extensions.
-#endif
-            Generic.IEnumerable<T> enumerable)
+        public static T LastOrDefault<T>(this Collections.Extensions.Generic.IEnumerable<T> enumerable)
         {
             if ((enumerable ?? throw GetArgumentNullException(nameof(enumerable))).SupportsReversedEnumeration)
             {
@@ -1033,14 +958,10 @@ Select
                 return enumerator.MoveNext() ? enumerator.Current : default;
             }
 
-            return enumerable.AsEnumerable().LastOrDefault();
+            return enumerable.LastOrDefault();
         }
 
-        public static T PredicateLastOrDefault<T>(this Collections.
-#if WinCopies3
-            Extensions.
-#endif
-            Generic.IEnumerable<T> enumerable, Predicate<T> predicate)
+        public static T LastOrDefaultPredicate<T>(this Collections.Extensions.Generic.IEnumerable<T> enumerable, Predicate<T> predicate)
         {
             ThrowIfNull(enumerable, nameof(enumerable));
             ThrowIfNull(predicate, nameof(predicate));
@@ -1060,7 +981,6 @@ Select
 
             return enumerable.LastOrDefault(item => predicate(item));
         }
-#endif
 
         /// <summary>
         /// Returns the first item, if any, from <typeparamref name="T"/> in a given <see cref="IEnumerable"/>.
@@ -1069,7 +989,7 @@ Select
         /// <param name="enumerable">The <see cref="IEnumerable"/> in which to look for the first item of the given type.</param>
         /// <returns>The first item, if any, from <typeparamref name="T"/> in <paramref name="enumerable"/> or the default value for <typeparamref name="T"/> if none value was found.</returns>
         /// <seealso cref="LastOrDefault{T}(IEnumerable)"/>
-        /// <seealso cref="PredicateFirstOrDefault{T}(IEnumerable, in Predicate{T})"/>
+        /// <seealso cref="FirstOrDefaultPredicate{T}(IEnumerable, in Predicate{T})"/>
         /// <seealso cref="LastOrDefault{T}(IEnumerable, in Predicate{T})"/>
         public static T FirstOrDefault<T>(this IEnumerable enumerable)
         {
@@ -1090,7 +1010,7 @@ Select
         /// <seealso cref="LastOrDefault{T}(IEnumerable, in Predicate{T})"/>
         /// <seealso cref="FirstOrDefault{T}(IEnumerable)"/>
         /// <seealso cref="LastOrDefault{T}(IEnumerable)"/>
-        public static T PredicateFirstOrDefault<T>(this IEnumerable enumerable, in Predicate<T> predicate)
+        public static T FirstOrDefaultPredicate<T>(this IEnumerable enumerable, in Predicate<T> predicate)
         {
             foreach (object item in enumerable ?? throw new ArgumentNullException(nameof(enumerable)))
 
@@ -1106,7 +1026,7 @@ Select
         /// <param name="enumerable">The <see cref="IEnumerable"/> in which to look for the last item of the given type.</param>
         /// <returns>The last item, if any, from <typeparamref name="T"/> in <paramref name="enumerable"/> or the default value for <typeparamref name="T"/> if none value was found.</returns>
         /// <seealso cref="FirstOrDefault{T}(IEnumerable)"/>
-        /// <seealso cref="PredicateFirstOrDefault{T}(IEnumerable, in Predicate{T})"/>
+        /// <seealso cref="FirstOrDefaultPredicate{T}(IEnumerable, in Predicate{T})"/>
         /// <seealso cref="LastOrDefault{T}(IEnumerable, in Predicate{T})"/>
         public static T LastOrDefault<T>(this IEnumerable enumerable)
         {
@@ -1130,7 +1050,7 @@ Select
         /// <param name="enumerable">The <see cref="IEnumerable"/> in which to look for the last item of the given type.</param>
         /// <param name="predicate">The predicate to validate.</param>
         /// <returns>The last item, if any, from <typeparamref name="T"/> in <paramref name="enumerable"/> or the default value for <typeparamref name="T"/> if none value was found.</returns>
-        /// <seealso cref="PredicateFirstOrDefault{T}(IEnumerable, in Predicate{T})"/>
+        /// <seealso cref="FirstOrDefaultPredicate{T}(IEnumerable, in Predicate{T})"/>
         /// <seealso cref="FirstOrDefault{T}(IEnumerable)"/>
         /// <seealso cref="LastOrDefault{T}(IEnumerable)"/>
         public static T LastOrDefault<T>(this IEnumerable enumerable, in Predicate<T> predicate)

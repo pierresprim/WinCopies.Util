@@ -15,9 +15,10 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if WinCopies3
 using System;
 using System.Collections.Generic;
+
+using static WinCopies.UtilHelpers;
 
 using GenericCollections = WinCopies.Collections.DotNetFix.Generic;
 
@@ -25,6 +26,27 @@ namespace WinCopies.Collections
 {
     public static class LinkedListExtensions
     {
+#if CS5
+        public static DotNetFix.IReadOnlyLinkedListNode<GenericCollections.ILinkedListNode<T>> AsLinkedListNode<T>(this GenericCollections.ILinkedListNode<T> node) => node;
+#endif
+        public static bool TryPeek<T>(this GenericCollections.IPeekable<T> collection, out object
+#if CS8
+            ?
+#endif
+            value) => TryGetValue<T>(collection.TryPeek, out value);
+
+        public static bool TryDequeue<T>(this GenericCollections.IQueueBase<T> queue, out object
+#if CS8
+            ?
+#endif
+            value) => TryGetValue<T>(queue.TryDequeue, out value);
+
+        public static bool TryPop<T>(this GenericCollections.IStackBase<T> stack, out object
+#if CS8
+            ?
+#endif
+            value) => TryGetValue<T>(stack.TryPop, out value);
+
         private static IEnumerable<T> GetEnumerable<T>(FuncOut<T, bool> func)
         {
             while (func(out T value))
@@ -73,4 +95,3 @@ namespace WinCopies.Collections
         public static IEnumerable<T> GetDequeuerEnumerable<T>(this GenericCollections.IQueueBase<T> queue, in Predicate<T> pre, in Predicate<T> post) => GetEnumerable<T>(queue.TryDequeue, pre, post);
     }
 }
-#endif

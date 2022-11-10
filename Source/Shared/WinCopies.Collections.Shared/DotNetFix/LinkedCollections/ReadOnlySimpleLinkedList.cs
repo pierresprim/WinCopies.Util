@@ -19,29 +19,44 @@ using System.Threading;
 
 using static WinCopies.Collections.ThrowHelper;
 
-#if !WinCopies3
-using WinCopies.Util;
-
-using static WinCopies.Util.Util;
-using static WinCopies.Util.ThrowHelper;
-#endif
-
 namespace WinCopies.Collections.DotNetFix
 {
-    public abstract class ReadOnlySimpleLinkedListBase
-#if WinCopies3
-            : ISimpleLinkedListBase2
-#endif
+    public abstract class ReadOnlySimpleLinkedListCore : ISimpleLinkedListBase2
     {
-        private object _syncRoot;
-
         public bool IsReadOnly => true;
 
         public abstract uint Count { get; }
 
-        public bool HasItems => Count != 0u;
+        public virtual bool HasItems => Count != 0u;
 
-        public object SyncRoot
+        protected abstract object SyncRoot { get; }
+
+        bool ISimpleLinkedListBase2.IsSynchronized => false;
+        object ISimpleLinkedListBase2.SyncRoot => SyncRoot;
+
+        public void Clear() => throw GetReadOnlyListOrCollectionException();
+    }
+
+    public abstract class ReadOnlySimpleLinkedListBase : ReadOnlySimpleLinkedListCore, ISimpleLinkedList, ISimpleLinkedListCommon
+    {
+        public abstract object Peek();
+        public abstract bool TryPeek(out object result);
+
+        void IListCommon.Add(object value) => throw GetReadOnlyListOrCollectionException();
+        object IListCommon.Remove() => throw GetReadOnlyListOrCollectionException();
+        bool IListCommon.TryRemove(out object result)
+        {
+            result = null;
+
+            return false;
+        }
+    }
+
+    public abstract class ReadOnlySimpleLinkedList : ReadOnlySimpleLinkedListBase
+    {
+        private object _syncRoot;
+
+        protected override object SyncRoot
         {
             get
             {
@@ -52,20 +67,21 @@ namespace WinCopies.Collections.DotNetFix
                 return _syncRoot;
             }
         }
-
-        public bool IsSynchronized => false;
-
-#if WinCopies3
-        public void Clear() => throw GetReadOnlyListOrCollectionException();
-#endif
     }
 
-    public abstract class ReadOnlySimpleLinkedList : ReadOnlySimpleLinkedListBase, ISimpleLinkedList
+    public abstract class ReadOnlySimpleLinkedList<T> : ReadOnlySimpleLinkedListBase, IUIntCountable, IPeekable, ISimpleLinkedListCore where T : IUIntCountable, IPeekable, ISimpleLinkedListBase2
     {
-        public abstract object Peek();
+        protected T InnerList { get; }
 
-#if WinCopies3
-        public abstract bool TryPeek(out object result);
-#endif
+        public override uint Count => InnerList.Count;
+
+        public override bool HasItems => InnerList.HasItems;
+
+        protected override object SyncRoot => InnerList.SyncRoot;
+
+        public ReadOnlySimpleLinkedList(in T list) => InnerList = list;
+
+        public override object Peek() => InnerList.Peek();
+        public override bool TryPeek(out object result) => InnerList.TryPeek(out result);
     }
 }
