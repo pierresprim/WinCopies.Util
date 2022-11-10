@@ -16,52 +16,31 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if CS7
-
 using System;
 using System.Collections.Generic;
 
-using WinCopies.Collections.DotNetFix
-#if WinCopies3
-    .Generic
-#endif
-    ;
+using WinCopies.Collections.DotNetFix.Generic;
 using WinCopies.Util;
+using WinCopies.Collections.DotNetFix;
 
-#if WinCopies3
 using static WinCopies.Delegates;
 using static WinCopies.Bool;
-#else
-using static WinCopies.Util.Delegates;
-using static WinCopies.Util.Bool;
-#endif
 
-namespace WinCopies
-#if !WinCopies3
-.Util
-#endif
+namespace WinCopies.Util
 {
     public abstract class ValueManager<T> : DotNetFix.IDisposable
     {
-        private ILinkedList<T> _values = new WinCopies.Collections.DotNetFix.
-#if WinCopies3
-            Generic.
-#endif
-          LinkedList<T>();
+        private ILinkedList<T> _values = new Collections.DotNetFix.Generic.LinkedList<T>();
 
         protected ILinkedList<T> Values => this.GetIfNotDisposed(_values);
 
         public bool IsDisposed { get; private set; }
 
-        public void Add(in T action) => _values.Add(action);
+        public void Add(in T action) => _values.AsFromType<System.Collections.Generic.ICollection<T>>().Add(action);
 
         public void Remove(in T action)
         {
-#if WinCopies3
-            ILinkedListNode
-#else
-            LinkedListNode
-#endif
-            <T> node = _values.First;
+            ILinkedListNode<T> node = _values.First;
 
             if (node == null)
 
@@ -75,7 +54,8 @@ namespace WinCopies
 
                     break;
                 }
-            } while ((node = node.Next) != null);
+            }
+            while ((node = node.AsFromType<Collections.DotNetFix.IReadOnlyLinkedListNode<ILinkedListNode<T>>>().Next) != null);
         }
 
         protected virtual void Dispose(in bool disposing)
@@ -86,7 +66,7 @@ namespace WinCopies
 
             if (disposing)
             {
-                _values.Clear();
+                _values.AsFromType<IClearable>().Clear();
 
                 _values = null;
             }
@@ -106,7 +86,7 @@ namespace WinCopies
     {
         public void RaiseEvent(in T param)
         {
-            foreach (Action<T> action in Values)
+            foreach (Action<T> action in Values.AsFromType<System.Collections.Generic.IEnumerable<Action<T>>>())
 
                 action(param);
         }
@@ -133,7 +113,6 @@ namespace WinCopies
         }
     }
 
-#if WinCopies3
     public abstract class EventAndQueryDelegate<TIn, TOut> : ValueManager<IQueryDelegateDelegate<TIn, TOut>>
     {
         public TOut DefaultValue { get; }
@@ -234,102 +213,6 @@ namespace WinCopies
 
         public static DelegateEventAndQueryDelegate<T, bool> GetXOR_Delegate(in bool defaultValue) => GetDelegate(defaultValue, True, XOr);
     }
-#else
-    public abstract class EventAndQueryDelegate<TIn, TOut> : ValueManager<IQueryDelegateDelegate<TIn, TOut>>
-    {
-        protected abstract bool Check(in TOut outParam);
-
-        protected abstract bool Merge(in TOut x, in TOut y, out TOut result);
-
-        public TOut RaiseEvent(TIn param)
-        {
-            NullableGeneric<TOut> result = null;
-            bool mergeResult;
-
-            Values.ForEach<IQueryDelegateDelegate<TIn, TOut>>(func =>
-            {
-                result = new NullableGeneric<TOut>(func.FirstAction(param));
-
-                return Check(result.Value);
-            }, func =>
-            {
-                mergeResult = Merge(result.Value, func.OtherAction(param, result.Value), out TOut mergeResultParam);
-
-                result = new NullableGeneric<TOut>(mergeResultParam);
-
-                return mergeResult;
-            });
-
-            return result == null ? default : result.Value;
-        }
-    }
-
-    public abstract class EventAndQueryDelegate2<TIn, TOut> : EventAndQueryDelegate<TIn, TOut>
-    {
-        protected abstract TOut Merge(in TOut x, in TOut y);
-
-        protected sealed override bool Merge(in TOut x, in TOut y, out TOut result)
-        {
-            result = Merge(x, y);
-
-            return Check(result);
-        }
-    }
-
-    public class AND_EventAndQueryDelegate<TIn> : EventAndQueryDelegate2<TIn, bool>
-    {
-        protected override bool Check(in bool outParam) => true;
-
-        protected override bool Merge(in bool x, in bool y) => x && y;
-    }
-
-    public class ANDALSO_EventAndQueryDelegate<TIn> : EventAndQueryDelegate2<TIn, bool>
-    {
-        protected override bool Check(in bool outParam) => outParam;
-
-        protected override bool Merge(in bool x, in bool y) => x && y;
-    }
-
-    public class OR_EventAndQueryDelegate<TIn> : EventAndQueryDelegate2<TIn, bool>
-    {
-        protected override bool Check(in bool outParam) => true;
-
-        protected override bool Merge(in bool x, in bool y) => x || y;
-    }
-
-    public class ORELSE_EventAndQueryDelegate<TIn> : EventAndQueryDelegate2<TIn, bool>
-    {
-        protected override bool Check(in bool outParam) => !outParam;
-
-        protected override bool Merge(in bool x, in bool y) => x || y;
-    }
-
-    public class XOR_EventAndQueryDelegate<TIn> : EventAndQueryDelegate2<TIn, bool>
-    {
-        protected override bool Check(in bool outParam) => true;
-
-        protected override bool Merge(in bool x, in bool y) => x ^ y;
-    }
-
-    public class XORELSE_EventAndQueryDelegate<TIn> : EventAndQueryDelegate<TIn, bool>
-    {
-        protected override bool Check(in bool outParam) => true;
-
-        protected override bool Merge(in bool x, in bool y, out bool result)
-        {
-            if (x && y)
-            {
-                result = false;
-
-                return false;
-            }
-
-            result = x ^ y;
-
-            return true;
-        }
-    }
-#endif
 }
 
 #endif

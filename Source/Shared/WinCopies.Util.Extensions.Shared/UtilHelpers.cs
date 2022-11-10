@@ -23,15 +23,8 @@ using System.Linq;
 
 using WinCopies.Linq;
 
-#if !WinCopies3
-using WinCopies.Util;
-#endif
-
 using static WinCopies.Diagnostics.IfHelpers;
-
-#if WinCopies3
 using static WinCopies.UtilHelpers;
-#endif
 
 using IfCT = WinCopies.Diagnostics.ComparisonType;
 using IfCM = WinCopies.Diagnostics.ComparisonMode;
@@ -41,11 +34,9 @@ namespace WinCopies.Extensions // To avoid name conflicts.
 {
     public static class UtilHelpers
     {
-#if WinCopies3
         public static IEnumerable<T> Enumerate<T>(params IEnumerable<T>[] enumerables) => enumerables.Join(false);
 
         public static IEnumerable<T> Enumerate<T>(params Func<IEnumerable<T>>[] enumerables) => enumerables.Join(false);
-#endif
 
         private static void _RunAction<T>(in IEnumerable<T> enumerable, in Action<T> action)
         {
@@ -110,23 +101,7 @@ namespace WinCopies.Extensions // To avoid name conflicts.
         /// <remarks>See <see cref="GetIf{TValues, TResult}(in TValues, in TValues, in Comparison{TValues}, in Func{TResult}, in Func{TResult}, in Func{TResult})"/> for the generic version.</remarks>
         public static object GetIf(in object x, in object y, in Collections.Comparison comparison, in Func lower, in Func equals, in Func greater)
         {
-            if (If(IfCT.Or, IfCM.Logical, IfComp.Equal, out string key, null,
-#if !WinCopies3
-                Util.Util.
-#endif
-                GetKeyValuePair(nameof(lower), lower),
-#if !WinCopies3
-                Util.Util.
-#endif
-                GetKeyValuePair(nameof(greater), greater),
-#if !WinCopies3
-                Util.Util.
-#endif
-                GetKeyValuePair(nameof(equals), equals)))
-
-                throw new ArgumentNullException(key);
-
-            int result = comparison(x, y);
+            int result = If(IfCT.Or, IfCM.Logical, IfComp.Equal, out string key, null, GetKeyValuePair(nameof(lower), lower), GetKeyValuePair(nameof(greater), greater), GetKeyValuePair(nameof(equals), equals)) ? throw new ArgumentNullException(key) : comparison(x, y);
 
             return result < 0 ? lower() : result > 0 ? greater() : equals();
         }
@@ -145,33 +120,21 @@ namespace WinCopies.Extensions // To avoid name conflicts.
         /// <remarks>See <see cref="GetIf(in object, in object, in Collections.Comparison, in Func, in Func, in Func)"/> for the non-generic version.</remarks>
         public static TResult GetIf<TValues, TResult>(in TValues x, in TValues y, in Comparison<TValues> comparison, in Func<TResult> lower, in Func<TResult> equals, in Func<TResult> greater)
         {
-            if (If(IfCT.Or, IfCM.Logical, IfComp.Equal, out string key, null, GetKeyValuePair(nameof(lower), lower), GetKeyValuePair(nameof(greater), greater), GetKeyValuePair(nameof(equals), equals)))
-
-                throw new ArgumentNullException(key);
-
-            int result = comparison(x, y);
+            int result = If(IfCT.Or, IfCM.Logical, IfComp.Equal, out string key, null, GetKeyValuePair(nameof(lower), lower), GetKeyValuePair(nameof(greater), greater), GetKeyValuePair(nameof(equals), equals)) ? throw new ArgumentNullException(key):comparison(x, y);
 
             return result < 0 ? lower() : result > 0 ? greater() : equals();
         }
 
         public static object GetIf(in object x, in object y, in IComparer comparer, in Func lower, in Func equals, in Func greater)
         {
-            if (If(IfCT.Or, IfCM.Logical, IfComp.Equal, out string key, null, GetKeyValuePair(nameof(lower), lower), GetKeyValuePair(nameof(greater), greater), GetKeyValuePair(nameof(equals), equals)))
-
-                throw new ArgumentNullException(key);
-
-            int result = comparer.Compare(x, y);
+            int result = If(IfCT.Or, IfCM.Logical, IfComp.Equal, out string key, null, GetKeyValuePair(nameof(lower), lower), GetKeyValuePair(nameof(greater), greater), GetKeyValuePair(nameof(equals), equals)) ? throw new ArgumentNullException(key):comparer.Compare(x, y);
 
             return result < 0 ? lower() : result > 0 ? greater() : equals();
         }
 
         public static TResult GetIf<TValues, TResult>(in TValues x, in TValues y, in Collections.Comparison comparison, in Func<TResult> lower, in Func<TResult> equals, in Func<TResult> greater)
         {
-            if (If(IfCT.Or, IfCM.Logical, IfComp.Equal, out string key, null, GetKeyValuePair(nameof(lower), lower), GetKeyValuePair(nameof(greater), greater), GetKeyValuePair(nameof(equals), equals)))
-
-                throw new ArgumentNullException(key);
-
-            int result = comparison(x, y);
+            int result = If(IfCT.Or, IfCM.Logical, IfComp.Equal, out string key, null, GetKeyValuePair(nameof(lower), lower), GetKeyValuePair(nameof(greater), greater), GetKeyValuePair(nameof(equals), equals)) ? throw new ArgumentNullException(key):comparison(x, y);
 
             return result < 0 ? lower() : result > 0 ? greater() : equals();
         }

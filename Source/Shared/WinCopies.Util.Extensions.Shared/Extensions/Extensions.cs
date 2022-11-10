@@ -20,27 +20,20 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 
 using WinCopies.Collections;
+using WinCopies.Collections.Generic;
 using WinCopies.Util;
 
 using IfCT = WinCopies.Diagnostics.ComparisonType;
 
-#if WinCopies3
-using WinCopies.Collections.Generic;
-
 using static WinCopies.ThrowHelper;
-#else
-using static WinCopies.Util.Util;
-
-using InvalidEnumArgumentException = WinCopies.Util.InvalidEnumArgumentException;
-#endif
 
 namespace WinCopies.Extensions // To avoid name conflicts.
 {
-#if WinCopies3
     public class EmbeddedResourcesDictionary : IReadOnlyDictionary<string, System.IO.Stream>
 #if CS8
         , Collections.DotNetFix.Generic.IEnumerable<KeyValuePair<string, System.IO.Stream>>
@@ -70,11 +63,9 @@ namespace WinCopies.Extensions // To avoid name conflicts.
         public bool TryGetValue(string key, out System.IO.Stream value) => (value = TryGetValue(key)) != null;
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
-#endif
-
+    
     public static class Extensions
     {
-#if WinCopies3
         public static IReadOnlyList<Type> GetRealGenericParameters(this Type type)
         {
             Type[] array = type.GetGenericArguments();
@@ -83,14 +74,6 @@ namespace WinCopies.Extensions // To avoid name conflicts.
 
             return new SubReadOnlyList<Type>(array, length == 0 ? 0 : array.Length - length);
         }
-#else
-        internal static void ThrowIfNotValidEnumValue(in string argumentName, in Enum @enum)
-        {
-            if (!@enum.IsValidEnumValue()) throw new InvalidEnumArgumentException(argumentName, @enum);
-
-            // .GetType().IsEnumDefined(@enum)
-        }
-#endif
 
         public static bool HasFlag(this Enum @enum, IEnumerable<Enum> values)
         {
