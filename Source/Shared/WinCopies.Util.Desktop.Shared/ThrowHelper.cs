@@ -16,14 +16,10 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using System;
-#if !WinCopies3
-using WinCopies.Util.DotNetFix;
-using static WinCopies.Util.Desktop.Resources.ExceptionMessages;
-#else
+
 using WinCopies.DotNetFix;
 
 using static WinCopies.Desktop.Resources.ExceptionMessages;
-#endif
 
 namespace WinCopies.Util.Desktop
 {
@@ -37,12 +33,6 @@ namespace WinCopies.Util.Desktop
         /// </summary>
         /// <returns>A new <see cref="InvalidOperationException"/> with <see cref="BackgroundWorkerIsBusy"/> as error message.</returns>
         public static InvalidOperationException GetBackgroundWorkerIsBusyException() => new InvalidOperationException(BackgroundWorkerIsBusy);
-
-        /// <summary>
-        /// Throws the exception returned by the <see cref="GetBackgroundWorkerIsBusyException"/> method.
-        /// </summary>
-        [Obsolete("Use the ThrowIfBackgroundWorkerIsBusy method overloads instead.")]
-        public static void ThrowBackgroundWorkerIsBusyException() => throw GetBackgroundWorkerIsBusyException();
 
         ///// <summary>
         ///// Throws the exception returned by the <see cref="GetBackgroundWorkerIsBusyException"/> method.
@@ -67,12 +57,6 @@ namespace WinCopies.Util.Desktop
         /// <returns>A new <see cref="InvalidOperationException"/> with <see cref="BackgroundWorkerDoesNotSupportCancellation"/> as error message.</returns>
         public static InvalidOperationException GetBackgroundWorkerDoesNotSupportCancellationException() => new InvalidOperationException(BackgroundWorkerDoesNotSupportCancellation);
 
-        /// <summary>
-        /// Throws the exception returned by the <see cref="GetBackgroundWorkerDoesNotSupportCancellationException"/> method.
-        /// </summary>
-        [Obsolete("Use the ThrowIfBackgroundWorkerDoesNotSupportCancellation method overloads instead.")]
-        public static void ThrowBackgroundWorkerDoesNotSupportCancellationException() => throw GetBackgroundWorkerDoesNotSupportCancellationException();
-
         ///// <summary>
         ///// Throws the exception returned by the <see cref="GetBackgroundWorkerDoesNotSupportCancellationException"/> method.
         ///// </summary>
@@ -96,12 +80,6 @@ namespace WinCopies.Util.Desktop
         /// <returns>A new <see cref="InvalidOperationException"/> with <see cref="BackgroundWorkerDoesNotSupportProgressionNotification"/> as error message.</returns>
         public static InvalidOperationException GetBackgroundWorkerDoesNotSupportProgressionNotificationException() => new InvalidOperationException(BackgroundWorkerDoesNotSupportProgressionNotification);
 
-        /// <summary>
-        /// Throws the exception returned by the <see cref="GetBackgroundWorkerDoesNotSupportProgressionNotificationException"/> method.
-        /// </summary>
-        [Obsolete("Use the ThrowIfBackgroundWorkerDoesNotSupportProgressionNotification method overloads instead.")]
-        public static void ThrowBackgroundWorkerDoesNotSupportProgressionNotificationException() => throw GetBackgroundWorkerDoesNotSupportProgressionNotificationException();
-
         ///// <summary>
         ///// Throws the exception returned by the <see cref="GetBackgroundWorkerDoesNotSupportProgressionNotificationException"/> method.
         ///// </summary>
@@ -124,13 +102,6 @@ namespace WinCopies.Util.Desktop
         /// </summary>
         /// <returns>A new <see cref="InvalidOperationException"/> with <see cref="BackgroundWorkerDoesNotSupportPausing"/> as error message.</returns>
         public static InvalidOperationException GetBackgroundWorkerDoesNotSupportPausingException() => new InvalidOperationException(BackgroundWorkerDoesNotSupportPausing);
-
-        /// <summary>
-        /// Throws the exception returned by the <see cref="GetBackgroundWorkerDoesNotSupportPausingException"/> method.
-        /// </summary>
-        [Obsolete("Use the ThrowIfBackgroundWorkerDoesNotSupportPausing method instead.")]
-        public static void ThrowBackgroundWorkerDoesNotSupportPausingException() => throw GetBackgroundWorkerDoesNotSupportPausingException();
-
 #if CS7
         /// <summary>
         /// Throws the exception returned by the <see cref="GetBackgroundWorkerDoesNotSupportPausingException"/> method.

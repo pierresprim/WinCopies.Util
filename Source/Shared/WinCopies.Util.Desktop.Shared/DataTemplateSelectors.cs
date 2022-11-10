@@ -25,17 +25,10 @@ using System.Windows.Controls;
 using WinCopies.Extensions;
 using WinCopies.Util;
 
-#if WinCopies3
 using WinCopies.Collections.Generic;
 using WinCopies.Linq;
-#else
-using WinCopies.Collections;
-#endif
 
 namespace WinCopies
-#if !WinCopies3
-    .Util
-#endif
 {
     public class InterfaceDataTemplateSelector : DataTemplateSelector
     {
@@ -60,13 +53,7 @@ namespace WinCopies
         public InterfaceDataTemplateSelector() { /* Left empty. */ }
 
         private bool GetBit(in byte pos) => _bools.GetBit(pos);
-        private void SetBit(in byte pos, in bool value) =>
-#if WinCopies3
-            UtilHelpers
-#else
-            Util
-#endif
-            .SetBit(ref _bools, pos, value);
+        private void SetBit(in byte pos, in bool value) => UtilHelpers.SetBit(ref _bools, pos, value);
 
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
@@ -95,11 +82,7 @@ namespace WinCopies
     }
 
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-    public
-#if WinCopies3
-        sealed
-#endif
-        class TypeForDataTemplateAttribute : Attribute
+    public sealed class TypeForDataTemplateAttribute : Attribute
     {
         public Type Type { get; }
 
