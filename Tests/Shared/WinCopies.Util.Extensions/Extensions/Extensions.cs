@@ -73,17 +73,17 @@ namespace WinCopies.Util.Tests
 #if WinCopies3
 (uint)
 #endif
-                    interfaces.Length, arrayBuilder.Count, $"Interfaces found: {((System.Collections.Generic.IEnumerable<Type>)arrayBuilder).ToString(true)}");
+                    interfaces.Length, arrayBuilder.Count, $"Interfaces found: {arrayBuilder.ToString(true)}");
 
                 int i = -1;
 
                 foreach (
 #if WinCopies3
-Type t 
+Type t
 #else
                     LinkedListNode<Type> node
 #endif
-                    in arrayBuilder)
+                    in arrayBuilder.AsFromType<IEnumerable<Type>>())
 
                     Assert.AreEqual(interfaces[++i].Name,
 #if WinCopies3
@@ -108,57 +108,45 @@ Type t
 
 
             updateArrayBuilderAndAssert(() => (typeof(A), false, false, new Type[] { typeof(IA) }));
-
             updateArrayBuilderAndAssert(() => (typeof(A<int>), false, false, new Type[] { typeof(IA<int>) }));
 
             updateArrayBuilderAndAssert(() => (typeof(B), false, false, new Type[] { typeof(IB) }));
-
             updateArrayBuilderAndAssert(() => (typeof(B<int>), false, false, new Type[] { typeof(IB<int>) }));
 
             updateArrayBuilderAndAssert(() => (typeof(C), false, false, new Type[] { typeof(IB), typeof(IC) }));
-
             updateArrayBuilderAndAssert(() => (typeof(C<int>), false, false, new Type[] { typeof(IB<int>), typeof(IC), typeof(IC<int>) }));
 
 
 
             updateArrayBuilderAndAssert(() => (typeof(A), true, false, new Type[] { typeof(IA) }));
-
             updateArrayBuilderAndAssert(() => (typeof(A<int>), true, false, new Type[] { typeof(IA) }));
 
             updateArrayBuilderAndAssert(() => (typeof(B), true, false, new Type[] { typeof(IB) }));
-
             updateArrayBuilderAndAssert(() => (typeof(B<int>), true, false, new Type[] { typeof(IB) }));
 
             updateArrayBuilderAndAssert(() => (typeof(C), true, false, new Type[] { typeof(IB), typeof(IC) }));
-
             updateArrayBuilderAndAssert(() => (typeof(C<int>), true, false, new Type[] { typeof(IB), typeof(IC) }));
 
 
 
             updateArrayBuilderAndAssert(() => (typeof(A), false, true, new Type[] { typeof(IA) }));
-
             updateArrayBuilderAndAssert(() => (typeof(A<int>), false, true, new Type[] { typeof(IA<int>) }));
 
             updateArrayBuilderAndAssert(() => (typeof(B), false, true, new Type[] { typeof(IB) }));
-
             updateArrayBuilderAndAssert(() => (typeof(B<int>), false, true, new Type[] { typeof(IB<int>) }));
 
             updateArrayBuilderAndAssert(() => (typeof(C), false, true, new Type[] { typeof(IC) }));
-
             updateArrayBuilderAndAssert(() => (typeof(C<int>), false, true, new Type[] { typeof(IC), typeof(IC<int>) }));
 
 
 
             updateArrayBuilderAndAssert(() => (typeof(A), true, true, new Type[] { typeof(IA) }));
-
             updateArrayBuilderAndAssert(() => (typeof(A<int>), true, true, new Type[] { typeof(IA) }));
 
             updateArrayBuilderAndAssert(() => (typeof(B), true, true, new Type[] { typeof(IB) }));
-
-            updateArrayBuilderAndAssert(() => (typeof(B<int>), true, true, Array.Empty<Type>()));
+            updateArrayBuilderAndAssert(() => (typeof(B<int>), true, true, System.Array.Empty<Type>()));
 
             updateArrayBuilderAndAssert(() => (typeof(C), true, true, new Type[] { typeof(IC) }));
-
             updateArrayBuilderAndAssert(() => (typeof(C<int>), true, true, new Type[] { typeof(IC) }));
         }
     }

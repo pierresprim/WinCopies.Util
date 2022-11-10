@@ -18,70 +18,31 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System;
-#if !WinCopies3
 using System.Collections.Generic;
-#endif
 using System.Linq;
 
 using WinCopies.Collections.Generic;
+using WinCopies.Util;
 
 namespace WinCopies.Collections.DotNetFix.Generic.Tests
 {
     [TestClass]
     public class LinkedListTests
     {
-        public WinCopies.Collections.DotNetFix.
-#if WinCopies3
-            Generic.
-#endif
-            LinkedList<int> LinkedList
-        { get; } = new LinkedList<int>();
+        public LinkedList<int> LinkedList { get; } = new LinkedList<int>();
+        public IEnumerable<int> Enumerable => LinkedList;
 
-        public WinCopies.Collections.DotNetFix.Generic.Queue<
-#if !WinCopies3
-            LinkedListNode
-#else
-            ILinkedListNode
-#endif
-          <int>> NodeQueue
-        { get; } = new Queue<
-#if !WinCopies3
-            LinkedListNode
-#else
-            ILinkedListNode
-#endif
-          <int>>();
+        public Queue<ILinkedListNode<int>> NodeQueue { get; } = new Queue<ILinkedListNode<int>>();
 
-        static void AssertCleared(WinCopies.Collections.DotNetFix.
-#if WinCopies3
-           Generic.
-#endif
-           ILinkedList<int> list, WinCopies.Collections.DotNetFix.Generic.Queue<
-#if !WinCopies3
-               LinkedListNode
-#else
-               ILinkedListNode
-#endif
-               <int>> queue, bool assertNodeQueueCleared = true)
+        static void AssertCleared(ILinkedList<int> list, Queue<ILinkedListNode<int>> queue, bool assertNodeQueueCleared = true)
         {
-            Assert.AreEqual(
-#if !WinCopies3
-0
-#else
-                0u
-#endif
-                , list.Count, "list should be empty.");
+            Assert.AreEqual(0u, list.AsFromType<IUIntCountable>().Count, "list should be empty.");
 
             Assert.IsNull(list.First, $"{nameof(list)}.{nameof(list.First)} should be null.");
 
             Assert.IsNull(list.Last, $"{nameof(list)}.{nameof(list.Last)} should be null.");
 
-#if !WinCopies3
-            LinkedListNode
-#else
-            ILinkedListNode
-#endif
-          <int> node;
+            ILinkedListNode<int> node;
             uint i = 0;
 
             while (queue.Count != 0)
@@ -90,9 +51,8 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
 
                 node = queue.Dequeue();
 
-                Assert.IsNull(node.Previous);
-
-                Assert.IsNull(node.Next);
+                Assert.IsNull(node.AsLinkedListNode().Previous);
+                Assert.IsNull(node.AsLinkedListNode().Next);
 
                 Assert.IsNull(node.List);
             }
@@ -102,26 +62,9 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
                 Assert.AreEqual(10u, i);
         }
 
-        static void AddNode(Func<
-#if !WinCopies3
-            LinkedListNode
-#else
-            ILinkedListNode
-#endif
-            <int>> action, int expected, WinCopies.Collections.DotNetFix.Generic.Queue<
-#if !WinCopies3
-                LinkedListNode
-#else
-                ILinkedListNode
-#endif
-                <int>> queue)
+        static void AddNode(Func<ILinkedListNode<int>> action, int expected, Queue<ILinkedListNode<int>> queue)
         {
-#if !WinCopies3
-            LinkedListNode
-#else
-            ILinkedListNode
-#endif
-            <int> node = action();
+            ILinkedListNode<int> node = action();
 
             Assert.AreEqual(expected, node.Value);
 
@@ -131,29 +74,13 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
         [TestMethod]
         public void TestAddFirstAndLast() => TestAddFirstAndLastStatic(LinkedList, NodeQueue);
 
-        public static void TestAddFirstAndLastStatic(WinCopies.Collections.DotNetFix.
-#if WinCopies3
-            Generic.
-#endif
-            ILinkedList<int> list, WinCopies.Collections.DotNetFix.Generic.Queue<
-#if !WinCopies3
-LinkedListNode
-#else
-                ILinkedListNode
-#endif
-                <int>> queue)
+        public static void TestAddFirstAndLastStatic(ILinkedList<int> list, Queue<ILinkedListNode<int>> queue)
         {
             for (int i = 1; i < 11; i++)
 
                 AddNode(() => list.AddFirst(i), i, queue);
 
-            Assert.AreEqual(
-#if !WinCopies3
-10
-#else
-                10u
-#endif
-                , list.Count, "AddFirst assertion fialed: Count should be 10.");
+            Assert.AreEqual(10u, list.AsFromType<IUIntCountable>().Count, "AddFirst assertion fialed: Count should be 10.");
 
             Assert.AreEqual(10, list.First.Value);
 
@@ -161,13 +88,13 @@ LinkedListNode
 
             int j = 10;
 
-            foreach (int i in list)
+            foreach (int i in list.AsFromType<System.Collections.Generic.IEnumerable<int>>())
 
                 Assert.AreEqual(j--, i, "Error during enumeration.");
 
             Assert.AreEqual(0, j, "Enumeration failed.");
 
-            list.Clear();
+            list.AsFromType<IClearable>().Clear();
 
             AssertCleared(list, queue);
 
@@ -177,13 +104,7 @@ LinkedListNode
 
                 AddNode(() => list.AddLast(i), i, queue);
 
-            Assert.AreEqual(
-#if !WinCopies3
-10
-#else
-                10u
-#endif
-                , list.Count, "AddLast assertion failed: Count should be 10.");
+            Assert.AreEqual(10u, list.AsFromType<IUIntCountable>().Count, "AddLast assertion failed: Count should be 10.");
 
             Assert.AreEqual(1, list.First.Value);
 
@@ -191,13 +112,13 @@ LinkedListNode
 
             j = 0;
 
-            foreach (int i in list)
+            foreach (int i in list.AsFromType<System.Collections.Generic.IEnumerable<int>>())
 
                 Assert.AreEqual(++j, i, "Error during enumeration.");
 
             Assert.AreEqual(10, j, "Enumeration failed.");
 
-            list.Clear();
+            list.AsFromType<IClearable>().Clear();
 
             AssertCleared(list, queue);
         }
@@ -225,8 +146,6 @@ LinkedListNode
 
             assertValues(new Enumerable<int>(() => LinkedList.GetEnumerator()), 0, i => i + 1);
 
-#if WinCopies3
-
             assertValues(new Enumerable<int>(() => LinkedList.GetEnumerator(EnumerationDirection.FIFO)), 0, i => i + 1);
 
             assertValues(new Enumerable<int>(() => LinkedList.GetReversedEnumerator()), 11, i => i - 1);
@@ -236,8 +155,6 @@ LinkedListNode
             assertValues(new Enumerable<ILinkedListNode<int>>(() => LinkedList.GetNodeEnumerator(EnumerationDirection.FIFO)).Select(node => node.Value), 0, i => i + 1);
 
             assertValues(new Enumerable<ILinkedListNode<int>>(() => LinkedList.GetNodeEnumerator(EnumerationDirection.LIFO)).Select(node => node.Value), 11, i => i - 1);
-
-#endif
 
             LinkedList.Clear();
 
@@ -251,18 +168,13 @@ LinkedListNode
 
                 AddNode(() => LinkedList.AddLast(i), i, NodeQueue);
 
-#if !WinCopies3
-            LinkedListNode
-#else
-            ILinkedListNode
-#endif
-                <int> node = LinkedList.First;
+            ILinkedListNode<int> node = LinkedList.First;
 
             void removeAndAssert()
             {
-                node = node.Next;
+                node = node.AsLinkedListNode().Next;
 
-                LinkedList.RemoveFirst();
+                _ = LinkedList.RemoveFirst();
 
                 Assert.AreEqual(node, LinkedList.First);
             }
@@ -295,18 +207,13 @@ LinkedListNode
 
                 AddNode(() => LinkedList.AddLast(i), i, NodeQueue);
 
-#if !WinCopies3
-            LinkedListNode
-#else
-            ILinkedListNode
-#endif
-                <int> node = LinkedList.Last;
+            ILinkedListNode<int> node = LinkedList.Last;
 
             void removeAndAssert()
             {
-                node = node.Previous;
+                node = node.AsLinkedListNode().Previous;
 
-                LinkedList.RemoveLast();
+                _ = LinkedList.RemoveLast();
 
                 Assert.AreEqual(node, LinkedList.Last);
             }
@@ -331,8 +238,6 @@ LinkedListNode
 
             AssertCleared(LinkedList, NodeQueue);
         }
-
-#if WinCopies3
 
         public void Fill()
         {
@@ -382,7 +287,7 @@ LinkedListNode
 
             i = 0;
 
-            foreach (int actual in LinkedList)
+            foreach (int actual in Enumerable)
 
                 Assert.AreEqual(expected[i++], actual);
 
@@ -428,7 +333,7 @@ LinkedListNode
 
             i = 0;
 
-            foreach (int actual in LinkedList)
+            foreach (int actual in Enumerable)
 
                 Assert.AreEqual(expected[i++], actual);
 
@@ -465,9 +370,9 @@ LinkedListNode
 
                 int _i = 0;
 
-                foreach (int actual in LinkedList)
+                foreach (int actual in Enumerable)
 
-                    Assert.AreEqual(expected[_i++], actual, $"i: { _i - 1 }");
+                    Assert.AreEqual(expected[_i++], actual, $"i: {_i - 1}");
             }
 
             Fill();
@@ -595,7 +500,7 @@ LinkedListNode
 
             i = 0;
 
-            foreach (int value in LinkedList)
+            foreach (int value in Enumerable)
 
                 Assert.AreEqual(i++, value);
 
@@ -605,7 +510,5 @@ LinkedListNode
 
             AssertCleared(LinkedList, NodeQueue, false);
         }
-
-#endif
     }
 }

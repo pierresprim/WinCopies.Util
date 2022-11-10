@@ -38,11 +38,7 @@ namespace WinCopies.Util.Tests
     { }
 
     [TestClass]
-    public
-#if !WinCopies3
-    partial
-#endif
-        class ExtensionsTests
+    public partial class ExtensionsTests
     {
         [TestMethod]
         public void TestIsAssignableFrom()

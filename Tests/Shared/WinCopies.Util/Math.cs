@@ -23,16 +23,8 @@ namespace WinCopies.Tests.Util.Util
 
             if (numericTypes.HasFlag(NumericTypes.ULong))
             {
-                result = WinCopies.
-                    #if !WinCopies3
-                    Util.
-#endif
-                    Math.IsAdditionResultInRange(left, right, maxValue);
-                ulong? resultULong = WinCopies.
-#if !WinCopies3
-                    Util.
-#endif
-                    Math.TryAdd(left, right, maxValue);
+                result = WinCopies.Math.IsAdditionResultInRange(left, right, maxValue);
+                ulong? resultULong = WinCopies.Math.TryAdd(left, right, maxValue);
 
                 if (shouldSucceed)
                 {
@@ -55,16 +47,8 @@ namespace WinCopies.Tests.Util.Util
                 var _right = (uint)right;
                 var _maxValue = (uint)maxValue;
 
-                result = WinCopies.
-#if !WinCopies3
-                    Util.
-#endif
-                    Math.IsAdditionResultInRange(_left, _right, _maxValue);
-                uint? resultUInt = WinCopies.
-#if !WinCopies3
-                    Util.
-#endif
-                    Math.TryAdd(_left, _right, _maxValue);
+                result = WinCopies.Math.IsAdditionResultInRange(_left, _right, _maxValue);
+                uint? resultUInt = WinCopies.Math.TryAdd(_left, _right, _maxValue);
 
                 if (shouldSucceed)
                 {
@@ -87,16 +71,8 @@ namespace WinCopies.Tests.Util.Util
                 var _right = (ushort)right;
                 var _maxValue = (ushort)maxValue;
 
-                result = WinCopies.
-#if !WinCopies3
-                    Util.
-#endif
-                    Math.IsAdditionResultInRange(_left, _right, _maxValue);
-                ushort? resultUShort = WinCopies.
-#if !WinCopies3
-                    Util.
-#endif
-                    Math.TryAdd(_left, _right, _maxValue);
+                result = WinCopies.Math.IsAdditionResultInRange(_left, _right, _maxValue);
+                ushort? resultUShort = WinCopies.Math.TryAdd(_left, _right, _maxValue);
 
                 if (shouldSucceed)
                 {
@@ -119,16 +95,8 @@ namespace WinCopies.Tests.Util.Util
                 var _right = (byte)right;
                 var _maxValue = (byte)maxValue;
 
-                result = WinCopies.
-#if !WinCopies3
-                    Util.
-#endif
-                    Math.IsAdditionResultInRange(_left, _right, _maxValue);
-                byte? resultByte = WinCopies.
-#if !WinCopies3
-                    Util.
-#endif
-                    Math.TryAdd(_left, _right, _maxValue);
+                result = WinCopies.Math.IsAdditionResultInRange(_left, _right, _maxValue);
+                byte? resultByte = WinCopies.Math.TryAdd(_left, _right, _maxValue);
 
                 if (shouldSucceed)
                 {
@@ -181,8 +149,8 @@ namespace WinCopies.Tests.Util.Util
 
             AssertAdditionResultInRange(ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, false, 0UL, NumericTypes.ULong);
 
-            AssertAdditionResultInRange(1UL, ulong.MaxValue - 1, ulong.MaxValue-1, false, 0UL, NumericTypes.ULong);
-            AssertAdditionResultInRange(ulong.MaxValue - 1, 1UL, ulong.MaxValue-1, false, 0UL, NumericTypes.ULong);
+            AssertAdditionResultInRange(1UL, ulong.MaxValue - 1, ulong.MaxValue - 1, false, 0UL, NumericTypes.ULong);
+            AssertAdditionResultInRange(ulong.MaxValue - 1, 1UL, ulong.MaxValue - 1, false, 0UL, NumericTypes.ULong);
 
             AssertAdditionResultInRange(1UL, ulong.MaxValue - 1, ulong.MaxValue, true, ulong.MaxValue, NumericTypes.ULong);
             AssertAdditionResultInRange(ulong.MaxValue - 1, 1UL, ulong.MaxValue, true, ulong.MaxValue, NumericTypes.ULong);
@@ -236,16 +204,8 @@ namespace WinCopies.Tests.Util.Util
 
             if (numericTypes.HasFlag(NumericTypes.ULong))
             {
-                result = WinCopies.
-#if !WinCopies3
-                    Util.
-#endif
-                    Math.IsMultiplicationResultInRange(left, right, maxValue);
-                ulong? resultULong = WinCopies.
-#if !WinCopies3
-                    Util.
-#endif
-                    Math.TryMultiply(left, right, maxValue);
+                result = WinCopies.Math.IsMultiplicationResultInRange(left, right, maxValue);
+                ulong? resultULong = WinCopies.Math.TryMultiply(left, right, maxValue);
 
                 if (shouldSucceed)
                 {
@@ -268,16 +228,8 @@ namespace WinCopies.Tests.Util.Util
                 var _right = (uint)right;
                 var _maxValue = (uint)maxValue;
 
-                result = WinCopies.
-#if !WinCopies3
-                    Util.
-#endif
-                    Math.IsMultiplicationResultInRange(_left, _right, _maxValue);
-                uint? resultUInt = WinCopies.
-#if !WinCopies3
-                    Util.
-#endif
-                    Math.TryMultiply(_left, _right, _maxValue);
+                result = WinCopies.Math.IsMultiplicationResultInRange(_left, _right, _maxValue);
+                uint? resultUInt = WinCopies.Math.TryMultiply(_left, _right, _maxValue);
 
                 if (shouldSucceed)
                 {
@@ -300,16 +252,8 @@ namespace WinCopies.Tests.Util.Util
                 var _right = (ushort)right;
                 var _maxValue = (ushort)maxValue;
 
-                result = WinCopies.
-#if !WinCopies3
-                    Util.
-#endif
-                    Math.IsMultiplicationResultInRange(_left, _right, _maxValue);
-                ushort? resultUShort = WinCopies.
-#if !WinCopies3
-                    Util.
-#endif
-                    Math.TryMultiply(_left, _right, _maxValue);
+                result = WinCopies.Math.IsMultiplicationResultInRange(_left, _right, _maxValue);
+                ushort? resultUShort = WinCopies.Math.TryMultiply(_left, _right, _maxValue);
 
                 if (shouldSucceed)
                 {
@@ -332,16 +276,8 @@ namespace WinCopies.Tests.Util.Util
                 var _right = (byte)right;
                 var _maxValue = (byte)maxValue;
 
-                result = WinCopies.
-#if !WinCopies3
-                    Util.
-#endif
-                    Math.IsMultiplicationResultInRange(_left, _right, _maxValue);
-                byte? resultByte = WinCopies.
-#if !WinCopies3
-                    Util.
-#endif
-                    Math.TryMultiply(_left, _right, _maxValue);
+                result = WinCopies.Math.IsMultiplicationResultInRange(_left, _right, _maxValue);
+                byte? resultByte = WinCopies.Math.TryMultiply(_left, _right, _maxValue);
 
                 if (shouldSucceed)
                 {
@@ -391,16 +327,16 @@ namespace WinCopies.Tests.Util.Util
 
             AssertMultiplicationResultInRange(ulong.MaxValue, ulong.MaxValue, ulong.MaxValue, false, 0UL, NumericTypes.ULong);
 
-            AssertMultiplicationResultInRange(1UL, ulong.MaxValue , ulong.MaxValue, true, ulong.MaxValue, NumericTypes.ULong);
-            AssertMultiplicationResultInRange(ulong.MaxValue , 1UL, ulong.MaxValue , true, ulong.MaxValue, NumericTypes.ULong);
+            AssertMultiplicationResultInRange(1UL, ulong.MaxValue, ulong.MaxValue, true, ulong.MaxValue, NumericTypes.ULong);
+            AssertMultiplicationResultInRange(ulong.MaxValue, 1UL, ulong.MaxValue, true, ulong.MaxValue, NumericTypes.ULong);
 
             AssertMultiplicationResultInRange(2UL, ulong.MaxValue / 2, ulong.MaxValue / 2, false, 0UL, NumericTypes.ULong);
             AssertMultiplicationResultInRange(ulong.MaxValue / 2, 2UL, ulong.MaxValue / 2, false, 0UL, NumericTypes.ULong);
 
             Assert.AreEqual(18446744073709551614, 2 * (ulong.MaxValue / 2));
 
-            AssertMultiplicationResultInRange(2UL, ulong.MaxValue / 2, ulong.MaxValue-1, true, ulong.MaxValue-1, NumericTypes.ULong);
-            AssertMultiplicationResultInRange(ulong.MaxValue / 2, 2UL, ulong.MaxValue-1, true, ulong.MaxValue-1, NumericTypes.ULong);
+            AssertMultiplicationResultInRange(2UL, ulong.MaxValue / 2, ulong.MaxValue - 1, true, ulong.MaxValue - 1, NumericTypes.ULong);
+            AssertMultiplicationResultInRange(ulong.MaxValue / 2, 2UL, ulong.MaxValue - 1, true, ulong.MaxValue - 1, NumericTypes.ULong);
 
             AssertMultiplicationResultInRange(10UL, 20UL, ulong.MaxValue, true, 200UL, NumericTypes.ULong);
             AssertMultiplicationResultInRange(20UL, 10UL, ulong.MaxValue, true, 200UL, NumericTypes.ULong);
@@ -415,8 +351,8 @@ namespace WinCopies.Tests.Util.Util
             AssertMultiplicationResultInRange(2UL, uint.MaxValue / 2, uint.MaxValue / 2, false, 0UL, NumericTypes.UInt);
             AssertMultiplicationResultInRange(uint.MaxValue / 2, 2UL, uint.MaxValue / 2, false, 0UL, NumericTypes.UInt);
 
-            AssertMultiplicationResultInRange(2UL, uint.MaxValue / 2, uint.MaxValue-1, true, uint.MaxValue-1, NumericTypes.UInt);
-            AssertMultiplicationResultInRange(uint.MaxValue / 2, 2UL, uint.MaxValue-1, true, uint.MaxValue-1, NumericTypes.UInt);
+            AssertMultiplicationResultInRange(2UL, uint.MaxValue / 2, uint.MaxValue - 1, true, uint.MaxValue - 1, NumericTypes.UInt);
+            AssertMultiplicationResultInRange(uint.MaxValue / 2, 2UL, uint.MaxValue - 1, true, uint.MaxValue - 1, NumericTypes.UInt);
 
             AssertMultiplicationResultInRange(10UL, 20UL, uint.MaxValue, true, 200UL, NumericTypes.UInt);
             AssertMultiplicationResultInRange(20UL, 10UL, uint.MaxValue, true, 200UL, NumericTypes.UInt);
@@ -431,8 +367,8 @@ namespace WinCopies.Tests.Util.Util
             AssertMultiplicationResultInRange(2UL, ushort.MaxValue / 2, ushort.MaxValue / 2, false, 0UL, NumericTypes.UShort);
             AssertMultiplicationResultInRange(ushort.MaxValue / 2, 2UL, ushort.MaxValue / 2, false, 0UL, NumericTypes.UShort);
 
-            AssertMultiplicationResultInRange(2UL, ushort.MaxValue / 2, ushort.MaxValue-1, true, ushort.MaxValue-1, NumericTypes.UShort);
-            AssertMultiplicationResultInRange(ushort.MaxValue / 2, 2UL, ushort.MaxValue-1, true, ushort.MaxValue-1, NumericTypes.UShort);
+            AssertMultiplicationResultInRange(2UL, ushort.MaxValue / 2, ushort.MaxValue - 1, true, ushort.MaxValue - 1, NumericTypes.UShort);
+            AssertMultiplicationResultInRange(ushort.MaxValue / 2, 2UL, ushort.MaxValue - 1, true, ushort.MaxValue - 1, NumericTypes.UShort);
 
             AssertMultiplicationResultInRange(10UL, 20UL, ushort.MaxValue, true, 200UL, NumericTypes.UShort);
             AssertMultiplicationResultInRange(20UL, 10UL, ushort.MaxValue, true, 200UL, NumericTypes.UShort);
@@ -447,8 +383,8 @@ namespace WinCopies.Tests.Util.Util
             AssertMultiplicationResultInRange(2UL, byte.MaxValue / 2, byte.MaxValue / 2, false, 0UL, NumericTypes.Byte);
             AssertMultiplicationResultInRange(byte.MaxValue / 2, 2UL, byte.MaxValue / 2, false, 0UL, NumericTypes.Byte);
 
-            AssertMultiplicationResultInRange(2UL, byte.MaxValue / 2, byte.MaxValue-1, true, byte.MaxValue-1, NumericTypes.Byte);
-            AssertMultiplicationResultInRange(byte.MaxValue / 2, 2UL, byte.MaxValue-1, true, byte.MaxValue-1, NumericTypes.Byte);
+            AssertMultiplicationResultInRange(2UL, byte.MaxValue / 2, byte.MaxValue - 1, true, byte.MaxValue - 1, NumericTypes.Byte);
+            AssertMultiplicationResultInRange(byte.MaxValue / 2, 2UL, byte.MaxValue - 1, true, byte.MaxValue - 1, NumericTypes.Byte);
 
             AssertMultiplicationResultInRange(10UL, 20UL, byte.MaxValue, true, 200UL, NumericTypes.Byte);
             AssertMultiplicationResultInRange(20UL, 10UL, byte.MaxValue, true, 200UL, NumericTypes.Byte);
