@@ -136,7 +136,7 @@ namespace WinCopies
 #else
                         )
 #endif
-                            {
+                        {
 #if !CS8
                             case
 #endif
@@ -283,8 +283,21 @@ namespace WinCopies.Util
     namespace Util
     {
 #endif
-    public static class Console
+        public static class Console
         {
+            public static bool AskConfirmation(in string message)
+            {
+                string value;
+
+                while ((value = ReadLine(message + " ([Y] for 'yes', [n] for 'no'.)")) != "Y")
+
+                    if (value == "n")
+
+                        return false;
+
+                return true;
+            }
+
             public static unsafe void ReadLines(params IValueObject<string
 #if CS8
                     ?
@@ -371,6 +384,17 @@ namespace WinCopies.Util
 #endif
                     , T?> converter, in string errorMessage) where T : struct => ReadLine(msg, converter, errorMessage).Value;
 
+            public static ConsoleKeyInfo
+#if CS8
+                    ?
+#endif
+                    ReadKey(in string msg)
+            {
+                WriteLine(msg);
+
+                return System.Console.ReadKey();
+            }
+
             public static void WriteMenu<T>(in
 #if CS5
                 IReadOnlyList
@@ -392,6 +416,31 @@ namespace WinCopies.Util
 #endif
                 <KeyValuePair<string, Func<bool>>> menu, in string msg, in bool clear)
             {
+                Func<bool> doWork() => menu[ReadValue<int>("Please make a choice to continue: ", s => int.TryParse(s, out int packageId) && packageId.Between(0, menu.Count - 1, true, true) ?
+#if !CS9
+                    (int?)
+#endif
+                    packageId : null, "Invalid value.")].Value;
+
+                bool _doWork()
+                {
+                    Func<bool> _func = doWork();
+
+                    Clear();
+
+                    return _func();
+                }
+
+                Func<bool> func = clear ? _doWork :
+#if !CS9
+                    (Func<bool>)(
+#endif
+                    () => doWork()()
+#if !CS9
+                    )
+#endif
+                    ;
+
                 do
                 {
                     if (clear)
@@ -405,11 +454,7 @@ namespace WinCopies.Util
                     WriteMenu(menu);
                 }
 
-                while (menu[ReadValue<int>("Please make a choice to continue: ", s => int.TryParse(s, out int packageId) && packageId.Between(0, menu.Count - 1, true, true) ?
-#if !CS9
-            (int?)
-#endif
-                packageId : null, "Invalid value.")].Value());
+                while (func());
             }
 
 #if CS5

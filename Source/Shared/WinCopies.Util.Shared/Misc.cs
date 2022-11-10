@@ -605,6 +605,206 @@ namespace WinCopies
             > value) => value.Value;
     }
 
+    public interface IValueProviderBase : DotNetFix.IDisposable
+    {
+#if CS8
+        [NotNull]
+#endif
+        object Value { get; }
+    }
+
+    public interface IValueProvider : IValueProviderBase, IEquatable<IValueProviderBase>
+    {
+        // Left empty.
+    }
+
+    public interface IValueProvider<T> : IValueProviderBase, IEquatable<T>
+    {
+#if CS8
+        object IValueProviderBase.Value => Value;
+
+        [NotNull]
+#endif
+        new T Value { get; }
+    }
+
+    public struct NullableDisposable : IValueProvider
+    {
+        private object
+#if CS8
+            ?
+#endif
+            _value;
+
+        public object Value => _value ?? throw new ObjectDisposedException(null);
+
+        public bool IsDisposed => _value == null;
+
+        public NullableDisposable(in object
+#if CS8
+            ?
+#endif
+            value) => _value = value;
+
+        private bool _Equals(object
+#if CS8
+            ?
+#endif
+            obj) => _value == obj;
+        public override bool Equals(object
+#if CS8
+            ?
+#endif
+            obj) => obj == null ? IsDisposed : obj is IValueProviderBase value ? Equals(value) : _Equals(obj);
+        public bool Equals<T>(T
+#if CS9
+            ?
+#endif
+            other) => _Equals(other.AsObject());
+        public bool Equals(IValueProviderBase
+#if CS9
+            ?
+#endif
+            other) => other == null || other.IsDisposed ? IsDisposed : !IsDisposed && _Equals(other.Value);
+
+        public override int GetHashCode() => Value.GetHashCode();
+
+        public static NullableDisposable<T> Create<T>(in T
+#if CS9
+            ?
+#endif
+            value) where T : class => new
+#if !CS9
+            NullableDisposable<T>
+#endif
+            (value);
+        public static NullableDisposable2<T> Create<T>(in NullableDisposable<T> value) where T : class, System.IDisposable => new
+#if !CS9
+            NullableDisposable2<T>
+#endif
+            (value);
+        public static NullableDisposable2<T> Create2<T>(in T
+#if CS9
+            ?
+#endif
+            value) where T : class, System.IDisposable => new
+#if !CS9
+            NullableDisposable2<T>
+#endif
+            (value);
+
+        public void Dispose() => _value = null;
+    }
+
+    public struct NullableDisposable<T> : IValueProvider<T> where T : class
+    {
+        private T
+#if CS9
+            ?
+#endif
+            _value;
+
+        public T Value => _value ?? throw new ObjectDisposedException(null);
+#if !CS8
+        object IValueProviderBase.Value => Value;
+#endif
+
+        public bool IsDisposed => _value == null;
+
+        public NullableDisposable(in T
+#if CS9
+            ?
+#endif
+            value) => _value = value;
+
+        private bool _Equals(object
+#if CS8
+            ?
+#endif
+            obj) => _value == obj;
+        public override bool Equals(object
+#if CS8
+            ?
+#endif
+            obj) => obj == null ? IsDisposed : obj is IValueProviderBase value ? Equals(value) : _Equals(obj);
+        public bool Equals(T
+#if CS9
+            ?
+#endif
+            other) => _Equals(other.AsObject());
+        public bool Equals(IValueProviderBase
+#if CS8
+            ?
+#endif
+            other) => other == null || other.IsDisposed ? IsDisposed : !IsDisposed && _Equals(other.Value);
+
+        public override int GetHashCode() => Value.GetHashCode();
+
+        public void Dispose() => _value = null;
+
+        public static bool operator ==(NullableDisposable<T> left, IValueProviderBase right) => left.Equals(right);
+        public static bool operator !=(NullableDisposable<T> left, IValueProviderBase right) => !(left == right);
+
+        public static bool operator ==(NullableDisposable<T> left, object
+#if CS8
+            ?
+#endif
+            right) => left.Equals(right);
+        public static bool operator !=(NullableDisposable<T> left, object
+#if CS8
+            ?
+#endif
+            right) => !(left == right);
+    }
+
+    public struct NullableDisposable2<T> : IValueProvider<T> where T : class, System.IDisposable
+    {
+        private NullableDisposable<T> _value;
+
+        public T Value => _value.Value;
+#if !CS8
+        object IValueProviderBase.Value => Value;
+#endif
+
+        public bool IsDisposed => _value.IsDisposed;
+
+        public NullableDisposable2(NullableDisposable<T> value) => _value = value;
+        public NullableDisposable2(T
+#if CS9
+            ?
+#endif
+            value) => this = new
+#if !CS9
+            NullableDisposable2<T>
+#endif
+            (new NullableDisposable<T>(value));
+
+        public bool Equals(T
+#if CS8
+            ?
+#endif
+            other) => _value.Equals(other);
+        public bool Equals(IValueProviderBase
+#if CS8
+            ?
+#endif
+            other) => _value.Equals(other);
+
+        public bool Dispose()
+        {
+            if (IsDisposed)
+
+                return false;
+
+            Value.Dispose();
+            _value.Dispose();
+
+            return true;
+        }
+
+        void System.IDisposable.Dispose() => Dispose();
+    }
+
     public delegate bool TaskAwaiterPredicate(ref bool cancel);
 
     public class StreamInfo : System.IO.Stream, DotNetFix.IDisposable

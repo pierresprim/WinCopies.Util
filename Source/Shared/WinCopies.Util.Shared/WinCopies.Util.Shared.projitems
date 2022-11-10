@@ -22,6 +22,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Comparers.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\Enums.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\ResourceNotFoundException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\Array.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ForLoop.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ItemsChangedEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Regex.cs" />

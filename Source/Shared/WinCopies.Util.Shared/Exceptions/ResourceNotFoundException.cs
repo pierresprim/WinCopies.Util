@@ -1,10 +1,6 @@
 ﻿using System;
 
-using static WinCopies
-#if !WinCopies3
-    .Util
-#endif
-    .Resources.ExceptionMessages;
+using static WinCopies.Resources.ExceptionMessages;
 
 namespace WinCopies
 {

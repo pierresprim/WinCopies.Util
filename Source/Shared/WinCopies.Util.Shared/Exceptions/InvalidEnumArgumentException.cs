@@ -22,14 +22,11 @@ using System.Security;
 using WinCopies.Collections;
 using WinCopies.Util;
 
-#if !WinCopies3
-namespace WinCopies.Util
-#else
 namespace WinCopies
-#endif
 {
     public class InvalidEnumArgumentException : System.ComponentModel.InvalidEnumArgumentException
     {
+#if !WinCopies4
         /// <summary>
         /// Initializes a new instance of the <see cref="InvalidEnumArgumentException"/> class.
         /// </summary>
@@ -66,6 +63,7 @@ namespace WinCopies
         /// <param name="enumClass">A <see cref="Type"/> that represents the enumeration class with the valid values.</param>
         /// <remarks>This constructor will create a localized message saying that the <paramref name="argumentName"/> parameter was invalid because the value passed in was invalid, and that the value should be one of the values in the enumeration class.</remarks>
         public InvalidEnumArgumentException(string argumentName, int invalidValue, Type enumClass) : this(null, argumentName, invalidValue, enumClass) { }
+#endif
 
         // todo: also for ulong and uint
 

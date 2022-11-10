@@ -18,9 +18,6 @@
 using System;
 
 namespace WinCopies
-#if !WinCopies3
-.Util
-#endif
 {
     public static class Math
     {
@@ -375,169 +372,28 @@ namespace WinCopies
 
     public static class MathExtensions
     {
-        public static bool Between(this byte i, byte x, byte y, in bool bx, bool by)
-        {
-            bool between(in Func<bool> func) => func() && (by ? i <= y : i < y);
+        public static bool Between(this byte i, byte x, byte y, in bool bx = true, bool by = true) => (bx ? x <= i : x < i) && (by ? i <= y : i < y);
+        public static bool Between(this sbyte i, sbyte x, sbyte y, in bool bx = true, bool by = true) => (bx ? x <= i : x < i) && (by ? i <= y : i < y);
+        public static bool Between(this short i, short x, short y, in bool bx = true, bool by = true) => (bx ? x <= i : x < i) && (by ? i <= y : i < y);
+        public static bool Between(this ushort i, ushort x, ushort y, in bool bx = true, bool by = true) => (bx ? x <= i : x < i) && (by ? i <= y : i < y);
+        public static bool Between(this int i, int x, int y, in bool bx = true, bool by = true) => (bx ? x <= i : x < i) && (by ? i <= y : i < y);
+        public static bool Between(this uint i, uint x, uint y, in bool bx = true, bool by = true) => (bx ? x <= i : x < i) && (by ? i <= y : i < y);
+        public static bool Between(this long i, long x, long y, in bool bx = true, bool by = true) => (bx ? x <= i : x < i) && (by ? i <= y : i < y);
+        public static bool Between(this ulong i, ulong x, ulong y, in bool bx = true, bool by = true) => (bx ? x <= i : x < i) && (by ? i <= y : i < y);
+        public static bool Between(this float i, float x, float y, in bool bx = true, bool by = true) => (bx ? x <= i : x < i) && (by ? i <= y : i < y);
+        public static bool Between(this double i, double x, double y, in bool bx = true, bool by = true) => (bx ? x <= i : x < i) && (by ? i <= y : i < y);
+        public static bool Between(this decimal i, decimal x, decimal y, in bool bx = true, bool by = true) => (bx ? x <= i : x < i) && (by ? i <= y : i < y);
 
-            return between(bx ?
-#if !CS9
-                (Func<bool>)(
-#endif
-                () => x <= i
-#if !CS9
-                )
-#endif
-                : () => x < i);
-        }
-
-        public static bool Between(this sbyte i, sbyte x, sbyte y, in bool bx, bool by)
-        {
-            bool between(in Func<bool> func) => func() && (by ? i <= y : i < y);
-
-            return between(bx ?
-#if !CS9
-                (Func<bool>)(
-#endif
-                () => x <= i
-#if !CS9
-                )
-#endif
-                : () => x < i);
-        }
-
-        public static bool Between(this short i, short x, short y, in bool bx, bool by)
-        {
-            bool between(in Func<bool> func) => func() && (by ? i <= y : i < y);
-
-            return between(bx ?
-#if !CS9
-                (Func<bool>)(
-#endif
-                () => x <= i
-#if !CS9
-                )
-#endif
-                : () => x < i);
-        }
-
-        public static bool Between(this ushort i, ushort x, ushort y, in bool bx, bool by)
-        {
-            bool between(in Func<bool> func) => func() && (by ? i <= y : i < y);
-
-            return between(bx ?
-#if !CS9
-                (Func<bool>)(
-#endif
-                () => x <= i
-#if !CS9
-                )
-#endif
-                : () => x < i);
-        }
-
-        public static bool Between(this int i, int x, int y, in bool bx, bool by)
-        {
-            bool between(in Func<bool> func) => func() && (by ? i <= y : i < y);
-
-            return between(bx ?
-#if !CS9
-                (Func<bool>)(
-#endif
-                () => x <= i
-#if !CS9
-                )
-#endif
-                : () => x < i);
-        }
-
-        public static bool Between(this uint i, uint x, uint y, in bool bx, bool by)
-        {
-            bool between(in Func<bool> func) => func() && (by ? i <= y : i < y);
-
-            return between(bx ?
-#if !CS9
-                (Func<bool>)(
-#endif
-                () => x <= i
-#if !CS9
-                )
-#endif
-                : () => x < i);
-        }
-
-        public static bool Between(this long i, long x, long y, in bool bx, bool by)
-        {
-            bool between(in Func<bool> func) => func() && (by ? i <= y : i < y);
-
-            return between(bx ?
-#if !CS9
-                (Func<bool>)(
-#endif
-                () => x <= i
-#if !CS9
-                )
-#endif
-                : () => x < i);
-        }
-
-        public static bool Between(this ulong i, ulong x, ulong y, in bool bx, bool by)
-        {
-            bool between(in Func<bool> func) => func() && (by ? i <= y : i < y);
-
-            return between(bx ?
-#if !CS9
-                (Func<bool>)(
-#endif
-                () => x <= i
-#if !CS9
-                )
-#endif
-                : () => x < i);
-        }
-
-        public static bool Between(this float i, float x, float y, in bool bx, bool by)
-        {
-            bool between(in Func<bool> func) => func() && (by ? i <= y : i < y);
-
-            return between(bx ?
-#if !CS9
-                (Func<bool>)(
-#endif
-                () => x <= i
-#if !CS9
-                )
-#endif
-                : () => x < i);
-        }
-
-        public static bool Between(this double i, double x, double y, in bool bx, bool by)
-        {
-            bool between(in Func<bool> func) => func() && (by ? i <= y : i < y);
-
-            return between(bx ?
-#if !CS9
-                (Func<bool>)(
-#endif
-                () => x <= i
-#if !CS9
-                )
-#endif
-                : () => x < i);
-        }
-
-        public static bool Between(this decimal i, decimal x, decimal y, in bool bx, bool by)
-        {
-            bool between(in Func<bool> func) => func() && (by ? i <= y : i < y);
-
-            return between(bx ?
-#if !CS9
-                (Func<bool>)(
-#endif
-                () => x <= i
-#if !CS9
-                )
-#endif
-                : () => x < i);
-        }
+        public static bool Outside(this byte i, byte x, byte y, in bool bx = true, bool by = true) => (bx ? x <= i : x < i) || (by ? i <= y : i < y);
+        public static bool Outside(this sbyte i, sbyte x, sbyte y, in bool bx = true, bool by = true) => (bx ? x <= i : x < i) || (by ? i <= y : i < y);
+        public static bool Outside(this short i, short x, short y, in bool bx = true, bool by = true) => (bx ? x <= i : x < i) || (by ? i <= y : i < y);
+        public static bool Outside(this ushort i, ushort x, ushort y, in bool bx = true, bool by = true) => (bx ? x <= i : x < i) || (by ? i <= y : i < y);
+        public static bool Outside(this int i, int x, int y, in bool bx = true, bool by = true) => (bx ? x <= i : x < i) || (by ? i <= y : i < y);
+        public static bool Outside(this uint i, uint x, uint y, in bool bx = true, bool by = true) => (bx ? x <= i : x < i) || (by ? i <= y : i < y);
+        public static bool Outside(this long i, long x, long y, in bool bx = true, bool by = true) => (bx ? x <= i : x < i) || (by ? i <= y : i < y);
+        public static bool Outside(this ulong i, ulong x, ulong y, in bool bx = true, bool by = true) => (bx ? x <= i : x < i) || (by ? i <= y : i < y);
+        public static bool Outside(this float i, float x, float y, in bool bx = true, bool by = true) => (bx ? x <= i : x < i) || (by ? i <= y : i < y);
+        public static bool Outside(this double i, double x, double y, in bool bx = true, bool by = true) => (bx ? x <= i : x < i) || (by ? i <= y : i < y);
+        public static bool Outside(this decimal i, decimal x, decimal y, in bool bx = true, bool by = true) => (bx ? x <= i : x < i) || (by ? i <= y : i < y);
     }
 }

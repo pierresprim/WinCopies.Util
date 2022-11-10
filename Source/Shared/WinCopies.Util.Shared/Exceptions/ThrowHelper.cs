@@ -276,7 +276,7 @@ namespace WinCopies
 
         public static ArgumentException GetArrayWithMoreThanOneDimensionException(in string paramName) => new ArgumentException(ArrayWithMoreThanOneDimension, paramName);
 
-        public static void ThrowIfArrayHasMoreThanOneDimension(in Array array, in string paramName)
+        public static void ThrowIfArrayHasMoreThanOneDimension(in System.Array array, in string paramName)
         {
             if (array.Rank > 1)
 
@@ -430,10 +430,9 @@ namespace WinCopies
             return func();
         }
 
-#if WinCopies3
         public static ArgumentException GetMultidimensionalArraysNotSupportedException(in string arrayArgumentName) => new ArgumentException(MultidimensionalArraysNotSupported, arrayArgumentName);
 
-        public static void ThrowIfMultidimensionalArray(in Array array, in string arrayArgumentName)
+        public static void ThrowIfMultidimensionalArray(in System.Array array, in string arrayArgumentName)
         {
             if (array.Rank > 1)
 
@@ -442,7 +441,7 @@ namespace WinCopies
 
         public static ArgumentException GetArrayHasNonZeroLowerBoundException(in string arrayArgumentName) => new ArgumentException(ArrayHasNonZeroLowerBound, arrayArgumentName);
 
-        public static void ThrowIfArrayHasNotEnoughSpace(in Array array, in int arrayIndex, in int count, in string arrayArgumentName)
+        public static void ThrowIfArrayHasNotEnoughSpace(in System.Array array, in int arrayIndex, in int count, in string arrayArgumentName)
         {
             if (count <= array.Length - arrayIndex)
 
@@ -465,7 +464,7 @@ namespace WinCopies
         }
 #endif
 
-        public static void ThrowOnInvalidCopyToArrayOperation(in Array array, in int arrayIndex, in int count, in string arrayArgumentName, in string arrayIndexArgumentName)
+        public static void ThrowOnInvalidCopyToArrayOperation(in System.Array array, in int arrayIndex, in int count, in string arrayArgumentName, in string arrayIndexArgumentName)
         {
             ThrowIfNull(array, nameof(array));
 
@@ -495,7 +494,7 @@ namespace WinCopies
             ThrowIfArrayHasNotEnoughSpace(array, arrayIndex, count, arrayArgumentName);
         }
 
-        public static void ThrowIfArrayHasNotEnoughSpace(in Array array, in int arrayIndex, in uint count, in string arrayArgumentName)
+        public static void ThrowIfArrayHasNotEnoughSpace(in System.Array array, in int arrayIndex, in uint count, in string arrayArgumentName)
         {
             if (array.Length - arrayIndex < count)
 
@@ -509,7 +508,7 @@ namespace WinCopies
                 throw new IndexOutOfRangeException(indexArgumentName);
         }
 
-        public static void ThrowOnInvalidCopyToArrayOperation(in Array array, in int arrayIndex, in uint count, in string arrayArgumentName, in string arrayIndexArgumentName)
+        public static void ThrowOnInvalidCopyToArrayOperation(in System.Array array, in int arrayIndex, in uint count, in string arrayArgumentName, in string arrayIndexArgumentName)
         {
             ThrowIfNull(array, nameof(array));
 
@@ -916,28 +915,5 @@ namespace WinCopies
 
             ThrowIfDisposingInternal(obj);
         }
-#else
-        public static void ThrowIfEnumeratorNotStartedOrDisposedException(in WinCopies.Collections.IDisposableEnumeratorInfo enumerator)
-        {
-            if (Extensions.IsEnumeratorNotStartedOrDisposed(enumerator))
-
-                throw GetEnumeratorNotStartedOrDisposedException();
-        }
-
-        [Obsolete("This method has been replaced by GetArrayWithMoreThanOneDimensionException and ThrowIfArrayWithMoreThanOneDimension.")]
-        public static void ThrowArrayWithMoreThanOneDimensionException(in string paramName) => throw GetArrayWithMoreThanOneDimensionException(paramName);
-
-        [Obsolete("Throw the result of GetDeclaringTypesNotCorrespondException instead of calling this method.")]
-        public static void ThrowDeclaringTypesNotCorrespondException(string propertyName, string methodName) => throw GetDeclaringTypesNotCorrespondException(propertyName, methodName);
-
-        [Obsolete("Throw the result of GetMoreThanOneOccurencesWereFoundException instead of calling this method.")]
-        public static void ThrowMoreThanOneOccurencesWereFoundException() => throw GetMoreThanOneOccurencesWereFoundException();
-
-        [Obsolete("This method has been replaced by GetOneOrMoreKeyIsNullException.")]
-        public static ArgumentException GetOneOrMoreKeyIsNull() => GetOneOrMoreKeyIsNullException();
-
-        [Obsolete("Throw the result of GetOneOrMoreKeyIsNullException instead of calling this method.")]
-        public static void ThrowOneOrMoreKeyIsNull() => throw GetOneOrMoreKeyIsNullException();
-#endif
     }
 }

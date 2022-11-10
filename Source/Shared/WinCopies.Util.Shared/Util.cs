@@ -18,96 +18,582 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Text;
 #if CS6
 using System.Threading.Tasks;
 
 using WinCopies.Collections;
 #endif
-
-using static WinCopies.
-#if !WinCopies3
-    Util.
-#endif
-    Delegates;
-
-#if WinCopies3
-using System.ComponentModel;
-
 using WinCopies.Util;
 
+using static WinCopies.Delegates;
 using static WinCopies.ThrowHelper;
+using static WinCopies.UtilHelpers;
 
 namespace WinCopies
 {
-#else
-using System.ComponentModel;
-
-using WinCopies.Collections;
-using WinCopies.Util.Resources;
-
-using static WinCopies.Util.ThrowHelper;
-
-#if CS6
-using IfCT = WinCopies.Util.Util.ComparisonType;
-using IfCM = WinCopies.Util.Util.ComparisonMode;
-using IfComp = WinCopies.Util.Util.Comparison;
-#endif
-
-namespace WinCopies.Util
-{
-#endif
     public readonly
 #if CS10
         record
 #endif
         struct Interval
+#if WinCopies4
+        <T>
+#if !CS10
+        where T : unmanaged
+#endif
+#endif
 #if CS10
         (
 #else
     {
         public readonly
 #endif
-        ulong Start
+#if WinCopies4
+            T
+#else
+            ulong
+#endif
+            Start
 #if CS10
         ,
 #else
     ;
         public readonly
 #endif
-        ulong Length
+#if WinCopies4
+            T
+#else
+            ulong
+#endif
+            Length
 #if CS10
-        );
+        )
+#if WinCopies4
+        where T : unmanaged
+#endif
+        ;
 #else
             ;
 
-        public Interval(in ulong start, in ulong length)
+        public Interval(in
+#if WinCopies4
+            T
+#else
+            ulong
+#endif
+            start, in
+#if WinCopies4
+            T
+#else
+            ulong
+#endif
+            length)
         {
             Start = start;
             Length = length;
         }
     }
 #endif
+#if CS5
+    public struct Version : IEquatable<Version>, IComparable<Version>
+    {
+        public enum VersionPart : byte
+        {
+            Major = 1,
+            Minor,
+            Build,
+            Revision
+        }
 
+        private readonly ulong _highValue;
+        private readonly ulong _lowValue;
+
+        public Version(in ulong highValue, in ulong lowValue)
+        {
+            _highValue = highValue;
+            _lowValue = lowValue;
+        }
+        public Version(in uint major, in uint minor, in uint build, in uint revision) => this = new
+#if !CS9
+            Version
+#endif
+            (major.Concatenate(minor), build.Concatenate(revision));
+        public Version(in int major, in int minor, in int build, in int revision) => this = new
+#if !CS9
+            Version
+#endif
+            ((uint)major, (uint)minor, (uint)build, (uint)revision);
+
+        public Version(in string version)
+        {
+            string[] versionParts = version.Split('.');
+
+            byte i = 0;
+
+            uint getVersionPart() => uint.Parse(versionParts[i++]);
+
+            this = new
+#if !CS9
+                Version
+#endif
+                (getVersionPart(), getVersionPart(), getVersionPart(), getVersionPart());
+        }
+
+        public uint GetPart(VersionPart part)
+        {
+            uint getValue(in ulong value) => UtilHelpers.GetValue(value, ((byte)part % 2) == 0, WinCopies.Util.Extensions.GetLowPart, WinCopies.Util.Extensions.GetHighPart);
+
+            return ((byte)part).Between((byte)VersionPart.Major, (byte)VersionPart.Revision, true, true) ? getValue(part < VersionPart.Build ? _highValue : _lowValue) : throw new InvalidEnumArgumentException(nameof(part), part);
+        }
+
+        public bool Equals(Version other) => _highValue == other._highValue && _lowValue == other._lowValue;
+
+        public override bool Equals(
+#if CS8
+            [NotNullWhen(true)]
+#endif
+            object
+#if CS8
+            ?
+#endif
+            obj) => obj is Version other && Equals(other);
+
+        public override int GetHashCode() => _highValue.GetHashCode() ^ _lowValue.GetHashCode();
+
+        public int CompareTo(Version other)
+        {
+            int result = _highValue.CompareTo(other._highValue);
+
+            return result == 0 ? _lowValue.CompareTo(other._lowValue) : result;
+        }
+
+        public override string ToString()
+        {
+            var result = new StringBuilder();
+
+            void append(in Version version, in VersionPart part) => result.Append(version.GetPart(part));
+
+            ActionIn<Version, VersionPart> action = (in Version version, in VersionPart part) =>
+            {
+                append(version, part);
+
+                action = (in Version _version, in VersionPart _part) =>
+                {
+                    _ = result.Append('.');
+
+                    append(_version, _part);
+                };
+            };
+
+            foreach (VersionPart value in GetEnumConstants<VersionPart>())
+
+                action(this, value);
+
+            return result.ToString();
+        }
+
+        public static explicit operator Version(System.Version version) => new
+#if !CS9
+            Version
+#endif
+            (version.Major, version.Minor, version.Build, version.Revision);
+
+        public static bool operator ==(Version left, Version right) => left.Equals(right);
+
+        public static bool operator !=(Version left, Version right) => !(left == right);
+
+        public static bool operator <(Version left, Version right) => left.CompareTo(right) < 0;
+
+        public static bool operator <=(Version left, Version right) => left.CompareTo(right) <= 0;
+
+        public static bool operator >(Version left, Version right) => left.CompareTo(right) > 0;
+
+        public static bool operator >=(Version left, Version right) => left.CompareTo(right) >= 0;
+    }
+#else
+    public static class Array
+    {
+        private static class EmptyArray<T>
+        {
+            internal static readonly T[] Array = new T[0];
+        }
+
+        public static T[] Empty<T>() => EmptyArray<T>.Array;
+    }
+#endif
     /// <summary>
     /// Provides some static helper methods.
     /// </summary>
-    public static class
-#if WinCopies3
-        UtilHelpers
-#else
-        Util
-#endif
+    public static class UtilHelpers
     {
-        private struct EmptyEnumerator<T> : IEnumerator<T>
+        public static bool Overlap(in int x, in int index, in int y) => x < y ? index.Between(x, y) : index.Outside(x, y);
+
+        /// <summary>
+        /// Increments <paramref name="index"/> circularly by one step. If <paramref name="index"/> is equal to <paramref name="maxLength"/> - 1, then it is reset to zero.
+        /// </summary>
+        /// <param name="index">The index to increment.</param>
+        /// <param name="maxLength">The total length. If an overflow is about to occur, the given index is reset to zero.</param>
+        /// <seealso cref="SetIndex(int, in int, ref int)"/>
+        /// <seealso cref="IncrementCircularly2(int, in int)"/>
+        /// <seealso cref="DecrementCircularly(ref int, in int)"/>
+        public static void IncrementCircularly(ref int index, in int maxLength) => index = (index + 1) % maxLength;
+        /// <summary>
+        /// Increments <paramref name="index"/> circularly by one step. If <paramref name="index"/> is equal to <paramref name="maxLength"/> - 1, then it is reset to zero.
+        /// </summary>
+        /// <param name="index">The index to increment.</param>
+        /// <param name="maxLength">The total length. If an overflow is about to occur, the given index is reset to zero.</param>
+        /// <seealso cref="GetIndex(int, in int, ref int)"/>
+        /// <seealso cref="IncrementCircularly(int, in int)"/>
+        /// <seealso cref="DecrementCircularly2(ref int, in int)"/>
+        public static int IncrementCircularly2(int index, in int maxLength)
+        {
+            IncrementCircularly(ref index, maxLength);
+
+            return index;
+        }
+
+        /// <summary>
+        /// Decrements <paramref name="index"/> circularly by one step. If <paramref name="index"/> is equal to zero, then it is set to <paramref name="maxLength"/> - 1.
+        /// </summary>
+        /// <param name="index">The index to decrement.</param>
+        /// <param name="maxLength">The total length. If a negative value is about to be computed, the given index is set to the last possible value regarding the value of the current parameter.</param>
+        /// <seealso cref="SetIndex(int, in int, ref int)"/>
+        /// <seealso cref="DecrementCircularly2(int, in int)"/>
+        /// <seealso cref="IncrementCircularly(ref int, in int)"/>
+        public static void DecrementCircularly(ref int index, in int maxLength) => index = (index == 0 ? maxLength : index) - 1;
+
+        /// <summary>
+        /// Decrements <paramref name="index"/> circularly by one step. If <paramref name="index"/> is equal to zero, then it is set to <paramref name="maxLength"/> - 1.
+        /// </summary>
+        /// <param name="index">The index to decrement.</param>
+        /// <param name="maxLength">The total length. If a negative value is about to be computed, the given index is set to the last possible value regarding the value of the current parameter.</param>
+        /// <seealso cref="DecrementCircularly(int, in int)"/>
+        /// <seealso cref="IncrementCircularly2(ref int, in int)"/>
+        /// <seealso cref="GetIndex(int, in int, ref int)"/>
+        public static int DecrementCircularly2(int index, in int maxLength)
+        {
+            DecrementCircularly(ref index, maxLength);
+
+            return index;
+        }
+
+        public static bool TryGetValue<T>(in FuncOut<T, bool> func, out object
+#if CS8
+            ?
+#endif
+            value)
+        {
+            if (func(out T
+#if CS9
+                ?
+#endif
+                _value))
+            {
+                value = _value;
+
+                return true;
+            }
+
+            value = null;
+
+            return false;
+        }
+
+        public static bool TryGetValue<TIn, TOut>(in FuncOut<TIn
+#if CS9
+            ?
+#endif
+            , bool> func, out TOut
+#if CS9
+            ?
+#endif
+            value) where TIn : TOut
+        {
+            if (func(out TIn
+#if CS9
+                ?
+#endif
+                _value))
+            {
+                value = _value;
+
+                return true;
+            }
+
+            value = default;
+
+            return false;
+        }
+
+        public static void SetOffset(int inStart, ref int outStart, int length)
+        {
+            string paramName;
+
+            bool check(in int value, in string _paramName)
+            {
+                paramName = _paramName;
+
+                return value.Between(0, length, true, false);
+            }
+
+            if (check(inStart, nameof(inStart)) && check(outStart, nameof(outStart)) ? (inStart = outStart - inStart) < 0 : throw new ArgumentOutOfRangeException(paramName))
+
+                inStart += length;
+
+            outStart = outStart < 0 ? -inStart : inStart;
+        }
+
+        public static int GetOffset(in int inStart, int outStart, in int length)
+        {
+            SetOffset(inStart, ref outStart, length);
+
+            return outStart;
+        }
+
+        public static bool CheckOverflow(in int totalLength, ref int length, int offset)
+        {
+            if (offset < 0)
+            {
+                offset = -offset;
+
+                bool result = CheckOverflow(totalLength, ref offset, length);
+
+                length = offset;
+
+                return result;
+            }
+
+            if (length.Between(2, totalLength - 1) && (length % totalLength) - 1 >= (length = totalLength - offset))
+
+                return true;
+
+            length = 0;
+
+            return false;
+        }
+
+        internal static void _ProcessData(int startIndex, in int length, in Action<int> action)
+        {
+            for (; startIndex < length; startIndex++)
+
+                action(startIndex);
+        }
+
+        internal static void _ProcessData(int startIndex, in int length, in ActionIn<int> action)
+        {
+            for (; startIndex < length; startIndex++)
+
+                action(startIndex);
+        }
+
+        internal static int _ProcessData(int startIndex, in int length, in Predicate<int> predicate)
+        {
+            for (; startIndex < length; startIndex++)
+
+                if (predicate(startIndex))
+
+                    return startIndex;
+
+            return -1;
+        }
+
+        internal static int _ProcessData(int startIndex, in int length, in PredicateIn<int> predicate)
+        {
+            for (; startIndex < length; startIndex++)
+
+                if (predicate(startIndex))
+
+                    return startIndex;
+
+            return -1;
+        }
+
+        public static void ProcessDataRef(int startIndex, ref int length, in Action<int> action) => _ProcessData(startIndex, length += startIndex, action);
+
+        public static void ProcessDataRef(int startIndex, ref int length, in ActionIn<int> action) => _ProcessData(startIndex, length += startIndex, action);
+
+        public static int ProcessDataRef(int startIndex, ref int length, in Predicate<int> predicate) => _ProcessData(startIndex, length += startIndex, predicate);
+
+        public static int ProcessDataRef(int startIndex, ref int length, in PredicateIn<int> predicate) => _ProcessData(startIndex, length += startIndex, predicate);
+
+        public static void ProcessData(in Action<int> action, int startIndex = 0, int length = -1) => _ProcessData(startIndex, startIndex + length, action);
+
+        public static void ProcessData(in ActionIn<int> action, int startIndex = 0, int length = -1) => _ProcessData(startIndex, startIndex + length, action);
+
+        public static int ProcessData(in Predicate<int> predicate, int startIndex = 0, int length = -1) => _ProcessData(startIndex, startIndex + length, predicate);
+
+        public static int ProcessData(in PredicateIn<int> predicate, int startIndex = 0, int length = -1) => _ProcessData(startIndex, startIndex + length, predicate);
+
+        /// <summary>
+        /// Increments <paramref name="start"/> by a number of steps provided by the value of <paramref name="offset"/>. The given index will remain between zero and a given length.
+        /// </summary>
+        /// <param name="start">The index to increment.</param>
+        /// <param name="totalLength">The total length supported. An offset that would result to an overflow regarding the given index will be felt back to a corresponding offset that will not result to an overflow.</param>
+        /// <param name="offset">The offset that represents the number of steps for the incrementation. This value can be any value supported by the <see cref="int"/> type. Negative values mean that this method will compute a decrementation. Overflow values will be felt back to a value between zero and the given length.</param>
+        /// <seealso cref="GetIndex(int, in int, ref int)"/>
+        /// <seealso cref="IncrementCircularly(ref int, in int)"/>
+        /// <seealso cref="DecrementCircularly(ref int, in int)"/>
+        public static void SetIndex(ref int start, in int totalLength, ref int offset)
+        {
+            offset %= totalLength;
+
+            switch (offset)
+            {
+                case 0:
+
+                    return;
+
+                case 1:
+
+                    start = (start + 1) % totalLength;
+
+                    break;
+
+                case -1:
+
+                    start = start == 0 ? totalLength - 1 : start - 1;
+
+                    break;
+
+                default:
+
+                    if (offset > 0)
+
+                        if (start == 0 /*&& length == totalLength*/)
+
+                            start = offset;
+
+                        else
+                        {
+                            int tmp = totalLength - start;
+
+                            start = offset == tmp ? 0 : offset > tmp ? (start - (totalLength - offset)) : start + offset;
+                        }
+
+                    else
+
+                        start = System.Math.Abs(offset) > start ? totalLength + offset + start : start + offset;
+
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Increments <paramref name="start"/> by a number of steps provided by the value of <paramref name="offset"/>. The given index will remain between zero and a given length.
+        /// </summary>
+        /// <param name="start">The index to increment.</param>
+        /// <param name="totalLength">The total length supported. An offset that would result to an overflow regarding the given index will be felt back to a corresponding offset that will not result to an overflow.</param>
+        /// <param name="offset">The offset that represents the number of steps for the incrementation. This value can be any value supported by the <see cref="int"/> type. Negative values mean that this method will compute a decrementation. Overflow values will be felt back to a value between zero and the given length.</param>
+        /// <seealso cref="SetIndex(ref int, in int, ref int)"/>
+        /// <seealso cref="IncrementCircularly2(ref int, in int)"/>
+        /// <seealso cref="DecrementCircularly2(ref int, in int)"/>
+        public static int GetIndex(int start, /*in int length,*/ in int totalLength, ref int offset)
+        {
+            SetIndex(ref start, /*length,*/ totalLength, ref offset);
+
+            return start;
+        }
+
+        public static string ToString(in bool value) => ToString(value.ToByte());
+        public static string ToString(in byte value) => ((char)value).ToString();
+        public static string ToString(in sbyte value) => ToString(unchecked((byte)value));
+        public static string ToString(in ushort value) => ((char)value).ToString();
+        public static string ToString(in short value) => ToString(unchecked((ushort)value));
+        private static unsafe string _ToString<T>(T value) where T : unmanaged => new string((char*)&value, 0, sizeof(T) / sizeof(char));
+        public static unsafe string ToString(uint value) => _ToString(value);
+        public static unsafe string ToString(ulong value) => _ToString(value);
+        public static unsafe string ToString(int value) => ToString(unchecked((uint)value));
+        public static unsafe string ToString(long value) => ToString(unchecked((ulong)value));
+
+        public static void Prepend(ref Action action, Action prependWith)
+        {
+            Action _action = action;
+
+            action = () =>
+            {
+                prependWith();
+
+                _action();
+            };
+        }
+
+        public static void RunSurrounded(in Action action, in Action surroundWith)
+        {
+            surroundWith();
+            action();
+            surroundWith();
+        }
+#if CS5
+        private static T GetTask<T>(in T task) where T : Task => task ?? throw new ArgumentNullException(nameof(task));
+        private static void StartTask<T>(in T task) where T : Task
+        {
+            GetTask(task).Start();
+            task.Wait();
+        }
+
+        public static ConfiguredTaskAwaitable AwaitFalse(this Task task) => GetTask(task).ConfigureAwait(false);
+
+        public static ConfiguredTaskAwaitable<T> AwaitFalse<T>(this Task<T> task) => GetTask(task).ConfigureAwait(false);
+
+        public static void Await(this Task task) => StartTask(task);
+
+        public static T Await<T>(this Task<T> task)
+        {
+            StartTask(task);
+
+            return task.Result;
+        }
+#endif
+        public static Predicate<Type> GetTypePredicate(Type type, in bool typeEquality) => typeEquality ?
+#if !CS9
+            (Predicate<Type>)
+#endif
+            (t => t == type) : (t => t.IsAssignableFrom(type));
+
+        public static Predicate<Type> GetTypePredicate(in object obj, in bool typeEquality) => GetTypePredicate(obj.GetType(), typeEquality);
+
+        public static void GetAvailableLength(in long length, in long position, ref long count)
+        {
+            long realLength = length - position;
+
+            if (count > realLength)
+
+                count = realLength;
+        }
+
+        public static void GetAvailableLength(in long length, in long position, ref int count)
+        {
+            long realLength = length - position;
+
+            if (count > realLength)
+
+                count = (int)realLength;
+        }
+#if CS5
+        public static IEnumerable<T> GetEnumConstants<T>() where T : Enum => typeof(T).GetEnumValues().Cast<T>();
+#endif
+        private struct EmptyEnumerator<T> : IEnumerator<T
+#if CS9
+            ?
+#endif
+    >
         {
             public static IEnumerator<T> Instance { get; }
 
-            public T Current => default;
+            public T
+#if CS9
+                ?
+#endif
+                Current => default;
             object IEnumerator.Current => Current;
 
             bool IEnumerator.MoveNext() => false;
@@ -146,11 +632,49 @@ namespace WinCopies.Util
                 action();
         }
 
+        public static void While(in Action action, in Func<bool> condition)
+        {
+            while (condition())
+
+                action();
+        }
+
+        public static void WhileRef(in Action action, ref Func<bool> condition)
+        {
+            while (condition())
+
+                action();
+        }
+
+        public static void While(in Func<bool> condition)
+        {
+            while (condition()) { /* Left empty. */ }
+        }
+
+        public static void WhileRef(ref Func<bool> condition)
+        {
+            while (condition()) { /* Left empty. */ }
+        }
+
         public static void DoWhile(in Action action, ref bool condition)
         {
             action();
 
             While(action, ref condition);
+        }
+
+        public static void DoWhile(in Action action, in Func<bool> condition)
+        {
+            action();
+
+            While(action, condition);
+        }
+
+        public static void DoWhileRef(in Action action, ref Func<bool> condition)
+        {
+            action();
+
+            WhileRef(action, ref condition);
         }
 
         public static void Until(in Action action, ref bool condition)
@@ -165,11 +689,214 @@ namespace WinCopies.Util
             goto CONDITION;
         }
 
+        public static void Until(in Action action, in Func<bool> condition)
+        {
+        CONDITION:
+            if (condition())
+
+                return;
+
+            action();
+
+            goto CONDITION;
+        }
+
+        public static void UntilRef<T>(in ActionRef<T> action, in PredicateRef<T> condition, ref T value)
+        {
+        CONDITION:
+            if (condition(ref value))
+
+                return;
+
+            action(ref value);
+
+            goto CONDITION;
+        }
+
+        public static void UntilRef(in Action action, ref Func<bool> condition)
+        {
+        CONDITION:
+            if (condition())
+
+                return;
+
+            action();
+
+            goto CONDITION;
+        }
+
+        public static void Until(in Func<bool> condition)
+        {
+        CONDITION:
+            if (condition())
+
+                return;
+
+            goto CONDITION;
+        }
+
+        public static void UntilRef(ref Func<bool> condition)
+        {
+        CONDITION:
+            if (condition())
+
+                return;
+
+            goto CONDITION;
+        }
+
         public static void DoUntil(in Action action, ref bool condition)
         {
             action();
 
             Until(action, ref condition);
+        }
+
+        public static void DoUntil(in Action action, in Func<bool> condition)
+        {
+            action();
+
+            Until(action, condition);
+        }
+
+        public static void DoUntilRef<T>(in ActionRef<T> action, in PredicateRef<T> condition, ref T value)
+        {
+        CONDITION:
+            action(ref value);
+
+            if (condition(ref value))
+
+                return;
+
+            goto CONDITION;
+        }
+
+        public static void DoUntilRef(in Action action, ref Func<bool> condition)
+        {
+            action();
+
+            UntilRef(action, ref condition);
+        }
+
+        public static void WhileRef(ref Action action, ref bool condition)
+        {
+            while (condition)
+
+                action();
+        }
+
+        public static void WhileRef2(ref Action action, in Func<bool> condition)
+        {
+            while (condition())
+
+                action();
+        }
+
+        public static void WhileRef3(ref Action action, ref Func<bool> condition)
+        {
+            while (condition())
+
+                action();
+        }
+
+        public static void DoWhileRef(ref Action action, ref bool condition)
+        {
+            action();
+
+            While(action, ref condition);
+        }
+
+        public static void DoWhileRef2(ref Action action, in Func<bool> condition)
+        {
+            action();
+
+            While(action, condition);
+        }
+
+        public static void DoWhileRef3(ref Action action, ref Func<bool> condition)
+        {
+            action();
+
+            WhileRef(action, ref condition);
+        }
+
+        public static void UntilRef(ref Action action, ref bool condition)
+        {
+        CONDITION:
+            if (condition)
+
+                return;
+
+            action();
+
+            goto CONDITION;
+        }
+
+        public static void UntilRef2(ref Action action, in Func<bool> condition)
+        {
+        CONDITION:
+            if (condition())
+
+                return;
+
+            action();
+
+            goto CONDITION;
+        }
+
+        public static void UntilRef3(ref Action action, ref Func<bool> condition)
+        {
+        CONDITION:
+            if (condition())
+
+                return;
+
+            action();
+
+            goto CONDITION;
+        }
+
+        public static void DoUntilRef(ref Action action, ref bool condition)
+        {
+            action();
+
+            Until(action, ref condition);
+        }
+
+        public static void DoUntilRef2(ref Action action, in Func<bool> condition)
+        {
+            action();
+
+            Until(action, condition);
+        }
+
+        public static void DoUntilRef3(ref Action action, ref Func<bool> condition)
+        {
+            action();
+
+            UntilRef(action, ref condition);
+        }
+
+        public static void ForUntil<T>(in Action
+#if CS8
+            ?
+#endif
+            preAction, in PredicateRef<T> func, Action updater, ActionRef<T> action, ref T value)
+        {
+            preAction?.Invoke();
+
+            UntilRef((ref T _value) => { action(ref _value); updater(); }, func, ref value);
+        }
+
+        public static void DoForUntil<T>(in Action
+#if CS8
+            ?
+#endif
+            preAction, in PredicateRef<T> func, Action updater, ActionRef<T> action, ref T value)
+        {
+            preAction?.Invoke();
+
+            DoUntilRef((ref T _value) => { action(ref _value); updater(); }, func, ref value);
         }
 
         public static IEnumerable<T> EnumerateRecursively<T>(T item, Converter<T, IEnumerable<T>> func)
@@ -189,7 +916,6 @@ namespace WinCopies.Util
 
                 yield return _item;
         }
-
 #if CS8
         public static long? GetHttpFileSize(in string url, in System.Net.Http.HttpClient client)
         {
@@ -207,8 +933,7 @@ namespace WinCopies.Util
 
             return resp.Content.Headers.ContentLength;
         }
-#endif
-#if !CS5
+#elif !CS5
         public static TAttribute GetCustomAttribute<TType, TAttribute>(in bool inherit) => (TAttribute)typeof(TType).GetCustomAttributes(typeof(TAttribute), inherit).TryGet(0);
 #endif
         public static T CastIfNotNull<T>(in object value, out bool succeeded) where T : struct
@@ -261,9 +986,16 @@ namespace WinCopies.Util
 
         public static T Update<T>(ref T value, in T defaultValue)
         {
+#if !CS8
             if (value == null)
-
-                value = defaultValue;
+#endif
+                value
+#if CS8
+        ??=
+#else
+                        =
+#endif
+                defaultValue;
 
             return value;
         }
@@ -277,9 +1009,16 @@ namespace WinCopies.Util
         /// <returns>A new value from <typeparamref name="T"/> if <paramref name="value"/> is null; otherwise the value of <paramref name="value"/>.</returns>
         public static T InitializeStruct<T>(ref T? value, in Func<T> func) where T : struct
         {
+#if !CS8
             if (value == null)
-
-                value = func();
+#endif
+                value
+#if CS8
+??=
+#else
+                                         =
+#endif
+                func();
 
             return value.Value;
         }
@@ -382,13 +1121,13 @@ namespace WinCopies.Util
             []
 #endif
             arrays) => GetLength(value => (ulong)converter(value), arrays);
-
 #if CS5
         public static ulong GetLength<T>(in Converter<T, ulong> converter, params T[] arrays) => GetLength(converter, arrays.AsEnumerable());
 
         public static ulong GetLength<T>(in Converter<T, int> converter, params T[] arrays) => GetLength(converter, arrays.AsEnumerable());
-#endif
 
+        public static ulong GetLength<T>(params IReadOnlyList<T>[] arrays) => GetLength(arrays.AsEnumerable());
+#endif
         public static ulong GetLength<T>(
 #if CS5
             IEnumerable<
@@ -405,10 +1144,6 @@ namespace WinCopies.Util
             [][]
 #endif
             arrays) => GetLength(GetULongLength, arrays);
-
-#if CS5
-        public static ulong GetLength<T>(params IReadOnlyList<T>[] arrays) => GetLength(arrays.AsEnumerable());
-#endif
 
         public static T GetValue<T>(in T value, in Predicate<T> predicate, in T defaultValue) => predicate(value) ? value : defaultValue;
 
@@ -433,6 +1168,10 @@ namespace WinCopies.Util
             ?
 #endif
             GetValue<T>(in Func<T> func, in Predicate<T> predicate) => GetValue(func(), predicate);
+
+        public static Converter<TIn, TOut> GetConverter<TIn, TOut>(in bool condition, in Converter<TIn, TOut> ifTrue, in Converter<TIn, TOut> ifFalse) => condition ? ifTrue : ifFalse;
+
+        public static TOut GetValue<TIn, TOut>(in TIn value, in bool condition, in Converter<TIn, TOut> ifTrue, in Converter<TIn, TOut> ifFalse) => GetConverter(condition, ifTrue, ifFalse)(value);
 
         public static T GetValue<T>(in bool condition, in Func<T> ifTrue, in Func<T> ifFalse) => (condition ? ifTrue : ifFalse)();
 
@@ -632,7 +1371,6 @@ namespace WinCopies.Util
             []
 #endif
             funcs, Predicate<T> predicate, in Action onError) => While(funcs, predicate, onError, out _, out _);
-
 #if CS5
         public static int While<T>(in Predicate<T> predicate, out T value, params Func<T>[] funcs) => While(funcs, predicate, out value);
 
@@ -654,18 +1392,17 @@ namespace WinCopies.Util
 
         public static T While<T>(in Predicate<T> predicate, in Func<T> onError, params Func<T>[] funcs) => While(funcs, predicate, onError);
 #endif
-
         public static int While(in
 #if CS5
-            IReadOnlyList<
+    IReadOnlyList<
 #endif
-            Func<bool>
+    Func<bool>
 #if CS5
-            >
+    >
 #else
             []
 #endif
-            funcs) => While(funcs, Self);
+    funcs) => While(funcs, Self);
 
 #if CS5
         public static int While(params Func<bool>[] funcs) => While(funcs.AsFromType<IReadOnlyList<Func<bool>>>());
@@ -730,8 +1467,7 @@ namespace WinCopies.Util
 #else
                 )
 #endif
-
-            action(obj);
+                action(obj);
         }
 
         public static void UsingIn<T>(in Func<T> func, in ActionIn<T> action) where T : System.IDisposable
@@ -749,8 +1485,7 @@ namespace WinCopies.Util
 #else
                 )
 #endif
-
-            action(obj);
+                action(obj);
         }
 
         public static TOut Using2<TIn, TOut>(in Func<TIn> func, Func<TIn, TOut> action) where TIn : System.IDisposable
@@ -770,7 +1505,6 @@ namespace WinCopies.Util
 
             return result;
         }
-
 #if CS8
         public static ReadOnlySpan<T> GetReadOnlySpan<T>(T[]? array, int start) => array == null ? new
 #if !CS9
@@ -792,7 +1526,6 @@ namespace WinCopies.Util
 #endif
             (array, length, length > array.Length ? array.Length : length);
 #endif
-
         private static void _Dispose<T>(ref T obj) where T : System.IDisposable
         {
             obj.Dispose();
@@ -868,13 +1601,11 @@ namespace WinCopies.Util
                 ?
 #endif
                 _obj) => _obj == null || _obj.IsDisposed);
-
 #if !CS9
         public static Type GetUnderlyingType<T>() where T : Enum => Enum.GetUnderlyingType(typeof(T));
 
         public static string[] GetNames<T>() where T : Enum => Enum.GetNames(typeof(T));
 #endif
-
         public static Predicate GetPredicate(object obj) => _obj => Delegates.CompareEquality(obj, _obj);
 
         public static Predicate<object> GetObjectPredicate(object obj) => _obj => Delegates.CompareEquality(obj, _obj);
@@ -902,9 +1633,48 @@ namespace WinCopies.Util
         public static bool IsSigned(object value) => (value ?? throw GetArgumentNullException(nameof(value))).Is(true, typeof(int), typeof(short), typeof(long), typeof(sbyte))
                 || (value.Is(true, typeof(uint), typeof(ushort), typeof(ulong), typeof(byte))
                 ? false
-                : throw new ArgumentException("The given value is neither from a signed nor an unsigned type."));
+                : throw new ArgumentException("The given value is neither from a signed nor a unsigned type."));
 
         public static T[] GetArray<T>(params T[] items) => items;
+#if CS5
+        public static IReadOnlyList<T> AsReadOnlyList<T>(params T[] values) => values;
+#endif
+        public static IDictionary<TKey, TValue> GetDictionary<TKey, TValue>(
+#if CS5
+            in IReadOnlyList<
+#else
+            params
+#endif
+                KeyValuePair<TKey, TValue>
+#if CS5
+                >
+#else
+                []
+#endif
+            items)
+        {
+            int count = items.
+#if CS5
+                Count
+#else
+                Length
+#endif
+                ;
+
+            IDictionary<TKey, TValue> dic = new Dictionary<TKey, TValue>(count);
+
+            KeyValuePair<TKey, TValue> item;
+
+            for (int i = 0; i < count; i++)
+
+                dic.Add((item = items[i]).Key, item.Value);
+
+            return dic;
+        }
+#if CS5
+        public static IDictionary<TKey, TValue> GetDictionary<TKey, TValue>(params KeyValuePair<TKey, TValue>[] items) => GetDictionary(items.AsReadOnlyList());
+#endif
+        public static IDictionary<TKey, TValue> GetDictionary<TKey, TValue>(in TKey key, in TValue value) => new Dictionary<TKey, TValue>(1) { { key, value } };
 
         public static bool PerformAction<T>(T? value, Action<T> action) where T : struct => PerformActionIf(value.HasValue, () => action(value.Value));
 
@@ -1088,7 +1858,6 @@ namespace WinCopies.Util
                     ?
 #endif
                     > func, in Action<T> action) => PerformActionIf(func(), param => param != null, action);
-
 #if CS8
         public static bool PerformActionIfIsNull<T>(in T param, in Action<T> action) => PerformActionIf(param, param is null, action);
 
@@ -1122,24 +1891,23 @@ namespace WinCopies.Util
 #endif
             , action);
 #endif
-
         public static bool PerformActionIfNotValidated<TIn, TOut>(TIn
 #if CS9
             ?
 #endif
-            param, Predicate<TIn
+    param, Predicate<TIn
 #if CS9
             ?
 #endif
-            > predicate, Converter<TIn
+    > predicate, Converter<TIn
 #if CS9
             ?
 #endif
-            , TOut> converter, out TOut
+    , TOut> converter, out TOut
 #if CS9
             ?
 #endif
-            result)
+    result)
         {
             if (predicate(param))
             {
@@ -1657,7 +2425,6 @@ namespace WinCopies.Util
 #endif
             GetValue<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, TResult>(in Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, TResult> func, in T1 param1, in T2 param2, in T3 param3, in T4 param4, in T5 param5, in T6 param6, in T7 param7, in T8 param8, in T9 param9, in T10 param10, in T11 param11, in T12 param12, in T13 param13, in T14 param14, in T15 param15, in T16 param16) => func == null ? default : func(param1, param2, param3, param4, param5, param6, param7, param8, param9, param10, param11, param12, param13, param14, param15, param16);
 #endif
-
         public static void Reverse<T>(ref T x, ref T y)
 #if CS7
             => (y, x) = (x, y);
@@ -1670,7 +2437,6 @@ namespace WinCopies.Util
             y = z;
         }
 #endif
-
         public static void Reverse<T>(in T x, in T y, in Action<T> setX, in Action<T> setY)
         {
             ThrowIfNull(setX, nameof(setX));
@@ -1745,28 +2511,14 @@ namespace WinCopies.Util
 
         private static bool _TruncateIfLonger(ref string s, int index, string replace, FuncIn2<string, int, string, string> func) => _TruncateIfLonger(ref s, index, (string _s, in int _index) => func(_s, _index, replace));
 
-        public static bool TruncateIfLonger(ref string s, int index, string replace) => _TruncateIfLonger(ref s, index, replace,
-#if WinCopies3
-            Util.
-#endif
-            Extensions.Truncate);
+        public static bool TruncateIfLonger(ref string s, int index, string replace) => _TruncateIfLonger(ref s, index, replace, Util.Extensions.Truncate);
 
-        public static bool TruncateIfLonger2(ref string s, in int index, in string replace) => _TruncateIfLonger(ref s, index, replace,
-#if WinCopies3
-            Util.
-#endif
-            Extensions.Truncate2);
+        public static bool TruncateIfLonger2(ref string s, in int index, in string replace) => _TruncateIfLonger(ref s, index, replace, Util.Extensions.Truncate2);
 
-        public static bool TruncateIfLonger(ref string s, in int index) => _TruncateIfLonger(ref s, index,
-#if WinCopies3
-            Util.
-#endif
-            Extensions.Truncate);
-
+        public static bool TruncateIfLonger(ref string s, in int index) => _TruncateIfLonger(ref s, index, Util.Extensions.Truncate);
 #if !CS5
         public static Type GetEnumUnderlyingType<T>() where T : Enum => typeof(T)._GetEnumUnderlyingType();
 #endif
-
         public static bool For(in Func<bool> loopCondition, in Func<bool> action, in Action postIterationAction)
         {
             while (loopCondition())
@@ -1826,7 +2578,6 @@ namespace WinCopies.Util
             throw GetInvalidTypeArgumentException(nameof(value));
         }
 #endif
-
         public static bool PredicateVal<T>(object value, Predicate<T> predicate) where T : struct => predicate(value is T _value ? _value : throw GetInvalidTypeArgumentException(nameof(value)));
 
         public static bool UpdateValue<T>(ref T value, in T newValue, in Action action)
@@ -1841,16 +2592,9 @@ namespace WinCopies.Util
             return false;
         }
 
-        public static bool IsNullOrEmpty(in Array array) => array == null || array.Length == 0;
+        public static bool IsNullOrEmpty(in System.Array array) => array == null || array.Length == 0;
 
         public static TValue GetValue<TKey, TValue>(KeyValuePair<TKey, TValue> keyValuePair) => keyValuePair.Value;
-
-#if !WinCopies3 && CS7
-        [Obsolete("This method has been replaced by the WinCopies.Util.Extensions.SetBackgroundWorkerProperty method overloads.")]
-        public static (bool propertyChanged, object oldValue) SetPropertyWhenNotBusy<T>(T bgWorker, string propertyName, string fieldName, object newValue, Type declaringType, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, bool throwIfBusy = true) where T : IBackgroundWorker, INotifyPropertyChanged => bgWorker.IsBusy
-                ? throwIfBusy ? throw new InvalidOperationException("Cannot change property value when BackgroundWorker is busy.") : (false, Extensions.GetField(fieldName, declaringType, bindingFlags).GetValue(bgWorker))
-                : bgWorker.SetProperty(propertyName, fieldName, newValue, declaringType, true, bindingFlags);
-#endif
 
         /// <summary>
         /// Provides a <see cref="Predicate"/> implementation that always returns <see langword="true"/>.
@@ -1863,48 +2607,6 @@ namespace WinCopies.Util
         /// </summary>
         /// <returns>Returns the <see langword="true"/> value.</returns>
         public static Predicate<T> GetCommonPredicate<T>() => (T value) => true;
-
-#if !WinCopies3
-#if CS6
-        [Obsolete("This method has been replaced by the WinCopies.Util.Extensions.ThrowIfInvalidEnumValue(params Enum[] values) method.")]
-        public static void ThrowOnNotValidEnumValue(params Enum[] values) => ThrowIfInvalidEnumValue(values);
-
-        public static void ThrowIfInvalidEnumValue(params Enum[] values)
-        {
-            ThrowIfNull(values, nameof(values));
-
-            foreach (Enum value in values)
-
-                value.ThrowIfNotValidEnumValue();
-        }
-
-        public static void ThrowIfInvalidEnumValue(in string argumentName, params Enum[] values)
-        {
-            ThrowIfNull(values, nameof(values));
-
-            foreach (Enum value in values)
-
-                value.ThrowIfNotValidEnumValue(argumentName);
-        }
-#endif
-
-        [Obsolete("This method has been replaced by the WinCopies.Util.Extensions.ThrowIfInvalidEnumValue(this Enum, bool, params Enum[]) method.")]
-        public static void ThrowOnEnumNotValidEnumValue(in Enum value, params Enum[] values) => value.ThrowIfInvalidEnumValue(false, values);
-
-        public static ArgumentException GetExceptionForNonFlagsEnum(in string argumentName) => new ArgumentException(ExceptionMessages.NonFlagsEnumException, argumentName);
-
-        public static TypeArgumentException GetExceptionForNonFlagsEnumType(in string typeArgumentName) => new TypeArgumentException(ExceptionMessages.NonFlagsEnumTypeException, typeArgumentName);
-
-#if CS7
-        public static void ThrowIfNotFlagsEnumType<T>(in string typeArgumentName) where T : Enum
-        {
-            if (!IsFlagsEnum<T>())
-
-                throw GetExceptionForNonFlagsEnum(typeArgumentName);
-        }
-#endif
-#endif
-
 #if CS7
         public static bool IsFlagsEnum<T>() where T : Enum =>
 #if !CS9
@@ -1920,1196 +2622,21 @@ namespace WinCopies.Util
 #endif
             ;
 #endif
-
         public static KeyValuePair<TKey, TValue> GetKeyValuePair<TKey, TValue>(in TKey key, in TValue value) => new
 #if !CS9
-            KeyValuePair<TKey, TValue>
+    KeyValuePair<TKey, TValue>
 #endif
-            (key, value);
+    (key, value);
 
         public static KeyValuePair<TKeyOut, TValueOut> GetKeyValuePair<TKeyIn, TKeyOut, TValueIn, TValueOut>(KeyValuePair<TKeyIn, TValueIn> item) where TKeyIn : TKeyOut where TValueIn : TValueOut => GetKeyValuePair<TKeyOut, TValueOut>(item.Key, item.Value);
 
-        public static KeyValuePair<TKey, Func<bool>>
-#if WinCopies3
-            GetKeyValuePairPredicate
-#else
-            GetIfKeyValuePairPredicate
-#endif
-            <TKey>(in TKey key, in Func<bool> predicate) =>
+        public static KeyValuePair<TKey, Func<bool>> GetKeyValuePairPredicate<TKey>(in TKey key, in Func<bool> predicate) =>
 #if CS9
             new
 #else
             GetKeyValuePair
 #endif
             (key, predicate);
-
-#if !WinCopies3 && CS6
-        #region 'If' methods
-        #region Enums
-
-        /// <summary>
-        /// Comparison types for the If functions.
-        /// </summary>
-        public enum ComparisonType
-        {
-            /// <summary>
-            /// Check if all conditions are checked.
-            /// </summary>
-            And = 0,
-
-            /// <summary>
-            /// Check if at least one condition is checked.
-            /// </summary>
-            Or = 1,
-
-            /// <summary>
-            /// Check if exactly one condition is checked.
-            /// </summary>
-            Xor = 2
-        }
-
-        /// <summary>
-        /// Comparison modes for the If functions.
-        /// </summary>
-        public enum ComparisonMode
-        {
-            /// <summary>
-            /// Use a binary comparison
-            /// </summary>
-            Binary = 0,
-
-            /// <summary>
-            /// Use a logical comparison
-            /// </summary>
-            Logical = 1
-        }
-
-        /// <summary>
-        /// Comparison to perform.
-        /// </summary>
-        public enum Comparison
-        {
-            /// <summary>
-            /// Check for values equality
-            /// </summary>
-            Equal = 0,
-
-            /// <summary>
-            /// Check for values non-equality
-            /// </summary>
-            NotEqual = 1,
-
-            /// <summary>
-            /// Check if a value is lesser than a given value. This field only works for methods that use lesser/greater/equal comparers.
-            /// </summary>
-            Lesser = 2,
-
-            /// <summary>
-            /// Check if a value is lesser than or equal to a given value. This field only works for methods that use lesser/greater/equal comparers.
-            /// </summary>
-            LesserOrEqual = 3,
-
-            /// <summary>
-            /// Check if a value is greater than a given value. This field only works for methods that use lesser/greater/equal comparers.
-            /// </summary>
-            Greater = 4,
-
-            /// <summary>
-            /// Check if a value is greater than or equal to a given value. This field only works for methods that use lesser/greater/equal comparers.
-            /// </summary>
-            GreaterOrEqual = 5,
-
-            /// <summary>
-            /// Check if an object reference is equal to a given object reference. This field only works for methods that use equality comparers (not lesser/greater ones).
-            /// </summary>
-            ReferenceEqual = 6
-        }
-
-        #endregion
-
-        #region 'Throw' methods
-#if CS6
-        private static void ThrowOnInvalidIfMethodArg(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison)
-        {
-            ThrowIfInvalidEnumValue(comparisonType, comparisonMode, comparison);
-
-            if (comparison == IfComp.ReferenceEqual)
-
-                throw new InvalidEnumArgumentException(nameof(comparison), (int)IfComp.ReferenceEqual, typeof(IfComp));
-        }
-
-        private static void ThrowOnInvalidEqualityIfMethodEnumValue(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison)
-        {
-            ThrowIfInvalidEnumValue(comparisonType, comparisonMode);
-
-            if (!(comparison == IfComp.Equal || comparison == IfComp.NotEqual || comparison == IfComp.ReferenceEqual))
-
-                // todo:
-
-                throw new ArgumentException($"{comparison} must be equal to {nameof(IfComp.Equal)}, {nameof(IfComp.NotEqual)} or {nameof(IfComp.ReferenceEqual)}");
-        }
-
-        private static void ThrowOnInvalidEqualityIfMethodArg(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, in Type valueType, in EqualityComparison comparisonDelegate)
-        {
-            ThrowOnInvalidEqualityIfMethodEnumValue(comparisonType, comparisonMode, comparison);
-
-            if (comparison == IfComp.ReferenceEqual && comparisonDelegate != null)
-
-                throw new ArgumentException($"{nameof(comparisonDelegate)} have to be set to null in order to use this method with the {nameof(IfComp.ReferenceEqual)} enum value.");
-
-            if (comparison == IfComp.ReferenceEqual && valueType.GetType().IsValueType) throw new InvalidOperationException("ReferenceEqual comparison is only valid with non-value types.");
-        }
-
-        private static void ThrowOnInvalidEqualityIfMethodArg<T>(IfCT comparisonType, IfCM comparisonMode, IfComp comparison, EqualityComparison<T> comparisonDelegate)
-        {
-            ThrowOnInvalidEqualityIfMethodEnumValue(comparisonType, comparisonMode, comparison);
-
-            if (comparison == IfComp.ReferenceEqual && comparisonDelegate != null)
-
-                throw new ArgumentException($"{nameof(comparisonDelegate)} have to be set to null in order to use this method with the {nameof(IfComp.ReferenceEqual)} enum value.");
-
-            if (comparison == IfComp.ReferenceEqual && typeof(T).IsValueType) throw new InvalidOperationException("ReferenceEqual comparison is only valid with non-value types.");
-        }
-#endif
-        #endregion
-
-        #region 'Check comparison' methods
-
-        private static bool CheckIfComparison(in IfComp comparison, in Func<bool> predicateResult, in int result)
-        {
-            if (comparison != IfComp.NotEqual && !predicateResult()) return false;
-
-            switch (comparison)
-            {
-                case IfComp.Equal:
-                case IfComp.ReferenceEqual:
-
-                    return result == 0;
-
-                case IfComp.LesserOrEqual:
-
-                    return result <= 0;
-
-                case IfComp.GreaterOrEqual:
-
-                    return result >= 0;
-
-                case IfComp.Lesser:
-
-                    return result < 0;
-
-                case IfComp.Greater:
-
-                    return result > 0;
-
-                case IfComp.NotEqual:
-
-                    return !predicateResult() || result != 0;
-
-                default:
-
-                    return false;//: comparisonType == ComparisonType.Or ?//(result == 0 && (comparison == Comparison.Equals || comparison == Comparison.LesserOrEquals || comparison == Comparison.GreaterOrEquals)) ||//    (result < 0 && (comparison == Comparison.DoesNotEqual || comparison == Comparison.LesserThan || comparison == Comparison.LesserOrEquals)) ||//    (result > 0 && (comparison == Comparison.DoesNotEqual || comparison == Comparison.GreaterThan || comparison == Comparison.GreaterOrEquals))
-            }
-        }
-
-        private static bool CheckEqualityComparison(in IfComp comparison, in object value, in object valueToCompare, in Func<bool> predicateResult, in EqualityComparison comparisonDelegate)
-        {
-            if (comparison == IfComp.ReferenceEqual && !value.GetType().IsValueType) throw new InvalidOperationException("ReferenceEqual comparison is only valid with non-value types.");
-
-            if (comparison != IfComp.NotEqual && !predicateResult()) return false;
-
-#if CS8
-
-            return comparison switch
-            {
-                IfComp.Equal => comparisonDelegate(value, valueToCompare),
-
-                IfComp.NotEqual => !predicateResult() || !comparisonDelegate(value, valueToCompare),
-
-#pragma warning disable IDE0002
-
-                IfComp.ReferenceEqual => object.ReferenceEquals(value, valueToCompare),
-
-#pragma warning restore IDE0002
-
-                _ => false
-            };
-
-#else
-
-            switch (comparison)
-            {
-
-                case IfComp.Equal:
-
-                    return comparisonDelegate(value, valueToCompare);
-
-                case IfComp.NotEqual:
-
-                    return !predicateResult() || !comparisonDelegate(value, valueToCompare);
-
-#pragma warning disable IDE0002
-
-                case IfComp.ReferenceEqual:
-
-                    return object.ReferenceEquals(value, valueToCompare);
-
-#pragma warning restore IDE0002
-
-                default:
-
-                    return false;
-
-            }
-
-#endif
-        }
-
-        private static bool CheckEqualityComparison<T>(in IfComp comparison, in T value, in T valueToCompare, in Func<bool> predicateResult, in EqualityComparison<T> comparisonDelegate)
-        {
-            // Because we've already checked that for the 'T' type in the 'If' method and assuming that 'T' is the base type of all the values to test, if 'T' is actually a class, we don't need to check here if the type of the current value is actually a class when comparison is set to ReferenceEqual.
-
-            if (comparison != IfComp.NotEqual && !predicateResult()) return false;
-
-#if CS8
-            return comparison switch
-            {
-                IfComp.Equal => comparisonDelegate(value, valueToCompare),
-
-                IfComp.NotEqual => !predicateResult() || !comparisonDelegate(value, valueToCompare),
-
-#pragma warning disable IDE0002
-
-                IfComp.ReferenceEqual => object.ReferenceEquals(value, valueToCompare),
-
-#pragma warning restore IDE0002
-
-                _ => false
-            };
-#else
-            switch (comparison)
-            {
-                case IfComp.Equal:
-
-                    return comparisonDelegate(value, valueToCompare);
-
-                case IfComp.NotEqual:
-
-                    return !predicateResult() || !comparisonDelegate(value, valueToCompare);
-
-#pragma warning disable IDE0002
-
-                case IfComp.ReferenceEqual:
-
-                    return object.ReferenceEquals(value, valueToCompare);
-
-#pragma warning restore IDE0002
-
-                default:
-
-                    return false;
-            }
-#endif
-        }
-
-        private delegate bool CheckIfComparisonDelegate(in object value, in Func<bool> predicate);
-
-        private delegate bool CheckIfComparisonDelegate<T>(in T value, in Func<bool> predicate);
-
-        #endregion
-
-        #region Enumerables
-
-        private interface IIfValuesEnumerable
-        {
-            Array Array { get; }
-
-            KeyValuePair<object, Func<bool>> GetValue(in int index);
-        }
-
-        private class IfValuesEnumerable : IIfValuesEnumerable
-        {
-            private static KeyValuePair<object, Func<bool>> GetValue(in object[] array, in int index, Predicate predicate)
-            {
-                object result = array[index];
-
-                return new KeyValuePair<object, Func<bool>>(result, () => predicate(result));
-            }
-
-            public object[] Array { get; }
-
-            Array IIfValuesEnumerable.Array => Array;
-
-            public Predicate Predicate { get; }
-
-            public IfValuesEnumerable(in object[] array, in Predicate predicate)
-            {
-                Array = array;
-
-                Predicate = predicate;
-            }
-
-            public KeyValuePair<object, Func<bool>> GetValue(in int index) => GetValue(Array, index, Predicate);
-        }
-
-        private class IfKeyValuePairEnumerable : IIfValuesEnumerable
-        {
-            public KeyValuePair<object, Func<bool>>[] Array { get; }
-
-            Array IIfValuesEnumerable.Array => Array;
-
-            public IfKeyValuePairEnumerable(in KeyValuePair<object, Func<bool>>[] array) => Array = array;
-
-            public KeyValuePair<object, Func<bool>> GetValue(in int index) => Array[index];
-        }
-
-        private interface IIfKeyValuesEnumerable
-        {
-            Array Array { get; }
-
-            KeyValuePair<object, KeyValuePair<object, Func<bool>>> GetValue(in int index);
-        }
-
-        private class IfKeyValuesEnumerable : IIfKeyValuesEnumerable
-        {
-            private static KeyValuePair<object, KeyValuePair<object, Func<bool>>> GetValue(in KeyValuePair<object, object>[] array, in int index, Predicate predicate)
-
-            {
-                KeyValuePair<object, object> result = array[index];
-
-                return new KeyValuePair<object, KeyValuePair<object, Func<bool>>>(result.Key, new KeyValuePair<object, Func<bool>>(result.Value, () => predicate(result.Value)));
-            }
-
-            public KeyValuePair<object, object>[] Array { get; }
-
-            Array IIfKeyValuesEnumerable.Array => Array;
-
-            public Predicate Predicate { get; }
-
-            public IfKeyValuesEnumerable(in KeyValuePair<object, object>[] array, in Predicate predicate)
-            {
-                Array = array;
-
-                Predicate = predicate;
-            }
-
-            public KeyValuePair<object, KeyValuePair<object, Func<bool>>> GetValue(in int index) => GetValue(Array, index, Predicate);
-        }
-
-        private class IfKeyKeyValuePairEnumerable : IIfKeyValuesEnumerable
-        {
-            public KeyValuePair<object, KeyValuePair<object, Func<bool>>>[] Array { get; }
-
-            Array IIfKeyValuesEnumerable.Array => Array;
-
-            public IfKeyKeyValuePairEnumerable(KeyValuePair<object, KeyValuePair<object, Func<bool>>>[] array) => Array = array;
-
-            public KeyValuePair<object, KeyValuePair<object, Func<bool>>> GetValue(in int index) => Array[index];
-        }
-
-        private interface IIfValuesEnumerable<T>
-        {
-            Array Array { get; }
-
-            KeyValuePair<T, Func<bool>> GetValue(in int index);
-        }
-
-        private class IfValuesEnumerable<T> : IIfValuesEnumerable<T>
-        {
-            private static KeyValuePair<T, Func<bool>> GetValue(in T[] array, in int index, Predicate<T> predicate)
-            {
-                T result = array[index];
-
-                return new KeyValuePair<T, Func<bool>>(result, () => predicate(result));
-            }
-
-            public T[] Array { get; }
-
-            Array IIfValuesEnumerable<T>.Array => Array;
-
-            public Predicate<T> Predicate { get; }
-
-            public IfValuesEnumerable(in T[] array, in Predicate<T> predicate)
-            {
-                Array = array;
-
-                Predicate = predicate;
-            }
-
-            public KeyValuePair<T, Func<bool>> GetValue(in int index) => GetValue(Array, index, Predicate);
-        }
-
-        private class IfKeyValuePairEnumerable<T> : IIfValuesEnumerable<T>
-        {
-            public KeyValuePair<T, Func<bool>>[] Array { get; }
-
-            Array IIfValuesEnumerable<T>.Array => Array;
-
-            public IfKeyValuePairEnumerable(in KeyValuePair<T, Func<bool>>[] array) => Array = array;
-
-            public KeyValuePair<T, Func<bool>> GetValue(in int index) => Array[index];
-        }
-
-        private interface IIfKeyValuesEnumerable<TKey, TValue>
-        {
-            Array Array { get; }
-
-            KeyValuePair<TKey, KeyValuePair<TValue, Func<bool>>> GetValue(in int index);
-        }
-
-        private class IfKeyValuesEnumerable<TKey, TValue> : IIfKeyValuesEnumerable<TKey, TValue>
-        {
-            private static KeyValuePair<TKey, KeyValuePair<TValue, Func<bool>>> GetValue(in KeyValuePair<TKey, TValue>[] array, in int index, Predicate<TValue> predicate)
-            {
-                KeyValuePair<TKey, TValue> result = array[index];
-
-                return new KeyValuePair<TKey, KeyValuePair<TValue, Func<bool>>>(result.Key, new KeyValuePair<TValue, Func<bool>>(result.Value, () => predicate(result.Value)));
-            }
-
-            public KeyValuePair<TKey, TValue>[] Array { get; }
-
-            Array IIfKeyValuesEnumerable<TKey, TValue>.Array => Array;
-
-            public Predicate<TValue> Predicate { get; }
-
-            public IfKeyValuesEnumerable(in KeyValuePair<TKey, TValue>[] array, in Predicate<TValue> predicate)
-            {
-                Array = array;
-
-                Predicate = predicate;
-            }
-
-            public KeyValuePair<TKey, KeyValuePair<TValue, Func<bool>>> GetValue(in int index) => GetValue(Array, index, Predicate);
-        }
-
-        private class IfKeyKeyValuePairEnumerable<TKey, TValue> : IIfKeyValuesEnumerable<TKey, TValue>
-        {
-            public KeyValuePair<TKey, KeyValuePair<TValue, Func<bool>>>[] Array { get; }
-
-            Array IIfKeyValuesEnumerable<TKey, TValue>.Array => Array;
-
-            public IfKeyKeyValuePairEnumerable(in KeyValuePair<TKey, KeyValuePair<TValue, Func<bool>>>[] array) => Array = array;
-
-            public KeyValuePair<TKey, KeyValuePair<TValue, Func<bool>>> GetValue(in int index) => Array[index];
-        }
-
-        #endregion
-
-        private static bool IfInternal(in IfCT comparisonType, in IfCM comparisonMode, CheckIfComparisonDelegate comparisonDelegate, in IIfValuesEnumerable values)
-        {
-            bool checkIfComparison(in KeyValuePair<object, Func<bool>> value) => comparisonDelegate(value.Key, value.Value);
-
-            // We check the comparison type for the 'and' comparison.
-
-            if (comparisonType == IfCT.And)
-            {
-                for (int i = 0; i < values.Array.Length; i++)
-
-                    if (!checkIfComparison(values.GetValue(i)))
-                    {
-                        if (comparisonMode == IfCM.Binary)
-
-                            for (i++; i < values.Array.Length; i++)
-
-                                _ = checkIfComparison(values.GetValue(i));
-
-                        return false;
-                    }
-
-                return true;
-            }
-
-            // We check the comparison type for the 'or' comparison.
-
-            else if (comparisonType == IfCT.Or)
-            {
-                for (int i = 0; i < values.Array.Length; i++)
-
-                    if (checkIfComparison(values.GetValue(i)))
-                    {
-                        if (comparisonMode == IfCM.Binary)
-
-                            for (i++; i < values.Array.Length; i++)
-
-                                _ = checkIfComparison(values.GetValue(i));
-
-                        return true;
-                    }
-
-                return false;
-            }
-
-            // We check the comparison type for the 'xor' comparison.
-
-            else
-            {
-                for (int i = 0; i < values.Array.Length; i++)
-
-                    if (checkIfComparison(values.GetValue(i)))
-                    {
-                        for (i++; i < values.Array.Length; i++)
-
-                            if (checkIfComparison(values.GetValue(i)))
-                            {
-                                if (comparisonMode == IfCM.Binary)
-
-                                    for (i++; i < values.Array.Length; i++)
-
-                                        _ = checkIfComparison(values.GetValue(i));
-
-                                return false;
-                            }
-
-                        return true;
-                    }
-
-                return false;
-
-            }
-        }
-
-        private static bool IfInternal(in IfCT comparisonType, in IfCM comparisonMode, CheckIfComparisonDelegate comparisonDelegate, out object key, in IIfKeyValuesEnumerable values)
-        {
-            bool checkIfComparison(in KeyValuePair<object, Func<bool>> value) => comparisonDelegate(value.Key, value.Value);
-
-            KeyValuePair<object, KeyValuePair<object, Func<bool>>> _value;
-
-            // We check the comparison type for the 'and' comparison.
-
-            if (comparisonType == IfCT.And)
-            {
-                for (int i = 0; i < values.Array.Length; i++)
-                {
-                    _value = values.GetValue(i);
-
-                    if (!checkIfComparison(_value.Value))
-                    {
-                        if (comparisonMode == IfCM.Binary)
-
-                            for (i++; i < values.Array.Length; i++)
-
-                                _ = checkIfComparison(_value.Value);
-
-                        key = _value.Key;
-
-                        return false;
-                    }
-                }
-
-                key = null;
-
-                return true;
-            }
-
-            // We check the comparison type for the 'or' comparison.
-
-            else if (comparisonType == IfCT.Or)
-            {
-                for (int i = 0; i < values.Array.Length; i++)
-                {
-                    _value = values.GetValue(i);
-
-                    if (checkIfComparison(_value.Value))
-                    {
-                        if (comparisonMode == IfCM.Binary)
-
-                            for (i++; i < values.Array.Length; i++)
-
-                                _ = checkIfComparison(_value.Value);
-
-                        key = _value.Key;
-
-                        return true;
-                    }
-                }
-
-                key = null;
-
-                return false;
-            }
-
-            // We check the comparison type for the 'xor' comparison.
-
-            else
-            {
-                for (int i = 0; i < values.Array.Length; i++)
-                {
-                    _value = values.GetValue(i);
-
-                    if (checkIfComparison(_value.Value))
-                    {
-                        for (i++; i < values.Array.Length; i++)
-                        {
-                            _value = values.GetValue(i);
-
-                            if (checkIfComparison(_value.Value))
-                            {
-                                if (comparisonMode == IfCM.Binary)
-
-                                    for (i++; i < values.Array.Length; i++)
-
-                                        _ = checkIfComparison(values.GetValue(i).Value);
-
-                                key = _value.Key;
-
-                                return false;
-                            }
-                        }
-
-                        key = _value.Key;
-
-                        return true;
-                    }
-                }
-
-                key = null;
-
-                return false;
-            }
-        }
-
-        private static bool IfInternal<T>(in IfCT comparisonType, in IfCM comparisonMode, CheckIfComparisonDelegate<T> comparisonDelegate, in IIfValuesEnumerable<T> values)
-        {
-            bool checkIfComparison(in KeyValuePair<T, Func<bool>> value) => comparisonDelegate(value.Key, value.Value);
-
-            // We check the comparison type for the 'and' comparison.
-
-            if (comparisonType == IfCT.And)
-            {
-                for (int i = 0; i < values.Array.Length; i++)
-
-                    if (!checkIfComparison(values.GetValue(i)))
-                    {
-                        if (comparisonMode == IfCM.Binary)
-
-                            for (i++; i < values.Array.Length; i++)
-
-                                _ = checkIfComparison(values.GetValue(i));
-
-                        return false;
-                    }
-
-                return true;
-            }
-
-            // We check the comparison type for the 'or' comparison.
-
-            else if (comparisonType == IfCT.Or)
-            {
-                for (int i = 0; i < values.Array.Length; i++)
-
-                    if (checkIfComparison(values.GetValue(i)))
-                    {
-                        if (comparisonMode == IfCM.Binary)
-
-                            for (i++; i < values.Array.Length; i++)
-
-                                _ = checkIfComparison(values.GetValue(i));
-
-                        return true;
-                    }
-
-                return false;
-            }
-
-            // We check the comparison type for the 'xor' comparison.
-
-            else
-            {
-                for (int i = 0; i < values.Array.Length; i++)
-
-                    if (checkIfComparison(values.GetValue(i)))
-                    {
-                        for (i++; i < values.Array.Length; i++)
-
-                            if (checkIfComparison(values.GetValue(i)))
-                            {
-                                if (comparisonMode == IfCM.Binary)
-
-                                    for (i++; i < values.Array.Length; i++)
-
-                                        _ = checkIfComparison(values.GetValue(i));
-
-                                return false;
-                            }
-
-                        return true;
-                    }
-
-                return false;
-            }
-        }
-
-        private static bool IfInternal<TKey, TValue>(in IfCT comparisonType, in IfCM comparisonMode, CheckIfComparisonDelegate<TValue> comparisonDelegate, out TKey key, in IIfKeyValuesEnumerable<TKey, TValue> values)
-        {
-            bool checkIfComparison(in KeyValuePair<TValue, Func<bool>> value) => comparisonDelegate(value.Key, value.Value);
-
-            KeyValuePair<TKey, KeyValuePair<TValue, Func<bool>>> _value;
-
-            // We check the comparison type for the 'and' comparison.
-
-            if (comparisonType == IfCT.And)
-            {
-                for (int i = 0; i < values.Array.Length; i++)
-                {
-                    _value = values.GetValue(i);
-
-                    if (!checkIfComparison(_value.Value))
-                    {
-                        if (comparisonMode == IfCM.Binary)
-
-                            for (i++; i < values.Array.Length; i++)
-
-                                _ = checkIfComparison(_value.Value);
-
-                        key = _value.Key;
-
-                        return false;
-                    }
-                }
-
-                key = default;
-
-                return true;
-            }
-
-            // We check the comparison type for the 'or' comparison.
-
-            else if (comparisonType == IfCT.Or)
-            {
-                for (int i = 0; i < values.Array.Length; i++)
-                {
-                    _value = values.GetValue(i);
-
-                    if (checkIfComparison(_value.Value))
-
-                    {
-                        if (comparisonMode == IfCM.Binary)
-
-                            for (i++; i < values.Array.Length; i++)
-
-                                _ = checkIfComparison(_value.Value);
-
-                        key = _value.Key;
-
-                        return true;
-                    }
-                }
-
-                key = default;
-
-                return false;
-            }
-
-            // We check the comparison type for the 'xor' comparison.
-
-            else
-            {
-                for (int i = 0; i < values.Array.Length; i++)
-                {
-                    _value = values.GetValue(i);
-
-                    if (checkIfComparison(_value.Value))
-                    {
-                        for (i++; i < values.Array.Length; i++)
-                        {
-                            _value = values.GetValue(i);
-
-                            if (checkIfComparison(_value.Value))
-                            {
-                                if (comparisonMode == IfCM.Binary)
-
-                                    for (i++; i < values.Array.Length; i++)
-
-                                        _ = checkIfComparison(values.GetValue(i).Value);
-
-                                key = _value.Key;
-
-                                return false;
-                            }
-                        }
-
-                        key = _value.Key;
-
-                        return true;
-                    }
-                }
-
-                key = default;
-
-                return false;
-            }
-        }
-
-        #region Non generic methods
-
-        #region Comparisons without key notification
-
-        /// <summary>
-        /// Performs a comparison by testing a value compared to an array of values.
-        /// </summary>
-        /// <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
-        /// <param name="comparisonMode">Whether to perform a binary or a logical comparison.</param>
-        /// <param name="comparison">Whether to perform an equality or an inequality comparison, and, if to perform an inequality comparison, the type of the inequality comparison to perform.</param>
-        /// <param name="value">The value to compare the values of the table with.</param>
-        /// <param name="values">The values to compare.</param>
-        /// <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
-        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, in object value, params object[] values) => If(comparisonType, comparisonMode, comparison, System.Collections.Generic.EqualityComparer<object>.Default, GetCommonPredicate(), value, values);
-
-        /// <summary>
-        /// Performs a comparison by testing a value compared to an array of values using a custom <see cref="System.Collections.IComparer"/> and <see cref="Predicate{T}"/>.
-        /// </summary>
-        /// <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
-        /// <param name="comparisonMode">Whether to perform a binary or a logical comparison.</param>
-        /// <param name="comparison">Whether to perform an equality or an inequality comparison, and, if to perform an inequality comparison, the type of the inequality comparison to perform.</param>
-        /// <param name="comparer">The comparer used to compare the values.</param>
-        /// <param name="value">The value to compare with.</param>
-        /// <param name="values">The values to compare.</param>
-        /// <param name="predicate">The comparison predicate</param>
-        /// <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
-        [Obsolete("This method has been replaced by the following method: If(ComparisonType, ComparisonMode, Comparison, IComparer, Predicate, object, params object[])")]
-        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, System.Collections.IComparer comparer, in Predicate<object> predicate, in object value, params object[] values) => If(comparisonType, comparisonMode, comparison, (object x, object y) => comparer.Compare(x, y), predicate, value, values);
-
-        /// <summary>
-        /// Performs a comparison by testing a value compared to an array of values using a custom <see cref="System.Collections.IComparer"/> and <see cref="Predicate"/>.
-        /// </summary>
-        /// <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
-        /// <param name="comparisonMode">Whether to perform a binary or a logical comparison.</param>
-        /// <param name="comparison">Whether to perform an equality or an inequality comparison, and, if to perform an inequality comparison, the type of the inequality comparison to perform.</param>
-        /// <param name="comparer">The comparer used to compare the values.</param>
-        /// <param name="value">The value to compare with.</param>
-        /// <param name="values">The values to compare.</param>
-        /// <param name="predicate">The comparison predicate</param>
-        /// <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
-        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, System.Collections.IComparer comparer, in Predicate predicate, in object value, params object[] values) => If(comparisonType, comparisonMode, comparison, (object x, object y) => comparer.Compare(x, y), predicate, value, values);
-
-        /// <summary>
-        /// Performs a comparison by testing a value compared to an array of values using a custom <see cref="Comparison{T}"/> and <see cref="Predicate{T}"/>.
-        /// </summary>
-        /// <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
-        /// <param name="comparisonMode">Whether to perform a binary or a logical comparison.</param>
-        /// <param name="comparison">Whether to perform an equality or an inequality comparison, and, if to perform an inequality comparison, the type of the inequality comparison to perform.</param>
-        /// <param name="comparisonDelegate">The comparison delegate used to compare the values.</param>
-        /// <param name="value">The value to compare with.</param>
-        /// <param name="values">The values to compare.</param>
-        /// <param name="predicate">The comparison predicate</param>
-        /// <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
-        [Obsolete("This method has been replaced by the following method: If(ComparisonType, ComparisonMode, Comparison, WinCopies.Collections.Comparison, Predicate, object, params object[])")]
-        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, Comparison<object> comparisonDelegate, Predicate<object> predicate, in object value, params object[] values) => If(comparisonType, comparisonMode, comparison, new WinCopies.Collections.Comparison((object x, object y) => comparisonDelegate(x, y)), new Predicate(o => predicate(o)), value, values);
-
-        /// <summary>
-        /// Performs a comparison by testing a value compared to an array of values using a custom <see cref="WinCopies.Collections.Comparison"/> and <see cref="Predicate"/>.
-        /// </summary>
-        /// <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
-        /// <param name="comparisonMode">Whether to perform a binary or a logical comparison.</param>
-        /// <param name="comparison">Whether to perform an equality or an inequality comparison, and, if to perform an inequality comparison, the type of the inequality comparison to perform.</param>
-        /// <param name="comparisonDelegate">The comparison delegate used to compare the values.</param>
-        /// <param name="value">The value to compare with.</param>
-        /// <param name="values">The values to compare.</param>
-        /// <param name="predicate">The comparison predicate</param>
-        /// <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
-        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, IfComp comparison, WinCopies.Collections.Comparison comparisonDelegate, in Predicate predicate, object value, params object[] values)
-        {
-            // First, we check if comparisonType and comparison are in the required value range.
-
-            ThrowOnInvalidIfMethodArg(comparisonType, comparisonMode, comparison);
-
-            return IfInternal(comparisonType, comparisonMode, (in object _value, in Func<bool> _predicate) => CheckIfComparison(comparison, _predicate, comparisonDelegate(value, _value)), new IfValuesEnumerable(values, predicate));
-        }
-
-        /// <summary>
-        /// Performs a comparison by testing a value compared to an array of values using a custom <see cref="IComparer"/> and <see cref="Predicate{T}"/>.
-        /// </summary>
-        /// <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
-        /// <param name="comparisonMode">Whether to perform a binary or a logical comparison.</param>
-        /// <param name="comparison">Whether to perform an equality or an inequality comparison, and, if to perform an inequality comparison, the type of the inequality comparison to perform.</param>
-        /// <param name="equalityComparer">The equality comparer used to compare the values.</param>
-        /// <param name="value">The value to compare with.</param>
-        /// <param name="values">The values to compare.</param>
-        /// <param name="predicate">The comparison predicate</param>
-        /// <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
-        [Obsolete("This method has been replaced by the following method: If(ComparisonType, ComparisonMode, Comparison, IEqualityComparer, Predicate, object, params object[])")]
-        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, in IEqualityComparer equalityComparer, Predicate<object> predicate, in object value, params object[] values) => If(comparisonType, comparisonMode, comparison, equalityComparer, new Predicate(o => predicate(o)), value, values);
-
-        /// <summary>
-        /// Performs a comparison by testing a value compared to an array of values using a custom <see cref="IComparer"/> and <see cref="Predicate"/>.
-        /// </summary>
-        /// <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
-        /// <param name="comparisonMode">Whether to perform a binary or a logical comparison.</param>
-        /// <param name="comparison">Whether to perform an equality or an inequality comparison, and, if to perform an inequality comparison, the type of the inequality comparison to perform.</param>
-        /// <param name="equalityComparer">The equality comparer used to compare the values.</param>
-        /// <param name="value">The value to compare with.</param>
-        /// <param name="values">The values to compare.</param>
-        /// <param name="predicate">The comparison predicate</param>
-        /// <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
-        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, IEqualityComparer equalityComparer, in Predicate predicate, in object value, params object[] values) => equalityComparer == null ? If(comparisonType, comparisonMode, comparison, (EqualityComparison)null, predicate, value, values) : If(comparisonType, comparisonMode, comparison, (object x, object y) => equalityComparer.Equals(x, y), predicate, value, values);
-
-        /// <summary>
-        /// Performs a comparison by testing a value compared to an array of values using a custom <see cref="EqualityComparison"/> and <see cref="Predicate"/>.
-        /// </summary>
-        /// <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
-        /// <param name="comparisonMode">Whether to perform a binary or a logical comparison.</param>
-        /// <param name="comparison">Whether to perform an equality or an inequality comparison, and, if to perform an inequality comparison, the type of the inequality comparison to perform.</param>
-        /// <param name="comparisonDelegate">The comparison delegate used to compare the values.</param>
-        /// <param name="value">The value to compare with.</param>
-        /// <param name="values">The values to compare.</param>
-        /// <param name="predicate">The comparison predicate</param>
-        /// <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
-        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, IfComp comparison, EqualityComparison comparisonDelegate, in Predicate predicate, object value, params object[] values)
-        {
-            // First, we check if comparisonType and comparison are in the required value range.
-
-            ThrowOnInvalidEqualityIfMethodArg(comparisonType, comparisonMode, comparison, value.GetType(), comparisonDelegate);
-
-            return IfInternal(comparisonType, comparisonMode, (in object _value, in Func<bool> _predicate) => CheckEqualityComparison(comparison, _value, value, _predicate, comparisonDelegate), new IfValuesEnumerable(values, predicate));
-        }
-
-        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, System.Collections.IComparer comparer, in object value, params KeyValuePair<object, Func<bool>>[] values) => If(comparisonType, comparisonMode, comparison, new WinCopies.Collections.Comparison((object x, object y) => comparer.Compare(x, y)), value, values);
-
-        [Obsolete("This method has been replaced by the following method: If(ComparisonType, ComparisonMode, Comparison, WinCopies.Collections.Comparison, object, params KeyValuePair<object, Func<bool>>[])")]
-        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, Comparison<object> comparisonDelegate, in object value, params KeyValuePair<object, Func<bool>>[] values) => If(comparisonType, comparisonMode, comparison, new WinCopies.Collections.Comparison((object x, object y) => comparisonDelegate(x, y)), value, values);
-
-        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, IfComp comparison, WinCopies.Collections.Comparison comparisonDelegate, object value, params KeyValuePair<object, Func<bool>>[] values)
-        {
-            // First, we check if comparisonType and comparison are in the required value range.
-
-            ThrowOnInvalidIfMethodArg(comparisonType, comparisonMode, comparison);
-
-            return IfInternal(comparisonType, comparisonMode, (in object _value, in Func<bool> _predicate) => CheckIfComparison(comparison, _predicate, comparisonDelegate(value, _value)), new IfKeyValuePairEnumerable(values));
-        }
-
-        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, IEqualityComparer equalityComparer, in object value, params KeyValuePair<object, Func<bool>>[] values) => equalityComparer == null ? If(comparisonType, comparisonMode, comparison, (EqualityComparison)null, value, values) : If(comparisonType, comparisonMode, comparison, new EqualityComparison((object x, object y) => equalityComparer.Equals(x, y)), value, values);
-
-        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, IfComp comparison, EqualityComparison comparisonDelegate, object value, params KeyValuePair<object, Func<bool>>[] values)
-        {
-            // First, we check if comparisonType and comparison are in the required value range.
-
-            ThrowOnInvalidEqualityIfMethodArg(comparisonType, comparisonMode, comparison, value.GetType(), comparisonDelegate);
-
-            return IfInternal(comparisonType, comparisonMode, (in object _value, in Func<bool> _predicate) => CheckEqualityComparison(comparison, _value, value, _predicate, comparisonDelegate), new IfKeyValuePairEnumerable(values));
-        }
-
-        #endregion
-
-        #region Comparisons with key notification
-
-        /// <summary>
-        /// Performs a comparison by testing a value compared to an array of objects or values.
-        /// </summary>
-        /// <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
-        /// <param name="comparison">The comparison type</param>
-        /// <param name="value">The value to compare the values of the table with.</param>
-        /// <param name="values">The values to compare.</param>
-        /// <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
-        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, out object key, in object value, params KeyValuePair<object, object>[] values) => If(comparisonType, comparisonMode, comparison, out key, System.Collections.Generic.EqualityComparer<object>.Default, GetCommonPredicate(), value, values);
-
-        /// <summary>
-        /// Performs a comparison by testing a value compared to an array of objects or values using a custom <see cref="System.Collections.IComparer"/> and <see cref="Predicate{Object}"/>.
-        /// </summary>
-        /// <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
-        /// <param name="comparison">The comparison type</param>
-        /// <param name="comparer">The comparer used to compare the values.</param>
-        /// <param name="value">The value to compare with.</param>
-        /// <param name="values">The values to compare.</param>
-        /// <param name="predicate">The comparison predicate</param>
-        /// <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
-        [Obsolete("This method has been replaced by the following method: If(ComparisonType, ComparisonMode, Comparison, out object, IComparer, Predicate, object, params KeyValuePair<object, object>[])")]
-        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, out object key, System.Collections.IComparer comparer, in Predicate<object> predicate, in object value, params KeyValuePair<object, object>[] values) => If(comparisonType, comparisonMode, comparison, out key, (object x, object y) => comparer.Compare(x, y), predicate, value, values);
-
-        /// <summary>
-        /// Performs a comparison by testing a value compared to an array of objects or values using a custom <see cref="System.Collections.IComparer"/> and <see cref="Predicate{Object}"/>.
-        /// </summary>
-        /// <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
-        /// <param name="comparison">The comparison type</param>
-        /// <param name="comparer">The comparer used to compare the values.</param>
-        /// <param name="value">The value to compare with.</param>
-        /// <param name="values">The values to compare.</param>
-        /// <param name="predicate">The comparison predicate</param>
-        /// <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
-        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, out object key, System.Collections.IComparer comparer, in Predicate predicate, in object value, params KeyValuePair<object, object>[] values) => If(comparisonType, comparisonMode, comparison, out key, (object x, object y) => comparer.Compare(x, y), predicate, value, values);
-
-        [Obsolete("This method has been replaced by the following method: If(ComparisonType, ComparisonMode, Comparison, out object, WinCopies.Collections.Comparison, Predicate, object, params KeyValuePair<object, object>[])")]
-        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, out object key, Comparison<object> comparisonDelegate, Predicate<object> predicate, in object value, params KeyValuePair<object, object>[] values) => If(comparisonType, comparisonMode, comparison, out key, new WinCopies.Collections.Comparison((object x, object y) => comparisonDelegate(x, y)), new Predicate(o => predicate(o)), value, values);
-
-        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, IfComp comparison, out object key, WinCopies.Collections.Comparison comparisonDelegate, in Predicate predicate, object value, params KeyValuePair<object, object>[] values)
-        {
-            // First, we check if comparisonType and comparison are in the required value range.
-
-            ThrowOnInvalidIfMethodArg(comparisonType, comparisonMode, comparison);
-
-            return IfInternal(comparisonType, comparisonMode, (in object _value, in Func<bool> _predicate) => CheckIfComparison(comparison, _predicate, comparisonDelegate(value, _value)), out key, new IfKeyValuesEnumerable(values, predicate));
-        }
-
-        [Obsolete("This method has been replaced by the following method: If(ComparisonType, ComparisonMode, Comparison, out object, IEqualityComparer, Predicate, object, params KeyValuePair<object, object>[])")]
-        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, out object key, in IEqualityComparer equalityComparer, Predicate<object> predicate, in object value, params KeyValuePair<object, object>[] values) => If(comparisonType, comparisonMode, comparison, out key, equalityComparer, new Predicate(o => predicate(o)), value, values);
-
-        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, out object key, IEqualityComparer equalityComparer, in Predicate predicate, in object value, params KeyValuePair<object, object>[] values) => equalityComparer == null ? If(comparisonType, comparisonMode, comparison, out key, (EqualityComparison)null, predicate, value, values) : If(comparisonType, comparisonMode, comparison, out key, (object x, object y) => equalityComparer.Equals(x, y), predicate, value, values);
-
-        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, IfComp comparison, out object key, EqualityComparison comparisonDelegate, in Predicate predicate, object value, params KeyValuePair<object, object>[] values)
-
-        {
-            ThrowOnInvalidEqualityIfMethodArg(comparisonType, comparisonMode, comparison, value.GetType(), comparisonDelegate);
-
-            return IfInternal(comparisonType, comparisonMode, (in object _value, in Func<bool> _predicate) => CheckEqualityComparison(comparison, _value, value, _predicate, comparisonDelegate), out key, new IfKeyValuesEnumerable(values, predicate));
-        }
-
-        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, out object key, System.Collections.IComparer comparer, in object value, params KeyValuePair<object, KeyValuePair<object, Func<bool>>>[] values) => If(comparisonType, comparisonMode, comparison, out key, new WinCopies.Collections.Comparison((object x, object y) => comparer.Compare(x, y)), value, values);
-
-        [Obsolete("This method has been replaced by the following method: If(ComparisonType, ComparisonMode, Comparison, out object, WinCopies.Collections.Comparison, object, params KeyValuePair<object, KeyValuePair<object, Func<bool>>>[])")]
-        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, out object key, Comparison<object> comparisonDelegate, in object value, params KeyValuePair<object, KeyValuePair<object, Func<bool>>>[] values) => If(comparisonType, comparisonMode, comparison, out key, new WinCopies.Collections.Comparison((object x, object y) => comparisonDelegate(x, y)), value, values);
-
-        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, IfComp comparison, out object key, WinCopies.Collections.Comparison comparisonDelegate, object value, params KeyValuePair<object, KeyValuePair<object, Func<bool>>>[] values)
-        {
-            // First, we check if comparisonType and comparison are in the required value range.
-
-            ThrowOnInvalidIfMethodArg(comparisonType, comparisonMode, comparison);
-
-            return IfInternal(comparisonType, comparisonMode, (in object _value, in Func<bool> _predicate) => CheckIfComparison(comparison, _predicate, comparisonDelegate(value, _value)), out key, new IfKeyKeyValuePairEnumerable(values));
-        }
-
-        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, out object key, IEqualityComparer equalityComparer, in object value, params KeyValuePair<object, KeyValuePair<object, Func<bool>>>[] values) => equalityComparer == null ? If(comparisonType, comparisonMode, comparison, out key, (EqualityComparison)null, value, values) : If(comparisonType, comparisonMode, comparison, out key, new EqualityComparison((object x, object y) => equalityComparer.Equals(x, y)), value, values);
-
-        public static bool If(in IfCT comparisonType, in IfCM comparisonMode, IfComp comparison, out object key, EqualityComparison comparisonDelegate, object value, params KeyValuePair<object, KeyValuePair<object, Func<bool>>>[] values)
-        {
-            ThrowOnInvalidEqualityIfMethodArg(comparisonType, comparisonMode, comparison, value.GetType(), comparisonDelegate);
-
-            return IfInternal(comparisonType, comparisonMode, (in object _value, in Func<bool> _predicate) => CheckEqualityComparison(comparison, _value, value, _predicate, comparisonDelegate), out key, new IfKeyKeyValuePairEnumerable(values));
-        }
-
-        #endregion
-
-        #endregion
-
-        #region Generic methods
-
-        #region Comparisons without key notification
-
-        /// <summary>
-        /// Performs a comparison by testing a value compared to an array of objects or values.
-        /// </summary>
-        /// <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
-        /// <param name="comparison">The comparison type</param>
-        /// <param name="value">The value to compare the values of the table with.</param>
-        /// <param name="values">The values to compare.</param>
-        /// <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
-        public static bool If<T>(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, in T value, params T[] values) => If(comparisonType, comparisonMode, comparison, System.Collections.Generic.EqualityComparer<T>.Default, GetCommonPredicate<T>(), value, values);
-
-        /// <summary>
-        /// Performs a comparison by testing a value compared to an array of objects or values using a custom <see cref="IComparer{Object}"/> and <see cref="Predicate{Object}"/>.
-        /// </summary>
-        /// <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
-        /// <param name="comparison">The comparison type</param>
-        /// <param name="comparer">The comparer used to compare the values.</param>
-        /// <param name="value">The value to compare with.</param>
-        /// <param name="values">The values to compare.</param>
-        /// <param name="predicate">The comparison predicate</param>
-        /// <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
-        public static bool If<T>(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, System.Collections.Generic.IComparer<T> comparer, in Predicate<T> predicate, in T value, params T[] values) => If(comparisonType, comparisonMode, comparison, (T x, T y) => comparer.Compare(x, y), predicate, value, values);
-
-        public static bool If<T>(in IfCT comparisonType, in IfCM comparisonMode, IfComp comparison, Comparison<T> comparisonDelegate, in Predicate<T> predicate, T value, params T[] values)
-
-        {
-            // First, we check if comparisonType and comparison are in the required value range.
-
-            ThrowOnInvalidIfMethodArg(comparisonType, comparisonMode, comparison);
-
-            return IfInternal(comparisonType, comparisonMode, (in T _value, in Func<bool> _predicate) => CheckIfComparison(comparison, _predicate, comparisonDelegate(value, _value)), new IfValuesEnumerable<T>(values, predicate));
-        }
-
-        public static bool If<T>(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, System.Collections.Generic.IEqualityComparer<T> equalityComparer, in Predicate<T> predicate, in T value, params T[] values) => equalityComparer == null ? If(comparisonType, comparisonMode, comparison, (EqualityComparison<T>)null, predicate, value, values) : If(comparisonType, comparisonMode, comparison, (T x, T y) => equalityComparer.Equals(x, y), predicate, value, values);
-
-        public static bool If<T>(in IfCT comparisonType, in IfCM comparisonMode, IfComp comparison, EqualityComparison<T> comparisonDelegate, in Predicate<T> predicate, T value, params T[] values)
-        {
-            ThrowOnInvalidEqualityIfMethodArg(comparisonType, comparisonMode, comparison, comparisonDelegate);
-
-            return IfInternal(comparisonType, comparisonMode, (in T _value, in Func<bool> _predicate) => CheckEqualityComparison(comparison, _value, value, _predicate, comparisonDelegate), new IfValuesEnumerable<T>(values, predicate));
-        }
-
-        public static bool If<T>(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, System.Collections.Generic.IComparer<T> comparer, in T value, params KeyValuePair<T, Func<bool>>[] values) => If(comparisonType, comparisonMode, comparison, (T x, T y) => comparer.Compare(x, y), value, values);
-
-        public static bool If<T>(in IfCT comparisonType, in IfCM comparisonMode, IfComp comparison, Comparison<T> comparisonDelegate, T value, params KeyValuePair<T, Func<bool>>[] values)
-        {
-            // First, we check if comparisonType and comparison are in the required value range.
-
-            ThrowOnInvalidIfMethodArg(comparisonType, comparisonMode, comparison);
-
-            return IfInternal(comparisonType, comparisonMode, (in T _value, in Func<bool> _predicate) => CheckIfComparison(comparison, _predicate, comparisonDelegate(value, _value)), new IfKeyValuePairEnumerable<T>(values));
-        }
-
-        public static bool If<T>(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, System.Collections.Generic.IEqualityComparer<T> equalityComparer, in T value, params KeyValuePair<T, Func<bool>>[] values) => equalityComparer == null ? If(comparisonType, comparisonMode, comparison, (EqualityComparison<T>)null, value, values) : If(comparisonType, comparisonMode, comparison, (T x, T y) => equalityComparer.Equals(x, y), value, values);
-
-        public static bool If<T>(in IfCT comparisonType, in IfCM comparisonMode, IfComp comparison, EqualityComparison<T> comparisonDelegate, T value, params KeyValuePair<T, Func<bool>>[] values)
-        {
-            ThrowOnInvalidEqualityIfMethodArg(comparisonType, comparisonMode, comparison, comparisonDelegate);
-
-            return IfInternal(comparisonType, comparisonMode, (in T _value, in Func<bool> _predicate) => CheckEqualityComparison(comparison, _value, value, _predicate, comparisonDelegate), new IfKeyValuePairEnumerable<T>(values));
-        }
-
-        #endregion
-
-        #region Comparisons with key notification
-        /// <summary>
-        /// Performs a comparison by testing a value compared to an array of objects or values.
-        /// </summary>
-        /// <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
-        /// <param name="comparison">The comparison type</param>
-        /// <param name="value">The value to compare the values of the table with.</param>
-        /// <param name="values">The values to compare.</param>
-        /// <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
-        public static bool If<TKey, TValue>(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, out TKey key, in TValue value, params KeyValuePair<TKey, TValue>[] values) => If(comparisonType, comparisonMode, comparison, out key, System.Collections.Generic.EqualityComparer<TValue>.Default, GetCommonPredicate<TValue>(), value, values);
-
-        /// <summary>
-        /// Performs a comparison by testing a value compared to an array of objects or values using a custom <see cref="IComparer{Object}"/> and <see cref="Predicate{Object}"/>.
-        /// </summary>
-        /// <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
-        /// <param name="comparison">The comparison type</param>
-        /// <param name="comparer">The comparer used to compare the values.</param>
-        /// <param name="value">The value to compare with.</param>
-        /// <param name="values">The values to compare.</param>
-        /// <param name="predicate">The comparison predicate</param>
-        /// <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
-        public static bool If<TKey, TValue>(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, out TKey key, System.Collections.Generic.IComparer<TValue> comparer, in Predicate<TValue> predicate, in TValue value, params KeyValuePair<TKey, TValue>[] values) => If(comparisonType, comparisonMode, comparison, out key, (TValue x, TValue y) => comparer.Compare(x, y), predicate, value, values);
-
-        public static bool If<TKey, TValue>(in IfCT comparisonType, in IfCM comparisonMode, IfComp comparison, out TKey key, Comparison<TValue> comparisonDelegate, in Predicate<TValue> predicate, TValue value, params KeyValuePair<TKey, TValue>[] values)
-        {
-            // First, we check if comparisonType and comparison are in the required value range.
-
-            ThrowOnInvalidIfMethodArg(comparisonType, comparisonMode, comparison);
-
-            return IfInternal(comparisonType, comparisonMode, (in TValue _value, in Func<bool> _predicate) => CheckIfComparison(comparison, _predicate, comparisonDelegate(value, _value)), out key, new IfKeyValuesEnumerable<TKey, TValue>(values, predicate));
-        }
-
-        public static bool If<TKey, TValue>(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, out TKey key, System.Collections.Generic.IEqualityComparer<TValue> equalityComparer, in Predicate<TValue> predicate, in TValue value, params KeyValuePair<TKey, TValue>[] values) => equalityComparer == null ? If(comparisonType, comparisonMode, comparison, out key, (EqualityComparison<TValue>)null, predicate, value, values) : If(comparisonType, comparisonMode, comparison, out key, (TValue x, TValue y) => equalityComparer.Equals(x, y), predicate, value, values);
-
-        public static bool If<TKey, TValue>(in IfCT comparisonType, in IfCM comparisonMode, IfComp comparison, out TKey key, EqualityComparison<TValue> comparisonDelegate, in Predicate<TValue> predicate, TValue value, params KeyValuePair<TKey, TValue>[] values)
-        {
-            ThrowOnInvalidEqualityIfMethodArg(comparisonType, comparisonMode, comparison, comparisonDelegate);
-
-            return IfInternal(comparisonType, comparisonMode, (in TValue _value, in Func<bool> _predicate) => CheckEqualityComparison(comparison, _value, value, _predicate, comparisonDelegate), out key, new IfKeyValuesEnumerable<TKey, TValue>(values, predicate));
-        }
-
-        public static bool If<TKey, TValue>(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, out TKey key, System.Collections.Generic.IComparer<TValue> comparer, in TValue value, params KeyValuePair<TKey, KeyValuePair<TValue, Func<bool>>>[] values) => If(comparisonType, comparisonMode, comparison, out key, (TValue x, TValue y) => comparer.Compare(x, y), value, values);
-
-        public static bool If<TKey, TValue>(in IfCT comparisonType, in IfCM comparisonMode, IfComp comparison, out TKey key, Comparison<TValue> comparisonDelegate, TValue value, params KeyValuePair<TKey, KeyValuePair<TValue, Func<bool>>>[] values)
-        {
-            ThrowOnInvalidIfMethodArg(comparisonType, comparisonMode, comparison);
-
-            return IfInternal(comparisonType, comparisonMode, (in TValue _value, in Func<bool> _predicate) => CheckIfComparison(comparison, _predicate, comparisonDelegate(value, _value)), out key, new IfKeyKeyValuePairEnumerable<TKey, TValue>(values));
-        }
-
-        public static bool If<TKey, TValue>(in IfCT comparisonType, in IfCM comparisonMode, in IfComp comparison, out TKey key, System.Collections.Generic.IEqualityComparer<TValue> equalityComparer, in TValue value, params KeyValuePair<TKey, KeyValuePair<TValue, Func<bool>>>[] values) => equalityComparer == null ? If(comparisonType, comparisonMode, comparison, out key, (EqualityComparison<TValue>)null, value, values) : If(comparisonType, comparisonMode, comparison, out key, (TValue x, TValue y) => equalityComparer.Equals(x, y), value, values);
-
-        public static bool If<TKey, TValue>(in IfCT comparisonType, in IfCM comparisonMode, IfComp comparison, out TKey key, EqualityComparison<TValue> comparisonDelegate, TValue value, params KeyValuePair<TKey, KeyValuePair<TValue, Func<bool>>>[] values)
-        {
-            ThrowOnInvalidEqualityIfMethodArg(comparisonType, comparisonMode, comparison, comparisonDelegate);
-
-            return IfInternal(comparisonType, comparisonMode, (in TValue _value, in Func<bool> _predicate) => CheckEqualityComparison(comparison, _value, value, _predicate, comparisonDelegate), out key, new IfKeyKeyValuePairEnumerable<TKey, TValue>(values));
-        }
-        #endregion
-        #endregion
-        #endregion
-#endif
-
 #if CS5
         public static bool IsNullEmptyOrWhiteSpace(in string
 #if CS8
@@ -3117,23 +2644,6 @@ namespace WinCopies.Util
 #endif
             value) => string.IsNullOrEmpty(value) || string.IsNullOrWhiteSpace(value);
 #endif
-
-#if !WinCopies3 && CS5
-        public static void ThrowIfNullEmptyOrWhiteSpace(in string value)
-        {
-            if (IsNullEmptyOrWhiteSpace(value))
-
-                throw new InvalidOperationException($"The given value is null, empty or white space. The given value is: '{value ?? ""}'");
-        }
-
-        public static void ThrowIfNullEmptyOrWhiteSpace(in string value, in string argumentName)
-        {
-            if (IsNullEmptyOrWhiteSpace(value))
-
-                throw new ArgumentException($"The given value is null, empty or white space. The given value is: '{value ?? ""}'", argumentName);
-        }
-#endif
-
         public static BitArray GetBitArray(long[] values)
         {
             var array = new BitArray(values.Length * 64);
@@ -3174,58 +2684,13 @@ namespace WinCopies.Util
 
                 totalArraysIndex += _array.Length;
             }
-
 #if CS8
             arrays[^1].CopyTo(newArray, totalArraysIndex);
 #else
             arrays[arrays.Length - 1].CopyTo(newArray, totalArraysIndex);
 #endif
-
             return newArray;
         }
-
-#if !WinCopies3
-        /// <summary>
-        /// Concatenates multiple arrays from a same item type using the <see cref="Array.LongLength"/> length property. Arrays must have only one dimension.
-        /// </summary>
-        /// <param name="arrays">The different tables to concatenate.</param>
-        /// <returns></returns>
-        [Obsolete("Use the Concatenate method instead.")]
-        public static T[] ConcatenateLong<T>(params T[][] arrays)
-        {
-            // /// <param name="elementType">The type of the items inside the tables.</param>
-
-            T[] newArray;
-
-            long totalArraysLength = 0;
-
-            long totalArraysIndex = 0;
-
-            foreach (T[] array in arrays)
-            {
-                // todo:
-
-                if (array.Rank != 1) throw new ArgumentException("Arrays must have only one dimension.");
-
-                totalArraysLength += array.LongLength;
-            }
-
-            newArray = new T[totalArraysLength];
-
-            for (long i = 0; i < arrays.LongLength - 1; i++)
-            {
-                T[] array = arrays[i];
-
-                array.CopyTo(newArray, totalArraysIndex);
-
-                totalArraysIndex += array.LongLength;
-            }
-
-            arrays[arrays.LongLength - 1].CopyTo(newArray, totalArraysIndex);
-
-            return newArray;
-        }
-#endif
 
         /// <summary>
         /// Checks if a object is a numeric value (an instance of a numeric value type).
@@ -3263,7 +2728,6 @@ namespace WinCopies.Util
         /// <param name="d">The <see cref="decimal"/> in which one set the <see cref="decimal"/> value</param>
         /// <returns>A <see cref="bool"/> value that indicates whether the <see cref="string"/> given is a <see cref="decimal"/>.</returns>
         public static bool IsNumeric(in string s, out decimal d) => decimal.TryParse(s, out d);
-
 #if CS7
         /// <summary>
         /// Get all the flags in a flags enum.
@@ -3280,11 +2744,10 @@ namespace WinCopies.Util
 
             Array array = Enum.GetValues(enumType);
 
-            return enumType.GetEnumUnderlyingType().IsType(typeof(sbyte), typeof(short), typeof(int), typeof(long)) ? (T)Enum.ToObject(enumType, NumericArrayToLongValue(array)) : (T)Enum.ToObject(enumType, NumericArrayToULongValue(array));
+            return enumType.GetEnumUnderlyingType().IsType(true, typeof(sbyte), typeof(short), typeof(int), typeof(long)) ? (T)Enum.ToObject(enumType, NumericArrayToLongValue(array)) : (T)Enum.ToObject(enumType, NumericArrayToULongValue(array));
         }
 #endif
-
-        public static long NumericArrayToLongValue(Array array)
+        public static long NumericArrayToLongValue(System.Array array)
         {
             ThrowIfNull(array, nameof(array));
 
@@ -3297,7 +2760,7 @@ namespace WinCopies.Util
             return values;
         }
 
-        public static ulong NumericArrayToULongValue(Array array)
+        public static ulong NumericArrayToULongValue(System.Array array)
         {
             ThrowIfNull(array, nameof(array));
 
@@ -3316,250 +2779,12 @@ namespace WinCopies.Util
         /// <param name="enumType">The enum type in which to look for the specified enum field value.</param>
         /// <param name="fieldName">The enum field to look for.</param>
         /// <returns>The numeric value corresponding to this enum, in the given enum type underlying type.</returns>
-        public static object GetNumValue
-#if !WinCopies3
-            (in Type enumType,
-#else
-            <T>(
-#endif
-            in string fieldName)
-#if WinCopies3
-where T : Enum
-#endif
+        public static object GetNumValue<T>(in string fieldName) where T : Enum
         {
-#if !WinCopies3
-            ThrowIfNull(enumType, nameof(enumType));
-#else
             Type enumType = typeof(T);
-#endif
 
             return enumType.IsEnum ? System.Convert.ChangeType(enumType.GetField(fieldName).GetValue(null), Enum.GetUnderlyingType(enumType)) : throw new ArgumentException("'enumType' is not an enum type.");
         }
-
-#if !WinCopies3
-        /// <summary>
-        /// Returns an <see cref="ArgumentNullException"/> for a given argument name.
-        /// </summary>
-        /// <param name="argumentName">The name of the <see langword="null"/> argument.</param>
-        /// <returns>An <see cref="ArgumentNullException"/> with the given argument name.</returns>
-        public static ArgumentNullException GetArgumentNullException(in string argumentName) => new ArgumentNullException(argumentName);
-
-        /// <summary>
-        /// Throws an <see cref="ArgumentNullException"/> if a given object is null.
-        /// </summary>
-        /// <param name="obj">The object to check.</param>
-        /// <param name="argumentName">The argument name for the <see cref="ArgumentNullException"/> that is thrown.</param>
-        public static void ThrowIfNull(in object obj, in string argumentName)
-        {
-            if (obj is null)
-
-                throw GetArgumentNullException(argumentName);
-        }
-
-        /// <summary>
-        /// Throws an <see cref="ArgumentNullException"/> if a given object is null.
-        /// </summary>
-        /// <typeparam name="T">The type of <paramref name="obj"/>. This must be a class type.</typeparam>
-        /// <param name="obj">The object to check.</param>
-        /// <param name="argumentName">The argument name for the <see cref="ArgumentNullException"/> that is thrown.</param>
-        public static void ThrowIfNull<T>(in T obj, in string argumentName) where T : class
-        {
-            if (obj is null)
-
-                throw GetArgumentNullException(argumentName);
-        }
-
-        /// <summary>
-        /// Returns <paramref name="obj"/> if it is not null, otherwise throws the <see cref="ArgumentNullException"/> that is returned by the <see cref="GetArgumentNullException(in string)"/> method.
-        /// </summary>
-        /// <param name="obj">The object to check.</param>
-        /// <param name="argumentName">The argument name for the <see cref="ArgumentNullException"/> that is thrown.</param>
-        public static object GetOrThrowIfNull(in object obj, in string argumentName) => GetOrThrowIfNull<object>(obj, argumentName);
-
-        public static object GetOrThrowIfNull(in object obj, in string argumentName, in Func func) => GetOrThrowIfNull(obj, argumentName, func.AsObjectFunc());
-
-        /// <summary>
-        /// Returns <paramref name="obj"/> if it is not null, otherwise throws the <see cref="ArgumentNullException"/> that is returned by the <see cref="GetArgumentNullException(in string)"/> method.
-        /// </summary>
-        /// <typeparam name="T">The type of <paramref name="obj"/>. This must be a class type.</typeparam>
-        /// <param name="obj">The object to check.</param>
-        /// <param name="argumentName">The argument name for the <see cref="ArgumentNullException"/> that is thrown.</param>
-        public static T GetOrThrowIfNull<T>(in T obj, in string argumentName)
-#if !WinCopies3
-            where T : class
-#endif
-            => GetOrThrowIfNull(obj, argumentName, Delegates.Self);
-
-        public static TOut GetOrThrowIfNull<TIn, TOut>(in TIn obj, in string argumentName, in Func<TOut> func) => obj == null ? throw GetArgumentNullException(argumentName) : GetOrThrowIfNull(func, nameof(func))();
-
-        private static TOut GetOrThrowIfNull<TIn, TOut>(in TIn obj, in string argumentName, in Func<TIn, TOut> func) => func(obj
-#if CS8
-            ??
-#else
-            == null ?
-#endif
-            throw GetArgumentNullException(argumentName)
-#if !CS8
-            : obj
-#endif
-            );
-
-        /// <summary>
-        /// Returns an <see cref="ArgumentException"/> for the given object and argument name.
-        /// </summary>
-        /// <typeparam name="T">The type to check.</typeparam>
-        /// <param name="objTypeName">The type name of the object of the exception.</param>
-        /// <param name="argumentName">The argument name for the <see cref="Exception"/> that is returned.</param>
-        /// <returns>An <see cref="ArgumentException"/> with the given argument name.</returns>
-        public static Exception GetExceptionForInvalidType<T>(in string objTypeName, in string argumentName) => new ArgumentException($"{argumentName} must be an instance of {typeof(T)}. {argumentName} is an instance of {objTypeName}", argumentName);
-
-        /// <summary>
-        /// Returns an <see cref="ArgumentException"/> for the given object and argument name.
-        /// </summary>
-        /// <typeparam name="T">The type to check.</typeparam>
-        /// <param name="objType">The type of the object of the exception.</param>
-        /// <param name="argumentName">The argument name for the <see cref="Exception"/> that is returned.</param>
-        /// <returns>An <see cref="ArgumentException"/> with the given argument name.</returns>
-        public static Exception GetExceptionForInvalidType<T>(in Type objType, in string argumentName) => new ArgumentException($"{argumentName} must be an instance of {typeof(T)}. {argumentName} is an instance of {objType}", argumentName);
-
-        /// <summary>
-        /// If <paramref name="obj"/> is not <typeparamref name="T"/>, throws the exception that is returned by the <see cref="GetExceptionForInvalidType{T}(in string, in string)"/> method.
-        /// </summary>
-        /// <typeparam name="T">The type to check.</typeparam>
-        /// <param name="obj">The object to check.</param>
-        /// <param name="argumentName">The argument name for the <see cref="Exception"/> that is thrown.</param>
-        public static void ThrowIfNotType<T>(in object obj, in string argumentName) where T : struct
-        {
-            if (!(obj is T))
-
-                throw GetExceptionForInvalidType<T>(obj.GetType().ToString(), argumentName);
-        }
-
-        /// <summary>
-        /// If <paramref name="obj"/> is not <typeparamref name="T"/>, throws the exception that is returned by the <see cref="GetExceptionForInvalidType{T}(in string, in string)"/> method.
-        /// </summary>
-        /// <typeparam name="T">The type to check.</typeparam>
-        /// <param name="obj">The object to check.</param>
-        /// <param name="argumentName">The argument name for the <see cref="Exception"/> that is thrown.</param>
-        public static void ThrowIfNotTypeOrNull<T>(in object obj, in string argumentName) where T : class
-        {
-            if (obj is null)
-
-                throw GetArgumentNullException(argumentName);
-
-            else if (!(obj is T))
-
-                throw GetExceptionForInvalidType<T>(obj.GetType().ToString(), argumentName);
-        }
-
-        /// <summary>
-        /// Returns a given object when it is an instance of a given type, otherwise throws an <see cref="ArgumentException"/> with a given argument name.
-        /// </summary>
-        /// <typeparam name="T">The type to check.</typeparam>
-        /// <param name="obj">The object to check.</param>
-        /// <param name="argumentName">The argument name for the <see cref="ArgumentException"/>.</param>
-        /// <returns><paramref name="obj"/> when it is an instance of <typeparamref name="T"/>, otherwise throws an <see cref="ArgumentException"/> with <paramref name="argumentName"/> for the argument name.</returns>
-        public static T GetOrThrowIfNotType<T>(in object obj, in string argumentName) where T : struct => obj is T _obj ? _obj : throw GetExceptionForInvalidType<T>(obj.GetType().ToString(), argumentName);
-
-        /// <summary>
-        /// Returns a given object when it is an instance of a given type, otherwise throws an <see cref="ArgumentNullException"/> if <paramref name="obj"/> is <see langword="null"/> or an <see cref="ArgumentException"/> with a given argument name otherwise.
-        /// </summary>
-        /// <typeparam name="T">The type to check.</typeparam>
-        /// <param name="obj">The object to check.</param>
-        /// <param name="argumentName">The argument name for the <see cref="ArgumentException"/>.</param>
-        /// <returns><paramref name="obj"/> when it is an instance of <typeparamref name="T"/>, otherwise throws an <see cref="ArgumentNullException"/> if <paramref name="obj"/> is <see langword="null"/> or an <see cref="ArgumentException"/> with <paramref name="argumentName"/> for the argument name otherwise.</returns>
-        public static T GetOrThrowIfNotTypeOrNull<T>(in object obj, in string argumentName) where T : class => (obj ?? throw GetArgumentNullException(argumentName)) is T _obj ? _obj : throw GetExceptionForInvalidType<T>(obj.GetType().ToString(), argumentName);
-
-        public static InvalidOperationException GetExceptionForDispose(in string objectName, in bool forDisposing) => forDisposing
-                ? new ObjectDisposingException(objectName)
-                : (InvalidOperationException)new ObjectDisposedException(objectName, "The current object or value is disposed.");
-
-        public static InvalidOperationException GetExceptionForDispose(in bool forDisposing) => new InvalidOperationException($"The current object or value is {(forDisposing ? "disposing" : "disposed")}.");
-
-        public static void ThrowOnInvalidCopyToArrayOperation(in Array array, in int arrayIndex, in int count, in string arrayArgumentName, in string arrayIndexArgumentName)
-        {
-            if (array is null)
-
-                throw new ArgumentNullException(arrayArgumentName);
-
-            if (array.Rank != 1)
-
-                throw new ArgumentException("Multidimensional arrays are not supported.", arrayArgumentName);
-
-            if (array.GetLowerBound(0) != 0)
-
-                throw new ArgumentException("The given array has a non-zero lower bound.", arrayArgumentName);
-
-            if (arrayIndex < 0)
-
-                throw new ArgumentOutOfRangeException(arrayIndexArgumentName);
-
-            if (array.Length - arrayIndex < count)
-
-                throw new ArgumentException("The given array has not enough space.", arrayArgumentName);
-        }
-
-        public static void ThrowOnInvalidCopyToArrayOperation(in Array array, in int arrayIndex, in uint count, in string arrayArgumentName, in string arrayIndexArgumentName)
-        {
-            if (array is null)
-
-                throw new ArgumentNullException(arrayArgumentName);
-
-            if (array.Rank != 1)
-
-                throw new ArgumentException("Multidimensional arrays are not supported.", arrayArgumentName);
-
-            if (array.GetLowerBound(0) != 0)
-
-                throw new ArgumentException("The given array has a non-zero lower bound.", arrayArgumentName);
-
-            if (arrayIndex < 0)
-
-                throw new ArgumentOutOfRangeException(arrayIndexArgumentName);
-
-            if (array.Length - arrayIndex < count)
-
-                throw new ArgumentException("The given array has not enough space.", arrayArgumentName);
-        }
-
-        internal static void ThrowIfDisposedInternal(DotNetFix.IDisposable obj)
-        {
-            if (obj.IsDisposed)
-
-                throw GetExceptionForDispose(false);
-        }
-
-        public static void ThrowIfDisposed(DotNetFix.IDisposable obj)
-        {
-            ThrowIfNull(obj, nameof(obj));
-
-            ThrowIfDisposedInternal(obj);
-        }
-
-        internal static void ThrowIfDisposingInternal(IDisposable obj)
-        {
-            if (obj.IsDisposing)
-
-                throw GetExceptionForDispose(true);
-        }
-
-        public static void ThrowIfDisposing(IDisposable obj)
-        {
-            ThrowIfNull(obj, nameof(obj));
-
-            ThrowIfDisposingInternal(obj);
-        }
-
-        public static void ThrowIfDisposingOrDisposed(IDisposable obj)
-        {
-            ThrowIfNull(obj, nameof(obj));
-
-            ThrowIfDisposedInternal(obj);
-
-            ThrowIfDisposingInternal(obj);
-        }
-#endif
-
 #if CS8
         // https://brockallen.com/2016/09/24/process-start-for-urls-on-net-core/
 
@@ -3604,7 +2829,6 @@ where T : Enum
             //}
         }
 #endif
-#if WinCopies3
     }
 #if WinCopies4
     namespace
@@ -3613,7 +2837,18 @@ where T : Enum
 #endif
         Consts
     {
-#endif
+        public static class TypeSizes
+        {
+            public const byte Int1 = sizeof(byte);
+            public const byte Int2 = Int1 << 1;
+            public const byte Int4 = Int2 << 1;
+            public const byte Int8 = Int4 << 1;
+            public const byte Int16 = Int8 << 1;
+            public const byte Int32 = Int16 << 1;
+            public const byte Int64 = Int32 << 1;
+
+            public const byte HalfByteMaxValue = byte.MaxValue >> Int4;
+        }
 #if WinCopies4
         namespace
 #else
@@ -3662,25 +2897,27 @@ where T : Enum
         public static class Common
         {
 #endif
-        public const int NotSetIndex = -1;
-        public const int DefaultStartIndex = 0;
+            public const int DefaultBufferLength = 4096;
 
-        public const string NotApplicable = "N/A";
+            public const int NotSetIndex = -1;
+            public const int DefaultStartIndex = 0;
 
-        public const char PathFilterChar = '*';
-        public const char LikeStatementChar = '%';
+            public const string NotApplicable = "N/A";
 
-        public const byte LSBMask = 1;
-        public const byte MSBMask = LSBMask << 7;
-        public const byte SetToFalseMask = byte.MaxValue;
+            public const char PathFilterChar = '*';
+            public const char LikeStatementChar = '%';
 
-        public const ushort MSBMask16 = LSBMask << 15;
-        public const ushort SetToFalseMask16 = ushort.MaxValue;
+            public const byte LSBMask = 1;
+            public const byte MSBMask = LSBMask << 7;
+            public const byte SetToFalseMask = byte.MaxValue;
 
-        public const BindingFlags DefaultBindingFlagsForPropertySet = BindingFlags.Public | BindingFlags.NonPublic |
-                         BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly;
+            public const ushort MSBMask16 = LSBMask << 15;
+            public const ushort SetToFalseMask16 = ushort.MaxValue;
+
+            public const BindingFlags DefaultBindingFlagsForPropertySet = BindingFlags.Public | BindingFlags.NonPublic |
+                             BindingFlags.Static | BindingFlags.Instance | BindingFlags.DeclaredOnly;
 #if WinCopies4
-    }
+        }
 #endif
     }
 }

@@ -2,11 +2,7 @@
 
 using WinCopies.Util;
 
-namespace WinCopies.
-#if !WinCopies3
-    Util.
-#endif
-    ActionRunners
+namespace WinCopies.ActionRunners
 {
     public static class BoolChecks
     {

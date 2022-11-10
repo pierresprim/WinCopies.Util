@@ -18,28 +18,47 @@
 using System;
 using System.Collections.Generic;
 
-using static WinCopies.
-#if WinCopies3
-    ThrowHelper;
-#else
-    Util.Util;
-#endif
+using WinCopies.Util;
+
+using static WinCopies.ThrowHelper;
 
 namespace WinCopies
-#if !WinCopies3
-.Util
-#endif
 {
     /// <summary>
     /// This class contains static methods that can be used as delegates.
     /// </summary>
     public static class Delegates
     {
-        public static ulong GetULongLength(Array array) => (ulong)array.Length;
+        public static Converter<int, T[]> GetArrayConverter<T>(T[] array, int start, string startParamName) => destinationLength => array.Length - start < destinationLength ? throw new ArgumentOutOfRangeException(startParamName) : array;
+
+        public static Converter<int, T[]> GetArrayConverter<T>() => destinationLength => new T[destinationLength];
+
+        public static ConverterIn<int, T[]> GetArrayConverterIn<T>(T[] array, int start, string startParamName) => (in int destinationLength) => array.Length - start < destinationLength ? throw new ArgumentOutOfRangeException(startParamName) : array;
+
+        public static ConverterIn<int, T[]> GetArrayConverterIn<T>() => (in int destinationLength) => new T[destinationLength];
+
+        public static Converter<int, T> GetIndexer<T>(
+#if CS5
+            System.Collections.Generic.IReadOnlyList<T>
+#else
+            T[]
+#endif
+            list) => i => list[i];
+        public static ConverterIn<int, T> GetIndexerIn<T>(
+#if CS5
+            System.Collections.Generic.IReadOnlyList<T>
+#else
+            T[]
+#endif
+            list) => (in int i) => list[i];
+
+        public static Converter<int, object> GetIndexer(System.Array array) => i => array.GetValue(i);
+        public static ConverterIn<int, object> GetIndexerIn(System.Array array) => (in int i) => array.GetValue(i);
+
+        public static ulong GetULongLength(System.Array array) => (ulong)array.Length;
 #if CS5
         public static ulong GetULongLength<T>(IReadOnlyList<T> array) => (ulong)array.Count;
 #endif
-
         public static bool AreEqualIn(in object x, in object y) => x == y;
         public static bool AreEqual(object x, object y) => AreEqualIn(x, y);
 
@@ -271,6 +290,8 @@ namespace WinCopies
         public static void EmptyVoid() { }
         public static void EmptyVoid(object parameter) { }
         public static void EmptyVoid<T>(T parameter) { }
+        public static void EmptyVoid(ref object parameter) { }
+        public static void EmptyVoid<T>(ref T parameter) { }
 
         public static T
 #if CS9
@@ -490,59 +511,43 @@ namespace WinCopies
     public static class Bool
     {
         public static bool And(bool x, bool y) => x && y;
-
         public static bool Or(bool x, bool y) => x || y;
-
         public static bool XOr(bool x, bool y) => x ^ y;
-
         public static bool Reversed(bool value) => !value;
 
         public static bool AndIn(in bool x, in bool y) => x && y;
-
         public static bool OrIn(in bool x, in bool y) => x || y;
-
         public static bool XOrIn(in bool x, in bool y) => x ^ y;
-
         public static bool ReversedIn(in bool value) => !value;
 
-#if !WinCopies3
-        public static bool True(bool value) => true;
-
-        public static bool False(bool value) => false;
-#endif
-
         public static bool True() => true;
-
         public static bool False() => false;
 
         public static bool True(object value) => true;
-
         public static bool False(object value) => false;
-
 #if CS8
         public static bool TrueNull(object? value) => true;
-
         public static bool FalseNull(object? value) => false;
 #endif
-
         public static bool True<T>(T value) => true;
-
         public static bool False<T>(T value) => false;
 
-        public static bool IsTrue(bool? value) => value == true;
-
-        public static bool IsFalse(bool? value) => value == false;
-
         public static bool TrueIn(in object value) => true;
-
         public static bool FalseIn(in object value) => false;
 
         public static bool TrueIn<T>(in T value) => true;
-
         public static bool FalseIn<T>(in T value) => false;
 
-        public static bool IsTrueIn(in bool? value) => value == true;
+        public static bool TrueRef(ref object value) => true;
+        public static bool FalseRef(ref object value) => false;
 
+        public static bool TrueRef<T>(ref T value) => true;
+        public static bool FalseRef<T>(ref T value) => false;
+
+        public static bool IsTrue(bool? value) => value == true;
+        public static bool IsFalse(bool? value) => value == false;
+
+        public static bool IsTrueIn(in bool? value) => value == true;
         public static bool IsFalseIn(in bool? value) => value == false;
 
         public static bool GetReversedBoolFunc(in Func<bool> func) => !GetOrThrowIfNull(func, nameof(func))();
@@ -774,9 +779,7 @@ namespace WinCopies
         }
 
         public static bool And(IEnumerable<bool> values) => AndIn(values);
-
         public static bool Or(IEnumerable<bool> values) => OrIn(values);
-
         public static bool XOr(IEnumerable<bool> values) => XOrIn(values);
     }
 }
