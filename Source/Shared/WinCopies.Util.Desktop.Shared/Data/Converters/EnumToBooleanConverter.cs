@@ -19,23 +19,15 @@ using System;
 using System.Globalization;
 using System.Windows.Data;
 
-#if WinCopies3
 using static WinCopies.Util.Data.ConverterHelper;
-#endif
 
 namespace WinCopies.Util.Data
 {
     /// <summary>
     /// Data converter for checking whether an enum equals a parameter.
     /// </summary>
-#if !WinCopies3
-    /// <remarks>This class can also work for numeric types (int, ...)</remarks>
-#else
     [ValueConversion(typeof(Enum), typeof(bool), ParameterType = typeof(Enum))]
-#endif
-    public class EnumToBooleanConverter :
-#if WinCopies3
-        TwoWayConverterBase<Enum, Enum, bool>
+    public class EnumToBooleanConverter : TwoWayConverterBase<Enum, Enum, bool>
     {
         /// <summary>
         /// No <see langword="null"/> argument is allowed for value nor parameter.
@@ -77,38 +69,13 @@ namespace WinCopies.Util.Data
 
             return false;
         }
-#else
-        ConverterBase
-    {
-        /// <summary>
-        /// Checks if an enum value equals a parameter.
-        /// </summary>
-        /// <param name="value">The value produced by the binding source.</param>
-        /// <param name="targetType">The type of the binding target property. This type must be <see cref="System.Boolean"/>.</param>
-        /// <param name="parameter">The converter parameter to use. This represents the value to compare with the value.</param>
-        /// <param name="culture">The culture to use in the converter.</param>
-        /// <returns>A value indicating whether <paramref name="value"/> is equal to <paramref name="parameter"/>.</returns>
-        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
-
-            // if (targetType != typeof(System.Boolean)) throw new ArgumentException("The targetType is not System.Boolean.");
-
-            value.Equals(parameter);
-
-        public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => (bool)value ? parameter : Binding.DoNothing;
-#endif
     }
 
     /// <summary>
     /// Data converter for checking whether an enum is not equal to a parameter.
     /// </summary>
-#if !WinCopies3
-    /// <remarks>This class can also work for numeric types (int, ...)</remarks>
-#else
     [ValueConversion(typeof(Enum), typeof(bool), ParameterType = typeof(Enum))]
-#endif
-    public class EnumToReversedBooleanConverter :
-#if WinCopies3
-        EnumToBooleanConverter
+    public class EnumToReversedBooleanConverter : EnumToBooleanConverter
     {
         protected override bool Convert(Enum value, Enum parameter, CultureInfo culture, out bool result)
         {
@@ -120,12 +87,5 @@ namespace WinCopies.Util.Data
         }
 
         protected override bool ConvertBack(bool value, Enum parameter, CultureInfo culture, out Enum result) => base.ConvertBack(!value, parameter, culture, out result);
-#else
-        ConverterBase
-    {
-        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture) => !value.Equals(parameter);
-
-        public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => !(bool)value ? parameter : Binding.DoNothing;
-#endif
     }
 }

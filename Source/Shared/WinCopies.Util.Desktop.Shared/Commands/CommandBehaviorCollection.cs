@@ -31,11 +31,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Windows;
 
-namespace WinCopies.
-#if !WinCopies3
-Util.
-#endif
-Commands
+namespace WinCopies.Commands
 {
     public class CommandBehaviorCollection
     {

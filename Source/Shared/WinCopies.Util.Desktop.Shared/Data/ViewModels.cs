@@ -94,7 +94,7 @@ namespace WinCopies.Util.Data
         // /// <remarks>To use this method, you need to work with the WinCopies Framework Property changed notification pattern. See the website of the WinCopies Framework for more details.</remarks>
         protected virtual bool Update(string propertyName, string fieldName, object newValue, Type declaringType, bool performIntegrityCheck = true)
         {
-            (bool propertyChanged, object oldValue) = performIntegrityCheck ? this.SetProperty(propertyName, fieldName, newValue, declaringType) : ((INotifyPropertyChanged)this).SetField(fieldName, newValue, declaringType);
+            (bool propertyChanged, object oldValue) = performIntegrityCheck ? this.SetProperty(propertyName, fieldName, newValue, declaringType) : this.SetField(fieldName, newValue, declaringType);
 
             if (propertyChanged)
 
@@ -123,58 +123,11 @@ namespace WinCopies.Util.Data
 
         protected virtual bool Update<T>(string propertyName, object newValue, bool performIntegrityCheck = true) => Update(propertyName, newValue, typeof(T), performIntegrityCheck);
 #endif
-        protected virtual bool UpdateValue<T>(ref T value, T newValue, System.ComponentModel.PropertyChangedEventArgs propertyChangedEventArgs)
-        {
-            T _value = value;
-
-            return UtilHelpers.UpdateValue(ref value, newValue, () => OnPropertyChanged(propertyChangedEventArgs, _value, newValue
-            ));
-        }
-
-        protected virtual bool UpdateValue<T>(ref T value, in T newValue, in string propertyName) => UpdateValue(ref value, newValue, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-
-        protected virtual void OnPropertyChanged(in System.ComponentModel.PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
-
-        protected virtual void OnPropertyChanged(in System.ComponentModel.PropertyChangedEventArgs e, in object oldValue, in object newValue) => OnPropertyChanged(e);
-
-        /// <summary>
-        /// Raises the <see cref="PropertyChanged"/> event.
-        /// </summary>
-        /// <param name="propertyName">The name of the property for which to set a new value.</param>
-        /// <param name="oldValue">The old value of the property. This parameter is ignored by default. You can override this method and use the <see cref="PropertyChangedEventArgs"/> if you want for the <see cref="PropertyChanged"/> event to notify for this value.</param>
-        /// <param name="newValue">The new value of the property. This parameter is ignored by default. You can override this method and use the <see cref="PropertyChangedEventArgs"/> if you want for the <see cref="PropertyChanged"/> event to notify for this value.</param>
-        protected virtual void OnPropertyChanged(in string propertyName, in object oldValue, in object newValue) => OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs(propertyName), oldValue, newValue);
-#if CS7
-        /// <summary>
-        /// Sets a value for a property. If succeeds, then call the <see cref="OnPropertyChanged(string, object, object)"/> method to raise the <see cref="PropertyChanged"/> event.
-        /// </summary>
-        /// <param name="propertyName">The name of the property for which to set a new value</param>
-        /// <param name="newValue">The value to set in the property</param>
-        /// <param name="declaringType">The declaring type of both the property and its associated field</param>
-        /// <param name="performIntegrityCheck">Whether to throw when the property is not settable</param>
-        protected virtual bool Update(string propertyName, object newValue, Type declaringType, bool performIntegrityCheck = true)
-        {
-            (bool propertyChanged, object oldValue) = this.SetProperty(propertyName, newValue, declaringType);
-
-            if (propertyChanged) OnPropertyChanged(propertyName, oldValue, newValue);
-
-            return propertyChanged;
-        }
-
-        protected virtual bool Update<T>(string propertyName, object newValue, bool performIntegrityCheck = true) => Update(propertyName, newValue, typeof(T), performIntegrityCheck);
-#endif
-        /// <summary>
-        /// Returns the current instance of this class as the value of the target property for this markup extension.
-        /// </summary>
-        /// <param name="serviceProvider">A service provider helper that can provide services for the markup extension.</param>
-        /// <returns>The object value to set on the property where the extension is applied.</returns>
-        public override object ProvideValue(IServiceProvider serviceProvider) => this;
     }
 
     public enum PropertyChangeScope
     {
         Model = 0,
-
         ViewModel = 1
     }
 
@@ -314,6 +267,9 @@ namespace WinCopies.Util.Data
             ;
     }
 
+    /// <summary>
+    /// Provides a base class for view models.
+    /// </summary>
     public class CollectionViewModel<T> : ViewModelRoot
 #if CS7
         , IObservableCollection<T>
@@ -563,7 +519,7 @@ namespace WinCopies.Util.Data
 
         System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        void ICollection.CopyTo(Array array, int index) => WinCopies.Collections.EnumerableExtensions.CopyTo(this, array, index, Count);
+        void ICollection.CopyTo(Array array, int index) => Collections.EnumerableExtensions.CopyTo(this, array, index, Count);
 
         int IList.Add(object value)
         {

@@ -112,13 +112,13 @@ namespace WinCopies.Util.Data
         }
 
         protected override
-#if WinCopies3 && CS10
+#if CS10
             PushBinding
 #else
             Freezable
 #endif
             CreateInstanceCore() => new
-#if !(WinCopies3 && CS10)
+#if !CS10
             PushBinding
 #endif
             ();

@@ -21,23 +21,7 @@ namespace WinCopies.Util.Data
 {
     public class ToStringConverter : AlwaysConvertibleOneWayConverter<object, string, string>
     {
-        public override
-#if WinCopies3
-            IReadOnlyConversionOptions
-#else
-            ConversionOptions
-#endif
-            ConvertOptions =>
-#if WinCopies3
-        ConverterHelper.
-#endif
-            ParameterCanBeNull;
-
-#if !WinCopies3
-        public override ConversionOptions ConvertBackOptions => AllowNull;
-
-        protected override object ConvertBack(string value, string parameter, CultureInfo culture) => throw new System.NotSupportedException();
-#endif
+        public override IReadOnlyConversionOptions ConvertOptions => ConverterHelper.ParameterCanBeNull;
 
         protected override string Convert(object value, string parameter, CultureInfo culture) => string.IsNullOrEmpty(parameter) ? value.ToString() : string.Format(parameter, value);
     }

@@ -30,11 +30,7 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
 
-namespace WinCopies.
-#if !WinCopies3
-    Util.
-#endif
-    Commands
+namespace WinCopies.Commands
 {
     /// <summary>
     /// Defines the command behavior binding

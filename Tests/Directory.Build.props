@@ -1,74 +1,79 @@
 <Project>
-  <!--Constants-->
+	<!--Constants-->
+	<Import Project="$(SolutionDir)\TargetFrameworks.props" />
 
-  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
-    <DefineConstants>TRACE;$(DefineConstants)</DefineConstants>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
+		<DefineConstants>TRACE;$(DefineConstants)</DefineConstants>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework.TrimEnd(`0123456789.`))'=='netcoreapp'">
-    <DefineConstants>CS6;CS7;CS8;NETCORE;$(DefineConstants)</DefineConstants>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(TargetFramework.TrimEnd(`0123456789.`))'=='netcoreapp'">
+		<DefineConstants>CS6;CS7;CS8;NETCORE;$(DefineConstants)</DefineConstants>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework.TrimEnd(`-windows`))'=='net5.0'">
-    <DefineConstants>CS6;CS7;CS8;CS9;$(DefineConstants)</DefineConstants>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(TargetFramework.TrimEnd(`0123456789-windows`))' == 'net5.'">
+		<DefineConstants>CS6;CS7;CS8;CS9;NET5;$(DefineConstants)</DefineConstants>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework.TrimEnd(`0123456789-windows`))' == 'net5.'">
-    <DefineConstants>NET5;$(DefineConstants)</DefineConstants>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(TargetFramework.TrimEnd(`0123456789-windows`))' == 'net6.'">
+		<DefineConstants>CS6;CS7;CS8;CS9;CS10;NET5;NET6;$(DefineConstants)</DefineConstants>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)'=='net40'">
-    <DefineConstants>CS6;$(DefineConstants)</DefineConstants>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(TargetFramework.TrimEnd(`0123456789-windows`))' == 'net7.'">
+		<DefineConstants>CS6;CS7;CS8;CS9;CS10;CS11;NET5;NET6;NET7;$(DefineConstants)</DefineConstants>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)'=='net472'">
-    <DefineConstants>CS6;CS7;$(DefineConstants)</DefineConstants>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(TargetFramework)'=='net40'">
+		<DefineConstants>CS6;$(DefineConstants)</DefineConstants>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)'=='net48'">
-    <DefineConstants>CS6;CS7;$(DefineConstants)</DefineConstants>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(TargetFramework)'=='net472'">
+		<DefineConstants>CS6;CS7;$(DefineConstants)</DefineConstants>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
-    <DefineConstants>CS6;CS7;$(DefineConstants)</DefineConstants>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(TargetFramework)'=='net48'">
+		<DefineConstants>CS6;CS7;$(DefineConstants)</DefineConstants>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.1'">
-    <DefineConstants>CS6;CS7;CS8;$(DefineConstants)</DefineConstants>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
+		<DefineConstants>CS6;CS7;$(DefineConstants)</DefineConstants>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework.TrimEnd(`0123456789.`))' == 'netstandard'">
-    <DefineConstants>NETSTANDARD;$(DefineConstants)</DefineConstants>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.1'">
+		<DefineConstants>CS6;CS7;CS8;$(DefineConstants)</DefineConstants>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Platform)'=='x64'">
-    <DefineConstants>WIN64;$(DefineConstants)</DefineConstants>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(TargetFramework.TrimEnd(`0123456789.`))' == 'netstandard'">
+		<DefineConstants>NETSTANDARD;$(DefineConstants)</DefineConstants>
+	</PropertyGroup>
 
-  <!--End Constants-->
-  
-  <!--Source Control-->
+	<PropertyGroup Condition="'$(Platform)'=='x64'">
+		<DefineConstants>WIN64;$(DefineConstants)</DefineConstants>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
+	<!--End Constants-->
 
-  <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789-windows`))' == 'net5.'">
-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
+	<!--Source Control-->
 
-  <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789-windows`))' != 'net5.'">
+	<ItemGroup>
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<!--<ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789-windows`))' != 'net5.'">
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
-  
-  <!--End Source Control-->
+  </ItemGroup>-->
+
+	<!--End Source Control-->
 </Project>

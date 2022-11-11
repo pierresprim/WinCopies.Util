@@ -22,9 +22,6 @@ using System.Windows;
 using System.Windows.Media.Imaging;
 
 namespace WinCopies
-#if !WinCopies3
-    .Util
-#endif
 {
     public static class Clipboard
     {

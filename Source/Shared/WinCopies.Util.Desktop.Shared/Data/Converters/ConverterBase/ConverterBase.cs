@@ -25,7 +25,6 @@ using static WinCopies.Util.Data.ConverterHelper;
 
 namespace WinCopies.Util.Data
 {
-#if WinCopies3
     public interface IReadOnlyConversionOptions
     {
         bool AllowNullValue { get; }
@@ -45,43 +44,22 @@ namespace WinCopies.Util.Data
         bool IReadOnlyConversionOptions.AllowNullParameter => AllowNullParameter;
 #endif
     }
-#endif
 
-    public class
-#if WinCopies3
-        ReadOnlyConversionOptions : IReadOnlyConversionOptions
-#else
-        ConversionOptions
-#endif
+    public class ReadOnlyConversionOptions : IReadOnlyConversionOptions
     {
         public bool AllowNullValue { get; }
 
         public bool AllowNullParameter { get; }
 
-        public
-#if WinCopies3
-        ReadOnlyConversionOptions
-#else
-        ConversionOptions
-#endif
-            ()
-        { /* Left empty. */ }
+        public ReadOnlyConversionOptions() { /* Left empty. */ }
 
-        public
-#if WinCopies3
-        ReadOnlyConversionOptions
-#else
-        ConversionOptions
-#endif
-            (in bool allowNullValue, in bool allowNullParameter)
+        public ReadOnlyConversionOptions(in bool allowNullValue, in bool allowNullParameter)
         {
             AllowNullValue = allowNullValue;
-
             AllowNullParameter = allowNullParameter;
         }
     }
 
-#if WinCopies3
     public class ConversionOptions : IConversionOptions
     {
         public bool AllowNullValue { get; set; }
@@ -96,14 +74,12 @@ namespace WinCopies.Util.Data
 
             AllowNullParameter = allowNullParameter;
         }
-
 #if !CS8
         bool IReadOnlyConversionOptions.AllowNullValue => AllowNullValue;
 
         bool IReadOnlyConversionOptions.AllowNullParameter => AllowNullParameter;
 #endif
     }
-#endif
 
     [Flags]
     public enum ConversionWays : byte
@@ -117,7 +93,6 @@ namespace WinCopies.Util.Data
 
     public static class ConverterHelper
     {
-#if WinCopies3
         public static ReadOnlyConversionOptions AllowNull { get; } = new ReadOnlyConversionOptions(true, true);
 
         public static ReadOnlyConversionOptions ValueCanBeNull { get; } = new ReadOnlyConversionOptions(true, false);
@@ -125,7 +100,6 @@ namespace WinCopies.Util.Data
         public static ReadOnlyConversionOptions ParameterCanBeNull { get; } = new ReadOnlyConversionOptions(false, true);
 
         public static ReadOnlyConversionOptions NotNull { get; } = new ReadOnlyConversionOptions(false, false);
-#endif
 
         public static bool CheckForNullItem(in object value, in bool methodParameter) => !methodParameter && value == null;
 
@@ -186,43 +160,15 @@ namespace WinCopies.Util.Data
 
     public abstract class ConverterBase<TSource, TParam, TDestination> : ConverterBase
     {
-#if !WinCopies3
-        public static ConversionOptions AllowNull { get; } = new ConversionOptions(true, true);
+        public abstract IReadOnlyConversionOptions ConvertOptions { get; }
 
-        public static ConversionOptions ValueCanBeNull { get; } = new ConversionOptions(true, false);
-
-        public static ConversionOptions ParameterCanBeNull { get; } = new ConversionOptions(false, true);
-
-        public static ConversionOptions NotNull { get; } = new ConversionOptions(false, false);
-#endif
-
-        public abstract
-#if WinCopies3
-            IReadOnlyConversionOptions
-#else
-            ConversionOptions
-#endif
-            ConvertOptions
-        { get; }
-
-        public abstract
-#if WinCopies3
-            IReadOnlyConversionOptions
-#else
-            ConversionOptions
-#endif
-           ConvertBackOptions
-        { get; }
+        public abstract IReadOnlyConversionOptions ConvertBackOptions { get; }
 
         public abstract ConversionWays Direction { get; }
 
         protected abstract bool Convert(TSource value, TParam parameter, CultureInfo culture, out TDestination result);
 
         protected abstract bool ConvertBack(TDestination value, TParam parameter, CultureInfo culture, out TSource result);
-
-#if !WinCopies3
-        public bool CheckForNullItem(in object value, in bool methodParameter) => !methodParameter && value == null;
-#endif
 
         public sealed override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

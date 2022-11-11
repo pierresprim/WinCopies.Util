@@ -46,15 +46,10 @@ namespace WinCopies.Util.Data
         /// <param name="parameter">The value to return if the value to convert is false. This parameter can't be the <see cref="Visibility.Visible"/> value. This parameter can be null.</param>
         /// <param name="culture">The culture used for the conversion. This parameter isn't evaluated in this converter.</param>
         /// <returns><see cref="Visibility.Visible"/> if the value to convert is <see langword="true"/>, if not, the value of the parameter if it is not null, otherwise <see cref="Visibility.Collapsed"/>.</returns>
-        public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (parameter != null && (!(parameter is Visibility) || (Visibility)parameter == Visibility.Visible))
+        public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => parameter != null && (!(parameter is Visibility) || (Visibility)parameter == Visibility.Visible) ?
 
                 // todo:
 
-                throw new ArgumentException("parameter must be a value of the System.Windows.Visibility enum and can't be the System.Windows.Visibility.Visible value.");
-
-            return (bool)value ? Visibility.Visible : parameter ?? Visibility.Collapsed;
-        }
+                throw new ArgumentException("parameter must be a value of the System.Windows.Visibility enum and can't be the System.Windows.Visibility.Visible value.") : (bool)value ? Visibility.Visible : parameter ?? Visibility.Collapsed;
     }
 }

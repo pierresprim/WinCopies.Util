@@ -26,13 +26,7 @@ namespace WinCopies.Util.Data
         /// <summary>
         /// Gets a value indicating whether <see langword="null"/> values are allowed. When this property is set to <see langword="false"/>, validation will fail for <see langword="null"/> values.
         /// </summary>
-        public abstract bool
-#if WinCopies3
-            AllowNullValue
-#else
-            AllowNullValueOverride
-#endif
-        { get; }
+        public abstract bool AllowNullValue { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ValidationRule"/> class.
@@ -60,12 +54,6 @@ namespace WinCopies.Util.Data
         /// <param name="value">The value from the binding target to check.</param>
         /// <param name="cultureInfo">The culture to use in this rule.</param>
         /// <returns>A <see cref="ValidationResult"/> object.</returns>
-        public sealed override ValidationResult Validate(object value, CultureInfo cultureInfo) => value == null ?
-#if WinCopies3
-            AllowNullValue
-#else
-            AllowNullValueOverride
-#endif
-            ? ValidationResult.ValidResult : new ValidationResult(false, "The value cannot be null or empty.") : value is T _value ? Validate(_value, cultureInfo): new ValidationResult(false, $"The value is not a {typeof(T).Name} value.");
+        public sealed override ValidationResult Validate(object value, CultureInfo cultureInfo) => value == null ? AllowNullValue ? ValidationResult.ValidResult : new ValidationResult(false, "The value cannot be null or empty.") : value is T _value ? Validate(_value, cultureInfo) : new ValidationResult(false, $"The value is not a {typeof(T).Name} value.");
     }
 }

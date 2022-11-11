@@ -1,5 +1,4 @@
-﻿#if WinCopies3
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -127,4 +126,3 @@ namespace WinCopies.Util.Data
 #endif
     }
 }
-#endif

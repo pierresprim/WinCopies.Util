@@ -39,7 +39,6 @@ namespace WinCopies.Markup
     public class Boolean : ValueMarkupExtension<bool>
     {
         public Boolean(in bool value) : base(value) { /* Left empty. */ }
-
         public Boolean(in string value) : base(bool.Parse(value)) { /* Left empty. */ }
     }
 

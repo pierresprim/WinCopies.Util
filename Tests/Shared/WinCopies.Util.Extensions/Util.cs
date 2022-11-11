@@ -20,13 +20,8 @@ using WinCopies.Collections;
 
 namespace WinCopies.Util.Tests
 {
-#if WinCopies3
-[TestClass]
-public  
-#else
-    public partial
-#endif
-    class UtilTests
+    [TestClass]
+    public class UtilTests
     {
         [TestMethod]
         public void GetIf()

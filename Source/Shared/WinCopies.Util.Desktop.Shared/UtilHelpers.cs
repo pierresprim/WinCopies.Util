@@ -46,7 +46,7 @@ namespace WinCopies.Util.Desktop
 {
     public static class UtilHelpers
     {
-        private static bool TryGetValue(in object item, in string value, in bool inherit, out string result, ref TypeConverterAttribute
+        private static bool TryGetValue(in object item, in string value, in bool inherit, out string? result, ref TypeConverterAttribute
 #if CS8
                 ?
 #endif
@@ -122,7 +122,7 @@ namespace WinCopies.Util.Desktop
             return false;
         }
 
-        public static bool TryGetValue(in IEnumerable values, ref string value, bool inherit, out object
+        public static bool TryGetValue(in IEnumerable values, ref string? value, bool inherit, out object
 #if CS8
             ?
 #endif
@@ -189,7 +189,7 @@ namespace WinCopies.Util.Desktop
                         return true;
                     }
 
-                    if (TryGetValue(item, _value, inherit, out string _result, ref typeConverterAttribute, ref _typeConverterAttribute, ref type, ref _type, ref typeConverter, ref _typeConverter, ref tmp))
+                    if (TryGetValue(item, _value, inherit, out string? _result, ref typeConverterAttribute, ref _typeConverterAttribute, ref type, ref _type, ref typeConverter, ref _typeConverter, ref tmp))
                     {
                         _value = _result;
 
@@ -256,7 +256,7 @@ namespace WinCopies.Util.Desktop
 #endif
                 _typeConverter = null;
 
-            return TryGetValue(item, value, inherit, out string result, ref typeConverterAttribute, ref _typeConverterAttribute, ref type, ref _type, ref typeConverter, ref _typeConverter, ref value) ? result : item?.ToString();
+            return TryGetValue(item, value, inherit, out string? result, ref typeConverterAttribute, ref _typeConverterAttribute, ref type, ref _type, ref typeConverter, ref _typeConverter, ref value) ? result : item?.ToString();
         }
 
         public static RoutedEventArgs<BooleanEventArgs> GetRoutedBooleanEventArgs(in RoutedEvent @event, in bool value) => new
@@ -299,21 +299,9 @@ namespace WinCopies.Util.Desktop
 
         public static DependencyPropertyKey RegisterAttachedReadOnly<TValue, TOwner>(in string propertyName, in TValue defaultValue) => RegisterAttachedReadOnly(propertyName, typeof(TOwner), defaultValue);
 
-        public static RoutedEvent
-#if WinCopies3
-            Register
-#else
-            RegisterRoutedEvent
-#endif
-            <TEventHandler, TOwner>(in string eventName, in RoutingStrategy routingStrategy) => EventManager.RegisterRoutedEvent(eventName, routingStrategy, typeof(TEventHandler), typeof(TOwner));
+        public static RoutedEvent Register<TEventHandler, TOwner>(in string eventName, in RoutingStrategy routingStrategy) => EventManager.RegisterRoutedEvent(eventName, routingStrategy, typeof(TEventHandler), typeof(TOwner));
 
-        public static void RaiseEvent(this UIElement uiElement, RoutedEvent routedEvent) => (uiElement ?? throw WinCopies.
-#if WinCopies3
-            ThrowHelper
-#else
-            Util.Util
-#endif
-            .GetArgumentNullException(nameof(uiElement))).RaiseEvent(new RoutedEventArgs(routedEvent));
+        public static void RaiseEvent(this UIElement uiElement, RoutedEvent routedEvent) => (uiElement ?? throw WinCopies.ThrowHelper.GetArgumentNullException(nameof(uiElement))).RaiseEvent(new RoutedEventArgs(routedEvent));
 
         public static void UpdateAttachedRoutedEventHandler(in DependencyObject d, in RoutedEvent @event, in Delegate handler, in Converter<UIElement, Action<RoutedEvent, Delegate>> converter)
         {

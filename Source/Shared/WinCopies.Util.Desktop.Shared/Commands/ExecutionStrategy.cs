@@ -27,11 +27,7 @@
 
 using System;
 
-namespace WinCopies.
-#if !WinCopies3
-    Util.
-#endif
-    Commands
+namespace WinCopies.Commands
 {
     /// <summary>
     /// Defines the interface for a strategy of execution for the CommandBehaviorBinding

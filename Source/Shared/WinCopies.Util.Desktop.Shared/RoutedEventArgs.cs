@@ -19,11 +19,7 @@ using System;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 
-#if !WinCopies3
-namespace WinCopies.Util
-#else
 namespace WinCopies
-#endif
 {
     /// <summary>
     /// Encapsulates a common <see cref="EventArgs"/> into a <see cref="RoutedEventArgs"/> in an event delegate.
@@ -95,11 +91,7 @@ namespace WinCopies
         public RoutedEventArgs(RoutedEvent routedEvent, object source, T originalEventArgs) : base(routedEvent, source) => OriginalEventArgs = originalEventArgs;
     }
 
-    namespace
-#if WinCopies3
-        Util.
-#endif
-        Data
+    namespace Util.Data
     {
         public delegate void ValueChangedRoutedEventHandler(object sender, ValueChangedRoutedEventArgs e);
 
@@ -108,7 +100,6 @@ namespace WinCopies
         public class ValueChangedRoutedEventArgs : RoutedEventArgs
         {
             public object OldValue { get; }
-
             public object NewValue { get; }
 
             public ValueChangedRoutedEventArgs(in object oldValue, in object newValue)

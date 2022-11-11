@@ -10,11 +10,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)BackgroundWorker.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Collections\INotifyCollectionChanging.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\NotifyCollectionChangedEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\ObservableCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\ObservableTreeNode.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Collections\Old.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\ReadOnlyObservableCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections\ReadOnlyObservableTreeNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Commands\ApplicationCommands.cs" />
@@ -46,7 +44,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\BooleanMultiConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\CheckableObject.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\IntConversionResultToStringConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\SystemTypeConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\CoalesceConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\ConverterArray.cs" />
@@ -68,7 +65,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\IsNullConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\SimpleLinkedListConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\ToStringConverter.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\Validation\IntRangeRule.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MarkupExtensions\BooleanMarkupExtension.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UtilHelpers.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\MenuItem.cs" />
@@ -82,8 +78,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\ReverseBooleanConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Validation\DecimalRangeRule.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Validation\ValidationRule.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\ValueChangedEventArgs.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\ValueObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\ViewModels.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\VisibilityToBooleanConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\VisibilityToReversedBooleanConverter.cs" />

@@ -1,4 +1,6 @@
 <Project>
+	<Import Project="$(SolutionDir)\TargetFrameworks.props" />
+
 	<PropertyGroup>
 		<Product>WinCopies framework</Product>
 		<Authors>Pierre Sprimont</Authors>

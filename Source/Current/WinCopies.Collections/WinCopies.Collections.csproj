@@ -11,7 +11,6 @@
 	</PropertyGroup>
 
 	<Import Project="$(SolutionDir)\ExtraProperties.props" Condition="'$(Configuration)'=='Release'" />
-	<Import Project="$(SolutionDir)\TargetFrameworks.props" />
 
 	<Import Project="..\..\Shared\WinCopies.Collections.Shared\WinCopies.Collections.Shared.projitems" Label="Shared" />
 

@@ -21,20 +21,14 @@ using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-#if WinCopies3
 using WinCopies.Desktop;
 
 using static WinCopies.Util.Data.ConverterHelper;
-#else
-using System;
-#endif
 
 namespace WinCopies.Util.Data
 {
     [ValueConversion(typeof(Bitmap), typeof(ImageSource))]
-    public class
-#if WinCopies3
-        BitmapToImageSourceConverter : AlwaysConvertibleTwoWayConverter<Bitmap
+    public class BitmapToImageSourceConverter : AlwaysConvertibleTwoWayConverter<Bitmap
 #if CS8
             ?
 #endif
@@ -79,62 +73,5 @@ namespace WinCopies.Util.Data
             ?
 #endif
             parameter, CultureInfo culture) => value == null ? null : ((BitmapSource)value).ToBitmap();
-#else
-        IconToImageSourceConverter : ConverterBase
-    {
-        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture) => value is Bitmap _value ? _value.ToImageSource() : null;
-
-        public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
-
-        //public static ImageSource ToImageSource(this Icon icon)
-
-        //{
-
-        //    IntPtr hIcon = icon.Handle;
-
-        //    BitmapSource wpfIcon = Imaging.CreateBitmapSourceFromHIcon(
-        //        hIcon,
-        //        Int32Rect.Empty,
-        //        BitmapSizeOptions.FromEmptyOptions());
-
-        //    //if (!Util.DeleteObject(hIcon))
-
-        //    //    throw new Win32Exception();
-
-        //    //using (MemoryStream memoryStream = new MemoryStream())
-
-        //    //{
-
-        //    //    icon.ToBitmap().Save(memoryStream, ImageFormat.Png);
-
-        //    //    IconBitmapDecoder iconBitmapDecoder = new IconBitmapDecoder(memoryStream, BitmapCreateOptions.DelayCreation, BitmapCacheOption.Default);
-
-        //    //    return (ImageSource) new ImageSourceConverter().ConvertFrom( iconBitmapDecoder);
-
-        //    //}
-
-        //    ImageSource imageSource;
-
-        //    // Icon icon = Icon.ExtractAssociatedIcon(path);
-
-        //    using (Bitmap bmp = icon.ToBitmap())
-        //    {
-        //        var stream = new MemoryStream();
-        //        bmp.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
-        //        imageSource = BitmapFrame.Create(stream);
-        //    }
-
-        //    return imageSource;
-
-        //    return icon.ToBitmap().ToImageSource();
-
-        //    return wpfIcon;
-
-        //}
-
-        //CS7
-
-        //#endif
-#endif
     }
 }

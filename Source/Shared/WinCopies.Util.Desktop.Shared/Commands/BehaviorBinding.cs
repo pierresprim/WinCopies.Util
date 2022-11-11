@@ -33,11 +33,7 @@ using WinCopies.Diagnostics;
 
 using static WinCopies.Util.Desktop.UtilHelpers;
 
-namespace WinCopies.
-#if !WinCopies3
-    Util.
-#endif
-    Commands
+namespace WinCopies.Commands
 {
     /// <summary>
     /// Provides a base class for behaviors.
@@ -45,9 +41,9 @@ namespace WinCopies.
     /// </summary>
     public abstract class Behavior : Freezable
     {
-        internal int Id { get; set; }
-
         DependencyObject _owner;
+
+        internal int Id { get; set; }
 
         /// <summary>
         /// Gets or sets the Owner of the binding
@@ -205,13 +201,13 @@ namespace WinCopies.
         }
 
         protected override
-#if WinCopies3 && CS10
+#if CS10
             BehaviorBinding
 #else
             Freezable
 #endif
             CreateInstanceCore() => new
-#if !(WinCopies3 && CS10)
+#if !CS10
             BehaviorBinding
 #endif
             ();

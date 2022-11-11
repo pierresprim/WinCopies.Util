@@ -22,11 +22,10 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
-using WinCopies.Extensions;
-using WinCopies.Util;
-
 using WinCopies.Collections.Generic;
+using WinCopies.Extensions;
 using WinCopies.Linq;
+using WinCopies.Util;
 
 namespace WinCopies
 {
@@ -41,13 +40,9 @@ namespace WinCopies
         private byte _bools = 0b111;
 
         public bool IgnoreGenerics { get => GetBit(0); set => SetBit(0, value); }
-
         public bool IgnoreFirstTypesWithoutInterfaces { get => GetBit(1); set => SetBit(1, value); }
-
         public bool DirectInterfacesOnly { get => GetBit(2); set => SetBit(2, value); }
-
         public bool DirectTypeOnly { get => GetBit(3); set => SetBit(3, value); }
-
         public bool IgnoreClassType { get => GetBit(4); set => SetBit(4, value); }
 
         public InterfaceDataTemplateSelector() { /* Left empty. */ }

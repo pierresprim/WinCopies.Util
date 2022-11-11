@@ -1,4 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="$(SolutionDir)\TargetFrameworks-windows.props" />
+
 	<PropertyGroup>
 		<PackageId>WinCopies.Util.Desktop</PackageId>
 		<UseWPF>true</UseWPF>
@@ -13,7 +15,6 @@
 	</PropertyGroup>
 
 	<Import Project="$(SolutionDir)\ExtraProperties.props" Condition="'$(Configuration)'=='Release'" />
-	<Import Project="$(SolutionDir)\TargetFrameworks.props" />
 
 	<Import Project="..\..\Shared\WinCopies.Util.Desktop.Shared\WinCopies.Util.Desktop.Shared.projitems" Label="Shared" />
 

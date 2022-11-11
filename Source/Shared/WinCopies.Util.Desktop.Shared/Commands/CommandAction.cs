@@ -23,38 +23,21 @@ using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Input;
 
-#if !WinCopies3
-namespace WinCopies.Util.Commands
-#else
 namespace WinCopies.Commands
-#endif
 {
     public class CommandAction : TriggerAction<DependencyObject>
     {
-        public static readonly DependencyProperty CommandProperty =
- DependencyProperty.Register("Command", typeof(ICommand), typeof(CommandAction),
- new PropertyMetadata(null, OnCommandChanged));
+        public static readonly DependencyProperty CommandProperty = DependencyProperty.Register("Command", typeof(ICommand), typeof(CommandAction), new PropertyMetadata(null, OnCommandChanged));
 
-        public static readonly DependencyProperty CommandParameterProperty =
-         DependencyProperty.Register("CommandParameter", typeof(object), typeof(CommandAction),
-         new PropertyMetadata(null, OnCommandParameterChanged));
+        public static readonly DependencyProperty CommandParameterProperty = DependencyProperty.Register("CommandParameter", typeof(object), typeof(CommandAction), new PropertyMetadata(null, OnCommandParameterChanged));
 
         private System.IDisposable canExecuteChanged;
 
-        public ICommand Command
-        {
-            get => (ICommand)GetValue(CommandProperty);
-            set => SetValue(CommandProperty, value);
-        }
+        public ICommand Command { get => (ICommand)GetValue(CommandProperty); set => SetValue(CommandProperty, value); }
 
-        public object CommandParameter
-        {
-            get => GetValue(CommandParameterProperty);
-            set => SetValue(CommandParameterProperty, value);
-        }
+        public object CommandParameter { get => GetValue(CommandParameterProperty); set => SetValue(CommandParameterProperty, value); }
 
-        private static void OnCommandChanged(DependencyObject sender,
-                        DependencyPropertyChangedEventArgs e)
+        private static void OnCommandChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
             if (sender is CommandAction ev)
             {
@@ -69,8 +52,7 @@ namespace WinCopies.Commands
             }
         }
 
-        private static void OnCommandParameterChanged(DependencyObject sender,
-                 DependencyPropertyChangedEventArgs e) => (sender as CommandAction)?.SynchronizeElementState();
+        private static void OnCommandParameterChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e) => (sender as CommandAction)?.SynchronizeElementState();
 
         private void SynchronizeElementState()
         {

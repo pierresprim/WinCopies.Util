@@ -33,16 +33,11 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
-#if !WinCopies3
-namespace WinCopies.Util.Commands
-#else
 namespace WinCopies.Commands
-#endif
 {
     public class EventArgsHandler<T> : Behavior where T : class
     {
         #region LastEventArgs
-
         /// <summary>
         /// LastEventArgs dependency property
         /// </summary>
@@ -58,11 +53,9 @@ namespace WinCopies.Commands
         public static T GetLastEventArgs(DependencyObject d) => (T)d.GetValue(LastEventArgsProperty);
 
         public static void SetLastEventArgs(DependencyObject d, EventArgs value) => d.SetValue(LastEventArgsProperty, value);
-
         #endregion
 
         #region HandleEventHandler 
-
         private static Dictionary<object, Dictionary<string, Delegate>> dico = null;
 
         public static readonly DependencyProperty HandleEventHandlerProperty =
@@ -93,13 +86,18 @@ namespace WinCopies.Commands
 
             else
             {
-#if CS8
-                dico ??= new Dictionary<object, Dictionary<string, Delegate>>();
-#else
-                if (dico == null)
-
-                    dico = new Dictionary<object, Dictionary<string, Delegate>>();
+#if !CS8
+                if (
 #endif
+                dico
+#if CS8
+                ??=
+#else
+                == null)
+
+                    dico = 
+#endif
+                new Dictionary<object, Dictionary<string, Delegate>>();
 
                 if (d is Control control)
                 {
@@ -134,11 +132,8 @@ namespace WinCopies.Commands
         public static void ControlEventHandler(dynamic a, dynamic b)
         {
 #if DEBUG
-
             Debug.WriteLine(nameof(ControlEventHandler));
-
 #endif
-
             if (a is DependencyObject c && b is EventArgs d)
 
                 SetLastEventArgs(c, d);
@@ -146,12 +141,8 @@ namespace WinCopies.Commands
 
         protected override Freezable CreateInstanceCore() => throw new NotImplementedException();
 
-        protected override void ResetBehavior()
-        {
-            // Nothing to do here ...
-        }
-
-        #endregion
+        protected override void ResetBehavior() { /* Left empty. */ }
+#endregion
     }
 
     public class EventArgsHandler : EventArgsHandler<EventArgs> { }

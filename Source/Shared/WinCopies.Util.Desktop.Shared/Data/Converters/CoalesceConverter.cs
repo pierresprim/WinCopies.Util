@@ -18,56 +18,25 @@
 using System;
 using System.Globalization;
 
-#if WinCopies3
 using static WinCopies.Util.Data.ConverterHelper;
-#endif
 
 namespace WinCopies.Util.Data
 {
     public class CoalesceConverter : AlwaysConvertibleTwoWayConverter<object, object, object>
     {
-        public override
-#if WinCopies3
-            IReadOnlyConversionOptions
-#else
-            ConversionOptions
-#endif
-            ConvertOptions => AllowNull;
-
-        public override
-#if WinCopies3
-            IReadOnlyConversionOptions
-#else
-            ConversionOptions
-#endif
-           ConvertBackOptions => AllowNull;
+        public override IReadOnlyConversionOptions ConvertOptions => AllowNull;
+        public override IReadOnlyConversionOptions ConvertBackOptions => AllowNull;
 
         protected override object Convert(object value, object parameter, CultureInfo culture) => value ?? parameter;
 
         protected override object ConvertBack(object value, object parameter, CultureInfo culture) => value ?? parameter;
     }
 
-    public class CoalesceMultiConverter :
-#if WinCopies3
-        AlwaysConvertibleOneWayMultiConverter<object, object>
-#else
-        MultiConverterBase
-#endif
+    public class CoalesceMultiConverter : AlwaysConvertibleOneWayMultiConverter<object, object>
     {
-#if WinCopies3
         public override IReadOnlyConversionOptions ConvertOptions => AllowNull;
-#endif
 
-#if WinCopies3
-        protected
-#else
-        public
-#endif
-            override object Convert(object[] values,
-#if !WinCopies3
-                Type targetType,
-#endif
-            object parameter, CultureInfo culture)
+        protected override object Convert(object[] values, object parameter, CultureInfo culture)
         {
             if (values != null)
 
@@ -79,9 +48,5 @@ namespace WinCopies.Util.Data
 
             return parameter;
         }
-
-#if !WinCopies3
-        public override object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) => throw new NotSupportedException();
-#endif
     }
 }

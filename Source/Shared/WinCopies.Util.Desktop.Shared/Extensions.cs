@@ -624,6 +624,17 @@ namespace WinCopies.Desktop
         /// <exception cref="Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="ArgumentException"/> otherwise.</exception>
         public static (bool propertyChanged, object oldValue) SetBackgroundWorkerProperty(this IBackgroundWorker obj, string propertyName, string fieldName, object newValue, Type declaringType, bool throwIfBusy, bool throwIfReadOnly = true, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, string paramName = null, bool setOnlyIfNotNull = false, bool throwIfNull = false, FieldValidateValueCallback validateValueCallback = null, bool throwIfValidationFails = false, FieldValueChangedCallback valueChangedCallback = null) => obj.IsBusy ? throwIfBusy ? throw new InvalidOperationException(WinCopies.Desktop.Resources.ExceptionMessages.BackgroundWorkerIsBusy) : (false, GetField(fieldName, declaringType, bindingFlags).GetValue(obj)) : obj.SetProperty(propertyName, fieldName, newValue, declaringType, throwIfReadOnly, bindingFlags, paramName, setOnlyIfNotNull, throwIfNull, validateValueCallback, throwIfValidationFails, valueChangedCallback);
 
+        public static bool SetBackgroundWorkerProperty<T>(this IBackgroundWorker obj, ref T value, T newValue, bool throwIfBusy, bool throwIfNull = false)
+        {
+            if (obj.IsBusy)
+
+                return throwIfBusy ? throw new InvalidOperationException(Resources.ExceptionMessages.BackgroundWorkerIsBusy) : false;
+
+            value = throwIfNull && newValue == null ? throw new ArgumentNullException(nameof(newValue)) : newValue;
+
+            return true;
+        }
+
         /// <summary>
         /// Sets a value to a property if the new value is different.
         /// </summary>

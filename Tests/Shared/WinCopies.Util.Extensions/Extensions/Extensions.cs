@@ -52,13 +52,8 @@ namespace WinCopies.Util.Tests
 
     delegate (Type t, bool ignoreGenerics, bool directTypeOnly, Type[] types) UpdateArrayBuilder();
 
-#if WinCopies3
     [TestClass]
-    public
-#else
-    public partial
-#endif
-        class ExtensionsTests
+    public class ExtensionsTests
     {
         [TestMethod]
         public void GetDirectInterfacesTests()

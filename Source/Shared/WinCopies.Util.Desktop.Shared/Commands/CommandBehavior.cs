@@ -34,11 +34,7 @@ using WinCopies.Diagnostics;
 
 using DesktopHelpers = WinCopies.Util.Desktop.UtilHelpers;
 
-namespace WinCopies.
-#if !WinCopies3
-    Util.
-#endif
-    Commands
+namespace WinCopies.    Commands
 {
     /// <summary>
     /// Defines the attached properties to create a <see cref="CommandBehaviorBinding"/>.

@@ -34,21 +34,15 @@ namespace WinCopies.Util.Data
         // Left empty.
     }
 
-    public abstract class OneWayConverterBase<TSource, TParam, TDestination
-#if WinCopies3
-
-#endif
-          > : ConverterBase<TSource, TParam, TDestination>, IOneWayConverter<TSource, TParam, TDestination>
+    public abstract class OneWayConverterBase<TSource, TParam, TDestination       > : ConverterBase<TSource, TParam, TDestination>, IOneWayConverter<TSource, TParam, TDestination>
     {
         public sealed override ConversionWays Direction => ConversionWays.OneWay;
 
         bool IOneWayConverter<TSource, TParam, TDestination>.Convert(TSource value, TParam parameter, CultureInfo culture, out TDestination result) => Convert(value, parameter, culture, out result);
 
-#if WinCopies3
         public sealed override IReadOnlyConversionOptions ConvertBackOptions => throw GetException(BackConversionExceptionMessageFormat);
 
         protected sealed override bool ConvertBack(TDestination value, TParam parameter, CultureInfo culture, out TSource result) => throw GetException(BackConversionExceptionMessageFormat);
-#endif
     }
 
     public abstract class OneWayToSourceConverterBase<TSource, TParam, TDestination> : ConverterBase<TSource, TParam, TDestination>, IOneWayToSourceConverter<TSource, TParam, TDestination>
@@ -57,18 +51,12 @@ namespace WinCopies.Util.Data
 
         bool IOneWayToSourceConverter<TSource, TParam, TDestination>.ConvertBack(TDestination value, TParam parameter, CultureInfo culture, out TSource result) => ConvertBack(value, parameter, culture, out result);
 
-#if WinCopies3
         public sealed override IReadOnlyConversionOptions ConvertOptions => throw GetException(string.Empty);
 
         protected sealed override bool Convert(TSource value, TParam parameter, CultureInfo culture, out TDestination result) => throw GetException(string.Empty);
-#endif
     }
 
-    public abstract class TwoWayConverterBase<TSource, TParam, TDestination
-#if WinCopies3
-
-#endif
-        > : ConverterBase<TSource, TParam, TDestination>, IValueConverter<TSource, TParam, TDestination>
+    public abstract class TwoWayConverterBase<TSource, TParam, TDestination> : ConverterBase<TSource, TParam, TDestination>, IValueConverter<TSource, TParam, TDestination>
     {
         public sealed override ConversionWays Direction => ConversionWays.TwoWays;
 

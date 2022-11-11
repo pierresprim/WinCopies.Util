@@ -21,13 +21,9 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Markup;
 
-#if !WinCopies3
-namespace WinCopies.Util
-#else
 using WinCopies.Collections;
 
 namespace WinCopies
-#endif
 {
     [MarkupExtensionReturnType(typeof(Style))]
     [DefaultProperty("Styles")]

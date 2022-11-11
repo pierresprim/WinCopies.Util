@@ -38,7 +38,11 @@ namespace WinCopies.Util.Data
     public class FreezableBinding : Freezable
     {
         #region Properties
-        private Binding _binding;
+        private Binding
+#if CS8
+            ?
+#endif
+            _binding;
 
         protected Binding Binding => _binding
 #if CS8
@@ -163,13 +167,13 @@ namespace WinCopies.Util.Data
         }
 
         protected override
-#if WinCopies3 && CS10
+#if CS10
             FreezableBinding
 #else
             Freezable
 #endif
             CreateInstanceCore() => new
-#if !(WinCopies3 && CS10)
+#if !CS10
             FreezableBinding
 #endif
             ();

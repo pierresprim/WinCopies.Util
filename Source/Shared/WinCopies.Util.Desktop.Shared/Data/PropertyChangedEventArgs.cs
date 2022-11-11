@@ -24,16 +24,14 @@ namespace WinCopies.Util.Data
     /// </summary>
     public class PropertyChangedEventArgs : System.ComponentModel.PropertyChangedEventArgs
     {
-        public object PreviousValue { get; set; } = null;
+        public object? PreviousValue { get; set; }
 
-        public object NewValue { get; set; } = null;
+        public object? NewValue { get; set; }
 
-        public PropertyChangedEventArgs(string propertyName) : base(propertyName) { }
-
+        public PropertyChangedEventArgs(string propertyName) : base(propertyName) { /* Left empty. */ }
         public PropertyChangedEventArgs(string propertyName, object previousValue, object newValue) : base(propertyName)
         {
             PreviousValue = previousValue;
-
             NewValue = newValue;
         }
     }
