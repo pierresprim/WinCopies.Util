@@ -49,6 +49,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{A40C60
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
 		ExtraProperties.props = ExtraProperties.props
+		TargetFrameworks.props = TargetFrameworks.props
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinCopies.Util.Preview", "Preview\WinCopies.Util\WinCopies.Util.Preview.csproj", "{D9A840FB-BBFD-4350-B41E-C6B4DDAF0C45}"
