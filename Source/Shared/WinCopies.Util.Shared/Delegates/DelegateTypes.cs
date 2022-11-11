@@ -145,7 +145,7 @@ namespace WinCopies
 
 
 
-    public delegate T Converter<outT>(object obj);
+    public delegate T Converter<out T>(object obj);
 
     public delegate TOut ConverterIn<TIn, out TOut>(in TIn value);
 

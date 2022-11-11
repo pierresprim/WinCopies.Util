@@ -34,7 +34,7 @@ namespace WinCopies.Collections.Abstraction.Generic.Abstract
         protected Countable(TEnumerable enumerable) => InnerEnumerable = enumerable;
     }
 
-    public abstract class CountableEnumerable<TEnumerable, TSourceItems, TDestinationItems> : Countable<TEnumerable, TSourceItems>, ICountableEnumerable<TDestinationItems> where TEnumerable : System.Collections.Generic.IEnumerable<TItems>
+    public abstract class CountableEnumerable<TEnumerable, TSourceItems, TDestinationItems> : Countable<TEnumerable, TSourceItems>, ICountableEnumerable<TDestinationItems> where TEnumerable : System.Collections.Generic.IEnumerable<TSourceItems>
     {
         protected CountableEnumerable(TEnumerable enumerable) : base(enumerable) { /* Left empty. */ }
 

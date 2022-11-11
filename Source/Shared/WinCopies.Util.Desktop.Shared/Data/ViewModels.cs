@@ -123,7 +123,6 @@ namespace WinCopies.Util.Data
 
         protected virtual bool Update<T>(string propertyName, object newValue, bool performIntegrityCheck = true) => Update(propertyName, newValue, typeof(T), performIntegrityCheck);
 #endif
-
         protected virtual bool UpdateValue<T>(ref T value, T newValue, System.ComponentModel.PropertyChangedEventArgs propertyChangedEventArgs)
         {
             T _value = value;

@@ -99,7 +99,7 @@ namespace WinCopies
 #endif
            <T> value, EqualityComparison<T> comparison, int? lowerBound, int? upperBound)
         {
-            if (list.Count == lowerBound < 0 ? throw new ArgumentOutOfRangeException(nameof(lowerBound)) : upperBound < 0 ? throw new ArgumentOutOfRangeException(nameof(upperBound)) : lowerBound > upperBound ? throw new ArgumentException($"{nameof(lowerBound)} must be less than or equal to {nameof(upperBound)}."):0 || value.Count == 0 || (upperBound.HasValue && upperBound.Value == 0))
+            if ((list.Count == lowerBound < 0 ? throw new ArgumentOutOfRangeException(nameof(lowerBound)) : upperBound < 0 ? throw new ArgumentOutOfRangeException(nameof(upperBound)) : lowerBound > upperBound ? throw new ArgumentException($"{nameof(lowerBound)} must be less than or equal to {nameof(upperBound)}.") : 0) || value.Count == 0 || (upperBound.HasValue && upperBound.Value == 0))
 
                 return false;
 
