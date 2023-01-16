@@ -95,7 +95,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Changelogs", "Changelogs", 
 	ProjectSection(SolutionItems) = preProject
 		..\Changelogs\2.x.md = ..\Changelogs\2.x.md
 		..\Changelogs\3.x.md = ..\Changelogs\3.x.md
-		4.x.md = 4.x.md
+		..\Changelogs\4.x.md = ..\Changelogs\4.x.md
 	EndProjectSection
 EndProject
 Global
