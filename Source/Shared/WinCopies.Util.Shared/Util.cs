@@ -18,7 +18,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -230,11 +229,29 @@ namespace WinCopies
         public static T[] Empty<T>() => EmptyArray<T>.Array;
     }
 #endif
+    public interface ISortableItem<T> : IEquatable<T>, IComparable<T>, Collections.Generic.IComparable<T>
+    {
+#if CS8
+        bool Collections.Generic.IComparable<T>.LessThan(T other) => CompareTo(other) < 0;
+        bool Collections.Generic.IComparable<T>.LessThanOrEqualTo(T other) => CompareTo(other) <= 0;
+        bool Collections.Generic.IComparable<T>.GreaterThan(T other) => CompareTo(other) > 0;
+        bool Collections.Generic.IComparable<T>.GreaterThanOrEqualTo(T other) => CompareTo(other) >= 0;
+#endif
+    }
+
     /// <summary>
     /// Provides some static helper methods.
     /// </summary>
     public static class UtilHelpers
     {
+#if !CS8
+        public static bool LessThan<T>(in  ISortableItem<T> item, in T other) => item.CompareTo(other) < 0;
+        public static bool LessThanOrEqualTo<T>(in ISortableItem<T> item, in T other) => item.CompareTo(other) <= 0;
+        public static bool GreaterThan<T>(in ISortableItem<T> item, in T other) => item.CompareTo(other) > 0;
+        public static bool GreaterThanOrEqualTo<T>(in ISortableItem<T> item, in T other) => item.CompareTo(other) >= 0;
+#endif
+        internal static bool Compare<T>(in T _x, in T _y, in Predicate<T> x, in Predicate<T> y, in FuncIn<bool, bool, bool> func) => func(x(_x), y(_y));
+
         public static bool Overlap(in int x, in int index, in int y) => x < y ? index.Between(x, y) : index.Outside(x, y);
 
         /// <summary>
@@ -603,18 +620,30 @@ namespace WinCopies
 
         public static IEnumerator<T> GetEmptyEnumerator<T>() => EmptyEnumerator<T>.Instance;
 
-        public static IEnumerable<T> EnumerateUntilNull<T>(T
+        public static IEnumerable<T
 #if CS9
             ?
 #endif
-            first, Converter<T, T
+            > EnumerateUntil<T>(T
 #if CS9
             ?
 #endif
-            > nextItemProvider)
+            first, Converter<T
+#if CS9
+            ?
+#endif
+            , T
+#if CS9
+            ?
+#endif
+            > nextItemProvider, Predicate<T
+#if CS9
+            ?
+#endif
+            > stop)
         {
         CONDITION:
-            if (first == null)
+            if (stop(first))
 
                 yield break;
 
@@ -624,6 +653,29 @@ namespace WinCopies
 
             goto CONDITION;
         }
+
+        public static IEnumerable<T> EnumerateUntilNull<T>(T
+#if CS9
+            ?
+#endif
+            first, Converter<T, T
+#if CS9
+            ?
+#endif
+            > nextItemProvider, Predicate<T>
+#if CS8
+            ?
+#endif
+            predicate = null) => EnumerateUntil(first, nextItemProvider, predicate == null ?
+#if !CS9
+                (Predicate<T>)
+#endif
+#if WinCopies4
+                EqualsNull
+#else
+                CheckIfEqualsNull
+#endif
+                : value => value == null || predicate(value));
 
         public static void While(in Action action, ref bool condition)
         {
@@ -898,7 +950,8 @@ namespace WinCopies
 
             DoUntilRef((ref T _value) => { action(ref _value); updater(); }, func, ref value);
         }
-
+#if !WinCopies4
+        [Obsolete("Use methods from WinCopies.Collections package instead.")]
         public static IEnumerable<T> EnumerateRecursively<T>(T item, Converter<T, IEnumerable<T>> func)
         {
             IEnumerable<T> enumerate(T _item)
@@ -916,6 +969,7 @@ namespace WinCopies
 
                 yield return _item;
         }
+#endif
 #if CS8
         public static long? GetHttpFileSize(in string url, in System.Net.Http.HttpClient client)
         {
@@ -989,13 +1043,13 @@ namespace WinCopies
 #if !CS8
             if (value == null)
 #endif
-                value
+            value
 #if CS8
-        ??=
+??=
 #else
-                        =
+                            =
 #endif
-                defaultValue;
+            defaultValue;
 
             return value;
         }
@@ -1012,13 +1066,13 @@ namespace WinCopies
 #if !CS8
             if (value == null)
 #endif
-                value
+            value
 #if CS8
 ??=
 #else
-                                         =
+                                             =
 #endif
-                func();
+            func();
 
             return value.Value;
         }
@@ -1467,7 +1521,7 @@ namespace WinCopies
 #else
                 )
 #endif
-                action(obj);
+            action(obj);
         }
 
         public static void UsingIn<T>(in Func<T> func, in ActionIn<T> action) where T : System.IDisposable
@@ -1485,7 +1539,7 @@ namespace WinCopies
 #else
                 )
 #endif
-                action(obj);
+            action(obj);
         }
 
         public static TOut Using2<TIn, TOut>(in Func<TIn> func, Func<TIn, TOut> action) where TIn : System.IDisposable

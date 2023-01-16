@@ -6,6 +6,28 @@ The WinCopies® software framework
 CHANGELOG
 ---------
 
+### ??/2023 4.x
+
+- Remove UtilHelpers.EnumerateRecursively method. Use methods from WinCopies.Collections package instead.
+
+### ??/2023 3.22
+
+- Add new:
+	- types
+	- static and extension methods
+	- nullable attributes for some items
+- IAsEnumerable\<T>: T now has the 'out' modifier.
+- Starting with .Net 7: Between extension methods take IComparisonOperators values.
+
+### 11/2022 3.21
+
+First release. In addition to the changes notified in Changelog.Preview.md:
+
+- Add and remove several static methods.
+- Add new types (including new delegates).
+- Some bug fixes and improvements.
+- Redesign linked/list/nodes, arrays, countables, collections, dictionaries, enumerables and enumerators related types. The new implementations should be easier to use.
+
 ### 08/2022.2 3.20-preview
 
 - New routed command: DuplicateTab.

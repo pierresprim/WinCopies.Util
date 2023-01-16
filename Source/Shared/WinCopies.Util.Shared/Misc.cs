@@ -156,7 +156,6 @@ namespace WinCopies
 #endif
             items, in int length) : this(new ArrayValueProvider<T>(items), length) { /* Left empty. */ }
     }
-
 #if CS8 && !NETSTANDARD
     public class AssemblyLoadContext : System.Runtime.Loader.AssemblyLoadContext
     {
@@ -170,7 +169,6 @@ namespace WinCopies
         protected override IntPtr LoadUnmanagedDll(string unmanagedDllName) => PerformActionIfNull(Resolver.ResolveUnmanagedDllToPath(unmanagedDllName), IntPtr.Zero, LoadUnmanagedDllFromPath);
     }
 #endif
-
     public static class Convert
     {
 #if CS8
@@ -282,6 +280,13 @@ namespace WinCopies
                 result) ? result : throw GetInvalidCastException<ulong>(value);
     }
 
+    public enum NullableBool : sbyte
+    {
+        None = -1,
+        False = 0,
+        True = 1,
+    }
+
     /// <summary>
     /// This enum is designed as an extension of the <see cref="bool"/> type.
     /// </summary>
@@ -300,17 +305,17 @@ namespace WinCopies
         /// <summary>
         /// The operation did not return any particular value. This value is the same as returning a <see langword="null"/> <see cref="Nullable{Boolean}"/>.
         /// </summary>
-        None = -1,
+        None = NullableBool.None,
 
         /// <summary>
         /// The operation returned False. This value is the same number as <see langword="false"/>.
         /// </summary>
-        False = 0,
+        False = NullableBool.False,
 
         /// <summary>
         /// The operation returned True. This value is the same number as <see langword="true"/>.
         /// </summary>
-        True = 1
+        True = NullableBool.True
     }
 
     public enum XOrResult : sbyte
@@ -337,6 +342,7 @@ namespace WinCopies
 
             DisposeUnmanaged();
             DisposeManaged();
+
             GC.SuppressFinalize(this);
         }
 
@@ -352,21 +358,11 @@ namespace WinCopies
         protected override void DisposeManaged() => _isDisposed = true;
     }
 
-    public abstract class DisposableValue<T> : System.IDisposable where T :
-#if !WinCopies3
-        WinCopies.Util.
-#endif
-        DotNetFix.IDisposable
+    public abstract class DisposableValue<T> : System.IDisposable where T : DotNetFix.IDisposable
     {
         protected T Value { get; }
 
-        protected DisposableValue(T value) => Value = value == null ? throw
-#if WinCopies3
-            ThrowHelper
-#else
-            Util
-#endif
-            .GetArgumentNullException(nameof(value)) : value;
+        protected DisposableValue(T value) => Value = value == null ? throw ThrowHelper.GetArgumentNullException(nameof(value)) : value;
 
         protected virtual void Dispose(in bool disposing)
         {
@@ -884,8 +880,21 @@ namespace WinCopies
         TOut Pop(TIn key);
     }
 
-    public interface IAsEnumerable<T>
+    public interface IAsEnumerable<
+#if CS5
+        out
+#endif
+        T>
     {
         IEnumerable<T> AsEnumerable();
+    }
+
+    public interface IAsEnumerableAlt<
+#if CS5
+        out
+#endif
+        T>
+    {
+        IEnumerable<T> AsEnumerableAlt();
     }
 }
