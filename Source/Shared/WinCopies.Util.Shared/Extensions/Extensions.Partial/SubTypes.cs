@@ -94,8 +94,10 @@ namespace WinCopies.Util
             public bool GreaterThanOrEqualTo(Enum<T> other) => UtilHelpers.GreaterThanOrEqualTo(this, other);
 #endif
         }
+
+        private
 #if !CS11
-        private readonly struct Number<T> : ISortableItem<T>
+        readonly struct Number<T> : ISortableItem<T> where T : unmanaged
         {
             private readonly Predicate<T> _predicate;
             private readonly Converter<T, int> _converter;
@@ -116,22 +118,60 @@ namespace WinCopies.Util
 #endif
         }
 
+        internal interface IShiftable<out T> where T : unmanaged
+        {
+            T InnerValue { get; }
+
+            byte Size { get; }
+
+            T Shift(in byte offset);
+        }
+
+        private readonly struct Shiftable<T> : IShiftable<T> where T : unmanaged
+        {
+            private readonly ConverterIn<byte, T> _func;
+
+            public T InnerValue { get; }
+
+            public byte Size { get; }
+
+            public Shiftable(in T innerValue, in byte size, in ConverterIn<byte, T> func)
+            {
+                _func = func;
+
+                InnerValue = innerValue;
+                Size = size;
+            }
+
+            public T Shift(in byte offset) => _func(offset);
+        }
+
         internal
 #endif
-        static class NumberHelper
+            static class NumberHelper
         {
 #if !CS11
-            public static ISortableItem<byte> GetNumber(byte value) => new Number<byte>(value.Equals, value.CompareTo);
-            public static ISortableItem<sbyte> GetNumber(sbyte value) => new Number<sbyte>(value.Equals, value.CompareTo);
-            public static ISortableItem<short> GetNumber(short value) => new Number<short>(value.Equals, value.CompareTo);
-            public static ISortableItem<ushort> GetNumber(ushort value) => new Number<ushort>(value.Equals, value.CompareTo);
-            public static ISortableItem<int> GetNumber(int value) => new Number<int>(value.Equals, value.CompareTo);
-            public static ISortableItem<uint> GetNumber(uint value) => new Number<uint>(value.Equals, value.CompareTo);
-            public static ISortableItem<long> GetNumber(long value) => new Number<long>(value.Equals, value.CompareTo);
-            public static ISortableItem<ulong> GetNumber(ulong value) => new Number<ulong>(value.Equals, value.CompareTo);
-            public static ISortableItem<float> GetNumber(float value) => new Number<float>(value.Equals, value.CompareTo);
-            public static ISortableItem<double> GetNumber(double value) => new Number<double>(value.Equals, value.CompareTo);
-            public static ISortableItem<decimal> GetNumber(decimal value) => new Number<decimal>(value.Equals, value.CompareTo);
+            internal static IShiftable<byte> GetShiftableL(byte value) => new Shiftable<byte>(value, sizeof(byte), (in byte offset) => (byte)((value << offset) >> offset));
+            internal static IShiftable<ushort> GetShiftableL(ushort value) => new Shiftable<ushort>(value, sizeof(ushort), (in byte offset) => (ushort)((value << offset) >> offset));
+            internal static IShiftable<uint> GetShiftableL(uint value) => new Shiftable<uint>(value, sizeof(uint), (in byte offset) => (value << offset) >> offset);
+            internal static IShiftable<ulong> GetShiftableL(ulong value) => new Shiftable<ulong>(value, sizeof(ulong), (in byte offset) => (value << offset) >> offset);
+
+            internal static IShiftable<byte> GetShiftableR(byte value) => new Shiftable<byte>(value, sizeof(byte), (in byte offset) => (byte)(value >> offset));
+            internal static IShiftable<ushort> GetShiftableR(ushort value) => new Shiftable<ushort>(value, sizeof(ushort), (in byte offset) => (ushort)(value >> offset));
+            internal static IShiftable<uint> GetShiftableR(uint value) => new Shiftable<uint>(value, sizeof(uint), (in byte offset) => value >> offset);
+            internal static IShiftable<ulong> GetShiftableR(ulong value) => new Shiftable<ulong>(value, sizeof(ulong), (in byte offset) => value >> offset);
+
+            public static ISortableItem<byte> GetNumber(in byte value) => new Number<byte>(value.Equals, value.CompareTo);
+            public static ISortableItem<sbyte> GetNumber(in sbyte value) => new Number<sbyte>(value.Equals, value.CompareTo);
+            public static ISortableItem<short> GetNumber(in short value) => new Number<short>(value.Equals, value.CompareTo);
+            public static ISortableItem<ushort> GetNumber(in ushort value) => new Number<ushort>(value.Equals, value.CompareTo);
+            public static ISortableItem<int> GetNumber(in int value) => new Number<int>(value.Equals, value.CompareTo);
+            public static ISortableItem<uint> GetNumber(in uint value) => new Number<uint>(value.Equals, value.CompareTo);
+            public static ISortableItem<long> GetNumber(in long value) => new Number<long>(value.Equals, value.CompareTo);
+            public static ISortableItem<ulong> GetNumber(in ulong value) => new Number<ulong>(value.Equals, value.CompareTo);
+            public static ISortableItem<float> GetNumber(in float value) => new Number<float>(value.Equals, value.CompareTo);
+            public static ISortableItem<double> GetNumber(in double value) => new Number<double>(value.Equals, value.CompareTo);
+            public static ISortableItem<decimal> GetNumber(in decimal value) => new Number<decimal>(value.Equals, value.CompareTo);
 #endif
             public static
 #if CS11

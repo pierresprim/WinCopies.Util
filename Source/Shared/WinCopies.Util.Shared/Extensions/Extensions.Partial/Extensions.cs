@@ -50,6 +50,8 @@ namespace WinCopies.Util // To avoid name conflicts.
     /// </summary>
     public static partial class Extensions
     {
+        public static void Invoke<T>(this ValueEventHandler<T> eventHandler, in object sender, in T value) => eventHandler?.Invoke(sender, new Data.EventArgs<T>(value));
+
         public static void ThrowIf<T>(this Exception
 #if CS8
             ?
@@ -98,254 +100,306 @@ namespace WinCopies.Util // To avoid name conflicts.
 
         public static IEnumerable<XmlNode> Enumerate(this XmlNode node) => EnumerateUntilNull(node.FirstChild, _node => _node.NextSibling);
 
+        #region Bitwise Operations
         public static ulong Concatenate(this uint x, in uint y) => ((ulong)x << TypeSizes.Int32) | y;
         public static uint Concatenate(this ushort x, in ushort y) => ((uint)x << TypeSizes.Int16) | y;
-        public static ushort Concatenate(this byte x, in byte y) => (byte)((x << TypeSizes.Int8) | y);
+        public static ushort Concatenate(this byte x, in byte y) => (byte)(((ushort)x << TypeSizes.Int8) | y);
         public static byte ConcatenateHalfParts(this byte x, in byte y) => (byte)((x << TypeSizes.Int4) | y);
 
+        public static ulong ToHighPart(this uint value) => (ulong)value << TypeSizes.Int32;
+        public static uint ToHighPart(this ushort value) => (uint)value << TypeSizes.Int16;
+        public static ushort ToUInt16HighPart(this byte value) => (ushort)((ushort)value << TypeSizes.Int8);
+        public static byte ToUInt8HighPart(this byte value) => value > TypeSizes.HalfByteMaxValue ? throw new ArgumentOutOfRangeException(nameof(value)) : (byte)(value << TypeSizes.HalfByteMaxValue);
+
+        public static long ToHighPart(this int value) => unchecked((long)unchecked((uint)value).ToHighPart());
+        public static int ToHighPart(this short value) => unchecked((int)unchecked((ushort)value).ToHighPart());
+        public static short ToUInt16HighPart(this sbyte value) => unchecked((short)unchecked((byte)value).ToUInt16HighPart());
+        public static sbyte ToUInt8HighPart(this sbyte value) => unchecked((sbyte)unchecked((byte)value).ToUInt8HighPart());
+
+        public static ulong AsHighPart(this ulong value) => value << TypeSizes.Int32;
+        public static uint AsHighPart(this uint value) => value << TypeSizes.Int16;
+        public static ushort AsHighPart(this ushort value) => (ushort)(value << TypeSizes.Int8);
+        public static byte AsHighPart(this byte value) => (byte)(value << TypeSizes.HalfByteMaxValue);
+
+        public static long AsHighPart(this long value) => unchecked((long)unchecked((ulong)value).AsHighPart());
+        public static int AsHighPart(this int value) => unchecked((int)unchecked((uint)value).AsHighPart());
+        public static short AsHighPart(this short value) => unchecked((short)unchecked((ushort)value).AsHighPart());
+        public static sbyte AsHighPart(this sbyte value) => unchecked((sbyte)unchecked((byte)value).AsHighPart());
+
+        private static T ShiftHighPart<T>(this
+#if CS11
+            T
+#else
+            IShiftable<T>
+#endif
+            value, in byte offset, in byte size) where T : unmanaged
+#if CS11
+            , IUnsignedNumber<T>, IShiftOperators<T, byte, T>
+#endif
+            => offset == 0 ? value
+#if !CS11
+            .InnerValue
+#endif
+            : offset == size ? default : offset > size ? throw new ArgumentOutOfRangeException(nameof(offset)) : value
+#if CS11
+            >>
+#else
+            .Shift(
+#endif
+            offset
+#if !CS11
+                )
+#endif
+                ;
+#if CS11
+        public
+#else
+        private
+#endif
+            static unsafe T ShiftHighPart<T>(this
+#if CS11
+            T
+#else
+            IShiftable<T>
+#endif
+            value, in byte offset) where T : unmanaged
+#if CS11
+            , IUnsignedNumber<T>, IShiftOperators<T, byte, T>
+#endif
+            => value.ShiftHighPart(offset, (byte)sizeof(T));
+#if CS11
+        public
+#else
+        private
+#endif
+            static unsafe T GetHighPart<T>(this
+#if CS11
+            T
+#else
+            IShiftable<T>
+#endif
+            value, in byte length) where T : unmanaged
+#if CS11
+            , IUnsignedNumber<T>, IShiftOperators<T, byte, T>
+#endif
+        {
+            byte size = (byte)sizeof(T);
+
+            return value.ShiftHighPart((byte)(size - length), size);
+        }
+
+        private static T ShiftLowPart<T>(this
+#if CS11
+            T
+#else
+            IShiftable<T>
+#endif
+            value, in byte offset, in byte size) where T : unmanaged
+#if CS11
+            , IUnsignedNumber<T>, IShiftOperators<T, byte, T>
+#endif
+            => offset == 0 ? value
+#if !CS11
+            .InnerValue
+#endif
+            : offset == size ? default : offset > size ? throw new ArgumentOutOfRangeException(nameof(offset)) :
+#if CS11
+            (
+#endif
+            value
+#if CS11
+            <<
+#else
+            .Shift(
+#endif
+            offset)
+#if CS11
+            >> offset
+#endif
+            ;
+#if CS11
+        public
+#else
+        private
+#endif
+            static unsafe T ShiftLowPart<T>(this
+#if CS11
+            T
+#else
+            IShiftable<T>
+#endif
+            value, in byte offset) where T : unmanaged
+#if CS11
+            , IUnsignedNumber<T>, IShiftOperators<T, byte, T>
+#endif
+            => value.ShiftLowPart(offset, (byte)sizeof(T));
+#if CS11
+        public
+#else
+        private
+#endif
+            static unsafe T GetLowPart<T>(this
+#if CS11
+            T
+#else
+            IShiftable<T>
+#endif
+            value, in byte length) where T : unmanaged
+#if CS11
+            , IUnsignedNumber<T>, IShiftOperators<T, byte, T>
+#endif
+        {
+            byte size = (byte)sizeof(T);
+
+            return value.ShiftLowPart((byte)(size - length));
+        }
+
+        #region (U)Int64
+        #region UInt64
         public static uint GetHighPart(this ulong value) => (uint)(value >> TypeSizes.Int32);
-        public static ulong ShiftHighPart(this ulong value, in byte offset)
-#if CS8
-                =>
-#else
-        {
-            switch (
+#if !CS11
+        public static ulong ShiftHighPart(this ulong value, in byte offset) => NumberHelper.GetShiftableR(value).ShiftHighPart(offset);
+        public static ulong GetHighPart(this ulong value, in byte length) => NumberHelper.GetShiftableR(value).GetHighPart(length);
 #endif
-            offset
-#if CS8
-                switch
-#else
-        )
-#endif
-            {
-#if !CS8
-                case
-#endif
-                0
-#if CS8
-                =>
-#else
-            :
-                    return
-#endif
-                        value
-#if CS8
-                ,
-#else
-                    ;
-                case
-#endif
-                TypeSizes.Int64
-#if CS8
-                =>
-#else
-            :
-                    return
-#endif
-                        0ul
-#if CS8
-                ,
-                _ =>
-#else
-                    ;
-            }
 
-            return
-#endif
-            offset > TypeSizes.Int64 ? throw new ArgumentOutOfRangeException(nameof(offset)) : value >> offset
-#if CS8
-            };
-#else
-            ;
-        }
-#endif
-        public static ulong GetHighPart(this ulong value, in byte length) => value.ShiftHighPart((byte)(TypeSizes.Int64 - length));
         public static uint GetLowPart(this ulong value) => (uint)(value & uint.MaxValue);
-        public static ulong ShiftLowPart(this ulong value, in byte offset) => (value << offset) >> offset;
-        public static ulong GetLowPart(this ulong value, in byte offset) => value.ShiftLowPart((byte)(TypeSizes.Int64 - offset));
+#if !CS11
+        public static ulong ShiftLowPart(this ulong value, in byte offset) => NumberHelper.GetShiftableL(value).ShiftLowPart(offset);
+        public static ulong GetLowPart(this ulong value, in byte length) => NumberHelper.GetShiftableL(value).GetLowPart(length);
+#endif
 
+        public static ulong SetHighPart(this ulong value, in uint newHighPart) => newHighPart.ToHighPart() | (value & TypeSizes.Int32);
+        public static ulong SetLowPart(this ulong value, in uint newLowPart) => value.GetHighPart().Concatenate(newLowPart);
+        #endregion UInt64
+
+        #region Int64
+        public static int GetHighPart(this long value) => unchecked((int)unchecked((ulong)value).GetHighPart());
+        public static long ShiftHighPart(this long value, in byte offset) => unchecked((long)unchecked((ulong)value).ShiftHighPart(offset));
+        public static long GetHighPart(this long value, in byte length) => unchecked((long)unchecked((ulong)value).GetHighPart(length));
+
+        public static int GetLowPart(this long value) => unchecked((int)unchecked((ulong)value).GetLowPart());
+        public static long ShiftLowPart(this long value, in byte offset) => unchecked((long)unchecked((ulong)value).ShiftLowPart(offset));
+        public static long GetLowPart(this long value, in byte length) => unchecked((long)unchecked((ulong)value).GetLowPart(length));
+
+        public static long SetHighPart(this long value, in int newHighPart) => unchecked((long)unchecked((ulong)value).SetHighPart(unchecked((uint)newHighPart)));
+        public static long SetLowPart(this long value, in int newLowPart) => unchecked((long)unchecked((ulong)value).SetLowPart(unchecked((uint)newLowPart)));
+        #endregion Int64
+        #endregion (U)Int64
+
+        #region (U)Int32
+        #region UInt32
         public static ushort GetHighPart(this uint value) => (ushort)(value >> TypeSizes.Int16);
-        public static uint ShiftHighPart(this uint value, in byte offset)
-#if CS8
-                =>
-#else
-        {
-            switch (
+#if !CS11
+        public static uint ShiftHighPart(this uint value, in byte offset) => NumberHelper.GetShiftableR(value).ShiftHighPart(offset);
+        public static uint GetHighPart(this uint value, in byte length) => NumberHelper.GetShiftableR(value).GetHighPart(length);
 #endif
-            offset
-#if CS8
-                switch
-#else
-        )
-#endif
-            {
-#if !CS8
-                case
-#endif
-                0
-#if CS8
-                =>
-#else
-            :
-                    return
-#endif
-                        value
-#if CS8
-                ,
-#else
-                    ;
-                case
-#endif
-                TypeSizes.Int32
-#if CS8
-                =>
-#else
-            :
-                    return
-#endif
-                        0u
-#if CS8
-                ,
-                _ =>
-#else
-                    ;
-            }
 
-            return
-#endif
-            offset > TypeSizes.Int32 ? throw new ArgumentOutOfRangeException(nameof(offset)) : value >> offset
-#if CS8
-            };
-#else
-            ;
-        }
-#endif
-        public static uint GetHighPart(this uint value, in byte length) => value.ShiftHighPart((byte)(TypeSizes.Int32 - length));
         public static ushort GetLowPart(this uint value) => (ushort)(value & ushort.MaxValue);
-        public static uint ShiftLowPart(this uint value, in byte offset) => (value << offset) >> offset;
-        public static uint GetLowPart(this uint value, in byte offset) => value.ShiftLowPart((byte)(TypeSizes.Int32 - offset));
+#if !CS11
+        public static uint ShiftLowPart(this uint value, in byte offset) => NumberHelper.GetShiftableL(value).ShiftLowPart(offset);
+        public static uint GetLowPart(this uint value, in byte length) => NumberHelper.GetShiftableL(value).GetLowPart(length);
+#endif
 
+        public static uint SetHighPart(this uint value, in ushort newHighPart) => newHighPart.ToHighPart() | (value & TypeSizes.Int16);
+        public static uint SetLowPart(this uint value, in ushort newLowPart) => value.GetHighPart().Concatenate(newLowPart);
+        #endregion UInt32
+
+        #region Int32
+        public static short GetHighPart(this int value) => unchecked((short)unchecked((uint)value).GetHighPart());
+        public static int ShiftHighPart(this int value, in byte offset) => unchecked((int)unchecked((uint)value).ShiftHighPart(offset));
+        public static int GetHighPart(this int value, in byte length) => unchecked((int)unchecked((uint)value).GetHighPart(length));
+
+        public static short GetLowPart(this int value) => unchecked((short)unchecked((uint)value).GetLowPart());
+        public static int ShiftLowPart(this int value, in byte offset) => unchecked((int)unchecked((uint)value).ShiftLowPart(offset));
+        public static int GetLowPart(this int value, in byte length) => unchecked((int)unchecked((uint)value).GetLowPart(length));
+
+        public static int SetHighPart(this int value, in short newHighPart) => unchecked((int)unchecked((uint)value).SetHighPart(unchecked((ushort)newHighPart)));
+        public static int SetLowPart(this int value, in short newLowPart) => unchecked((int)unchecked((uint)value).SetLowPart(unchecked((ushort)newLowPart)));
+        #endregion Int32
+        #endregion (U)Int32
+
+        #region (U)Int16
+        #region UInt16
         public static byte GetHighPart(this ushort value) => (byte)(value >> TypeSizes.Int8);
-        public static ushort ShiftHighPart(this ushort value, in byte offset)
-#if CS8
-                =>
-#else
-        {
-            switch (
+#if !CS11
+        public static ushort ShiftHighPart(this ushort value, in byte offset) => NumberHelper.GetShiftableR(value).ShiftHighPart(offset);
+        public static ushort GetHighPart(this ushort value, in byte length) => NumberHelper.GetShiftableR(value).GetHighPart(length);
 #endif
-            offset
-#if CS8
-                switch
-#else
-        )
-#endif
-            {
-#if !CS8
-                case
-#endif
-                0
-#if CS8
-                =>
-#else
-            :
-                    return
-#endif
-                        value
-#if CS8
-                ,
-#else
-                    ;
-                case
-#endif
-                TypeSizes.Int16
-#if CS8
-                =>
-#else
-            :
-                    return
-#endif
-                        0
-#if CS8
-                ,
-                _ =>
-#else
-                    ;
-            }
 
-            return
-#endif
-            offset > TypeSizes.Int16 ? throw new ArgumentOutOfRangeException(nameof(offset)) : (ushort)(value >> offset)
-#if CS8
-            };
-#else
-            ;
-        }
-#endif
-        public static ushort GetHighPart(this ushort value, in byte length) => value.ShiftHighPart((byte)(TypeSizes.Int16 - length));
         public static byte GetLowPart(this ushort value) => (byte)(value & byte.MaxValue);
-        public static ushort ShiftLowPart(this ushort value, in byte offset) => (ushort)((value << offset) >> offset);
-        public static ushort GetLowPart(this ushort value, in byte offset) => value.ShiftLowPart((byte)(TypeSizes.Int16 - offset));
+#if !CS11
+        public static ushort ShiftLowPart(this ushort value, in byte offset) => NumberHelper.GetShiftableL(value).ShiftLowPart(offset);
+        public static ushort GetLowPart(this ushort value, in byte length) => NumberHelper.GetShiftableL(value).GetLowPart(length);
+#endif
 
+        public static ushort SetHighPart(this ushort value, in byte newHighPart) => (ushort)(newHighPart.ToUInt16HighPart() | ((uint)value & TypeSizes.Int8));
+        public static ushort SetLowPart(this ushort value, in byte newLowPart) => value.GetHighPart().Concatenate(newLowPart);
+        #endregion UInt16
+
+        #region Int16
+        public static sbyte GetHighPart(this short value) => unchecked((sbyte)unchecked((ushort)value).GetHighPart());
+        public static short ShiftHighPart(this short value, in byte offset) => unchecked((short)unchecked((ushort)value).ShiftHighPart(offset));
+        public static short GetHighPart(this short value, in byte length) => unchecked((short)unchecked((ushort)value).GetHighPart(length));
+
+        public static sbyte GetLowPart(this short value) => unchecked((sbyte)unchecked((ushort)value).GetLowPart());
+        public static short ShiftLowPart(this short value, in byte offset) => unchecked((short)unchecked((ushort)value).ShiftLowPart(offset));
+        public static short GetLowPart(this short value, in byte length) => unchecked((short)unchecked((ushort)value).GetLowPart(length));
+
+        public static short SetHighPart(this short value, in sbyte newHighPart) => unchecked((short)unchecked((ushort)value).SetHighPart(unchecked((byte)newHighPart)));
+        public static short SetLowPart(this short value, in sbyte newLowPart) => unchecked((short)unchecked((ushort)value).SetLowPart(unchecked((byte)newLowPart)));
+        #endregion Int16
+        #endregion (U)Int16
+
+        #region (U)Int8
+        #region UInt8
         public static byte GetHighPart(this byte value) => (byte)(value >> TypeSizes.Int4);
-        public static byte ShiftHighPart(this byte value, in byte offset)
-#if CS8
-                =>
-#else
-        {
-            switch (
+#if !CS11
+        public static byte ShiftHighPart(this byte value, in byte offset) => NumberHelper.GetShiftableR(value).ShiftHighPart(offset);
+        public static byte GetHighPart(this byte value, in byte length) => NumberHelper.GetShiftableR(value).GetHighPart(length);
 #endif
-            offset
-#if CS8
-                switch
-#else
-        )
-#endif
-            {
-#if !CS8
-                case
-#endif
-                0
-#if CS8
-                =>
-#else
-            :
-                    return
-#endif
-                        value
-#if CS8
-                ,
-#else
-                    ;
-                case
-#endif
-                TypeSizes.Int8
-#if CS8
-                =>
-#else
-            :
-                    return
-#endif
-                        0
-#if CS8
-                ,
-                _ =>
-#else
-                    ;
-            }
 
-            return
-#endif
-            offset > TypeSizes.Int8 ? throw new ArgumentOutOfRangeException(nameof(offset)) : (byte)(value >> offset)
-#if CS8
-            };
-#else
-            ;
-        }
-#endif
-        public static byte GetHighPart(this byte value, in byte length) => value.ShiftHighPart((byte)(TypeSizes.Int8 - length));
         public static byte GetLowPart(this byte value) => (byte)(value & TypeSizes.HalfByteMaxValue);
-        public static byte ShiftLowPart(this byte value, in byte offset) => (byte)((value << offset) >> offset);
-        public static byte GetLowPart(this byte value, in byte offset) => value.ShiftLowPart((byte)(TypeSizes.Int8 - offset));
+#if !CS11
+        public static byte ShiftLowPart(this byte value, in byte offset) => NumberHelper.GetShiftableL(value).ShiftLowPart(offset);
+        public static byte GetLowPart(this byte value, in byte length) => NumberHelper.GetShiftableL(value).GetLowPart(length);
+#endif
+
+        public static byte SetHighPart(this byte value, in byte newHighPart) => (byte)(newHighPart.ToUInt8HighPart() | ((uint)value & TypeSizes.HalfByteMaxValue));
+        public static byte SetLowPart(this byte value, in byte newLowPart) => value.GetHighPart().ConcatenateHalfParts(newLowPart);
+        #endregion UInt8
+
+        #region Int8
+        public static sbyte GetHighPart(this sbyte value) => unchecked((sbyte)unchecked((byte)value).GetHighPart());
+        public static sbyte ShiftHighPart(this sbyte value, in byte offset) => unchecked((sbyte)unchecked((byte)value).ShiftHighPart(offset));
+        public static sbyte GetHighPart(this sbyte value, in byte length) => unchecked((sbyte)unchecked((byte)value).GetHighPart(length));
+
+        public static sbyte GetLowPart(this sbyte value) => unchecked((sbyte)unchecked((byte)value).GetLowPart());
+        public static sbyte ShiftLowPart(this sbyte value, in byte offset) => unchecked((sbyte)unchecked((byte)value).ShiftLowPart(offset));
+        public static sbyte GetLowPart(this sbyte value, in byte length) => unchecked((sbyte)unchecked((byte)value).GetLowPart(length));
+
+        public static sbyte SetHighPart(this sbyte value, in sbyte newHighPart) => unchecked((sbyte)unchecked((byte)value).SetHighPart(unchecked((byte)newHighPart)));
+        public static sbyte SetLowPart(this sbyte value, in sbyte newLowPart) => unchecked((sbyte)unchecked((byte)value).SetLowPart(unchecked((byte)newLowPart)));
+        #endregion Int8
+        #endregion (U)Int8
+
+        #region (U)IntPtr
+        #region UIntPtr
+        public static ushort GetHighWord(this UIntPtr i) => unchecked((uint)i).GetHighPart();
+        public static ushort GetLowWord(this UIntPtr i) => unchecked((uint)i).GetLowPart();
+
+        public static uint GetHighDWord(this UIntPtr i) => ((ulong)i).GetHighPart();
+        public static uint GetLowDWord(this UIntPtr i) => ((ulong)i).GetLowPart();
+        #endregion UIntPtr
+
+        #region IntPtr
+        public static short GetHighWord(this IntPtr i) => unchecked((int)i).GetHighPart();
+        public static short GetLowWord(this IntPtr i) => unchecked((int)i).GetLowPart();
+
+        public static int GetHighDWord(IntPtr i) => ((long)i).GetHighPart();
+        public static int GetLowDWord(IntPtr i) => ((long)i).GetLowPart();
+        #endregion IntPtr
+        #endregion (U)IntPtr
+        #endregion Bitwise Operations
 
         public static string PadWithZeroes(this string s, in int count) => s.PadLeft(count, '0');
         public static unsafe string PadWithZeroes<T>(this string s) where T : unmanaged => s.PadLeft(sizeof(T), '0');
@@ -470,7 +524,7 @@ namespace WinCopies.Util // To avoid name conflicts.
             array, int index) => array.TryGet(index, out T result) ? result : default;
 
 #if !CS5
-            public static T GetCustomAttribute<T>(this Type type, in bool inherit) => (T)type.GetCustomAttributes(typeof(T), inherit).TryGet(0);
+        public static T GetCustomAttribute<T>(this Type type, in bool inherit) => (T)type.GetCustomAttributes(typeof(T), inherit).TryGet(0);
 #endif
 
         public static IEnumerable<KeyValuePair<string, System.IO.Stream>> EnumerateEmbeddedResources(this Assembly assembly)
@@ -1097,41 +1151,41 @@ namespace WinCopies.Util // To avoid name conflicts.
                     action(item);
         }
 #if !CS5
-            internal static Type _GetEnumUnderlyingType(this Type type)
-            {
-                var fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+        internal static Type _GetEnumUnderlyingType(this Type type)
+        {
+            var fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
-                return fields.Length > 0 ? fields[0].FieldType : null;
-            }
+            return fields.Length > 0 ? fields[0].FieldType : null;
+        }
 
-            public static Type GetEnumUnderlyingType(this Type type) => type.IsEnum ? type._GetEnumUnderlyingType() : null;
+        public static Type GetEnumUnderlyingType(this Type type) => type.IsEnum ? type._GetEnumUnderlyingType() : null;
 
-            public static Type GetEnumUnderlyingType<T>(this T value) where T : Enum => UtilHelpers.GetEnumUnderlyingType<T>();
+        public static Type GetEnumUnderlyingType<T>(this T value) where T : Enum => UtilHelpers.GetEnumUnderlyingType<T>();
 
-            public static bool HasFlag<T>(this T value, in T flag) where T : Enum
-            {
-                if (value == null ? throw GetArgumentNullException(nameof(value)) : flag == null ? throw GetArgumentNullException(nameof(flag)) : typeof(T).GetCustomAttributes(false).FirstOrDefault(a => a is FlagsAttribute) == null)
+        public static bool HasFlag<T>(this T value, in T flag) where T : Enum
+        {
+            if (value == null ? throw GetArgumentNullException(nameof(value)) : flag == null ? throw GetArgumentNullException(nameof(flag)) : typeof(T).GetCustomAttributes(false).FirstOrDefault(a => a is FlagsAttribute) == null)
 
-                    return false;
+                return false;
 
-                object _value = value.GetNumValue();
+            object _value = value.GetNumValue();
 
-                return _value is int @int
-                    ? @int.HasFlag((int)flag.GetNumValue())
-                    : _value is uint @uint
-                    ? @uint.HasFlag((uint)flag.GetNumValue())
-                    : _value is short @short
-                    ? @short.HasFlag((short)flag.GetNumValue())
-                    : _value is ushort @ushort
-                    ? @ushort.HasFlag((ushort)flag.GetNumValue())
-                    : _value is long @long
-                    ? @long.HasFlag((long)flag.GetNumValue())
-                    : _value is ulong @ulong
-                    ? @ulong.HasFlag((ulong)flag.GetNumValue())
-                    : _value is byte @byte
-                    ? @byte.HasFlag((byte)flag.GetNumValue())
-                    : ((sbyte)_value).HasFlag((sbyte)flag.GetNumValue());
-            }
+            return _value is int @int
+                ? @int.HasFlag((int)flag.GetNumValue())
+                : _value is uint @uint
+                ? @uint.HasFlag((uint)flag.GetNumValue())
+                : _value is short @short
+                ? @short.HasFlag((short)flag.GetNumValue())
+                : _value is ushort @ushort
+                ? @ushort.HasFlag((ushort)flag.GetNumValue())
+                : _value is long @long
+                ? @long.HasFlag((long)flag.GetNumValue())
+                : _value is ulong @ulong
+                ? @ulong.HasFlag((ulong)flag.GetNumValue())
+                : _value is byte @byte
+                ? @byte.HasFlag((byte)flag.GetNumValue())
+                : ((sbyte)_value).HasFlag((sbyte)flag.GetNumValue());
+        }
 #endif
         public static string Truncate(this string s, in int length) => s.Substring(0, length);
 
