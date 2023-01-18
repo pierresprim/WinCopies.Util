@@ -841,9 +841,16 @@ namespace WinCopies
 
     public class BooleanEventArgs : EventArgs
     {
-        public bool Value { get; }
+        public bool Value { get; protected set; }
 
         public BooleanEventArgs(in bool value) => Value = value;
+    }
+
+    public class BooleanEventArgs2 : BooleanEventArgs
+    {
+        public new bool Value { get => base.Value; set => base.Value = value; }
+
+        public BooleanEventArgs2(in bool value = false) : base(value) { /* Left empty. */ }
     }
 
     public interface ISplitFactory<T, U, TContainer>
