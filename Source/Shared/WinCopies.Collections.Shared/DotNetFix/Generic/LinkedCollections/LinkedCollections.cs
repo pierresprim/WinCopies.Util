@@ -40,7 +40,9 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
         protected internal TList InnerList => _list ?? throw GetExceptionForDispose(false);
         protected System.Collections.Generic.ICollection<TItems> InnerCollection => InnerList;
+        protected System.Collections.ICollection InnerCollection2 => InnerList;
         protected Extensions.IEnumerable<IUIntCountableEnumeratorInfo<TItems>> InnerEnumerable => InnerList;
+        protected IUIntCountable InnerCountable => InnerList;
 
         public bool IsDisposed => _list == null;
 
@@ -133,9 +135,9 @@ namespace WinCopies.Collections.DotNetFix.Generic
 #endif
     }
 
-    public class ReadOnlyLinkedCollection<T> : ReadOnlyLinkedCollection<T, IReadOnlyLinkedListNode<T>, IReadOnlyLinkedList<T>>, System.Collections.Generic.ICollection<T>, IEnumerable<T>, System.Collections.Generic.IReadOnlyCollection<T>, ICollection, IReadOnlyLinkedList<T>
+    public class ReadOnlyLinkedCollection<T> : ReadOnlyLinkedCollection<T, ILinkedListNode<T>, IReadOnlyLinkedList<T, ILinkedListNode<T>>>, System.Collections.Generic.ICollection<T>, IEnumerable<T>, System.Collections.Generic.IReadOnlyCollection<T>, ICollection, IReadOnlyLinkedList<T>
     {
-        public ReadOnlyLinkedCollection(in IReadOnlyLinkedList<T> list) : base(list) { /* Left empty. */ }
+        public ReadOnlyLinkedCollection(in IReadOnlyLinkedList<T, ILinkedListNode<T>> list) : base(list) { /* Left empty. */ }
     }
 
     public class LinkedCollection<T> : LinkedCollection<T, ILinkedListNode<T>, ILinkedList3<T>>, ILinkedList3<T>, System.Collections.Generic.ICollection<T>, ICollectionBase<T>
