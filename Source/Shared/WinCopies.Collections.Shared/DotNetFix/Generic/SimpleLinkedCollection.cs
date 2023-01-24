@@ -17,85 +17,100 @@
 
 #if CS7
 using System;
-using System.Collections;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
 using WinCopies.Util;
 
-namespace WinCopies.Collections.DotNetFix
+namespace WinCopies.Collections.DotNetFix.Generic
 {
-    namespace Generic
+    [Serializable, DebuggerDisplay("Count = {Count}")]
+    public abstract class SimpleLinkedCollection<TList, TItems> : SimpleLinkedCollectionBase<TList>, ISimpleLinkedList<TItems>, ISimpleLinkedListCommon<TItems> where TList : ISimpleLinkedList<TItems>, ISimpleLinkedListCommon<TItems>
     {
-        [Serializable, DebuggerDisplay("Count = {Count}")]
-        public class SimpleLinkedCollection<TList, TItems> : SimpleLinkedCollectionBase<TList>, ISimpleLinkedList<TItems>, ISimpleLinkedListCommon<TItems> where TList : ISimpleLinkedList<TItems>, ISimpleLinkedListCommon<TItems>
-        {
-            /// <summary>
-            /// Initializes a new instance of the <see cref="SimpleLinkedCollection{TList, TItems}"/> class with a custom queue.
-            /// </summary>
-            /// <param name="list">The inner queue for this <see cref="SimpleLinkedCollection{TList, TItems}"/>.</param>
-            public SimpleLinkedCollection(in TList list) : base(list) { /* Left empty. */ }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SimpleLinkedCollection{TList, TItems}"/> class with a custom queue.
+        /// </summary>
+        /// <param name="list">The inner queue for this <see cref="SimpleLinkedCollection{TList, TItems}"/>.</param>
+        public SimpleLinkedCollection(in TList list) : base(list) { /* Left empty. */ }
 
-            /// <summary>
-            /// Returns the object at the beginning of the <see cref="SimpleLinkedCollection{T}"/> without removing it.
-            /// </summary>
-            /// <returns>The object at the beginning of the <see cref="SimpleLinkedCollection{T}"/>.</returns>
-            /// <exception cref="InvalidOperationException">The <see cref="SimpleLinkedCollection{T}"/> is empty.</exception>
-            /// <seealso cref="TryPeek(out TItems)"/>
-            public TItems
+        /// <summary>
+        /// Returns the object at the beginning of the <see cref="SimpleLinkedCollection{T}"/> without removing it.
+        /// </summary>
+        /// <returns>The object at the beginning of the <see cref="SimpleLinkedCollection{T}"/>.</returns>
+        /// <exception cref="InvalidOperationException">The <see cref="SimpleLinkedCollection{T}"/> is empty.</exception>
+        /// <seealso cref="TryPeek(out TItems)"/>
+        public TItems
 #if CS9
                 ?
 #endif
-                Peek() => InnerList.Peek();
+            Peek() => InnerList.Peek();
 
-            /// <summary>
-            /// Tries to peek the object at the beginning of the <see cref="SimpleLinkedCollection{TList, TItems}"/> without removing it.
-            /// </summary>
-            /// <param name="result">The object at the beginning of the <see cref="SimpleLinkedCollection{TList, TItems}"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
-            /// <returns>A <see cref="bool"/> value that indicates whether a value has actually been retrieved.</returns>
-            /// <seealso cref="Peek"/>
-            public bool TryPeek(
+        /// <summary>
+        /// Tries to peek the object at the beginning of the <see cref="SimpleLinkedCollection{TList, TItems}"/> without removing it.
+        /// </summary>
+        /// <param name="result">The object at the beginning of the <see cref="SimpleLinkedCollection{TList, TItems}"/>. This value can be <see langword="null"/> when the return value is <see langword="false"/>.</param>
+        /// <returns>A <see cref="bool"/> value that indicates whether a value has actually been retrieved.</returns>
+        /// <seealso cref="Peek"/>
+        public bool TryPeek(
 #if CS8
                 [MaybeNullWhen(false)]
 #endif
-                out TItems result) => InnerList.TryPeek(out result);
+            out TItems result) => InnerList.TryPeek(out result);
 
-            /// <summary>
-            /// Adds an object to the end of the <see cref="SimpleLinkedCollection{TList, TItems}"/>.
-            /// </summary>
-            /// <param name="item">The object to add to the <see cref="SimpleLinkedCollection{TList, TItems}"/>. The value can be <see langword="null"/> for reference types.</param>
-            public virtual void Add(TItems
+        /// <summary>
+        /// Adds an object to the end of the <see cref="SimpleLinkedCollection{TList, TItems}"/>.
+        /// </summary>
+        /// <param name="item">The object to add to the <see cref="SimpleLinkedCollection{TList, TItems}"/>. The value can be <see langword="null"/> for reference types.</param>
+        public abstract void Add(TItems
 #if CS9
                 ?
 #endif
-                item) => InnerList.Add(item);
+            item);
 
-            /// <summary>
-            /// Removes and returns the object at the beginning of the <see cref="SimpleLinkedCollection{TList, TItems}"/>.
-            /// </summary>
-            /// <returns>The object that is removed from the beginning of the <see cref="SimpleLinkedCollection{TList, TItems}"/>.</returns>
-            /// <exception cref="InvalidOperationException">The <see cref="SimpleLinkedCollection{TList, TItems}"/> is empty.</exception>
-            /// <seealso cref="TryRemove(out TItems)"/>
-            public virtual TItems
+        /// <summary>
+        /// Removes and returns the object at the beginning of the <see cref="SimpleLinkedCollection{TList, TItems}"/>.
+        /// </summary>
+        /// <returns>The object that is removed from the beginning of the <see cref="SimpleLinkedCollection{TList, TItems}"/>.</returns>
+        /// <exception cref="InvalidOperationException">The <see cref="SimpleLinkedCollection{TList, TItems}"/> is empty.</exception>
+        /// <seealso cref="TryRemove(out TItems)"/>
+        public abstract TItems
 #if CS9
                 ?
 #endif
-                Remove() => InnerList.Remove();
+            Remove();
 
-            public virtual bool TryRemove(
+        public abstract bool TryRemove(
 #if CS8
                 [MaybeNullWhen(false)]
 #endif
-                out TItems result) => InnerList.TryRemove(out result);
+            out TItems result);
 
-            void IListCommon.Add(object value) => Add((TItems)value);
-            object IListCommon.Remove() => Remove();
-            bool IListCommon.TryRemove(out object result) => UtilHelpers.TryGetValue<TItems>(TryRemove, out result);
+        void IListCommon.Add(object value) => Add((TItems)value);
+        object IListCommon.Remove() => Remove();
+        bool IListCommon.TryRemove(out object result) => UtilHelpers.TryGetValue<TItems>(TryRemove, out result);
 #if !CS8
-            object IPeekable.Peek() => InnerList.Peek();
-            bool IPeekable.TryPeek(out object result) => InnerList.TryPeek(out result);
+        object IPeekable.Peek() => InnerList.AsFromType<IPeekable>().Peek();
+        bool IPeekable.TryPeek(out object result) => InnerList.AsFromType<IPeekable>().TryPeek(out result);
 #endif
-        }
+    }
+
+    public abstract class SimpleLinkedListBaseCollection<TList, TItems> : SimpleLinkedListBaseCollectionBase<TList>, ISimpleLinkedListBase, IPeekable<TItems>, ISimpleLinkedListCommon<TItems> where TList : ISimpleLinkedListBase, IPeekable<TItems>, ISimpleLinkedListCommon<TItems>
+    {
+        protected SimpleLinkedListBaseCollection(in TList list) : base(list) { /* Left empty. */ }
+
+        public TItems Peek() => InnerList.Peek();
+        public bool TryPeek(out TItems result) => InnerList.TryPeek(out result);
+
+        public virtual void Add(TItems value) => InnerList.Add(value);
+        public virtual TItems Remove() => InnerList.Remove();
+        public virtual bool TryRemove(out TItems result) => InnerList.TryRemove(out result);
+
+        object IPeekable.Peek() => InnerList.AsFromType<IPeekable>().Peek();
+        public bool TryPeek(out object result) => InnerList.AsFromType<IPeekable>().TryPeek(out result);
+
+        void IListCommon.Add(object value) => Add((TItems)value);
+        object IListCommon.Remove() => Remove();
+        public bool TryRemove(out object result) => UtilHelpers.TryGetValue<TItems>(TryRemove, out result);
     }
 }
 #endif
