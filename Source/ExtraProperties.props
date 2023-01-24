@@ -3,7 +3,7 @@
 		<AssemblyName>$(PackageId)</AssemblyName>
 		<Title>$(PackageId)</Title>
 		<DocumentationFile>$(PackageId).xml</DocumentationFile>
-		<AssemblyOriginatorKeyFile>$(PackageId).snk</AssemblyOriginatorKeyFile>
+		<!--<AssemblyOriginatorKeyFile>$(PackageId).snk</AssemblyOriginatorKeyFile>-->
 	</PropertyGroup>
 
 	<Target Name="CopyNuGetPackage" AfterTargets="AfterBuild" Condition="'$(Configuration)'=='Release'">
