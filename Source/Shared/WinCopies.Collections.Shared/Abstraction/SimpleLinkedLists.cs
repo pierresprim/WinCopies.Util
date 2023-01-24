@@ -17,26 +17,23 @@
 
 using WinCopies.Collections.DotNetFix;
 using WinCopies.Collections.DotNetFix.Generic;
-using WinCopies.Util;
 
 namespace WinCopies.Collections.Abstraction.Generic
 {
 #if CS7
-    public abstract class SimpleLinkedList<TItems, TList> : IPeekable<TItems>, IListCommon<TItems> where TList : ISimpleLinkedListCommon<TItems>, IPeekable<TItems>, ISimpleLinkedListBase2
+    public abstract class SimpleLinkedListCommon<TItems, TList> : IUIntCountable, IClearable where TList : IUIntCountable, IClearable
     {
         protected TList InnerList { get; }
-        //protected ISimpleLinkedListCore InnerSimpleLinkedList;
-
-        public object SyncRoot => InnerList.SyncRoot;
-        public bool IsSynchronized => InnerList.IsSynchronized;
 
         public uint Count => InnerList.Count;
 
-        public bool IsReadOnly => InnerList.IsReadOnly;
+        protected SimpleLinkedListCommon(in TList list) => InnerList = list;
 
-        public bool HasItems => InnerList.HasItems;
-
-        protected SimpleLinkedList(in TList list) => InnerList = list;
+        public void Clear() => InnerList.Clear();
+    }
+    public abstract class SimpleLinkedListBase<TItems, TList> : SimpleLinkedListCommon<TItems, TList>, IListCommon<TItems>, IPeekable<TItems> where TList : IUIntCountable, IPeekable<TItems>, IClearable
+    {
+        protected SimpleLinkedListBase(in TList list) : base(list) { /* Left empty. */ }
 
         public TItems
 #if CS9
@@ -49,8 +46,6 @@ namespace WinCopies.Collections.Abstraction.Generic
 #endif
             result) => InnerList.TryPeek(out result);
 
-        public void Clear() => InnerList.AsFromType<IClearable>().Clear();
-
         public abstract void Add(TItems value);
         public abstract TItems Remove();
         public abstract bool TryRemove(out TItems result);
@@ -62,6 +57,20 @@ namespace WinCopies.Collections.Abstraction.Generic
         object IPeekable.Peek() => Peek();
         public bool TryPeek(out object result) => TryPeek(out result);
 #endif
+    }
+
+    public abstract class SimpleLinkedList<TItems, TList> : SimpleLinkedListBase<TItems, TList> where TList : ISimpleLinkedListCommon<TItems>, IPeekable<TItems>, ISimpleLinkedListBase2
+    {
+        //protected ISimpleLinkedListCore InnerSimpleLinkedList;
+
+        public object SyncRoot => InnerList.SyncRoot;
+        public bool IsSynchronized => InnerList.IsSynchronized;
+
+        public bool IsReadOnly => InnerList.IsReadOnly;
+
+        public bool HasItems => InnerList.HasItems;
+
+        protected SimpleLinkedList(in TList list) : base(list) { /* Left empty. */ }
     }
 
     public class Queue<TItems, TList> : SimpleLinkedList<TItems, TList>, IQueue<TItems> where TList : IQueueCommon<TItems>, ISimpleLinkedListBase2
@@ -96,7 +105,6 @@ namespace WinCopies.Collections.Abstraction.Generic
         public bool TryDequeue(out object result) => UtilHelpers.TryGetValue<TItems>(TryDequeue, out result);
 #endif
     }
-
     public class Stack<TItems, TList> : SimpleLinkedList<TItems, TList>, IStack<TItems> where TList : IStackCommon<TItems>, ISimpleLinkedListBase2
 #if CS8
         , IListCommon<TItems>
@@ -129,8 +137,14 @@ namespace WinCopies.Collections.Abstraction.Generic
         public bool TryPop(out object result) => UtilHelpers.TryGetValue<TItems>(TryPop, out result);
 #endif
     }
-#endif
 
+    public class IndexedSimpleLinkedList<TItems, TList> : SimpleLinkedListCommon<TItems, TList> where TList : Collections.Generic.IIndexable<TItems>, IUIntCountable, IClearable
+    {
+        public int CurrentIndex { get; private set; }
+
+        public IndexedSimpleLinkedList(in TList items) : base(items) { /* Left empty. */ }
+    }
+#endif
     public static class EnumerableHelper<T>
     {
         public abstract class SimpleLinkedList : IPeekable<T>, ISimpleLinkedListBase
