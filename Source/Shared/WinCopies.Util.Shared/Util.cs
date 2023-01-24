@@ -229,7 +229,7 @@ namespace WinCopies
         public static T[] Empty<T>() => EmptyArray<T>.Array;
     }
 #endif
-    public interface ISortableItem<out T> : IEquatable<T>, IComparable<T>, Collections.Generic.IComparable<T>
+    public interface ISortableItem<T> : IEquatable<T>, IComparable<T>, Collections.Generic.IComparable<T>
     {
 #if CS8
         bool Collections.Generic.IComparable<T>.LessThan(T other) => CompareTo(other) < 0;
