@@ -25,11 +25,7 @@ namespace WinCopies.Collections
     {
         private readonly Func<IEnumerator> _enumeratorFunc;
 
-        public Enumerable(
-#if WinCopies3
-            in
-#endif
-            Func<IEnumerator> enumeratorFunc) => _enumeratorFunc = enumeratorFunc;
+        public Enumerable(in Func<IEnumerator> enumeratorFunc) => _enumeratorFunc = enumeratorFunc;
 
         public IEnumerator GetEnumerator() => _enumeratorFunc();
 
@@ -49,18 +45,12 @@ namespace WinCopies.Collections
 
         public static IEnumerable<T> GetEnumerable<T>(params T[] items) => FromEnumeratorFunc(() => GetEnumerator(items));
 
-        public static IEnumerable<T> FromEnumeratorFunc<T>(in Func<IEnumerator<T>> func) => new
-#if WinCopies3
-            Generic.
-#endif
-            Enumerable<T>(func);
+        public static IEnumerable<T> FromEnumeratorFunc<T>(in Func<IEnumerator<T>> func) => new Generic.Enumerable<T>(func);
 
         public static IEnumerable<T> FromEnumerator<T>(IEnumerator<T> enumerator) => FromEnumeratorFunc(() => enumerator);
 
-#if WinCopies3
         public static IEnumerable<T> GetNullCheckWhileEnumerable<T>(T first, Converter<T, T> converter) => new Generic.Enumerable<T>(() => Enumerator.GetNullCheckWhileEnumerator(first, converter));
 
         public static IEnumerable<T> GetNullCheckWhileEnumerableC<T>(T first, Converter<T, T> converter) => FromEnumerator(Enumerator.GetNullCheckWhileEnumerator(first, converter));
-#endif
     }
 }
