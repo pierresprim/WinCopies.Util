@@ -32,20 +32,12 @@ namespace WinCopies.Collections
 #if CS8
     namespace DotNetFix.Generic
     {
-        public interface IEnumerable<
-#if CS5
-            out
-#endif
-            T> : System.Collections.Generic.IEnumerable<T>
+        public interface IEnumerable<out T> : System.Collections.Generic.IEnumerable<T>
         {
             System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 
-        public interface IEnumerator<
-#if CS5
-            out
-#endif
-             T> : System.Collections.Generic.IEnumerator<T>, IEnumeratorBase
+        public interface IEnumerator<out T> : System.Collections.Generic.IEnumerator<T>, IEnumeratorBase
         {
             object? System.Collections.IEnumerator.Current => Current;
         }
@@ -186,7 +178,6 @@ namespace WinCopies.Collections
             protected EnumerableBase(in Func<TEnumerator> enumeratorFunc) => EnumeratorFunc = enumeratorFunc ?? throw GetArgumentNullException(nameof(enumeratorFunc));
 
             public TEnumerator GetEnumerator() => EnumeratorFunc();
-
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 #if !CS8
             IEnumerator<TItems> IEnumerable<TItems>.GetEnumerator() => GetEnumerator();
