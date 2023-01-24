@@ -18,7 +18,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 using WinCopies.Collections.DotNetFix;
@@ -32,6 +31,10 @@ namespace WinCopies.Collections
 {
     public static class EnumerableExtensions
     {
+        public static System.Collections.Generic.IEnumerator<IRecursiveEnumerable<T>> GetRecursiveEnumerator<T>(this IRecursiveEnumerableProvider<T> enumerable) => enumerable.AsEnumerable().GetEnumerator();
+        public static System.Collections.Generic.IEnumerator<IRecursiveEnumerable<T>> GetContainersEnumerator<T>(this IRecursiveEnumerableProvider<T> enumerable) => enumerable.AsFromType<IAsEnumerableAlt<IRecursiveEnumerable<T>>>().AsEnumerableAlt().GetEnumerator();
+        public static System.Collections.Generic.IEnumerator<T> GetItemsEnumerator<T>(this IRecursiveEnumerableProvider<T> enumerable) => enumerable.AsFromType<IAsEnumerableAlt<T>>().AsEnumerableAlt().GetEnumerator();
+
         public static ICountableEnumerable GetCountableEnumerable<TEnumerable>(this TEnumerable enumerable) where TEnumerable : ICountable, IEnumerable => enumerable as ICountableEnumerable ?? new Enumeration.CountableEnumerable<TEnumerable>(enumerable);
 
         public static IUIntCountableEnumerable GetUIntCountableEnumerable<TEnumerable>(this TEnumerable enumerable) where TEnumerable : IUIntCountable, IEnumerable => enumerable as IUIntCountableEnumerable ?? new Enumeration.UIntCountableEnumerable<TEnumerable>(enumerable);
@@ -263,7 +266,7 @@ namespace WinCopies.Collections
             }
         }
 
-        public static void CopyTo(this IEnumerable enumerable, in System.Array array) => CopyTo(enumerable, array, 0, array.Length);
+        public static void CopyTo(this IEnumerable enumerable, in System.Array array) => enumerable.CopyTo(array, 0, array.Length);
 
         public static void CopyTo(this IEnumerable enumerable, in System.Array array, in int arrayIndex, in uint count)
         {
@@ -276,33 +279,26 @@ namespace WinCopies.Collections
 
                 array.SetValue(value, i++);
         }
-
-        public static void CopyTo<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in T[] array, in int arrayIndex, in int count)
+#if CS5
+        public static void CopyTo<T>(this IReadOnlyList<T> list, in System.Array array, int arrayIndex, int count)
         {
-            ThrowOnInvalidCopyToArrayParameters(enumerable, array);
-            ThrowOnInvalidCopyToArrayOperation(array, arrayIndex, count, nameof(array), nameof(arrayIndex));
+            // set count
+            {
+                int _count = count > array.Length ? throw new ArgumentOutOfRangeException(nameof(count)) : count + arrayIndex > array.Length ? throw new ArgumentOutOfRangeException(nameof(arrayIndex)) : list.Count;
 
-            int i = arrayIndex;
+                if (count > _count)
 
-            foreach (T value in enumerable)
+                    count = _count;
+            }
 
-                array[i++] = value;
+            for (int i = 0; i < count; i++, arrayIndex++)
+
+                array.SetValue(list[i], arrayIndex);
         }
 
-        public static void CopyTo<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in T[] array) => CopyTo(enumerable, array, 0, array.Length);
+        public static void CopyTo<T>(this IReadOnlyList<T> list, in System.Array array, int arrayIndex) => list.CopyTo(array, arrayIndex, list.Count);
 
-        public static void CopyTo<T>(this System.Collections.Generic.IEnumerable<T> enumerable, in T[] array, in int arrayIndex, in uint count)
-        {
-            ThrowOnInvalidCopyToArrayParameters(enumerable, array);
-            ThrowOnInvalidCopyToArrayOperation(array, arrayIndex, count, nameof(array), nameof(arrayIndex));
-
-            int i = arrayIndex;
-
-            foreach (T value in enumerable)
-
-                array[i++] = value;
-        }
-
+        public static void CopyTo<T>(this IReadOnlyList<T> list, in System.Array array) => list.CopyTo(array, 0, array.Length);
 #if CS7
         public static ArrayList ToList(this IEnumerable array) => array.ToList(0);
 
@@ -361,19 +357,7 @@ namespace WinCopies.Collections
                 return arrayList;
             }
         }
-#endif
 
-        //public static List<T> ToList<T>(this System.Collections.Generic.IEnumerable<T> array)
-        //{
-        //    List<T> arrayList = new List<T>();
-
-        //    foreach (T value in array)
-
-        //        arrayList.Add(value);
-
-        //    return arrayList;
-        //}
-#if CS7
         /// <summary>
         /// Converts an <see cref="IEnumerable"/> to a <see cref="List{T}"/> from a given index for a given length.
         /// </summary>
@@ -443,6 +427,18 @@ namespace WinCopies.Collections
             return _array.ToArray();
         }
 #endif
+#endif
+        //public static List<T> ToList<T>(this System.Collections.Generic.IEnumerable<T> array)
+        //{
+        //    List<T> arrayList = new List<T>();
+
+        //    foreach (T value in array)
+
+        //        arrayList.Add(value);
+
+        //    return arrayList;
+        //}
+
         public static object[] ToArray(this IEnumerable array, in int startIndex, in int length)
         {
             ThrowIfNull(array, nameof(array));
