@@ -64,7 +64,7 @@ namespace WinCopies.Collections
     {
         public static partial class EnumerableHelper<T>
         {
-            public interface ILinkedList : EnumerableHelper.ILinkedListBase, ISimpleLinkedListBase, ISimpleLinkedListCore, IClearable, IQueueCommon<T>, IStackCore<T>
+            public interface ILinkedList : EnumerableHelper.ILinkedListBase, ISimpleLinkedListBase, ISimpleLinkedListCore, IClearable, IQueueCommon<T>, IStackCommon<T>
             {
                 T
 #if CS9
