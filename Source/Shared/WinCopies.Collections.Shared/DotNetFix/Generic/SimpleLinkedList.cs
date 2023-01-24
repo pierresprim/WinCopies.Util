@@ -16,166 +16,166 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using System.Collections;
+
 using WinCopies.Util;
+
 using static WinCopies.Collections.ThrowHelper;
 
-namespace WinCopies.Collections.DotNetFix
+namespace WinCopies.Collections.DotNetFix.Generic
 {
-    namespace Generic
+    public interface ISimpleLinkedList<T> : IPeekable<T>, ISimpleLinkedList
     {
-        public interface ISimpleLinkedList<T> : IPeekable<T>, ISimpleLinkedList
+        // Left empty.
+    }
+
+    public abstract class SimpleLinkedList<TNode, TValue> : SimpleLinkedListBase<TNode>, ISimpleLinkedList<TValue>, IListCommon where TNode : ISimpleLinkedListNode<TNode, TValue>
+    {
+        private TValue OnRemove()
         {
-            // Left empty.
+            TNode firstItem = FirstItem;
+
+            TValue result = firstItem.Value;
+
+            Decrement();
+
+            firstItem.Clear();
+
+            return result;
         }
 
-        public abstract class SimpleLinkedList<TNode, TValue> : SimpleLinkedListBase<TNode>, ISimpleLinkedList<TValue>, IListCommon where TNode : ISimpleLinkedListNode<TNode, TValue>
+        protected TValue PeekItem() => FirstItem.Value;
+
+        protected abstract TNode AddItem(TValue item, out bool actionAfter);
+
+        public TValue Peek() => HasItems ? PeekItem() : throw GetEmptyListOrCollectionException();
+
+        public bool TryPeek(out TValue
+#if CS9
+            ?
+#endif
+            result)
         {
-            private TValue OnRemove()
+            if (HasItems)
             {
-                TNode firstItem = FirstItem;
+                result = PeekItem();
 
-                TValue result = firstItem.Value;
-
-                firstItem.Clear();
-
-                Decrement();
-
-                return result;
+                return true;
             }
 
-            protected TValue PeekItem() => FirstItem.Value;
+            result = default;
 
-            protected abstract TNode AddItem(TValue item, out bool actionAfter);
+            return false;
+        }
 
-            public TValue Peek() => HasItems ? PeekItem() : throw GetEmptyListOrCollectionException();
-
-            public bool TryPeek(out TValue
+        public void Add(TValue
 #if CS9
-                ?
+            ?
 #endif
-                result)
+            item)
+        {
+            FirstItem = IsReadOnly ? throw GetReadOnlyListOrCollectionException() : AddItem(item, out bool actionAfter);
+
+            Increment(actionAfter);
+        }
+
+        public TValue Remove()
+        {
+            ThrowIfEmptyListOrCollection(IsReadOnly ? throw GetReadOnlyListOrCollectionException() : this);
+
+            return OnRemove();
+        }
+
+        public bool TryRemove(out TValue
+#if CS9
+            ?
+#endif
+            result)
+        {
+            if (IsReadOnly || Count == 0)
             {
-                if (HasItems)
-                {
-                    result = PeekItem();
-
-                    return true;
-                }
-
                 result = default;
 
                 return false;
             }
 
-            public void Add(TValue
-#if CS9
-                ?
-#endif
-                item)
-            {
-                FirstItem = IsReadOnly ? throw GetReadOnlyListOrCollectionException() : AddItem(item, out bool actionAfter);
+            result = OnRemove();
 
-                Increment(actionAfter);
-            }
+            return true;
+        }
 
-            public TValue Remove()
-            {
-                ThrowIfEmptyListOrCollection(IsReadOnly ? throw GetReadOnlyListOrCollectionException() : this);
-
-                return OnRemove();
-            }
-
-            public bool TryRemove(out TValue
-#if CS9
-                ?
-#endif
-                result)
-            {
-                if (IsReadOnly || Count == 0)
-                {
-                    result = default;
-
-                    return false;
-                }
-
-                result = OnRemove();
-
-                return true;
-            }
-
-            public void Add(object value) => Add((TValue)value);
-            object IListCommon.Remove() => Remove();
-            public bool TryRemove(out object result) => UtilHelpers.TryGetValue<TValue>(TryRemove, out result);
+        public void Add(object value) => Add((TValue)value);
+        object IListCommon.Remove() => Remove();
+        public bool TryRemove(out object result) => UtilHelpers.TryGetValue<TValue>(TryRemove, out result);
 #if !CS8
             object IPeekable.Peek() => Peek();
 
             bool IPeekable.TryPeek(out object result) => UtilHelpers.TryGetValue<TValue>(TryPeek, out result);
 #endif
-        }
+    }
 
-        public abstract class SimpleLinkedList<T> : SimpleLinkedList<SimpleLinkedListNode<T>, T>
-        {
-            // Left empty.
-        }
+    public abstract class SimpleLinkedList<T> : SimpleLinkedList<SimpleLinkedListNode<T>, T>
+    {
+        // Left empty.
+    }
 
-        /*public interface ILinkedListNode<T>
-        {
-            ILinkedList<T> List { get; }
+    /*public interface ILinkedListNode<T>
+    {
+        ILinkedList<T> List { get; }
 
-            ILinkedListNode<T> Next { get; }
+        ILinkedListNode<T> Next { get; }
 
-            ILinkedListNode<T> Previous { get; }
+        ILinkedListNode<T> Previous { get; }
 
-            T Value { get; set; }
-        }
+        T Value { get; set; }
+    }
 
-        public interface ILinkedList<T> : System.Collections.Generic.ICollection<T>, System.Collections.Generic.IEnumerable<T>, IEnumerable, System.Collections.Generic.IReadOnlyCollection<T>, ICollection, IDeserializationCallback, ISerializable
-        {
-            ILinkedListNode<T> Last { get; }
+    public interface ILinkedList<T> : System.Collections.Generic.ICollection<T>, System.Collections.Generic.IEnumerable<T>, IEnumerable, System.Collections.Generic.IReadOnlyCollection<T>, ICollection, IDeserializationCallback, ISerializable
+    {
+        ILinkedListNode<T> Last { get; }
 
-            ILinkedListNode<T> First { get; }
+        ILinkedListNode<T> First { get; }
 
-            int Count { get; }
+        int Count { get; }
 
-            void AddAfter(ILinkedListNode<T> node, ILinkedListNode<T> newNode);
+        void AddAfter(ILinkedListNode<T> node, ILinkedListNode<T> newNode);
 
-            ILinkedListNode<T> AddAfter(ILinkedListNode<T> node, T value);
+        ILinkedListNode<T> AddAfter(ILinkedListNode<T> node, T value);
 
-            void AddBefore(ILinkedListNode<T> node, ILinkedListNode<T> newNode);
+        void AddBefore(ILinkedListNode<T> node, ILinkedListNode<T> newNode);
 
-            ILinkedListNode<T> AddBefore(ILinkedListNode<T> node, T value);
+        ILinkedListNode<T> AddBefore(ILinkedListNode<T> node, T value);
 
-            void AddFirst(ILinkedListNode<T> node);
+        void AddFirst(ILinkedListNode<T> node);
 
-            ILinkedListNode<T> AddFirst(T value);
+        ILinkedListNode<T> AddFirst(T value);
 
-            void AddLast(ILinkedListNode<T> node);
+        void AddLast(ILinkedListNode<T> node);
 
-            ILinkedListNode<T> AddLast(T value);
+        ILinkedListNode<T> AddLast(T value);
 
-            void Clear();
+        void Clear();
 
-            bool Contains(T value);
+        bool Contains(T value);
 
-            void CopyTo(T[] array, int index);
+        void CopyTo(T[] array, int index);
 
-            ILinkedListNode<T> Find(T value);
+        ILinkedListNode<T> Find(T value);
 
-            ILinkedListNode<T> FindLast(T value);
+        ILinkedListNode<T> FindLast(T value);
 
-            void Remove(ILinkedListNode<T> node);
+        void Remove(ILinkedListNode<T> node);
 
-            bool Remove(T value);
+        bool Remove(T value);
 
-            void RemoveFirst();
+        void RemoveFirst();
 
-            void RemoveLast();
-        }*/
+        void RemoveLast();
+    }*/
 
-        public abstract class ReadOnlySimpleLinkedListBase<T> : ReadOnlySimpleLinkedListCore, ISimpleLinkedList<T>
-        {
-            public abstract T Peek();
-            public abstract bool TryPeek(out T result);
+    public abstract class ReadOnlySimpleLinkedListBase<T> : ReadOnlySimpleLinkedListCore, ISimpleLinkedList<T>
+    {
+        public abstract T Peek();
+        public abstract bool TryPeek(out T result);
 #if !CS8
             object IPeekable.Peek() => Peek();
 
@@ -193,45 +193,44 @@ namespace WinCopies.Collections.DotNetFix
                 return false;
             }
 #endif
-        }
+    }
 
-        public abstract class ReadOnlySimpleLinkedList<TList, TItems> : ReadOnlySimpleLinkedListBase<TItems>, IListCommon<TItems> where TList : ISimpleLinkedListCore, IUIntCountable, IPeekable<TItems>
-        {
-            protected TList InnerList { get; }
+    public abstract class ReadOnlySimpleLinkedList<TList, TItems> : ReadOnlySimpleLinkedListBase<TItems>, IListCommon<TItems> where TList : ISimpleLinkedListCore, IUIntCountable, IPeekable<TItems>
+    {
+        protected TList InnerList { get; }
 
-            public override uint Count => InnerList.AsFromType<IUIntCountable>().Count;
+        public override uint Count => InnerList.AsFromType<IUIntCountable>().Count;
 
-            public override bool HasItems => InnerList.HasItems;
+        public override bool HasItems => InnerList.HasItems;
 
-            protected override object SyncRoot => null;
+        protected override object SyncRoot => null;
 
-            protected ReadOnlySimpleLinkedList(in TList list) => InnerList = list;
+        protected ReadOnlySimpleLinkedList(in TList list) => InnerList = list;
 
-            public override TItems Peek() => InnerList.Peek();
-            public override bool TryPeek(out TItems result) => InnerList.TryPeek(out result);
+        public override TItems Peek() => InnerList.Peek();
+        public override bool TryPeek(out TItems result) => InnerList.TryPeek(out result);
 
-            void IListCommon<TItems>.Add(TItems item) => throw GetReadOnlyListOrCollectionException();
-            TItems IListCommon<TItems>.Remove() => throw GetReadOnlyListOrCollectionException();
-            bool IListCommon<TItems>.TryRemove(out TItems result) => throw GetReadOnlyListOrCollectionException();
-        
-            void IListCommon.Add(object item) => throw GetReadOnlyListOrCollectionException();
-            object IListCommon.Remove() => throw GetReadOnlyListOrCollectionException();
-            bool IListCommon.TryRemove(out object result) => throw GetReadOnlyListOrCollectionException();
-        }
+        void IListCommon<TItems>.Add(TItems item) => throw GetReadOnlyListOrCollectionException();
+        TItems IListCommon<TItems>.Remove() => throw GetReadOnlyListOrCollectionException();
+        bool IListCommon<TItems>.TryRemove(out TItems result) => throw GetReadOnlyListOrCollectionException();
 
-        public interface IEnumerableSimpleLinkedList<T> : ISimpleLinkedList<T>, IUIntCountable, IEnumerableSimpleLinkedListBase, ICollection,
+        void IListCommon.Add(object item) => throw GetReadOnlyListOrCollectionException();
+        object IListCommon.Remove() => throw GetReadOnlyListOrCollectionException();
+        bool IListCommon.TryRemove(out object result) => throw GetReadOnlyListOrCollectionException();
+    }
+
+    public interface IEnumerableSimpleLinkedList<T> : ISimpleLinkedList<T>, IUIntCountable, IEnumerableSimpleLinkedListBase, ICollection,
 #if CS7
-            System.Collections.Generic.IReadOnlyCollection<T>
+        System.Collections.Generic.IReadOnlyCollection<T>
 #if CS8
-            , DotNetFix.Generic.IEnumerable<T>
+        , DotNetFix.Generic.IEnumerable<T>
 #endif
 #else
             System.Collections.Generic.IEnumerable<T>
 #endif
-        {
-            void CopyTo(T[] array, int index);
+    {
+        void CopyTo(T[] array, int index);
 
-            T[] ToArray();
-        }
+        T[] ToArray();
     }
 }
