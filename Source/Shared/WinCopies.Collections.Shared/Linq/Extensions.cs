@@ -29,22 +29,40 @@ using static WinCopies.ThrowHelper;
 
 namespace WinCopies.Linq
 {
-    public static class Enumerable
-    {
-        public static IEnumerable<TResult> ForEachIfNotNull<TIn, TOut, TResult>(TIn value, Converter<TIn, IEnumerable<TOut>> converter, ExtendedConverter<TOut, TResult> extendedConverter)
-        {
-            if (value != null)
-
-                foreach (TOut item in converter(value))
-
-                    if (extendedConverter(item, out TResult result))
-
-                        yield return result;
-        }
-    }
-
     public static class Extensions
     {
+        public static bool None<T>(this System.Collections.Generic.IEnumerable<T> enumerable, Func<T, bool> func)
+        {
+            foreach (T value in enumerable)
+
+                if (func(value))
+
+                    return false;
+
+            return true;
+        }
+        public static bool NonePredicate<T>(this System.Collections.Generic.IEnumerable<T> enumerable, Predicate<T> func)
+        {
+            foreach (T value in enumerable)
+
+                if (func(value))
+
+                    return false;
+
+            return true;
+        }
+
+        public static bool None<T>(this System.Collections.Generic.IEnumerable<T> enumerable, T value)
+        {
+            foreach (T _value in enumerable)
+
+                if (object.Equals(value, _value))
+
+                    return false;
+
+            return true;
+        }
+
         public static TOut[] Convert<TIn, TOut>(this TIn[] values, in Converter<TIn, TOut> converter)
         {
             var result = new TOut[values.Length];
@@ -86,7 +104,6 @@ namespace WinCopies.Linq
 
                     yield return select(item);
         }
-
 #if !CS8
         public static int LastIndexOf(this string s, in char c)
         {
@@ -664,21 +681,21 @@ namespace WinCopies.Linq
 #if CS9
             ?
 #endif
-            FirstOrDefaultValue<T>(this IEnumerable<T> enumerable, in Func<T, bool> func) => enumerable.FirstOrValue(() => default, func);
+            FirstOrDefault<T>(this IEnumerable<T> enumerable, in Func<T, bool> func) => enumerable.FirstOrValue(() => default, func);
 
         public static T
 #if CS9
             ?
 #endif
-            FirstOrDefaultValuePredicate<T>(this IEnumerable<T> enumerable, in Predicate<T> func) => enumerable.FirstOrValuePredicate(() => default, func);
+            FirstOrDefaultPredicate<T>(this IEnumerable<T> enumerable, in Predicate<T> func) => enumerable.FirstOrValuePredicate(() => default, func);
 
-        public static bool FirstOrDefaultValue<T>(this IEnumerable<T> enumerable, in Func<T, bool> func, out T
+        public static bool FirstOrDefault<T>(this IEnumerable<T> enumerable, in Func<T, bool> func, out T
 #if CS9
             ?
 #endif
             result) => enumerable.FirstOrValue(() => default, func, out result);
 
-        public static bool FirstOrDefaultValuePredicate<T>(this IEnumerable<T> enumerable, in Predicate<T> func, out T
+        public static bool FirstOrDefaultPredicate<T>(this IEnumerable<T> enumerable, in Predicate<T> func, out T
 #if CS9
             ?
 #endif
@@ -766,7 +783,7 @@ namespace WinCopies.Linq
 #if CS9
             ?
 #endif
-            FirstOrDefault<TIn, TOut>(this IEnumerable<TIn> enumerable, in Func<TOut, bool> predicate)
+            FirstOrDefault2<TIn, TOut>(this IEnumerable<TIn> enumerable, in Func<TOut, bool> predicate)
         {
             foreach (TIn item in enumerable ?? throw new ArgumentNullException(nameof(enumerable)))
 
@@ -781,7 +798,7 @@ namespace WinCopies.Linq
 #if CS9
             ?
 #endif
-            FirstOrDefaultPredicate<TIn, TOut>(this IEnumerable<TIn> enumerable, in Predicate<TOut> predicate)
+            FirstOrDefaultPredicate2<TIn, TOut>(this IEnumerable<TIn> enumerable, in Predicate<TOut> predicate)
         {
             foreach (TIn item in enumerable ?? throw new ArgumentNullException(nameof(enumerable)))
 
@@ -856,7 +873,12 @@ namespace WinCopies.Linq
                 yield return item;
         }
 
-        public static IEnumerable<T> SelectMany<T>(this IEnumerable<IEnumerable<T>> enumerable) => enumerable.SelectMany(Delegates.Self);
+        public static IEnumerable<TOut> SelectMany<TIn, TOut>(this IEnumerable<TIn> enumerable, Func<TIn, IEnumerable<TOut>> func, Func<TIn, TOut> _func, RecursiveEnumerationOrder enumerationOrder) => Collections.Enumerable.FromEnumerator(new SelectManyEnumerator<TIn, TOut>(enumerable, func, _func, enumerationOrder));
+
+        public static IEnumerable<TOut> SelectManyConverter<TIn, TOut>(this IEnumerable<TIn> enumerable, Converter<TIn, IEnumerable<TOut>> func, Converter<TIn, TOut> _func, RecursiveEnumerationOrder enumerationOrder) => Collections.Enumerable.FromEnumerator(new SelectManyEnumerator<TIn, TOut>(enumerable, new Func<TIn, IEnumerable<TOut>>(func), new Func<TIn, TOut>(_func), enumerationOrder));
+
+        public static IEnumerable<T> Join<T>(this IEnumerable<IEnumerable<T>> enumerable) => enumerable.SelectMany(Delegates.Self);
+        public static IEnumerable<T> Join<T>(this IEnumerable<Func<IEnumerable<T>>> enumerable) => enumerable.SelectMany(Delegates.GetResult);
 
         public static Collections.Generic.IEnumerableInfo<T
 #if CS9
@@ -871,7 +893,6 @@ namespace WinCopies.Linq
                 ?
 #endif
                 > enumerable, bool keepEmptyEnumerables, params T[] join) => new EnumerableInfo<T>(() => new JoinEnumerator<T>(enumerable, keepEmptyEnumerables, join), null);
-
         public static IEnumerable<T
 #if CS9
                 ?
