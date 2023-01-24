@@ -15,23 +15,10 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-using System;
-using System.Collections;
-
 namespace WinCopies.Collections.DotNetFix
 {
-    public interface IUIntIndexedCollection :
-#if !WinCopies3
-IEnumerable
+    public interface IUIntIndexedCollection : IUIntCountableEnumerable
     {
-        /// <summary>
-        /// Gets the number of items in the collection.
-        /// </summary>
-        uint Count { get; }
-#else
-        IUIntCountableEnumerable
-    {
-#endif
         object SyncRoot { get; }
 
         bool IsSynchronized { get; }
@@ -41,13 +28,10 @@ IEnumerable
         /// </summary>
         /// <param name="array">The array to copy the items.</param>
         /// <param name="index">The index in the array from which to start to copy.</param>
-        void CopyTo(in Array array, int index);
+        void CopyTo(System.Array array, int index);
     }
 
     public interface IReadOnlyUIntIndexedList : IUIntIndexedCollection
-#if !WinCopies3
-, IEnumerable
-#endif
     {
         /// <summary>
         /// Gets or sets an item at a given index in the list.
@@ -72,9 +56,6 @@ IEnumerable
     }
 
     public interface IUIntIndexedList : IReadOnlyUIntIndexedList
-#if !WinCopies3
-, IEnumerable
-#endif
     {
         /// <summary>
         /// Gets the item at a given index in the list.
@@ -120,97 +101,39 @@ IEnumerable
         void RemoveAt(in uint index);
     }
 
-#if !WinCopies3
-    public interface IReadOnlyUIntIndexedCollection<
-#if CS5
-            out
-#endif
-            T> : System.Collections.Generic.IEnumerable<T>, IEnumerable
-    {
-        uint Count { get; }
-    }
-#else
     namespace Generic
     {
-#endif
-        public interface IUIntIndexedCollection<T> :
-#if !WinCopies3
-            IReadOnlyUIntIndexedCollection<T>, System.Collections.Generic.IEnumerable<T>, IEnumerable
-#else
-            IUIntCountableEnumerable<T>
-#endif
+        public interface IUIntIndexedCollection<T> : IUIntCountableEnumerable<T>
         {
-            void Add(
-#if !WinCopies3
-in
-#endif
-                T item);
+            void Add(T item);
 
             void Clear();
 
-            bool Contains(
-#if !WinCopies3
-in
-#endif
-                 T item);
+            bool Contains(T item);
 
-            void CopyTo(
-#if !WinCopies3
-in
-#endif
-                 T[] array, uint arrayIndex);
+            void CopyTo(T[] array, uint arrayIndex);
 
-            bool Remove(
-#if !WinCopies3
-in
-#endif
-                 T item);
+            bool Remove(T item);
         }
 
         public interface IReadOnlyUIntIndexedList<
 #if CS5
             out
 #endif
-            T> :
-#if !WinCopies3
-            IReadOnlyUIntIndexedCollection<T>, System.Collections.Generic.IEnumerable<T>, IEnumerable
-#else
-            IUIntCountableEnumerable<T>
-#endif
+            T> : IUIntCountableEnumerable<T>
         {
             T this[uint index] { get; }
         }
 
         public interface IUIntIndexedList<T> : IUIntIndexedCollection<T>, IReadOnlyUIntIndexedList<T>
-#if !WinCopies3
-, System.Collections.Generic.IEnumerable<T>, IEnumerable
-#endif
         {
             new T this[uint index] { get; set; }
 
-            uint? IndexOf(
-#if !WinCopies3
-in
-#endif
-                 T item);
+            uint? IndexOf(T item);
 
-            void Insert(
-#if !WinCopies3
-in
-#endif
-                 uint index,
-#if !WinCopies3
-in
-#endif
-                 T item);
+            void Insert(uint index, T item);
 
-            void RemoveAt(
-#if !WinCopies3
-in
-#endif
-                 uint index);
+            void RemoveAt(uint index);
         }
-#if WinCopies3
     }
-#endif
 }
