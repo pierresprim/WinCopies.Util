@@ -23,10 +23,8 @@ using WinCopies.Collections.Generic;
 
 namespace WinCopies.Collections.DotNetFix.Generic
 {
-    public interface IReadOnlyLinkedListCore<T>
+    public interface IReadOnlyLinkedListCore<T> : ISimpleLinkedListCore
     {
-        bool HasItems { get; }
-
         T FirstValue { get; }
         T LastValue { get; }
     }
