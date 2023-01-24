@@ -24,15 +24,11 @@ namespace WinCopies.Collections
         bool MoveNext();
     }
 
-#if WinCopies3
-namespace Generic
-{
-#endif
-    public interface IEnumerableEnumerator<T> : IEnumerableEnumerator, System.IDisposable
+    namespace Generic
     {
-        new T Current { get; }
+        public interface IEnumerableEnumerator<T> : IEnumerableEnumerator, System.IDisposable
+        {
+            new T Current { get; }
+        }
     }
-#if WinCopies3
-}
-#endif
 }

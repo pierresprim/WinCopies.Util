@@ -1,6 +1,5 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
-using System.Globalization;
+
 using WinCopies.Util;
 
 namespace WinCopies.Collections.DotNetFix
@@ -26,7 +25,7 @@ namespace WinCopies.Collections.DotNetFix
 
     public interface IPeekableEnumerableInfo<T> : IPeekableEnumerable, IEnumerableInfo<T> where T : Collections.IEnumeratorInfo
     {
-
+        // Left empty.
     }
 
     public interface IPeekableEnumerableInfo : IPeekableEnumerableInfo<Collections.IEnumeratorInfo>, IEnumerableInfo
@@ -38,11 +37,7 @@ namespace WinCopies.Collections.DotNetFix
     {
         public interface IPeekable<T> : IPeekable
         {
-            new T
-#if CS9
-                ?
-#endif
-                Peek();
+            new T Peek();
 
             bool TryPeek(out T
 #if CS9
