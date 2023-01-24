@@ -101,8 +101,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\LinkedCollections.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\DotNetFix\Misc.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerables\DotNetFix\ICountableEnumerable.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\IUIntIndexation\Enumerators.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\IUIntIndexation\ListsAndCollections.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\UIntIndexation\Enumerators.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\UIntIndexation\ListsAndCollections.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\LinkedCollections\LinkedCollectionChangedAction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\LinkedCollections\ReadOnlySimpleLinkedList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerables\Enumerable.cs" />
