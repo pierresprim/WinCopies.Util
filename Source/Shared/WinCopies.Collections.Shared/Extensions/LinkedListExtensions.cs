@@ -26,6 +26,10 @@ namespace WinCopies.Collections
 {
     public static class LinkedListExtensions
     {
+#if CS5 && !CS8
+        public static DotNetFix.IReadOnlyLinkedListNode<GenericCollections.IReadOnlyLinkedListNode<T>> AsReadOnly<T>(this GenericCollections.ILinkedListNode<T> node) => node;
+        public static DotNetFix.IReadOnlyLinkedListNode<GenericCollections.ILinkedListNode<T>> AsReadWrite<T>(this GenericCollections.ILinkedListNode<T> node) => node;
+#endif
 #if CS5
         public static DotNetFix.IReadOnlyLinkedListNode<GenericCollections.ILinkedListNode<T>> AsLinkedListNode<T>(this GenericCollections.ILinkedListNode<T> node) => node;
 #endif
