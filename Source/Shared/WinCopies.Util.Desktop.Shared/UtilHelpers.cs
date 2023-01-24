@@ -46,29 +46,33 @@ namespace WinCopies.Util.Desktop
 {
     public static class UtilHelpers
     {
-        private static bool TryGetValue(in object item, in string value, in bool inherit, out string? result, ref TypeConverterAttribute
+        private static bool TryGetValue(in object item, in string value, in bool inherit, out string
 #if CS8
-                ?
+            ?
 #endif
-                typeConverterAttribute, ref TypeConverterAttribute
+            result, ref TypeConverterAttribute
 #if CS8
-                ?
+            ?
+#endif
+            typeConverterAttribute, ref TypeConverterAttribute
+#if CS8
+            ?
 #endif
             _typeConverterAttribute, ref Type
 #if CS8
-                ?
+            ?
 #endif
             type, ref Type
 #if CS8
-                ?
+            ?
 #endif
             _type, ref TypeConverter
 #if CS8
-                ?
+            ?
 #endif
             typeConverter, ref TypeConverter
 #if CS8
-                ?
+            ?
 #endif
             _typeConverter, ref string tmp)
         {
@@ -122,7 +126,11 @@ namespace WinCopies.Util.Desktop
             return false;
         }
 
-        public static bool TryGetValue(in IEnumerable values, ref string? value, bool inherit, out object
+        public static bool TryGetValue(in IEnumerable values, ref string
+#if CS8
+            ?
+#endif
+            value, bool inherit, out object
 #if CS8
             ?
 #endif
@@ -189,7 +197,11 @@ namespace WinCopies.Util.Desktop
                         return true;
                     }
 
-                    if (TryGetValue(item, _value, inherit, out string? _result, ref typeConverterAttribute, ref _typeConverterAttribute, ref type, ref _type, ref typeConverter, ref _typeConverter, ref tmp))
+                    if (TryGetValue(item, _value, inherit, out string
+#if CS8
+                        ? 
+#endif
+                        _result, ref typeConverterAttribute, ref _typeConverterAttribute, ref type, ref _type, ref typeConverter, ref _typeConverter, ref tmp))
                     {
                         _value = _result;
 
@@ -256,7 +268,11 @@ namespace WinCopies.Util.Desktop
 #endif
                 _typeConverter = null;
 
-            return TryGetValue(item, value, inherit, out string? result, ref typeConverterAttribute, ref _typeConverterAttribute, ref type, ref _type, ref typeConverter, ref _typeConverter, ref value) ? result : item?.ToString();
+            return TryGetValue(item, value, inherit, out string
+#if CS8
+                ? 
+#endif
+                result, ref typeConverterAttribute, ref _typeConverterAttribute, ref type, ref _type, ref typeConverter, ref _typeConverter, ref value) ? result : item?.ToString();
         }
 
         public static RoutedEventArgs<BooleanEventArgs> GetRoutedBooleanEventArgs(in RoutedEvent @event, in bool value) => new
