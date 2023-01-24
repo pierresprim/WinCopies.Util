@@ -13,13 +13,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)Abstraction\AbstractionTypes.Partial\LinkedList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstraction\AbstractionTypes.Partial\ReadOnlyDictionary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstraction\AbstractionTypes.Partial\ReadOnlyList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Abstraction\AbstractionTypes.Partial\ReadOnlySimpleLinkedLists.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstraction\AbstractionTypes.Partial\SimpleLinkedLists.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstraction\Abstract\Countable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstraction\Abstract\List.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstraction\ArrayEnumerable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstraction\Dictionary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstraction\LinkedList.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Abstraction\List.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Abstraction\Lists.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstraction\SimpleLinkedLists.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\Dictionary\IDictionary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\Dictionary\Old.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\DotNetFix\ILongCountableEnumerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\MultipleEnumerableEnumerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\RepeatEnumerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\SelectManyEnumerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\StringEnumerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\TypeConverterEnumerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\EnumerableExtensions.cs" />
@@ -105,7 +107,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\LinkedCollections\ReadOnlySimpleLinkedList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerables\Enumerable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\EmptyCheckEnumerator.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\EmptyEnumerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\Enumerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\IEnumerableEnumerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Enumeration\Enumerators\IEnumerator.cs" />
@@ -143,6 +144,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Generic\NullableEntry.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ArrayExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\StringExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Linq\Misc.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PropertySystem\Attributes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PropertySystem\IProperty.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PropertySystem\PropertySystemCollection.cs" />
