@@ -17,67 +17,131 @@
 
 using System;
 
+using WinCopies.Util;
+
 namespace WinCopies.Collections.DotNetFix
 {
-    public class QueueCollection : SimpleLinkedCollectionBase<IEnumerableQueue>
+    public class QueueCollection<T> : SimpleLinkedCollection<T>, IQueue where T : IQueue
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="QueueCollection"/> class.
-        /// </summary>
-        public QueueCollection() : this(new EnumerableQueue()) { /* Left empty. */ }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="QueueCollection"/> class with a custom queue.
-        /// </summary>
-        /// <param name="queue">The inner queue for this <see cref="QueueCollection"/>.</param>
-        public QueueCollection(in IEnumerableQueue queue) : base(queue) { /* Left empty. */ }
+        public QueueCollection(in T queue) : base(queue) { /* Left empty. */ }
 
         /// <summary>
         /// Adds an object to the end of the <see cref="QueueCollection"/>.
         /// <param name="item">The object to add to the <see cref="QueueCollection"/>. The value can be <see langword="null"/> for reference types.</param>
-        public virtual void Enqueue(object
+        public void Enqueue(object
 #if CS8
             ?
 #endif
-            item) => InnerList.Enqueue(item);
+            item) => Add(item);
 
         /// <summary>
         /// Removes and returns the object at the beginning of the <see cref="QueueCollection"/>.
         /// </summary>
         /// <returns>The object that is removed from the beginning of the <see cref="QueueCollection"/>.</returns>
         /// <exception cref="InvalidOperationException">The <see cref="QueueCollection"/> is empty.</exception>
-        public virtual object
+        public object
 #if CS8
             ?
 #endif
-            Dequeue() => InnerList.Dequeue();
+            Dequeue() => Remove();
 
-        public virtual bool TryDequeue(out object
+        public bool TryDequeue(out object
 #if CS8
             ?
 #endif
-            result) => InnerList.TryDequeue(out result);
+            result) => TryRemove(out result);
+
+        public override void Add(object value) => InnerList.Enqueue(value);
+        public override object Remove() => InnerList.Dequeue();
+        public override bool TryRemove(out object result) => InnerList.TryDequeue(out result);
+    }
+    public class QueueCollection : QueueCollection<IQueue>
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="QueueCollection"/> class with a custom queue.
+        /// </summary>
+        /// <param name="queue">The inner queue for this <see cref="QueueCollection"/>.</param>
+        public QueueCollection(in IQueue queue) : base(queue) { /* Left empty. */ }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="QueueCollection"/> class.
+        /// </summary>
+        public QueueCollection() : this(new Queue()) { /* Left empty. */ }
+    }
+    public class EnumerableQueueCollection : QueueCollection<IEnumerableQueue>, IEnumerableQueue
+    {
+        int System.Collections.ICollection.Count => InnerList.AsFromType<System.Collections.ICollection>().Count;
+
+        object System.Collections.ICollection.SyncRoot => InnerList.AsFromType<System.Collections.ICollection>().SyncRoot;
+        bool System.Collections.ICollection.IsSynchronized => InnerList.AsFromType<System.Collections.ICollection>().IsSynchronized;
+
+        public EnumerableQueueCollection(in IEnumerableQueue queue) : base(queue) { /* Left empty. */ }
+        public EnumerableQueueCollection() : this(new EnumerableQueue()) { /* Left empty. */ }
+
+        public void CopyTo(System.Array array, int index) => InnerList.AsFromType<System.Collections.ICollection>().CopyTo(array, index);
+        public object[] ToArray() => InnerList.ToArray();
+        public System.Collections.IEnumerator GetEnumerator() => InnerList.GetEnumerator();
+    }
+    public class QueueBaseCollection : SimpleLinkedListBaseCollection<IQueueBase>, IQueueBase
+    {
+        public QueueBaseCollection(in IQueueBase list) : base(list) { /* Left empty. */ }
+        public QueueBaseCollection() : this(EnumerableHelper.GetQueue()) { /* Left empty. */ }
+
+        public void Enqueue(object item) => Add(item);
+        public object Dequeue() => Remove();
+        public bool TryDequeue(out object result) => TryRemove(out result);
     }
 
-    public class StackCollection : SimpleLinkedCollectionBase<IEnumerableStack>
+    public class StackCollection<T> : SimpleLinkedCollection<T>, IStack where T : IStack
     {
-        public StackCollection() : this(new EnumerableStack()) { /* Left empty. */ }
-        public StackCollection(in IEnumerableStack stack) : base(stack) { /* Left empty. */ }
+        public StackCollection(in T stack) : base(stack) { /* Left empty. */ }
 
-        public virtual void Push(object
+        public void Push(object
 #if CS8
             ?
 #endif
-            item) => InnerList.Push(item);
-        public virtual object
+            item) => Add(item);
+        public object
 #if CS8
             ?
 #endif
-            Pop() => InnerList.Pop();
-        public virtual bool TryPop(out object
+            Pop() => Remove();
+        public bool TryPop(out object
 #if CS8
             ?
 #endif
-            result) => InnerList.TryPop(out result);
+            result) => TryRemove(out result);
+
+        public override void Add(object value) => InnerList.Push(value);
+        public override object Remove() => InnerList.Pop();
+        public override bool TryRemove(out object result) => InnerList.TryPop(out result);
+    }
+    public class StackCollection : StackCollection<IStack>
+    {
+        public StackCollection(in IStack stack) : base(stack) { /* Left empty. */ }
+        public StackCollection() : this(new Stack()) { /* Left empty. */ }
+    }
+    public class EnumerableStackCollection : StackCollection<IEnumerableStack>, IEnumerableStack
+    {
+        int System.Collections.ICollection.Count => InnerList.AsFromType<System.Collections.ICollection>().Count;
+
+        object System.Collections.ICollection.SyncRoot => InnerList.AsFromType<System.Collections.ICollection>().SyncRoot;
+        bool System.Collections.ICollection.IsSynchronized => InnerList.AsFromType<System.Collections.ICollection>().IsSynchronized;
+
+        public EnumerableStackCollection(in IEnumerableStack stack) : base(stack) { /* Left empty. */ }
+        public EnumerableStackCollection() : this(new EnumerableStack()) { /* Left empty. */ }
+
+        public void CopyTo(System.Array array, int index) => InnerList.AsFromType<System.Collections.ICollection>().CopyTo(array, index);
+        public object[] ToArray() => InnerList.ToArray();
+        public System.Collections.IEnumerator GetEnumerator() => InnerList.GetEnumerator();
+    }
+    public class StackBaseCollection : SimpleLinkedListBaseCollection<IStackBase>, IStackBase
+    {
+        public StackBaseCollection(in IStackBase list) : base(list) { /* Left empty. */ }
+        public StackBaseCollection() : this(EnumerableHelper.GetStack()) { /* Left empty. */ }
+
+        public void Push(object item) => Add(item);
+        public object Pop() => Remove();
+        public bool TryPop(out object result) => TryRemove(out result);
     }
 }
