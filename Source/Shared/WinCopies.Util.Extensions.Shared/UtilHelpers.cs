@@ -35,7 +35,6 @@ namespace WinCopies.Extensions // To avoid name conflicts.
     public static class UtilHelpers
     {
         public static IEnumerable<T> Enumerate<T>(params IEnumerable<T>[] enumerables) => enumerables.Join(false);
-
         public static IEnumerable<T> Enumerate<T>(params Func<IEnumerable<T>>[] enumerables) => enumerables.Join(false);
 
         private static void _RunAction<T>(in IEnumerable<T> enumerable, in Action<T> action)
