@@ -134,7 +134,7 @@ namespace WinCopies.Util // To avoid name conflicts.
 #endif
             value, in byte offset, in byte size) where T : unmanaged
 #if CS11
-            , IUnsignedNumber<T>, IShiftOperators<T, byte, T>
+            , IUnsignedNumber<T>, IShiftOperators<T, int, T>
 #endif
             => offset == 0 ? value
 #if !CS11
@@ -164,7 +164,7 @@ namespace WinCopies.Util // To avoid name conflicts.
 #endif
             value, in byte offset) where T : unmanaged
 #if CS11
-            , IUnsignedNumber<T>, IShiftOperators<T, byte, T>
+            , IUnsignedNumber<T>, IShiftOperators<T, int, T>
 #endif
             => value.ShiftHighPart(offset, (byte)sizeof(T));
 #if CS11
@@ -180,7 +180,7 @@ namespace WinCopies.Util // To avoid name conflicts.
 #endif
             value, in byte length) where T : unmanaged
 #if CS11
-            , IUnsignedNumber<T>, IShiftOperators<T, byte, T>
+            , IUnsignedNumber<T>, IShiftOperators<T, int, T>
 #endif
         {
             byte size = (byte)sizeof(T);
@@ -196,7 +196,7 @@ namespace WinCopies.Util // To avoid name conflicts.
 #endif
             value, in byte offset, in byte size) where T : unmanaged
 #if CS11
-            , IUnsignedNumber<T>, IShiftOperators<T, byte, T>
+            , IUnsignedNumber<T>, IShiftOperators<T, int, T>
 #endif
             => offset == 0 ? value
 #if !CS11
@@ -230,7 +230,7 @@ namespace WinCopies.Util // To avoid name conflicts.
 #endif
             value, in byte offset) where T : unmanaged
 #if CS11
-            , IUnsignedNumber<T>, IShiftOperators<T, byte, T>
+            , IUnsignedNumber<T>, IShiftOperators<T, int, T>
 #endif
             => value.ShiftLowPart(offset, (byte)sizeof(T));
 #if CS11
@@ -246,7 +246,7 @@ namespace WinCopies.Util // To avoid name conflicts.
 #endif
             value, in byte length) where T : unmanaged
 #if CS11
-            , IUnsignedNumber<T>, IShiftOperators<T, byte, T>
+            , IUnsignedNumber<T>, IShiftOperators<T, int, T>
 #endif
         {
             byte size = (byte)sizeof(T);
@@ -389,14 +389,26 @@ namespace WinCopies.Util // To avoid name conflicts.
 
         public static uint GetHighDWord(this UIntPtr i) => ((ulong)i).GetHighPart();
         public static uint GetLowDWord(this UIntPtr i) => ((ulong)i).GetLowPart();
+
+        public static short GetHighShort(this UIntPtr i) => unchecked((short)i.GetHighWord());
+        public static short GetLowShort(this UIntPtr i) => unchecked((short)i.GetLowWord());
+
+        public static int GetHighInt(this UIntPtr i) => unchecked((int)i.GetHighDWord());
+        public static int GetLowInt(this UIntPtr i) => unchecked((int)i.GetLowDWord());
         #endregion UIntPtr
 
         #region IntPtr
-        public static short GetHighWord(this IntPtr i) => unchecked((int)i).GetHighPart();
-        public static short GetLowWord(this IntPtr i) => unchecked((int)i).GetLowPart();
+        public static ushort GetHighWord(this IntPtr i) => unchecked((uint)i.ToInt64()).GetHighPart();
+        public static ushort GetLowWord(this IntPtr i) => unchecked((uint)i.ToInt64()).GetLowPart();
 
-        public static int GetHighDWord(IntPtr i) => ((long)i).GetHighPart();
-        public static int GetLowDWord(IntPtr i) => ((long)i).GetLowPart();
+        public static uint GetHighDWord(this IntPtr i) => unchecked((ulong)i.ToInt64()).GetHighPart();
+        public static uint GetLowDWord(this IntPtr i) => unchecked((ulong)i.ToInt64()).GetLowPart();
+
+        public static short GetHighShort(this IntPtr i) => unchecked((short)i.GetHighWord());
+        public static short GetLowShort(this IntPtr i) => unchecked((short)i.GetLowWord());
+
+        public static int GetHighInt(this IntPtr i) => unchecked((int)i.GetHighDWord());
+        public static int GetLowInt(this IntPtr i) => unchecked((int)i.GetLowDWord());
         #endregion IntPtr
         #endregion (U)IntPtr
         #endregion Bitwise Operations
