@@ -22,11 +22,7 @@ namespace WinCopies.Collections.DotNetFix
         // Left empty.
     }
 
-    public interface ICountableDisposableEnumerator : ICountableEnumerator, WinCopies.
-#if !WinCopies3
-        Util.
-#endif
-        DotNetFix.IDisposable
+    public interface ICountableDisposableEnumerator : ICountableEnumerator, WinCopies.DotNetFix.IDisposable
     {
         // Left empty.
     }
@@ -36,11 +32,7 @@ namespace WinCopies.Collections.DotNetFix
         // Left empty.
     }
 
-    public interface IUIntCountableDisposableEnumerator : IUIntCountableEnumerator, WinCopies.
-#if !WinCopies3
-        Util.
-#endif
-        DotNetFix.IDisposable
+    public interface IUIntCountableDisposableEnumerator : IUIntCountableEnumerator, WinCopies.DotNetFix.IDisposable
     {
         // Left empty.
     }
@@ -51,12 +43,7 @@ namespace WinCopies.Collections.DotNetFix
 #if CS5
             out
 #endif
-            T> : System.Collections.Generic.IEnumerator<T>,
-#if WinCopies3
-            ICountableEnumerator
-#else
-            ICountable
-#endif
+            T> : System.Collections.Generic.IEnumerator<T>, ICountableEnumerator
         {
             // Left empty.
         }
@@ -65,12 +52,7 @@ namespace WinCopies.Collections.DotNetFix
 #if CS5
             out
 #endif
-             T> : ICountableEnumerator<T>,
-#if WinCopies3
-            ICountableDisposableEnumerator
-#else
-            WinCopies.Util.DotNetFix.IDisposable
-#endif
+             T> : ICountableEnumerator<T>, ICountableDisposableEnumerator
         {
             // Left empty.
         }
@@ -79,12 +61,7 @@ namespace WinCopies.Collections.DotNetFix
 #if CS5
             out
 #endif
-            T> : System.Collections.Generic.IEnumerator<T>,
-#if WinCopies3
-            IUIntCountableEnumerator
-#else
-            IUIntCountable
-#endif
+            T> : System.Collections.Generic.IEnumerator<T>, IUIntCountableEnumerator
         {
             // Left empty.
         }
@@ -93,12 +70,7 @@ namespace WinCopies.Collections.DotNetFix
 #if CS5
             out
 #endif
-             T> : IUIntCountableEnumerator<T>,
-#if WinCopies3
-            IUIntCountableDisposableEnumerator
-#else
-            WinCopies.Util.DotNetFix.IDisposable
-#endif
+             T> : IUIntCountableEnumerator<T>, IUIntCountableDisposableEnumerator
         {
             // Left empty.
         }
