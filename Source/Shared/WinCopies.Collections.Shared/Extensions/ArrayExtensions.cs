@@ -17,7 +17,6 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 
 using WinCopies.Collections.Abstraction.Generic;
 using WinCopies.Util;
@@ -66,11 +65,11 @@ namespace WinCopies.Collections
             return arrayList;
         }
 
-        public static List<T> ToList<T>(this T[] array, in int startIndex, in int length)
+        public static System.Collections.Generic.List<T> ToList<T>(this T[] array, in int startIndex, in int length)
         {
             ThrowIfNull(array, nameof(array));
 
-            var arrayList = new List<T>(length);
+            var arrayList = new System.Collections.Generic.List<T>(length);
 
             int count = startIndex + length;
 
