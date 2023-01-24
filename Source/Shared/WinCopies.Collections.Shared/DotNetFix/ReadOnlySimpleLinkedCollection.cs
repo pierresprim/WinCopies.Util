@@ -54,7 +54,7 @@ namespace WinCopies.Collections.DotNetFix
         /// </summary>
         /// <param name="queue">The inner queue for this <see cref="QueueCollection"/>.</param>
         public ReadOnlyQueueCollection(in IEnumerableQueue queue) : base(queue) { /* Left empty. */ }
-        public ReadOnlyQueueCollection(in QueueCollection queueCollection) : this(queueCollection.InnerList) { /* Left empty. */ }
+        public ReadOnlyQueueCollection(in EnumerableQueueCollection queueCollection) : this(queueCollection.InnerList) { /* Left empty. */ }
 
         void IQueueCore.Enqueue(object item) => throw GetReadOnlyListOrCollectionException();
         object IQueueCore.Dequeue() => throw GetReadOnlyListOrCollectionException();
@@ -64,7 +64,7 @@ namespace WinCopies.Collections.DotNetFix
     public class ReadOnlyStackCollection : ReadOnlySimpleLinkedCollection<IEnumerableStack>, IEnumerableStack
     {
         public ReadOnlyStackCollection(in IEnumerableStack stack) : base(stack) { /* Left empty. */ }
-        public ReadOnlyStackCollection(in StackCollection stackCollection) : this(stackCollection.InnerList) { /* Left empty. */ }
+        public ReadOnlyStackCollection(in EnumerableStackCollection stackCollection) : this(stackCollection.InnerList) { /* Left empty. */ }
 
         void IStackCore.Push(object item) => throw GetReadOnlyListOrCollectionException();
         object IStackCore.Pop() => throw GetReadOnlyListOrCollectionException();
