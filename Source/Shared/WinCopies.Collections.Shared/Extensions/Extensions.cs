@@ -1978,11 +1978,7 @@ namespace WinCopies.Collections
 
             // If the value is lesser than zero, this is not a flags enum value.
 
-            if (comparisonResult < 0 || (comparisonResult == 0 && throwIfZero))
-
-                throw new InvalidEnumArgumentException("The given value must be greater than zero if the 'throwIfZero' parameter is set to true, or greater or equal to zero otherwise.", nameof(@enum), value is long __value ? __value : (int)value, enumType);
-
-            if (!@enum.IsFlagsEnum())
+            if (comparisonResult < 0 || (comparisonResult == 0 && throwIfZero) ? throw new InvalidEnumArgumentException("The given value must be greater than zero if the 'throwIfZero' parameter is set to true, or greater or equal to zero otherwise.", nameof(@enum), value is long __value ? __value : (int)value, enumType) : !@enum.IsFlagsEnum())
 
                 return throwIfNotFlagsEnum ? throw GetExceptionForNonFlagsEnum(nameof(@enum)) : false;
 
