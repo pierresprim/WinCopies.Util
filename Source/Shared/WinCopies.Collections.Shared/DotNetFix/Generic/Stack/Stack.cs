@@ -19,17 +19,9 @@ namespace WinCopies.Collections.DotNetFix.Generic
 {
     public interface IStackCore<T> : IStackCore
     {
-        void Push(T
-#if CS9
-            ?
-#endif
-            item);
+        void Push(T item);
 
-        new T
-#if CS9
-            ?
-#endif
-            Pop();
+        new T Pop();
         bool TryPop(out T
 #if CS9
             ?

@@ -19,16 +19,8 @@ namespace WinCopies.Collections.DotNetFix.Generic
 {
     public interface IQueueCore<T> : IQueueCore
     {
-        void Enqueue(T
-#if CS9
-            ?
-#endif
-            item);
-        new T
-#if CS9
-            ?
-#endif
-        Dequeue();
+        void Enqueue(T item);
+        new T Dequeue();
         bool TryDequeue(out T
 #if CS9
             ?
@@ -66,7 +58,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
         // Left empty.
     }
 
-    public interface IQueueBase<T> : IQueueBase, ISimpleLinkedListBase,  IQueueCommon<T>
+    public interface IQueueBase<T> : IQueueBase, ISimpleLinkedListBase, IQueueCommon<T>
     {
 #if CS8
         void IListCommon<T>.Add(T
