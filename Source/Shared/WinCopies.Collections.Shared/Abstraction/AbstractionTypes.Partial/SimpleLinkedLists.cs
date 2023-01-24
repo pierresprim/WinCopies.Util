@@ -80,7 +80,7 @@ namespace WinCopies.Collections.AbstractionInterop.Generic
 
         public class Queue<TQueue> : SimpleLinkedCollection<TQueue>, IQueue<TDestination> where TQueue : IQueue<TSource>
         {
-            public Queue(in TQueue queue) : base(queue) { }
+            public Queue(in TQueue queue) : base(queue) { /* Left empty. */ }
 
             public void Enqueue(TDestination
 #if CS9
@@ -111,7 +111,7 @@ namespace WinCopies.Collections.AbstractionInterop.Generic
 
         public class Stack<TStack> : SimpleLinkedCollection<TStack>, IStack<TDestination> where TStack : IStack<TSource>
         {
-            public Stack(in TStack stack) : base(stack) { }
+            public Stack(in TStack stack) : base(stack) { /* Left empty. */ }
 
             public void Push(TDestination
 #if CS9
