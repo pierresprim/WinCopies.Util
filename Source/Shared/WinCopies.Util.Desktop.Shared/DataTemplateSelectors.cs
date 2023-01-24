@@ -70,7 +70,7 @@ namespace WinCopies
 
             Type itemType = item.GetType();
 
-            System.Collections.Generic.IEnumerable<Type> types = DirectInterfacesOnly ? itemType.GetDirectInterfaces(IgnoreGenerics, DirectTypeOnly, IgnoreFirstTypesWithoutInterfaces, t => t.CustomAttributes.FirstOrDefault(_t => typeof(Ignore).IsAssignableFrom(_t.AttributeType)) == null) : itemType.GetInterfaces();
+            System.Collections.Generic.IEnumerable<Type> types = DirectInterfacesOnly ? itemType.GetDirectInterfaces(IgnoreGenerics, DirectTypeOnly, IgnoreFirstTypesWithoutInterfaces, predicate: t => t.CustomAttributes.FirstOrDefault(_t => typeof(Ignore).IsAssignableFrom(_t.AttributeType)) == null) : itemType.GetInterfaces();
 
             return (IgnoreClassType ? types : types.Prepend(itemType)).FirstOrDefault<DataTemplate>(t => containerElement.TryFindResource(new DataTemplateKey(t))) ?? base.SelectTemplate(item, container);
         }
