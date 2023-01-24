@@ -26,6 +26,7 @@ using System.Reflection;
 
 using WinCopies.Collections;
 using WinCopies.Collections.Generic;
+using WinCopies.Linq;
 using WinCopies.Util;
 
 using IfCT = WinCopies.Diagnostics.ComparisonType;
@@ -63,7 +64,7 @@ namespace WinCopies.Extensions // To avoid name conflicts.
         public bool TryGetValue(string key, out System.IO.Stream value) => (value = TryGetValue(key)) != null;
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
-    
+
     public static class Extensions
     {
         public static IReadOnlyList<Type> GetRealGenericParameters(this Type type)
@@ -157,56 +158,65 @@ namespace WinCopies.Extensions // To avoid name conflicts.
             }
         }
 
-        public static IEnumerable<Type> GetDirectInterfaces(this Type t, bool ignoreGenerics, bool directTypeOnly, bool ignoreFirstTypesWithoutInterfaces = true, Predicate<Type>
+        public static IEnumerable<Type> GetBaseTypes(this Type type, in Predicate<Type>
+#if CS8
+            ?
+#endif
+            predicate = null) => WinCopies.UtilHelpers.EnumerateUntilNull(type, Delegates.GetBaseTypeConverter(), predicate);
+
+        public static IEnumerable<Type> GetParentTypes(this Type type, in Predicate<Type>
+#if CS8
+            ?
+#endif
+            predicate = null) => WinCopies.UtilHelpers.EnumerateUntilNull(type, Delegates.GetParentTypeConverter(), predicate);
+
+        public static IEnumerable<Type> GetDirectInterfaces(this Type t, bool ignoreGenerics, bool? directTypeOnly, bool ignoreFirstTypesWithoutInterfaces = true, bool doNotExclude = false, Predicate<Type>
 #if CS8
             ?
 #endif
             predicate = null)
         {
-            var interfaces = new ArrayBuilder<Type>();
-            var subInterfaces = new ArrayBuilder<Type>();
+            EnumerableHelper<Type>.IEnumerableLinkedList interfaces = EnumerableHelper<Type>.GetEnumerableLinkedList();
+            EnumerableHelper<Type>.IEnumerableLinkedList subInterfaces = EnumerableHelper<Type>.GetEnumerableLinkedList();
 
-            void _addInterface(in Type i) => _ = interfaces.AddLast(i);
-
-            void _addSubInterface(in Type i) => _ = subInterfaces.AddLast(i);
-
-            void addNonGenericSubInterfaces(Type _t)
+            void __addInterface(in Type i, in EnumerableHelper<Type>.IEnumerableLinkedList collection)
             {
-                foreach (Type i in _t.GetInterfaces())
+                if (collection.None(i))
 
-                    if (!i.IsGenericType)
-
-                        _addSubInterface(i);
+                    collection.AddLast(i);
             }
+            void _addInterface(in Type i) => __addInterface(i, interfaces);
+            void _addSubInterface(in Type i) => __addInterface(i, subInterfaces);
 
-            void addNonGenericInterfaces()
+            void addInterface(in Type _t, params ActionIn<Type>[] actions)
             {
-                foreach (Type i in t.GetInterfaces())
-
-                    if (!i.IsGenericType)
-                    {
-                        _addInterface(i);
-
-                        addNonGenericSubInterfaces(i);
-                    }
-            }
-
-            void addSubInterfaces(Type _t)
-            {
-                foreach (Type i in _t.GetInterfaces())
-
-                    _addSubInterface(i);
-            }
-
-            void addInterfaces()
-            {
-                foreach (Type i in t.GetInterfaces())
+                ActionIn<Type> action = actions.Length > 1 ? (in Type i) =>
                 {
-                    _addInterface(i);
+                    foreach (ActionIn<Type> _action in actions)
 
-                    addSubInterfaces(i);
+                        _action(i);
                 }
+                : actions[0];
+
+                foreach (Type i in _t.GetInterfaces())
+
+                    action(i);
             }
+
+            ActionIn<Type> getNonGenericAssertedAction(params ActionIn<Type>[] actions) => (in Type i) =>
+            {
+                if (!i.IsGenericType)
+
+                    foreach (ActionIn<Type> action in actions)
+
+                        action(i);
+            };
+
+            void addNonGenericSubInterfaces(in Type _t) => addInterface(_t, getNonGenericAssertedAction(_addSubInterface));
+            void addNonGenericInterfaces() => addInterface(t, getNonGenericAssertedAction(_addInterface, addNonGenericSubInterfaces));
+
+            void addSubInterfaces(in Type _t) => addInterface(_t, _addSubInterface);
+            void addInterfaces() => addInterface(t, _addInterface, addSubInterfaces);
 
             bool _predicate(Type _t) => _t.GetDirectInterfaces(ignoreGenerics, true, false).GetEnumerator().MoveNext();
 
@@ -216,57 +226,56 @@ namespace WinCopies.Extensions // To avoid name conflicts.
 #endif
                 _predicate : (_t => predicate(_t) && _predicate(_t));
 
-            void addBaseTypesInterfaces(Action<Type> _action)
+            void add(in Action _addInterfaces, in ActionIn<Type> _addSubInterfaces)
             {
-                Type _t;
+                _addInterfaces();
 
-                if (ignoreFirstTypesWithoutInterfaces)
-                {
-                    _t = t;
+                if (directTypeOnly.HasValue)
 
-                    do
+                    if (directTypeOnly.Value)
                     {
-                        if (__predicate(_t))
+                        Type
+#if CS8
+                            ?
+#endif
+                            _t;
+
+                        if (ignoreFirstTypesWithoutInterfaces)
                         {
-                            _t = _t.BaseType;
+                            if (t.GetBaseTypes().FirstOrDefaultPredicate<Type>(__predicate, out _t))
 
-                            break;
+                                _t = _t.BaseType;
                         }
+
+                        else
+
+                            _t = t.BaseType;
+
+                        if (_t != null)
+
+                            foreach (Type __t in _t.GetBaseTypes())
+
+                                _addSubInterfaces(__t);
                     }
-                    while ((_t = _t.BaseType) != null);
-                }
 
-                else
+                    else if (doNotExclude)
 
-                    _t = t.BaseType;
+                        foreach (Type _t in t.GetBaseTypes().SelectMany(__t => __t.GetDirectInterfaces(ignoreGenerics, null, ignoreFirstTypesWithoutInterfaces, false, predicate)))
 
-                while (_t != null)
-                {
-                    _action(_t);
+                            if (WinCopies.UtilHelpers.EnumerateUntilNull(subInterfaces.FirstNode, node => node.Next).FirstOrDefault(node => node.Value == _t, out EnumerableHelper<Type>.ILinkedListNode _node))
 
-                    _t = _t.BaseType;
-                }
+                                _node.Remove();
             }
 
             if (ignoreGenerics)
-            {
-                addNonGenericInterfaces();
 
-                if (directTypeOnly)
-
-                    addBaseTypesInterfaces(addNonGenericSubInterfaces);
-            }
+                add(addNonGenericInterfaces, addNonGenericSubInterfaces);
 
             else
-            {
-                addInterfaces();
 
-                if (directTypeOnly)
+                add(addInterfaces, addSubInterfaces);
 
-                    addBaseTypesInterfaces(addSubInterfaces);
-            }
-
-            return ((IEnumerable<Type>)interfaces).Except(subInterfaces);
+            return interfaces.AsFromType<IEnumerable<Type>>().Except(subInterfaces);
         }
     }
 }
