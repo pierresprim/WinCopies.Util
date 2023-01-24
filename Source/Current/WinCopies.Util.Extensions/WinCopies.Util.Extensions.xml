@@ -1,0 +1,194 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WinCopies.Util.Extensions</name>
+    </assembly>
+    <members>
+        <member name="M:WinCopies.Diagnostics.IfHelpers.If(WinCopies.Diagnostics.ComparisonType@,WinCopies.Diagnostics.ComparisonMode@,WinCopies.Diagnostics.Comparison@,System.Object@,System.Object[])">
+            <summary>
+            Performs a comparison by testing a value compared to an array of values.
+            </summary>
+            <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
+            <param name="comparisonMode">Whether to perform a binary or a logical comparison.</param>
+            <param name="comparison">Whether to perform an equality or an inequality comparison, and, if to perform an inequality comparison, the type of the inequality comparison to perform.</param>
+            <param name="value">The value to compare the values of the table with.</param>
+            <param name="values">The values to compare.</param>
+            <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Diagnostics.IfHelpers.If(WinCopies.Diagnostics.ComparisonType@,WinCopies.Diagnostics.ComparisonMode@,WinCopies.Diagnostics.Comparison@,System.Collections.IComparer,WinCopies.Predicate@,System.Object@,System.Object[])">
+            <summary>
+            Performs a comparison by testing a value compared to an array of values using a custom <see cref="T:System.Collections.IComparer"/> and <see cref="T:WinCopies.Predicate"/>.
+            </summary>
+            <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
+            <param name="comparisonMode">Whether to perform a binary or a logical comparison.</param>
+            <param name="comparison">Whether to perform an equality or an inequality comparison, and, if to perform an inequality comparison, the type of the inequality comparison to perform.</param>
+            <param name="comparer">The comparer used to compare the values.</param>
+            <param name="value">The value to compare with.</param>
+            <param name="values">The values to compare.</param>
+            <param name="predicate">The comparison predicate</param>
+            <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Diagnostics.IfHelpers.If(WinCopies.Diagnostics.ComparisonType@,WinCopies.Diagnostics.ComparisonMode@,WinCopies.Diagnostics.Comparison,WinCopies.Collections.Comparison,WinCopies.Predicate@,System.Object,System.Object[])">
+            <summary>
+            Performs a comparison by testing a value compared to an array of values using a custom <see cref="T:WinCopies.Collections.Comparison"/> and <see cref="T:WinCopies.Predicate"/>.
+            </summary>
+            <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
+            <param name="comparisonMode">Whether to perform a binary or a logical comparison.</param>
+            <param name="comparison">Whether to perform an equality or an inequality comparison, and, if to perform an inequality comparison, the type of the inequality comparison to perform.</param>
+            <param name="comparisonDelegate">The comparison delegate used to compare the values.</param>
+            <param name="value">The value to compare with.</param>
+            <param name="values">The values to compare.</param>
+            <param name="predicate">The comparison predicate</param>
+            <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Diagnostics.IfHelpers.If(WinCopies.Diagnostics.ComparisonType@,WinCopies.Diagnostics.ComparisonMode@,WinCopies.Diagnostics.Comparison@,System.Collections.IEqualityComparer,WinCopies.Predicate@,System.Object@,System.Object[])">
+            <summary>
+            Performs a comparison by testing a value compared to an array of values using a custom <see cref="T:System.Collections.IComparer"/> and <see cref="T:WinCopies.Predicate"/>.
+            </summary>
+            <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
+            <param name="comparisonMode">Whether to perform a binary or a logical comparison.</param>
+            <param name="comparison">Whether to perform an equality or an inequality comparison, and, if to perform an inequality comparison, the type of the inequality comparison to perform.</param>
+            <param name="equalityComparer">The equality comparer used to compare the values.</param>
+            <param name="value">The value to compare with.</param>
+            <param name="values">The values to compare.</param>
+            <param name="predicate">The comparison predicate</param>
+            <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Diagnostics.IfHelpers.If(WinCopies.Diagnostics.ComparisonType@,WinCopies.Diagnostics.ComparisonMode@,WinCopies.Diagnostics.Comparison,WinCopies.Collections.EqualityComparison,WinCopies.Predicate@,System.Object,System.Object[])">
+            <summary>
+            Performs a comparison by testing a value compared to an array of values using a custom <see cref="T:WinCopies.Collections.EqualityComparison"/> and <see cref="T:WinCopies.Predicate"/>.
+            </summary>
+            <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
+            <param name="comparisonMode">Whether to perform a binary or a logical comparison.</param>
+            <param name="comparison">Whether to perform an equality or an inequality comparison, and, if to perform an inequality comparison, the type of the inequality comparison to perform.</param>
+            <param name="comparisonDelegate">The comparison delegate used to compare the values.</param>
+            <param name="value">The value to compare with.</param>
+            <param name="values">The values to compare.</param>
+            <param name="predicate">The comparison predicate</param>
+            <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Diagnostics.IfHelpers.If(WinCopies.Diagnostics.ComparisonType@,WinCopies.Diagnostics.ComparisonMode@,WinCopies.Diagnostics.Comparison@,System.Object@,System.Object@,System.Collections.Generic.KeyValuePair{System.Object,System.Object}[])">
+            <summary>
+            Performs a comparison by testing a value compared to an array of objects or values.
+            </summary>
+            <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
+            <param name="comparison">The comparison type</param>
+            <param name="value">The value to compare the values of the table with.</param>
+            <param name="values">The values to compare.</param>
+            <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Diagnostics.IfHelpers.If(WinCopies.Diagnostics.ComparisonType@,WinCopies.Diagnostics.ComparisonMode@,WinCopies.Diagnostics.Comparison@,System.Object@,System.Collections.IComparer,WinCopies.Predicate@,System.Object@,System.Collections.Generic.KeyValuePair{System.Object,System.Object}[])">
+            <summary>
+            Performs a comparison by testing a value compared to an array of objects or values using a custom <see cref="T:System.Collections.Generic.IComparer`1"/> and <see cref="T:System.Predicate`1"/>.
+            </summary>
+            <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
+            <param name="comparison">The comparison type</param>
+            <param name="comparer">The comparer used to compare the values.</param>
+            <param name="value">The value to compare with.</param>
+            <param name="values">The values to compare.</param>
+            <param name="predicate">The comparison predicate</param>
+            <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Diagnostics.IfHelpers.If``1(WinCopies.Diagnostics.ComparisonType@,WinCopies.Diagnostics.ComparisonMode@,WinCopies.Diagnostics.Comparison@,``0@,``0[])">
+            <summary>
+            Performs a comparison by testing a value compared to an array of objects or values.
+            </summary>
+            <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
+            <param name="comparison">The comparison type</param>
+            <param name="value">The value to compare the values of the table with.</param>
+            <param name="values">The values to compare.</param>
+            <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Diagnostics.IfHelpers.If``1(WinCopies.Diagnostics.ComparisonType@,WinCopies.Diagnostics.ComparisonMode@,WinCopies.Diagnostics.Comparison@,System.Collections.Generic.IComparer{``0},System.Predicate{``0}@,``0@,``0[])">
+            <summary>
+            Performs a comparison by testing a value compared to an array of objects or values using a custom <see cref="T:System.Collections.Generic.IComparer`1"/> and <see cref="T:System.Predicate`1"/>.
+            </summary>
+            <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
+            <param name="comparison">The comparison type</param>
+            <param name="comparer">The comparer used to compare the values.</param>
+            <param name="value">The value to compare with.</param>
+            <param name="values">The values to compare.</param>
+            <param name="predicate">The comparison predicate</param>
+            <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Diagnostics.IfHelpers.If``2(WinCopies.Diagnostics.ComparisonType@,WinCopies.Diagnostics.ComparisonMode@,WinCopies.Diagnostics.Comparison@,``0@,``1@,System.Collections.Generic.KeyValuePair{``0,``1}[])">
+            <summary>
+            Performs a comparison by testing a value compared to an array of objects or values.
+            </summary>
+            <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
+            <param name="comparison">The comparison type</param>
+            <param name="value">The value to compare the values of the table with.</param>
+            <param name="values">The values to compare.</param>
+            <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Diagnostics.IfHelpers.If``2(WinCopies.Diagnostics.ComparisonType@,WinCopies.Diagnostics.ComparisonMode@,WinCopies.Diagnostics.Comparison@,``0@,System.Collections.Generic.IComparer{``1},System.Predicate{``1}@,``1@,System.Collections.Generic.KeyValuePair{``0,``1}[])">
+            <summary>
+            Performs a comparison by testing a value compared to an array of objects or values using a custom <see cref="!:System.Collections.Generic.System.Collections.Generic.IComparer&lt;Object&gt;"/> and <see cref="T:System.Predicate`1"/>.
+            </summary>
+            <param name="comparisonType">Whether to perform an 'and', 'or' or 'xor' comparison.</param>
+            <param name="comparison">The comparison type</param>
+            <param name="comparer">The comparer used to compare the values.</param>
+            <param name="value">The value to compare with.</param>
+            <param name="values">The values to compare.</param>
+            <param name="predicate">The comparison predicate</param>
+            <returns><see langword="true"/> if the comparison has succeeded for all values, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Extensions.ThrowHelper.ThrowIfNotValidFlagsEnumValue(System.Enum@,System.Boolean@,System.Boolean@)">
+            <summary>
+            Throws an <see cref="T:System.InvalidOperationException"/> if the enum value is not in the required enum value range.
+            </summary>
+            <param name="enum">The enum value to check.</param>
+            <param name="throwIfNotFlagsEnum">Whether to throw if the given enum does not have the <see cref="T:System.FlagsAttribute"/> attribute.</param>
+            <param name="throwIfZero">Whether to throw if the given enum is zero.</param>
+            <exception cref="T:System.ArgumentException"><paramref name="enum"/> does not have the <see cref="T:System.FlagsAttribute"/> and <paramref name="throwIfNotFlagsEnum"/> is set to <see langword="true"/>.</exception>
+            <exception cref="T:WinCopies.InvalidEnumArgumentException"><paramref name="enum"/> is equal to zero and the <paramref name="throwIfZero"/> parameter is set to true or <paramref name="enum"/> is lesser than zero.</exception>
+            <seealso cref="!:WinCopies.Extensions.IsValidEnumValue(Enum)"/>
+            <seealso cref="M:WinCopies.ThrowHelper.ThrowIfNotValidEnumValue(System.String@,System.Enum@)"/>
+        </member>
+        <member name="M:WinCopies.Extensions.ThrowHelper.ThrowIfNotValidFlagsEnumValue(System.Enum@,System.String@,System.Boolean@,System.Boolean@)">
+            <summary>
+            Throws an <see cref="T:WinCopies.InvalidEnumArgumentException"/> if the enum value is not in the required enum value range.
+            </summary>
+            <param name="enum">The enum value to check.</param>
+            <param name="argumentName">The parameter name.</param>
+            <param name="throwIfNotFlagsEnum">Whether to throw if the given enum does not have the <see cref="T:System.FlagsAttribute"/> attribute.</param>
+            <param name="throwIfZero">Whether to throw if the given enum is zero.</param>
+            <exception cref="T:System.ArgumentException"><paramref name="enum"/> does not have the <see cref="T:System.FlagsAttribute"/> and <paramref name="throwIfNotFlagsEnum"/> is set to <see langword="true"/>.</exception>
+            <exception cref="T:WinCopies.InvalidEnumArgumentException"><paramref name="enum"/> is equal to zero and the <paramref name="throwIfZero"/> parameter is set to true or <paramref name="enum"/> is lesser than zero.</exception>
+            <seealso cref="!:WinCopies.Extensions.IsValidEnumValue(Enum)"/>
+        </member>
+        <member name="M:WinCopies.Extensions.UtilHelpers.GetIf(System.Object@,System.Object@,WinCopies.Collections.Comparison@,WinCopies.Func@,WinCopies.Func@,WinCopies.Func@)">
+            <summary>
+            Returns a value obtained by a <see cref="T:WinCopies.Func"/>, depending on the result of a comparison.
+            </summary>
+            <param name="x">The value to compare to <paramref name="y"/>.</param>
+            <param name="y">The value to compare to <paramref name="x"/>.</param>
+            <param name="comparison">The comparison delegate.</param>
+            <param name="lower">The <see cref="T:WinCopies.Func"/> that provides the value for <paramref name="x"/> is lower than <paramref name="y"/>.</param>
+            <param name="equals">The <see cref="T:WinCopies.Func"/> that provides the value for <paramref name="x"/> is equal to <paramref name="y"/>.</param>
+            <param name="greater">The <see cref="T:WinCopies.Func"/> that provides the value for <paramref name="x"/> is greater than <paramref name="y"/>.</param>
+            <returns>A value obtained by a <see cref="T:WinCopies.Func"/>, depending on the result of a comparison.</returns>
+            <exception cref="T:System.ArgumentNullException">One or more of the given <see cref="T:WinCopies.Func"/>s are <see langword="null"/>.</exception>
+            <remarks>See <see cref="M:WinCopies.Extensions.UtilHelpers.GetIf``2(``0@,``0@,System.Comparison{``0}@,System.Func{``1}@,System.Func{``1}@,System.Func{``1}@)"/> for the generic version.</remarks>
+        </member>
+        <member name="M:WinCopies.Extensions.UtilHelpers.GetIf``2(``0@,``0@,System.Comparison{``0}@,System.Func{``1}@,System.Func{``1}@,System.Func{``1}@)">
+            <summary>
+            Returns a value obtained by a <see cref="T:WinCopies.Func"/>, depending on the result of a comparison.
+            </summary>
+            <param name="x">The value to compare to <paramref name="y"/>.</param>
+            <param name="y">The value to compare to <paramref name="x"/>.</param>
+            <param name="comparison">The comparison delegate.</param>
+            <param name="lower">The <see cref="T:WinCopies.Func"/> that provides the value for <paramref name="x"/> is lower than <paramref name="y"/>.</param>
+            <param name="equals">The <see cref="T:WinCopies.Func"/> that provides the value for <paramref name="x"/> is equal to <paramref name="y"/>.</param>
+            <param name="greater">The <see cref="T:WinCopies.Func"/> that provides the value for <paramref name="x"/> is greater than <paramref name="y"/>.</param>
+            <returns>A value obtained by a <see cref="T:WinCopies.Func"/>, depending on the result of a comparison.</returns>
+            <exception cref="T:System.ArgumentNullException">One or more of the given <see cref="T:WinCopies.Func"/>s are <see langword="null"/>.</exception>
+            <remarks>See <see cref="M:WinCopies.Extensions.UtilHelpers.GetIf(System.Object@,System.Object@,WinCopies.Collections.Comparison@,WinCopies.Func@,WinCopies.Func@,WinCopies.Func@)"/> for the non-generic version.</remarks>
+        </member>
+        <member name="M:WinCopies.ActionDictionaryBase`2.DisposeUnmanaged">
+            <summary>
+            This method is called by <see cref="M:WinCopies.ActionDictionaryBase`2.Dispose"/> and by the deconstructor. This overload does nothing and it is not necessary to call this base overload in derived classes.
+            </summary>
+        </member>
+    </members>
+</doc>

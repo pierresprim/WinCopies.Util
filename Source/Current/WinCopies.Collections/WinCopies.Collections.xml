@@ -1,0 +1,985 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WinCopies.Collections</name>
+    </assembly>
+    <members>
+        <member name="T:WinCopies.Collections.Resources.ExceptionMessages">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Collections.Resources.ExceptionMessages.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Collections.Resources.ExceptionMessages.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Collections.Resources.ExceptionMessages.EnumeratorIsNotStartedOrDisposed">
+            <summary>
+              Looks up a localized string similar to The enumeration is not started or the enumerator is disposed..
+            </summary>
+        </member>
+        <member name="P:WinCopies.Collections.Resources.ExceptionMessages.NodeIsAlreadyContainedInAnotherListOrTree">
+            <summary>
+              Looks up a localized string similar to The given node is already contained in another list or tree..
+            </summary>
+        </member>
+        <member name="P:WinCopies.Collections.Resources.ExceptionMessages.ReadOnlyListOrCollection">
+            <summary>
+              Looks up a localized string similar to This list or collection is read-only..
+            </summary>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.EnumerableSimpleLinkedList`1.GetEnumerator">
+            <summary>
+            Returns an <see cref="T:System.Collections.IEnumerator"/> for this <see cref="T:WinCopies.Collections.DotNetFix.EnumerableSimpleLinkedList`1"/>.
+            </summary>
+            <returns>An <see cref="T:System.Collections.IEnumerator"/> for this <see cref="T:WinCopies.Collections.DotNetFix.EnumerableSimpleLinkedList`1"/>.</returns>
+        </member>
+        <member name="P:WinCopies.Collections.DotNetFix.EnumerableSimpleLinkedList`1.Enumerator.CurrentOverride">
+            <summary>
+            When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.SimpleLinkedList`1.AddItem(System.Object,System.Boolean@)">
+            <summary>
+            When overridden in a derived class, adds a given item to the current list.
+            </summary>
+            <param name="value">The item to add.</param>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.SimpleLinkedList`1.Add(System.Object)">
+            <summary>
+            Adds a given item to the current list.
+            </summary>
+            <param name="value">The item to add.</param>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.SimpleLinkedList`1.Remove">
+            <summary>
+            Removes the first or last item from the current list, depending on the linked list type (FIFO/LIFO).
+            </summary>
+        </member>
+        <member name="P:WinCopies.Collections.DotNetFix.SimpleLinkedListBase.IsReadOnly">
+            <summary>
+            Gets a value indicating whether the current list is read-only.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Collections.DotNetFix.SimpleLinkedListBase`1.Count">
+            <summary>
+            Gets the number of items in the current list.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.SimpleLinkedListBase`1.RemoveItem">
+            <summary>
+            When overridden in a derived class, removes the first or last item from the current list, depending on the linked list type (FIFO/LIFO).
+            </summary>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection"/> class.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection.#ctor(WinCopies.Collections.DotNetFix.IEnumerableQueue@)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection"/> class with a custom queue.
+            </summary>
+            <param name="queue">The inner queue for this <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection"/>.</param>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:WinCopies.Collections.DotNetFix.QueueCollection.Enqueue(System.Object)" -->
+        <member name="M:WinCopies.Collections.DotNetFix.QueueCollection.Dequeue">
+            <summary>
+            Removes and returns the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection"/>.
+            </summary>
+            <returns>The object that is removed from the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection"/>.</returns>
+            <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection"/> is empty.</exception>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.ReadOnlyQueueCollection.#ctor(WinCopies.Collections.DotNetFix.IEnumerableQueue@)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection"/> class with a custom queue.
+            </summary>
+            <param name="queue">The inner queue for this <see cref="T:WinCopies.Collections.DotNetFix.QueueCollection"/>.</param>
+        </member>
+        <member name="P:WinCopies.Collections.DotNetFix.SimpleLinkedCollectionCore`1.Count">
+            <summary>
+            Gets the number of elements contained in the <see cref="T:WinCopies.Collections.DotNetFix.SimpleLinkedCollectionCore`1"/>.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.SimpleLinkedCollectionCore`1.#ctor(`0@)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Collections.DotNetFix.SimpleLinkedCollectionCore`1"/> class with a custom queue.
+            </summary>
+            <param name="queue">The inner queue for this <see cref="T:WinCopies.Collections.DotNetFix.SimpleLinkedCollectionCore`1"/>.</param>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.SimpleLinkedCollectionBase`1.Clear">
+            <summary>
+            Removes all objects from the <see cref="T:WinCopies.Collections.DotNetFix.SimpleLinkedCollectionBase`1"/>.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.SimpleLinkedCollection`1.Peek">
+            <summary>
+            Returns the object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.SimpleLinkedCollection`1"/> without removing it.
+            </summary>
+            <returns>The object at the beginning of the <see cref="T:WinCopies.Collections.DotNetFix.SimpleLinkedCollection`1"/>.</returns>
+            <exception cref="T:System.InvalidOperationException">The <see cref="T:WinCopies.Collections.DotNetFix.SimpleLinkedCollection`1"/> is empty.</exception>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.IEnumeratorBase.MoveNext">
+            <summary>
+            Advances the enumerator to the next element of the collection.
+            </summary>
+            <returns><see langword="true"/> if the enumerator was successfully advanced to the next element; <see langword="false"/> if the enumerator has passed the end of the collection.</returns>
+            <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created.</exception>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.IEnumeratorBase.Reset">
+            <summary>
+            Sets the enumerator to its initial position, which is before the first element in the collection.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created.</exception>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.IUIntIndexedCollection.CopyTo(WinCopies.Array@,System.Int32)">
+            <summary>
+            Copies the items of this collection to a given array starting at a given index.
+            </summary>
+            <param name="array">The array to copy the items.</param>
+            <param name="index">The index in the array from which to start to copy.</param>
+        </member>
+        <member name="P:WinCopies.Collections.DotNetFix.IReadOnlyUIntIndexedList.Item(System.UInt32)">
+            <summary>
+            Gets or sets an item at a given index in the list.
+            </summary>
+            <param name="index">The index of the item.</param>
+            <returns>The item at <paramref name="index"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.IReadOnlyUIntIndexedList.Contains(System.Object@)">
+            <summary>
+            Checks if the list contains a given value.
+            </summary>
+            <param name="value">The value to check.</param>
+            <returns><see langword="true"/> if the list contains <paramref name="value"/>, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.IReadOnlyUIntIndexedList.IndexOf(System.Object@)">
+            <summary>
+            Returns the index of a given value in the list.
+            </summary>
+            <param name="value">The value for which return the index.</param>
+            <returns>The index of <paramref name="value"/> if it was found, or <see langword="null"/> otherwise.</returns>
+        </member>
+        <member name="P:WinCopies.Collections.DotNetFix.IUIntIndexedList.Item(System.UInt32)">
+            <summary>
+            Gets the item at a given index in the list.
+            </summary>
+            <param name="index">The index of the item.</param>
+            <returns>The item at <paramref name="index"/>.</returns>
+        </member>
+        <member name="P:WinCopies.Collections.DotNetFix.IUIntIndexedList.IsFixedSize">
+            <summary>
+            Gets a value that indicates whether the current list is fixed size.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.IUIntIndexedList.Add(System.Object@)">
+            <summary>
+            Adds a value to the list.
+            </summary>
+            <param name="value">The value to add.</param>
+            <returns>The index of the new value in the list.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.IUIntIndexedList.Clear">
+            <summary>
+            Removes all items from the list.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.IUIntIndexedList.Insert(System.UInt32@,System.Object@)">
+            <summary>
+            Inserts a value to the list.
+            </summary>
+            <param name="index">The index at which to add the value.</param>
+            <param name="value">The value to add.</param>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.IUIntIndexedList.Remove(System.Object@)">
+            <summary>
+            Removes a given value from the list.
+            </summary>
+            <param name="value">The value to remove.</param>
+        </member>
+        <member name="M:WinCopies.Collections.DotNetFix.IUIntIndexedList.RemoveAt(System.UInt32@)">
+            <summary>
+            Removes a value from the list at a given index.
+            </summary>
+            <param name="index">The index of the value to remove.</param>
+        </member>
+        <member name="M:WinCopies.Collections.Generic.EnumerableInfoBase`2.#ctor(System.Func{`1}@,System.Func{`1}@)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Collections.Generic.EnumerableInfoBase`2"/> class.
+            </summary>
+            <param name="enumeratorFunc">The func that provides the enumerators.</param>
+            <param name="reversedEnumeratorFunc">The func that provides the reversed enumerators. This parameter can be null.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="enumeratorFunc"/> is null.</exception>
+        </member>
+        <member name="M:WinCopies.Collections.Generic.EnumerableInfoBase`2.GetReversedEnumerator">
+            <summary>
+            Returns a reversed enumerator for the current collection.
+            </summary>
+            <returns>A reversed enumerator for the current collection.</returns>
+            <exception cref="T:System.InvalidOperationException"><see cref="!:Enumeration.IEnumerable.SupportsReversedEnumeration"/> is set to <see langword="false"/>.</exception>
+            <seealso cref="!:IEnumerable&lt;T&gt;.GetReversedEnumerator"/>
+        </member>
+        <member name="M:WinCopies.Collections.Generic.EnumerableInfo`1.#ctor(System.Func{WinCopies.Collections.Generic.IEnumeratorInfo{`0}}@,System.Func{WinCopies.Collections.Generic.IEnumeratorInfo{`0}}@)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Collections.Generic.EnumerableInfo`1"/> class.
+            </summary>
+            <param name="enumeratorFunc">The func that provides the enumerators.</param>
+            <param name="reversedEnumeratorFunc">The func that provides the reversed enumerators. This parameter can be null.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="enumeratorFunc"/> is null.</exception>
+        </member>
+        <member name="P:WinCopies.Collections.Generic.EmptyCheckEnumerator`1.CurrentOverride">
+            <summary>
+            When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Collections.Generic.Enumerator`1.Current">
+            <summary>
+            Gets the element in the collection at the current position of the enumerator.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">The enumerator is disposed.</exception>
+        </member>
+        <member name="P:WinCopies.Collections.Generic.Enumerator`1.CurrentOverride">
+            <summary>
+            When overridden in a derived class, gets the item in the collection at the current position of the enumerator.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Collections.Generic.EnumeratorInfo`2.CurrentOverride">
+            <summary>
+            When overridden in a derived class, gets the item in the collection at the current position of the enumerator.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Collections.Generic.Enumerator`3.#ctor(`1)">
+            <summary>
+            When overridden in a derived class, initializes a new instance of the <see cref="T:WinCopies.Collections.Generic.Enumerator`2"/> class.
+            </summary>
+            <param name="enumerator">The enumerator to enumerate.</param>
+        </member>
+        <member name="M:WinCopies.Collections.Generic.Enumerator`2.#ctor(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            When overridden in a derived class, initializes a new instance of the <see cref="T:WinCopies.Collections.Generic.Enumerator`2"/> class.
+            </summary>
+            <param name="enumerable">An enumerable from which to get an enumerator to enumerate.</param>
+        </member>
+        <member name="M:WinCopies.Collections.Generic.Enumerator`2.#ctor(System.Collections.Generic.IEnumerator{`0})">
+            <summary>
+            When overridden in a derived class, initializes a new instance of the <see cref="T:WinCopies.Collections.Generic.Enumerator`2"/> class.
+            </summary>
+            <param name="enumerator">The enumerator to enumerate.</param>
+        </member>
+        <member name="M:WinCopies.Collections.Generic.SingletonEnumerator`1.Dispose">
+            <summary>
+            Disposing is disabled for the <see cref="T:WinCopies.Collections.Generic.SingletonEnumerator`1"/> class because this enumerator does not have to be disposed and does not support it. Calling this method from this class will not do anything, as it was left empty.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Collections.Generic.JoinSubEnumerator`1.CurrentOverride">
+            <summary>
+            When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Collections.Generic.JoinEnumerator`1.CurrentOverride">
+            <summary>
+            When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Collections.Generic.SelectEnumerator`2.CurrentOverride">
+            <summary>
+            When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            </summary>
+        </member>
+        <member name="T:WinCopies.Collections.Extensions.IEnumerable">
+            <summary>
+            A collection that can be enumerated.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Collections.Extensions.IEnumerable.SupportsReversedEnumeration">
+            <summary>
+            Gets a value indicating whether this collection can be enumerated in the two directions (FIFO and LIFO).
+            </summary>
+        </member>
+        <member name="M:WinCopies.Collections.Extensions.IEnumerable.GetReversedEnumerator">
+            <summary>
+            Returns a reversed enumerator for the current collection. See the Remarks section.
+            </summary>
+            <returns>A reversed enumerator for the current collection.</returns>
+            <exception cref="T:System.InvalidOperationException"><see cref="P:WinCopies.Collections.Extensions.IEnumerable.SupportsReversedEnumeration"/> is set to <see langword="false"/>.</exception>
+            <remarks>
+            This method returns an enumerator that enumerates in the reversed direction that the enumerator returned by the <see cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/> method. So, for a queue, the <see cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/> method will return an enumerator that will enumerate through the queue using the FIFO direction and the <see cref="M:WinCopies.Collections.Extensions.IEnumerable.GetReversedEnumerator"/> will throw an exception, because any reversed enumerator can be returned while a queue only supports the FIFO direction. However, a stack, which only supports the LIFO direction, will return a LIFO-enumerator as its main enumerator and throw an exception if we ask it to return a reversed enumerator. A linked list that supports the two directions, but which stores items using the FIFO direction by default, will return a FIFO-enumerator as its main enumerator and a LIFO-enumerator as its reversed enumerator.
+            </remarks>
+        </member>
+        <member name="T:WinCopies.Collections.Extensions.Generic.IEnumerable`1">
+            <summary>
+            A collection that can be enumerated.
+            </summary>
+            <typeparam name="T">The item type of the collection.</typeparam>
+        </member>
+        <member name="M:WinCopies.Collections.Extensions.Generic.IEnumerable`1.GetReversedEnumerator">
+            <summary>
+            Returns a reversed enumerator for the current collection. See the Remarks section.
+            </summary>
+            <returns>A reversed enumerator for the current collection.</returns>
+            <exception cref="T:System.InvalidOperationException"><see cref="!:SupportsReversedEnumeration"/> is set to <see langword="false"/>.</exception>
+            <remarks>
+            This method returns an enumerator that enumerates in the reversed direction that the enumerator returned by the <see cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/> method. So, for a queue, the <see cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/> method will return an enumerator that will enumerate through the queue using the FIFO direction and the <see cref="M:WinCopies.Collections.Extensions.Generic.IEnumerable`1.GetReversedEnumerator"/> will throw an exception, because any reversed enumerator can be returned while a queue only supports the FIFO direction. However, a stack, which only supports the LIFO direction, will return a LIFO-enumerator as its main enumerator and throw an exception if we ask it to return a reversed enumerator. A linked list that supports the two directions, but which stores items using the FIFO direction by default, will return a FIFO-enumerator as its main enumerator and a LIFO-enumerator as its reversed enumerator.
+            </remarks>
+        </member>
+        <member name="T:WinCopies.Collections.ICountable">
+            <summary>
+            Represents a countable item.
+            </summary>
+        </member>
+        <member name="T:WinCopies.Collections.IUIntCountable">
+            <summary>
+            Represents a <see cref="T:System.UInt32"/>-countable item.
+            </summary>
+        </member>
+        <member name="T:WinCopies.Collections.ILongCountable">
+            <summary>
+            Represents a <see cref="T:System.Int64"/>-countable item.
+            </summary>
+        </member>
+        <member name="T:WinCopies.Collections.IULongCountable">
+            <summary>
+            Represents a <see cref="T:System.UInt64"/>-countable item.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Collections.EmptyCheckEnumerator.CurrentOverride">
+            <summary>
+            When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Collections.Enumerator.CurrentOverride">
+            <summary>
+            When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            </summary>
+        </member>
+        <member name="T:WinCopies.Collections.EnumeratorInfo">
+            <summary>
+            <see cref="T:System.Collections.IEnumerator"/> wrapper that inherits from <see cref="T:WinCopies.Collections.Enumerator"/>, a class that extends the info provided by the <see cref="T:System.Collections.IEnumerator"/> interface.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Collections.EnumeratorInfo.InnerEnumerator">
+            <summary>
+            The <see cref="T:System.Collections.IEnumerator"/> to enumerate.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Collections.EnumeratorInfo.IsResetSupported">
+            <summary>
+            Always returns <see langword="null"/>.
+            </summary>
+        </member>
+        <member name="P:WinCopies.Collections.EnumeratorInfo.CurrentOverride">
+            <summary>
+            When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Collections.EnumeratorInfo.#ctor(System.Collections.IEnumerator@)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WinCopies.Collections.EnumeratorInfo"/> class.
+            </summary>
+            <param name="enumerator">The enumerator to enumerate.</param>
+        </member>
+        <member name="M:WinCopies.Collections.EnumeratorInfo.MoveNextOverride">
+            <summary>
+            Calls the <see cref="M:System.Collections.IEnumerator.MoveNext"/> method on <see cref="T:WinCopies.Collections.Enumerator"/>.
+            </summary>
+            <returns>A value indicating whether a value has been retrieved.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.EnumeratorInfo.ResetOverride2">
+            <summary>
+            Calls the <see cref="M:System.Collections.IEnumerator.Reset"/> method on <see cref="T:WinCopies.Collections.Enumerator"/>.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Collections.ArrayExtensions.Append(System.Array,System.Array[])">
+            <summary>
+            Appends data to the table. Arrays must have only one dimension.
+            </summary>
+            <param name="array">The source table.</param>
+            <param name="arrays">The tables to concatenate.</param>
+            <returns>The concatenatd array.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.AddIfNotContains(System.Collections.IList,System.Object@)">
+            <summary>
+            Tries to add a value to an <see cref="T:System.Collections.IList"/> if it does not contain it already.
+            </summary>
+            <param name="collection">The collection to which try to add the value</param>
+            <param name="value">The value to try to add to the collection</param>
+            <returns><see langword="true"/> if the value has been added to the collection, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeIfNotContains(System.Collections.IList,System.Object[])">
+            <summary>
+            Tries to add multiple values to an <see cref="T:System.Collections.IList"/> if it does not contain them already.
+            </summary>
+            <param name="collection">The collection to which try to add the value</param>
+            <param name="values">The values to try to add to the collection</param>
+            <returns><see langword="true"/> if the value has been added to the collection, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.AddIfNotContains``1(System.Collections.Generic.ICollection{``0},``0@)">
+            <summary>
+            Tries to add a value to an <see cref="T:WinCopies.Collections.Generic.ICollection`1"/> if it does not contain it already.
+            </summary>
+            <typeparam name="T">The value type</typeparam>
+            <param name="collection">The collection to which try to add the value</param>
+            <param name="value">The value to try to add to the collection</param>
+            <returns><see langword="true"/> if the value has been added to the collection, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.InsertIfNotContains(System.Collections.IList,System.Int32@,System.Object@)">
+            <summary>
+            Inserts a value at the specified index in a given collection if the value does not already exists in the collection.
+            </summary>
+            <param name="collection">The collection in which to add the value.</param>
+            <param name="index">The index at the collection to which add the value.</param>
+            <param name="value">The value to add in the collection.</param>
+            <returns><see langword="true"/> if the value is added to the collection, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeFirst``1(System.Collections.Generic.LinkedList{``0},``0[])">
+            <summary>
+            Add multiple values at the top of a <see cref="T:System.Collections.Generic.LinkedList`1"/>. For better performance, use the <see cref="!:ArrayBuilder&lt;T&gt;"/> class.
+            </summary>
+            <param name="collection">The <see cref="T:System.Collections.Generic.LinkedList`1"/> into which add the values.</param>
+            <param name="values">The values to add to this <see cref="T:System.Collections.Generic.LinkedList`1"/></param>
+            <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeFirst``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.IEnumerable{``0}@)">
+            <summary>
+            Add multiple values at the top of a <see cref="T:System.Collections.Generic.LinkedList`1"/>. For better performance, use the <see cref="!:ArrayBuilder&lt;T&gt;"/> class.
+            </summary>
+            <param name="collection">The <see cref="T:System.Collections.Generic.LinkedList`1"/> into which add the values.</param>
+            <param name="array">The values to add to this <see cref="T:System.Collections.Generic.LinkedList`1"/></param>
+            <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeFirst``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.LinkedListNode{``0}[])">
+            <summary>
+            Add multiple <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s at the top of a <see cref="T:System.Collections.Generic.LinkedList`1"/>.
+            </summary>
+            <param name="collection">The <see cref="T:System.Collections.Generic.LinkedList`1"/> into which add the values.</param>
+            <param name="nodes">The <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s to add to a <see cref="T:System.Collections.Generic.LinkedList`1"/></param>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeFirst``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.IEnumerable{System.Collections.Generic.LinkedListNode{``0}}@)">
+            <summary>
+            Add multiple <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s at the top of a <see cref="T:System.Collections.Generic.LinkedList`1"/>. For better performance, use the <see cref="!:ArrayBuilder&lt;T&gt;"/> class.
+            </summary>
+            <param name="collection">The <see cref="T:System.Collections.Generic.LinkedList`1"/> into which add the values.</param>
+            <param name="array">The <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s to add to a <see cref="T:System.Collections.Generic.LinkedList`1"/></param>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeLast``1(System.Collections.Generic.LinkedList{``0},``0[])">
+            <summary>
+            Add multiple values at the end of a <see cref="T:System.Collections.Generic.LinkedList`1"/>. For better performance, use the <see cref="!:ArrayBuilder&lt;T&gt;"/> class.
+            </summary>
+            <param name="collection">The <see cref="T:System.Collections.Generic.LinkedList`1"/> into which add the values.</param>
+            <param name="values">The values to add to a <see cref="T:System.Collections.Generic.LinkedList`1"/></param>
+            <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeLast``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.IEnumerable{``0}@)">
+            <summary>
+            Add multiple values at the end of a <see cref="T:System.Collections.Generic.LinkedList`1"/>. For better performance, use the <see cref="!:ArrayBuilder&lt;T&gt;"/> class.
+            </summary>
+            <param name="collection">The <see cref="T:System.Collections.Generic.LinkedList`1"/> into which add the values.</param>
+            <param name="array">The values to add to a <see cref="T:System.Collections.Generic.LinkedList`1"/></param>
+            <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeLast``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.LinkedListNode{``0}[])">
+            <summary>
+            Add multiple <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s at the end of a <see cref="T:System.Collections.Generic.LinkedList`1"/>.
+            </summary>
+            <param name="collection">The <see cref="T:System.Collections.Generic.LinkedList`1"/> into which add the values.</param>
+            <param name="nodes">The <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s to add to a <see cref="T:System.Collections.Generic.LinkedList`1"/></param>
+            <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeLast``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.IEnumerable{System.Collections.Generic.LinkedListNode{``0}}@)">
+            <summary>
+            Add multiple <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s at the end of a <see cref="T:System.Collections.Generic.LinkedList`1"/>.
+            </summary>
+            <param name="collection">The <see cref="T:System.Collections.Generic.LinkedList`1"/> into which add the values.</param>
+            <param name="array">The <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s to add to a <see cref="T:System.Collections.Generic.LinkedList`1"/></param>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeBefore``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.LinkedListNode{``0}@,``0[])">
+            <summary>
+            Add multiple values before a specified node in a <see cref="T:System.Collections.Generic.LinkedList`1"/>. For better performance, use the <see cref="!:ArrayBuilder&lt;T&gt;"/> class.
+            </summary>
+            <param name="collection">The <see cref="T:System.Collections.Generic.LinkedList`1"/> into which add the values.</param>
+            <param name="node">The node before which to add the values</param>
+            <param name="values">The values to add to a <see cref="T:System.Collections.Generic.LinkedList`1"/></param>
+            <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeBefore``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.LinkedListNode{``0}@,System.Collections.Generic.IEnumerable{``0}@)">
+            <summary>
+            Add multiple values before a specified node in a <see cref="T:System.Collections.Generic.LinkedList`1"/>. For better performance, use the <see cref="!:ArrayBuilder&lt;T&gt;"/> class.
+            </summary>
+            <param name="collection">The <see cref="T:System.Collections.Generic.LinkedList`1"/> into which add the values.</param>
+            <param name="node">The node before which to add the values</param>
+            <param name="array">The values to add to a <see cref="T:System.Collections.Generic.LinkedList`1"/></param>
+            <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeBefore``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.LinkedListNode{``0}@,System.Collections.Generic.LinkedListNode{``0}[])">
+            <summary>
+            Add multiple values before a specified node in a <see cref="T:System.Collections.Generic.LinkedList`1"/>.
+            </summary>
+            <param name="collection">The <see cref="T:System.Collections.Generic.LinkedList`1"/> into which add the values.</param>
+            <param name="node">The node before which to add the values</param>
+            <param name="nodes">The <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s to add to a <see cref="T:System.Collections.Generic.LinkedList`1"/></param>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeBefore``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.LinkedListNode{``0}@,System.Collections.Generic.IEnumerable{System.Collections.Generic.LinkedListNode{``0}}@)">
+            <summary>
+            Add multiple values before a specified node in a <see cref="T:System.Collections.Generic.LinkedList`1"/>.
+            </summary>
+            <param name="collection">The <see cref="T:System.Collections.Generic.LinkedList`1"/> into which add the values.</param>
+            <param name="node">The node before which to add the values</param>
+            <param name="array">The values to add to a <see cref="T:System.Collections.Generic.LinkedList`1"/></param>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeAfter``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.LinkedListNode{``0}@,``0[])">
+            <summary>
+            Add multiple values after a specified node in a <see cref="T:System.Collections.Generic.LinkedList`1"/>. For better performance, use the <see cref="!:ArrayBuilder&lt;T&gt;"/> class.
+            </summary>
+            <param name="collection">The <see cref="T:System.Collections.Generic.LinkedList`1"/> into which add the values.</param>
+            <param name="node">The node after which to add the values</param>
+            <param name="values">The values to add to a <see cref="T:System.Collections.Generic.LinkedList`1"/></param>
+            <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeAfter``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.LinkedListNode{``0}@,System.Collections.Generic.IEnumerable{``0}@)">
+            <summary>
+            Add multiple values after a specified node in a <see cref="T:System.Collections.Generic.LinkedList`1"/>. For better performance, use the <see cref="!:ArrayBuilder&lt;T&gt;"/> class.
+            </summary>
+            <param name="collection">The <see cref="T:System.Collections.Generic.LinkedList`1"/> into which add the values.</param>
+            <param name="node">The node after which to add the values</param>
+            <param name="array">The values to add to a <see cref="T:System.Collections.Generic.LinkedList`1"/></param>
+            <returns>The added <see cref="T:System.Collections.Generic.LinkedListNode`1"/>'s.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeAfter``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.LinkedListNode{``0}@,System.Collections.Generic.LinkedListNode{``0}[])">
+            <summary>
+            Add multiple values after a specified node in a <see cref="T:System.Collections.Generic.LinkedList`1"/>.
+            </summary>
+            <param name="collection">The <see cref="T:System.Collections.Generic.LinkedList`1"/> into which add the values.</param>
+            <param name="node">The node after which to add the values</param>
+            <param name="nodes">The values to add to a <see cref="T:System.Collections.Generic.LinkedList`1"/></param>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.AddRangeAfter``1(System.Collections.Generic.LinkedList{``0},System.Collections.Generic.LinkedListNode{``0}@,System.Collections.Generic.IEnumerable{System.Collections.Generic.LinkedListNode{``0}}@)">
+            <summary>
+            Add multiple values after a specified node in a <see cref="T:System.Collections.Generic.LinkedList`1"/>.
+            </summary>
+            <param name="collection">The <see cref="T:System.Collections.Generic.LinkedList`1"/> into which add the values.</param>
+            <param name="node">The node after which to add the values</param>
+            <param name="array">The values to add to a <see cref="T:System.Collections.Generic.LinkedList`1"/></param>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.RemoveRange(System.Collections.IList,System.Int32@,System.Int32@)">
+            <summary>
+            Removes multiple items in an <see cref="T:System.Collections.IList"/> collection, from a given start index for a given length.
+            </summary>
+            <param name="collection">The collection from which remove the items.</param>
+            <param name="start">The start index in the collection from which delete the items.</param>
+            <param name="length">The length to remove.</param>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneValue(System.Collections.IEnumerable,System.Boolean@,System.Object[])">
+            <summary>
+            Checks whether an array contains <i>exactly</i> one value of a given array.
+            </summary>
+            <param name="array">The array to browse</param>
+            <param name="containsMoreThanOneValue"><see langword="true"/> if more than one value has been found, otherwise <see langword="false"/></param>
+            <param name="values">The values to compare</param>
+            <returns><see langword="true"/> if <i>exactly</i> one value has been found, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneValue(System.Collections.IEnumerable,System.Collections.IComparer,System.Boolean@,System.Object[])">
+            <summary>
+            Checks whether an array contains <i>exactly</i> one value of a given array using a custom comparer.
+            </summary>
+            <param name="array">The array to browse</param>
+            <param name="comparer">The <see cref="T:System.Collections.IComparer"/> used to compare the values</param>
+            <param name="containsMoreThanOneValue"><see langword="true"/> if more than one value has been found, otherwise <see langword="false"/></param>
+            <param name="values">The values to compare</param>
+            <returns><see langword="true"/> if <i>exactly</i> one value has been found, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneValue(System.Collections.IEnumerable,WinCopies.Collections.Comparison,System.Boolean@,System.Object[])">
+            <summary>
+            Checks whether an array contains <i>exactly</i> one value of a given array using a custom comparer.
+            </summary>
+            <param name="array">The array to browse</param>
+            <param name="comparison">The <see cref="T:WinCopies.Collections.Comparison"/> used to compare the values</param>
+            <param name="containsMoreThanOneValue"><see langword="true"/> if more than one value has been found, otherwise <see langword="false"/></param>
+            <param name="values">The values to compare</param>
+            <returns><see langword="true"/> if <i>exactly</i> one value has been found, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneValue(System.Collections.IEnumerable,System.Collections.IEqualityComparer,System.Boolean@,System.Object[])">
+            <summary>
+            Checks whether an array contains <i>exactly</i> one value of a given array using a custom equality comparer.
+            </summary>
+            <param name="array">The array to browse</param>
+            <param name="equalityComparer">The <see cref="T:System.Collections.IEqualityComparer"/> used to compare the values</param>
+            <param name="containsMoreThanOneValue"><see langword="true"/> if more than one value has been found, otherwise <see langword="false"/></param>
+            <param name="values">The values to compare</param>
+            <returns><see langword="true"/> if <i>exactly</i> one value has been found, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneOrMoreValues(System.Collections.IEnumerable,System.Boolean@,System.Object[])">
+            <summary>
+            Checks whether an array contains at least one value of a given array.
+            </summary>
+            <param name="array">The array to browse</param>
+            <param name="containsMoreThanOneValue"><see langword="true"/> if more than one value has been found, otherwise <see langword="false"/></param>
+            <param name="values">The values to compare</param>
+            <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneOrMoreValues(System.Collections.IEnumerable,System.Collections.IComparer,System.Boolean@,System.Object[])">
+            <summary>
+            Checks whether an array contains at least one value of a given array using a custom comparer.
+            </summary>
+            <param name="array">The array to browse</param>
+            <param name="comparer">The <see cref="T:System.Collections.IComparer"/> used to compare the values</param>
+            <param name="containsMoreThanOneValue"><see langword="true"/> if more than one value has been found, otherwise <see langword="false"/></param>
+            <param name="values">The values to compare</param>
+            <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneOrMoreValues(System.Collections.IEnumerable,System.Comparison{System.Object},System.Boolean@,System.Object[])">
+            <summary>
+            Checks whether an array contains at least one value of a given array using a custom comparer.
+            </summary>
+            <param name="array">The array to browse</param>
+            <param name="comparison">The <see cref="T:System.Comparison`1"/> used to compare the values</param>
+            <param name="containsMoreThanOneValue"><see langword="true"/> if more than one value has been found, otherwise <see langword="false"/></param>
+            <param name="values">The values to compare</param>
+            <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneOrMoreValues(System.Collections.IEnumerable,System.Collections.IEqualityComparer,System.Boolean@,System.Object[])">
+            <summary>
+            Checks whether an array contains at least one value of a given array using a custom equality comparer.
+            </summary>
+            <param name="array">The array to browse</param>
+            <param name="equalityComparer">The <see cref="T:System.Collections.IEqualityComparer"/> used to compare the values</param>
+            <param name="containsMoreThanOneValue"><see langword="true"/> if more than one value has been found, otherwise <see langword="false"/></param>
+            <param name="values">The values to compare</param>
+            <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneOrMoreValues(System.Collections.IEnumerable,System.Object[])">
+            <summary>
+            Checks whether an array contains at least one value of a given array.
+            </summary>
+            <param name="array">The array to browse</param>
+            <param name="values">The values to compare</param>
+            <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneOrMoreValues(System.Collections.IEnumerable,System.Collections.IComparer,System.Object[])">
+            <summary>
+            Checks whether an array contains at least one value of a given array using a custom comparer.
+            </summary>
+            <param name="array">The array to browse</param>
+            <param name="comparer">The <see cref="T:System.Collections.IComparer"/> used to compare the values</param>
+            <param name="values">The values to compare</param>
+            <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneOrMoreValues(System.Collections.IEnumerable,System.Comparison{System.Object},System.Object[])">
+            <summary>
+            Checks whether an array contains at least one value of a given array using a custom comparer.
+            </summary>
+            <param name="array">The array to browse</param>
+            <param name="comparison">The <see cref="T:System.Comparison`1"/> used to compare the values</param>
+            <param name="values">The values to compare</param>
+            <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneOrMoreValues(System.Collections.IEnumerable,System.Collections.IEqualityComparer,System.Object[])">
+            <summary>
+            Checks whether an array contains at least one value of a given array using a custom comparer.
+            </summary>
+            <param name="array">The array to browse</param>
+            <param name="equalityComparer">The <see cref="T:System.Collections.IEqualityComparer"/> used to compare the values</param>
+            <param name="values">The values to compare</param>
+            <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.Contains(System.Collections.IEnumerable,System.Object[])">
+            <summary>
+            Checks whether an array contains all values of a given array.
+            </summary>
+            <param name="array">The array to browse</param>
+            <param name="values">The values to compare</param>
+            <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.Contains(System.Collections.IEnumerable,System.Collections.IComparer,System.Object[])">
+            <summary>
+            Checks whether an array contains all values of a given array using a custom comparer.
+            </summary>
+            <param name="array">The array to browse</param>
+            <param name="comparer">The <see cref="T:System.Collections.IComparer"/> used to compare the values</param>
+            <param name="values">The values to compare</param>
+            <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.Contains(System.Collections.IEnumerable,System.Comparison{System.Object},System.Object[])">
+            <summary>
+            Checks whether an array contains all values of a given array using a custom comparer.
+            </summary>
+            <param name="array">The array to browse</param>
+            <param name="comparison">The <see cref="T:System.Comparison`1"/> used to compare the values</param>
+            <param name="values">The values to compare</param>
+            <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.Contains(System.Collections.IEnumerable,System.Collections.IEqualityComparer,System.Object[])">
+            <summary>
+            Checks whether an array contains all values of a given array using a custom comparer.
+            </summary>
+            <param name="array">The array to browse</param>
+            <param name="equalityComparer">The <see cref="T:System.Collections.IEqualityComparer"/> used to compare the values</param>
+            <param name="values">The values to compare</param>
+            <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneValue``1(System.Collections.Generic.IEnumerable{``0},System.Boolean@,``0[])">
+            <summary>
+            Checks whether an array contains <i>exactly</i> one value of a given array.
+            </summary>
+            <param name="array">The array to browse</param>
+            <param name="containsMoreThanOneValue"><see langword="true"/> if more than one value has been found, otherwise <see langword="false"/></param>
+            <param name="values">The values to compare</param>
+            <returns><see langword="true"/> if <i>exactly</i> one value has been found, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneValue``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IComparer{``0},System.Boolean@,``0[])">
+            <summary>
+            Checks whether an array contains <i>exactly</i> one value of a given array using a custom comparer.
+            </summary>
+            <param name="array">The array to browse</param>
+            <param name="comparer">The <see cref="T:System.Collections.Generic.IComparer`1"/> used to compare the values</param>
+            <param name="containsMoreThanOneValue"><see langword="true"/> if more than one value has been found, otherwise <see langword="false"/></param>
+            <param name="values">The values to compare</param>
+            <returns><see langword="true"/> if <i>exactly</i> one value has been found, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneValue``1(System.Collections.Generic.IEnumerable{``0},System.Comparison{``0},System.Boolean@,``0[])">
+            <summary>
+            Checks whether an array contains <i>exactly</i> one value of a given array using a custom comparer.
+            </summary>
+            <param name="array">The array to browse</param>
+            <param name="comparison">The <see cref="T:System.Comparison`1"/> used to compare the values</param>
+            <param name="containsMoreThanOneValue"><see langword="true"/> if more than one value has been found, otherwise <see langword="false"/></param>
+            <param name="values">The values to compare</param>
+            <returns><see langword="true"/> if <i>exactly</i> one value has been found, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneValue``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEqualityComparer{``0},System.Boolean@,``0[])">
+            <summary>
+            Checks whether an array contains <i>exactly</i> one value of a given array using a custom comparer.
+            </summary>
+            <param name="array">The array to browse</param>
+            <param name="equalityComparer">The <see cref="T:System.Collections.Generic.IEqualityComparer`1"/> used to compare the values</param>
+            <param name="containsMoreThanOneValue"><see langword="true"/> if more than one value has been found, otherwise <see langword="false"/></param>
+            <param name="values">The values to compare</param>
+            <returns><see langword="true"/> if <i>exactly</i> one value has been found, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneOrMoreValues``1(System.Collections.Generic.IEnumerable{``0},System.Boolean@,``0[])">
+            <summary>
+            Checks whether an array contains at least one value of a given array.
+            </summary>
+            <param name="array">The array to browse</param>
+            <param name="containsMoreThanOneValue"><see langword="true"/> if more than one value has been found, otherwise <see langword="false"/></param>
+            <param name="values">The values to compare</param>
+            <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneOrMoreValues``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IComparer{``0},System.Boolean@,``0[])">
+            <summary>
+            Checks whether an array contains at least one value of a given array using a custom comparer.
+            </summary>
+            <param name="array">The array to browse</param>
+            <param name="comparer">The <see cref="T:System.Collections.Generic.IComparer`1"/> used to compare the values</param>
+            <param name="containsMoreThanOneValue"><see langword="true"/> if more than one value has been found, otherwise <see langword="false"/></param>
+            <param name="values">The values to compare</param>
+            <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneOrMoreValues``1(System.Collections.Generic.IEnumerable{``0},System.Comparison{``0},System.Boolean@,``0[])">
+            <summary>
+            Checks whether an array contains at least one value of a given array using a custom comparer.
+            </summary>
+            <param name="array">The array to browse</param>
+            <param name="comparison">The <see cref="T:System.Comparison`1"/> used to compare the values</param>
+            <param name="containsMoreThanOneValue"><see langword="true"/> if more than one value has been found, otherwise <see langword="false"/></param>
+            <param name="values">The values to compare</param>
+            <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneOrMoreValues``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEqualityComparer{``0},System.Boolean@,``0[])">
+            <summary>
+            Checks whether an array contains at least one value of a given array using a custom comparer.
+            </summary>
+            <param name="array">The array to browse</param>
+            <param name="equalityComparer">The <see cref="T:System.Collections.Generic.IEqualityComparer`1"/> used to compare the values</param>
+            <param name="containsMoreThanOneValue"><see langword="true"/> if more than one value has been found, otherwise <see langword="false"/></param>
+            <param name="values">The values to compare</param>
+            <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneOrMoreValues``1(System.Collections.Generic.IEnumerable{``0},``0[])">
+            <summary>
+            Checks whether an array contains at least one value of a given array.
+            </summary>
+            <param name="array">The array to browse</param>
+            <param name="values">The values to compare</param>
+            <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneOrMoreValues``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IComparer{``0},``0[])">
+            <summary>
+            Checks whether an array contains at least one value of a given array using a custom comparer.
+            </summary>
+            <param name="array">The array to browse</param>
+            <param name="comparer">The <see cref="T:System.Collections.Generic.IComparer`1"/> used to compare the values</param>
+            <param name="values">The values to compare</param>
+            <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneOrMoreValues``1(System.Collections.Generic.IEnumerable{``0},System.Comparison{``0},``0[])">
+            <summary>
+            Checks whether an array contains at least one value of a given array using a custom comparer.
+            </summary>
+            <param name="array">The array to browse</param>
+            <param name="comparison">The <see cref="T:System.Comparison`1"/> used to compare the values</param>
+            <param name="values">The values to compare</param>
+            <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.ContainsOneOrMoreValues``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEqualityComparer{``0},``0[])">
+            <summary>
+            Checks whether an array contains at least one value of a given array using a custom comparer.
+            </summary>
+            <param name="array">The array to browse</param>
+            <param name="equalityComparer">The <see cref="T:System.Collections.Generic.IEqualityComparer`1"/> used to compare the values</param>
+            <param name="values">The values to compare</param>
+            <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.Contains``1(System.Collections.Generic.IEnumerable{``0},``0[])">
+            <summary>
+            Checks whether an array contains all values of a given array.
+            </summary>
+            <param name="array">The array to browse</param>
+            <param name="values">The values to compare</param>
+            <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.Contains``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IComparer{``0},``0[])">
+            <summary>
+            Checks whether an array contains all values of a given array using a custom comparer.
+            </summary>
+            <param name="array">The array to browse</param>
+            <param name="comparer">The <see cref="T:System.Collections.Generic.IComparer`1"/> used to compare the values</param>
+            <param name="values">The values to compare</param>
+            <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.Contains``1(System.Collections.Generic.IEnumerable{``0},System.Comparison{``0},``0[])">
+            <summary>
+            Checks whether an array contains all values of a given array using a custom comparer.
+            </summary>
+            <param name="array">The array to browse</param>
+            <param name="comparison">The <see cref="T:System.Comparison`1"/> used to compare the values</param>
+            <param name="values">The values to compare</param>
+            <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.CommonExtensions.Contains``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEqualityComparer{``0},``0[])">
+            <summary>
+            Checks whether an array contains all values of a given array using a custom comparer.
+            </summary>
+            <param name="array">The array to browse</param>
+            <param name="equalityComparer">The <see cref="T:System.Collections.Generic.IEqualityComparer`1"/> used to compare the values</param>
+            <param name="values">The values to compare</param>
+            <returns><see langword="true"/> if at least one value has been found, otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.ThrowHelper.GetReadOnlyListOrCollectionException">
+            <summary>
+            Returns an exception indicating that a list or collection is read-only.
+            </summary>
+            <returns>An exception indicating that a list or collection is read-only.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.ThrowHelper.GetEmptyListOrCollectionException">
+            <summary>
+            Returns an exception indicating that a list or collection is empty.
+            </summary>
+            <returns>An exception indicating that a list or collection is empty.</returns>
+        </member>
+        <member name="M:WinCopies.Collections.ThrowHelper.ThrowIfEmptyListOrCollection(WinCopies.Collections.ICountable@)">
+            <summary>
+            Throws the exception given by <see cref="M:WinCopies.Collections.ThrowHelper.GetEmptyListOrCollectionException"/> if the <see cref="P:WinCopies.Collections.ICountable.Count"/> property of a given <see cref="T:WinCopies.Collections.ICountable"/> object is equal to 0.
+            </summary>
+            <param name="obj">The <see cref="T:WinCopies.Collections.ICountable"/> object for which to check the <see cref="P:WinCopies.Collections.ICountable.Count"/> property.</param>
+        </member>
+        <member name="M:WinCopies.Collections.ThrowHelper.ThrowIfEmptyListOrCollection(WinCopies.Collections.IUIntCountable@)">
+            <summary>
+            Throws the exception given by <see cref="M:WinCopies.Collections.ThrowHelper.GetEmptyListOrCollectionException"/> if the <see cref="P:WinCopies.Collections.IUIntCountable.Count"/> property of a given <see cref="T:WinCopies.Collections.IUIntCountable"/> object is equal to 0.
+            </summary>
+            <param name="obj">The <see cref="T:WinCopies.Collections.IUIntCountable"/> object for which to check the <see cref="P:WinCopies.Collections.IUIntCountable.Count"/> property.</param>
+        </member>
+        <member name="T:WinCopies.Collections.Util">
+            <summary>
+            Collection-oriented helper methods.
+            </summary>
+        </member>
+        <member name="M:WinCopies.Collections.Util.GetIf(System.Object@,System.Object@,WinCopies.Collections.Comparison@,WinCopies.Func@,WinCopies.Func@,WinCopies.Func@)">
+            <summary>
+            Returns a value obtained by a <see cref="T:WinCopies.Func"/>, depending on the result of a comparison.
+            </summary>
+            <param name="x">The value to compare to <paramref name="y"/>.</param>
+            <param name="y">The value to compare to <paramref name="x"/>.</param>
+            <param name="comparison">The comparison delegate.</param>
+            <param name="lower">The <see cref="T:WinCopies.Func"/> that provides the value for <paramref name="x"/> is lower than <paramref name="y"/>.</param>
+            <param name="equals">The <see cref="T:WinCopies.Func"/> that provides the value for <paramref name="x"/> is equal to <paramref name="y"/>.</param>
+            <param name="greater">The <see cref="T:WinCopies.Func"/> that provides the value for <paramref name="x"/> is greater than <paramref name="y"/>.</param>
+            <returns>A value obtained by a <see cref="T:WinCopies.Func"/>, depending on the result of a comparison.</returns>
+            <exception cref="T:System.ArgumentNullException">One or more of the given <see cref="T:WinCopies.Func"/>s are <see langword="null"/>.</exception>
+            <remarks>See <see cref="M:WinCopies.Collections.Util.GetIf``2(``0@,``0@,System.Comparison{``0}@,System.Func{``1}@,System.Func{``1}@,System.Func{``1}@)"/> for the generic version.</remarks>
+        </member>
+        <member name="M:WinCopies.Collections.Util.GetIf``2(``0@,``0@,System.Comparison{``0}@,System.Func{``1}@,System.Func{``1}@,System.Func{``1}@)">
+            <summary>
+            Returns a value obtained by a <see cref="T:WinCopies.Func"/>, depending on the result of a comparison.
+            </summary>
+            <param name="x">The value to compare to <paramref name="y"/>.</param>
+            <param name="y">The value to compare to <paramref name="x"/>.</param>
+            <param name="comparison">The comparison delegate.</param>
+            <param name="lower">The <see cref="T:WinCopies.Func"/> that provides the value for <paramref name="x"/> is lower than <paramref name="y"/>.</param>
+            <param name="equals">The <see cref="T:WinCopies.Func"/> that provides the value for <paramref name="x"/> is equal to <paramref name="y"/>.</param>
+            <param name="greater">The <see cref="T:WinCopies.Func"/> that provides the value for <paramref name="x"/> is greater than <paramref name="y"/>.</param>
+            <returns>A value obtained by a <see cref="T:WinCopies.Func"/>, depending on the result of a comparison.</returns>
+            <exception cref="T:System.ArgumentNullException">One or more of the given <see cref="T:WinCopies.Func"/>s are <see langword="null"/>.</exception>
+            <remarks>See <see cref="M:WinCopies.Collections.Util.GetIf(System.Object@,System.Object@,WinCopies.Collections.Comparison@,WinCopies.Func@,WinCopies.Func@,WinCopies.Func@)"/> for the non-generic version.</remarks>
+        </member>
+        <member name="M:WinCopies.Linq.Extensions.AsObjectEnumerable(System.Collections.IEnumerable)">
+            <summary>
+            Yield returns each object of an <see cref="T:System.Collections.IEnumerable"/>, so the given <see cref="T:System.Collections.IEnumerable"/> will be considered as an <see cref="T:System.Collections.Generic.IEnumerable`1"/>.
+            </summary>
+            <param name="enumerable">An <see cref="T:System.Collections.IEnumerable"/> to consider as a <see cref="T:System.Collections.Generic.IEnumerable`1"/>.</param>
+            <returns>Yield returns the same enumerable as the given <paramref name="enumerable"/>, as an <see cref="T:System.Collections.Generic.IEnumerable`1"/>.</returns>
+        </member>
+        <member name="M:WinCopies.Linq.Extensions.FirstOrDefault``1(System.Collections.IEnumerable)">
+            <summary>
+            Returns the first item, if any, from <typeparamref name="T"/> in a given <see cref="T:System.Collections.IEnumerable"/>.
+            </summary>
+            <typeparam name="T">The type of the item to return.</typeparam>
+            <param name="enumerable">The <see cref="T:System.Collections.IEnumerable"/> in which to look for the first item of the given type.</param>
+            <returns>The first item, if any, from <typeparamref name="T"/> in <paramref name="enumerable"/> or the default value for <typeparamref name="T"/> if none value was found.</returns>
+            <seealso cref="M:WinCopies.Linq.Extensions.LastOrDefault``1(System.Collections.IEnumerable)"/>
+            <seealso cref="M:WinCopies.Linq.Extensions.FirstOrDefaultPredicate``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
+            <seealso cref="M:WinCopies.Linq.Extensions.LastOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
+        </member>
+        <member name="M:WinCopies.Linq.Extensions.FirstOrDefaultPredicate``1(System.Collections.IEnumerable,System.Predicate{``0}@)">
+            <summary>
+            Returns the first item, if any, from <typeparamref name="T"/> and that validates a given predicate in a given <see cref="T:System.Collections.IEnumerable"/>.
+            </summary>
+            <typeparam name="T">The type of the item to return.</typeparam>
+            <param name="enumerable">The <see cref="T:System.Collections.IEnumerable"/> in which to look for the first item of the given type.</param>
+            <param name="predicate">The predicate to validate.</param>
+            <returns>The first item, if any, from <typeparamref name="T"/> in <paramref name="enumerable"/> or the default value for <typeparamref name="T"/> if none value was found.</returns>
+            <seealso cref="M:WinCopies.Linq.Extensions.LastOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
+            <seealso cref="M:WinCopies.Linq.Extensions.FirstOrDefault``1(System.Collections.IEnumerable)"/>
+            <seealso cref="M:WinCopies.Linq.Extensions.LastOrDefault``1(System.Collections.IEnumerable)"/>
+        </member>
+        <member name="M:WinCopies.Linq.Extensions.LastOrDefault``1(System.Collections.IEnumerable)">
+            <summary>
+            Returns the last item, if any, from <typeparamref name="T"/> in a given <see cref="T:System.Collections.IEnumerable"/>.
+            </summary>
+            <typeparam name="T">The type of the item to return.</typeparam>
+            <param name="enumerable">The <see cref="T:System.Collections.IEnumerable"/> in which to look for the last item of the given type.</param>
+            <returns>The last item, if any, from <typeparamref name="T"/> in <paramref name="enumerable"/> or the default value for <typeparamref name="T"/> if none value was found.</returns>
+            <seealso cref="M:WinCopies.Linq.Extensions.FirstOrDefault``1(System.Collections.IEnumerable)"/>
+            <seealso cref="M:WinCopies.Linq.Extensions.FirstOrDefaultPredicate``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
+            <seealso cref="M:WinCopies.Linq.Extensions.LastOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
+        </member>
+        <member name="M:WinCopies.Linq.Extensions.LastOrDefault``1(System.Collections.IEnumerable,System.Predicate{``0}@)">
+            <summary>
+            Returns the last item, if any, from <typeparamref name="T"/> and that validates a given predicate in a given <see cref="T:System.Collections.IEnumerable"/>.
+            </summary>
+            <typeparam name="T">The type of the item to return.</typeparam>
+            <param name="enumerable">The <see cref="T:System.Collections.IEnumerable"/> in which to look for the last item of the given type.</param>
+            <param name="predicate">The predicate to validate.</param>
+            <returns>The last item, if any, from <typeparamref name="T"/> in <paramref name="enumerable"/> or the default value for <typeparamref name="T"/> if none value was found.</returns>
+            <seealso cref="M:WinCopies.Linq.Extensions.FirstOrDefaultPredicate``1(System.Collections.IEnumerable,System.Predicate{``0}@)"/>
+            <seealso cref="M:WinCopies.Linq.Extensions.FirstOrDefault``1(System.Collections.IEnumerable)"/>
+            <seealso cref="M:WinCopies.Linq.Extensions.LastOrDefault``1(System.Collections.IEnumerable)"/>
+        </member>
+    </members>
+</doc>
