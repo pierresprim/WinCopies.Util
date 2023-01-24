@@ -18,27 +18,15 @@
 using System;
 using System.Diagnostics;
 
-using static WinCopies
-#if !WinCopies3
-    .Util.Util;
-
-using System.Collections;
-using System.Collections.Generic;
-#else
-    .ThrowHelper;
-
 using WinCopies.Collections.DotNetFix.Generic;
-#endif
+
+using static WinCopies.ThrowHelper;
 
 namespace WinCopies.Collections.DotNetFix
 {
     // todo: check if the given collection implements the WinCopies.DotNetFix.IDisposable (or WinCopies.IDisposable) interface and, if yes, check the given collection is not disposed (or disposing) in the Current property and in the MoveNext method.
 
-    public abstract class UIntIndexedListEnumeratorBase : WinCopies.
-#if !WinCopies3
-        Util.
-#endif
-        DotNetFix.IDisposable
+    public abstract class UIntIndexedListEnumeratorBase : WinCopies.DotNetFix.IDisposable
     {
         private uint? index = null;
 
@@ -134,11 +122,9 @@ namespace WinCopies.Collections.DotNetFix
         public UIntIndexedListEnumerator(IReadOnlyUIntIndexedList uintIndexedList, Func<bool> moveNextMethod)
         {
             MoveNextMethod = moveNextMethod;
-
             innerList = uintIndexedList;
         }
 
-#if WinCopies2
         public UIntIndexedListEnumerator(IUIntIndexedList uintIndexedList) : this((IReadOnlyUIntIndexedList)uintIndexedList)
         {
             // Left empty.
@@ -148,7 +134,6 @@ namespace WinCopies.Collections.DotNetFix
         {
             // Left empty.
         }
-#endif
 
         protected override void Dispose(bool disposing)
         {
@@ -170,35 +155,26 @@ namespace WinCopies.Collections.DotNetFix
         }
     }
 
-#if WinCopies3
     namespace Generic
     {
-#endif
-    public sealed class UIntIndexedListEnumerator<T> : UIntIndexedListEnumeratorBase, System.Collections.Generic.IEnumerator<T>
-    {
-        private IReadOnlyUIntIndexedList<T> innerList;
-
-        internal IReadOnlyUIntIndexedList<T> InnerList { get { ThrowIfDisposed(this); return innerList; } private set { ThrowIfDisposed(this); innerList = value; } }
-
-        private Func<bool> moveNextMethodToReset;
-
-        public static Func<UIntIndexedListEnumerator<T>, bool> DefaultMoveNextMethod => (UIntIndexedListEnumerator<T> e) =>
+        public sealed class UIntIndexedListEnumerator<T> : UIntIndexedListEnumeratorBase, System.Collections.Generic.IEnumerator<T>, IUIntCountableEnumerator<T>
         {
-            if (e.InnerList.Count > 0)
+            private IReadOnlyUIntIndexedList<T> _innerList;
+            private Func<bool> _moveNextMethodToReset;
+
+            internal IReadOnlyUIntIndexedList<T> InnerList { get { ThrowIfDisposed(this); return _innerList; } private set { ThrowIfDisposed(this); _innerList = value; } }
+
+            public static Func<UIntIndexedListEnumerator<T>, bool> DefaultMoveNextMethod => (UIntIndexedListEnumerator<T> e) =>
+{
+    if (e.InnerList.Count > 0)
+    {
+        e.Index = 0;
+
+        e.MoveNextMethod = () =>
+        {
+            if (e.Index < e.InnerList.Count - 1)
             {
-                e.Index = 0;
-
-                e.MoveNextMethod = () =>
-                {
-                    if (e.Index < e.InnerList.Count - 1)
-                    {
-                        e.Index++;
-
-                        return true;
-                    }
-
-                    else return false;
-                };
+                e.Index++;
 
                 return true;
             }
@@ -206,52 +182,58 @@ namespace WinCopies.Collections.DotNetFix
             else return false;
         };
 
-        public T Current
-        {
-            get
-            {
-                Debug.Assert(Index.HasValue, "_index does not have value.");
+        return true;
+    }
 
-                return InnerList[Index.Value];
+    else return false;
+};
+
+            public T Current
+            {
+                get
+                {
+                    Debug.Assert(Index.HasValue, "_index does not have value.");
+
+                    return InnerList[Index.Value];
+                }
+            }
+
+            object System.Collections.IEnumerator.Current => Current;
+
+            public uint Count => _innerList.Count;
+
+            public UIntIndexedListEnumerator(IUIntIndexedList<T> uintIndexedList)
+            {
+                MoveNextMethod = _moveNextMethodToReset = () => DefaultMoveNextMethod(this);
+
+                _innerList = uintIndexedList;
+            }
+
+            public UIntIndexedListEnumerator(IUIntIndexedList<T> uintIndexedList, Func<bool> moveNextMethod)
+            {
+                MoveNextMethod = moveNextMethod;
+
+                _innerList = uintIndexedList;
+            }
+
+            protected override void Dispose(bool disposing)
+            {
+                if (!IsDisposed)
+                {
+                    InnerList = null;
+
+                    _moveNextMethodToReset = null;
+
+                    base.Dispose(disposing);
+                }
+            }
+
+            public override void Reset()
+            {
+                base.Reset();
+
+                MoveNextMethod = _moveNextMethodToReset;
             }
         }
-
-        object System.Collections.IEnumerator.Current => Current;
-
-        public UIntIndexedListEnumerator(IUIntIndexedList<T> uintIndexedList)
-        {
-            MoveNextMethod = moveNextMethodToReset = () => DefaultMoveNextMethod(this);
-
-            innerList = uintIndexedList;
-        }
-
-        public UIntIndexedListEnumerator(IUIntIndexedList<T> uintIndexedList, Func<bool> moveNextMethod)
-        {
-            MoveNextMethod = moveNextMethod;
-
-            innerList = uintIndexedList;
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (!IsDisposed)
-            {
-                InnerList = null;
-
-                moveNextMethodToReset = null;
-
-                base.Dispose(disposing);
-            }
-        }
-
-        public override void Reset()
-        {
-            base.Reset();
-
-            MoveNextMethod = moveNextMethodToReset;
-        }
     }
-#if WinCopies3
-    }
-#endif
 }
