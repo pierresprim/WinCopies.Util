@@ -17,6 +17,8 @@
 
 using System;
 
+using WinCopies.Util;
+
 namespace WinCopies.Collections.Generic
 {
     public class SelectManyEnumerator<TIn, TOut> : Enumerator<TIn, TOut>
