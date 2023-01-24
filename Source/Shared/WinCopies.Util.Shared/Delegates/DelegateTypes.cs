@@ -18,12 +18,11 @@
 using System;
 using System.Reflection;
 
+using WinCopies.Util.Data;
+
 namespace WinCopies
-#if !WinCopies3
-.Util
-#endif
 {
-    public struct ConversionStruct<TIn, TOut>
+    public readonly struct ConversionStruct<TIn, TOut>
     {
         public Converter<TIn, TOut> Converter { get; }
 
@@ -50,23 +49,6 @@ namespace WinCopies
             BackConverter = backConverter;
         }
     }
-
-#if !WinCopies3
-    /// <summary>
-    /// This delegate represents the action that is performed for each iteration of a loop.
-    /// </summary>
-    /// <param name="obj">The object or value retrieved by the current iteration.</param>
-    /// <returns><see langword="true"/> to break the loop; otherwise <see langword="false"/>.</returns>
-    public delegate bool LoopIteration(object obj);
-
-    /// <summary>
-    /// This delegate represents the action that is performed for each iteration of a loop.
-    /// </summary>
-    /// <typeparam name="T">The type of the object or value that is retrieved.</typeparam>
-    /// <param name="obj">The object or value retrieved by the current iteration.</param>
-    /// <returns><see langword="true"/> to break the loop; otherwise <see langword="false"/>.</returns>
-    public delegate bool LoopIteration<T>(T obj);
-#endif
 
     public delegate
 #if CS7
@@ -146,16 +128,18 @@ namespace WinCopies
 
 
     public delegate T Converter<out T>(object obj);
+    public delegate T ConverterIn<out T>(in object obj);
 
     public delegate TOut ConverterIn<TIn, out TOut>(in TIn value);
-
     public delegate TOut ConverterRef<TIn, out TOut>(ref TIn value);
 
     public delegate bool ExtendedConverter<TIn, TOut>(TIn value, out TOut result);
 
-    public delegate void EventHandler<T>(T sender, EventArgs e);
-
+    public delegate void EventHandler<T>(T sender, System.EventArgs e);
     public delegate void EventHandler<TSender, TEventArgs>(TSender sender, TEventArgs e);
+
+    public delegate void ValueEventHandler<T>(object sender, EventArgs<T> e);
+    public delegate void ValueEventHandler<TSender, TValue>(TSender sender, EventArgs<TValue> e);
 
 
 

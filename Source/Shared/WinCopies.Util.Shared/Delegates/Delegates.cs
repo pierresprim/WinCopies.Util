@@ -29,6 +29,17 @@ namespace WinCopies
     /// </summary>
     public static class Delegates
     {
+        public static Converter<Type, Type
+#if CS8
+            ?
+#endif
+            > GetBaseTypeConverter() => type => type.BaseType;
+        public static Converter<Type, Type
+#if CS8
+            ?
+#endif
+            > GetParentTypeConverter() => type => type.DeclaringType;
+
         public static Converter<int, T[]> GetArrayConverter<T>(T[] array, int start, string startParamName) => destinationLength => array.Length - start < destinationLength ? throw new ArgumentOutOfRangeException(startParamName) : array;
 
         public static Converter<int, T[]> GetArrayConverter<T>() => destinationLength => new T[destinationLength];
@@ -308,6 +319,16 @@ namespace WinCopies
 #if CS8
             ?
 #endif
+            Null() => null;
+        public static T
+#if CS9
+            ?
+#endif
+            Null<T>() where T : class => null;
+        public static object
+#if CS8
+            ?
+#endif
             Null(object parameter) => null;
         public static object
 #if CS8
@@ -339,6 +360,9 @@ namespace WinCopies
 
         public static T Self<T>(T value) => value;
         public static T SelfIn<T>(in T value) => value;
+
+        public static TOut Self<TIn, TOut>(TIn value) where TIn : TOut => value;
+        public static TOut SelfIn<TIn, TOut>(in TIn value) where TIn : TOut => value;
 
         public static TOut
 #if CS9
