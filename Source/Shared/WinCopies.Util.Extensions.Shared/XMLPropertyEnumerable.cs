@@ -71,7 +71,7 @@ namespace WinCopies.Data
 #if CS8
                 ?
 #endif
-                categoryNode = Node.Enumerate().FirstOrDefaultValuePredicate(predicate);
+                categoryNode = Node.Enumerate().FirstOrDefaultPredicate(predicate);
 
             return categoryNode?.Enumerate().SelectConverter(converter);
         }
