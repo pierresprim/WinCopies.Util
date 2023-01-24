@@ -91,7 +91,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinCopies.Util.Extensions.T
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinCopies.Util.Extensions.Tests.Preview", "..\Tests\Preview\WinCopies.Util.Extensions\WinCopies.Util.Extensions.Tests.Preview.csproj", "{A6D00A98-D898-431A-B8E8-B4AB24568412}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Changelogs", "Changelogs", "{02360DA9-C456-4871-8A48-7C6F69895E3C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Changelogs", "Changelogs", "{FF6E9F29-A95C-4CDC-BA77-CDAE0144BB9D}"
 	ProjectSection(SolutionItems) = preProject
 		..\Changelogs\2.x.md = ..\Changelogs\2.x.md
 		..\Changelogs\3.x.md = ..\Changelogs\3.x.md
@@ -206,7 +206,7 @@ Global
 		{5303B2D1-2824-4449-8490-9DD604E6D9DE} = {0AA03B4B-238B-46B4-B215-CA028991DBED}
 		{A5F118B8-941E-4CB0-B474-232AAF2DA269} = {2443A6F4-FC9A-40B4-9B40-912088E6292E}
 		{A6D00A98-D898-431A-B8E8-B4AB24568412} = {46A535AF-DB0C-4818-8A70-490C14C658FA}
-		{02360DA9-C456-4871-8A48-7C6F69895E3C} = {BC999358-BABA-47D2-B239-C0CEC4D0B44F}
+		{FF6E9F29-A95C-4CDC-BA77-CDAE0144BB9D} = {BC999358-BABA-47D2-B239-C0CEC4D0B44F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AC8E2D74-F33E-4845-A513-58D1E7556181}
