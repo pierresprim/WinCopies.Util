@@ -80,7 +80,7 @@ namespace WinCopies.Collections.DotNetFix.Generic.Tests
 
                 AddNode(() => list.AddFirst(i), i, queue);
 
-            Assert.AreEqual(10u, list.AsFromType<IUIntCountable>().Count, "AddFirst assertion fialed: Count should be 10.");
+            Assert.AreEqual(10u, list.AsFromType<IUIntCountable>().Count, "AddFirst assertion failed: Count should be 10.");
 
             Assert.AreEqual(10, list.First.Value);
 

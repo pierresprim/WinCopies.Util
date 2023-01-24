@@ -527,6 +527,7 @@ namespace WinCopies.Extensions.Util.Tests.Array
                 int overflow = 0;
                 ConverterIn<int, int> _converter;
                 IReadOnlyList<char> array = null;
+                var tmp = new char[values.Length];
 
                 void check(in sbyte length)
                 {
@@ -536,6 +537,8 @@ namespace WinCopies.Extensions.Util.Tests.Array
 
                     void assert(in ConverterIn<int, char> x, in ConverterIn<int, char> y)
                     {
+                        var v = values;
+                        var t = tmp;
                         for (int k = 0; k < values.Length; k++) // TODO: should execute for each value of j.
 
                             Assert.AreEqual(x(k), y(k), $"o: {offset} ; i: {k} ; j: {j}");
@@ -553,7 +556,7 @@ namespace WinCopies.Extensions.Util.Tests.Array
                         else
                         {
                             values.CopyTo(tmp, 0);
-
+                            
                             array = new CircularReadOnlyList<char>(values, offset);
 
                             _offset = _offset.GetLowPart();
