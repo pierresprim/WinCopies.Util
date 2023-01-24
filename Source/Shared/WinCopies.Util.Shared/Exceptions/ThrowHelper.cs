@@ -21,27 +21,23 @@ using System.Globalization;
 
 using WinCopies.Util;
 
-using static WinCopies.
-#if !WinCopies3
-    Util.
-#endif
-    Resources.ExceptionMessages;
-#if WinCopies3
+using static WinCopies.Resources.ExceptionMessages;
 using static WinCopies.UtilHelpers;
-#else
-using static WinCopies.Util.Util;
-#endif
 
 namespace WinCopies
-#if !WinCopies3
-    .Util
-#endif
 {
     /// <summary>
     /// This class contains some helper methods for exception throwing.
     /// </summary>
     public static class ThrowHelper
     {
+        public static void ThrowIfInvalidEnumValue<T>(in string parameterName, in T value, in T x, in T y) where T : Enum
+        {
+            if (value.EnumOutside(x, y))
+
+                throw new InvalidEnumArgumentException(parameterName, value);
+        }
+
         public static OverflowException GetOverflowException(in string paramName) => new
 #if !CS9
             OverflowException
