@@ -17,13 +17,12 @@
 
 using System;
 
+using WinCopies.Collections.DotNetFix;
+using WinCopies.Collections.DotNetFix.Generic;
 using WinCopies.Util;
 
 using static WinCopies.ThrowHelper;
 using static WinCopies.UtilHelpers;
-
-using WinCopies.Collections.DotNetFix;
-using WinCopies.Collections.DotNetFix.Generic;
 
 using DataEventArgs = WinCopies.Util.Data.EventArgs;
 using EnumerationEventArgs = WinCopies.Util.Data.EventArgs<WinCopies.Collections.Generic.EnumerationStatus>;
@@ -297,7 +296,6 @@ namespace WinCopies.Collections
             protected static System.Collections.Generic.IEnumerator<TItems> GetEnumerator(in System.Collections.Generic.IEnumerable<TItems> enumerable, in string paramName) => GetOrThrowIfNull(enumerable, paramName).GetEnumerator();
 
             protected override bool MoveNextOverride() => _innerEnumerator.MoveNext();
-
             protected override void ResetOverride2() => _innerEnumerator.Reset();
 
             protected override void DisposeManaged()
@@ -427,18 +425,17 @@ namespace WinCopies.Collections
             /// When overridden in a derived class, initializes a new instance of the <see cref="Enumerator{TSource, TDestination}"/> class.
             /// </summary>
             /// <param name="enumerator">The enumerator to enumerate.</param>
-            public Enumerator(TEnumSource enumerator)
+            public Enumerator(TEnumSource enumerator) => _innerEnumerator = enumerator
 #if CS8
-                    => _innerEnumerator = enumerator ?? throw GetArgumentNullException(nameof(enumerator));
+                ??
 #else
-            {
-                if (enumerator == null)
-
-                    throw GetArgumentNullException(nameof(enumerator));
-
-                _innerEnumerator = enumerator;
-            }
+                == null ?
 #endif
+                throw GetArgumentNullException(nameof(enumerator))
+#if !CS8
+                : enumerator
+#endif
+                ;
 
             protected override void ResetOverride2() => InnerEnumerator.Reset();
 
@@ -463,7 +460,7 @@ namespace WinCopies.Collections
             /// When overridden in a derived class, initializes a new instance of the <see cref="Enumerator{TSource, TDestination}"/> class.
             /// </summary>
             /// <param name="enumerator">The enumerator to enumerate.</param>
-            public Enumerator(System.Collections.Generic.IEnumerator<TSource> enumerator) : base(enumerator ?? throw GetArgumentNullException(nameof(enumerator))) { /* Left empty. */ }
+            public Enumerator(System.Collections.Generic.IEnumerator<TSource> enumerator) : base(enumerator) { /* Left empty. */ }
         }
 
         public abstract class ExtensionEnumerator<TItems, TEnumerator> : DotNetFix.IDisposableEnumeratorInfo, IEnumeratorBase, IDisposableEnumerator<TItems>, IDisposableEnumeratorInfo, IEnumeratorInfo2<TItems> where TEnumerator : IEnumeratorInfo<TItems>
@@ -568,19 +565,28 @@ namespace WinCopies.Collections
             public UIntCountableEnumeratorInfo(in IEnumeratorInfo<T> enumerator, in Func<uint> countableFunc) : base(enumerator, countableFunc) { /* Left empty. */ }
         }
 
-        public sealed class SingletonEnumerable<T> : System.Collections.Generic.IEnumerable<T>
+        public sealed class SingletonEnumerable<T> :
+#if CS8
+            WinCopies.Collections.DotNetFix
+#else
+            System.Collections
+#endif
+            .Generic.IEnumerable<T>
         {
-            private readonly SingletonEnumerator<T> _enumerator = new
+            private readonly SingletonEnumerator<T> _enumerator;
+
+            public SingletonEnumerable(in T value) => _enumerator = new
 #if !CS9
                 SingletonEnumerator<T>
 #endif
-                ();
-
-            public System.Collections.Generic.IEnumerator<T> GetEnumerator() => _enumerator;
+                (value);
 
             public void UpdateCurrent(T value) => _enumerator.UpdateCurrent(value);
 
+            public System.Collections.Generic.IEnumerator<T> GetEnumerator() => _enumerator;
+#if !CS8
             System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
+#endif
         }
 
         public sealed class SingletonEnumerator<T> : Enumerator<T>
@@ -592,27 +598,14 @@ namespace WinCopies.Collections
 
             protected override T CurrentOverride => _current;
 
-            public bool TryUpdateCurrent(in T value)
-            {
-                if (IsResetSupported != false)
-                {
-                    Reset();
-
-                    _current = IsDisposed ? throw GetExceptionForDispose(false) : value;
-
-                    _move = true;
-
-                    return true;
-                }
-
-                return false;
-            }
+            public SingletonEnumerator(in T value) => _current = value;
 
             public void UpdateCurrent(in T value)
             {
-                if (!TryUpdateCurrent(value))
+                Reset();
 
-                    throw new InvalidOperationException("The current enumerator does not support resetting.");
+                _current = value;
+                _move = true;
             }
 
             protected override bool MoveNextOverride() => UpdateValue(ref _move);
