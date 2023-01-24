@@ -110,7 +110,7 @@
 	</PropertyGroup>
 
 	<ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789-windows`))' == 'net7.'">
-		<PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="7.0-preview">
+		<PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="7.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
