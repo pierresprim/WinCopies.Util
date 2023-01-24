@@ -20,6 +20,7 @@ using System.Linq;
 
 using WinCopies.Collections.DotNetFix;
 using WinCopies.Collections.DotNetFix.Generic;
+using WinCopies.Util;
 
 using static WinCopies.ThrowHelper;
 
@@ -57,8 +58,8 @@ namespace WinCopies.Collections
             private Func<bool> _moveNext;
 
             protected TEnumerator InnerEnumerator { get; }
-            protected Action Entering { get; }
-            protected Action Exiting { get; }
+            protected Action<TItems> Entering { get; }
+            protected Action<TItems> Exiting { get; }
 
             public TItems Current => InnerEnumerator.Current;
 
@@ -68,7 +69,7 @@ namespace WinCopies.Collections
 #endif
                 System.Collections.IEnumerator.Current => Current;
 
-            public ActionObservableEnumerator(in TEnumerator enumerator, in Action entering, in Action exiting)
+            public ActionObservableEnumerator(in TEnumerator enumerator, in Action<TItems> entering, in Action<TItems> exiting)
             {
                 InnerEnumerator = enumerator;
                 Entering = entering;
@@ -79,17 +80,19 @@ namespace WinCopies.Collections
 
             private void ResetMoveNext() => _moveNext = () =>
             {
-                if (InnerEnumerator.MoveNext())
+                bool moveNext() => InnerEnumerator.MoveNext();
+
+                if (moveNext())
                 {
-                    Entering();
+                    Entering(Current);
 
                     _moveNext = () =>
                     {
-                        if (InnerEnumerator.MoveNext())
+                        if (moveNext())
 
                             return true;
 
-                        Exiting();
+                        Exiting(Current);
 
                         return false;
                     };
@@ -116,9 +119,9 @@ namespace WinCopies.Collections
 
         public class ActionObservableEnumerator<T> : ActionObservableEnumerator<T, System.Collections.Generic.IEnumerator<T>>
         {
-            public ActionObservableEnumerator(in System.Collections.Generic.IEnumerator<T> enumerator, in Action entering, in Action exiting) : base(enumerator, entering, exiting) { /* Left empty. */ }
+            public ActionObservableEnumerator(in System.Collections.Generic.IEnumerator<T> enumerator, in Action<T> entering, in Action<T> exiting) : base(enumerator, entering, exiting) { /* Left empty. */ }
 
-            public ActionObservableEnumerator(in System.Collections.Generic.IEnumerable<T> enumerable, in Action entering, in Action exiting) : this(enumerable.GetEnumerator(), entering, exiting) { /* Left empty. */ }
+            public ActionObservableEnumerator(in System.Collections.Generic.IEnumerable<T> enumerable, in Action<T> entering, in Action<T> exiting) : this(enumerable.GetEnumerator(), entering, exiting) { /* Left empty. */ }
         }
 
         public abstract class DisposableEnumerableBase<T> : DotNetFix.Generic.IDisposableEnumerable<T>
@@ -200,7 +203,7 @@ namespace WinCopies.Collections
             }
         }
 
-        public interface IRecursiveEnumerableProviderEnumerable<
+        public interface IRecursiveEnumerableProvider<
 #if CS5
             out
 #endif
@@ -210,18 +213,72 @@ namespace WinCopies.Collections
 #else
             System.Collections
 #endif
-            .Generic.IEnumerable<T>
+            .Generic.IEnumerable<T>, IAsEnumerable<IRecursiveEnumerable<T>>, IAsEnumerableAlt<IRecursiveEnumerable<T>>, IAsEnumerableAlt<T>
         {
-            System.Collections.Generic.IEnumerator<IRecursiveEnumerable<T>> GetRecursiveEnumerator();
+            // Left empty.
         }
 
         public interface IRecursiveEnumerable<
 #if CS5
             out
 #endif
-             T> : IRecursiveEnumerableProviderEnumerable<T>
+             T> : IRecursiveEnumerableProvider<T>
         {
             T Value { get; }
+        }
+
+        public readonly struct RecursiveEnumerationConverters<T>
+        {
+            public readonly Converter<T, System.Collections.Generic.IEnumerable<T>> ContainersConverter;
+            public readonly Converter<T, System.Collections.Generic.IEnumerable<T>> ItemsConverter;
+
+            public RecursiveEnumerationConverters(in Converter<T, System.Collections.Generic.IEnumerable<T>> containersConverter, in Converter<T, System.Collections.Generic.IEnumerable<T>> itemsConverter)
+            {
+                ContainersConverter = containersConverter;
+                ItemsConverter = itemsConverter;
+            }
+        }
+
+        public readonly struct RecursiveEnumerableConverters<T>
+        {
+            public readonly Converter<T, System.Collections.Generic.IEnumerable<T>> Converter;
+            public readonly RecursiveEnumerationConverters<T> RecursiveEnumerationConverters;
+
+            public RecursiveEnumerableConverters(in Converter<T, System.Collections.Generic.IEnumerable<T>> converter, in RecursiveEnumerationConverters<T> recursiveEnumerationConverters)
+            {
+                Converter = converter;
+                RecursiveEnumerationConverters = recursiveEnumerationConverters;
+            }
+        }
+
+        public readonly struct RecursiveEnumerable<T> : IRecursiveEnumerable<T>
+        {
+            private readonly RecursiveEnumerableConverters<T> _converters;
+
+            public T Value { get; }
+
+            public RecursiveEnumerable(in T value, in RecursiveEnumerableConverters<T> converters)
+            {
+                _converters = converters;
+
+                Value = value;
+            }
+
+            private System.Collections.Generic.IEnumerable<IRecursiveEnumerable<T>> GetEnumerable(in Converter<T, System.Collections.Generic.IEnumerable<T>> converter)
+            {
+                RecursiveEnumerableConverters<T> converters = _converters;
+
+                return converter(Value).Select(item => new RecursiveEnumerable<T>(item, converters).AsFromType<IRecursiveEnumerable<T>>());
+            }
+
+            public System.Collections.Generic.IEnumerable<IRecursiveEnumerable<T>> AsEnumerable() => GetEnumerable(_converters.Converter);
+            System.Collections.Generic.IEnumerable<IRecursiveEnumerable<T>> IAsEnumerableAlt<IRecursiveEnumerable<T>>.AsEnumerableAlt() => GetEnumerable(_converters.RecursiveEnumerationConverters.ContainersConverter);
+            System.Collections.Generic.IEnumerable<T> IAsEnumerableAlt<T>.AsEnumerableAlt() => _converters.RecursiveEnumerationConverters.ItemsConverter(Value);
+
+            public System.Collections.Generic.IEnumerator<T> GetEnumerator() => _converters.Converter(Value).GetEnumerator();
+#if !CS8
+            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
+#endif
         }
 
         public interface IEnumeratorInfo<
