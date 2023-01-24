@@ -111,13 +111,7 @@ ThrowIfEmptyListOrCollection
         /// Throws the exception given by <see cref="GetEmptyListOrCollectionException"/> if the <see cref="IUIntCountable.Count"/> property of a given <see cref="IUIntCountable"/> object is equal to 0.
         /// </summary>
         /// <param name="obj">The <see cref="IUIntCountable"/> object for which to check the <see cref="IUIntCountable.Count"/> property.</param>
-        public static void
-#if !WinCopies3
-            ThrowIfEmpty
-#else
-ThrowIfEmptyListOrCollection
-#endif
-            (in IUIntCountable obj)
+        public static void ThrowIfEmptyListOrCollection(in IUIntCountable obj)
         {
             if (obj.Count == 0)
 
