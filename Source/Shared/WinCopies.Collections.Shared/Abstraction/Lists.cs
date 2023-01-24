@@ -20,10 +20,60 @@ using System;
 using System.Collections;
 
 using WinCopies.Collections.Abstraction.Generic.Abstract;
+using WinCopies.Collections.DotNetFix;
 using WinCopies.Collections.Extensions.Generic;
+using WinCopies.Util;
 
 namespace WinCopies.Collections.Abstraction.Generic
 {
+    public abstract class Enumerable<TItems, TEnumerable> : System.Collections.Generic.IEnumerable<TItems> where TEnumerable : System.Collections.Generic.IEnumerable<TItems>
+    {
+        protected TEnumerable Items { get; }
+
+        public Enumerable(in TEnumerable items) => Items = items;
+
+        public System.Collections.Generic.IEnumerator<TItems> GetEnumerator() => Items.GetEnumerator();
+        System.Collections.IEnumerator IEnumerable.GetEnumerator() => Items.AsFromType<IEnumerable>().GetEnumerator();
+    }
+
+    public class ReadOnlyList<T> : Enumerable<T, System.Collections.Generic.IReadOnlyList<T>>, System.Collections.Generic.IReadOnlyList<T>, Collections.Generic.IIndexableR<T>, ICountable, IUIntCountable, System.Collections.Generic.IEnumerable<T>
+    {
+        public int Count => Items.Count;
+        uint IUIntCountable.Count => (uint)Count;
+        public T this[int index] => Items[index];
+
+        public ReadOnlyList(in System.Collections.Generic.IReadOnlyList<T> items) : base(items) { /* Left empty. */ }
+#if !CS8
+        object IIndexableR.this[int index] => this[index];
+#endif
+    }
+    public class List<T> : Enumerable<T, System.Collections.Generic.IList<T>>, System.Collections.Generic.IList<T>, IClearable, Collections.Generic.IIndexable<T>, ICountable, IUIntCountable, System.Collections.Generic.IEnumerable<T>
+    {
+        public int Count => Items.Count;
+        uint IUIntCountable.Count => (uint)Count;
+
+        public bool IsReadOnly => Items.IsReadOnly;
+
+        public T this[int index] { get => Items[index]; set => Items[index] = value; }
+        T Collections.Generic.IIndexableW<T>.this[int index] { set => this[index] = value; }
+
+        public List(in System.Collections.Generic.IList<T> items) : base(items) { /* Left empty. */ }
+
+        public bool Contains(T item) => Items.Contains(item);
+        public int IndexOf(T item) => Items.IndexOf(item);
+        public void CopyTo(T[] array, int arrayIndex) => Items.CopyTo(array, arrayIndex);
+
+        public void Add(T item) => Items.Add(item);
+        public void Insert(int index, T item) => Items.Insert(index, item);
+        public bool Remove(T item) => Items.Remove(item);
+        public void RemoveAt(int index) => Items.RemoveAt(index);
+        public void Clear() => Items.Clear();
+#if !CS8
+        object IIndexableR.this[int index] => this[index];
+        object IIndexableW.this[int index] { set => this[index] = (T)value; }
+#endif
+    }
+
     public abstract class ReadOnlyListBase<TEnumerable, TSource, TDestination> : CountableEnumerableSelector<TEnumerable, TSource, TDestination> where TEnumerable : System.Collections.Generic.IEnumerable<TSource>
     {
         public ReadOnlyListBase(in TEnumerable innerList, in Converter<TSource, TDestination> selector) : base(innerList, selector) { /* Left empty. */ }
