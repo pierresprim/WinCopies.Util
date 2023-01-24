@@ -147,17 +147,10 @@ namespace WinCopies.Collections.DotNetFix
         {
 #if CS8
             DotNetFix.IReadOnlyLinkedListNode<ILinkedListNode<T>> AsReadWrite => this;
+            DotNetFix.IReadOnlyLinkedListNode<IReadOnlyLinkedListNode<T>> AsReadOnly => this;
 
-            IReadOnlyLinkedListNode<T>
-#if CS8
-                ?
-#endif
-            DotNetFix.IReadOnlyLinkedListNode<IReadOnlyLinkedListNode<T>>.Previous => AsReadWrite.Previous;
-            IReadOnlyLinkedListNode<T>
-#if CS8
-                ?
-#endif
-            DotNetFix.IReadOnlyLinkedListNode<IReadOnlyLinkedListNode<T>>.Next => AsReadWrite.Next;
+            IReadOnlyLinkedListNode<T>? DotNetFix.IReadOnlyLinkedListNode<IReadOnlyLinkedListNode<T>>.Previous => AsReadWrite.Previous;
+            IReadOnlyLinkedListNode<T>? DotNetFix.IReadOnlyLinkedListNode<IReadOnlyLinkedListNode<T>>.Next => AsReadWrite.Next;
 #endif
         }
 #if !CS8
