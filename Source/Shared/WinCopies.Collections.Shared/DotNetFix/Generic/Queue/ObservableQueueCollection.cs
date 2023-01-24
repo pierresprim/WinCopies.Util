@@ -45,18 +45,18 @@ namespace WinCopies.Collections.DotNetFix
 
             protected void RaiseCollectionChangedEvent(NotifyCollectionChangedAction action, TItems item) => OnCollectionChanged(new SimpleLinkedCollectionChangedEventArgs<TItems>(action, item));
 
-            public override void Enqueue(TItems item)
+            public override void Add(TItems item)
             {
-                base.Enqueue(item);
+                base.Add(item);
 
                 RaiseCountPropertyChangedEvent();
 
                 RaiseCollectionChangedEvent(NotifyCollectionChangedAction.Add, item);
             }
 
-            public override TItems Dequeue()
+            public override TItems Remove()
             {
-                TItems result = base.Dequeue();
+                TItems result = base.Remove();
 
                 RaiseCountPropertyChangedEvent();
 
@@ -65,9 +65,9 @@ namespace WinCopies.Collections.DotNetFix
                 return result;
             }
 #if CS8
-            public override bool TryDequeue([MaybeNullWhen(false)] out TItems result)
+            public override bool TryRemove([MaybeNullWhen(false)] out TItems result)
             {
-                bool succeeded = base.TryDequeue(out result);
+                bool succeeded = base.TryRemove(out result);
 
                 if (succeeded)
                 {

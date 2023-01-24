@@ -75,20 +75,44 @@ namespace WinCopies.Collections.DotNetFix
 #endif
             result) => InnerList.TryPeek(out result);
 
-        public void Add(object
+        public abstract void Add(object
 #if CS8
             ?
 #endif
-            value) => InnerList.Add(value);
-        public object
+            value);
+        public abstract object
 #if CS8
             ?
 #endif
-            Remove() => InnerList.Remove();
-        public bool TryRemove(out object
+            Remove();
+        public abstract bool TryRemove(out object
 #if CS8
             ?
 #endif
-            result) => InnerList.TryRemove(out result);
+            result);
+    }
+
+    public class SimpleLinkedListBaseCollectionBase<T> : ISimpleLinkedListBase where T : ISimpleLinkedListBase, IPeekable, ISimpleLinkedListCommon
+    {
+        protected T InnerList { get; }
+
+        public bool IsReadOnly => InnerList.IsReadOnly;
+        public bool HasItems => InnerList.HasItems;
+
+        protected SimpleLinkedListBaseCollectionBase(in T list) => InnerList = list;
+
+        public virtual void Clear() => InnerList.Clear();
+    }
+
+    public class SimpleLinkedListBaseCollection<T> : SimpleLinkedListBaseCollectionBase<T>, IPeekable, ISimpleLinkedListCommon where T : ISimpleLinkedListBase, IPeekable, ISimpleLinkedListCommon
+    {
+        protected SimpleLinkedListBaseCollection(in T list) : base(list) { /* Left empty. */ }
+
+        public object Peek() => InnerList.Peek();
+        public bool TryPeek(out object result) => InnerList.TryPeek(out result);
+
+        public virtual void Add(object value) => InnerList.Add(value);
+        public virtual object Remove() => InnerList.Remove();
+        public virtual bool TryRemove(out object result) => InnerList.TryRemove(out result);
     }
 }

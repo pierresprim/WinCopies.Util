@@ -51,9 +51,9 @@ namespace WinCopies.Collections.DotNetFix.Generic
             OnCollectionChanged(new SimpleLinkedCollectionChangedEventArgs<TItems>(NotifyCollectionChangedAction.Reset, default));
         }
 
-        public override TItems Pop()
+        public override TItems Remove()
         {
-            TItems result = base.Pop();
+            TItems result = base.Remove();
 
             RaiseCountPropertyChangedEvent();
 
@@ -62,18 +62,18 @@ namespace WinCopies.Collections.DotNetFix.Generic
             return result;
         }
 
-        public override void Push(TItems item)
+        public override void Add(TItems item)
         {
-            base.Push(item);
+            base.Add(item);
 
             RaiseCountPropertyChangedEvent();
 
             RaiseCollectionChangedEvent(NotifyCollectionChangedAction.Add, item);
         }
 #if CS8
-        public override bool TryPop([MaybeNullWhen(false)] out TItems result)
+        public override bool TryRemove([MaybeNullWhen(false)] out TItems result)
         {
-            bool succeeded = base.TryPop(out result);
+            bool succeeded = base.TryRemove(out result);
 
             if (succeeded)
             {
