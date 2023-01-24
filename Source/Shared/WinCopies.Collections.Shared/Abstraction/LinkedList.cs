@@ -264,7 +264,17 @@ namespace WinCopies.Collections.Abstraction.Generic
 
         void ICollection.CopyTo(Array array, int index) => InnerList.AsFromType<ICollection>().CopyTo(array, index);
 
-        public bool Equals(LinkedList<T> other) => other == null ? false : InnerList == other.InnerList;
+        public bool Equals(LinkedList<T>
+#if CS8
+            ?
+#endif
+            other) => InnerList == other?.InnerList;
+        public override bool Equals(object
+#if CS8
+            ?
+#endif
+            obj) => obj is LinkedList<T> list && Equals(list);
+        public override int GetHashCode() => InnerList.GetHashCode();
 
         public static bool operator ==(LinkedList<T> x, ILinkedList<T> y) => x.AsObject() == null ? y == null : x.Equals(y);
         public static bool operator !=(LinkedList<T> x, ILinkedList<T> y) => !(x == y);
