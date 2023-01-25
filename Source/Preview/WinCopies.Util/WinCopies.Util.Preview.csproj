@@ -4,6 +4,7 @@
 		<Description>WinCopies framework utilities</Description>
 		<PackageTags>WinCopies</PackageTags>
 		<VersionPrefix>4.0</VersionPrefix>
+		<VersionSuffix>preview</VersionSuffix>
 		<AssemblyVersion>4.0</AssemblyVersion>
 		<FileVersion>4.0</FileVersion>
 		<RootNamespace>WinCopies</RootNamespace>
