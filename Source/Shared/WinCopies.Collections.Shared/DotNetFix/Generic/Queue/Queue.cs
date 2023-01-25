@@ -17,35 +17,71 @@
 
 namespace WinCopies.Collections.DotNetFix.Generic
 {
-    public interface
-#if WinCopies3
-        IQueueBase
-#else
-        IQueue
-#endif
-        <T> :
-#if WinCopies3
-        ISimpleLinkedListBase, IPeekable<T>
-#else
-        ISimpleLinkedList<T>
-#endif
+    public interface IQueueCore<T> : IQueueCore
     {
         void Enqueue(T item);
-
-        T Dequeue();
-
-#if WinCopies3
+        new T Dequeue();
         bool TryDequeue(out T
 #if CS9
             ?
 #endif
             result);
+#if CS8
+        void IQueueCore.Enqueue(object? value) => Enqueue((T
+#if CS9
+            ?
+#endif
+            )value);
+        object? IQueueCore.Dequeue() => Dequeue();
+        bool IQueueCore.TryDequeue(out object? value)
+        {
+            if (TryDequeue(out T
+#if CS9
+                ?
+#endif
+                _value))
+            {
+                value = _value;
+
+                return true;
+            }
+
+            value = null;
+
+            return false;
+        }
+#endif
     }
 
-    public interface IQueue<T> : ISimpleLinkedList<T>, IQueueBase<T>
+    public interface IQueueCommon<T> : ISimpleLinkedListCommon<T>, IQueueCore<T>
     {
         // Left empty.
+    }
+
+    public interface IQueueBase<T> : IQueueBase, ISimpleLinkedListBase, IQueueCommon<T>
+    {
+#if CS8
+        void IListCommon<T>.Add(T
+#if CS9
+            ?
 #endif
+            item) => Enqueue(item);
+        T
+#if CS9
+        ?
+#endif
+        IListCommon<T>.Remove() => Dequeue();
+        bool IListCommon<T>.TryRemove(out T
+#if CS9
+            ?
+#endif
+            item) => TryDequeue(out item);
+#endif
+    }
+
+    public interface IQueue<T> : ISimpleLinkedList<T>, IQueueBase<T>, IQueue
+    {
+        // Left empty.
     }
 
     public class Queue<T> : SimpleLinkedList<T>, IQueue<T>
@@ -56,13 +92,11 @@ namespace WinCopies.Collections.DotNetFix.Generic
 #endif
             _lastItem;
 
-#if !WinCopies3
-        public new uint Count => base.Count;
-
-        public new T Peek() => base.Peek();
+        public void Enqueue(T
+#if CS9
+            ?
 #endif
-
-        public void Enqueue(T item) => Add(item);
+            item) => Add(item);
 
         protected sealed override SimpleLinkedListNode<T> AddItem(T item, out bool actionAfter)
         {
@@ -78,7 +112,6 @@ namespace WinCopies.Collections.DotNetFix.Generic
             var newNode = new SimpleLinkedListNode<T>(item);
 
             _lastItem.Next = newNode;
-
             _lastItem = newNode;
 
             return FirstItem;
@@ -86,10 +119,23 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
         protected sealed override void OnItemAdded() => _lastItem = FirstItem;
 
-        public T Dequeue() => Remove();
+        public T
+#if CS9
+            ?
+#endif
+            Dequeue() => Remove();
 
-        public bool TryDequeue(out T result) => TryRemove(out result);
+        public bool TryDequeue(out T
+#if CS9
+            ?
+#endif
+            result) => TryRemove(out result);
 
         protected sealed override SimpleLinkedListNode<T> RemoveItem() => FirstItem.Next;
+#if !CS8
+        void IQueueCore.Enqueue(object value) => Enqueue((T)value);
+        object IQueueCore.Dequeue() => Dequeue();
+        bool IQueueCore.TryDequeue(out object value) => UtilHelpers.TryGetValue<T>(TryRemove, out value);
+#endif
     }
 }

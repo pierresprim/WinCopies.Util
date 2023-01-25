@@ -17,15 +17,9 @@
 
 #if CS7
 using System.Collections.Generic;
-
-using static WinCopies.
-#if !WinCopies3
-    Util.Util;
-
 using WinCopies.Util;
-#else
-    ThrowHelper;
-#endif
+
+using static WinCopies.ThrowHelper;
 
 namespace WinCopies.Collections.Generic
 {
@@ -33,15 +27,9 @@ namespace WinCopies.Collections.Generic
     {
         public Dictionary<TKey, TValue> ToDictionary(in bool remove = false)
         {
-#if WinCopies3
             ValidateCount();
-#endif
 
-            var dic = new Dictionary<TKey, TValue>(
-#if WinCopies3
-(int)
-#endif
-                Count);
+            var dic = new Dictionary<TKey, TValue>((int)Count);
 
             ToDictionaryPrivate(dic, remove);
 
@@ -50,9 +38,7 @@ namespace WinCopies.Collections.Generic
 
         public void ToDictionary(in IDictionary<TKey, TValue> dic, in bool remove = false)
         {
-#if WinCopies3
             ValidateCount();
-#endif
 
             ToDictionaryPrivate(dic ?? throw GetArgumentNullException(nameof(dic)), remove);
         }
@@ -63,29 +49,11 @@ namespace WinCopies.Collections.Generic
 
                 while (Count != 0)
 
-                    dic.Add(First.Value.Key,
-#if !WinCopies3
-                        InnerList
-#else
-                        this
-#endif
-                        .
-#if WinCopies3
-                            RemoveAndGetFirst
-#else
-                            RemoveAndGetFirstValue
-#endif
-                            ().Value.Value);
+                    dic.Add(First.Value.Key, this.RemoveAndGetFirst().Value.Value);
 
             else
 
-                foreach (KeyValuePair<TKey, TValue> keyValuePair in
-#if !WinCopies3
-                InnerList
-#else
-                this
-#endif
-                )
+                foreach (KeyValuePair<TKey, TValue> keyValuePair in this.AsFromType<IEnumerable<KeyValuePair<TKey, TValue>>>())
 
                     dic.Add(keyValuePair.Key, keyValuePair.Value);
         }

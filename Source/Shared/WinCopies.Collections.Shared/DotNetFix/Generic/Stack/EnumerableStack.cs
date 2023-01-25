@@ -15,19 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-using System;
-using System.Collections;
-
-using static WinCopies
-#if !WinCopies3
-    .Util.Util;
-
-using static WinCopies.Util.ThrowHelper;
-#else
-    .ThrowHelper;
-#endif
-
-
 namespace WinCopies.Collections.DotNetFix.Generic
 {
     public interface IEnumerableStack<T> : IStack<T>, IEnumerableSimpleLinkedList<T>
@@ -35,209 +22,43 @@ namespace WinCopies.Collections.DotNetFix.Generic
         // Left empty.
     }
 
-    [Serializable]
-    public class EnumerableStack<T> : EnumerableSimpleLinkedList<T>, IEnumerableStack<T>
+    public class EnumerableStack<T> : EnumerableSimpleLinkedList<T, Stack<T>>, IEnumerableStack<T>
     {
-        [NonSerialized]
-        private readonly Stack<T> _stack;
-
-        public sealed override uint Count => _stack.Count;
-
-        public bool HasItems => _stack.HasItems;
-
-        public EnumerableStack() => _stack = new Stack<T>();
-
-        public sealed override void Clear() => _stack.Clear();
-
-        public void Push(T item)
-        {
-            _stack.Push(item);
-
-            UpdateEnumerableVersion();
-        }
-
-        public sealed override T Peek() => _stack.Peek();
-
-        public sealed override bool TryPeek(out T result) => _stack.TryPeek(out result);
-
-        public T Pop()
-        {
-            T result = _stack.Pop();
-
-            UpdateEnumerableVersion();
-
-            return result;
-        }
-
-        public bool TryPop(out T result) => _stack.TryPop(out result);
-
-        public sealed override
-#if WinCopies3
-            IUIntCountableEnumerator
-#else
-            System.Collections.Generic.IEnumerator
+        protected override ISimpleLinkedListNode<T>
+#if CS8
+            ?
 #endif
-          <T> GetEnumerator()
-        {
-            var enumerator = new Enumerator(this);
+            FirstNode => List.FirstItem;
 
-            IncrementEnumeratorCount();
+        public EnumerableStack() : base(new Stack<T>()) { /* Left empty. */ }
 
-            return enumerator;
-        }
-
-        System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-#if !WinCopies3
-        [Serializable]
+        public void Push(T
+#if CS9
+            ?
 #endif
-        public sealed class Enumerator :
-#if WinCopies3
-WinCopies.Collections.Generic.Enumerator<T>, IUIntCountableEnumerator<T>
-#else
-            System.Collections.Generic.IEnumerator<T>, WinCopies.Util.DotNetFix.IDisposable
+            item) => Add(item);
+        public T
+#if CS9
+            ?
 #endif
-        {
-            private EnumerableStack<T> _stack;
-            private ISimpleLinkedListNode<T> _currentNode;
-            private readonly uint _version;
-
-#if WinCopies3
-            private bool _first = true;
-
-            public override bool? IsResetSupported => true;
-
-            /// <summary>
-            /// When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
-            /// </summary>
-            protected override T CurrentOverride => _currentNode.Value;
-
-            public uint Count => _stack.Count;
-#else
-            private T _current;
-
-            public T Current => IsDisposed ? throw GetExceptionForDispose(false) : _current;
-
-            object System.Collections.IEnumerator.Current => Current;
-
-            public bool IsDisposed { get; private set; }
+            Pop() => Remove();
+        public bool TryPop(out T
+#if CS9
+            ?
 #endif
+            result) => TryRemove(out result);
 
-            public Enumerator(in EnumerableStack<T> stack)
-            {
-                _stack = stack;
-
-                _version = stack.EnumerableVersion;
-
-#if WinCopies3
-                ResetOverride();
-#else
-                Reset();
+        void IListCommon.Add(object item) => Push((T
+#if CS9
+            ?
 #endif
-            }
-
-#if WinCopies3
-            protected override void ResetOverride2()
-            {
-#else
-            public void Reset()
-            {
-                if (IsDisposed)
-
-                    throw GetExceptionForDispose(false);
+            )item);
+        object IListCommon.Remove() => Pop();
+        bool IListCommon.TryRemove(out object result) => UtilHelpers.TryGetValue<T>(TryPop, out result);
+#if !CS8
+        void IStackCore.Push(object item) => Push((T)item);
+        object IStackCore.Pop() => Pop();
+        public bool TryPop(out object result) => UtilHelpers.TryGetValue<T>(TryPop, out result);
 #endif
-                ThrowIfVersionHasChanged(_stack.EnumerableVersion, _version);
-
-#if WinCopies3
-                _first = true;
-#endif
-
-                _currentNode = _stack._stack.FirstItem;
-            }
-
-#if WinCopies3
-            protected override bool MoveNextOverride()
-            {
-#else
-            public bool MoveNext()
-            {
-                if (IsDisposed)
-
-                    throw GetExceptionForDispose(false);
-#endif
-                ThrowIfVersionHasChanged(_stack.EnumerableVersion, _version);
-
-#if WinCopies3
-                if (_first)
-                {
-                    _first = false;
-
-                    return _currentNode != null;
-                }
-
-                if (_currentNode.Next == null)
-                {
-                    _currentNode = null;
-
-                    return false;
-                }
-
-                _currentNode = _currentNode.Next;
-
-                return true;
-#else
-                if (_currentNode == null)
-
-                    return false;
-
-                _current = _currentNode.Value;
-
-                _currentNode = _currentNode.NextNode;
-
-                return true;
-#endif
-            }
-
-#if WinCopies3
-            protected override void DisposeUnmanaged()
-            {
-                _stack.DecrementEnumeratorCount();
-                _stack = null;
-
-                base.DisposeUnmanaged();
-            }
-
-            protected override void DisposeManaged()
-            {
-                base.DisposeManaged();
-
-                _currentNode = null;
-            }
-#else
-            private void Dispose(bool disposing)
-            {
-                if (IsDisposed)
-
-                    return;
-
-                _stack.DecrementEnumeratorCount();
-
-                if (disposing)
-                {
-                    _current = default;
-
-                    _stack = null;
-
-                    _currentNode = null;
-                }
-
-                IsDisposed = true;
-            }
-
-            public void Dispose() => Dispose(true);
-
-            ~Enumerator() => Dispose(false);
-#endif
-        }
     }
 }

@@ -19,31 +19,7 @@ using System;
 
 namespace WinCopies.Util.Data
 {
-#if !WinCopies3
-    /// <summary>
-    /// Provides an object that defines a value with an associated name and notifies of the name or value change.
-    /// </summary>
-    public interface INamedObject : IValueObject
-    {
-        /// <summary>
-        /// Gets or sets the name of this object.
-        /// </summary>
-        string Name { get; set; }
-    }
-
-    /// <summary>
-    /// Provides an object that defines a value with an associated name and notifies of the name or value change.
-    /// </summary>
-    public interface INamedObject<T> : INamedObject, IValueObject<T> { }
-#endif
-
-    public abstract class NamedObjectBase : ViewModelBase,
-#if WinCopies3
-        WinCopies.DotNetFix
-#else
-        System
-#endif
-        .IDisposable
+    public abstract class NamedObjectBase : ViewModelBase, WinCopies.DotNetFix.IDisposable
     {
         private string _name = null;
 
@@ -55,7 +31,6 @@ namespace WinCopies.Util.Data
         public bool IsReadOnly => false;
 
         public NamedObjectBase() { /* Left empty. */ }
-
         public NamedObjectBase(in string name) => _name = name;
 
         public override string ToString() => Name;
@@ -127,26 +102,14 @@ namespace WinCopies.Util.Data
         /// <summary>
         /// Initializes a new instance of the <see cref="NamedObject"/> class using custom values.
         /// </summary>
-        public NamedObject(
-#if WinCopies3
-in
-#endif
-            string name,
-#if WinCopies3
-in
-#endif
-            object value) : base(name) => _value = value;
+        public NamedObject(in string name, in object value) : base(name) => _value = value;
 
         /// <summary>
         /// Determines whether this object is equal to a given object.
         /// </summary>
         /// <param name="obj">Object to compare to the current object.</param>
         /// <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
-        public bool Equals(WinCopies.
-#if !WinCopies3
-            Util.
-#endif
-            IValueObject obj) => new ValueObjectEqualityComparer().Equals(this, obj);
+        public bool Equals(WinCopies.IValueObject obj) => new ValueObjectEqualityComparer().Equals(this, obj);
 
         /// <summary>
         /// Determines whether this object is equal to a given object.
@@ -155,31 +118,11 @@ in
         /// <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
         public bool Equals(IReadOnlyValueObject obj) => new ValueObjectEqualityComparer().Equals(this, obj);
 
-        protected override void
-#if WinCopies3
-            DisposeOverride
-#else
-            Dispose
-#endif
-            (
-#if WinCopies3
-in
-#endif
-            bool disposing)
+        protected override void DisposeOverride(in bool disposing)
         {
-#if !WinCopies3
-            if (IsDisposed)
-
-                return;
-#endif
-
             if (Value is System.IDisposable _value)
 
                 _value.Dispose();
-
-#if !WinCopies3
-            IsDisposed = true;
-#endif
         }
     }
 
@@ -198,12 +141,7 @@ in
 
         object IReadOnlyValueObject.Value => _value;
 
-        object WinCopies.
-#if !WinCopies3
-            Util.
-#endif
-            IValueObject.Value
-        { get => _value; set => Value = value is T _value ? _value : throw new ArgumentException("Invalid type.", nameof(value)); }
+        object WinCopies.IValueObject.Value { get => _value; set => Value = value is T _value ? _value : throw new ArgumentException("Invalid type.", nameof(value)); }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NamedObject{T}"/> class.
@@ -213,15 +151,7 @@ in
         /// <summary>
         /// Initializes a new instance of the <see cref="NamedObject{T}"/> class using custom values.
         /// </summary>
-        public NamedObject(
-#if WinCopies3
-            in
-#endif
-            string name,
-#if WinCopies3
-            in
-#endif
-            T value) : base(name) => _value = value;
+        public NamedObject(in string name, in T value) : base(name) => _value = value;
 
         /// <summary>
         /// Determines whether this object is equal to a given object.
@@ -235,11 +165,7 @@ in
         /// </summary>
         /// <param name="obj">Object to compare to the current object.</param>
         /// <returns><see langword="true"/> if this object is equal to <paramref name="obj"/>, otherwise <see langword="false"/>.</returns>
-        public bool Equals(WinCopies
-#if !WinCopies3
-            .Util
-#endif
-            .IValueObject<T> obj) => new ValueObjectEqualityComparer<T>().Equals(this, obj);
+        public bool Equals(WinCopies.IValueObject<T> obj) => new ValueObjectEqualityComparer<T>().Equals(this, obj);
 
         /// <summary>
         /// Determines whether this object is equal to a given object.
@@ -252,31 +178,11 @@ in
         /// Removes the unmanaged resources and the managed resources if needed. If you override this method, you should call this implementation of this method in your override implementation to avoid unexpected results when using this object laater.
         /// </summary>
         /// <param name="disposing"><see langword="true"/> to dispose managed resources, otherwise <see langword="false"/>.</param>
-        protected override void
-#if WinCopies3
-            DisposeOverride
-#else
-            Dispose
-#endif
-            (
-#if WinCopies3
-in
-#endif
-           bool disposing)
+        protected override void DisposeOverride(in bool disposing)
         {
-#if !WinCopies3
-            if (IsDisposed)
-
-                return;
-#endif
-
             if (Value is System.IDisposable _value)
 
                 _value.Dispose();
-
-#if !WinCopies3
-            IsDisposed = true;
-#endif
         }
     }
 }

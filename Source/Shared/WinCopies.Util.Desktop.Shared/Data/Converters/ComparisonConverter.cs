@@ -54,17 +54,7 @@ namespace WinCopies.Util.Data
 
     public class ComparisonConverter<T> : AlwaysConvertibleOneWayConverter<T, ComparisonConverterParameter<T>, bool>
     {
-        public override
-#if WinCopies3
-            IReadOnlyConversionOptions
-#else
-            ConversionOptions
-#endif
-           ConvertOptions => ValueCanBeNull;
-
-#if !WinCopies3
-        public override ConversionOptions ConvertBackOptions => throw new InvalidOperationException();
-#endif
+        public override IReadOnlyConversionOptions ConvertOptions => ValueCanBeNull;
 
         protected override bool Convert(T value, ComparisonConverterParameter<T> parameter, CultureInfo culture)
         {
@@ -120,16 +110,8 @@ namespace WinCopies.Util.Data
                     return parameter.ExpectedComparisonResult == Diagnostics.Comparison.ReferenceEqual;
             }
 
-            throw new InvalidOperationException(WinCopies.
-#if !WinCopies3
-                Util.
-#endif
-                Desktop.Resources.ExceptionMessages.ComparisonResultReturnedByParameterIsNotSupported);
+            throw new InvalidOperationException(WinCopies.Desktop.Resources.ExceptionMessages.ComparisonResultReturnedByParameterIsNotSupported);
         }
-
-#if !WinCopies3
-        protected override T ConvertBack(bool value, ComparisonConverterParameter<T> parameter, CultureInfo culture) => throw new InvalidOperationException();
-#endif
     }
 
     public sealed class IntComparisonConverter : ComparisonConverter<int>

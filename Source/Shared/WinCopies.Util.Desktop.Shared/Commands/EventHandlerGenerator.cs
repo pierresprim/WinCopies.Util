@@ -29,11 +29,7 @@ using System;
 using System.Reflection.Emit;
 using System.Reflection;
 
-namespace WinCopies.
-#if !WinCopies3
-Util.
-#endif
-Commands
+namespace WinCopies.Commands
 {
     /// <summary>
     /// Generates delegates according to the specified signature on runtime

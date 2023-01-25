@@ -16,11 +16,13 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using System;
+#if CS11
+using System.Numerics;
+#endif
+
+using static WinCopies.UtilHelpers;
 
 namespace WinCopies
-#if !WinCopies3
-.Util
-#endif
 {
     public static class Math
     {
@@ -375,169 +377,364 @@ namespace WinCopies
 
     public static class MathExtensions
     {
-        public static bool Between(this byte i, byte x, byte y, in bool bx, bool by)
-        {
-            bool between(in Func<bool> func) => func() && (by ? i <= y : i < y);
+        private static bool Between<T>(this
+#if !CS11
+            ISortableItem<
+#endif
+            T
+#if !CS11
+            >
+#endif
+            value, in T x, in T y, in bool bx, in bool by) where T :
+#if CS11
+            IComparisonOperators<T, T, bool>
+#else
+            unmanaged
+#endif
+            => Compare(x, y, bx ?
+#if CS11
+            _value => value >= _value : _value => value > _value
+#else
+            value.GreaterThanOrEqualTo :
+#if !CS9
+                (Predicate<T>)
+#endif
+                value.GreaterThan
+#endif
+            , by ?
+#if CS11
+            _value => value <= _value : _value => value < _value
+#else
+            value.LessThanOrEqualTo :
+#if !CS9
+                (Predicate<T>)
+#endif
+                value.LessThan
+#endif
+                , Bool.AndIn);
 
-            return between(bx ?
-#if !CS9
-                (Func<bool>)(
+        private static bool Outside<T>(this
+#if !CS11
+            ISortableItem<
 #endif
-                () => x <= i
-#if !CS9
-                )
+            T
+#if !CS11
+            >
 #endif
-                : () => x < i);
-        }
+            value, in T x, in T y, in bool bx, in bool by) where T :
+#if CS11
+            IComparisonOperators<T, T, bool>
+#else
+            unmanaged
+#endif
+            => Compare(x, y, bx ?
+#if CS11
+            _value => value <= _value : _value => value < _value
+#else
+            value.LessThanOrEqualTo :
+#if !CS9
+                (Predicate<T>)
+#endif
+                value.LessThan
+#endif
+            , by ?
+#if CS11
+            _value => value >= _value : _value => value > _value
+#else
+            value.GreaterThanOrEqualTo :
+#if !CS9
+                (Predicate<T>)
+#endif
+                value.GreaterThan
+#endif
+                , Bool.OrIn);
 
-        public static bool Between(this sbyte i, sbyte x, sbyte y, in bool bx, bool by)
-        {
-            bool between(in Func<bool> func) => func() && (by ? i <= y : i < y);
+        public static bool Between(this byte value, byte x, byte y, in bool bx = true, bool by = true) => Between
+#if CS11
+            <byte>
+#endif
+            (
+#if !CS11
+            Util.Extensions.NumberHelper.GetNumber(
+#endif
+            value
+#if !CS11
+            )
+#endif
+            , x, y, bx, by);
+        public static bool Between(this sbyte value, sbyte x, sbyte y, in bool bx = true, bool by = true) => Between
+#if CS11
+            <sbyte>
+#endif
+            (
+#if !CS11
+            Util.Extensions.NumberHelper.GetNumber(
+#endif
+            value
+#if !CS11
+            )
+#endif
+            , x, y, bx, by);
+        public static bool Between(this short value, short x, short y, in bool bx = true, bool by = true) => Between
+#if CS11
+            <short>
+#endif
+            (
+#if !CS11
+            Util.Extensions.NumberHelper.GetNumber(
+#endif
+            value
+#if !CS11
+            )
+#endif
+            , x, y, bx, by);
+        public static bool Between(this ushort value, ushort x, ushort y, in bool bx = true, bool by = true) => Between
+#if CS11
+            <ushort>
+#endif
+            (
+#if !CS11
+            Util.Extensions.NumberHelper.GetNumber(
+#endif
+            value
+#if !CS11
+            )
+#endif
+            , x, y, bx, by);
+        public static bool Between(this int value, int x, int y, in bool bx = true, bool by = true) => Between
+#if CS11
+            <int>
+#endif
+            (
+#if !CS11
+            Util.Extensions.NumberHelper.GetNumber(
+#endif
+            value
+#if !CS11
+            )
+#endif
+            , x, y, bx, by);
+        public static bool Between(this uint value, uint x, uint y, in bool bx = true, bool by = true) => Between
+#if CS11
+            <uint>
+#endif
+            (
+#if !CS11
+            Util.Extensions.NumberHelper.GetNumber(
+#endif
+            value
+#if !CS11
+            )
+#endif
+            , x, y, bx, by);
+        public static bool Between(this long value, long x, long y, in bool bx = true, bool by = true) => Between
+#if CS11
+            <long>
+#endif
+            (
+#if !CS11
+            Util.Extensions.NumberHelper.GetNumber(
+#endif
+            value
+#if !CS11
+            )
+#endif
+            , x, y, bx, by);
+        public static bool Between(this ulong value, ulong x, ulong y, in bool bx = true, bool by = true) => Between
+#if CS11
+            <ulong>
+#endif
+            (
+#if !CS11
+            Util.Extensions.NumberHelper.GetNumber(
+#endif
+            value
+#if !CS11
+            )
+#endif
+            , x, y, bx, by);
+        public static bool Between(this float value, float x, float y, in bool bx = true, bool by = true) => Between
+#if CS11
+            <float>
+#endif
+            (
+#if !CS11
+            Util.Extensions.NumberHelper.GetNumber(
+#endif
+            value
+#if !CS11
+            )
+#endif
+            , x, y, bx, by);
+        public static bool Between(this double value, double x, double y, in bool bx = true, bool by = true) => Between
+#if CS11
+            <double>
+#endif
+            (
+#if !CS11
+            Util.Extensions.NumberHelper.GetNumber(
+#endif
+            value
+#if !CS11
+            )
+#endif
+            , x, y, bx, by);
+        public static bool Between(this decimal value, decimal x, decimal y, in bool bx = true, bool by = true) => Between
+#if CS11
+            <decimal>
+#endif
+            (
+#if !CS11
+            Util.Extensions.NumberHelper.GetNumber(
+#endif
+            value
+#if !CS11
+            )
+#endif
+            , x, y, bx, by);
 
-            return between(bx ?
-#if !CS9
-                (Func<bool>)(
+        public static bool Outside(this byte value, byte x, byte y, in bool bx = true, bool by = true) => Outside
+#if CS11
+            <byte>
 #endif
-                () => x <= i
-#if !CS9
-                )
+            (
+#if !CS11
+            Util.Extensions.NumberHelper.GetNumber(
 #endif
-                : () => x < i);
-        }
-
-        public static bool Between(this short i, short x, short y, in bool bx, bool by)
-        {
-            bool between(in Func<bool> func) => func() && (by ? i <= y : i < y);
-
-            return between(bx ?
-#if !CS9
-                (Func<bool>)(
+            value
+#if !CS11
+            )
 #endif
-                () => x <= i
-#if !CS9
-                )
+            , x, y, bx, by);
+        public static bool Outside(this sbyte value, sbyte x, sbyte y, in bool bx = true, bool by = true) => Outside
+#if CS11
+            <sbyte>
 #endif
-                : () => x < i);
-        }
-
-        public static bool Between(this ushort i, ushort x, ushort y, in bool bx, bool by)
-        {
-            bool between(in Func<bool> func) => func() && (by ? i <= y : i < y);
-
-            return between(bx ?
-#if !CS9
-                (Func<bool>)(
+            (
+#if !CS11
+            Util.Extensions.NumberHelper.GetNumber(
 #endif
-                () => x <= i
-#if !CS9
-                )
+            value
+#if !CS11
+            )
 #endif
-                : () => x < i);
-        }
-
-        public static bool Between(this int i, int x, int y, in bool bx, bool by)
-        {
-            bool between(in Func<bool> func) => func() && (by ? i <= y : i < y);
-
-            return between(bx ?
-#if !CS9
-                (Func<bool>)(
+            , x, y, bx, by);
+        public static bool Outside(this short value, short x, short y, in bool bx = true, bool by = true) => Outside
+#if CS11
+            <short>
 #endif
-                () => x <= i
-#if !CS9
-                )
+            (
+#if !CS11
+            Util.Extensions.NumberHelper.GetNumber(
 #endif
-                : () => x < i);
-        }
-
-        public static bool Between(this uint i, uint x, uint y, in bool bx, bool by)
-        {
-            bool between(in Func<bool> func) => func() && (by ? i <= y : i < y);
-
-            return between(bx ?
-#if !CS9
-                (Func<bool>)(
+            value
+#if !CS11
+            )
 #endif
-                () => x <= i
-#if !CS9
-                )
+            , x, y, bx, by);
+        public static bool Outside(this ushort value, ushort x, ushort y, in bool bx = true, bool by = true) => Outside
+#if CS11
+            <ushort>
 #endif
-                : () => x < i);
-        }
-
-        public static bool Between(this long i, long x, long y, in bool bx, bool by)
-        {
-            bool between(in Func<bool> func) => func() && (by ? i <= y : i < y);
-
-            return between(bx ?
-#if !CS9
-                (Func<bool>)(
+            (
+#if !CS11
+            Util.Extensions.NumberHelper.GetNumber(
 #endif
-                () => x <= i
-#if !CS9
-                )
+            value
+#if !CS11
+            )
 #endif
-                : () => x < i);
-        }
-
-        public static bool Between(this ulong i, ulong x, ulong y, in bool bx, bool by)
-        {
-            bool between(in Func<bool> func) => func() && (by ? i <= y : i < y);
-
-            return between(bx ?
-#if !CS9
-                (Func<bool>)(
+            , x, y, bx, by);
+        public static bool Outside(this int value, int x, int y, in bool bx = true, bool by = true) => Outside
+#if CS11
+            <int>
 #endif
-                () => x <= i
-#if !CS9
-                )
+            (
+#if !CS11
+            Util.Extensions.NumberHelper.GetNumber(
 #endif
-                : () => x < i);
-        }
-
-        public static bool Between(this float i, float x, float y, in bool bx, bool by)
-        {
-            bool between(in Func<bool> func) => func() && (by ? i <= y : i < y);
-
-            return between(bx ?
-#if !CS9
-                (Func<bool>)(
+            value
+#if !CS11
+            )
 #endif
-                () => x <= i
-#if !CS9
-                )
+            , x, y, bx, by);
+        public static bool Outside(this uint value, uint x, uint y, in bool bx = true, bool by = true) => Outside
+#if CS11
+            <uint>
 #endif
-                : () => x < i);
-        }
-
-        public static bool Between(this double i, double x, double y, in bool bx, bool by)
-        {
-            bool between(in Func<bool> func) => func() && (by ? i <= y : i < y);
-
-            return between(bx ?
-#if !CS9
-                (Func<bool>)(
+            (
+#if !CS11
+            Util.Extensions.NumberHelper.GetNumber(
 #endif
-                () => x <= i
-#if !CS9
-                )
+            value
+#if !CS11
+            )
 #endif
-                : () => x < i);
-        }
-
-        public static bool Between(this decimal i, decimal x, decimal y, in bool bx, bool by)
-        {
-            bool between(in Func<bool> func) => func() && (by ? i <= y : i < y);
-
-            return between(bx ?
-#if !CS9
-                (Func<bool>)(
+            , x, y, bx, by);
+        public static bool Outside(this long value, long x, long y, in bool bx = true, bool by = true) => Outside
+#if CS11
+            <long>
 #endif
-                () => x <= i
-#if !CS9
-                )
+            (
+#if !CS11
+            Util.Extensions.NumberHelper.GetNumber(
 #endif
-                : () => x < i);
-        }
+            value
+#if !CS11
+            )
+#endif
+            , x, y, bx, by);
+        public static bool Outside(this ulong value, ulong x, ulong y, in bool bx = true, bool by = true) => Outside
+#if CS11
+            <ulong>
+#endif
+            (
+#if !CS11
+            Util.Extensions.NumberHelper.GetNumber(
+#endif
+            value
+#if !CS11
+            )
+#endif
+            , x, y, bx, by);
+        public static bool Outside(this float value, float x, float y, in bool bx = true, bool by = true) => Outside
+#if CS11
+            <float>
+#endif
+            (
+#if !CS11
+            Util.Extensions.NumberHelper.GetNumber(
+#endif
+            value
+#if !CS11
+            )
+#endif
+            , x, y, bx, by);
+        public static bool Outside(this double value, double x, double y, in bool bx = true, bool by = true) => Outside
+#if CS11
+            <double>
+#endif
+            (
+#if !CS11
+            Util.Extensions.NumberHelper.GetNumber(
+#endif
+            value
+#if !CS11
+            )
+#endif
+            , x, y, bx, by);
+        public static bool Outside(this decimal value, decimal x, decimal y, in bool bx = true, bool by = true) => Outside
+#if CS11
+            <decimal>
+#endif
+            (
+#if !CS11
+            Util.Extensions.NumberHelper.GetNumber(
+#endif
+            value
+#if !CS11
+            )
+#endif
+            , x, y, bx, by);
     }
 }

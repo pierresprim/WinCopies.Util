@@ -15,10 +15,12 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if WinCopies3 && CS5
+#if CS5
 using System;
 using System.Collections.Generic;
 using System.Threading;
+
+using WinCopies.Util;
 
 namespace WinCopies.Collections.DotNetFix.Generic
 {
@@ -44,7 +46,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
         bool ISimpleLinkedListBase2.IsSynchronized => false;
 
-        public uint Count => InnerLinkedList.Count;
+        public uint Count => InnerLinkedList.AsFromType<IUIntCountable>().Count;
 
         public bool IsReadOnly => false;
 
@@ -82,7 +84,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
         public KeyValuePair<TKey, TValue> Peek() => PeekOrDequeue(TryPeek);
 
-        object ISimpleLinkedList.Peek() => Peek();
+        object IPeekable.Peek() => Peek();
 
         public void Enqueue(KeyValuePair<TKey, TValue> item)
         {
@@ -141,7 +143,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
                 else
 
-                    first.Value = new KeyValuePair<TKey, KeyValuePair<ILinkedListNode<TValue>, ILinkedListNode<TValue>>>(first.Value.Key, new KeyValuePair<ILinkedListNode<TValue>, ILinkedListNode<TValue>>(keyNode.Next, nodes.Value));
+                    first.Value = new KeyValuePair<TKey, KeyValuePair<ILinkedListNode<TValue>, ILinkedListNode<TValue>>>(first.Value.Key, new KeyValuePair<ILinkedListNode<TValue>, ILinkedListNode<TValue>>(keyNode.AsFromType<DotNetFix.IReadOnlyLinkedListNode<ILinkedListNode<TValue>>>().Next, nodes.Value));
 
                 InnerLinkedList.Remove(keyNode);
 
@@ -155,10 +157,22 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
         public void Clear()
         {
-            InnerLinkedList.Clear();
+            InnerLinkedList.AsFromType<ICollection<TValue>>().Clear();
 
             InnerDictionary.Clear();
         }
+
+        void IQueueCore.Enqueue(object item) => Enqueue((KeyValuePair<TKey, TValue>)item);
+        object IQueueCore.Dequeue() => Dequeue();
+        public bool TryDequeue(out object result) => UtilHelpers.TryGetValue<KeyValuePair<TKey, TValue>>(TryDequeue, out result);
+#if !CS8
+        void IListCommon<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> value) => Enqueue(value);
+        KeyValuePair<TKey, TValue> IListCommon<KeyValuePair<TKey, TValue>>.Remove() => Dequeue();
+        bool IListCommon<KeyValuePair<TKey, TValue>>.TryRemove(out KeyValuePair<TKey, TValue> result) => TryDequeue(out result);
+#endif
+        void IListCommon.Add(object value) => this.AsFromType<IQueueCore>().Enqueue(value);
+        object IListCommon.Remove() => Dequeue();
+        bool IListCommon.TryRemove(out object result) => TryDequeue(out result);
     }
 }
 #endif

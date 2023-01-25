@@ -96,23 +96,11 @@ namespace WinCopies.Util.Data
             Data
         { get; set; }
 
-        public override bool
-#if WinCopies3
-            AllowNullValue
-#else
-            AllowNullValueOverride
-#endif
-            => false;
+        public override bool AllowNullValue => false;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected virtual bool UpdateValue<T>(ref T value, in T newValue, SystemPropertyChangedEventArgs e) =>
-#if WinCopies3
-            UtilHelpers
-#else
-            Util
-#endif
-            .UpdateValue(ref value, newValue, () => PropertyChanged?.Invoke(this, e));
+        protected virtual bool UpdateValue<T>(ref T value, in T newValue, SystemPropertyChangedEventArgs e) => UtilHelpers.UpdateValue(ref value, newValue, () => PropertyChanged?.Invoke(this, e));
 
         protected virtual bool UpdateValue<T>(ref T value, in T newValue, in string propertyName) => UpdateValue(ref value, newValue, new SystemPropertyChangedEventArgs(propertyName));
 

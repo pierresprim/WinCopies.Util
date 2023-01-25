@@ -20,11 +20,7 @@ using System.Windows.Input;
 
 namespace WinCopies.Commands
 {
-    public class CommandModel<T> : Util.Commands.Primitives.ICommand,
-#if !WinCopies3
-        System.Windows.Input.
-#endif
-        ICommand where T : Util.Commands.Primitives.ICommand
+    public class CommandModel<T> : Util.Commands.Primitives.ICommand, ICommand where T : Util.Commands.Primitives.ICommand
     {
         protected T Command { get; }
 
@@ -41,11 +37,7 @@ namespace WinCopies.Commands
         public void Execute(object parameter) => Command.Execute(parameter);
     }
 
-    public class CommandModel<TCommand, TParameter> : CommandModel<TCommand>, Util.Commands.Primitives.ICommand<TParameter>, 
-#if !WinCopies3
-        WinCopies.Util.Commands.
-#endif
-        ICommand<TParameter> where TCommand : Util.Commands.Primitives.ICommand<TParameter>
+    public class CommandModel<TCommand, TParameter> : CommandModel<TCommand>, Util.Commands.Primitives.ICommand<TParameter>, ICommand<TParameter> where TCommand : Util.Commands.Primitives.ICommand<TParameter>
     {
         public CommandModel(in TCommand command) : base(command) { /* Left empty. */ }
 

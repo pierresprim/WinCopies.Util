@@ -17,13 +17,14 @@
 
 using System;
 using System.Collections.Generic;
+
 using WinCopies.Util;
 
 namespace WinCopies.Diagnostics
 {
     internal interface IIfValuesEnumerable
     {
-        Array Array { get; }
+        System.Array Array { get; }
 
         KeyValuePair<object, Func<bool>> GetValue(in int index);
     }
@@ -39,14 +40,13 @@ namespace WinCopies.Diagnostics
 
         public object[] Array { get; }
 
-        Array IIfValuesEnumerable.Array => Array;
+        System.Array IIfValuesEnumerable.Array => Array;
 
         public Predicate Predicate { get; }
 
         public IfValuesEnumerable(in object[] array, in Predicate predicate)
         {
             Array = array;
-
             Predicate = predicate;
         }
 
@@ -57,7 +57,7 @@ namespace WinCopies.Diagnostics
     {
         public KeyValuePair<object, Func<bool>>[] Array { get; }
 
-        Array IIfValuesEnumerable.Array => Array;
+        System.Array IIfValuesEnumerable.Array => Array;
 
         public IfKeyValuePairEnumerable(in KeyValuePair<object, Func<bool>>[] array) => Array = array;
 
@@ -66,7 +66,7 @@ namespace WinCopies.Diagnostics
 
     internal interface IIfKeyValuesEnumerable
     {
-        Array Array { get; }
+        System.Array Array { get; }
 
         KeyValuePair<object, KeyValuePair<object, Func<bool>>> GetValue(in int index);
     }
@@ -83,14 +83,13 @@ namespace WinCopies.Diagnostics
 
         public KeyValuePair<object, object>[] Array { get; }
 
-        Array IIfKeyValuesEnumerable.Array => Array;
+        System.Array IIfKeyValuesEnumerable.Array => Array;
 
         public Predicate Predicate { get; }
 
         public IfKeyValuesEnumerable(in KeyValuePair<object, object>[] array, in Predicate predicate)
         {
             Array = array;
-
             Predicate = predicate;
         }
 
@@ -101,7 +100,7 @@ namespace WinCopies.Diagnostics
     {
         public KeyValuePair<object, KeyValuePair<object, Func<bool>>>[] Array { get; }
 
-        Array IIfKeyValuesEnumerable.Array => Array;
+        System.Array IIfKeyValuesEnumerable.Array => Array;
 
         public IfKeyKeyValuePairEnumerable(KeyValuePair<object, KeyValuePair<object, Func<bool>>>[] array) => Array = array;
 
@@ -110,7 +109,7 @@ namespace WinCopies.Diagnostics
 
     internal interface IIfValuesEnumerable<T>
     {
-        Array Array { get; }
+        System.Array Array { get; }
 
         KeyValuePair<T, Func<bool>> GetValue(in int index);
     }
@@ -126,14 +125,13 @@ namespace WinCopies.Diagnostics
 
         public T[] Array { get; }
 
-        Array IIfValuesEnumerable<T>.Array => Array;
+        System.Array IIfValuesEnumerable<T>.Array => Array;
 
         public Predicate<T> Predicate { get; }
 
         public IfValuesEnumerable(in T[] array, in Predicate<T> predicate)
         {
             Array = array;
-
             Predicate = predicate;
         }
 
@@ -144,7 +142,7 @@ namespace WinCopies.Diagnostics
     {
         public KeyValuePair<T, Func<bool>>[] Array { get; }
 
-        Array IIfValuesEnumerable<T>.Array => Array;
+        System.Array IIfValuesEnumerable<T>.Array => Array;
 
         public IfKeyValuePairEnumerable(in KeyValuePair<T, Func<bool>>[] array) => Array = array;
 
@@ -153,7 +151,7 @@ namespace WinCopies.Diagnostics
 
     internal interface IIfKeyValuesEnumerable<TKey, TValue>
     {
-        Array Array { get; }
+        System.Array Array { get; }
 
         KeyValuePair<TKey, KeyValuePair<TValue, Func<bool>>> GetValue(in int index);
     }
@@ -169,14 +167,13 @@ namespace WinCopies.Diagnostics
 
         public KeyValuePair<TKey, TValue>[] Array { get; }
 
-        Array IIfKeyValuesEnumerable<TKey, TValue>.Array => Array;
+        System.Array IIfKeyValuesEnumerable<TKey, TValue>.Array => Array;
 
         public Predicate<TValue> Predicate { get; }
 
         public IfKeyValuesEnumerable(in KeyValuePair<TKey, TValue>[] array, in Predicate<TValue> predicate)
         {
             Array = array;
-
             Predicate = predicate;
         }
 
@@ -187,7 +184,7 @@ namespace WinCopies.Diagnostics
     {
         public KeyValuePair<TKey, KeyValuePair<TValue, Func<bool>>>[] Array { get; }
 
-        Array IIfKeyValuesEnumerable<TKey, TValue>.Array => Array;
+        System.Array IIfKeyValuesEnumerable<TKey, TValue>.Array => Array;
 
         public IfKeyKeyValuePairEnumerable(in KeyValuePair<TKey, KeyValuePair<TValue, Func<bool>>>[] array) => Array = array;
 

@@ -59,15 +59,4 @@ namespace WinCopies.Collections
             public ReadOnlyObservableCollection(ObservableCollection<T> list) : base(list) => list.CollectionChanging += (object sender, NotifyCollectionChangedEventArgs e) => CollectionChanging?.Invoke(this, e);
         }
     }
-
-#if !WinCopies3
-    [Obsolete("This class has been moved to the WinCopies.Collections.DotNetFix namespace. This implementation is still here temporarily only.")]
-    [Serializable]
-    public class ReadOnlyObservableCollection<T> : System.Collections.ObjectModel.ReadOnlyObservableCollection<T>, INotifyCollectionChanging
-    {
-        public event NotifyCollectionChangingEventHandler CollectionChanging;
-
-        public ReadOnlyObservableCollection(ObservableCollection<T> list) : base(list) => list.CollectionChanging += (object sender, DotNetFix.NotifyCollectionChangedEventArgs e) => CollectionChanging?.Invoke(this, e);
-    }
-#endif
 }

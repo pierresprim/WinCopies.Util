@@ -21,16 +21,7 @@ namespace WinCopies.Collections
 {
     public class Stack : System.Collections.Stack, IEnumerableStack
     {
-#if WinCopies3
-        bool ISimpleLinkedListBase.
-#else
-        public bool
-#endif
-            IsReadOnly => false;
-
-#if !WinCopies3
-        uint IUIntCountableEnumerable.Count => (uint)Count;
-#endif
+        bool ISimpleLinkedListCore.IsReadOnly => false;
 
         uint IUIntCountable.Count => (uint)Count;
 
@@ -63,20 +54,15 @@ namespace WinCopies.Collections
 
             return false;
         }
+
+        void IListCommon.Add(object value) => Push(value);
+        object IListCommon.Remove() => Pop();
+        bool IListCommon.TryRemove(out object result) => TryPop(out result);
     }
 
     public class Queue : System.Collections.Queue, IEnumerableQueue
     {
-#if WinCopies3
-        bool ISimpleLinkedListBase.
-#else
-        public bool
-#endif
-            IsReadOnly => false;
-
-#if !WinCopies3
-        uint IUIntCountableEnumerable.Count => (uint)Count;
-#endif
+        bool ISimpleLinkedListCore.IsReadOnly => false;
 
         uint IUIntCountable.Count => (uint)Count;
 
@@ -109,5 +95,9 @@ namespace WinCopies.Collections
 
             return false;
         }
+
+        void IListCommon.Add(object value) => Enqueue(value);
+        object IListCommon.Remove() => Dequeue();
+        bool IListCommon.TryRemove(out object result) => TryDequeue(out result);
     }
 }

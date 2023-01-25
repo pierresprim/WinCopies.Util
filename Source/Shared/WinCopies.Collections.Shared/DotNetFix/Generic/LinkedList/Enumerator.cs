@@ -22,79 +22,54 @@ using System.Text;
 
 using WinCopies.Collections.Generic;
 
-using static WinCopies.
-#if WinCopies3
-    ThrowHelper;
-#else
-    Util.Util;
+using static WinCopies.ThrowHelper;
 #endif
-#endif
-
 namespace WinCopies.Collections.DotNetFix
 {
     public enum EnumerationDirection
     {
         FIFO = 1,
-
         LIFO = 2
     }
-
 #if CS7
-#if WinCopies3
     namespace Generic
     {
-#endif
         public class LinkedListEnumerator<T> : Enumerator<ILinkedListNode<T>>
         {
             private ILinkedList<T> _list;
             private Action _action;
             private Func<bool> _moveNext;
-            private
-#if !WinCopies3
-                DotNetFix.
+            private ILinkedListNode<T>
+#if CS8
+                ?
 #endif
-                ILinkedListNode
-            <T> _currentNode;
+                _currentNode;
             private Action _reset;
 
             protected ILinkedList<T> List => GetOrThrowIfDisposed(_list);
 
             public EnumerationDirection EnumerationDirection { get; }
 
-            public
-#if !WinCopies3
-                DotNetFix.
-#endif
-                ILinkedListNode
-            <T> Start
-            { get; }
+            public ILinkedListNode<T> Start { get; }
+            public ILinkedListNode<T> End { get; }
 
-            public
-#if !WinCopies3
-                DotNetFix.
-#endif
-                ILinkedListNode
-            <T> End
-            { get; }
-
-#if WinCopies3
             public override bool? IsResetSupported => true;
 
             /// <summary>
             /// When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
             /// </summary>
             protected override ILinkedListNode<T> CurrentOverride => _currentNode;
-#endif
+            protected DotNetFix.IReadOnlyLinkedListNode<ILinkedListNode<T>> CurrentNode => _currentNode;
 
-            public LinkedListEnumerator(in ILinkedList<T> list, in EnumerationDirection enumerationDirection, in
-#if !WinCopies3
-            DotNetFix.
+            public LinkedListEnumerator(in ILinkedList<T> list, in EnumerationDirection enumerationDirection, in ILinkedListNode<T>
+#if CS8
+                ?
 #endif
-            ILinkedListNode<T> start = default, in
-#if !WinCopies3
-            DotNetFix.
+                start = default, in ILinkedListNode<T>
+#if CS8
+                ?
 #endif
-            ILinkedListNode<T> end = default)
+                end = default)
             {
                 _list = list ?? throw GetArgumentNullException(nameof(list));
 
@@ -110,33 +85,21 @@ namespace WinCopies.Collections.DotNetFix
                 {
                     case EnumerationDirection.FIFO:
 
-                        _action = () => _currentNode = _currentNode.Next;
+                        _action = () => _currentNode = CurrentNode.Next;
 
                         _reset = () => _currentNode = Start ??
-#if !WinCopies3
-                        new Abstraction.Generic.LinkedListNode<T>(
-#endif
-                        _list.First
-#if !WinCopies3
-      )
-#endif
-                        ;
+
+                        _list.First;
 
                         break;
 
                     case EnumerationDirection.LIFO:
 
-                        _action = () => _currentNode = _currentNode.Previous;
+                        _action = () => _currentNode = CurrentNode.Previous;
 
                         _reset = () => _currentNode = Start ??
-#if !WinCopies3
-                        new Abstraction.Generic.LinkedListNode<T>(
-#endif
-                        _list.Last
-#if !WinCopies3
-      )
-#endif
-                        ;
+
+                        _list.Last;
 
                         break;
                 }
@@ -189,48 +152,20 @@ namespace WinCopies.Collections.DotNetFix
                 return true;
             }
 
-            protected override void
-#if WinCopies3
-                ResetOverride2
-#else
-                ResetOverride
-#endif
-                ()
+            protected override void ResetOverride2()
             {
-#if !WinCopies3
-            base.ResetOverride();
-#endif
-
                 _reset();
 
                 ResetMoveNext();
-
-#if !WinCopies3
-            ResetCurrent();
-#endif
             }
 
             protected override bool MoveNextOverride() => _moveNext();
 
-            protected
-#if WinCopies3
-override
-#else
-            virtual
-#endif
-            void ResetCurrent() => _currentNode = null;
+            protected override void ResetCurrent() => _currentNode = null;
 
-            protected
-#if WinCopies3
-override
-#else
-            virtual
-#endif
-           void DisposeManaged()
+            protected override void DisposeManaged()
             {
-#if WinCopies3
                 base.DisposeManaged();
-#endif
 
                 _action = null;
 
@@ -239,33 +174,13 @@ override
                 _reset = null;
             }
 
-            protected override void
-#if WinCopies3
-            DisposeUnmanaged()
-#else
-            Dispose(bool disposing)
-#endif
+            protected override void DisposeUnmanaged()
             {
                 _list = null;
 
-                base.
-#if WinCopies3
-                DisposeUnmanaged();
-#else
-                Dispose(disposing);
-#endif
-
-#if WinCopies3
+                base.DisposeUnmanaged();
             }
-#else
-                DisposeManaged();
-            }
-
-            ~LinkedListEnumerator() => Dispose(false);
-#endif
         }
-#if WinCopies3
     }
 #endif
-#endif
-    }
+}

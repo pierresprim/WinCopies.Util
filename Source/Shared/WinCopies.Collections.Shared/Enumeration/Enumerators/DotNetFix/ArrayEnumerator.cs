@@ -15,137 +15,371 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if WinCopies3
 using System;
+using System.Collections;
 
 using WinCopies.Collections.Generic;
+using WinCopies.Util;
 
+using static WinCopies.Collections.DotNetFix.ArrayEnumerationOptions;
 using static WinCopies.ThrowHelper;
 
 namespace WinCopies.Collections.DotNetFix
 {
-    public class ArrayEnumerator : Enumerator<object
+    [Flags]
+    public enum ArrayEnumerationOptions : byte
+    {
+        None = 0,
+        Reverse = 1,
+        Circular = 2,
+        Reserved = 4,
+        Infinite = Circular | Reserved
+    }
+
+    public class ListEnumerator<T> : Generic.ArrayEnumeratorBase<object
 #if CS8
         ?
 #endif
-        >
+        , T> where T : System.Collections.IList
     {
-        protected Array Array { get; }
-
-        public int CurrentIndex { get; private set; }
-
-        public override bool? IsResetSupported => true;
-
         protected override object
 #if CS8
             ?
 #endif
-            CurrentOverride => Array.GetValue(CurrentIndex);
+            CurrentOverride => Array[CurrentIndex];
 
-        public ArrayEnumerator(in Array array)
-        {
-            Array = array ?? throw GetArgumentNullException(nameof(array));
+        public override int Count => Array.Count;
 
-            ResetIndex();
-        }
+        public ListEnumerator(in T array, in ArrayEnumerationOptions options = None, in int? startIndex = null) : base(array, options, startIndex) { /* Left empty. */ }
+    }
 
-        protected void ResetIndex() => CurrentIndex = -1;
+    public class ListEnumerator : ListEnumerator<System.Collections.IList>
+    {
+        public ListEnumerator(in System.Collections.IList array, in ArrayEnumerationOptions options = None, in int? startIndex = null) : base(array, options, startIndex) { /* Left empty. */ }
+    }
 
-        protected override void ResetCurrent()
-        {
-            base.ResetCurrent();
+    public class ArrayEnumerator<T> : Generic.ArrayEnumeratorBase<object
+#if CS8
+        ?
+#endif
+        , T> where T : ICountable, IIndexableR
+    {
+        protected override object
+#if CS8
+            ?
+#endif
+            CurrentOverride => Array[CurrentIndex];
 
-            ResetIndex();
-        }
+        public override int Count => Array.Count;
 
-        protected override bool MoveNextOverride() => ++CurrentIndex < Array.Length;
+        public ArrayEnumerator(in T array, in ArrayEnumerationOptions options = None, in int? startIndex = null) : base(array, options, startIndex) { /* Left empty. */ }
+    }
 
-        protected override void ResetOverride2() => ResetIndex();
+    public static class ArrayEnumerator
+    {
+        public static ListEnumerator Create(in System.Collections.IList array, ArrayEnumerationOptions options = None, in int? startIndex = null) => new
+#if !CS9
+            ListEnumerator
+#endif
+            (array, options, startIndex);
+
+        public static Generic.ArrayEnumerator<T> Create<T>(in
+#if CS7
+            System.Collections
+#else
+            Extensions
+#endif
+            .Generic.IReadOnlyList<T> array, in ArrayEnumerationOptions options = None, in int? startIndex = null) => new
+#if !CS9
+            Generic.ArrayEnumerator<T>
+#endif
+            (array, options, startIndex);
+
+        public static Generic.ListEnumerator<T> Create<T>(in System.Collections.Generic.IList<T> array, in ArrayEnumerationOptions options = None, in int? startIndex = null) => new
+#if !CS9
+            Generic.ListEnumerator<T>
+#endif
+            (array, options, startIndex);
+
+        public static ArrayEnumerator<T> Create<T>(in T array, in ArrayEnumerationOptions options = None, in int? startIndex = null) where T : ICountable, IIndexableR => new
+#if !CS9
+            ArrayEnumerator<T>
+#endif
+            (array, options, startIndex);
     }
 
     namespace Generic
     {
-        public class ArrayEnumerator<T> : Enumerator<T>, ICountableDisposableEnumeratorInfo<T>
+        public abstract class ArrayEnumeratorBase<TItems, TList> : Enumerator<TItems>, ICountableDisposableEnumeratorInfo<TItems>
         {
-            private
-#if CS7
-                System.Collections.Generic.
-#else
-                Extensions.Generic.
-#endif
-            IReadOnlyList<T> _array;
+            private TList _array;
             private int _currentIndex;
-            private readonly int _startIndex;
+            private int? _defaultStartIndex;
+            private ArrayEnumerationOptions _options;
             private Func<bool> _condition;
             private Action _moveNext;
 
-            protected
-#if CS7
-                System.Collections.Generic.
-#else
-                Extensions.Generic.
-#endif
-            IReadOnlyList<T> Array => IsDisposed ? throw GetExceptionForDispose(false) : _array;
+            protected TList Array => IsDisposed ? throw GetExceptionForDispose(false) : _array;
 
-            public int Count => IsDisposed ? throw GetExceptionForDispose(false) : _array.Count;
+            public abstract int Count { get; }
 
             protected int CurrentIndex => IsDisposed ? throw GetExceptionForDispose(false) : _currentIndex;
 
-            public ArrayEnumerator(in
-#if CS7
-                System.Collections.Generic.
-#else
-                Extensions.Generic.
-#endif
-            IReadOnlyList<T> array, in bool reverse = false, in int? startIndex = null)
+            public ArrayEnumerationOptions Options
             {
-                _array = array ?? throw GetArgumentNullException(nameof(array));
+                get => _options;
 
-                if (startIndex.HasValue && (startIndex.Value < 0 || startIndex.Value >= array.Count))
-
-                    throw new ArgumentOutOfRangeException(nameof(startIndex), startIndex, $"The given index is less than zero or greater than or equal to {nameof(array.Count)}.");
-
-                if (reverse)
+                set
                 {
-                    _startIndex = startIndex.HasValue ? startIndex.Value + 1 : _array.Count;
-                    _condition = () => _currentIndex >= 0;
-                    _moveNext = () => _currentIndex--;
+                    ThrowIfStartedOrDisposed();
+
+                    _options = value;
+                }
+            }
+
+            public override bool? IsResetSupported => true;
+
+            public int StartIndex { get; private set; }
+
+            public bool IsCircular => _options.HasFlag(Circular);
+
+            public int? DefaultStartIndex { get => _defaultStartIndex; set => UpdateStartIndex(value); }
+
+            public ArrayEnumeratorBase(in TList array, ArrayEnumerationOptions options = None, in int? startIndex = null)
+            {
+                _array = array
+#if CS8
+                    ??
+#else
+                    == null ?
+#endif
+                    throw GetArgumentNullException(nameof(array))
+#if !CS8
+                    : array
+#endif
+                    ;
+
+                UpdateStartIndex(startIndex);
+
+                _options = options;
+
+                ResetMoveNext();
+                ResetCurrent();
+            }
+
+            private void UpdateStartIndex(in int? index)
+            {
+                ThrowIfStartedOrDisposed();
+
+                _defaultStartIndex = index.HasValue && (index.Value < 0 || index.Value >= Count) ? throw new ArgumentOutOfRangeException(nameof(index), index, $"The given index is less than zero or greater than or equal to the length of {nameof(Array)}.") : index;
+            }
+
+            protected virtual void ResetMoveNext()
+            {
+                int count = Count;
+
+                if (count == 0)
+                {
+                    _moveNext = Delegates.EmptyVoid;
+                    _condition = Bool.False;
+                }
+
+                else if (count == 1)
+                {
+                    _moveNext = Delegates.EmptyVoid;
+                    _condition = () =>
+                    {
+                        _condition = Bool.False;
+
+                        return true;
+                    };
                 }
 
                 else
                 {
-                    _startIndex = startIndex.HasValue ? startIndex.Value - 1 : -1;
-                    _condition = () => _currentIndex < _array.Count;
-                    _moveNext = () => _currentIndex++;
-                }
+                    bool isInfinite(in Action action)
+                    {
+                        if (_options.HasFlag(Infinite))
+                        {
+                            _condition = Bool.True;
 
-                ResetCurrent();
+                            action();
+
+                            return true;
+                        }
+
+                        return false;
+                    }
+
+                    void whenCircular(in Action action)
+                    {
+                        _condition = () =>
+                        {
+                            _condition = () =>
+                            {
+                                if (_currentIndex == StartIndex)
+
+                                    _condition = Bool.False;
+
+                                return true;
+                            };
+
+                            return true;
+                        };
+
+                        action();
+                    }
+
+                    if (_options.HasFlag(Reverse))
+                    {
+                        StartIndex = _defaultStartIndex.HasValue ? _defaultStartIndex.Value + 1 : count;
+
+                        void updateIndex() => _currentIndex--;
+
+                        void setMoveNext() => _moveNext = () =>
+                        {
+                            if (_currentIndex == 0)
+
+                                _currentIndex = count;
+
+                            else
+
+                                updateIndex();
+                        };
+
+                        if (isInfinite(setMoveNext))
+
+                            return;
+
+                        else if (IsCircular)
+
+                            whenCircular(setMoveNext);
+
+                        else
+                        {
+                            _condition = () => _currentIndex >= 0;
+                            _moveNext = updateIndex;
+                        }
+                    }
+
+                    else
+                    {
+                        StartIndex = _defaultStartIndex.HasValue ? _defaultStartIndex.Value - 1 : -1;
+
+                        void updateIndex() => _currentIndex++;
+
+                        void setMoveNext()
+                        {
+                            count--;
+
+                            _moveNext = () =>
+                            {
+                                if (_currentIndex == count)
+
+                                    _currentIndex = 0;
+
+                                else
+
+                                    updateIndex();
+                            };
+                        }
+
+                        if (isInfinite(setMoveNext))
+
+                            return;
+
+                        else if (IsCircular)
+
+                            whenCircular(setMoveNext);
+
+                        else
+                        {
+                            _condition = () => _currentIndex < count;
+                            _moveNext = updateIndex;
+                        }
+                    }
+                }
             }
 
-            protected override T CurrentOverride => _array[_currentIndex];
-
-            public override bool? IsResetSupported => true;
+            private void DisposeDelegates()
+            {
+                _condition = null;
+                _moveNext = null;
+            }
 
             protected override bool MoveNextOverride()
             {
                 _moveNext();
 
-                return _condition();
+                if (_condition())
+
+                    return true;
+
+                DisposeDelegates();
+
+                return false;
             }
 
-            protected override void ResetCurrent() => _currentIndex = _startIndex;
+            protected virtual void ResetIndex() => _currentIndex = StartIndex;
 
-            protected override void ResetOverride2() { /* Left empty. */ }
+            protected override void ResetCurrent()
+            {
+                base.ResetCurrent();
+
+                ResetIndex();
+            }
+
+            protected override void ResetOverride2() => ResetMoveNext();
 
             protected override void DisposeManaged()
             {
-                _array = null;
-                _condition = null;
-                _moveNext = null;
+                _array = default;
 
-                Reset();
+                DisposeDelegates();
+
+                StartIndex = -1;
+
+                base.DisposeManaged();
             }
+        }
+
+        public class ArrayEnumerator<TItems, TArray> : ArrayEnumeratorBase<TItems, TArray> where TArray : IIndexableR<TItems>, ICountable
+        {
+            protected override TItems CurrentOverride => Array[CurrentIndex];
+
+            public override int Count => Array.Count;
+
+            public ArrayEnumerator(in TArray array, in ArrayEnumerationOptions options = None, in int? startIndex = null) : base(array, options, startIndex) { /* Left empty. */ }
+        }
+
+        public class ArrayEnumerator<T> : ArrayEnumeratorBase<T,
+#if CS7
+            System.Collections.Generic
+#else
+            Extensions.Generic
+#endif
+            .IReadOnlyList<T>>
+        {
+            protected override T CurrentOverride => Array[CurrentIndex];
+
+            public override int Count => Array.Count;
+
+            public ArrayEnumerator(in
+#if CS7
+                System.Collections.Generic
+#else
+                Extensions.Generic
+#endif
+                .IReadOnlyList<T> array, in ArrayEnumerationOptions options = None, in int? startIndex = null) : base(array, options, startIndex) { /* Left empty. */ }
+        }
+
+        public class ListEnumerator<T> : ArrayEnumeratorBase<T, System.Collections.Generic.IList<T>>
+        {
+            protected override T CurrentOverride => Array[CurrentIndex];
+
+            public override int Count => Array.Count;
+
+            public ListEnumerator(in System.Collections.Generic.IList<T> list, in ArrayEnumerationOptions options = None, in int? startIndex = null) : base(list, options, startIndex) { /* Left empty. */ }
         }
     }
 }
-#endif

@@ -16,251 +16,68 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if CS7
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
 
 using WinCopies.Collections.Generic;
+using WinCopies.Util;
 
-#if !WinCopies3
-using System.Runtime.Serialization;
-#endif
-
-namespace WinCopies.Collections.DotNetFix
-#if WinCopies3
-.Generic
-#endif
+namespace WinCopies.Collections.DotNetFix.Generic
 {
     public interface ILinkedList<T> :
         // TODO:
-#if WinCopies3
-        IReadOnlyLinkedList2<T>, Collections.
-#if WinCopies3
-            Extensions.
-#endif
-            Generic.IEnumerable<ILinkedListNode<T>>, IUIntCollection<T>,
-#else
-        ISerializable, IDeserializationCallback, System.Collections.Generic.IEnumerable<T>,
-#endif
-        System.Collections.Generic.ICollection<T>, ICollection
+        IReadOnlyLinkedList<T, ILinkedListNode<T>>, IUIntCountableEnumerableInfo<ILinkedListNode<T>>, IUIntCollection<T>, System.Collections.Generic.ICollection<T>, ICollection, IUIntCountableEnumerableInfo<T>, IQueueCommon<T>, IStackCommon<T>, IPeekable<T>, ISimpleLinkedListBase2
     {
-#if WinCopies3
-        new bool IsReadOnly { get; }
-
-        ILinkedListNode<T> First { get; }
-
-        ILinkedListNode<T> Last { get; }
-
-        ILinkedListNode<T> Find(T value);
-
-        ILinkedListNode<T> FindLast(T value);
+        IQueue<T> AsQueue();
+        IStack<T> AsStack();
 
         IUIntCountableEnumerable<ILinkedListNode<T>> AsNodeEnumerable();
 
-        new void Add(T item);
+        IUIntCountableEnumeratorInfo<ILinkedListNode<T>> GetNodeEnumerator();
+        IUIntCountableEnumeratorInfo<ILinkedListNode<T>> GetReversedNodeEnumerator();
 
-        new bool Remove(T item);
+        ILinkedListNode<T> AddAfter(ILinkedListNode<T> node, T value);
+        ILinkedListNode<T> AddBefore(ILinkedListNode<T> node, T value);
 
-        new void Clear();
-
-        new bool Contains(T item);
-
-        new void CopyTo(T[] array, int arrayIndex);
-
-        new IUIntCountableEnumerator<T> GetEnumerator();
-
-        new IUIntCountableEnumerator<T> GetReversedEnumerator();
-
-        IUIntCountableEnumerator<ILinkedListNode<T>> GetNodeEnumerator();
-
-        IUIntCountableEnumerator<ILinkedListNode<T>> GetReversedNodeEnumerator();
-
-#if CS8
-        bool ICollectionBase<T>.IsReadOnly => IsReadOnly;
-
-        void ICollectionBase<T>.Add(T item) => Add(item);
-
-        bool ICollectionBase<T>.Remove(T item) => Remove(item);
-
-        bool System.Collections.Generic.ICollection<T>.IsReadOnly => IsReadOnly;
-
-        void System.Collections.Generic.ICollection<T>.Add(T item) => Add(item);
-
-        bool System.Collections.Generic.ICollection<T>.Remove(T item) => Remove(item);
-
-        void System.Collections.Generic.ICollection<T>.Clear() => Clear();
-
-        bool System.Collections.Generic.ICollection<T>.Contains(T item) => Contains(item);
-
-        void System.Collections.Generic.ICollection<T>.CopyTo(T[] array, int arrayIndex) => CopyTo(array, arrayIndex);
-
-        void ICollectionBase<T>.Clear() => Clear();
-
-        bool IReadOnlyCollectionBase<T>.Contains(T item) => Contains(item);
-
-        void IReadOnlyCollectionBase<T>.CopyTo(T[] array, int arrayIndex) => CopyTo(array, arrayIndex);
-
-        IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.First => First;
-
-        IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.Last => Last;
-
-        IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.Find(T value) => Find(value);
-
-        IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.FindLast(T value) => FindLast(value);
-
-        IUIntCountableEnumerator<T> IReadOnlyLinkedList2<T>.GetEnumerator() => GetEnumerator();
-
-        IUIntCountableEnumerator<T> IReadOnlyLinkedList2<T>.GetReversedEnumerator() => GetReversedEnumerator();
-#endif
-#else
-        System.Collections.Generic.LinkedListNode<T> Last { get; }
-
-        System.Collections.Generic.LinkedListNode<T> First { get; }
-
-        new int Count { get; }
-
-        void AddAfter(System.Collections.Generic.LinkedListNode<T> node, System.Collections.Generic.LinkedListNode<T> newNode);
-
-        void AddBefore(System.Collections.Generic.LinkedListNode<T> node, System.Collections.Generic.LinkedListNode<T> newNode);
-
-        void AddFirst(System.Collections.Generic.LinkedListNode<T> node);
-
-        void AddLast(System.Collections.Generic.LinkedListNode<T> node);
-
-        System.Collections.Generic.LinkedListNode<T> Find(T value);
-
-        System.Collections.Generic.LinkedListNode<T> FindLast(T value);
-
-        new System.Collections.Generic.LinkedList<T>.Enumerator GetEnumerator();
-#endif
+        ILinkedListNode<T> AddFirst(T value);
+        ILinkedListNode<T> AddLast(T value);
 
 
 
-#if !WinCopies3
-        System.Collections.Generic.LinkedListNode
-#else
-        ILinkedListNode
-#endif
-                <T> AddAfter(
-#if !WinCopies3
-System.Collections.Generic.LinkedListNode
-#else
-            ILinkedListNode
-#endif
-                <T> node, T value);
-
-#if !WinCopies3
-        System.Collections.Generic.LinkedListNode
-#else
-        ILinkedListNode
-#endif
-           <T> AddBefore(
-#if !WinCopies3
-System.Collections.Generic.LinkedListNode
-#else
-            ILinkedListNode
-#endif
-               <T> node, T value);
-
-
-#if !WinCopies3
-        System.Collections.Generic.LinkedListNode
-#else
-        ILinkedListNode
-#endif
-               <T> AddFirst(T value);
-
-
-#if !WinCopies3
-        System.Collections.Generic.LinkedListNode
-#else
-        ILinkedListNode
-#endif
-               <T> AddLast(T value);
-
-
-
-        void Remove(
-#if !WinCopies3
-            System.Collections.Generic.LinkedListNode
-#else
-            ILinkedListNode
-#endif
-                <T> node);
+        void Remove(ILinkedListNode<T> node);
 
         void RemoveFirst();
-
         void RemoveLast();
+#if CS8
+        new IUIntCountableEnumeratorInfo<T> GetEnumerator() => this.AsFromType<Enumeration.IEnumerable<IUIntCountableEnumeratorInfo<T>>>().GetEnumerator();
+        IUIntCountableEnumerator<T> Enumeration.IEnumerable<IUIntCountableEnumerator<T>>.GetEnumerator() => GetEnumerator();
+        System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetEnumerator();
+        System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        System.Collections.IEnumerator Extensions.IEnumerable.GetReversedEnumerator() => this.AsFromType<Extensions.Generic.IEnumerable<T>>().GetReversedEnumerator();
+
+        void ICollectionBase<T>.Add(T item) => AddLast(item);
+        bool ICollectionBase<T>.Remove(T item) => this.AsFromType<System.Collections.Generic.ICollection<T>>().Remove(item) != null;
+#endif
     }
 
-    [Obsolete("The IsReadOnly property is available through the System.Collections.Generic.ICollection<T> interface.")]
-    public interface ILinkedList2<T> : ILinkedList<T>
+    public interface ILinkedList3<T> : ILinkedList<T>
     {
-        new bool IsReadOnly { get; }
-    }
-
-    public interface ILinkedList3<T> :
-#if WinCopies4
-        ILinkedList
-#else
-        ILinkedList2
-#endif
-        <T>, IUIntCountableEnumerable<T>
-#if !WinCopies3
-, IUIntCountableEnumerable<ILinkedListNode<T>>
-#endif
-    {
-#if !WinCopies3
-        System.Collections.Generic.IEnumerator<ILinkedListNode<T>> GetNodeEnumerator(EnumerationDirection enumerationDirection);
-#endif
-
-        new ILinkedListNode<T> Remove(T item);
-
         bool MoveAfter(ILinkedListNode<T> node, ILinkedListNode<T> after);
-
         bool MoveBefore(ILinkedListNode<T> node, ILinkedListNode<T> before);
 
-        void Swap(ILinkedListNode<T> x, ILinkedListNode<T> y);
-
-#if WinCopies3 && CS8
-        System.Collections.IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
-#endif
-    }
-
-#if WinCopies3
-    public interface IEnumerableInfoLinkedList<T> : ILinkedList3<T>, IReadOnlyEnumerableInfoLinkedList<T>, Collections.Generic.IEnumerableInfo<ILinkedListNode<T>>
-    {
-        new IUIntCountableEnumeratorInfo<T> GetEnumerator();
-
-        new IUIntCountableEnumeratorInfo<T> GetReversedEnumerator();
-
-        new IUIntCountableEnumeratorInfo<ILinkedListNode<T>> GetNodeEnumerator();
-
-        new IUIntCountableEnumeratorInfo<ILinkedListNode<T>> GetReversedNodeEnumerator();
-
+        new ILinkedListNode<T>
 #if CS8
-        IEnumeratorInfo<T> IEnumerable<T, IEnumeratorInfo<T>>.GetEnumerator() => new EnumeratorInfo<T>(GetEnumerator());
-
-        IEnumeratorInfo<T> Collections.Generic.IEnumerable<T, IEnumeratorInfo<T>>.GetReversedEnumerator() => new EnumeratorInfo<T>(GetReversedEnumerator());
-
-        System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-        IUIntCountableEnumerator<T> ILinkedList<T>.GetEnumerator() => GetEnumerator();
-
-        IUIntCountableEnumerator<T> ILinkedList<T>.GetReversedEnumerator() => GetReversedEnumerator();
-
-        IUIntCountableEnumerator<ILinkedListNode<T>> ILinkedList<T>.GetNodeEnumerator() => GetNodeEnumerator();
-
-        IUIntCountableEnumerator<ILinkedListNode<T>> ILinkedList<T>.GetReversedNodeEnumerator() => GetReversedNodeEnumerator();
-
-        IEnumeratorInfo<ILinkedListNode<T>> IEnumerable<ILinkedListNode<T>, IEnumeratorInfo<ILinkedListNode<T>>>.GetEnumerator() => GetNodeEnumerator();
-
-        System.Collections.IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
-
-        IEnumeratorInfo<ILinkedListNode<T>> Collections.Generic.IEnumerable<ILinkedListNode<T>, IEnumeratorInfo<ILinkedListNode<T>>>.GetReversedEnumerator() => GetReversedNodeEnumerator();
+            ?
 #endif
+            Remove(T item);
+
+        void Swap(ILinkedListNode<T> x, ILinkedListNode<T> y);
     }
-#endif
+
+    public interface IEnumerableInfoLinkedList<T> : ILinkedList3<T>, IReadOnlyEnumerableInfoLinkedList<T, ILinkedListNode<T>>
+    {
+        // Left empty.
+    }
 }
 #endif

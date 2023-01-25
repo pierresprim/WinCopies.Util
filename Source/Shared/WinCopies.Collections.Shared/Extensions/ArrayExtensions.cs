@@ -15,12 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if WinCopies3
 using System;
 using System.Collections;
-using System.Collections.Generic;
 
 using WinCopies.Collections.Abstraction.Generic;
+using WinCopies.Util;
 
 using static WinCopies.ThrowHelper;
 
@@ -30,13 +29,13 @@ namespace WinCopies.Collections
     {
         public static void Clear<T>(this IArrayEnumerable<T
 #if CS9
-                ?
+            ?
 #endif
-                > array)
+            > array)
         {
             ThrowIfNull(array, nameof(array));
 
-            for (int i = 0; i < array.Count; i++)
+            for (int i = 0; i < array.AsFromType<ICountable>().Count; i++)
 
                 array[i] = default;
         }
@@ -47,7 +46,7 @@ namespace WinCopies.Collections
         /// <param name="array">The source table.</param>
         /// <param name="arrays">The tables to concatenate.</param>
         /// <returns>The concatenatd array.</returns>
-        public static object[] Append(this Array array, params Array[] arrays) => UtilHelpers.Concatenate((object[])array, arrays);
+        public static object[] Append(this System.Array array, params System.Array[] arrays) => UtilHelpers.Concatenate((object[])array, arrays);
 
         public static ArrayList ToList(this object[] array, in int startIndex, in int length)
         {
@@ -66,11 +65,11 @@ namespace WinCopies.Collections
             return arrayList;
         }
 
-        public static List<T> ToList<T>(this T[] array, in int startIndex, in int length)
+        public static System.Collections.Generic.List<T> ToList<T>(this T[] array, in int startIndex, in int length)
         {
             ThrowIfNull(array, nameof(array));
 
-            var arrayList = new List<T>(length);
+            var arrayList = new System.Collections.Generic.List<T>(length);
 
             int count = startIndex + length;
 
@@ -85,7 +84,7 @@ namespace WinCopies.Collections
 
 
 
-        private static void ThrowOnInvalidArrayMoveOperation(in Array array, in string arrayArgumentName, in int x, in string xArgumentName, in int y, in string yArgumentName)
+        private static void ThrowOnInvalidArrayMoveOperation(in System.Array array, in string arrayArgumentName, in int x, in string xArgumentName, in int y, in string yArgumentName)
         {
             ThrowIfNull(array, arrayArgumentName);
             ThrowIfMultidimensionalArray(array, arrayArgumentName);
@@ -93,7 +92,7 @@ namespace WinCopies.Collections
             ThrowIfNOTBetween(y, 0, array.Length - 1, yArgumentName);
         }
 
-        public static void Move(this Array array, int move, int at)
+        public static void Move(this System.Array array, int move, int at)
         {
             ThrowOnInvalidArrayMoveOperation(array, nameof(array), move, nameof(move), at, nameof(at));
 
@@ -159,7 +158,7 @@ namespace WinCopies.Collections
             }
         }
 
-        public static void Swap(this Array array, int x, int y)
+        public static void Swap(this System.Array array, int x, int y)
         {
             ThrowOnInvalidArrayMoveOperation(array, nameof(array), x, nameof(x), y, nameof(y));
 
@@ -185,7 +184,6 @@ namespace WinCopies.Collections
             if (array.Length <= 1 || x == y)
 
                 return;
-
 #if CS5
             (array[y], array[x]) = (array[x], array[y]);
 #else
@@ -196,10 +194,5 @@ namespace WinCopies.Collections
             array[y] = temp;
 #endif
         }
-
-#if !WinCopies3
-        public static IEnumerable<T> ToEnumerable<T>(this T[] array) => array ?? throw GetArgumentNullException(nameof(array));
-#endif
     }
 }
-#endif

@@ -15,7 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if WinCopies3
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Data;
@@ -24,9 +23,7 @@ using System.Windows.Media.Imaging;
 
 using WinCopies.Desktop;
 
-#if WinCopies3
 using static WinCopies.Util.Data.ConverterHelper;
-#endif
 
 namespace WinCopies.Util.Data
 {
@@ -46,7 +43,6 @@ namespace WinCopies.Util.Data
             >
     {
         public override IReadOnlyConversionOptions ConvertOptions => AllowNull;
-
         public override IReadOnlyConversionOptions ConvertBackOptions => AllowNull;
 
         protected override ImageSource
@@ -78,4 +74,3 @@ namespace WinCopies.Util.Data
             parameter, CultureInfo culture) => value == null ? null : Icon.FromHandle(((BitmapSource)value).ToBitmap().GetHicon());
     }
 }
-#endif

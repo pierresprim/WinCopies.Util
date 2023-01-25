@@ -18,58 +18,30 @@
 using System;
 using System.Collections;
 
-#if !WinCopies3
-using static WinCopies.Util.Util;
-#endif
-
-using static WinCopies.
-#if !WinCopies3
-    Util.
-#endif
-    ThrowHelper;
-
 namespace WinCopies.Collections.DotNetFix
 {
-    public interface IEnumerableStack : IStack, IEnumerableSimpleLinkedList
+    public interface IEnumerableStack : IStack, IEnumerableSimpleLinkedList, ICollection
     {
         // Left empty.
     }
 
     [Serializable]
-    public class EnumerableStack : EnumerableSimpleLinkedList, IEnumerableStack
+    public class EnumerableStack : EnumerableSimpleLinkedList<Stack>, IEnumerableStack
     {
-        [NonSerialized]
-        private readonly Stack _stack;
+                protected override ISimpleLinkedListNode2 FirstNode => InnerList.FirstItem;
 
-#if !WinCopies3
-        public new bool IsReadOnly => base.IsReadOnly;
-#endif
-
-        public sealed override uint Count => _stack.Count;
-
-        public EnumerableStack() => _stack = new Stack();
-
-        public sealed override void Clear()
-        {
-            _stack.Clear();
-
-            UpdateEnumerableVersion();
-        }
+        public EnumerableStack() : base(new Stack()) { /* Left empty. */ }
 
         public void Push(object item)
         {
-            _stack.Push(item);
+            InnerList.Push(item);
 
             UpdateEnumerableVersion();
         }
 
-        public sealed override object Peek() => _stack.Peek();
-
-        public sealed override bool TryPeek(out object result) => _stack.TryPeek(out result);
-
         public object Pop()
         {
-            object result = _stack.Pop();
+            object result = InnerList.Pop();
 
             UpdateEnumerableVersion();
 
@@ -78,7 +50,7 @@ namespace WinCopies.Collections.DotNetFix
 
         public bool TryPop(out object result)
         {
-            if (_stack.TryPop(out result))
+            if (InnerList.TryPop(out result))
             {
                 UpdateEnumerableVersion();
 
@@ -86,161 +58,6 @@ namespace WinCopies.Collections.DotNetFix
             }
 
             return false;
-        }
-
-        public sealed override System.Collections.IEnumerator GetEnumerator()
-        {
-            var enumerator = new Enumerator(this);
-
-            IncrementEnumeratorCount();
-
-            return enumerator;
-        }
-
-#if !WinCopies3
-        [Serializable]
-#endif
-        public sealed class Enumerator :
-#if WinCopies3
-Collections.Enumerator
-#else
-IEnumerator, WinCopies.Util.DotNetFix.IDisposable
-#endif
-        {
-            private EnumerableStack _stack;
-            private ISimpleLinkedListNode _currentNode;
-            private readonly uint _version;
-            private bool _first = true;
-
-#if WinCopies3
-            /// <summary>
-            /// When overridden in a derived class, gets the element in the collection at the current position of the enumerator.
-            /// </summary>
-            protected override object CurrentOverride => _currentNode.Value;
-
-            public override bool? IsResetSupported => true;
-#else
-            public object Current => IsDisposed ? throw GetExceptionForDispose(false) : _currentNode.Value;
-
-            public bool IsDisposed { get; private set; }
-#endif
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="Enumerator"/> class.
-            /// </summary>
-            /// <param name="stack">The <see cref="EnumerableStack"/> to enumerate.</param>
-            public Enumerator(in EnumerableStack stack)
-            {
-                _stack = stack;
-
-                _version = stack.EnumerableVersion;
-
-#if WinCopies3
-                ResetOverride();
-#else
-                Reset();
-#endif
-            }
-
-#if WinCopies3
-            protected override void ResetOverride2()
-            {
-                ThrowIfVersionHasChanged(_stack.EnumerableVersion, _version);
-#else
-            public void Reset()
-            {
-                if (IsDisposed)
-
-                    throw GetExceptionForDispose(false);
-#endif
-
-                _first = true;
-
-                _currentNode = _stack._stack.FirstItem;
-            }
-
-#if WinCopies3
-            protected override bool MoveNextOverride()
-            {
-#else
-            public bool MoveNext()
-            {
-                if (IsDisposed)
-
-                    throw GetExceptionForDispose(false);
-
-#endif
-                ThrowIfVersionHasChanged(_stack.EnumerableVersion, _version);
-
-                if (_first)
-                {
-                    _first = false;
-
-                    return _currentNode != null;
-                }
-
-                if (_currentNode.
-#if WinCopies3
-                    Next
-#else
-                    NextNode
-#endif
-                    == null)
-                {
-                    _currentNode = null;
-
-                    return false;
-                }
-
-                _currentNode = _currentNode.
-#if WinCopies3
-                    Next
-#else
-                    NextNode
-#endif
-                    ;
-
-                return true;
-            }
-
-#if WinCopies3
-            protected override void DisposeUnmanaged()
-            {
-                _stack.DecrementEnumeratorCount();
-                _stack = null;
-
-                base.DisposeUnmanaged();
-            }
-
-            protected override void DisposeManaged()
-            {
-                base.DisposeManaged();
-
-                _currentNode = null;
-            }
-#else
-            private void Dispose(bool disposing)
-            {
-                if (IsDisposed)
-
-                    return;
-
-                _stack.DecrementEnumeratorCount();
-
-                if (disposing)
-                {
-                    _stack = null;
-
-                    _currentNode = null;
-                }
-
-                IsDisposed = true;
-            }
-
-            public void Dispose() => Dispose(true);
-
-            ~Enumerator() => Dispose(false);
-#endif
         }
     }
 }

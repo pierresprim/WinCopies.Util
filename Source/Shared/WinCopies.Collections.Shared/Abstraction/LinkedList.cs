@@ -22,107 +22,90 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 using WinCopies.Collections.DotNetFix;
-
-using static WinCopies.
-#if WinCopies3
-    ThrowHelper;
-
 using WinCopies.Collections.DotNetFix.Generic;
 using WinCopies.Collections.Generic;
 using WinCopies.Linq;
-#else
-    Util.Util;
-#endif
 using WinCopies.Util;
+
+using static WinCopies.ThrowHelper;
+using static WinCopies.Collections.ThrowHelper;
 
 namespace WinCopies.Collections.Abstraction.Generic
 {
     public class LinkedListNode<T> :
-#if !WinCopies3
-        DotNetFix.
+#if !CS8
+        LinkedListNodeBase<T>,
 #endif
         ILinkedListNode<T>, IEquatable<ILinkedListNode<T>>
     {
-#if WinCopies3
-        private IReadOnlyLinkedListNodeBase2<T> _asReadOnly;
-        private ILinkedListNodeBase2<T> _asReadOnly2;
+        private DotNetFix.Generic.IReadOnlyLinkedListNode<T>
+#if CS8
+            ?
 #endif
+            _asReadOnly;
 
         protected internal System.Collections.Generic.LinkedListNode<T> InnerNode { get; }
 
-        ILinkedList<T>
-#if !WinCopies3
-        DotNetFix.
-#endif
-        ILinkedListNode<T>.List => GetList();
-
-#if WinCopies3
-        ILinkedList<T> IReadOnlyLinkedListNode<T, ILinkedList<T>>.List => GetList();
-
-        IReadOnlyLinkedList<T> IReadOnlyLinkedListNode<T, IReadOnlyLinkedList<T>>.List => GetList();
-
-        ILinkedListNode<T> ILinkedListNode<T>.Previous => GetNode(InnerNode.Previous);
-
-        ILinkedListNode<T, ILinkedList<T>> IReadOnlyLinkedListNode<T, ILinkedListNode<T, ILinkedList<T>>, ILinkedList<T>>.Previous => GetNode(InnerNode.Previous);
-
-        IReadOnlyLinkedListNode<T, IReadOnlyLinkedList<T>> IReadOnlyLinkedListNode<T, IReadOnlyLinkedListNode<T, IReadOnlyLinkedList<T>>, IReadOnlyLinkedList<T>>.Previous => GetNode(InnerNode.Previous);
-
-        IReadOnlyLinkedListNode IReadOnlyLinkedListNode.Previous => GetNode(InnerNode.Previous);
-
-        ILinkedListNode<T> ILinkedListNode<T>.Next => GetNode(InnerNode.Next);
-
-        ILinkedListNode<T, ILinkedList<T>> IReadOnlyLinkedListNode<T, ILinkedListNode<T, ILinkedList<T>>, ILinkedList<T>>.Next => GetNode(InnerNode.Next);
-
-        IReadOnlyLinkedListNode<T, IReadOnlyLinkedList<T>> IReadOnlyLinkedListNode<T, IReadOnlyLinkedListNode<T, IReadOnlyLinkedList<T>>, IReadOnlyLinkedList<T>>.Next => GetNode(InnerNode.Next);
-
-        IReadOnlyLinkedListNode IReadOnlyLinkedListNode.Next => GetNode(InnerNode.Next);
-
-        T ILinkedListNodeBase<T>.Value { get => InnerNode.Value; set => InnerNode.Value = value; }
-
-        T IReadOnlyLinkedListNodeBase<T>.Value => InnerNode.Value;
-
-        object IReadOnlyLinkedListNode.Value => InnerNode.Value;
-
-        ILinkedListNode<T, ILinkedList<T>> ILinkedListNode<T, ILinkedListNode<T, ILinkedList<T>>, ILinkedList<T>>.Previous => GetNode(InnerNode.Previous);
-
-        ILinkedListNode<T, ILinkedList<T>> ILinkedListNode<T, ILinkedListNode<T, ILinkedList<T>>, ILinkedList<T>>.Next => GetNode(InnerNode.Next);
-
-        ILinkedListNodeBase2<T> ILinkedListNodeBase2<T>.Previous => GetNode(InnerNode.Previous);
-
-        ILinkedListNodeBase2<T> ILinkedListNodeBase2<T>.Next => GetNode(InnerNode.Next);
-
-        IReadOnlyLinkedListNodeBase2<T> IReadOnlyLinkedListNodeBase2<T>.Previous => GetNode(InnerNode.Previous);
-
-        IReadOnlyLinkedListNodeBase2<T> IReadOnlyLinkedListNodeBase2<T>.Next => GetNode(InnerNode.Next);
+        public T Value { get => InnerNode.Value; set => InnerNode.Value = value; }
+        bool ILinkedListNodeBase<T>.IsAvailableByRef =>
+#if CS9
+            true
 #else
-        DotNetFix.ILinkedListNode<T> DotNetFix.ILinkedListNode<T>.Next => GetNode(InnerNode.Next);
-
-        DotNetFix.ILinkedListNode<T> DotNetFix.ILinkedListNode<T>.Previous => GetNode(InnerNode.Previous);
-
-        T DotNetFix.ILinkedListNode<T>.Value => InnerNode.Value;
+            false
 #endif
-
-        bool
-#if WinCopies3
-            IReadOnlyLinkedListNode
+            ;
+        ref T ILinkedListNodeBase<T>.ValueRef =>
+#if CS9
+            ref InnerNode.ValueRef;
 #else
-            DotNetFix.ILinkedListNode<T>
+            throw new InvalidOperationException("This feature is not supported by this implementation.");
+#if !CS8
+        object IReadOnlyLinkedListNode.Value => Value;
 #endif
-       .IsReadOnly => false;
+#endif
+        bool IReadOnlyLinkedListNode.IsReadOnly => false;
+
+        public
+#if !CS8
+            override
+#endif
+            ILinkedListNode<T>
+#if CS8
+            ?
+#endif
+            Previous => GetNode(InnerNode.Previous);
+        public
+#if !CS8
+            override
+#endif
+            ILinkedListNode<T>
+#if CS8
+            ?
+#endif
+            Next => GetNode(InnerNode.Next);
+        public ILinkedList3<T> List => GetList();
 
         public LinkedListNode(in System.Collections.Generic.LinkedListNode<T> node) => InnerNode = node ?? throw GetArgumentNullException(nameof(node));
 
-        public LinkedListNode<T> GetNode(in System.Collections.Generic.LinkedListNode<T> node) => new
+        public LinkedListNode<T>
+#if CS8
+            ?
+#endif
+            GetNode(in System.Collections.Generic.LinkedListNode<T>
+#if CS8
+            ?
+#endif
+            node) => node == null ? null : new
 #if !CS9
             LinkedListNode<T>
 #endif
-          (node);
+            (node);
 
         private LinkedList<T> GetList() => new
 #if !CS9
             LinkedList<T>
 #endif
-          (InnerNode.List);
+            (InnerNode.List);
 
         public bool Equals(ILinkedListNode<T> other) => InnerNode == LinkedList<T>.TryGetNode(other);
 
@@ -132,8 +115,7 @@ namespace WinCopies.Collections.Abstraction.Generic
 #endif
             obj) => obj is ILinkedListNode<T> other && Equals(other);
 
-#if WinCopies3
-        public IReadOnlyLinkedListNodeBase2<T> ToReadOnly() => _asReadOnly
+        DotNetFix.Generic.IReadOnlyLinkedListNode<T> IReadOnlyLinkedListNodeBase2<DotNetFix.Generic.IReadOnlyLinkedListNode<T>>.ToReadOnly() => _asReadOnly
 #if CS8
             ??=
 #else
@@ -145,72 +127,67 @@ namespace WinCopies.Collections.Abstraction.Generic
 #endif
             ;
 
-        public ILinkedListNodeBase2<T> ToReadOnly2() => _asReadOnly2
+        public static bool operator ==(LinkedListNode<T>
 #if CS8
-            ??=
-#else
-            ?? (_asReadOnly2 =
+            ?
 #endif
-             new DotNetFix.Generic.LinkedListNode<T>(this)
-#if !CS8
-            )
+            x, ILinkedListNode<T>
+#if CS8
+            ?
 #endif
-            ;
+            y) => x.AsObject() == null ? y == null : x.Equals(y);
+        public static bool operator !=(LinkedListNode<T>
+#if CS8
+            ?
 #endif
-
-        public static bool operator ==(LinkedListNode<T> x, ILinkedListNode<T> y) => x == null ? y == null : x.Equals(y);
-
-        public static bool operator !=(LinkedListNode<T> x, ILinkedListNode<T> y) => !(x == y);
+            x, ILinkedListNode<T>
+#if CS8
+            ?
+#endif
+            y) => !(x == y);
     }
 
-    public class LinkedList<T> : ILinkedList2<T>, IEquatable<LinkedList<T>>
+    public class LinkedList<T> : LinkedListBase<T, ILinkedListNode<T>>, ILinkedList3<T>, IEquatable<LinkedList<T>>
     {
         protected System.Collections.Generic.LinkedList<T> InnerList { get; }
 
-        protected System.Collections.Generic.ICollection<T> InnerCollection => InnerList.AsFromType<System.Collections.Generic.ICollection<T>>();
+        protected System.Collections.ICollection InnerCollection => InnerList;
+        protected System.Collections.Generic.ICollection<T> InnerCollection2 => InnerList;
 
-        bool ILinkedList2<T>.IsReadOnly => false;
+        ILinkedListNode<T>
+#if CS8
+            ?
+#endif
+            IReadOnlyLinkedListBase2<ILinkedListNode<T>>.First => GetNode(InnerList.First);
+        ILinkedListNode<T>
+#if CS8
+            ?
+#endif
+            IReadOnlyLinkedListBase2<ILinkedListNode<T>>.Last => GetNode(InnerList.Last);
 
-#if WinCopies3
-        ILinkedListNode<T> ILinkedList<T>.First => GetNode(InnerList.First);
+        public override T FirstValue => (InnerList.First ?? throw GetEmptyListOrCollectionException()).Value;
+        T IReadOnlyLinkedListCore<T>.LastValue => (InnerList.Last ?? throw GetEmptyListOrCollectionException()).Value;
 
-        ILinkedListNode<T> ILinkedList<T>.Last => GetNode(InnerList.Last);
-
-        T IReadOnlyLinkedList2<T>.FirstValue => InnerList.First.Value;
-
-        T IReadOnlyLinkedList2<T>.LastValue => InnerList.Last.Value;
-
-        IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.First => GetNode(InnerList.First);
-
-        IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.Last => GetNode(InnerList.Last);
-
-        bool IReadOnlyLinkedList<T>.SupportsReversedEnumeration => true;
-
-        bool Enumeration.IEnumerable.SupportsReversedEnumeration => true;
-
-        uint IReadOnlyLinkedList<T>.Count => (uint)InnerList.Count;
+        public bool SupportsReversedEnumeration => true;
 
         int System.Collections.Generic.IReadOnlyCollection<T>.Count => InnerList.Count;
+        public override uint Count => (uint)InnerList.Count;
 
-        uint IUIntCountable.Count => (uint)InnerList.Count;
+        public override bool HasItems => InnerList.Count > 0;
 
-        ILinkedListNode<T> ILinkedList<T>.Find(T value) => GetNode(InnerList.Find(value));
-
-        ILinkedListNode<T> ILinkedList<T>.FindLast(T value) => GetNode(InnerList.FindLast(value));
+        ILinkedListNode<T> IReadOnlyLinkedListBase<T, ILinkedListNode<T>>.Find(T value) => GetNode(InnerList.Find(value));
+        ILinkedListNode<T> IReadOnlyLinkedListBase<T, ILinkedListNode<T>>.FindLast(T value) => GetNode(InnerList.FindLast(value));
 
         ILinkedListNode<T> ILinkedList<T>.AddAfter(ILinkedListNode<T> node, T value) => GetNode(InnerList.AddAfter(GetNode(node), value));
-
         ILinkedListNode<T> ILinkedList<T>.AddBefore(ILinkedListNode<T> node, T value) => GetNode(InnerList.AddBefore(GetNode(node), value));
 
-        ILinkedListNode<T> ILinkedList<T>.AddFirst(T value) => GetNode(InnerList.AddFirst(value));
+        protected override ILinkedListNode<T> AddFirstItem(T value) => GetNode(InnerList.AddFirst(value));
+        protected override ILinkedListNode<T> AddLastItem(T value) => GetNode(InnerList.AddLast(value));
 
-        ILinkedListNode<T> ILinkedList<T>.AddLast(T value) => GetNode(InnerList.AddLast(value));
+        ILinkedListNode<T> ILinkedList<T>.AddFirst(T value) => AddFirstItem(value);
+        ILinkedListNode<T> ILinkedList<T>.AddLast(T value) => AddLastItem(value);
 
         void ILinkedList<T>.Remove(ILinkedListNode<T> node) => InnerList.Remove(GetNode(node));
-
-        IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.Find(T value) => GetNode(InnerList.Find(value));
-
-        IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.FindLast(T value) => GetNode(InnerList.FindLast(value));
 
         public IEnumeratorInfo2<ILinkedListNode<T>> GetNodeEnumerator(in EnumerationDirection enumerationDirection) => new LinkedListEnumerator<T>(this, enumerationDirection, null, null);
 
@@ -222,153 +199,214 @@ namespace WinCopies.Collections.Abstraction.Generic
 
         public IUIntCountableEnumeratorInfo<T> GetEnumerator3(in EnumerationDirection enumerationDirection) => new UIntCountableEnumeratorInfo<T>(GetEnumerator2(enumerationDirection), () => (uint)InnerList.Count);
 
-        IUIntCountableEnumerator<T> ILinkedList<T>.GetEnumerator() => GetEnumerator3(EnumerationDirection.FIFO);
+        //IUIntCountableEnumerator<T> ILinkedList<T>.GetEnumerator() => GetEnumerator3(EnumerationDirection.FIFO);
 
-        IUIntCountableEnumerator<T> ILinkedList<T>.GetReversedEnumerator() => GetEnumerator3(EnumerationDirection.LIFO);
-
-        IUIntCountableEnumerator<ILinkedListNode<T>> ILinkedList<T>.GetNodeEnumerator() => GetNodeEnumerator2(EnumerationDirection.FIFO);
-
-        IUIntCountableEnumerator<ILinkedListNode<T>> ILinkedList<T>.GetReversedNodeEnumerator() => GetNodeEnumerator2(EnumerationDirection.LIFO);
-
-        System.Collections.Generic.IEnumerator<ILinkedListNode<T>> System.Collections.Generic.IEnumerable<ILinkedListNode<T>>.GetEnumerator() => GetNodeEnumerator(EnumerationDirection.FIFO);
-
-        System.Collections.Generic.IEnumerator<ILinkedListNode<T>> Collections.
-#if WinCopies3
-            Extensions.
-#endif
-            Generic.IEnumerable<ILinkedListNode<T>>.GetReversedEnumerator() => GetNodeEnumerator(EnumerationDirection.LIFO);
-
-        System.Collections.IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetEnumerator(EnumerationDirection.LIFO);
-
-        bool ILinkedList<T>.IsReadOnly => false;
-
-        bool ICollectionBase<T>.IsReadOnly => false;
-#else
-        System.Collections.Generic.LinkedListNode<T> ILinkedList<T>.Last => InnerList.Last;
-
-        System.Collections.Generic.LinkedListNode<T> ILinkedList<T>.First => InnerList.First;
-
-        int ILinkedList<T>.Count => InnerList.Count;
-
-        void ILinkedList<T>.AddAfter(System.Collections.Generic.LinkedListNode<T> node, System.Collections.Generic.LinkedListNode<T> newNode) => InnerList.AddAfter(node, newNode);
-
-        void ILinkedList<T>.AddBefore(System.Collections.Generic.LinkedListNode<T> node, System.Collections.Generic.LinkedListNode<T> newNode) => InnerList.AddBefore(node, newNode);
-
-        void ILinkedList<T>.AddFirst(System.Collections.Generic.LinkedListNode<T> node) => InnerList.AddFirst(node);
-
-        void ILinkedList<T>.AddLast(System.Collections.Generic.LinkedListNode<T> node) => InnerList.AddLast(node);
-
-        System.Collections.Generic.LinkedListNode<T> ILinkedList<T>.Find(T value) => InnerList.Find(value);
-
-        System.Collections.Generic.LinkedListNode<T> ILinkedList<T>.FindLast(T value) => InnerList.FindLast(value);
-
-        System.Collections.Generic.LinkedList<T>.Enumerator ILinkedList<T>.GetEnumerator() => InnerList.GetEnumerator();
-
-        System.Collections.Generic.LinkedListNode<T> ILinkedList<T>.AddAfter(System.Collections.Generic.LinkedListNode<T> node, T value) => InnerList.AddAfter(node, value);
-
-        System.Collections.Generic.LinkedListNode<T> ILinkedList<T>.AddBefore(System.Collections.Generic.LinkedListNode<T> node, T value) => InnerList.AddBefore(node, value);
-
-        System.Collections.Generic.LinkedListNode<T> ILinkedList<T>.AddFirst(T value) => InnerList.AddFirst(value);
-
-        System.Collections.Generic.LinkedListNode<T> ILinkedList<T>.AddLast(T value) => InnerList.AddLast(value);
-
-        void ILinkedList<T>.Remove(System.Collections.Generic.LinkedListNode<T> node) => InnerList.Remove(node);
-
-        void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context) => InnerList.GetObjectData(info, context);
-
-        void IDeserializationCallback.OnDeserialization(object sender) => InnerList.OnDeserialization(sender);
-
-        IEnumerator<T> IEnumerable<T>.GetEnumerator() => InnerList.GetEnumerator();
-#endif
+        System.Collections.Generic.IEnumerator<ILinkedListNode<T>> Collections.Extensions.Generic.IEnumerable<ILinkedListNode<T>>.GetReversedEnumerator() => GetNodeEnumerator(EnumerationDirection.LIFO);
 
         int System.Collections.Generic.ICollection<T>.Count => InnerList.Count;
-
         int ICollection.Count => InnerList.Count;
 
-        bool System.Collections.Generic.ICollection<T>.IsReadOnly => false;
+        public override bool IsReadOnly => InnerCollection2.IsReadOnly;
 
-        object ICollection.SyncRoot => InnerList.AsFromType<ICollection>().SyncRoot;
+        protected override bool IsSynchronized => InnerCollection.IsSynchronized;
+        protected override object SyncRoot => InnerCollection.SyncRoot;
 
-        bool ICollection.IsSynchronized => InnerList.AsFromType<ICollection>().IsSynchronized;
+        bool ICollection.IsSynchronized => InnerCollection.IsSynchronized;
+        object ICollection.SyncRoot => InnerCollection.SyncRoot;
 
         public LinkedList(in System.Collections.Generic.LinkedList<T> list) => InnerList = list ?? throw GetArgumentNullException(nameof(list));
 
-        public LinkedListNode<T> GetNode(in System.Collections.Generic.LinkedListNode<T> node) => new
+        public LinkedListNode<T>
+#if CS8
+            ?
+#endif
+            GetNode(in System.Collections.Generic.LinkedListNode<T>
+#if CS8
+            ?
+#endif
+            node) => node == null ? null : new
 #if !CS9
             LinkedListNode<T>
 #endif
             (node);
 
-        public static System.Collections.Generic.LinkedListNode<T> TryGetNode(in ILinkedListNode<T> node) => node is LinkedListNode<T> _node ? _node.InnerNode : null;
+        public static System.Collections.Generic.LinkedListNode<T>
+#if CS8
+            ?
+#endif
+            TryGetNode(in ILinkedListNode<T> node) => node is LinkedListNode<T> _node ? _node.InnerNode : null;
 
         public static System.Collections.Generic.LinkedListNode<T> GetNode(in ILinkedListNode<T> node) => TryGetNode(node) ?? throw new ArgumentException("The given node is not contained in the current list.", nameof(node));
 
-        void ILinkedList<T>.RemoveFirst() => InnerList.RemoveFirst();
+        protected override T RemoveFirstItem()
+        {
+            System.Collections.Generic.LinkedListNode<T>
+#if CS8
+                ?
+#endif
+            node = InnerList.First;
 
+            InnerList.Remove(node);
+
+            return node.Value;
+        }
+
+        void ILinkedList<T>.RemoveFirst() => RemoveFirstItem();
         void ILinkedList<T>.RemoveLast() => InnerList.RemoveLast();
 
         void System.Collections.Generic.ICollection<T>.Add(T item) => InnerList.AsFromType<System.Collections.Generic.ICollection<T>>().Add(item);
-
+        bool System.Collections.Generic.ICollection<T>.Remove(T item) => InnerList.Remove(item);
         void System.Collections.Generic.ICollection<T>.Clear() => InnerList.Clear();
 
         bool System.Collections.Generic.ICollection<T>.Contains(T item) => InnerList.Contains(item);
 
         void System.Collections.Generic.ICollection<T>.CopyTo(T[] array, int arrayIndex) => InnerList.CopyTo(array, arrayIndex);
 
-        bool System.Collections.Generic.ICollection<T>.Remove(T item) => InnerList.Remove(item);
-
         void ICollection.CopyTo(Array array, int index) => InnerList.AsFromType<ICollection>().CopyTo(array, index);
 
-        public bool Equals(LinkedList<T> other) => other == null ? false : InnerList == other.InnerList;
+        public bool Equals(LinkedList<T>
+#if CS8
+            ?
+#endif
+            other) => InnerList == other?.InnerList;
+        public override bool Equals(object
+#if CS8
+            ?
+#endif
+            obj) => obj is LinkedList<T> list && Equals(list);
+        public override int GetHashCode() => InnerList.GetHashCode();
 
-        public static bool operator ==(LinkedList<T> x, ILinkedList<T> y) => x == null ? y == null : x.Equals(y);
-
+        public static bool operator ==(LinkedList<T> x, ILinkedList<T> y) => x.AsObject() == null ? y == null : x.Equals(y);
         public static bool operator !=(LinkedList<T> x, ILinkedList<T> y) => !(x == y);
 
-        System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerList).GetEnumerator();
+        System.Collections.IEnumerator IEnumerable.GetEnumerator() => InnerList.GetEnumerator();
 
-#if WinCopies3
-        DotNetFix.Generic.IUIntCountableEnumerable<ILinkedListNode<T>> ILinkedList<T>.AsNodeEnumerable() => throw new NotSupportedException("This operation is not supported by this implementation.");
+        protected static NotSupportedException GetOperationNotSupportedException() => new NotSupportedException("This operation is not supported by this implementation.");
 
-        void ILinkedList<T>.Add(T item) => InnerCollection.Add(item);
+        DotNetFix.Generic.IUIntCountableEnumerable<ILinkedListNode<T>> ILinkedList<T>.AsNodeEnumerable() => throw GetOperationNotSupportedException();
 
-        bool ILinkedList<T>.Remove(T item) => InnerList.Remove(item);
+        public void Add(T item) => InnerCollection2.Add(item);
+        public bool Remove(T item) => InnerList.Remove(item);
+        protected override void ClearItems() => InnerList.Clear();
+        public void Clear() => ClearItems();
 
-        void ILinkedList<T>.Clear() => InnerList.Clear();
+        public bool Contains(T item) => InnerList.Contains(item);
 
-        bool ILinkedList<T>.Contains(T item) => InnerList.Contains(item);
+        public IQueue<T> AsQueue() => new Abstraction.Generic.Queue<T, ILinkedList<T>>(this);
+        public IStack<T> AsStack() => new Abstraction.Generic.Stack<T, ILinkedList<T>>(this);
 
-        void ILinkedList<T>.CopyTo(T[] array, int arrayIndex) => InnerList.CopyTo(array, arrayIndex);
+        IUIntCountableEnumeratorInfo<ILinkedListNode<T>> ILinkedList<T>.GetNodeEnumerator() => throw GetOperationNotSupportedException();
+        IUIntCountableEnumeratorInfo<ILinkedListNode<T>> Enumeration.IEnumerable<IUIntCountableEnumeratorInfo<ILinkedListNode<T>>>.GetEnumerator() => throw GetOperationNotSupportedException();
+        IUIntCountableEnumeratorInfo<ILinkedListNode<T>> ILinkedList<T>.GetReversedNodeEnumerator() => throw GetOperationNotSupportedException();
+        IUIntCountableEnumeratorInfo<ILinkedListNode<T>> Extensions.IEnumerable<IUIntCountableEnumeratorInfo<ILinkedListNode<T>>>.GetReversedEnumerator() => throw GetOperationNotSupportedException();
 
-        bool IReadOnlyLinkedList2<T>.Contains(T value) => InnerList.Contains(value);
-
-        void IReadOnlyLinkedList2<T>.CopyTo(T[] array, int index) => InnerList.CopyTo(array, index);
-
-        IUIntCountableEnumerator<T> IUIntCountableEnumerable<T, IUIntCountableEnumerator<T>>.GetEnumerator() => GetEnumerator3(EnumerationDirection.FIFO);
-
-#if !CS8
-        System.Collections.Generic.IEnumerator<T> IEnumerable<T>.GetEnumerator() => GetEnumerator(EnumerationDirection.FIFO);
-
-        System.Collections.Generic.IEnumerator<T> Extensions.Generic.IEnumerable<T>.GetReversedEnumerator() => GetEnumerator(EnumerationDirection.LIFO);
-
-        IUIntCountableEnumerator<T> IReadOnlyLinkedList2<T>.GetEnumerator() => GetEnumerator3(EnumerationDirection.FIFO);
-
-        IUIntCountableEnumerator<T> IReadOnlyLinkedList2<T>.GetReversedEnumerator() => GetEnumerator3(EnumerationDirection.LIFO);
-
-        void ICollectionBase<T>.Add(T item) => InnerCollection.Add(item);
-
-        void ICollectionBase<T>.Clear() => InnerList.Clear();
-
-        bool ICollectionBase<T>.Remove(T item) => InnerList.Remove(item);
-
-        bool IReadOnlyCollectionBase<T>.Contains(T item) => InnerList.Contains(item);
+        public IUIntCountableEnumeratorInfo<T> GetEnumerator() => GetEnumerator3(EnumerationDirection.FIFO);
+        public IUIntCountableEnumeratorInfo<T> GetReversedEnumerator() => GetEnumerator3(EnumerationDirection.LIFO);
 
         void IReadOnlyCollectionBase<T>.CopyTo(T[] array, int arrayIndex) => InnerList.CopyTo(array, arrayIndex);
 
-        IUIntCountableEnumerator<T> Enumeration.DotNetFix.IEnumerable<IUIntCountableEnumerator<T>>.GetEnumerator() => GetEnumerator3(EnumerationDirection.FIFO);
-
-        IUIntCountableEnumerator<T> DotNetFix.Generic.IEnumerable<T, IUIntCountableEnumerator<T>>.GetEnumerator() => GetEnumerator3(EnumerationDirection.FIFO);
+        protected System.Collections.Generic.LinkedListNode<T>
+#if CS8
+            ?
 #endif
+            UpdateNodeState(in T item, in Action<System.Collections.Generic.LinkedListNode<T>> action)
+        {
+            System.Collections.Generic.LinkedListNode<T>
+#if CS8
+                ?
+#endif
+                node = InnerList.Find(item);
+
+            if (node != null)
+
+                action(node);
+
+            return node;
+        }
+
+        protected bool Move(in ILinkedListNode<T> node, ILinkedListNode<T> other, Action<System.Collections.Generic.LinkedListNode<T>, System.Collections.Generic.LinkedListNode<T>> action)
+        {
+            bool result = false;
+
+            UpdateNodeState(node.Value, _node => UpdateNodeState(other.Value, __node =>
+            {
+                InnerList.Remove(_node);
+
+                action(__node, _node);
+
+                result = true;
+            }));
+
+            return result;
+        }
+
+        public bool MoveAfter(ILinkedListNode<T> node, ILinkedListNode<T> after) => Move(node, after, InnerList.AddAfter);
+        public bool MoveBefore(ILinkedListNode<T> node, ILinkedListNode<T> before) => Move(node, before, InnerList.AddBefore);
+
+        ILinkedListNode<T>
+#if CS8
+            ?
+#endif
+            ILinkedList3<T>.Remove(T item) => GetNode(UpdateNodeState(item, InnerList.Remove));
+        public void Swap(ILinkedListNode<T> x, ILinkedListNode<T> y)
+        {
+            if (!Move(x, y, (_x, _y) =>
+            {
+                System.Collections.Generic.LinkedListNode<T>
+#if CS8
+                    ?
+#endif
+                node = null;
+                System.Collections.Generic.LinkedListNode<T>
+#if CS8
+                    ?
+#endif
+                _node = null;
+
+                void doWork(System.Collections.Generic.LinkedListNode<T> toProcess, ref System.Collections.Generic.LinkedListNode<T>
+#if CS8
+                    ?
+#endif
+                    __node, in Action<Action<System.Collections.Generic.LinkedListNode<T>, System.Collections.Generic.LinkedListNode<T>>> action)
+                {
+                    Action<System.Collections.Generic.LinkedListNode<T>, System.Collections.Generic.LinkedListNode<T>> getAction(ref System.Collections.Generic.LinkedListNode<T>
+#if CS8
+                        ?
+#endif
+                        ___node)
+                    {
+                        if ((___node = toProcess.Previous) == null)
+                        {
+                            ___node = toProcess.Next;
+
+                            return InnerList.AddBefore;
+                        }
+
+                        return InnerList.AddAfter;
+                    }
+
+                    InnerList.Remove(toProcess);
+
+                    action(getAction(ref __node));
+                }
+
+                doWork(_x, ref node, first => doWork(_y, ref _node, second =>
+                {
+                    first(node, _y);
+                    second(_node, _x);
+                }));
+            }))
+
+                throw new ArgumentException("At least one of the given nodes was not found.");
+        }
+#if !CS8
+        System.Collections.Generic.IEnumerator<T> IEnumerable<T>.GetEnumerator() => GetEnumerator(EnumerationDirection.FIFO);
+        System.Collections.Generic.IEnumerator<T> Extensions.Generic.IEnumerable<T>.GetReversedEnumerator() => GetEnumerator(EnumerationDirection.LIFO);
+
+        IUIntCountableEnumerator<T> Enumeration.IEnumerable<IUIntCountableEnumerator<T>>.GetEnumerator() => GetEnumerator();
+        IEnumerator<ILinkedListNode<T>> IEnumerable<ILinkedListNode<T>>.GetEnumerator() => throw GetOperationNotSupportedException();
+
+        System.Collections.IEnumerator Extensions.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
 #endif
     }
 }

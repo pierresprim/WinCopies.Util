@@ -16,63 +16,21 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if CS7
-
 using System;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 
-namespace WinCopies.Collections.DotNetFix
+namespace WinCopies.Collections.DotNetFix.Generic
 {
-#if WinCopies3
-    namespace Generic
-    {
-#endif
     [Serializable]
-    public class ObservableStackCollection<
-#if WinCopies3
-        TStack, TItems
-#else
-        T
-#endif
-        > : StackCollection<
-#if WinCopies3
-        TStack, TItems
-#else
-        T
-#endif
-       >, INotifyPropertyChanged, INotifySimpleLinkedCollectionChanged<
-#if WinCopies3
-           TItems
-#else
-           T
-#endif
-           >
-#if WinCopies3
-where TStack : IStack<TItems>
-#endif
+    public class ObservableStackCollection<TStack, TItems> : StackCollection<TStack, TItems>, INotifyPropertyChanged, INotifySimpleLinkedCollectionChanged<TItems> where TStack : IStack<TItems>
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public event SimpleLinkedCollectionChangedEventHandler<
-#if WinCopies3
-           TItems
-#else
-           T
-#endif
-          > CollectionChanged;
+        public event SimpleLinkedCollectionChangedEventHandler<TItems> CollectionChanged;
 
-#if !WinCopies3
-        public ObservableStackCollection() : base() { }
-#endif
-
-        public ObservableStackCollection(in
-#if WinCopies3
-            TStack
-#else
-            System.Collections.Generic.Stack<T>
-#endif
-      Stack) : base(Stack) { }
+        public ObservableStackCollection(in TStack stack) : base(stack) { /* Left empty. */ }
 
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
 
@@ -80,57 +38,22 @@ where TStack : IStack<TItems>
 
         protected void RaiseCountPropertyChangedEvent() => OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
 
-        protected virtual void OnCollectionChanged(SimpleLinkedCollectionChangedEventArgs<
-#if WinCopies3
-           TItems
-#else
-           T
-#endif
-         > e) => CollectionChanged?.Invoke(this, e);
+        protected virtual void OnCollectionChanged(SimpleLinkedCollectionChangedEventArgs<TItems> e) => CollectionChanged?.Invoke(this, e);
 
-        protected void RaiseCollectionChangedEvent(NotifyCollectionChangedAction action,
-#if WinCopies3
-           TItems
-#else
-           T
-#endif
-          item) => OnCollectionChanged(new SimpleLinkedCollectionChangedEventArgs<
-#if WinCopies3
-           TItems
-#else
-           T
-#endif
-         >(action, item));
+        protected void RaiseCollectionChangedEvent(NotifyCollectionChangedAction action, TItems item) => OnCollectionChanged(new SimpleLinkedCollectionChangedEventArgs<TItems>(action, item));
 
-        protected override void ClearItems()
+        public override void Clear()
         {
-            base.ClearItems();
+            base.Clear();
 
             RaiseCountPropertyChangedEvent();
 
-            OnCollectionChanged(new SimpleLinkedCollectionChangedEventArgs<
-#if WinCopies3
-           TItems
-#else
-           T
-#endif
-         >(NotifyCollectionChangedAction.Reset, default));
+            OnCollectionChanged(new SimpleLinkedCollectionChangedEventArgs<TItems>(NotifyCollectionChangedAction.Reset, default));
         }
 
-        protected override
-#if WinCopies3
-           TItems
-#else
-           T
-#endif
-          PopItem()
+        public override TItems Remove()
         {
-#if WinCopies3
-                TItems
-#else
-            T
-#endif
-          result = base.PopItem();
+            TItems result = base.Remove();
 
             RaiseCountPropertyChangedEvent();
 
@@ -139,31 +62,18 @@ where TStack : IStack<TItems>
             return result;
         }
 
-        protected override void PushItem(
-#if WinCopies3
-           TItems
-#else
-           T
-#endif
-          item)
+        public override void Add(TItems item)
         {
-            base.PushItem(item);
+            base.Add(item);
 
             RaiseCountPropertyChangedEvent();
 
             RaiseCollectionChangedEvent(NotifyCollectionChangedAction.Add, item);
         }
-
 #if CS8
-        protected override bool TryPopItem([MaybeNullWhen(false)] out 
-#if WinCopies3
-           TItems
-#else
-           T
-#endif
-          result)
+        public override bool TryRemove([MaybeNullWhen(false)] out TItems result)
         {
-            bool succeeded = base.TryPopItem(out result);
+            bool succeeded = base.TryRemove(out result);
 
             if (succeeded)
             {
@@ -177,15 +87,11 @@ where TStack : IStack<TItems>
 #endif
     }
 
-#if WinCopies3
-        public class ObservableStackCollection<T> : ObservableStackCollection<IStack<T>, T>
-        {
-            public ObservableStackCollection() : this(new Stack<T>()) { }
+    public class ObservableStackCollection<T> : ObservableStackCollection<IStack<T>, T>
+    {
+        public ObservableStackCollection() : this(new Stack<T>()) { /* Left empty. */ }
 
-            public ObservableStackCollection(in IStack<T> Stack) : base(Stack) { }
-        }
+        public ObservableStackCollection(in IStack<T> stack) : base(stack) { /* Left empty. */ }
     }
-#endif
 }
-
 #endif

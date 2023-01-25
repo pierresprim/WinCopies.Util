@@ -21,21 +21,44 @@ namespace WinCopies.Collections.DotNetFix
 {
     internal static class SimpleLinkedListNodeHelper
     {
-        public static InvalidOperationException GetIsClearedException() => new InvalidOperationException("The node is cleared.");
+        public static InvalidOperationException GetIsClearedException() => new
+#if !CS9
+            InvalidOperationException
+#endif
+            ("The node is cleared.");
     }
 
-    public class SimpleLinkedListNode : ISimpleLinkedListNode
+    public abstract class SimpleLinkedListNodeBase<T> : ISimpleLinkedListNodeBase where T : ISimpleLinkedListNode<T>
     {
-        private object _value;
-        private SimpleLinkedListNode _next;
+        private T _next;
 
         public bool IsCleared { get; private set; }
 
+        public T Next { get => IsCleared ? throw SimpleLinkedListNodeHelper.GetIsClearedException() : _next; internal set => _next = IsCleared ? throw SimpleLinkedListNodeHelper.GetIsClearedException() : value; }
+
+        ISimpleLinkedListNodeBase ISimpleLinkedListNodeBase.Next => Next;
+
+        protected abstract void ResetValue();
+
+        public void Clear()
+        {
+            ResetValue();
+
+            Next = default;
+
+            IsCleared = true;
+        }
+    }
+
+    public class SimpleLinkedListNode : SimpleLinkedListNodeBase<SimpleLinkedListNode>, ISimpleLinkedListNode<SimpleLinkedListNode>, ISimpleLinkedListNode2
+    {
+        private object _value;
+
         public object Value => IsCleared ? throw SimpleLinkedListNodeHelper.GetIsClearedException() : _value;
 
-        // public SimpleLinkedListNode Previous { get; private set; }
+        ISimpleLinkedListNode2 ISimpleLinkedListNodeBase<ISimpleLinkedListNode2>.Next => Next;
 
-        public SimpleLinkedListNode Next { get => IsCleared ? throw SimpleLinkedListNodeHelper.GetIsClearedException() : _next; internal set => _next = IsCleared ? throw SimpleLinkedListNodeHelper.GetIsClearedException() : value; }
+        // public SimpleLinkedListNode Previous { get; private set; }
         //{
         //get => _next; internal set =>
         //{
@@ -54,23 +77,8 @@ namespace WinCopies.Collections.DotNetFix
         //}
         //}
 
-        ISimpleLinkedListNode ISimpleLinkedListNode.
-#if !WinCopies3
-                NextNode
-#else
-                Next
-#endif
-                => Next;
-
         public SimpleLinkedListNode(object value) => _value = value;
 
-        public void Clear()
-        {
-            _value = null;
-
-            Next = null;
-
-            IsCleared = true;
-        }
+        protected override void ResetValue() => _value = null;
     }
 }

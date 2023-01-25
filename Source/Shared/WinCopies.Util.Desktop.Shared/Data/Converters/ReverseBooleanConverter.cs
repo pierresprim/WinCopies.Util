@@ -18,18 +18,12 @@
 using System.Globalization;
 using System.Windows.Data;
 
-#if WinCopies3
 using static WinCopies.Util.Data.ConverterHelper;
-#else
-using System;
-#endif
 
 namespace WinCopies.Util.Data
 {
     [ValueConversion(typeof(bool), typeof(bool))]
-    public class ReverseBooleanConverter :
-#if WinCopies3
-        AlwaysConvertibleTwoWayConverter<bool, object, bool>
+    public class ReverseBooleanConverter :        AlwaysConvertibleTwoWayConverter<bool, object, bool>
     {
         public override IReadOnlyConversionOptions ConvertOptions => ParameterCanBeNull;
 
@@ -38,12 +32,5 @@ namespace WinCopies.Util.Data
         protected override bool Convert(bool value, object parameter, CultureInfo culture) => !value;
 
         protected override bool ConvertBack(bool value, object parameter, CultureInfo culture) => !value;
-#else
-        ConverterBase
-    {
-        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture) => !(bool)value;
-
-        public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => !(bool)value;
-#endif
     }
 }

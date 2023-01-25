@@ -156,7 +156,6 @@ namespace WinCopies
 #endif
             items, in int length) : this(new ArrayValueProvider<T>(items), length) { /* Left empty. */ }
     }
-
 #if CS8 && !NETSTANDARD
     public class AssemblyLoadContext : System.Runtime.Loader.AssemblyLoadContext
     {
@@ -170,7 +169,6 @@ namespace WinCopies
         protected override IntPtr LoadUnmanagedDll(string unmanagedDllName) => PerformActionIfNull(Resolver.ResolveUnmanagedDllToPath(unmanagedDllName), IntPtr.Zero, LoadUnmanagedDllFromPath);
     }
 #endif
-
     public static class Convert
     {
 #if CS8
@@ -282,6 +280,13 @@ namespace WinCopies
                 result) ? result : throw GetInvalidCastException<ulong>(value);
     }
 
+    public enum NullableBool : sbyte
+    {
+        None = -1,
+        False = 0,
+        True = 1,
+    }
+
     /// <summary>
     /// This enum is designed as an extension of the <see cref="bool"/> type.
     /// </summary>
@@ -300,17 +305,17 @@ namespace WinCopies
         /// <summary>
         /// The operation did not return any particular value. This value is the same as returning a <see langword="null"/> <see cref="Nullable{Boolean}"/>.
         /// </summary>
-        None = -1,
+        None = NullableBool.None,
 
         /// <summary>
         /// The operation returned False. This value is the same number as <see langword="false"/>.
         /// </summary>
-        False = 0,
+        False = NullableBool.False,
 
         /// <summary>
         /// The operation returned True. This value is the same number as <see langword="true"/>.
         /// </summary>
-        True = 1
+        True = NullableBool.True
     }
 
     public enum XOrResult : sbyte
@@ -337,6 +342,7 @@ namespace WinCopies
 
             DisposeUnmanaged();
             DisposeManaged();
+
             GC.SuppressFinalize(this);
         }
 
@@ -352,21 +358,11 @@ namespace WinCopies
         protected override void DisposeManaged() => _isDisposed = true;
     }
 
-    public abstract class DisposableValue<T> : System.IDisposable where T :
-#if !WinCopies3
-        WinCopies.Util.
-#endif
-        DotNetFix.IDisposable
+    public abstract class DisposableValue<T> : System.IDisposable where T : DotNetFix.IDisposable
     {
         protected T Value { get; }
 
-        protected DisposableValue(T value) => Value = value == null ? throw
-#if WinCopies3
-            ThrowHelper
-#else
-            Util
-#endif
-            .GetArgumentNullException(nameof(value)) : value;
+        protected DisposableValue(T value) => Value = value == null ? throw ThrowHelper.GetArgumentNullException(nameof(value)) : value;
 
         protected virtual void Dispose(in bool disposing)
         {
@@ -605,6 +601,206 @@ namespace WinCopies
             > value) => value.Value;
     }
 
+    public interface IValueProviderBase : DotNetFix.IDisposable
+    {
+#if CS8
+        [NotNull]
+#endif
+        object Value { get; }
+    }
+
+    public interface IValueProvider : IValueProviderBase, IEquatable<IValueProviderBase>
+    {
+        // Left empty.
+    }
+
+    public interface IValueProvider<T> : IValueProviderBase, IEquatable<T>
+    {
+#if CS8
+        object IValueProviderBase.Value => Value;
+
+        [NotNull]
+#endif
+        new T Value { get; }
+    }
+
+    public struct NullableDisposable : IValueProvider
+    {
+        private object
+#if CS8
+            ?
+#endif
+            _value;
+
+        public object Value => _value ?? throw new ObjectDisposedException(null);
+
+        public bool IsDisposed => _value == null;
+
+        public NullableDisposable(in object
+#if CS8
+            ?
+#endif
+            value) => _value = value;
+
+        private bool _Equals(object
+#if CS8
+            ?
+#endif
+            obj) => _value == obj;
+        public override bool Equals(object
+#if CS8
+            ?
+#endif
+            obj) => obj == null ? IsDisposed : obj is IValueProviderBase value ? Equals(value) : _Equals(obj);
+        public bool Equals<T>(T
+#if CS9
+            ?
+#endif
+            other) => _Equals(other.AsObject());
+        public bool Equals(IValueProviderBase
+#if CS9
+            ?
+#endif
+            other) => other == null || other.IsDisposed ? IsDisposed : !IsDisposed && _Equals(other.Value);
+
+        public override int GetHashCode() => Value.GetHashCode();
+
+        public static NullableDisposable<T> Create<T>(in T
+#if CS9
+            ?
+#endif
+            value) where T : class => new
+#if !CS9
+            NullableDisposable<T>
+#endif
+            (value);
+        public static NullableDisposable2<T> Create<T>(in NullableDisposable<T> value) where T : class, System.IDisposable => new
+#if !CS9
+            NullableDisposable2<T>
+#endif
+            (value);
+        public static NullableDisposable2<T> Create2<T>(in T
+#if CS9
+            ?
+#endif
+            value) where T : class, System.IDisposable => new
+#if !CS9
+            NullableDisposable2<T>
+#endif
+            (value);
+
+        public void Dispose() => _value = null;
+    }
+
+    public struct NullableDisposable<T> : IValueProvider<T> where T : class
+    {
+        private T
+#if CS9
+            ?
+#endif
+            _value;
+
+        public T Value => _value ?? throw new ObjectDisposedException(null);
+#if !CS8
+        object IValueProviderBase.Value => Value;
+#endif
+
+        public bool IsDisposed => _value == null;
+
+        public NullableDisposable(in T
+#if CS9
+            ?
+#endif
+            value) => _value = value;
+
+        private bool _Equals(object
+#if CS8
+            ?
+#endif
+            obj) => _value == obj;
+        public override bool Equals(object
+#if CS8
+            ?
+#endif
+            obj) => obj == null ? IsDisposed : obj is IValueProviderBase value ? Equals(value) : _Equals(obj);
+        public bool Equals(T
+#if CS9
+            ?
+#endif
+            other) => _Equals(other.AsObject());
+        public bool Equals(IValueProviderBase
+#if CS8
+            ?
+#endif
+            other) => other == null || other.IsDisposed ? IsDisposed : !IsDisposed && _Equals(other.Value);
+
+        public override int GetHashCode() => Value.GetHashCode();
+
+        public void Dispose() => _value = null;
+
+        public static bool operator ==(NullableDisposable<T> left, IValueProviderBase right) => left.Equals(right);
+        public static bool operator !=(NullableDisposable<T> left, IValueProviderBase right) => !(left == right);
+
+        public static bool operator ==(NullableDisposable<T> left, object
+#if CS8
+            ?
+#endif
+            right) => left.Equals(right);
+        public static bool operator !=(NullableDisposable<T> left, object
+#if CS8
+            ?
+#endif
+            right) => !(left == right);
+    }
+
+    public struct NullableDisposable2<T> : IValueProvider<T> where T : class, System.IDisposable
+    {
+        private NullableDisposable<T> _value;
+
+        public T Value => _value.Value;
+#if !CS8
+        object IValueProviderBase.Value => Value;
+#endif
+
+        public bool IsDisposed => _value.IsDisposed;
+
+        public NullableDisposable2(NullableDisposable<T> value) => _value = value;
+        public NullableDisposable2(T
+#if CS9
+            ?
+#endif
+            value) => this = new
+#if !CS9
+            NullableDisposable2<T>
+#endif
+            (new NullableDisposable<T>(value));
+
+        public bool Equals(T
+#if CS8
+            ?
+#endif
+            other) => _value.Equals(other);
+        public bool Equals(IValueProviderBase
+#if CS8
+            ?
+#endif
+            other) => _value.Equals(other);
+
+        public bool Dispose()
+        {
+            if (IsDisposed)
+
+                return false;
+
+            Value.Dispose();
+            _value.Dispose();
+
+            return true;
+        }
+
+        void System.IDisposable.Dispose() => Dispose();
+    }
+
     public delegate bool TaskAwaiterPredicate(ref bool cancel);
 
     public class StreamInfo : System.IO.Stream, DotNetFix.IDisposable
@@ -645,9 +841,44 @@ namespace WinCopies
 
     public class BooleanEventArgs : EventArgs
     {
-        public bool Value { get; }
+        public bool Value { get; protected set; }
 
         public BooleanEventArgs(in bool value) => Value = value;
+    }
+
+    public class BooleanEventArgs2 : BooleanEventArgs
+    {
+        public new bool Value { get => base.Value; set => base.Value = value; }
+
+        public BooleanEventArgs2(in bool value = false) : base(value) { /* Left empty. */ }
+    }
+
+    public class ReadOnlyValueBooleanEventArgs<T> : BooleanEventArgs
+    {
+        public T Item { get; }
+
+        public ReadOnlyValueBooleanEventArgs(in T item, in bool value) : base(value) => Item = item;
+    }
+
+    public class ReadOnlyValueBooleanEventArgs2<T> : BooleanEventArgs2
+    {
+        public T Item { get; }
+
+        public ReadOnlyValueBooleanEventArgs2(in T item, in bool value = false) : base(value) => Item = item;
+    }
+
+    public class ValueBooleanEventArgs<T> : BooleanEventArgs
+    {
+        public T Item { get; set; }
+
+        public ValueBooleanEventArgs(in T item, in bool value) : base(value) => Item = item;
+    }
+
+    public class ValueBooleanEventArgs2<T> : BooleanEventArgs2
+    {
+        public T Item { get; set; }
+
+        public ValueBooleanEventArgs2(in T item, in bool value = false) : base(value) => Item = item;
     }
 
     public interface ISplitFactory<T, U, TContainer>
@@ -684,8 +915,21 @@ namespace WinCopies
         TOut Pop(TIn key);
     }
 
-    public interface IAsEnumerable<T>
+    public interface IAsEnumerable<
+#if CS5
+        out
+#endif
+        T>
     {
         IEnumerable<T> AsEnumerable();
+    }
+
+    public interface IAsEnumerableAlt<
+#if CS5
+        out
+#endif
+        T>
+    {
+        IEnumerable<T> AsEnumerableAlt();
     }
 }

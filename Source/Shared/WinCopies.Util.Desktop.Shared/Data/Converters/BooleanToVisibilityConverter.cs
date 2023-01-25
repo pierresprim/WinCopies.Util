@@ -20,9 +20,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-#if WinCopies3
 using static WinCopies.Util.Data.ConverterHelper;
-#endif
 
 namespace WinCopies.Util.Data
 {
@@ -32,18 +30,10 @@ namespace WinCopies.Util.Data
     /// Provides a converter for conversion from a <see langword="bool"/> value to a <see cref="Visibility"/> value.
     /// </summary>
     [ValueConversion(typeof(bool), typeof(Visibility), ParameterType = typeof(Visibility))]
-    public class BooleanToVisibilityConverter :
-#if WinCopies3
-        AlwaysConvertibleTwoWayConverter<bool, Visibility?, Visibility>
-#else
-ConverterBase
-#endif
+    public class BooleanToVisibilityConverter : AlwaysConvertibleTwoWayConverter<bool, Visibility?, Visibility>
     {
-#if WinCopies3
         public override IReadOnlyConversionOptions ConvertOptions => ParameterCanBeNull;
-
         public override IReadOnlyConversionOptions ConvertBackOptions => ParameterCanBeNull;
-#endif
 
         /// <summary>
         /// Converts a <see langword="bool"/> value to a <see cref="Visibility"/> value. If the value is <see langword="true"/>, the returned value will be the <see cref="Visibility.Visible"/> value, if not and if parameter is not null, it will be the value of the parameter, otherwise it will be <see cref="Visibility.Collapsed"/>.
@@ -53,41 +43,11 @@ ConverterBase
         /// <param name="parameter">The value to return if the value to convert is false. This parameter can't be the <see cref="Visibility.Visible"/> value. This parameter can be null.</param>
         /// <param name="culture">The culture used for the conversion. This parameter isn't evaluated in this converter.</param>
         /// <returns><see cref="Visibility.Visible"/> if the value to convert is <see langword="true"/>, if not, the value of the parameter if it is not null, otherwise <see cref="Visibility.Collapsed"/>.</returns>
-#if WinCopies3
-        protected override Visibility Convert(bool value, Visibility?
-#else
-        public override object Convert(object value, Type targetType, object
-#endif
-            parameter, CultureInfo culture)
-        {
-            if (parameter != null &&
-#if WinCopies3
-                parameter
-#else
-                !(parameter is Visibility visibility && visibility
-#endif
-                == Visibility.Visible
-#if !WinCopies3
-                )
-#endif
-                )
+        protected override Visibility Convert(bool value, Visibility? parameter, CultureInfo culture) => parameter != null && parameter == Visibility.Visible ?
 
                 // todo:
 
-                throw ThrowHelper.GetArgumentMustBeFromEnumAndNotValueException(nameof(parameter), $"{nameof(System)}.{nameof(System.Windows)}.{nameof(Visibility)}",
-#if WinCopies3
-                    parameter.Value
-#else
-                    (Visibility)parameter
-#endif
-                    , Visibility.Visible);
-
-            return
-#if !WinCopies3
-                (bool)
-#endif
-                value ? Visibility.Visible : parameter ?? Visibility.Collapsed;
-        }
+                throw ThrowHelper.GetArgumentMustBeFromEnumAndNotValueException(nameof(parameter), $"{nameof(System)}.{nameof(System.Windows)}.{nameof(Visibility)}", parameter.Value, Visibility.Visible) : value ? Visibility.Visible : parameter ?? Visibility.Collapsed;
 
         /// <summary>
         /// Converts a <see cref="Visibility"/> value to a <see langword="bool"/> value. If the value is <see cref="Visibility.Visible"/>, the returned value will be <see langword="true"/>, otherwise false.
@@ -97,15 +57,9 @@ ConverterBase
         /// <param name="parameter">The parameter of this converter. This parameter isn't evaluated in this converter.</param>
         /// <param name="culture">The culture used for the conversion. This parameter isn't evaluated in this converter.</param>
         /// <returns><see langword="true"/> if the value to convert is <see cref="Visibility.Visible"/>, otherwise false.</returns>
-#if WinCopies3
-        protected override bool ConvertBack(Visibility value, Visibility? parameter, CultureInfo culture) =>
-#else
-        public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => (Visibility)
-#endif
-            value == Visibility.Visible;
+        protected override bool ConvertBack(Visibility value, Visibility? parameter, CultureInfo culture) =>            value == Visibility.Visible;
     }
 
-#if WinCopies3
     [ValueConversion(typeof(bool?), typeof(bool), ParameterType = typeof(bool))]
     public class NullableBooleanToBooleanConverter : AlwaysConvertibleTwoWayConverter<bool?, bool, bool>
     {
@@ -116,31 +70,11 @@ ConverterBase
         protected override bool Convert(bool? value, bool parameter, CultureInfo culture) => value ?? parameter;
         protected override bool? ConvertBack(bool value, bool parameter, CultureInfo culture) => value;
     }
-#endif
 
     [ValueConversion(typeof(bool), typeof(Visibility), ParameterType = typeof(Visibility))]
-    public class ReversedBooleanToVisibilityConverter :
-#if WinCopies3
-        BooleanToVisibilityConverter
+    public class ReversedBooleanToVisibilityConverter :        BooleanToVisibilityConverter
     {
         protected override Visibility Convert(bool value, Visibility? parameter, CultureInfo culture) => base.Convert(!value, parameter, culture);
-
         protected override bool ConvertBack(Visibility value, Visibility? parameter, CultureInfo culture) => !base.ConvertBack(value, parameter, culture);
-#else
-ConverterBase
-    {
-        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (parameter != null && !(parameter is Visibility))
-
-                // todo:
-
-                throw new ArgumentException("parameter must be a value of the System.Windows.Visibility enum.");
-
-            return (bool)value ? parameter ?? Visibility.Collapsed : Visibility.Visible;
-        }
-
-        public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => (Visibility)value == Visibility.Visible;
-#endif
     }
 }

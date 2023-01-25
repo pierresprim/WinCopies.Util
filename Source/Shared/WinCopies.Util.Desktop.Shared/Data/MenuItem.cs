@@ -21,9 +21,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 
-#if WinCopies3
 using WinCopies.Collections;
-#endif
 
 namespace WinCopies.Util.Data
 {
@@ -77,9 +75,7 @@ namespace WinCopies.Util.Data
         public MenuItemBase(in ImageSource icon, in ICommand command, in object commandParameter, in IInputElement commandTarget) : this(icon)
         {
             _command = command;
-
             _commandParameter = commandParameter;
-
             _commandTarget = commandTarget;
         }
     }
@@ -105,53 +101,11 @@ namespace WinCopies.Util.Data
 
         public MenuItem(in bool isSeparator) : base(isSeparator) { /* Left empty. */ }
 
-        public MenuItem(
-#if WinCopies3
-            in
-#endif
-            object header) => _header = header;
+        public MenuItem(in object header) => _header = header;
 
-        public MenuItem(
-#if WinCopies3
-            in
-#endif
-            object header,
-#if WinCopies3
-            in
-#endif
-             ImageSource icon) : base(icon) => _header = header;
-
-        public MenuItem(
-#if WinCopies3
-            in
-#endif
-            object header,
-#if WinCopies3
-            in
-#endif
-            ImageSource icon,
-#if WinCopies3
-            in
-#endif
-            ICommand command,
-#if WinCopies3
-            in
-#endif
-            object commandParameter,
-#if WinCopies3
-            in
-#endif
-            IInputElement commandTarget) : base(icon, command, commandParameter, commandTarget) => _header = header;
-
-        public MenuItem(
-#if WinCopies3
-            in
-#endif
-            object header,
-#if WinCopies3
-            in
-#endif
-            IEnumerable<MenuItem> items)
+        public MenuItem(in object header, in ImageSource icon) : base(icon) => _header = header;
+        public MenuItem(in object header, in ImageSource icon, in ICommand command, in object commandParameter, in IInputElement commandTarget) : base(icon, command, commandParameter, commandTarget) => _header = header;
+        public MenuItem(in object header, in IEnumerable<MenuItem> items)
         {
             _header = header;
 
@@ -177,58 +131,10 @@ namespace WinCopies.Util.Data
 
         public MenuItem() { /* Left empty. */ }
 
-        public MenuItem(
-#if WinCopies3
-            in
-#endif
-            bool isSeparator) : base(isSeparator) { /* Left empty. */ }
-
-        public MenuItem(
-#if WinCopies3
-            in
-#endif
-            THeader header) => _header = header;
-
-        public MenuItem(
-#if WinCopies3
-            in
-#endif
-            THeader header,
-#if WinCopies3
-            in
-#endif
-            ImageSource icon) : base(icon) => _header = header;
-
-        public MenuItem(
-#if WinCopies3
-            in
-#endif
-         THeader header,
-#if WinCopies3
-            in
-#endif
-          ImageSource icon,
-#if WinCopies3
-            in
-#endif
-         ICommand command,
-#if WinCopies3
-            in
-#endif
-         object commandParameter,
-#if WinCopies3
-            in
-#endif
-         IInputElement commandTarget) : base(icon, command, commandParameter, commandTarget) => _header = header;
-
-        public MenuItem(
-#if WinCopies3
-            in
-#endif
-         THeader header,
-#if WinCopies3
-            in
-#endif
-         IEnumerable<MenuItem> items) : this(header) => Items.AddRange(items);
+        public MenuItem(in bool isSeparator) : base(isSeparator) { /* Left empty. */ }
+        public MenuItem(in THeader header) => _header = header;
+        public MenuItem(in THeader header, in ImageSource icon) : base(icon) => _header = header;
+        public MenuItem(in THeader header, in ImageSource icon, in ICommand command, in object commandParameter, in IInputElement commandTarget) : base(icon, command, commandParameter, commandTarget) => _header = header;
+        public MenuItem(in THeader header, in IEnumerable<MenuItem> items) : this(header) => Items.AddRange(items);
     }
 }

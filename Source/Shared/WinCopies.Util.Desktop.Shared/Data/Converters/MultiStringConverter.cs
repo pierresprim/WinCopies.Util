@@ -25,9 +25,7 @@ using WinCopies.Linq;
 namespace WinCopies.Util.Data
 {
     [MultiValueConversion(typeof(string), ParameterType = typeof(string))]
-    public class MultiStringConverter :
-#if WinCopies3
-        AlwaysConvertibleOneWayMultiConverter<string, string>
+    public class MultiStringConverter : AlwaysConvertibleOneWayMultiConverter<string, string>
     {
         public override IReadOnlyConversionOptions ConvertOptions => ConverterHelper.AllowNull;
 
@@ -40,12 +38,4 @@ namespace WinCopies.Util.Data
 
         protected override string Convert(object[] values, string parameter, CultureInfo culture) => values?.Cast<string>().Join(false, parameter);
     }
-#else
-        MultiConverterBase
-    {
-        public override object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) => string.Format(culture, (string)parameter, values);
-
-        public override object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) => throw new InvalidOperationException();
-    }
-#endif
 }

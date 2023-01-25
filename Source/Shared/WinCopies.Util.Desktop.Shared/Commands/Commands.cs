@@ -21,28 +21,16 @@ using System.Windows.Input;
 
 using WinCopies.Util.Data;
 
-using static WinCopies.
-#if WinCopies3
-    ThrowHelper;
-using EventArgs = System.EventArgs;
-#else
-    Util.Util;
-#endif
+using static WinCopies.ThrowHelper;
 
-namespace WinCopies.
-#if !WinCopies3
-Util.
-#endif
-Commands
+using EventArgs = System.EventArgs;
+
+namespace WinCopies.Commands
 {
     public interface ICommandSource<T> : ICommandSource
     {
-#if WinCopies3
         new ICommand<T> Command { get; }
-#endif
-
         new T CommandParameter { get; }
-
 #if CS8
         ICommand ICommandSource.Command => Command;
 
@@ -53,7 +41,6 @@ Commands
     public interface IQueryCommandSource<T> : ICommandSource
     {
         new IQueryCommand<T> Command { get; }
-
 #if CS8
         ICommand ICommandSource.Command => Command;
 #endif
@@ -85,7 +72,6 @@ Commands
         public T CommandParameter { get; set; }
 
         public CommandSource(in ICommand<T> command) => Command = command;
-
 #if !CS8
         ICommand ICommandSource.Command => Command;
 
@@ -116,7 +102,6 @@ Commands
         public T CommandParameter { get => ModelGeneric.CommandParameter; set { ModelGeneric.CommandParameter = value; OnPropertyChanged(nameof(CommandParameter)); } }
 
         public CommandSourceViewModel(in CommandSource<T> commandSource) : base(commandSource) { /* Left empty. */ }
-
 #if !CS8
         ICommand ICommandSource.Command => Command;
 

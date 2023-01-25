@@ -25,50 +25,31 @@ using System.Windows.Controls;
 
 namespace WinCopies.Collections
 {
-#if WinCopies3
     namespace DotNetFix
     {
         public interface IObservableCollectionBase : System.Collections.IEnumerable, INotifyCollectionChanged, INotifyPropertyChanged
         {
             // Left empty.
         }
-#endif
 
         public delegate void NotifyCollectionChangingEventHandler(object sender, DotNetFix.NotifyCollectionChangedEventArgs e);
 
 #if CS7
-#if WinCopies3
         namespace Generic
         {
-#endif
-            public interface IObservableCollection<T> :
-#if WinCopies3
-            IObservableCollectionBase<T>,
-#else
-             System.Collections.Generic.IEnumerable<T>, System.Collections.IEnumerable, INotifyCollectionChanged, INotifyPropertyChanged,
-#endif
-            System.Collections.Generic.IList<T>, IList, ICollection, System.Collections.Generic.IReadOnlyList<T>
+            public interface IObservableCollection<T> : IObservableCollectionBase<T>, System.Collections.Generic.IList<T>, IList, ICollection, System.Collections.Generic.IReadOnlyList<T>
             {
                 void Move(int oldIndex, int newIndex);
             }
-#if WinCopies3
         }
 #endif
-#endif
-
-#if !WinCopies3
-    namespace DotNetFix
-    {
-#endif
-
-#if WinCopies3
         namespace Generic
         {
             public interface IObservableCollectionBase<T> : System.Collections.Generic.IEnumerable<T>, IObservableCollectionBase
             {
                 // Left empty.
             }
-#endif
+
             /// <summary>
             /// Represents a dynamic data collection that provides notifications when items get added, removed, or when the whole list is refreshed.
             /// </summary>
@@ -163,13 +144,7 @@ namespace WinCopies.Collections
                 {
                     CheckReentrancy();
 
-                    OnCollectionChanging(new NotifyCollectionChangedEventArgs(
-#if WinCopies3
-                    true, NotifyCollectionChangedAction.Reset
-#else
-                    new ReadOnlyCollection<T>(this)
-#endif
-                    ));
+                    OnCollectionChanging(new NotifyCollectionChangedEventArgs(true, NotifyCollectionChangedAction.Reset));
 
                     base.ClearItems();
                 }
@@ -186,300 +161,263 @@ namespace WinCopies.Collections
                 }
             }
         }
-
-#if WinCopies3
     }
-#endif
 
-    //namespace Advanced
+    /*namespace Advanced
+    {
+        //internal class ObservableCollectionInternal<T> : WinCopies.Collections.ObservableCollection<T>
+        //{
+        //    public ObservableCollectionInternal() : base() { }
 
-    //{
+        //    public ObservableCollectionInternal(List<T> list) : base(list) { }
 
-    //    //internal class ObservableCollectionInternal<T> : WinCopies.Collections.ObservableCollection<T>
+        //    public ObservableCollectionInternal(System.Collections.Generic.IEnumerable<T> collection) : base(collection) { }
 
-    //    //{
+        //    internal new IList<T> Items => base.Items;
 
-    //    //    public ObservableCollectionInternal() : base() { }
+        //    internal new void CheckReentrancy() => base.CheckReentrancy();
 
-    //    //    public ObservableCollectionInternal(List<T> list) : base(list) { }
+        //    internal new IDisposable BlockReentrancy() => base.BlockReentrancy();
+        //}
 
-    //    //    public ObservableCollectionInternal(System.Collections.Generic.IEnumerable<T> collection) : base(collection) { }
+        [Serializable]
+        public class ObservableCollection<T> : WinCopies.Collections.ObservableCollection<T>, IObservableCollection<T>
+        {
+            private ObservableCollectionInternal<T> items;
 
-    //    //    internal new IList<T> Items => base.Items;
+            private void SetItems(ObservableCollectionInternal<T> itemCollection)
+            {
+                items = itemCollection;
 
-    //    //    internal new void CheckReentrancy() => base.CheckReentrancy();
+                items.CollectionChanging += (object sender, DotNetFix.NotifyCollectionChangedEventArgs e) => OnCollectionChanging(e);
 
-    //    //    internal new IDisposable BlockReentrancy() => base.BlockReentrancy();
+                items.CollectionChanged += (object sender, System.Collections.Specialized.DotNetFix.NotifyCollectionChangedEventArgs e) => OnCollectionChanged(e);
 
-    //    //}
+                ((INotifyPropertyChanged)items).PropertyChanged += (object sender, PropertyChangedEventArgs e) => OnPropertyChanged(e);
+            }
 
-    //    [Serializable]
-    //    public class ObservableCollection<T> : WinCopies.Collections.ObservableCollection<T>, IObservableCollection<T>
+            protected IList<T> Items => items.Items;
 
-    //    {
+            // private Func<T, TModifier> getModifier;
 
-    //        private ObservableCollectionInternal<T> items;
+            //public ObservableCollection(Func<T, TModifier> getModifier)
+            //{
+            //    items = new ObservableCollection<TModifier>();
 
-    //        private void SetItems(ObservableCollectionInternal<T> itemCollection)
-    //        {
+            //    this.getModifier = getModifier;
+            //}
 
-    //            items = itemCollection;
+            //public ObservableCollection(List<T> list, Func<T, TModifier> getModifier) : this((System.Collections.Generic.IEnumerable<T>)list, getModifier) { }
 
-    //            items.CollectionChanging += (object sender, DotNetFix.NotifyCollectionChangedEventArgs e) => OnCollectionChanging(e);
+            //public ObservableCollection(System.Collections.Generic.IEnumerable<T> collection, Func<T, TModifier> getModifier)
+            //{
+            //    this.getModifier = getModifier;
 
-    //            items.CollectionChanged += (object sender, System.Collections.Specialized.DotNetFix.NotifyCollectionChangedEventArgs e) => OnCollectionChanged(e);
+            //    var builder = new ArrayAndListBuilder<TModifier>();
 
-    //            ((INotifyPropertyChanged)items).PropertyChanged += (object sender, PropertyChangedEventArgs e) => OnPropertyChanged(e);
+            //    foreach (var item in collection)
 
-    //        }
+            //        builder.AddLast(getModifier(item));
 
-    //        protected IList<T> Items => items.Items;
+            //    // todo: to add collections that can be built (see arrayandlistbuilder in WinCopies.Util
 
-    //        // private Func<T, TModifier> getModifier;
+            //    items = new ObservableCollection<TModifier>(builder);
+            //}
 
-    //        //public ObservableCollection(Func<T, TModifier> getModifier)
-    //        //{
+            public ObservableCollection() => SetItems(new ObservableCollectionInternal<T>());
 
-    //        //    items = new ObservableCollection<TModifier>();
+            public ObservableCollection(List<T> list) => SetItems(new ObservableCollectionInternal<T>(list));
 
-    //        //    this.getModifier = getModifier;
+            public ObservableCollection(System.Collections.Generic.IEnumerable<T> collection) => SetItems(new ObservableCollectionInternal<T>(collection));
 
-    //        //}
+            T System.Collections.Generic.IList<T>.this[int index] { get => GetItem(index); set => Update(index, value); }
 
-    //        //public ObservableCollection(List<T> list, Func<T, TModifier> getModifier) : this((System.Collections.Generic.IEnumerable<T>)list, getModifier) { }
+            object IList.this[int index] { get => this[index]; set => Update(index, GetOrThrowIfNotType<T>(value, nameof(value))); }
 
-    //        //public ObservableCollection(System.Collections.Generic.IEnumerable<T> collection, Func<T, TModifier> getModifier)
+            public T this[int index] => GetItem(index);
 
-    //        //{
+            T System.Collections.Generic.IReadOnlyList<T>.this[int index] => this[index];
 
-    //        //    this.getModifier = getModifier;
+            public bool Update(int index, T item) => SetItem(index, item);
 
-    //        //    var builder = new ArrayAndListBuilder<TModifier>();
+            public int Count => ItemsCount;
 
-    //        //    foreach (var item in collection)
+            protected virtual int ItemsCount => items.Count;
 
-    //        //        builder.AddLast(getModifier(item));
+            protected virtual bool IsReadOnly => false;
 
-    //        //    // todo: to add collections that can be built (see arrayandlistbuilder in WinCopies.Util
+            bool IList<T>.IsReadOnly => IsReadOnly;
 
-    //        //    items = new ObservableCollection<TModifier>(builder);
+            bool IList.IsReadOnly => IsReadOnly;
 
-    //        //}
+            protected virtual bool IsFixedSize => false;
 
-    //        public ObservableCollection() => SetItems(new ObservableCollectionInternal<T>());
+            bool IList.IsFixedSize => IsFixedSize;
 
-    //        public ObservableCollection(List<T> list) => SetItems(new ObservableCollectionInternal<T>(list));
+            object ICollection.SyncRoot => ((ICollection)items).SyncRoot;
 
-    //        public ObservableCollection(System.Collections.Generic.IEnumerable<T> collection) => SetItems(new ObservableCollectionInternal<T>(collection));
+            bool ICollection.IsSynchronized => ((ICollection)items).IsSynchronized;
 
-    //        T System.Collections.Generic.IList<T>.this[int index] { get => GetItem(index); set => Update(index, value); }
+            public event NotifyCollectionChangedEventHandler CollectionChanged;
 
-    //        object IList.this[int index] { get => this[index]; set => Update(index, GetOrThrowIfNotType<T>(value, nameof(value))); }
+            event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged { add => PropertyChanged += value; remove => PropertyChanged -= value; }
 
-    //        public T this[int index] => GetItem(index);
+            protected event PropertyChangedEventHandler PropertyChanged;
 
-    //        T System.Collections.Generic.IReadOnlyList<T>.this[int index] => this[index];
+            public event NotifyCollectionChangingEventHandler CollectionChanging;
 
-    //        public bool Update(int index, T item) => SetItem(index, item);
+            protected IDisposable BlockReentrancy() => items.BlockReentrancy();
 
-    //        public int Count => ItemsCount;
+            protected void CheckReentrancy() => items.CheckReentrancy();
 
-    //        protected virtual int ItemsCount => items.Count;
+            public bool Add(T item) => InsertItem(Count, item);
 
-    //        protected virtual bool IsReadOnly => false;
+            void IList<T>.Add(T item) => Add(item);
 
-    //        bool IList<T>.IsReadOnly => IsReadOnly;
+            int IList.Add(object value) => InsertItem(Count, GetOrThrowIfNotType<T>(value, nameof(value))) ? Count - 1 : -1;
 
-    //        bool IList.IsReadOnly => IsReadOnly;
+            public bool Clear() => ClearItems();
 
-    //        protected virtual bool IsFixedSize => false;
+            void IList.Clear() => ClearItems();
 
-    //        bool IList.IsFixedSize => IsFixedSize;
+            void IList<T>.Clear() => ClearItems();
 
-    //        object ICollection.SyncRoot => ((ICollection)items).SyncRoot;
+            public bool Contains(T item) => ContainsItem(item);
 
-    //        bool ICollection.IsSynchronized => ((ICollection)items).IsSynchronized;
+            protected virtual bool ContainsItem(T item)
+            {
+                if (item?.Equals(null) == true) return false;
 
-    //        public event NotifyCollectionChangedEventHandler CollectionChanged;
+                foreach (T _item in items)
 
-    //        event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged { add => PropertyChanged += value; remove => PropertyChanged -= value; }
+                    if (_item.Equals(item))
 
-    //        protected event PropertyChangedEventHandler PropertyChanged;
+                        return true;
 
-    //        public event NotifyCollectionChangingEventHandler CollectionChanging;
+                return false;
+            }
 
-    //        protected IDisposable BlockReentrancy() => items.BlockReentrancy();
+            public bool Contains(object value) => value is T item ? Contains(item) : false;
 
-    //        protected void CheckReentrancy() => items.CheckReentrancy();
+            public virtual void CopyTo(T[] array, int arrayIndex) =>
 
-    //        public bool Add(T item) => InsertItem(Count, item);
+                //T[] items = new T[Count];
 
-    //        void IList<T>.Add(T item) => Add(item);
+                //for (int i = 0; i < this.items.Count; i++)
 
-    //        int IList.Add(object value) => InsertItem(Count, GetOrThrowIfNotType<T>(value, nameof(value))) ? Count - 1 : -1;
+                //    items[i] = this.items[i].Item;
 
-    //        public bool Clear() => ClearItems();
+                items.CopyTo(array, arrayIndex);
 
-    //        void IList.Clear() => ClearItems();
+            void ICollection.CopyTo(Array array, int index) => CopyTo(array, index);
 
-    //        void IList<T>.Clear() => ClearItems();
+            protected virtual void CopyTo(Array array, int index) => ((IList)items).CopyTo(array, index);
 
-    //        public bool Contains(T item) => ContainsItem(item);
+            public virtual System.Collections.Generic.IEnumerator<T> GetEnumerator() => items.GetEnumerator();
 
-    //        protected virtual bool ContainsItem(T item)
+            public int IndexOf(T item) => IndexOfItem(item);
 
-    //        {
+            protected virtual int IndexOfItem(T item) => items.IndexOf(item);
 
-    //            if (item?.Equals(null) == true) return false;
+            int IList.IndexOf(object value) => value is T browsableObjectInfo ? IndexOf(browsableObjectInfo) : -1;
 
-    //            foreach (T _item in items)
+            void System.Collections.Generic.IList<T>.Insert(int index, T item) => InsertItem(index, item);
 
-    //                if (_item.Equals(item))
+            /// <summary>
+            /// Inserts an element into the <see cref="ObservableCollection{T}"/> at the specified index. See the Remarks section.
+            /// </summary>
+            /// <param name="index">The zero-based index at which <paramref name="item"/> should be inserted.</param>
+            /// <param name="item">The object to insert. The value can be <see langword="null"/> for reference types.</param>
+            /// <returns><see langword="true"/> if the new item was successfully inserted in the colelction, otherwise <see langword="false"/>.</returns>
+            /// <remarks>If the item could not be inserted because of an index error, an <see cref="ArgumentOutOfRangeException"/> is thrown. On its default implementation, this method always inserts the new item and returns <see langword="true"/> if the given index is in the required value range.</remarks>
+            /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is less than zero.
+            /// OR <paramref name="index"/> is greater than <see cref="Count"/>.</exception>
+            public bool Insert(int index, T item) => InsertItem(index, item);
 
-    //                    return true;
+            void IList.Insert(int index, object value) => InsertItem(index, GetOrThrowIfNotType<T>(value, nameof(value)));
 
-    //            return false;
+            void IObservableCollection<T>.Move(int oldIndex, int newIndex) => MoveItem(oldIndex, newIndex);
 
-    //        }
+            /// <summary>
+            /// Moves the item at the specified index to a new location in the collection. See the Remarks section.
+            /// </summary>
+            /// <param name="oldIndex">The zero-based index specifying the location of the item to be moved.</param>
+            /// <param name="newIndex">The zero-based index specifying the new location of the item.</param>
+            /// <returns><see langword="true"/> if the new item was successfully inserted in the colelction, otherwise <see langword="false"/>.</returns>
+            /// <remarks><para>If the item could not be inserted because of an index error, an <see cref="ArgumentOutOfRangeException"/> is thrown. On its default implementation, this method always inserts the new item and returns <see langword="true"/> if the given index is in the required value range.</para>
+            /// <para>Subclasses can override the <see cref="MoveItem"/> method to provide custom behavior for this method.</para></remarks>
+            /// <exception cref="ArgumentOutOfRangeException">At least <paramref name="oldIndex"/> or <paramref name="newIndex"/> is less than zero.
+            /// OR At least <paramref name="oldIndex"/> or <paramref name="newIndex"/> is greater than <see cref="Count"/>.</exception>
+            public bool Move(int oldIndex, int newIndex) => MoveItem(oldIndex, newIndex);
 
-    //        public bool Contains(object value) => value is T item ? Contains(item) : false;
+            public bool Move(T item, int newIndex) => TryAlter(item, i => MoveItem(i, newIndex));
 
-    //        public virtual void CopyTo(T[] array, int arrayIndex) =>
+            public bool Remove(T item) => TryAlter((object)item, i => RemoveItem(i));
 
-    //            //T[] items = new T[Count];
+            void IList.Remove(object value) => TryAlter(value, i => RemoveItem(i));
 
-    //            //for (int i = 0; i < this.items.Count; i++)
+            private bool TryAlter(object value, Func<int, bool> func)
+            {
+                if (value is T _value)
+                {
+                    int i = IndexOf(_value);
 
-    //            //    items[i] = this.items[i].Item;
+                    return i == -1 ? false : func(i);
+                }
 
-    //            items.CopyTo(array, arrayIndex);
+                return false;
+            }
 
-    //        void ICollection.CopyTo(Array array, int index) => CopyTo(array, index);
+            public bool RemoveAt(int index) => RemoveItem(index);
 
-    //        protected virtual void CopyTo(Array array, int index) => ((IList)items).CopyTo(array, index);
+            void IList.RemoveAt(int index) => RemoveItem(index);
 
-    //        public virtual System.Collections.Generic.IEnumerator<T> GetEnumerator() => items.GetEnumerator();
+            void System.Collections.Generic.IList<T>.RemoveAt(int index) => RemoveItem(index);
 
-    //        public int IndexOf(T item) => IndexOfItem(item);
+            System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-    //        protected virtual int IndexOfItem(T item) => items.IndexOf(item);
+            protected virtual bool ClearItems()
+            {
+                items.Clear();
 
-    //        int IList.IndexOf(object value) => value is T browsableObjectInfo ? IndexOf(browsableObjectInfo) : -1;
+                return true;
+            }
 
-    //        void System.Collections.Generic.IList<T>.Insert(int index, T item) => InsertItem(index, item);
+            protected virtual bool InsertItem(int index, T item)
+            {
+                items.Insert(index, item);
 
-    //        /// <summary>
-    //        /// Inserts an element into the <see cref="ObservableCollection{T}"/> at the specified index. See the Remarks section.
-    //        /// </summary>
-    //        /// <param name="index">The zero-based index at which <paramref name="item"/> should be inserted.</param>
-    //        /// <param name="item">The object to insert. The value can be <see langword="null"/> for reference types.</param>
-    //        /// <returns><see langword="true"/> if the new item was successfully inserted in the colelction, otherwise <see langword="false"/>.</returns>
-    //        /// <remarks>If the item could not be inserted because of an index error, an <see cref="ArgumentOutOfRangeException"/> is thrown. On its default implementation, this method always inserts the new item and returns <see langword="true"/> if the given index is in the required value range.</remarks>
-    //        /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is less than zero.
-    //        /// OR <paramref name="index"/> is greater than <see cref="Count"/>.</exception>
-    //        public bool Insert(int index, T item) => InsertItem(index, item);
+                return true;
+            }
 
-    //        void IList.Insert(int index, object value) => InsertItem(index, GetOrThrowIfNotType<T>(value, nameof(value)));
+            protected virtual bool MoveItem(int oldIndex, int newIndex)
+            {
+                items.Move(oldIndex, newIndex);
 
-    //        void IObservableCollection<T>.Move(int oldIndex, int newIndex) => MoveItem(oldIndex, newIndex);
+                return true;
+            }
 
-    //        /// <summary>
-    //        /// Moves the item at the specified index to a new location in the collection. See the Remarks section.
-    //        /// </summary>
-    //        /// <param name="oldIndex">The zero-based index specifying the location of the item to be moved.</param>
-    //        /// <param name="newIndex">The zero-based index specifying the new location of the item.</param>
-    //        /// <returns><see langword="true"/> if the new item was successfully inserted in the colelction, otherwise <see langword="false"/>.</returns>
-    //        /// <remarks><para>If the item could not be inserted because of an index error, an <see cref="ArgumentOutOfRangeException"/> is thrown. On its default implementation, this method always inserts the new item and returns <see langword="true"/> if the given index is in the required value range.</para>
-    //        /// <para>Subclasses can override the <see cref="MoveItem"/> method to provide custom behavior for this method.</para></remarks>
-    //        /// <exception cref="ArgumentOutOfRangeException">At least <paramref name="oldIndex"/> or <paramref name="newIndex"/> is less than zero.
-    //        /// OR At least <paramref name="oldIndex"/> or <paramref name="newIndex"/> is greater than <see cref="Count"/>.</exception>
-    //        public bool Move(int oldIndex, int newIndex) => MoveItem(oldIndex, newIndex);
+            protected virtual void OnCollectionChanging(DotNetFix.NotifyCollectionChangedEventArgs e) => CollectionChanging?.Invoke(this, e);
 
-    //        public bool Move(T item, int newIndex) => TryAlter(item, i => MoveItem(i, newIndex));
+            protected virtual void OnCollectionChanged(System.Collections.Specialized.DotNetFix.NotifyCollectionChangedEventArgs e) => CollectionChanged?.Invoke(this, e);
 
-    //        public bool Remove(T item) => TryAlter((object)item, i => RemoveItem(i));
+            protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
 
-    //        void IList.Remove(object value) => TryAlter(value, i => RemoveItem(i));
+            protected virtual bool RemoveItem(int index)
+            {
+                items.RemoveAt(index);
 
-    //        private bool TryAlter(object value, Func<int, bool> func)
-    //        {
+                return true;
+            }
 
-    //            if (value is T _value)
+            protected virtual T GetItem(int index) => items[index];
 
-    //            {
+            protected virtual bool SetItem(int index, T item)
+            {
+                items[index] = item;
 
-    //                int i = IndexOf(_value);
-
-    //                return i == -1 ? false : func(i);
-
-    //            }
-
-    //            return false;
-
-    //        }
-
-    //        public bool RemoveAt(int index) => RemoveItem(index);
-
-    //        void IList.RemoveAt(int index) => RemoveItem(index);
-
-    //        void System.Collections.Generic.IList<T>.RemoveAt(int index) => RemoveItem(index);
-
-    //        System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-    //        protected virtual bool ClearItems()
-    //        {
-
-    //            items.Clear();
-
-    //            return true;
-
-    //        }
-
-    //        protected virtual bool InsertItem(int index, T item)
-    //        {
-
-    //            items.Insert(index, item);
-
-    //            return true;
-
-    //        }
-
-    //        protected virtual bool MoveItem(int oldIndex, int newIndex)
-    //        {
-
-    //            items.Move(oldIndex, newIndex);
-
-    //            return true;
-
-    //        }
-
-    //        protected virtual void OnCollectionChanging(DotNetFix.NotifyCollectionChangedEventArgs e) => CollectionChanging?.Invoke(this, e);
-
-    //        protected virtual void OnCollectionChanged(System.Collections.Specialized.DotNetFix.NotifyCollectionChangedEventArgs e) => CollectionChanged?.Invoke(this, e);
-
-    //        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
-
-    //        protected virtual bool RemoveItem(int index)
-
-    //        {
-
-    //            items.RemoveAt(index);
-
-    //            return true;
-
-    //        }
-
-    //        protected virtual T GetItem(int index) => items[index];
-
-    //        protected virtual bool SetItem(int index, T item)
-    //        {
-
-    //            items[index] = item;
-
-    //            return true;
-
-    //        }
-    //    }
-
-    //}
+                return true;
+            }
+        }
+    }*/
 }

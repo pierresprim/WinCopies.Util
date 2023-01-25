@@ -15,13 +15,12 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if WinCopies3
-
+using WinCopies.Collections.DotNetFix;
 using WinCopies.Collections.DotNetFix.Generic;
 
-namespace WinCopies.Collections.Generic
+namespace WinCopies.Collections
 {
-    public static partial class EnumerableHelper<T>
+    public static partial class EnumerableHelper
     {
         public static IEnumerableLinkedList GetEnumerableLinkedList() => new Enumerable();
 
@@ -29,12 +28,28 @@ namespace WinCopies.Collections.Generic
 
         public static IEnumerableQueue GetEnumerableQueue() => new EnumerableQueue();
 
-        public static IQueueBase<T> GetQueue() => new Queue();
+        public static IQueueBase GetQueue() => new Queue();
 
         public static IEnumerableStack GetEnumerableStack() => new EnumerableStack();
 
-        public static IStackBase<T> GetStack() => new Stack();
+        public static IStackBase GetStack() => new Stack();
+    }
+
+    namespace Generic
+    {
+        public static partial class EnumerableHelper<T>
+        {
+            public static IEnumerableLinkedList GetEnumerableLinkedList() => new Enumerable();
+
+            public static ILinkedList GetLinkedList() => new LinkedList();
+
+            public static IEnumerableQueue GetEnumerableQueue() => new EnumerableQueue();
+
+            public static IQueueBase<T> GetQueue() => new Queue();
+
+            public static IEnumerableStack GetEnumerableStack() => new EnumerableStack();
+
+            public static IStackBase<T> GetStack() => new Stack();
+        }
     }
 }
-
-#endif

@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if WinCopies3 && CS7
+#if CS7
 using System;
 using System.Collections;
 using System.Diagnostics;
@@ -123,7 +123,7 @@ namespace WinCopies.Collections.Generic
 #if !CS9
             ArrayEnumerator<T>
 #endif
-            (this, true);
+            (this, DotNetFix.ArrayEnumerationOptions.Reverse);
     }
 
     public abstract class ArrayArray<T, U> : IULongCountableEnumerable<T> where U : System.Collections.Generic.IReadOnlyList<T>
@@ -238,15 +238,15 @@ namespace WinCopies.Collections.Generic
     {
         public T this[int index] => this[(ulong)index];
 
-        int IReadOnlyList<T>.Count => (int)Count;
-        int ICountableEnumerable<T, ICountableEnumerator<T>>.Count => (int)Count;
-#if !CS8
         int ICountable.Count => (int)Count;
+#if !CS8
         int System.Collections.Generic.IReadOnlyCollection<T>.Count => (int)Count;
 
         object IIndexableR.this[int index] => this[index];
-#endif
 
+        ICountableEnumerator<T> Enumeration.IEnumerable<ICountableEnumerator<T>>.GetEnumerator() => GetEnumerator2();
+        DotNetFix.ICountableEnumerator Enumeration.IEnumerable<DotNetFix.ICountableEnumerator>.GetEnumerator() => GetEnumerator2();
+#endif
         public ReadOnlyArrayArray2(in System.Collections.Generic.IEnumerable<System.Collections.Generic.IReadOnlyList<T>> arrays) : base(arrays)
         {
             if (Count > int.MaxValue)
@@ -258,15 +258,11 @@ namespace WinCopies.Collections.Generic
 
         public ICountableEnumerator<T> GetEnumerator2() => new Enumerator2<ReadOnlyArrayArray2<T>>(this);
         ICountableEnumerator<T> IReadOnlyList<T>.GetEnumerator() => GetEnumerator2();
-        ICountableEnumerator<T> ICountableEnumerable<T, ICountableEnumerator<T>>.GetEnumerator() => GetEnumerator2();
         System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetEnumerator();
-        ICountableEnumerator<T> Enumeration.DotNetFix.IEnumerable<ICountableEnumerator<T>>.GetEnumerator() => GetEnumerator2();
-        ICountableEnumerator<T> DotNetFix.Generic.IEnumerable<T, ICountableEnumerator<T>>.GetEnumerator() => GetEnumerator2();
-        DotNetFix.ICountableEnumerator Enumeration.DotNetFix.IEnumerable<DotNetFix.ICountableEnumerator>.GetEnumerator() => GetEnumerator2();
 
         public class Enumerator2<U> : Enumerator<U>, ICountableEnumerator<T> where U : IULongCountableEnumerable<T>, IReadOnlyList<T>, IULongIndexableR<T>
         {
-            int ICountable.Count => InnerArrays.AsFromType<IReadOnlyList<T>>().Count;
+            int ICountable.Count => (int)Count;
 
             public Enumerator2(in U arrays) : base(arrays) { /* Left empty. */ }
         }

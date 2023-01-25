@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<IsPackable>false</IsPackable>
+		<DefineConstants>WinCopies2;WinCopies3;WinCopies4;$(DefineConstants)</DefineConstants>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+		<PackageReference Include="MSTest.TestAdapter" Version="2.1.0" />
+		<PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
+		<PackageReference Include="coverlet.collector" Version="1.2.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\Source\Preview\WinCopies.Util.Extensions\WinCopies.Util.Extensions.Preview.csproj" />
+	</ItemGroup>
+
+	<Import Project="..\..\Shared\WinCopies.Util.Extensions\WinCopies.Util.Extensions.projitems" Label="Shared" />
+
+</Project>

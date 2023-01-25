@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<PackageId>WinCopies.Util</PackageId>
+		<Description>WinCopies framework utilities</Description>
+		<PackageTags>WinCopies</PackageTags>
+		<VersionPrefix>3.21</VersionPrefix>
+		<AssemblyVersion>3.21</AssemblyVersion>
+		<FileVersion>3.21</FileVersion>
+		<DefineConstants>WinCopies2;WinCopies3;$(DefineConstants)</DefineConstants>
+		<RootNamespace>WinCopies</RootNamespace>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
+
+	<Import Project="$(SolutionDir)\ExtraProperties.props" Condition="'$(Configuration)'=='Release'" />
+
+	<Import Project="..\..\Shared\WinCopies.Util.Shared\WinCopies.Util.Shared.projitems" Label="Shared" />
+
+	<ItemGroup>
+		<Compile Update="Resources\ExceptionMessages.Designer.cs">
+			<DependentUpon>ExceptionMessages.resx</DependentUpon>
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Update="Resources\ExceptionMessages.resx">
+			<LastGenOutput>ExceptionMessages.Designer.cs</LastGenOutput>
+			<Generator>PublicResXFileCodeGenerator</Generator>
+		</EmbeddedResource>
+	</ItemGroup>
+
+</Project>

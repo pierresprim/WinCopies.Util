@@ -18,87 +18,45 @@
 using System.Collections;
 
 using WinCopies.Collections.Generic;
+using WinCopies.Util;
 
 namespace WinCopies.Collections.DotNetFix
 {
-    public interface ICountableEnumerable
-#if WinCopies3
-<out TEnumerator> : Enumeration.DotNetFix.IEnumerable<TEnumerator>, ICountable where TEnumerator : ICountableEnumerator
-#else
-        : IEnumerable
-#endif
+    public interface ICountableEnumerable<out TEnumerator> : Enumeration.IEnumerable<TEnumerator>, ICountable where TEnumerator : ICountableEnumerator
     {
-#if WinCopies3
         // Left empty.
     }
 
     public interface ICountableEnumerable : ICountableEnumerable<ICountableEnumerator>
     {
         // Left empty.
-#else
-        int Count { get; }
-#endif
     }
 
-    public interface IUIntCountableEnumerable
-#if WinCopies3
-    <out TEnumerator> : Enumeration.DotNetFix.IEnumerable<TEnumerator>, IUIntCountable where TEnumerator : IUIntCountableEnumerator
-#else
-: IEnumerable
-#endif
+    public interface IUIntCountableEnumerable<out TEnumerator> : Enumeration.IEnumerable<TEnumerator>, IUIntCountable where TEnumerator : IUIntCountableEnumerator
     {
-#if WinCopies3
         // Left empty.
     }
 
     public interface IUIntCountableEnumerable : IUIntCountableEnumerable<IUIntCountableEnumerator>
     {
         // Left empty.
-#else
-        uint Count { get; }
-#endif
     }
 
-#if WinCopies3
     namespace Generic
     {
-#endif
         public interface ICountableEnumerable
-#if WinCopies3
         <
 #if CS5
             out
 #endif
-             TItems, out TEnumerator> : DotNetFix.ICountableEnumerable<TEnumerator>, IEnumerable<TItems, TEnumerator>
+            TItems, out TEnumerator> : DotNetFix.ICountableEnumerable<TEnumerator>, Enumeration.Generic.IEnumerable<TItems, TEnumerator>
 #if CS7
-, System.Collections.Generic.IReadOnlyCollection<TItems>
+            , System.Collections.Generic.IReadOnlyCollection<TItems>
 #endif
-             where TEnumerator : ICountableEnumerator<TItems>
-#else
-        <
-#if CS5
-            out
-#endif
-            T> : System.Collections.Generic.IEnumerable<T>, ICountableEnumerable
-#endif
-    {
-#if WinCopies3
-#if CS7
-            new int Count { get; }
-#endif
-
-            new TEnumerator GetEnumerator();
-
+            where TEnumerator : ICountableEnumerator<TItems>
+        {
 #if CS8
-            int System.Collections.Generic.IReadOnlyCollection<TItems>.Count => Count;
-
-            int ICountable.Count => Count;
-
-            TEnumerator IEnumerable<TItems, TEnumerator>.GetEnumerator() => GetEnumerator();
-
-            TEnumerator Enumeration.DotNetFix.IEnumerable<TEnumerator>.GetEnumerator() => GetEnumerator();
-
-            System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+            int System.Collections.Generic.IReadOnlyCollection<TItems>.Count => this.AsFromType<ICountable>().Count;
 #endif
         }
 
@@ -126,60 +84,31 @@ namespace WinCopies.Collections.DotNetFix
 #endif
              T> : ICountableDisposableEnumerable<T, ICountableDisposableEnumerator<T>>
         {
-#endif
-        // Left empty.
-    }
+            // Left empty.
+        }
 
-    public interface IReadOnlyArray<
+        public interface IReadOnlyArray<
+#if CS5
+                out
+#endif
+                T> : WinCopies.Collections.DotNetFix.Generic.ICountableEnumerable<T>
+        {
+            T this[int index] { get; }
+        }
+
+        public interface IArray<T> : Collections.Extensions.Generic.IReadOnlyList<T>, IReadOnlyArray<T>
+        {
+            new T this[int index] { get; set; }
+        }
+
+        public interface IUIntCountableEnumerable
+            <
 #if CS5
             out
 #endif
-            T> : WinCopies.Collections.DotNetFix.
-#if WinCopies3
-        Generic.
-#endif
-        ICountableEnumerable<T>
-    {
-        T this[int index] { get; }
-    }
-
-    public interface IArray<T> : Collections.
-#if WinCopies3
-            Extensions.
-#endif
-            Generic.IReadOnlyList<T>
-#if WinCopies3
-            , IReadOnlyArray<T>
-#endif
-    {
-        new T this[int index] { get; set; }
-    }
-
-    public interface IUIntCountableEnumerable
-#if WinCopies3
-       <
-#if CS5
-            out
-#endif
-             TItems, out TEnumerator> : DotNetFix.IUIntCountableEnumerable<TEnumerator>, IEnumerable<TItems, TEnumerator> where TEnumerator : IUIntCountableEnumerator<TItems>
-#else
-<
-#if CS5
-            out
-#endif
-            T> : System.Collections.Generic.IEnumerable<T>, IUIntCountableEnumerable
-#endif
-    {
-#if WinCopies3
-            new TEnumerator GetEnumerator();
-
-#if CS8
-            TEnumerator IEnumerable<TItems, TEnumerator>.GetEnumerator() => GetEnumerator();
-
-            TEnumerator Enumeration.DotNetFix.IEnumerable<TEnumerator>.GetEnumerator() => GetEnumerator();
-
-            System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-#endif
+            TItems, out TEnumerator> : DotNetFix.IUIntCountableEnumerable<TEnumerator>, Enumeration.Generic.IEnumerable<TItems, TEnumerator> where TEnumerator : IUIntCountableEnumerator<TItems>
+        {
+            // Left empty.
         }
 
         public interface IUIntCountableEnumerable<
@@ -188,7 +117,9 @@ namespace WinCopies.Collections.DotNetFix
 #endif
              T> : IUIntCountableEnumerable<T, IUIntCountableEnumerator<T>>
         {
-            // Left empty.
+#if CS8
+            System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => this.AsFromType<Enumeration.IEnumerable<IUIntCountableEnumerator<T>>>().GetEnumerator();
+#endif
         }
 
         public interface IUIntCountableDisposableEnumerable<
@@ -206,11 +137,9 @@ namespace WinCopies.Collections.DotNetFix
 #endif
              T> : IUIntCountableDisposableEnumerable<T, IUIntCountableDisposableEnumerator<T>>
         {
-#endif
-        // Left empty.
-    }
+            // Left empty.
+        }
 
-#if WinCopies3
         public interface ICountableEnumerableInfo<
 #if CS5
             out
@@ -229,5 +158,4 @@ namespace WinCopies.Collections.DotNetFix
             // Left empty.
         }
     }
-#endif
 }

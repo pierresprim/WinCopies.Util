@@ -16,167 +16,43 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if CS7
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 
-using WinCopies.Util;
-
-using static WinCopies.Collections.ThrowHelper;
-using static WinCopies
-#if !WinCopies3
-    .Util.Util;
-
-using System.Runtime.Serialization;
-
-using WinCopies.Util;
-#else
-    .ThrowHelper;
-
-using WinCopies.Collections.Generic;
-#endif
-
-namespace WinCopies.Collections.DotNetFix
+namespace WinCopies.Collections.DotNetFix.Generic
 {
-#if WinCopies3
-    namespace Generic
+    [Serializable]
+    public class ReadOnlyObservableLinkedCollection<T> : ReadOnlyLinkedCollection<T, ILinkedListNode<T>, ObservableLinkedCollection<T>>, System.Collections.Generic.ICollection<T>, IEnumerable<T>, IEnumerable, System.Collections.Generic.IReadOnlyCollection<T>, ICollection, INotifyPropertyChanged, INotifyLinkedCollectionChanged<T>, IReadOnlyLinkedList<T>
     {
-#endif
-        [Serializable]
-        public class ReadOnlyObservableLinkedCollection<T> : DisposableBase, System.Collections.Generic.ICollection<T>, IEnumerable<T>, IEnumerable, System.Collections.Generic.IReadOnlyCollection<T>, ICollection, INotifyPropertyChanged, INotifyLinkedCollectionChanged<T>
-#if WinCopies3
-            , IReadOnlyLinkedList2<T>
-#endif
+        public event PropertyChangedEventHandler PropertyChanged;
+        public event LinkedCollectionChangedEventHandler<T> CollectionChanged;
+
+        public ReadOnlyObservableLinkedCollection(in ObservableLinkedCollection<T> linkedCollection) : base(linkedCollection)
         {
-            private ObservableLinkedCollection<T> _collection;
-
-            protected ObservableLinkedCollection<T> InnerLinkedCollection => _collection ?? throw GetExceptionForDispose(false);
-            protected ICollection InnerCollection => InnerLinkedCollection.AsFromType<ICollection>();
-
-            public override bool IsDisposed => InnerLinkedCollection == null;
-
-            public
-#if !WinCopies3
-int
-#else
-                    uint
-#endif
-                    Count => InnerLinkedCollection.Count;
-
-#if WinCopies3
-            int ICollection.Count => (int)Count;
-
-            int System.Collections.Generic.ICollection<T>.Count => (int)Count;
-
-            int System.Collections.Generic.IReadOnlyCollection<T>.Count => (int)Count;
-#endif
-
-            public bool IsReadOnly => true;
-
-            bool ICollection.IsSynchronized => InnerCollection.IsSynchronized;
-
-            object ICollection.SyncRoot => InnerCollection.SyncRoot;
-
-            public T FirstValue => InnerLinkedCollection.FirstValue;
-
-            public T LastValue => InnerLinkedCollection.LastValue;
-
-#if WinCopies3
-            public bool SupportsReversedEnumeration => InnerLinkedCollection.SupportsReversedEnumeration;
-
-            IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.First => throw GetReadOnlyListOrCollectionException();
-
-            IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.Last => throw GetReadOnlyListOrCollectionException();
-#endif
-
-            public event PropertyChangedEventHandler PropertyChanged;
-
-            public event LinkedCollectionChangedEventHandler<T> CollectionChanged;
-
-            public ReadOnlyObservableLinkedCollection(in ObservableLinkedCollection<T> linkedCollection)
-            {
-                (_collection = linkedCollection ?? throw GetArgumentNullException(nameof(linkedCollection))).CollectionChanged += InnerLinkedCollection_CollectionChanged;
-                _collection.PropertyChanged += InnerLinkedCollection_PropertyChanged;
-            }
-
-            private void InnerLinkedCollection_CollectionChanged(object sender, LinkedCollectionChangedEventArgs<T> e) => OnCollectionChanged(e);
-            private void InnerLinkedCollection_PropertyChanged(object sender, PropertyChangedEventArgs e) => OnPropertyChanged(e);
-
-            protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
-
-            protected void RaisePropertyChangedEvent(in string propertyName) => OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
-
-            protected void RaiseCountPropertyChangedEvent() => OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
-
-            protected virtual void OnCollectionChanged(LinkedCollectionChangedEventArgs<T> e) => CollectionChanged?.Invoke(this, e);
-
-#if !WinCopies3
-        [Obsolete("This method is never used and will be removed in later versions.")]
-        protected void RaiseCollectionChangedEvent(in LinkedCollectionChangedAction action, in
-#if !WinCopies3
-                System.Collections.Generic.LinkedListNode
-#else
-                ILinkedListNode
-#endif
-                <T> addedBefore, in
-#if !WinCopies3
-                System.Collections.Generic.LinkedListNode
-#else
-                ILinkedListNode
-#endif
-                <T> addedAfter, in
-#if !WinCopies3
-                System.Collections.Generic.LinkedListNode
-#else
-                ILinkedListNode
-#endif
-                <T> node) => OnCollectionChanged(new LinkedCollectionChangedEventArgs<T>(action, addedBefore, addedAfter, node));
-#endif
-
-            System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => InnerLinkedCollection.GetEnumerator();
-
-            System.Collections.IEnumerator IEnumerable.GetEnumerator() => InnerLinkedCollection.GetEnumerator();
-
-            public void CopyTo(T[] array, int arrayIndex) => InnerLinkedCollection.CopyTo(array, arrayIndex);
-
-            void ICollection.CopyTo(Array array, int index) => InnerLinkedCollection.CopyTo(array, index);
-
-            public bool Contains(T item) => InnerLinkedCollection.Contains(item);
-
-            void System.Collections.Generic.ICollection<T>.Add(T item) => throw GetReadOnlyListOrCollectionException();
-
-            void System.Collections.Generic.ICollection<T>.Clear() => throw GetReadOnlyListOrCollectionException();
-
-            bool System.Collections.Generic.ICollection<T>.Remove(T item) => throw GetReadOnlyListOrCollectionException();
-
-#if WinCopies3
-            IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.Find(T value) => throw GetReadOnlyListOrCollectionException();
-
-            IReadOnlyLinkedListNode<T> IReadOnlyLinkedList<T>.FindLast(T value) => throw GetReadOnlyListOrCollectionException();
-
-            public IUIntCountableEnumerator<T> GetEnumerator() => InnerLinkedCollection.GetEnumerator();
-
-            public IUIntCountableEnumerator<T> GetReversedEnumerator() => InnerLinkedCollection.GetReversedEnumerator();
-
-#if !CS8
-            System.Collections.Generic.IEnumerator<T> Extensions.Generic.IEnumerable<T>.GetReversedEnumerator() => InnerLinkedCollection.GetReversedEnumerator();
-
-            System.Collections.IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
-#endif
-#endif
-
-            protected override void DisposeUnmanaged()
-            {
-                InnerLinkedCollection.CollectionChanged -= InnerLinkedCollection_CollectionChanged;
-                InnerLinkedCollection.PropertyChanged -= InnerLinkedCollection_PropertyChanged;
-            }
-
-            protected override void DisposeManaged() => _collection = null;
+            linkedCollection.CollectionChanged += InnerLinkedCollection_CollectionChanged;
+            linkedCollection.PropertyChanged += InnerLinkedCollection_PropertyChanged;
         }
-#if WinCopies3
+
+        private void InnerLinkedCollection_CollectionChanged(object sender, LinkedCollectionChangedEventArgs<T> e) => OnCollectionChanged(e);
+        private void InnerLinkedCollection_PropertyChanged(object sender, PropertyChangedEventArgs e) => OnPropertyChanged(e);
+
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
+
+        protected void RaisePropertyChangedEvent(in string propertyName) => OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+
+        protected void RaiseCountPropertyChangedEvent() => OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
+
+        protected virtual void OnCollectionChanged(LinkedCollectionChangedEventArgs<T> e) => CollectionChanged?.Invoke(this, e);
+
+        protected override void DisposeUnmanaged()
+        {
+            base.DisposeUnmanaged();
+
+            InnerList.CollectionChanged -= InnerLinkedCollection_CollectionChanged;
+            InnerList.PropertyChanged -= InnerLinkedCollection_PropertyChanged;
+        }
     }
-#endif
 }
 #endif

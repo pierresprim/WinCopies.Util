@@ -18,12 +18,11 @@
 using System;
 using System.Reflection;
 
+using WinCopies.Util.Data;
+
 namespace WinCopies
-#if !WinCopies3
-.Util
-#endif
 {
-    public struct ConversionStruct<TIn, TOut>
+    public readonly struct ConversionStruct<TIn, TOut>
     {
         public Converter<TIn, TOut> Converter { get; }
 
@@ -50,23 +49,6 @@ namespace WinCopies
             BackConverter = backConverter;
         }
     }
-
-#if !WinCopies3
-    /// <summary>
-    /// This delegate represents the action that is performed for each iteration of a loop.
-    /// </summary>
-    /// <param name="obj">The object or value retrieved by the current iteration.</param>
-    /// <returns><see langword="true"/> to break the loop; otherwise <see langword="false"/>.</returns>
-    public delegate bool LoopIteration(object obj);
-
-    /// <summary>
-    /// This delegate represents the action that is performed for each iteration of a loop.
-    /// </summary>
-    /// <typeparam name="T">The type of the object or value that is retrieved.</typeparam>
-    /// <param name="obj">The object or value retrieved by the current iteration.</param>
-    /// <returns><see langword="true"/> to break the loop; otherwise <see langword="false"/>.</returns>
-    public delegate bool LoopIteration<T>(T obj);
-#endif
 
     public delegate
 #if CS7
@@ -115,36 +97,49 @@ namespace WinCopies
     /// <returns><see langword="true"/> if the predicate success, otherwise <see langword="false"/>.</returns>
     public delegate bool Predicate(object value);
 
+    public delegate bool PredicateOut(object obj, out object result);
+
     public delegate bool PredicateIn(in object obj);
+    public delegate bool PredicateInOut(in object obj, out object result);
+
+    public delegate bool PredicateRef(ref object obj);
+    public delegate bool PredicateRefOut(ref object obj, out object result);
 
 #if CS8
     public delegate bool PredicateNull(object? value);
-    public delegate bool PredicateInNull(in object? obj);
-#endif
 
-    public delegate bool PredicateIn<T>(in T value);
+    public delegate bool PredicateOutNull(object? value, out object? result);
+
+    public delegate bool PredicateInNull(in object? obj);
+    public delegate bool PredicateInOutNull(in object? obj, out object? result);
+
+    public delegate bool PredicateRefNull(ref object? obj);
+    public delegate bool PredicateRefOutNull(ref object? obj, out object? result);
+#endif
 
     public delegate bool PredicateOut<TIn, TOut>(TIn param, out TOut result);
 
+    public delegate bool PredicateIn<T>(in T value);
     public delegate bool PredicateInOut<TIn, TOut>(in TIn param, out TOut result);
 
+    public delegate bool PredicateRef<T>(ref T value);
+    public delegate bool PredicateRefOut<T>(ref T value, out T result);
 
 
-    public delegate T Converter<
-#if WinCopies3
-        out
-#endif
-        T>(object obj);
+
+    public delegate T Converter<out T>(object obj);
+    public delegate T ConverterIn<out T>(in object obj);
 
     public delegate TOut ConverterIn<TIn, out TOut>(in TIn value);
-
     public delegate TOut ConverterRef<TIn, out TOut>(ref TIn value);
 
     public delegate bool ExtendedConverter<TIn, TOut>(TIn value, out TOut result);
 
-    public delegate void EventHandler<T>(T sender, EventArgs e);
-
+    public delegate void EventHandler<T>(T sender, System.EventArgs e);
     public delegate void EventHandler<TSender, TEventArgs>(TSender sender, TEventArgs e);
+
+    public delegate void ValueEventHandler<T>(object sender, EventArgs<T> e);
+    public delegate void ValueEventHandler<TSender, TValue>(TSender sender, EventArgs<TValue> e);
 
 
 

@@ -15,63 +15,135 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if WinCopies3
 using System.Collections;
 
+using System.Collections.Generic;
+using WinCopies.Collections.DotNetFix;
 using WinCopies.Collections.DotNetFix.Generic;
-using WinCopies.Util;
 
-namespace WinCopies.Collections.Generic
+namespace WinCopies.Collections
 {
-    public static partial class EnumerableHelper<T>
+    public static partial class EnumerableHelper
     {
-        public interface IEnumerableStack : IStackBase<T>, IPeekableEnumerableInfo<T>
+        public interface IEnumerableStack : IStackBase, IPeekableEnumerableInfo
         {
             // Left empty.
         }
 
-        internal class Stack : IStackBase<T>
+        internal class Stack : SimpleLinkedListBase<IEnumerableStack>, IStackBase
         {
-            private protected IEnumerableStack Enumerable { get; } = new Enumerable();
+            public Stack() : base(new Enumerable()) { /* Left empty. */ }
 
-            public bool IsReadOnly => false;
+            public object
+#if CS9
+                ?
+#endif
+                Peek() => Enumerable.Peek();
 
-            public bool HasItems => Enumerable.HasItems;
+            public bool TryPeek(out object
+#if CS9
+                ?
+#endif
+                result) => Enumerable.TryPeek(out result);
 
-            public T Peek() => Enumerable.Peek();
+            public void Push(object
+#if CS9
+                ?
+#endif
+                item) => Enumerable.Push(item);
 
-            public bool TryPeek(out T result) => Enumerable.TryPeek(out result);
+            public object
+#if CS9
+                ?
+#endif
+                Pop() => Enumerable.Pop();
 
-            public void Push(T item) => Enumerable.Push(item);
-
-            public T Pop() => Enumerable.Pop();
-
-            public bool TryPop(out T item) => Enumerable.TryPop(out item);
-
-            public void Clear() => Enumerable.Clear();
+            public bool TryPop(out object
+#if CS9
+                ?
+#endif
+                item) => Enumerable.TryPop(out item);
         }
 
         internal class EnumerableStack : Stack, IEnumerableStack
         {
             public bool SupportsReversedEnumeration => Enumerable.SupportsReversedEnumeration;
 
-            public IEnumeratorInfo<T> GetEnumerator() => Enumerable.GetEnumerator();
+            public IEnumeratorInfo GetEnumerator() => EnumerableInfo.GetEnumerator();
+            System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-            System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => Enumerable.GetEnumerator();
-
-            IEnumerator IEnumerable.GetEnumerator() => Enumerable.GetEnumerator();
-
-            public IEnumeratorInfo<T> GetReversedEnumerator() => Enumerable.GetReversedEnumerator();
-
-            System.Collections.Generic.IEnumerator<T>
-#if WinCopies3
-                Extensions.Generic.
-#endif
-            IEnumerable<T>.GetReversedEnumerator() => Enumerable.GetReversedEnumerator();
+            public IEnumeratorInfo GetReversedEnumerator() => EnumerableInfo.GetReversedEnumerator();
 #if !CS8
-            IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
+            System.Collections.IEnumerator Extensions.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
 #endif
         }
     }
-}
+
+    namespace Generic
+    {
+        public static partial class EnumerableHelper<T>
+        {
+            public interface IEnumerableStack : IStackBase<T>, DotNetFix.Generic.IPeekableEnumerableInfo<T>
+            {
+                // Left empty.
+            }
+
+            internal class Stack : LinkedListBase<IEnumerableStack>, IStackBase<T>
+            {
+                public Stack() : base(new Enumerable()) { /* Left empty. */ }
+
+                public T
+#if CS9
+                    ?
 #endif
+                    Peek() => Enumerable.Peek();
+
+                public bool TryPeek(out T
+#if CS9
+                    ?
+#endif
+                    result) => Enumerable.TryPeek(out result);
+
+                public void Push(T
+#if CS9
+                    ?
+#endif
+                    item) => Enumerable.Push(item);
+
+                public T
+#if CS9
+                    ?
+#endif
+                    Pop() => Enumerable.Pop();
+
+                public bool TryPop(out T
+#if CS9
+                    ?
+#endif
+                    item) => Enumerable.TryPop(out item);
+#if !CS8
+                public void Push(object item) => Push((T)item);
+                object IStackCore.Pop() => Pop();
+                public bool TryPop(out object result) => UtilHelpers.TryGetValue<T>(TryPop, out result);
+                object IPeekable.Peek() => Peek();
+                public bool TryPeek(out object result) => UtilHelpers.TryGetValue<T>(TryPeek, out result);
+#endif
+            }
+
+            internal class EnumerableStack : Stack, IEnumerableStack
+            {
+                public bool SupportsReversedEnumeration => Enumerable.SupportsReversedEnumeration;
+
+                public IEnumeratorInfo<T> GetEnumerator() => EnumerableInfo.GetEnumerator();
+
+                public IEnumeratorInfo<T> GetReversedEnumerator() => EnumerableInfo.GetReversedEnumerator();
+                System.Collections.IEnumerator Extensions.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
+#if !CS8
+                IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetEnumerator();
+                System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+                IEnumerator<T> Extensions.Generic.IEnumerable<T>.GetReversedEnumerator() => GetReversedEnumerator();
+#endif
+            }
+        }
+    }
+}

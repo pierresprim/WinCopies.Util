@@ -23,29 +23,15 @@ using System.Windows.Input;
 using WinCopies.Commands;
 using WinCopies.Util.Commands;
 
-#if WinCopies3
 using static WinCopies.Util.Data.ConverterHelper;
-#endif
 
 namespace WinCopies.Util.Data
 {
     public class ActionToCommandConverter : AlwaysConvertibleTwoWayConverter<Action<object>, object, ICommand>
     {
-        public override
-#if WinCopies3
-            IReadOnlyConversionOptions
-#else
-            ConversionOptions
-#endif
-            ConvertOptions => ParameterCanBeNull;
+        public override IReadOnlyConversionOptions ConvertOptions => ParameterCanBeNull;
 
-        public override
-#if WinCopies3
-            IReadOnlyConversionOptions
-#else
-            ConversionOptions
-#endif
-           ConvertBackOptions => ParameterCanBeNull;
+        public override IReadOnlyConversionOptions ConvertBackOptions => ParameterCanBeNull;
 
         protected override ICommand Convert(Action<object> value, object parameter, CultureInfo culture) => new DelegateCommand3(value);
 
@@ -55,21 +41,8 @@ namespace WinCopies.Util.Data
     [ValueConversion(typeof(Action), typeof(DelegateCommand2))]
     public class ActionToDelegateCommand2Converter : AlwaysConvertibleTwoWayConverter<Action, object, DelegateCommand2>
     {
-        public override
-#if WinCopies3
-            IReadOnlyConversionOptions
-#else
-            ConversionOptions
-#endif
-           ConvertOptions => ParameterCanBeNull;
-
-        public override
-#if WinCopies3
-            IReadOnlyConversionOptions
-#else
-            ConversionOptions
-#endif
-           ConvertBackOptions => ParameterCanBeNull;
+        public override IReadOnlyConversionOptions ConvertOptions => ParameterCanBeNull;
+        public override IReadOnlyConversionOptions ConvertBackOptions => ParameterCanBeNull;
 
         protected override DelegateCommand2 Convert(Action value, object parameter, CultureInfo culture) => new DelegateCommand2(value);
 
@@ -78,20 +51,8 @@ namespace WinCopies.Util.Data
 
     public class CommandConverter : AlwaysConvertibleOneWayConverter<Commands.Primitives.ICommand, object, ICommand>
     {
-        public override
-#if WinCopies3
-            IReadOnlyConversionOptions
-#else
-            ConversionOptions
-#endif
-           ConvertOptions => ParameterCanBeNull;
+        public override IReadOnlyConversionOptions ConvertOptions => ParameterCanBeNull;
 
         protected override ICommand Convert(Commands.Primitives.ICommand value, object parameter, CultureInfo culture) => new CommandModel<Commands.Primitives.ICommand>(value);
-
-#if !WinCopies3
-        public override ConversionOptions ConvertBackOptions => throw new NotSupportedException();
-
-        protected override Commands.Primitives.ICommand ConvertBack(ICommand value, object parameter, CultureInfo culture) => throw new NotSupportedException();
-#endif
     }
 }

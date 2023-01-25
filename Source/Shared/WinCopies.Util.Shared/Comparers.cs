@@ -52,6 +52,14 @@ namespace WinCopies.Collections
 
         public delegate void EqualityComparisonIn<T>(in T x, in T y);
 
+        public interface IComparable<T>
+        {
+            bool LessThan(T other);
+            bool LessThanOrEqualTo(T other);
+            bool GreaterThan(T other);
+            bool GreaterThanOrEqualTo(T other);
+        }
+
         public interface IComparer<
 #if CS5
             in

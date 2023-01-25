@@ -63,11 +63,9 @@ namespace WinCopies.Util.Data
 
         TDestination IAlwaysConvertibleOneWayConverter<TSource, TParam, TDestination>.Convert(TSource value, TParam parameter, CultureInfo culture) => Convert(value, parameter, culture);
 
-#if WinCopies3
         public sealed override IReadOnlyConversionOptions ConvertBackOptions => throw GetException(BackConversionExceptionMessageFormat);
 
         protected sealed override TSource ConvertBack(TDestination value, TParam parameter, CultureInfo culture) => throw GetException(BackConversionExceptionMessageFormat);
-#endif
     }
 
     public abstract class AlwaysConvertibleOneWayToSourceConverter<TSource, TParam, TDestination> : AlwaysConvertibleConverterBase<TSource, TParam, TDestination>, IAlwaysConvertibleOneWayToSourceConverter<TSource, TParam, TDestination>
@@ -78,11 +76,9 @@ namespace WinCopies.Util.Data
 
         TSource IAlwaysConvertibleOneWayToSourceConverter<TSource, TParam, TDestination>.ConvertBack(TDestination value, TParam parameter, CultureInfo culture) => ConvertBack(value, parameter, culture);
 
-#if WinCopies3
         public sealed override IReadOnlyConversionOptions ConvertOptions => throw GetException(string.Empty);
 
         protected sealed override TDestination Convert(TSource value, TParam parameter, CultureInfo culture) => throw GetException(string.Empty);
-#endif
     }
 
     public abstract class AlwaysConvertibleTwoWayConverter<TSource, TParam, TDestination> : AlwaysConvertibleConverterBase<TSource, TParam, TDestination>, IAlwaysConvertibleValueConverter<TSource, TParam, TDestination>

@@ -22,19 +22,10 @@ using System.Windows.Data;
 namespace WinCopies.Util.Data
 {
     [ValueConversion(typeof(object), typeof(Type))]
-    public class ObjectToTypeConverter :
-#if WinCopies3
-        AlwaysConvertibleOneWayConverter<object, object, Type>
+    public class ObjectToTypeConverter :        AlwaysConvertibleOneWayConverter<object, object, Type>
     {
         public override IReadOnlyConversionOptions ConvertOptions => ConverterHelper.ParameterCanBeNull;
 
         protected override Type Convert(object value, object parameter, CultureInfo culture) => value.GetType();
-#else
-        ConverterBase
-    {
-        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture) => value.GetType();
-
-        public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
-#endif
     }
 }

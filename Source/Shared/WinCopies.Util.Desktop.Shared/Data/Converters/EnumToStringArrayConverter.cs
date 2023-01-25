@@ -23,9 +23,7 @@ using System.Windows.Data;
 namespace WinCopies.Util.Data
 {
     [ValueConversion(typeof(object), typeof(string[]), ParameterType = typeof(Type))]
-    public class EnumToStringArrayConverter :
-#if WinCopies3
-        AlwaysConvertibleOneWayConverter<object, Type, string[]>
+    public class EnumToStringArrayConverter : AlwaysConvertibleOneWayConverter<object, Type, string[]>
     {
         /// <summary>
         /// <para>Value: ignored.</para>
@@ -34,13 +32,6 @@ namespace WinCopies.Util.Data
         public override IReadOnlyConversionOptions ConvertOptions => ConverterHelper.ValueCanBeNull;
 
         protected override string[] Convert(object value, Type parameter, CultureInfo culture) => parameter.IsEnum ? parameter.GetEnumNames() : null;
-#else
-        ConverterBase
-    {
-        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture) => parameter is Type t && t.IsEnum ? t.GetEnumNames() : null;
-
-        public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
-#endif
     }
 }
 #endif

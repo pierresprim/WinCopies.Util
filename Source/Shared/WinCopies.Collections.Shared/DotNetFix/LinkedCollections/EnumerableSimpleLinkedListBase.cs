@@ -18,38 +18,42 @@
 using System;
 using System.Threading;
 
+using WinCopies.Collections.DotNetFix.Generic;
+
+using static WinCopies.ThrowHelper;
+
 namespace WinCopies.Collections.DotNetFix
 {
-#if WinCopies3
     public interface IEnumerableSimpleLinkedListBase : ISimpleLinkedListBase2
     {
         // Left empty.
     }
-#endif
 
-    public abstract class EnumerableSimpleLinkedListBase
-#if WinCopies3
-: IEnumerableSimpleLinkedListBase
-#endif
+    [Serializable]
+    public abstract class EnumerableSimpleLinkedListBase : IEnumerableSimpleLinkedListBase
     {
         [NonSerialized]
         private uint _enumeratorsCount = 0;
         [NonSerialized]
         private uint _enumerableVersion = 0;
         [NonSerialized]
-        private object _syncRoot;
+        private object
+#if CS8
+            ?
+#endif
+            _syncRoot;
 
-        public object SyncRoot
-        {
-            get
-            {
-                if (_syncRoot == null)
-
-                    _syncRoot = Interlocked.CompareExchange(ref _syncRoot, new object(), null);
-
-                return _syncRoot;
-            }
-        }
+        public object SyncRoot => _syncRoot
+#if CS8
+            ??=
+#else
+            ?? (_syncRoot =
+#endif
+            _syncRoot = Interlocked.CompareExchange(ref _syncRoot, new object(), null)
+#if !CS8
+            )
+#endif
+            ;
 
         public bool IsSynchronized => false;
 
@@ -57,7 +61,7 @@ namespace WinCopies.Collections.DotNetFix
 
         public abstract uint Count { get; }
 
-        public bool HasItems => Count != 0u;
+        public abstract bool HasItems { get; }
 
         public bool IsReadOnly => false;
 
@@ -77,6 +81,74 @@ namespace WinCopies.Collections.DotNetFix
             if (--_enumeratorsCount == 0)
 
                 _enumerableVersion = 0;
+        }
+
+        public abstract class Enumerator<TItems, TNode, TList> : Collections.Generic.Enumerator<TItems>, IUIntCountableEnumerator<TItems> where TList : EnumerableSimpleLinkedListBase, IUIntCountable
+        {
+            private readonly uint _version;
+            private bool _first = true;
+
+            protected TList List { get; private set; }
+
+            public override bool? IsResetSupported => true;
+
+            protected abstract TNode FirstNode { get; }
+            public TNode CurrentNode { get; private set; }
+            protected abstract TNode NextNode { get; }
+
+            public uint Count => List.Count;
+
+            public Enumerator(in TList list)
+            {
+                _version = (List = list).EnumerableVersion;
+                ResetOverride();
+            }
+
+            protected override void ResetOverride2()
+            {
+                ThrowIfVersionHasChanged(List.EnumerableVersion, _version);
+
+                _first = true;
+                CurrentNode = FirstNode;
+            }
+
+            protected override bool MoveNextOverride()
+            {
+                ThrowIfVersionHasChanged(List.EnumerableVersion, _version);
+
+                if (_first)
+                {
+                    _first = false;
+
+                    return CurrentNode != null;
+                }
+
+                if (NextNode == null)
+                {
+                    CurrentNode = default;
+
+                    return false;
+                }
+
+                CurrentNode = NextNode;
+
+                return true;
+            }
+
+            protected override void DisposeUnmanaged()
+            {
+                List.DecrementEnumeratorCount();
+                List = default;
+
+                base.DisposeUnmanaged();
+            }
+
+            protected override void DisposeManaged()
+            {
+                base.DisposeManaged();
+
+                CurrentNode = default;
+            }
         }
     }
 }

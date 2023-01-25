@@ -16,73 +16,58 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if CS7
-
 using System;
-
-#if !WinCopies3
-using WinCopies.Util;
-#endif
+using System.Collections;
 
 using static WinCopies.Collections.ThrowHelper;
 
 namespace WinCopies.Collections.DotNetFix
 {
     [Serializable]
-    public class ReadOnlyEnumerableQueue : ReadOnlySimpleLinkedList,
-#if !WinCopies3
-            IEnumerableStack,
-#endif
-            IEnumerableQueue
+    public abstract class ReadOnlyEnumerableSimpleLinkedList<T> : ReadOnlySimpleLinkedList<T>, ICollection where T : IUIntCountable, IPeekable, ISimpleLinkedListBase2, ICollection
     {
-        private readonly IEnumerableQueue _queue;
+        protected ICollection InnerCollection => InnerList;
 
-        public sealed override uint Count =>
-#if !WinCopies3
-                ((IUIntCountable)
-#endif
-                _queue
-#if !WinCopies3
-                )
-#endif
-                .Count;
+        int ICollection.Count => (int)Count;
 
-        public ReadOnlyEnumerableQueue(IEnumerableQueue queue) => _queue = queue;
+        bool ICollection.IsSynchronized => InnerCollection.IsSynchronized;
+        object ICollection.SyncRoot => InnerCollection.SyncRoot;
 
-        public sealed override object Peek() => _queue.Peek();
+        protected ReadOnlyEnumerableSimpleLinkedList(in T list) : base(list) { /* Left empty. */ }
 
-        public void CopyTo(Array array, int arrayIndex) =>
-#if !WinCopies3
-                WinCopies.Util.Extensions
-#else
-            EnumerableExtensions
-#endif
-                .CopyTo(this, array, arrayIndex, Count);
+        public void CopyTo(Array array, int arrayIndex) => EnumerableExtensions.CopyTo(this, array, arrayIndex, Count);
 
-        public object[] ToArray() => _queue.ToArray();
+        public object[] ToArray() => InnerList.ToArray();
 
-#if !WinCopies3
-        void IStack.Push(object item) => throw GetReadOnlyListOrCollectionException();
+        public System.Collections.IEnumerator GetEnumerator() => InnerList.GetEnumerator();
+    }
 
-        object IStack.Pop() => throw GetReadOnlyListOrCollectionException();
-#endif
+    public class ReadOnlyEnumerableQueue : ReadOnlyEnumerableSimpleLinkedList<IEnumerableQueue>, IEnumerableQueue
+    {
+        public ReadOnlyEnumerableQueue(in IEnumerableQueue queue) : base(queue) { /* Left empty. */ }
 
-        void IQueue.Enqueue(object item) => throw GetReadOnlyListOrCollectionException();
-
-        object IQueue.Dequeue() => throw GetReadOnlyListOrCollectionException();
-
-#if WinCopies3
-        public sealed override bool TryPeek(out object result) => _queue.TryPeek(out result);
-
-        bool IQueue.TryDequeue(out object result)
+        void IQueueCore.Enqueue(object item) => throw GetReadOnlyListOrCollectionException();
+        object IQueueCore.Dequeue() => throw GetReadOnlyListOrCollectionException();
+        bool IQueueCore.TryDequeue(out object result)
         {
             result = null;
 
             return false;
         }
-#endif
+    }
 
-        public System.Collections.IEnumerator GetEnumerator() => _queue.GetEnumerator();
+    public class ReadOnlyEnumerableStack : ReadOnlyEnumerableSimpleLinkedList<IEnumerableStack>, IEnumerableStack
+    {
+        public ReadOnlyEnumerableStack(in IEnumerableStack stack) : base(stack) { /* Left empty. */ }
+
+        void IStackCore.Push(object item) => throw GetReadOnlyListOrCollectionException();
+        object IStackCore.Pop() => throw GetReadOnlyListOrCollectionException();
+        bool IStackCore.TryPop(out object result)
+        {
+            result = null;
+
+            return false;
+        }
     }
 }
-
 #endif

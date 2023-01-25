@@ -30,19 +30,10 @@ using System;
 using System.Windows;
 using System.Windows.Input;
 
-using WinCopies.
-#if WinCopies3
-    Desktop;
+using WinCopies.Desktop;
 using WinCopies.Util;
-#else
-    Util;
-#endif
 
-namespace WinCopies.
-#if !WinCopies3
-Util.
-#endif
-    Commands
+namespace WinCopies.Commands
 {
     public abstract class DelegateCommandRoot
     {
@@ -459,9 +450,9 @@ Util.
 
     public class DelegateCommand3 : DelegateCommand3<object
 #if CS9
-            ?
+        ?
 #endif
-            >
+        >
     {
         public DelegateCommand3(in Action<object
 #if CS8

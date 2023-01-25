@@ -15,12 +15,13 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if WinCopies3
 using System;
 
 using WinCopies.Collections.DotNetFix;
 using WinCopies.Collections.DotNetFix.Generic;
 using WinCopies.Collections.Extensions.Generic;
+using WinCopies.Collections.Generic;
+using WinCopies.Util;
 
 namespace WinCopies.Collections.Abstraction.Generic
 {
@@ -48,12 +49,12 @@ namespace WinCopies.Collections.Abstraction.Generic
 
         void System.Collections.IEnumerator.Reset() => _enumerator.Reset();
 
-        void System.IDisposable.Dispose() { /* Left empty. */ }
+        public void Dispose() { /* Left empty. */ }
     }
 
     public sealed class Enumerable : System.Collections.Generic.IEnumerable<object>
     {
-        private System.Collections.IEnumerable _enumerable;
+        private readonly System.Collections.IEnumerable _enumerable;
 
         public Enumerable(in System.Collections.IEnumerable enumerable) => _enumerable = enumerable;
 
@@ -63,6 +64,9 @@ namespace WinCopies.Collections.Abstraction.Generic
     }
 
     public abstract class ReadOnlyArrayEnumerableBase<TSourceItems, TDestinationItems> : System.Collections.Generic.IEnumerable<TDestinationItems>, IReadOnlyList
+#if CS5
+        , System.Collections.Generic.IReadOnlyCollection<TDestinationItems>
+#endif
     {
         protected TSourceItems[] Array { get; }
 
@@ -84,12 +88,15 @@ namespace WinCopies.Collections.Abstraction.Generic
         }
 
         public abstract ICountableEnumerator<TDestinationItems> GetEnumerator();
-
         System.Collections.Generic.IEnumerator<TDestinationItems> System.Collections.Generic.IEnumerable<TDestinationItems>.GetEnumerator() => GetEnumerator();
-
+        ICountableEnumerator Enumeration.IEnumerable<ICountableEnumerator>.GetEnumerator() => GetEnumerator();
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
+#if !CS8
+#if CS5
+        int System.Collections.Generic.IReadOnlyCollection<TDestinationItems>.Count => Count;
+#endif
+#endif
 
-        ICountableEnumerator Enumeration.DotNetFix.IEnumerable<ICountableEnumerator>.GetEnumerator() => GetEnumerator();
     }
 
     public abstract class ReadOnlyArrayEnumerableBase2<TSourceItems, TDestinationItems> : ReadOnlyArrayEnumerableBase<TSourceItems, TDestinationItems>, IReadOnlyArrayEnumerable<TDestinationItems>
@@ -98,7 +105,18 @@ namespace WinCopies.Collections.Abstraction.Generic
 
         public ReadOnlyArrayEnumerableBase2(in TSourceItems[] array) : base(array) { /* Left empty. */ }
 
-        public sealed override ICountableEnumerator<TDestinationItems> GetEnumerator() => new ArrayEnumerator<TDestinationItems>(this);
+        public sealed override ICountableEnumerator<TDestinationItems> GetEnumerator() => new DotNetFix.Generic.ArrayEnumerator<TDestinationItems>(this);
+#if !CS8
+#if CS5
+        TDestinationItems System.Collections.Generic.IReadOnlyList<TDestinationItems>.this[int index] => this[index];
+#endif
+        TDestinationItems IIndexableR<TDestinationItems>.this[int index] => this[index];
+
+        bool IReadOnlyArrayEnumerable<TDestinationItems>.Check() => Check();
+
+        ICountableEnumerator<TDestinationItems> IReadOnlyList<TDestinationItems>.GetEnumerator() => GetEnumerator();
+        ICountableEnumerator<TDestinationItems> Enumeration.IEnumerable<ICountableEnumerator<TDestinationItems>>.GetEnumerator() => GetEnumerator();
+#endif
     }
 
     public abstract class ArrayEnumerableBase<TSourceItems, TDestinationItems> : ReadOnlyArrayEnumerableBase<TSourceItems, TDestinationItems>, IArrayEnumerable<TDestinationItems>
@@ -107,7 +125,7 @@ namespace WinCopies.Collections.Abstraction.Generic
 
         public ArrayEnumerableBase(in TSourceItems[] array) : base(array) { /* Left empty. */ }
 
-        public sealed override ICountableEnumerator<TDestinationItems> GetEnumerator() => new ArrayEnumerator<TDestinationItems>(this);
+        public sealed override ICountableEnumerator<TDestinationItems> GetEnumerator() => new DotNetFix.Generic.ArrayEnumerator<TDestinationItems>(this);
     }
 
     public abstract class ReadOnlyArrayEnumerable<TSourceItems, TDestinationItems> : ReadOnlyArrayEnumerableBase2<TSourceItems, TDestinationItems>
@@ -148,4 +166,3 @@ namespace WinCopies.Collections.Abstraction.Generic
         public ArrayEnumerableSelector(in TSourceItems[] array, in Conversion<TSourceItems, TDestinationItems> selectors) : base(array) => _selectors = selectors;
     }
 }
-#endif

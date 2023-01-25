@@ -15,7 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if WinCopies3
 using System;
 using System.Globalization;
 using System.Linq;
@@ -38,17 +37,7 @@ namespace WinCopies.Util.Data
 
         protected sealed override bool Convert(object[] values, TParamOut _parameter, CultureInfo culture, out TDestinationIn result)
         {
-            TSourceEnumerableIn array = Convert(
-#if WinCopies3
-                    values?.
-#else
-                    values == null ? null :
-#endif
-                    Cast<TSourceIn>(
-#if !WinCopies3
-                        values
-#endif
-                    ), values.Length, _parameter, culture);
+            TSourceEnumerableIn array = Convert(values?.Cast<TSourceIn>(), values.Length, _parameter, culture);
 
             if (array != null)
 
@@ -105,7 +94,7 @@ namespace WinCopies.Util.Data
 
     public abstract class MultiConverterBase6<TSourceIn, TSourceOut, TParamIn, TParamOut, TDestinationIn, TDestinationOut> : MultiConverterBase5<TSourceIn, TSourceOut, IArrayEnumerable<TSourceOut>, TParamIn, TParamOut, TDestinationIn, TDestinationOut>
     {
-        protected sealed override int Count(in IArrayEnumerable<TSourceOut> values) => values.Count;
+        protected sealed override int Count(in IArrayEnumerable<TSourceOut> values) => values.AsFromType<ICountable>().Count;
 
         protected sealed override void Convert(in bool[] conversionsSucceeded, in IArrayEnumerable<TSourceOut> results, in object[] resultArray)
         {
@@ -116,7 +105,6 @@ namespace WinCopies.Util.Data
 
         protected sealed override void Clear(in IArrayEnumerable<TSourceOut> values) => values.Clear();
     }
-
 #if CS7
     public abstract class MultiConverterBase7<TSourceIn, TSourceOut, TParamIn, TParamOut, TDestinationIn, TDestinationOut> : MultiConverterBase4<TSourceIn, TSourceOut, ArrayBuilder<TSourceOut>, IQueue<TSourceOut>, TParamIn, TParamOut, TDestinationIn, TDestinationOut>
     {
@@ -149,4 +137,3 @@ namespace WinCopies.Util.Data
     }
 #endif
 }
-#endif

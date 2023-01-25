@@ -16,7 +16,6 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if CS7
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -26,168 +25,75 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace WinCopies.Collections.DotNetFix
 {
-#if WinCopies3
     namespace Generic
     {
-#endif
-    [Serializable]
-    public class ObservableQueueCollection<
-#if WinCopies3
-        TQueue, TItems
-#else
-        T
-#endif
-        > : QueueCollection<
-#if WinCopies3
-        TQueue, TItems
-#else
-        T
-#endif
-       >, INotifyPropertyChanged, INotifySimpleLinkedCollectionChanged<
-#if WinCopies3
-           TItems
-#else
-           T
-#endif
-           >
-#if WinCopies3
-where TQueue : IQueue<TItems>
-#endif
-    {
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public event SimpleLinkedCollectionChangedEventHandler<
-#if WinCopies3
-           TItems
-#else
-           T
-#endif
-          > CollectionChanged;
-
-#if !WinCopies3
-        public ObservableQueueCollection() : base() { }
-#endif
-
-        public ObservableQueueCollection(in
-#if WinCopies3
-            TQueue
-#else
-            System.Collections.Generic.Queue<T>
-#endif
-      queue) : base(queue) { }
-
-        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
-
-        protected void RaisePropertyChangedEvent(in string propertyName) => OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
-
-        protected void RaiseCountPropertyChangedEvent() => OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
-
-        protected virtual void OnCollectionChanged(SimpleLinkedCollectionChangedEventArgs<
-#if WinCopies3
-           TItems
-#else
-           T
-#endif
-         > e) => CollectionChanged?.Invoke(this, e);
-
-        protected void RaiseCollectionChangedEvent(NotifyCollectionChangedAction action,
-#if WinCopies3
-           TItems
-#else
-           T
-#endif
-          item) => OnCollectionChanged(new SimpleLinkedCollectionChangedEventArgs<
-#if WinCopies3
-           TItems
-#else
-           T
-#endif
-         >(action, item));
-
-        protected override void ClearItems()
+        [Serializable]
+        public class ObservableQueueCollection<TQueue, TItems> : QueueCollection<TQueue, TItems>, INotifyPropertyChanged, INotifySimpleLinkedCollectionChanged<TItems> where TQueue : IQueue<TItems>
         {
-            base.ClearItems();
+            public event PropertyChangedEventHandler PropertyChanged;
+            public event SimpleLinkedCollectionChangedEventHandler<TItems> CollectionChanged;
 
-            RaiseCountPropertyChangedEvent();
+            public ObservableQueueCollection(in TQueue queue) : base(queue) { }
 
-            OnCollectionChanged(new SimpleLinkedCollectionChangedEventArgs<
-#if WinCopies3
-           TItems
-#else
-           T
-#endif
-         >(NotifyCollectionChangedAction.Reset, default));
-        }
+            protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) => PropertyChanged?.Invoke(this, e);
 
-        protected override
-#if WinCopies3
-           TItems
-#else
-           T
-#endif
-          DequeueItem()
-        {
-#if WinCopies3
-                TItems
-#else
-            T
-#endif
-          result = base.DequeueItem();
+            protected void RaisePropertyChangedEvent(in string propertyName) => OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
 
-            RaiseCountPropertyChangedEvent();
+            protected void RaiseCountPropertyChangedEvent() => OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
 
-            RaiseCollectionChangedEvent(NotifyCollectionChangedAction.Remove, result);
+            protected virtual void OnCollectionChanged(SimpleLinkedCollectionChangedEventArgs<TItems> e) => CollectionChanged?.Invoke(this, e);
 
-            return result;
-        }
+            protected void RaiseCollectionChangedEvent(NotifyCollectionChangedAction action, TItems item) => OnCollectionChanged(new SimpleLinkedCollectionChangedEventArgs<TItems>(action, item));
 
-        protected override void EnqueueItem(
-#if WinCopies3
-           TItems
-#else
-           T
-#endif
-          item)
-        {
-            base.EnqueueItem(item);
-
-            RaiseCountPropertyChangedEvent();
-
-            RaiseCollectionChangedEvent(NotifyCollectionChangedAction.Add, item);
-        }
-
-#if CS8
-        protected override bool TryDequeueItem([MaybeNullWhen(false)] out 
-#if WinCopies3
-           TItems
-#else
-           T
-#endif
-          result)
-        {
-            bool succeeded = base.TryDequeueItem(out result);
-
-            if (succeeded)
+            public override void Add(TItems item)
             {
+                base.Add(item);
+
+                RaiseCountPropertyChangedEvent();
+
+                RaiseCollectionChangedEvent(NotifyCollectionChangedAction.Add, item);
+            }
+
+            public override TItems Remove()
+            {
+                TItems result = base.Remove();
+
                 RaiseCountPropertyChangedEvent();
 
                 RaiseCollectionChangedEvent(NotifyCollectionChangedAction.Remove, result);
+
+                return result;
             }
+#if CS8
+            public override bool TryRemove([MaybeNullWhen(false)] out TItems result)
+            {
+                bool succeeded = base.TryRemove(out result);
 
-            return succeeded;
-        }
+                if (succeeded)
+                {
+                    RaiseCountPropertyChangedEvent();
+
+                    RaiseCollectionChangedEvent(NotifyCollectionChangedAction.Remove, result);
+                }
+
+                return succeeded;
+            }
 #endif
-    }
+            public override void Clear()
+            {
+                base.Clear();
 
-#if WinCopies3
+                RaiseCountPropertyChangedEvent();
+
+                OnCollectionChanged(new SimpleLinkedCollectionChangedEventArgs<TItems>(NotifyCollectionChangedAction.Reset, default));
+            }
+        }
+
         public class ObservableQueueCollection<T> : ObservableQueueCollection<IQueue<T>, T>
         {
             public ObservableQueueCollection(in IQueue<T> queue) : base(queue) { /* Left empty. */ }
-
             public ObservableQueueCollection() : this(new Queue<T>()) { /* Left empty. */ }
         }
     }
-#endif
 }
-
 #endif

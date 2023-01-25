@@ -17,23 +17,13 @@
 
 using System;
 
-#if WinCopies3
 using static WinCopies.ThrowHelper;
-#else
-using System.Collections;
-using System.Collections.Generic;
-
-using static WinCopies.Util.Util;
-using static WinCopies.Util.ThrowHelper;
-#endif
 
 namespace WinCopies.Collections.Generic
 {
     public sealed class SelectEnumerator<TSource, TDestination> : Enumerator<TSource, TDestination>
     {
         private Converter<TSource, TDestination> _func;
-
-#if WinCopies3
         private TDestination _current;
 
         /// <summary>
@@ -42,17 +32,8 @@ namespace WinCopies.Collections.Generic
         protected override TDestination CurrentOverride => _current;
 
         public override bool? IsResetSupported => null;
-#endif
 
-#if !WinCopies3
-        [Obsolete("This constructor has been replaced by SelectEnumerator(in System.Collections.Generic.IEnumerator<TSource> enumerator, in Converter<TSource, TDestination> func) : base(enumerator) => _func = func ?? throw GetArgumentNullException(nameof(func)).")]
-        public SelectEnumerator(in System.Collections.Generic.IEnumerator<TSource> enumerator, Func<TSource, TDestination> func) : base(enumerator) => _func = item => (func ?? throw GetArgumentNullException(nameof(func)))(item);
-#endif
-
-        public SelectEnumerator(in System.Collections.Generic.IEnumerable<TSource> enumerable, in Converter<TSource, TDestination> func):this(enumerable.GetEnumerator(), func)
-        {
-            // Left empty.
-        }
+        public SelectEnumerator(in System.Collections.Generic.IEnumerable<TSource> enumerable, in Converter<TSource, TDestination> func) : this(enumerable.GetEnumerator(), func) { /* Left empty. */ }
 
         public SelectEnumerator(in System.Collections.Generic.IEnumerator<TSource> enumerator, in Converter<TSource, TDestination> func) : base(enumerator) => _func = func ?? throw GetArgumentNullException(nameof(func));
 
@@ -60,12 +41,7 @@ namespace WinCopies.Collections.Generic
         {
             if (InnerEnumerator.MoveNext())
             {
-#if !WinCopies3
-                Current
-#else
-                _current
-#endif
-                    = _func(InnerEnumerator.Current);
+                _current = _func(InnerEnumerator.Current);
 
                 return true;
             }
@@ -73,41 +49,18 @@ namespace WinCopies.Collections.Generic
             return false;
         }
 
-        protected override void
-#if WinCopies3
-            ResetOverride2
-#else
-            ResetOverride
-#endif
-            ()
+        protected override void ResetOverride2()
         {
-            base.
-#if WinCopies3
-                ResetOverride2
-#else
-                ResetOverride
-#endif
-                ();
+            base.ResetOverride2();
 
             InnerEnumerator.Reset();
         }
 
-        protected override void
-#if !WinCopies3
-              Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-
-            if (disposing)
-
-                _func = null;
-#else
-        DisposeManaged()
+        protected override void DisposeManaged()
         {
             base.DisposeManaged();
 
             _func = null;
-#endif
         }
     }
 }

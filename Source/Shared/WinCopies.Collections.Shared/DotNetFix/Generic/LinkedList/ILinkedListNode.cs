@@ -16,209 +16,205 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if CS7
+using System;
+
 namespace WinCopies.Collections.DotNetFix
 {
     public interface IReadOnlyLinkedListNode
     {
-#if WinCopies3
         bool IsReadOnly { get; }
+
+        object
+#if CS8
+            ?
 #endif
-
-        object Value { get; }
-
-        IReadOnlyLinkedListNode Previous { get; }
-
-        IReadOnlyLinkedListNode Next { get; }
+            Value
+        { get; }
     }
 
-#if WinCopies3
+    public interface IReadOnlyLinkedListNode<out T> where T : IReadOnlyLinkedListNode
+    {
+        T
+#if CS9
+            ?
+#endif
+            Previous
+        { get; }
+        T
+#if CS9
+            ?
+#endif
+            Next
+        { get; }
+    }
+
     namespace Generic
     {
-#endif
         public interface IReadOnlyLinkedListNodeBase<out T> : IReadOnlyLinkedListNode
         {
-            T Value { get; }
-
+            new T Value { get; }
 #if CS8
-            object IReadOnlyLinkedListNode.Value => Value;
+            object
+#if CS8
+                ?
 #endif
-#if WinCopies3
+                IReadOnlyLinkedListNode.Value => Value;
+#endif
         }
 
-        public interface IReadOnlyLinkedListNodeBase2<out T> : IReadOnlyLinkedListNodeBase<T>
+        public interface IReadOnlyLinkedListNodeBase2<out T> where T : IReadOnlyLinkedListNodeBase2<T>, IReadOnlyLinkedListNode
         {
-            new IReadOnlyLinkedListNodeBase2<T> Previous { get; }
-
-            new IReadOnlyLinkedListNodeBase2<T> Next { get; }
-
-#if CS8
-            IReadOnlyLinkedListNode IReadOnlyLinkedListNode.Previous => Previous;
-
-            IReadOnlyLinkedListNode IReadOnlyLinkedListNode.Next => Next;
-#endif
-
-            IReadOnlyLinkedListNodeBase2<T> ToReadOnly();
+            T ToReadOnly();
         }
 
-        public class ReadOnlyLinkedListNode<T> : IReadOnlyLinkedListNodeBase2<T>
+        public interface IReadOnlyLinkedListNodeBase2<out TValue, out TNode> : IReadOnlyLinkedListNodeBase<TValue>, IReadOnlyLinkedListNodeBase2<TNode> where TNode : IReadOnlyLinkedListNodeBase2<TValue, TNode>, IReadOnlyLinkedListNode
         {
-            protected IReadOnlyLinkedListNodeBase2<T> InnerNode { get; }
+            // Left empty.
+        }
+
+        public interface IReadOnlyLinkedListNodeBase<out TNode, out TReadOnly> : DotNetFix.IReadOnlyLinkedListNode<TNode>, IReadOnlyLinkedListNodeBase2<TReadOnly> where TNode : IReadOnlyLinkedListNodeBase<TNode, TReadOnly>, IReadOnlyLinkedListNode where TReadOnly : IReadOnlyLinkedListNodeBase2<TReadOnly>, IReadOnlyLinkedListNode
+        {
+            // Left empty.
+        }
+
+        public interface IReadOnlyLinkedListNode<out TValue, out TNode, out TReadOnly> : IReadOnlyLinkedListNodeBase<TValue>, IReadOnlyLinkedListNodeBase<TNode, TReadOnly> where TNode : IReadOnlyLinkedListNodeBase<TNode, TReadOnly>, IReadOnlyLinkedListNode where TReadOnly : IReadOnlyLinkedListNodeBase2<TValue, TReadOnly>, IReadOnlyLinkedListNode
+        {
+            // Left empty.
+        }
+
+        public abstract class ReadOnlyLinkedListNode<TValue, TNode, TReadOnly> : IReadOnlyLinkedListNode<TValue, TNode, TReadOnly> where TNode : IReadOnlyLinkedListNodeBase<TNode, TReadOnly>, IReadOnlyLinkedListNode where TReadOnly : IReadOnlyLinkedListNodeBase2<TValue, TReadOnly>, IReadOnlyLinkedListNode
+        {
+            protected IReadOnlyLinkedListNode<TValue, TNode, TReadOnly> InnerNode { get; }
 
             public bool IsReadOnly => true;
 
-            public T Value => InnerNode.Value;
-
-            public IReadOnlyLinkedListNodeBase2<T> Previous => InnerNode.Previous.ToReadOnly();
-
-            public IReadOnlyLinkedListNodeBase2<T> Next => InnerNode.Next.ToReadOnly();
-
+            public TValue Value => InnerNode.Value;
 #if !CS8
-            IReadOnlyLinkedListNode IReadOnlyLinkedListNode.Previous => Previous;
-
-            IReadOnlyLinkedListNode IReadOnlyLinkedListNode.Next => Next;
-
-            object IReadOnlyLinkedListNode.Value => Value;
+            object IReadOnlyLinkedListNode.Value => InnerNode.Value;
 #endif
+            public abstract TNode Previous { get; }
+            public abstract TNode Next { get; }
 
-            public ReadOnlyLinkedListNode(in IReadOnlyLinkedListNodeBase2<T> node) => InnerNode = node;
+            public ReadOnlyLinkedListNode(in IReadOnlyLinkedListNode<TValue, TNode, TReadOnly> node) => InnerNode = node;
 
-            public IReadOnlyLinkedListNodeBase2<T> ToReadOnly() => this;
-#endif
+            public abstract TReadOnly ToReadOnly();
         }
 
-        public interface IReadOnlyLinkedListNode<out TItems, out TList> :
-#if WinCopies3
-            IReadOnlyLinkedListNodeBase2
-#else
-            IReadOnlyLinkedListNodeBase
-#endif
-            <TItems> where TList : IReadOnlyLinkedList<TItems>
-        {
-            TList List { get; }
-        }
-
-        public interface IReadOnlyLinkedListNode<out TItems, out TNodes, out TList> : IReadOnlyLinkedListNode<TItems, TList> where TList : IReadOnlyLinkedList<TItems> where TNodes : IReadOnlyLinkedListNode<TItems, TList>
-        {
-            TNodes Previous { get; }
-
-            TNodes Next { get; }
-
-#if CS8
-            IReadOnlyLinkedListNode IReadOnlyLinkedListNode.Previous => Previous;
-
-            IReadOnlyLinkedListNode IReadOnlyLinkedListNode.Next => Next;
-#endif
-        }
-
-        public interface IReadOnlyLinkedListNode<T> : IReadOnlyLinkedListNode<T, IReadOnlyLinkedListNode<T, IReadOnlyLinkedList<T>>, IReadOnlyLinkedList<T>>
-        {
-#if CS8
-            IReadOnlyLinkedListNode<T, IReadOnlyLinkedList<T>> IReadOnlyLinkedListNode<T, IReadOnlyLinkedListNode<T, IReadOnlyLinkedList<T>>, IReadOnlyLinkedList<T>>.Previous => Previous;
-
-            IReadOnlyLinkedListNode<T, IReadOnlyLinkedList<T>> IReadOnlyLinkedListNode<T, IReadOnlyLinkedListNode<T, IReadOnlyLinkedList<T>>, IReadOnlyLinkedList<T>>.Next => Next;
-
-            IReadOnlyLinkedList<T> IReadOnlyLinkedListNode<T, IReadOnlyLinkedList<T>>.List => List;
-#else
-            // Left empty.
-#endif
-        }
-
-        public interface
-#if WinCopies3
-            ILinkedListNodeBase<T> : IReadOnlyLinkedListNodeBase<T>
-        {
-            T Value { get; set; }
-        }
-
-        public interface ILinkedListNodeBase2<T> : IReadOnlyLinkedListNodeBase2<T>, ILinkedListNodeBase<T>
-        {
-            new ILinkedListNodeBase2<T> Previous { get; }
-
-            new ILinkedListNodeBase2<T> Next { get; }
-
-            ILinkedListNodeBase2<T> ToReadOnly2();
-
-#if CS8
-            IReadOnlyLinkedListNodeBase2<T> IReadOnlyLinkedListNodeBase2<T>.Previous => Previous;
-
-            IReadOnlyLinkedListNodeBase2<T> IReadOnlyLinkedListNodeBase2<T>.Next => Next;
-#endif
-        }
-
-        public class LinkedListNode<T> : ILinkedListNodeBase2<T>
-        {
-            protected ILinkedListNodeBase2<T> InnerNode { get; }
-
-            public bool IsReadOnly => false;
-
-            public T Value { get => InnerNode.Value; set => InnerNode.Value = value; }
-
-            public ILinkedListNodeBase2<T> Previous => InnerNode.Previous.ToReadOnly2();
-
-            public ILinkedListNodeBase2<T> Next => InnerNode.Next.ToReadOnly2();
-
-#if !CS8
-            IReadOnlyLinkedListNode IReadOnlyLinkedListNode.Previous => Previous;
-
-            IReadOnlyLinkedListNode IReadOnlyLinkedListNode.Next => Next;
-
-            object IReadOnlyLinkedListNode.Value => Value;
-
-            IReadOnlyLinkedListNodeBase2<T> IReadOnlyLinkedListNodeBase2<T>.Previous => Previous;
-
-            IReadOnlyLinkedListNodeBase2<T> IReadOnlyLinkedListNodeBase2<T>.Next => Next;
-#endif
-
-            public LinkedListNode(in ILinkedListNodeBase2<T> node) => InnerNode = node;
-
-            public ILinkedListNodeBase2<T> ToReadOnly2() => this;
-
-            public IReadOnlyLinkedListNodeBase2<T> ToReadOnly() => InnerNode.ToReadOnly();
-        }
-
-        public interface ILinkedListNode<TItems, out TList> : ILinkedListNodeBase2<TItems>, IReadOnlyLinkedListNode<TItems, TList> where TList : ILinkedList<TItems>
+        public interface IReadOnlyLinkedListNode<T> : IReadOnlyLinkedListNode<T, IReadOnlyLinkedListNode<T>, IReadOnlyLinkedListNode<T>>, IReadOnlyLinkedListNodeBase2<T, IReadOnlyLinkedListNode<T>>
         {
             // Left empty.
         }
 
-        public interface ILinkedListNode<TItems, out TNodes, out TList> : ILinkedListNode<TItems, TList>, IReadOnlyLinkedListNode<TItems, TNodes, TList> where TList : ILinkedList<TItems> where TNodes : ILinkedListNode<TItems, TList>
+        public class ReadOnlyLinkedListNode<T> : ReadOnlyLinkedListNode<T, IReadOnlyLinkedListNode<T>, IReadOnlyLinkedListNode<T>>, IReadOnlyLinkedListNode<T>
         {
-            new TNodes Previous { get; }
+            public override IReadOnlyLinkedListNode<T> Previous => InnerNode.Previous?.ToReadOnly();
+            public override IReadOnlyLinkedListNode<T> Next => InnerNode.Next?.ToReadOnly();
 
-            new TNodes Next { get; }
+            public ReadOnlyLinkedListNode(in IReadOnlyLinkedListNode<T> node) : base(node) { /* Left empty. */ }
 
-#if CS8
-            TNodes IReadOnlyLinkedListNode<TItems, TNodes, TList>.Previous => Previous;
-
-            TNodes IReadOnlyLinkedListNode<TItems, TNodes, TList>.Next => Next;
-#endif
+            public override IReadOnlyLinkedListNode<T> ToReadOnly() => this;
         }
 
-        public interface ILinkedListNode<T> : ILinkedListNode<T, ILinkedListNode<T, ILinkedList<T>>, ILinkedList<T>>, IReadOnlyLinkedListNode<T>
+        public interface IReadOnlyLinkedListNodeBase3<out T>
         {
-            new ILinkedList<T> List { get; }
+            T List { get; }
+        }
 
-            new ILinkedListNode<T> Previous { get; }
+        public interface IReadOnlyLinkedListNode<out TValue, out TNode, out TReadOnly, out TList> : IReadOnlyLinkedListNode<TValue, TNode, TReadOnly>, IReadOnlyLinkedListNodeBase3<TList> where TList : IReadOnlyLinkedListBase<TValue> where TNode : IReadOnlyLinkedListNode<TValue, TNode, TReadOnly> where TReadOnly : IReadOnlyLinkedListNodeBase2<TValue, TReadOnly>
+        {
+            // Left empty.
+        }
 
-            new ILinkedListNode<T> Next { get; }
+        public interface ILinkedListNodeBase<T> : IReadOnlyLinkedListNodeBase<T>
+        {
+            new T Value { get; set; }
 
+            bool IsAvailableByRef { get; }
+            ref T ValueRef { get; }
+        }
+
+        public interface ILinkedListNode<TValue, out TNode, out TReadOnly> : ILinkedListNodeBase<TValue>, IReadOnlyLinkedListNode<TValue, TNode, TReadOnly> where TNode : ILinkedListNode<TValue, TNode, TReadOnly> where TReadOnly : IReadOnlyLinkedListNodeBase2<TValue, TReadOnly>
+        {
+            // Left empty.
+        }
+
+        public interface ILinkedListNode<TValue, out TNode, out TReadOnly, out TList> : ILinkedListNode<TValue, TNode, TReadOnly>, IReadOnlyLinkedListNode<TValue, TNode, TReadOnly, TList> where TList : ILinkedList<TValue> where TNode : ILinkedListNode<TValue, TNode, TReadOnly> where TReadOnly : IReadOnlyLinkedListNodeBase2<TValue, TReadOnly>
+        {
+            // Left empty.
+        }
+
+        public interface ILinkedListNode<T> : ILinkedListNode<T, ILinkedListNode<T>, IReadOnlyLinkedListNode<T>, ILinkedList3<T>>, IReadOnlyLinkedListNode<T>
+        {
 #if CS8
-            ILinkedList<T> IReadOnlyLinkedListNode<T, ILinkedList<T>>.List => List;
+            DotNetFix.IReadOnlyLinkedListNode<ILinkedListNode<T>> AsReadWrite => this;
+            DotNetFix.IReadOnlyLinkedListNode<IReadOnlyLinkedListNode<T>> AsReadOnly => this;
+
+            IReadOnlyLinkedListNode<T>? DotNetFix.IReadOnlyLinkedListNode<IReadOnlyLinkedListNode<T>>.Previous => AsReadWrite.Previous;
+            IReadOnlyLinkedListNode<T>? DotNetFix.IReadOnlyLinkedListNode<IReadOnlyLinkedListNode<T>>.Next => AsReadWrite.Next;
 #endif
         }
-#else
+#if !CS8
+        public abstract class LinkedListNodeBase<T> : DotNetFix.IReadOnlyLinkedListNode<IReadOnlyLinkedListNode<T>>
+        {
+            public abstract ILinkedListNode<T> Previous { get; }
+            public abstract ILinkedListNode<T> Next { get; }
+
+            IReadOnlyLinkedListNode<T> DotNetFix.IReadOnlyLinkedListNode<IReadOnlyLinkedListNode<T>>.Previous => Previous;
+            IReadOnlyLinkedListNode<T> DotNetFix.IReadOnlyLinkedListNode<IReadOnlyLinkedListNode<T>>.Next => Next;
+        }
+#endif
+        public class LinkedListNode<T> :
+#if !CS8
+            LinkedListNodeBase<T>,
+#endif
             ILinkedListNode<T>
         {
-            bool IsReadOnly { get; }
-
-            ILinkedList<T> List { get; }
-
-            ILinkedListNode<T> Previous { get; }
-
-            ILinkedListNode<T> Next { get; }
-
-            T Value { get; }
+            protected ILinkedListNode<T> InnerNode { get; }
+#if !CS8
+            protected DotNetFix.IReadOnlyLinkedListNode<ILinkedListNode<T>> InnerReadWriteNode => InnerNode;
 #endif
+            public bool IsReadOnly => false;
+
+            public
+#if !CS8
+                override
+#endif
+                ILinkedListNode<T> Previous =>
+#if CS8
+                InnerNode.AsReadWrite
+#else
+                InnerReadWriteNode
+#endif
+                .Previous;
+            public
+#if !CS8
+                override
+#endif
+                ILinkedListNode<T> Next =>
+#if CS8
+                InnerNode.AsReadWrite
+#else
+                InnerReadWriteNode
+#endif
+                .Next;
+
+            public ILinkedList3<T> List => InnerNode.List;
+
+            public T Value { get => InnerNode.Value; set => InnerNode.Value = value; }
+            public bool IsAvailableByRef => InnerNode.IsAvailableByRef;
+            public ref T ValueRef => ref InnerNode.ValueRef;
+#if !CS8
+            object IReadOnlyLinkedListNode.Value => Value;
+#endif
+            public LinkedListNode(in ILinkedListNode<T> node)
+            {
+                if ((InnerNode = node ?? throw new ArgumentNullException(nameof(node))).IsReadOnly)
+
+                    throw new ArgumentException("The given node is read-only.", nameof(node));
+            }
+
+            public IReadOnlyLinkedListNode<T> ToReadOnly() => InnerNode.ToReadOnly();
+        }
     }
 }
 #endif

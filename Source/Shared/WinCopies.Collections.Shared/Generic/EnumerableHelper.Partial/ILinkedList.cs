@@ -15,45 +15,168 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if WinCopies3
+using WinCopies.Collections.DotNetFix;
 using WinCopies.Collections.DotNetFix.Generic;
 
-namespace WinCopies.Collections.Generic
+namespace WinCopies.Collections
 {
-    public static partial class EnumerableHelper<T>
+    public static partial class EnumerableHelper
     {
-        public interface ILinkedList : IQueueBase<T>, IStackBase<T>
+        public interface ILinkedListBase : IClearable
         {
-            T First { get; }
-
-            T Last { get; }
-
-            bool TryGetFirst(out T result);
-
-            bool TryGetLast(out T result);
-
-            void AddFirst(T item);
-
-            void AddLast(T item);
-
             void RemoveFirst();
-
-            T GetAndRemoveFirst();
-
-            bool TryGetAndRemoveFirst(out T result);
-
             void RemoveLast();
+        }
 
-            T GetAndRemoveLast();
+        internal interface _ILinkedListBase<T> : ILinkedListBase
+        {
+            void Remove(ILinkedListNode<T> node);
+        }
 
-            bool TryGetAndRemoveLast(out T result);
+        public interface ILinkedList : ILinkedListBase, ISimpleLinkedListBase, IPeekable, ISimpleLinkedListCore, IClearable, IQueueCore, IStackCore
+        {
+            object First { get; }
+            object Last { get; }
 
-            new void Clear();
+            bool TryGetFirst(out object result);
+
+            bool TryGetLast(out object result);
+
+            void AddFirst(object item);
+
+            void AddLast(object item);
+
+            object GetAndRemoveFirst();
+
+            bool TryGetAndRemoveFirst(out object result);
+
+            object GetAndRemoveLast();
+
+            bool TryGetAndRemoveLast(out object result);
 #if CS8
-            T IPeekable<T>.Peek() => First;
-            bool IPeekable<T>.TryPeek(out T value) => TryGetFirst(out value);
+            object IPeekable.Peek() => First;
+            bool IPeekable.TryPeek(out object value) => TryGetFirst(out value);
 #endif
         }
     }
-}
+
+    namespace Generic
+    {
+        public static partial class EnumerableHelper<T>
+        {
+            public interface ILinkedList : EnumerableHelper.ILinkedListBase, ISimpleLinkedListBase, ISimpleLinkedListCore, IClearable, IQueueCommon<T>, IStackCommon<T>
+            {
+                T
+#if CS9
+                    ?
 #endif
+                    First
+                { get; }
+                T
+#if CS9
+                    ?
+#endif
+                    Last
+                { get; }
+
+                bool TryGetFirst(out T
+#if CS9
+                    ?
+#endif
+                    result);
+                bool TryGetLast(out T
+#if CS9
+                    ?
+#endif
+                    result);
+
+                void AddFirst(T
+#if CS9
+                    ?
+#endif
+                    item);
+                void AddLast(T
+#if CS9
+                    ?
+#endif
+                    item);
+
+                T
+#if CS9
+                    ?
+#endif
+                    GetAndRemoveFirst();
+                bool TryGetAndRemoveFirst(out T
+#if CS9
+                    ?
+#endif
+                    result);
+
+                T
+#if CS9
+                    ?
+#endif
+                    GetAndRemoveLast();
+                bool TryGetAndRemoveLast(out T
+#if CS9
+                    ?
+#endif
+                    result);
+
+                IQueueCommon<T> AsQueue();
+                IStackCommon<T> AsStack();
+#if CS8
+                #region IQueueCore Implementation
+                void IQueueCore<T>.Enqueue(T
+#if CS9
+                    ?
+#endif
+                    item) => AddLast(item);
+
+                T
+#if CS9
+                    ?
+#endif
+                    IQueueCore<T>.Dequeue() => GetAndRemoveFirst();
+
+                bool IQueueCore<T>.TryDequeue(out T
+#if CS9
+                    ?
+#endif
+                    result) => TryGetAndRemoveFirst(out result);
+                #endregion IQueueCore Implementation
+                #region IStackCore Implementation
+                void IStackCore<T>.Push(T
+#if CS9
+                    ?
+#endif
+                    item) => AddFirst(item);
+
+                T
+#if CS9
+                    ?
+#endif
+                    IStackCore<T>.Pop() => GetAndRemoveLast();
+
+                bool IStackCore<T>.TryPop(out T
+#if CS9
+                    ?
+#endif
+                    result) => TryGetAndRemoveFirst(out result);
+                #endregion IStackCore Implementation
+
+                T
+#if CS9
+                    ?
+#endif
+                    IPeekable<T>.Peek() => First;
+                bool IPeekable<T>.TryPeek(out T
+#if CS9
+                    ?
+#endif
+                    value) => TryGetFirst(out value);
+#endif
+            }
+        }
+    }
+}

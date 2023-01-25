@@ -15,7 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if WinCopies3
 using System.Globalization;
 
 namespace WinCopies.Util.Data
@@ -43,4 +42,3 @@ namespace WinCopies.Util.Data
         protected sealed override object[] ConvertBack(TDestinationOut _value, TParamIn _parameter, CultureInfo culture) => ConvertBack(DestinationConverters.Convert(_value), ParameterConverters.Convert(_parameter), culture);
     }
 }
-#endif

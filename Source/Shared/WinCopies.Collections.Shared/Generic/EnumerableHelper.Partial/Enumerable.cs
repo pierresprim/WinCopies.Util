@@ -15,59 +15,108 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if WinCopies3
+using System.Collections;
 using System.Collections.Generic;
 
 using WinCopies.Collections.DotNetFix;
+using WinCopies.Collections.DotNetFix.Generic;
+using WinCopies.Collections.Generic;
 using WinCopies.Linq;
 
-namespace WinCopies.Collections.Generic
+namespace WinCopies.Collections
 {
-    public static partial class EnumerableHelper<T>
+    public static partial class EnumerableHelper
     {
-        public interface IEnumerableLinkedList : ILinkedList, IEnumerableInfo<T>, IAsEnumerable<ILinkedListNode>
+        public interface ILinkedListBase<T>
         {
-            ILinkedListNode FirstNode { get; }
-            ILinkedListNode LastNode { get; }
-
-            IEnumeratorInfo<ILinkedListNode> GetNodeEnumerator(EnumerationDirection enumerationDirection);
-
-            IEnumerable<ILinkedListNode> AsEnumerable(EnumerationDirection enumerationDirection);
+            T FirstNode { get; }
+            T LastNode { get; }
         }
 
-        internal class Enumerable : LinkedList, IEnumerableLinkedList, IEnumerableQueue, IEnumerableStack
+        public interface IEnumerableLinkedListBase<T> : ILinkedListBase<T>, IAsEnumerable<T>
+        {
+            IEnumeratorInfo<T> GetNodeEnumerator(EnumerationDirection enumerationDirection);
+
+            System.Collections.Generic.IEnumerable<T> AsEnumerable(EnumerationDirection enumerationDirection);
+        }
+
+        public interface IEnumerableLinkedList : IEnumerableLinkedListBase<ILinkedListNode>, ILinkedList, IEnumerableInfo
+        {
+            // Left empty.
+        }
+
+        internal class Enumerable : LinkedList, IEnumerableLinkedList, ISimpleLinkedListBase, IPeekable, ISimpleLinkedListCore, IClearable, IQueueCore, IStackCore, IPeekableEnumerableInfo, ILinkedListBase<LinkedList.Node>, IEnumerableQueue, IEnumerableStack
         {
             public bool SupportsReversedEnumeration => true;
 
-            ILinkedListNode IEnumerableLinkedList.FirstNode => FirstNode;
-            ILinkedListNode IEnumerableLinkedList.LastNode => LastNode;
+            Node ILinkedListBase<Node>.FirstNode => FirstNode;
+            Node ILinkedListBase<Node>.LastNode => LastNode;
 
-            public IEnumeratorInfo<ILinkedListNode> GetNodeEnumerator(EnumerationDirection enumerationDirection) => new Enumerator(this, enumerationDirection);
+            ILinkedListNode ILinkedListBase<ILinkedListNode>.FirstNode => FirstNode;
+            ILinkedListNode ILinkedListBase<ILinkedListNode>.LastNode => LastNode;
 
-            public IEnumerable<ILinkedListNode> AsEnumerable(EnumerationDirection enumerationDirection) => Collections.Enumerable.FromEnumerator(GetNodeEnumerator(enumerationDirection));
+            public IEnumeratorInfo<ILinkedListNode> GetNodeEnumerator(EnumerationDirection enumerationDirection) => GetNodeEnumerator(this, enumerationDirection);
 
-            public IEnumerable<ILinkedListNode> AsEnumerable() => AsEnumerable(EnumerationDirection.FIFO);
+            public System.Collections.Generic.IEnumerable<ILinkedListNode> AsEnumerable(EnumerationDirection enumerationDirection) => Collections.Enumerable.FromEnumerator(GetNodeEnumerator(enumerationDirection));
+            public System.Collections.Generic.IEnumerable<ILinkedListNode> AsEnumerable() => AsEnumerable(EnumerationDirection.FIFO);
 
-            public IEnumeratorInfo<T> GetEnumerator(EnumerationDirection enumerationDirection) => GetNodeEnumerator(enumerationDirection).SelectConverter(node => node.Value);
+            public IEnumeratorInfo GetEnumerator(EnumerationDirection enumerationDirection) => GetNodeEnumerator(enumerationDirection).SelectConverter(node => node.Value);
 
-            public IEnumeratorInfo<T> GetEnumerator() => GetEnumerator(EnumerationDirection.FIFO);
+            public IEnumeratorInfo GetEnumerator() => GetEnumerator(EnumerationDirection.FIFO);
+            System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-            IEnumerator<T> IEnumerable<T>.GetEnumerator() => GetEnumerator();
+            public IEnumeratorInfo GetReversedEnumerator() => GetEnumerator(EnumerationDirection.LIFO);
+            System.Collections.IEnumerator Extensions.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
 
-            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
+            void IListCommon.Add(object value) => AddLast(value);
+            object IListCommon.Remove() => GetAndRemoveFirst();
+            bool IListCommon.TryRemove(out object result) => TryGetAndRemoveFirst(out result);
+        }
+    }
 
-            public IEnumeratorInfo<T> GetReversedEnumerator() => GetEnumerator(EnumerationDirection.LIFO);
+    namespace Generic
+    {
+        public static partial class EnumerableHelper<T>
+        {
+            public interface IEnumerableLinkedList : EnumerableHelper.IEnumerableLinkedListBase<ILinkedListNode>, ILinkedList, IEnumerableInfo<T>
+            {
+                // Left empty.
+            }
 
-            IEnumerator<T>
-#if WinCopies3
-                Extensions.
-#endif
-                Generic.IEnumerable<T>.GetReversedEnumerator() => GetReversedEnumerator();
+            internal class Enumerable : LinkedList, IEnumerableLinkedList, ISimpleLinkedListBase, IPeekable, ISimpleLinkedListCore, IClearable, IQueueCore<T>, IStackCore<T>, DotNetFix.Generic.IPeekableEnumerableInfo<T>, EnumerableHelper.ILinkedListBase<LinkedList.Node>, IEnumerableQueue, IEnumerableStack
+            {
+                public bool SupportsReversedEnumeration => true;
 
+                ILinkedListNode EnumerableHelper.ILinkedListBase<ILinkedListNode>.FirstNode => FirstNode;
+                ILinkedListNode EnumerableHelper.ILinkedListBase<ILinkedListNode>.LastNode => LastNode;
+
+                Node EnumerableHelper.ILinkedListBase<Node>.FirstNode => FirstNode;
+                Node EnumerableHelper.ILinkedListBase<Node>.LastNode => LastNode;
+
+                void IListCommon<T>.Add(T value) => AddLast(value);
+                T IListCommon<T>.Remove() => GetAndRemoveFirst();
+                bool IListCommon<T>.TryRemove(out T result) => TryGetAndRemoveFirst(out result);
+
+                void IListCommon.Add(object value) => AddLast((T)value);
+                object IListCommon.Remove() => GetAndRemoveFirst();
+                bool IListCommon.TryRemove(out object result) => UtilHelpers.TryGetValue<T>(TryGetAndRemoveFirst, out result);
+
+                public IEnumeratorInfo<ILinkedListNode> GetNodeEnumerator(EnumerationDirection enumerationDirection) => GetNodeEnumerator(this, enumerationDirection);
+
+                public System.Collections.Generic.IEnumerable<ILinkedListNode> AsEnumerable(EnumerationDirection enumerationDirection) => Collections.Enumerable.FromEnumerator(GetNodeEnumerator(enumerationDirection));
+                public System.Collections.Generic.IEnumerable<ILinkedListNode> AsEnumerable() => AsEnumerable(EnumerationDirection.FIFO);
+
+                public IEnumeratorInfo<T> GetEnumerator(EnumerationDirection enumerationDirection) => GetNodeEnumerator(enumerationDirection).SelectConverter(node => node.Value);
+                public IEnumeratorInfo<T> GetEnumerator() => GetEnumerator(EnumerationDirection.FIFO);
+                System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetEnumerator();
+                System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
+
+                public IEnumeratorInfo<T> GetReversedEnumerator() => GetEnumerator(EnumerationDirection.LIFO);
+                System.Collections.IEnumerator Extensions.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
 #if !CS8
-            System.Collections.IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
+                IEnumerator<T> Extensions.Generic.IEnumerable<T>.GetReversedEnumerator() => GetReversedEnumerator();
 #endif
+            }
         }
     }
 }
-#endif

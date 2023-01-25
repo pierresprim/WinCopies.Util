@@ -16,153 +16,132 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using System;
-using System.Collections;
+
+using WinCopies.Util;
 
 namespace WinCopies.Collections.DotNetFix
 {
-    [Serializable]
-    public class QueueCollection : IEnumerable, ICollection
-#if !WinCopies3
-        , ICloneable
-#endif
+    public class QueueCollection<T> : SimpleLinkedCollection<T>, IQueue where T : IQueue
     {
-        protected internal
-#if !WinCopies3
-            System.Collections.Queue
-#else
-IEnumerableQueue
-#endif
-            InnerQueue
-
-        { get; }
+        public QueueCollection(in T queue) : base(queue) { /* Left empty. */ }
 
         /// <summary>
-        /// Gets the number of elements contained in the <see cref="QueueCollection"/>.
-        /// </summary>
-        /// <value>The number of elements contained in the <see cref="QueueCollection"/>.</value>
-        public
-#if !WinCopies3
-int
-#else
-            uint
+        /// Adds an object to the end of the <see cref="QueueCollection"/>.
+        /// <param name="item">The object to add to the <see cref="QueueCollection"/>. The value can be <see langword="null"/> for reference types.</param>
+        public void Enqueue(object
+#if CS8
+            ?
 #endif
-            Count => InnerQueue.Count;
-
-#if WinCopies3
-        int ICollection.Count => (int)Count;
-#endif
-
-        public bool IsReadOnly => false;
-
-        bool ICollection.IsSynchronized => ((ICollection)InnerQueue).IsSynchronized;
-
-        object ICollection.SyncRoot => ((ICollection)InnerQueue).SyncRoot;
+            item) => Add(item);
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="QueueCollection"/> class.
+        /// Removes and returns the object at the beginning of the <see cref="QueueCollection"/>.
         /// </summary>
-        public QueueCollection() : this(new
-#if !WinCopies3
-            System.Collections.Queue
-#else
-            EnumerableQueue
+        /// <returns>The object that is removed from the beginning of the <see cref="QueueCollection"/>.</returns>
+        /// <exception cref="InvalidOperationException">The <see cref="QueueCollection"/> is empty.</exception>
+        public object
+#if CS8
+            ?
 #endif
-            ())
-        { }
+            Dequeue() => Remove();
 
+        public bool TryDequeue(out object
+#if CS8
+            ?
+#endif
+            result) => TryRemove(out result);
+
+        public override void Add(object value) => InnerList.Enqueue(value);
+        public override object Remove() => InnerList.Dequeue();
+        public override bool TryRemove(out object result) => InnerList.TryDequeue(out result);
+    }
+    public class QueueCollection : QueueCollection<IQueue>
+    {
         /// <summary>
         /// Initializes a new instance of the <see cref="QueueCollection"/> class with a custom queue.
         /// </summary>
         /// <param name="queue">The inner queue for this <see cref="QueueCollection"/>.</param>
-        public QueueCollection(in
-#if !WinCopies3
-            System.Collections.Queue
-#else
-            IEnumerableQueue
+        public QueueCollection(in IQueue queue) : base(queue) { /* Left empty. */ }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="QueueCollection"/> class.
+        /// </summary>
+        public QueueCollection() : this(new Queue()) { /* Left empty. */ }
+    }
+    public class EnumerableQueueCollection : QueueCollection<IEnumerableQueue>, IEnumerableQueue
+    {
+        int System.Collections.ICollection.Count => InnerList.AsFromType<System.Collections.ICollection>().Count;
+
+        object System.Collections.ICollection.SyncRoot => InnerList.AsFromType<System.Collections.ICollection>().SyncRoot;
+        bool System.Collections.ICollection.IsSynchronized => InnerList.AsFromType<System.Collections.ICollection>().IsSynchronized;
+
+        public EnumerableQueueCollection(in IEnumerableQueue queue) : base(queue) { /* Left empty. */ }
+        public EnumerableQueueCollection() : this(new EnumerableQueue()) { /* Left empty. */ }
+
+        public void CopyTo(System.Array array, int index) => InnerList.AsFromType<System.Collections.ICollection>().CopyTo(array, index);
+        public object[] ToArray() => InnerList.ToArray();
+        public System.Collections.IEnumerator GetEnumerator() => InnerList.GetEnumerator();
+    }
+    public class QueueBaseCollection : SimpleLinkedListBaseCollection<IQueueBase>, IQueueBase
+    {
+        public QueueBaseCollection(in IQueueBase list) : base(list) { /* Left empty. */ }
+        public QueueBaseCollection() : this(EnumerableHelper.GetQueue()) { /* Left empty. */ }
+
+        public void Enqueue(object item) => Add(item);
+        public object Dequeue() => Remove();
+        public bool TryDequeue(out object result) => TryRemove(out result);
+    }
+
+    public class StackCollection<T> : SimpleLinkedCollection<T>, IStack where T : IStack
+    {
+        public StackCollection(in T stack) : base(stack) { /* Left empty. */ }
+
+        public void Push(object
+#if CS8
+            ?
 #endif
-            queue) => InnerQueue = queue;
-
-#if !WinCopies3
-
-        /// <summary>
-        /// Creates a shallow copy of the <see cref="QueueCollection"/>.
-        /// </summary>
-        /// <returns>A shallow copy of the <see cref="QueueCollection"/>.</returns>
-        public object Clone() => InnerQueue.Clone();
-
+            item) => Add(item);
+        public object
+#if CS8
+            ?
 #endif
+            Pop() => Remove();
+        public bool TryPop(out object
+#if CS8
+            ?
+#endif
+            result) => TryRemove(out result);
 
-        /// <summary>
-        /// Removes all objects from the <see cref="QueueCollection"/>. Override this method to provide a custom implementation.
-        /// </summary>
-        protected virtual void ClearItems() => InnerQueue.Clear();
+        public override void Add(object value) => InnerList.Push(value);
+        public override object Remove() => InnerList.Pop();
+        public override bool TryRemove(out object result) => InnerList.TryPop(out result);
+    }
+    public class StackCollection : StackCollection<IStack>
+    {
+        public StackCollection(in IStack stack) : base(stack) { /* Left empty. */ }
+        public StackCollection() : this(new Stack()) { /* Left empty. */ }
+    }
+    public class EnumerableStackCollection : StackCollection<IEnumerableStack>, IEnumerableStack
+    {
+        int System.Collections.ICollection.Count => InnerList.AsFromType<System.Collections.ICollection>().Count;
 
-        /// <summary>
-        /// Removes all objects from the <see cref="QueueCollection"/>. Override the <see cref="ClearItems"/> method to provide a custom implementation.
-        /// </summary>
-        public void Clear() => ClearItems();
+        object System.Collections.ICollection.SyncRoot => InnerList.AsFromType<System.Collections.ICollection>().SyncRoot;
+        bool System.Collections.ICollection.IsSynchronized => InnerList.AsFromType<System.Collections.ICollection>().IsSynchronized;
 
-        /// <summary>
-        /// Determines whether an element is in the <see cref="QueueCollection"/>.
-        /// </summary>
-        /// <param name="item">The object to locate in the <see cref="QueueCollection"/>. The value can be <see langword="null"/> for reference types.</param>
-        /// <returns><see langword="true"/> if <paramref name="item"/> is found in <see cref="InnerQueue"/>; otherwise, <see langword="false"/>.</returns>
-        public bool Contains(object item) => InnerQueue.Contains(item);
+        public EnumerableStackCollection(in IEnumerableStack stack) : base(stack) { /* Left empty. */ }
+        public EnumerableStackCollection() : this(new EnumerableStack()) { /* Left empty. */ }
 
-        /// <summary>
-        /// Copies the <see cref="QueueCollection"/> elements to an existing one-dimensional <see cref="System.Array"/>, starting at the specified array index.
-        /// </summary>
-        /// <param name="array">The one-dimensional <see cref="System.Array"/> that is the destination of the elements copied from <see cref="QueueCollection"/>. The <see cref="System.Array"/> must have zero-based indexing.</param>
-        /// <param name="index">The zero-based index in array at which copying begins.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="array"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is less than zero.</exception>
-        /// <exception cref="ArgumentException"><paramref name="array"/> is multidimensional. -or- The number of elements in the source <see cref="QueueCollection"/> is greater than the available space from index to the end of the destination array.</exception>
-        /// <exception cref="ArrayTypeMismatchException">The type of the source <see cref="QueueCollection"/> cannot be cast automatically to the type of the destination array.</exception>
-        public void CopyTo(Array array, int index) => InnerQueue.CopyTo(array, index);
+        public void CopyTo(System.Array array, int index) => InnerList.AsFromType<System.Collections.ICollection>().CopyTo(array, index);
+        public object[] ToArray() => InnerList.ToArray();
+        public System.Collections.IEnumerator GetEnumerator() => InnerList.GetEnumerator();
+    }
+    public class StackBaseCollection : SimpleLinkedListBaseCollection<IStackBase>, IStackBase
+    {
+        public StackBaseCollection(in IStackBase list) : base(list) { /* Left empty. */ }
+        public StackBaseCollection() : this(EnumerableHelper.GetStack()) { /* Left empty. */ }
 
-        /// <summary>
-        /// Removes and returns the object at the beginning of the <see cref="QueueCollection"/>. Override this method to provide a custom implementation.
-        /// </summary>
-        /// <returns>The object that is removed from the beginning of the <see cref="QueueCollection"/>.</returns>
-        /// <exception cref="InvalidOperationException">The <see cref="QueueCollection"/> is empty.</exception>
-        protected virtual object DequeueItem() => InnerQueue.Dequeue();
-
-        /// <summary>
-        /// Removes and returns the object at the beginning of the <see cref="QueueCollection"/>. Override the <see cref="DequeueItem"/> to provide a custom implementation.
-        /// </summary>
-        /// <returns>The object that is removed from the beginning of the <see cref="QueueCollection"/>.</returns>
-        /// <exception cref="InvalidOperationException">The <see cref="QueueCollection"/> is empty.</exception>
-        public object Dequeue() => DequeueItem();
-
-        /// <summary>
-        /// Adds an object to the end of the <see cref="QueueCollection"/>. Override this method to provide a custom implementation.
-        /// </summary>
-        /// <param name="item">The object to add to the <see cref="QueueCollection"/>. The value can be <see langword="null"/> for reference types.</param>
-        protected virtual void EnqueueItem(in object item) => InnerQueue.Enqueue(item);
-
-        /// <summary>
-        /// Adds an object to the end of the <see cref="QueueCollection"/>. Override the <see cref="EnqueueItem(in object)"/> method to provide a custom implementation.
-        /// </summary>
-        /// <param name="item">The object to add to the <see cref="QueueCollection"/>. The value can be <see langword="null"/> for reference types.</param>
-        public void Enqueue(in object item) => EnqueueItem(item);
-
-        /// <summary>
-        /// Returns the object at the beginning of the <see cref="QueueCollection"/> without removing it.
-        /// </summary>
-        /// <returns>The object at the beginning of the <see cref="QueueCollection"/>.</returns>
-        /// <exception cref="InvalidOperationException">The <see cref="QueueCollection"/> is empty.</exception>
-        public object Peek() => InnerQueue.Peek();
-
-        /// <summary>
-        /// Copies the <see cref="QueueCollection"/> elements to a new array.
-        /// </summary>
-        /// <returns>A new array containing elements copied from the <see cref="QueueCollection"/>.</returns>
-        public object[] ToArray() => InnerQueue.ToArray();
-
-        /// <summary>
-        /// Returns an enumerator that iterates through the <see cref="QueueCollection"/>.
-        /// </summary>
-        /// <returns>An <see cref="System.Collections.IEnumerator"/> for the <see cref="QueueCollection"/>.</returns>
-        public System.Collections.IEnumerator GetEnumerator() => InnerQueue.GetEnumerator();
+        public void Push(object item) => Add(item);
+        public object Pop() => Remove();
+        public bool TryPop(out object result) => TryRemove(out result);
     }
 }

@@ -52,10 +52,7 @@ namespace WinCopies.Util.Data
 
         public ConverterArrayMultiParametersParameter(IList<IValueConverter> converters, IList<object> parameters)
         {
-            if (converters.Count != parameters.Count) throw new ArgumentException("converters and parameters does not have the same number of items.");
-
-            Converters = converters;
-
+            Converters = converters.Count != parameters.Count ? throw new ArgumentException("converters and parameters does not have the same number of items.") : converters;
             Parameters = parameters;
         }
 
@@ -132,9 +129,7 @@ namespace WinCopies.Util.Data
         public MultiConverterArrayParameter(IEnumerable<IValueConverter> converters, IMultiValueConverter converter, object parameter)
         {
             Converter = converter;
-
             Converters = converters;
-
             Parameter = parameter;
         }
 
@@ -153,14 +148,9 @@ namespace WinCopies.Util.Data
 
         public MultiConverterArrayMultiParametersParameter(IList<IValueConverter> converters, IMultiValueConverter converter, object parameter, IList<object> parameters)
         {
-            if (converters.Count != parameters.Count) throw new ArgumentException("converters and parameters does not have the same number of parameters.");
-
-            Converter = converter;
-
+            Converter = converters.Count != parameters.Count ? throw new ArgumentException("converters and parameters does not have the same number of parameters.") : converter;
             Converters = converters;
-
             Parameter = parameter;
-
             Parameters = parameters;
         }
 
@@ -223,23 +213,11 @@ namespace WinCopies.Util.Data
         {
             if (parameter is MultiConverterArrayParameter multiConverterArrayParameter)
             {
-                Type[] types
-#if !WinCopies3
-                    = ((MultiValueConversionAttribute)multiConverterArrayParameter.Converter.GetType().GetCustomAttributes(typeof(MultiValueConversionAttribute), true).FirstOrDefault())?.SourceTypes;
+                Type[] types = new Type[targetTypes.Length];
 
-                if (types == null)
-                {
-#else
-                    ;
-#endif
-                    types = new Type[targetTypes.Length];
+                for (int i = 0; i < targetTypes.Length; i++)
 
-                    for (int i = 0; i < targetTypes.Length; i++)
-
-                        types[i] = typeof(object);
-#if !WinCopies3
-              }
-#endif
+                    types[i] = typeof(object);
 
                 object[] values = multiConverterArrayParameter.Converter.ConvertBack(value, types, multiConverterArrayParameter.Parameter, culture);
 
@@ -259,23 +237,11 @@ namespace WinCopies.Util.Data
 
             if (parameter is MultiConverterArrayMultiParametersParameter multiConverterArrayMultiParametersParameter)
             {
-                Type[] types
-#if !WinCopies3
-                    = ((MultiValueConversionAttribute)multiConverterArrayMultiParametersParameter.Converter.GetType().GetCustomAttributes(typeof(MultiValueConversionAttribute), true).FirstOrDefault())?.SourceTypes;
+                Type[] types = new Type[targetTypes.Length];
 
-                if (types == null)
-                {
-#else
-                    ;
-#endif
-                    types = new Type[targetTypes.Length];
+                for (int i = 0; i < targetTypes.Length; i++)
 
-                    for (int i = 0; i < targetTypes.Length; i++)
-
-                        types[i] = typeof(object);
-#if !WinCopies3
-                }
-#endif
+                    types[i] = typeof(object);
 
                 object[] values = multiConverterArrayMultiParametersParameter.Converter.ConvertBack(value, types, multiConverterArrayMultiParametersParameter.Parameter, culture);
 

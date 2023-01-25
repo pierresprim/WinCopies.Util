@@ -18,13 +18,9 @@
 using System.Windows;
 using System.Windows.Input;
 
-#if !WinCopies3
-namespace WinCopies.Util.Commands
-#else
 using WinCopies.Desktop;
 
 namespace WinCopies.Commands
-#endif
 {
     public static class KeyCommandHelper
     {

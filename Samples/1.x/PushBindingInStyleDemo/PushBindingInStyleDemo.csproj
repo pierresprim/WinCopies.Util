@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<TargetFrameworks>net6.0-windows</TargetFrameworks>
+		<TargetFrameworks>net7.0-windows</TargetFrameworks>
 		<UseWPF>true</UseWPF>
 		<PackageId>WinCopies.PushBindingInStyleDemo</PackageId>
 		<Description>Demo for the PushBinding package</Description>
@@ -12,8 +12,8 @@
 		<Copyright>Copyright © 2021 Pierre Sprimont</Copyright>
 		<AssemblyVersion>1.0.1.1</AssemblyVersion>
 		<FileVersion>1.0.1.1</FileVersion>
-		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<Version>1.0.1.1</Version>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageReleaseNotes>See Changelog</PackageReleaseNotes>
 		<PackageProjectUrl>https://github.com/pierresprim/WinCopies.Util</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/pierresprim/WinCopies.Util.git</RepositoryUrl>
@@ -29,7 +29,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\..\Source\3.x\WinCopies.Util.Desktop\WinCopies.Util.Desktop.csproj" />
+	  <ProjectReference Include="..\..\..\Source\Current\WinCopies.Util.Desktop\WinCopies.Util.Desktop.csproj" />
 	</ItemGroup>
 
 	<Import Project="..\..\Shared\PushBindingInStyleDemo.Shared\PushBindingInStyleDemo.Shared.projitems" Label="Shared" />

@@ -15,9 +15,9 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if WinCopies3 && CS7
-
+#if CS7
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 using WinCopies.Collections.DotNetFix.Generic;
@@ -38,14 +38,12 @@ namespace WinCopies.Collections.Generic
         void DecrementIndex(long length);
     }
 
-    public sealed class IncrementableIReadOnlyList<T> : Enumerator<T>, IIncrementableReadOnlyList<T>, WinCopies.DotNetFix.IDisposable
+    public sealed class IncrementableReadOnlyList<T> : Enumerator<T>, IIncrementableReadOnlyList<T>, WinCopies.DotNetFix.IDisposable
     {
         private System.Collections.Generic.IReadOnlyList<T> _list;
         private int _currentIndex = -1;
 
         int IIncrementableReadOnlyList<T>.CurrentIndex => GetOrThrowIfDisposed(_currentIndex);
-
-        int ICountableEnumerable<T, ICountableEnumerator<T>>.Count => GetOrThrowIfDisposed(_list).Count;
 
         int System.Collections.Generic.IReadOnlyCollection<T>.Count => GetOrThrowIfDisposed(_list).Count;
 
@@ -55,9 +53,7 @@ namespace WinCopies.Collections.Generic
 
         public override bool? IsResetSupported => true;
 
-        public bool IsDisposed { get; private set; }
-
-        public IncrementableIReadOnlyList(in System.Collections.Generic.IReadOnlyList<T> list) => _list = list ?? throw GetArgumentNullException(nameof(list));
+        public IncrementableReadOnlyList(in System.Collections.Generic.IReadOnlyList<T> list) => _list = list ?? throw GetArgumentNullException(nameof(list));
 
         void IIncrementableReadOnlyList<T>.IncrementIndex(long length)
         {
@@ -70,7 +66,7 @@ namespace WinCopies.Collections.Generic
             _currentIndex += (int)length;
         }
 
-        ICountableEnumerator<T> ICountableEnumerable<T, ICountableEnumerator<T>>.GetEnumerator() => IsDisposed ? throw GetExceptionForDispose(false) : new IncrementableIReadOnlyList<T>(_list);
+        //ICountableEnumerator<T> ICountableEnumerable<T, ICountableEnumerator<T>>.GetEnumerator() => IsDisposed ? throw GetExceptionForDispose(false) : new IncrementableIReadOnlyList<T>(_list);
 
         protected override bool MoveNextOverride() => ++_currentIndex < _list.Count;
 
@@ -85,12 +81,11 @@ namespace WinCopies.Collections.Generic
             _list = null;
         }
 
-#if !CS9
         public ICountableEnumerator<T> GetEnumerator() => GetEnumerator();
 
-        System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetEnumerator();
-
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
+#if !CS9
+        System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetEnumerator();
 #endif
     }
 
@@ -119,5 +114,4 @@ namespace WinCopies.Collections.Generic
     }
 #endif
 }
-
 #endif

@@ -236,7 +236,6 @@ namespace WinCopies.Util.Data
             if (Determine.OneOrMoreNull(pushBindings, pushBindingsToAdd))
 
                 return;
-
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
             foreach (PushBinding
 #if CS8

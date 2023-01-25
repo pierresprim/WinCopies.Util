@@ -15,10 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if WinCopies3 && CS7
+#if CS7
 using System.Collections.Generic;
 
 using WinCopies.Collections.DotNetFix.Generic;
+using WinCopies.Util;
 
 using static WinCopies.ThrowHelper;
 
@@ -59,7 +60,7 @@ namespace WinCopies.Collections.Generic
 
             else
 
-                foreach (IUIntCountableEnumerable<KeyValuePair<TKey, TValue>> _array in this)
+                foreach (IUIntCountableEnumerable<KeyValuePair<TKey, TValue>> _array in this.AsFromType<System.Collections.Generic.IEnumerable<IUIntCountableEnumerable<KeyValuePair<TKey, TValue>>>>())
 
                     foreach (KeyValuePair<TKey, TValue> item in _array)
 

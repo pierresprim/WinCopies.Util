@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net7.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>AttachedCommandBehaviorDemo.snk</AssemblyOriginatorKeyFile>
@@ -27,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Source\3.x\WinCopies.Util.Desktop\WinCopies.Util.Desktop.csproj" />
+    <ProjectReference Include="..\..\..\Source\Current\WinCopies.Util.Desktop\WinCopies.Util.Desktop.csproj" />
   </ItemGroup>
 
   <Import Project="..\..\Shared\AttachedCommandBehaviorDemo.Shared\AttachedCommandBehaviorDemo.Shared.projitems" Label="Shared" />

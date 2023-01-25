@@ -15,14 +15,14 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if WinCopies3 && CS7
-
+#if CS7
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 
 using WinCopies.Collections.DotNetFix.Generic;
+using WinCopies.Util;
 
 using static WinCopies.ThrowHelper;
 
@@ -108,7 +108,7 @@ namespace WinCopies.Collections.Generic
 
             else
 
-                foreach (IUIntCountableEnumerable<T> _array in this)
+                foreach (IUIntCountableEnumerable<T> _array in this.AsFromType<System.Collections.Generic.IEnumerable<IUIntCountableEnumerable<T>>>())
 
                     foreach (T item in _array)
 
@@ -185,7 +185,7 @@ namespace WinCopies.Collections.Generic
 
                     action = item => _ = arrayList.Add(item);
 
-                foreach (IUIntCountableEnumerable<T> array in this)
+                foreach (IUIntCountableEnumerable<T> array in this.AsFromType<System.Collections.Generic.IEnumerable<IUIntCountableEnumerable<T>>>())
 
                     foreach (T item in array)
 
@@ -263,7 +263,7 @@ namespace WinCopies.Collections.Generic
 
                     action = item => list.Add(item);
 
-                foreach (IUIntCountableEnumerable<T> array in this)
+                foreach (IUIntCountableEnumerable<T> array in this.AsFromType<System.Collections.Generic.IEnumerable<IUIntCountableEnumerable<T>>>())
 
                     foreach (T item in array)
 
@@ -273,7 +273,6 @@ namespace WinCopies.Collections.Generic
 
         #region Overrides
         protected override void OnNodeAdded(ILinkedListNode<IUIntCountableEnumerable<T>> node) => RealCount += node.Value.Count;
-
         protected override void OnNodeRemoved(ILinkedListNode<IUIntCountableEnumerable<T>> node) => RealCount -= node.Value.Count;
 
         protected override void ClearItems()
@@ -285,5 +284,4 @@ namespace WinCopies.Collections.Generic
         #endregion
     }
 }
-
 #endif

@@ -22,6 +22,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Comparers.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\Enums.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\ResourceNotFoundException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\Array.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\Extensions.Partial\Extensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\Extensions.Partial\SubTypes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ForLoop.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ItemsChangedEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Regex.cs" />
@@ -38,7 +41,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\InvalidArgumentException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\ThrowHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\TypeArgumentException.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IBackgroundWorker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IDeepCloneable.cs" />

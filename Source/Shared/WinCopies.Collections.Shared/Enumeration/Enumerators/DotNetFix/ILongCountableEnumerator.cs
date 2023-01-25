@@ -22,11 +22,7 @@ namespace WinCopies.Collections.DotNetFix
         // Left empty.
     }
 
-    public interface ILongCountableDisposableEnumerator : ILongCountableEnumerator, WinCopies.
-#if !WinCopies3
-        Util.
-#endif
-        DotNetFix.IDisposable
+    public interface ILongCountableDisposableEnumerator : ILongCountableEnumerator, WinCopies.DotNetFix.IDisposable
     {
         // Left empty.
     }
@@ -36,11 +32,7 @@ namespace WinCopies.Collections.DotNetFix
         // Left empty.
     }
 
-    public interface IULongCountableDisposableEnumerator : IULongCountableEnumerator, WinCopies.
-#if !WinCopies3
-        Util.
-#endif
-        DotNetFix.IDisposable
+    public interface IULongCountableDisposableEnumerator : IULongCountableEnumerator, WinCopies.DotNetFix.IDisposable
     {
         // Left empty.
     }
@@ -51,12 +43,7 @@ namespace WinCopies.Collections.DotNetFix
 #if CS5
             out
 #endif
-            T> : System.Collections.Generic.IEnumerator<T>,
-#if WinCopies3
-            ILongCountableEnumerator
-#else
-            ILongCountable
-#endif
+            T> : System.Collections.Generic.IEnumerator<T>, ILongCountableEnumerator
         {
             // Left empty.
         }
@@ -65,12 +52,7 @@ namespace WinCopies.Collections.DotNetFix
 #if CS5
             out
 #endif
-             T> : ILongCountableEnumerator<T>,
-#if WinCopies3
-            ILongCountableDisposableEnumerator
-#else
-            WinCopies.Util.DotNetFix.IDisposable
-#endif
+             T> : ILongCountableEnumerator<T>, ILongCountableDisposableEnumerator
         {
             // Left empty.
         }
@@ -79,12 +61,7 @@ namespace WinCopies.Collections.DotNetFix
 #if CS5
             out
 #endif
-            T> : System.Collections.Generic.IEnumerator<T>,
-#if WinCopies3
-            IULongCountableEnumerator
-#else
-            IULongCountable
-#endif
+            T> : System.Collections.Generic.IEnumerator<T>, IULongCountableEnumerator
         {
             // Left empty.
         }
@@ -93,12 +70,7 @@ namespace WinCopies.Collections.DotNetFix
 #if CS5
             out
 #endif
-             T> : IULongCountableEnumerator<T>,
-#if WinCopies3
-            IULongCountableDisposableEnumerator
-#else
-            WinCopies.Util.DotNetFix.IDisposable
-#endif
+             T> : IULongCountableEnumerator<T>, IULongCountableDisposableEnumerator
         {
             // Left empty.
         }

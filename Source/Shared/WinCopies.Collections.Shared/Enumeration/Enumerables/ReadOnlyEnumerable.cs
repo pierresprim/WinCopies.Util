@@ -37,7 +37,7 @@ namespace WinCopies.Collections
 
             public System.Collections.Generic.IEnumerator<T> GetEnumerator() => InnerEnumerable.GetEnumerator();
 
-            System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerEnumerable).GetEnumerator();
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
     }
 }

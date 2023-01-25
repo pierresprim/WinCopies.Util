@@ -17,12 +17,8 @@
 
 using System.Windows.Input;
 
-namespace WinCopies.
-#if !WinCopies3
-Util.
-#endif
-    Commands
-{ 
+namespace WinCopies.Commands
+{
     public static class TextCommands
     {
         public static RoutedUICommand Upper { get; } = new RoutedUICommand("Upper", nameof(Upper), typeof(TextCommands), new InputGestureCollection() { new KeyGesture(Key.U, ModifierKeys.Control | ModifierKeys.Shift) });

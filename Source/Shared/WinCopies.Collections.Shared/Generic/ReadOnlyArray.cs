@@ -15,40 +15,33 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if WinCopies3 && CS7
+#if CS7
 using System.Collections;
 
 using WinCopies.Collections.DotNetFix.Generic;
+using WinCopies.Util;
 
 namespace WinCopies.Collections.Generic
 {
-    public class ReadOnlyArray<T> : ReadOnlyEnumerable<T[], T>, ICountableEnumerableInfo<T>, System.Collections.Generic.IReadOnlyList<T>
+    public class ReadOnlyArray<T> : ReadOnlyEnumerable<System.Collections.Generic.IReadOnlyList<T>, T>, ICountableEnumerableInfo<T>, System.Collections.Generic.IReadOnlyList<T>
     {
-        public int Count => InnerEnumerable.Length;
+        public int Count => InnerEnumerable.Count;
 
         public bool SupportsReversedEnumeration => true;
 
         public T this[int index] => InnerEnumerable[index];
 
-        public ReadOnlyArray(params T[] array) : base(array) { /* Left empty. */ }
+        public ReadOnlyArray(in System.Collections.Generic.IReadOnlyList<T> values) : base(values) { /* Left empty. */ }
+
+        public ReadOnlyArray(params T[] array) : this(array.AsReadOnlyList()) { /* Left empty. */ }
 
         public ICountableEnumeratorInfo<T> GetEnumerator() => new ArrayEnumerator<T>(InnerEnumerable);
-
+        System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => InnerEnumerable.GetEnumerator();
 
-        System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetEnumerator();
-
-        public ICountableEnumeratorInfo<T> GetReversedEnumerator() => new ArrayEnumerator<T>(InnerEnumerable, true);
-
-        System.Collections.Generic.IEnumerator<T>
-#if WinCopies3
-            Extensions.Generic.
-#endif
-            IEnumerable<T>.GetReversedEnumerator() => GetReversedEnumerator();
-
-#if !CS8
-        IEnumerator Enumeration.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
-#endif
+        public ICountableEnumeratorInfo<T> GetReversedEnumerator() => new ArrayEnumerator<T>(InnerEnumerable, DotNetFix.ArrayEnumerationOptions.Reverse);
+        System.Collections.Generic.IEnumerator<T> Extensions.Generic.IEnumerable<T>.GetReversedEnumerator() => GetReversedEnumerator();
+        IEnumerator Extensions.IEnumerable.GetReversedEnumerator() => GetReversedEnumerator();
     }
 }
 #endif

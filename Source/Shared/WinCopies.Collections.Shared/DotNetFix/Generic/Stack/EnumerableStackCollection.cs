@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if CS7 && WinCopies3
+#if CS7
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -24,31 +24,30 @@ namespace WinCopies.Collections.DotNetFix.Generic
 {
     public class EnumerableStackCollection<TStack, TItems> : StackCollection<TStack, TItems>, IEnumerableStack<TItems>, System.Collections.Generic.IReadOnlyCollection<TItems>, ICollection where TStack : IEnumerableStack<TItems>
     {
-        bool ICollection.IsSynchronized => ((ICollection)InnerStack).IsSynchronized;
+        protected ICollection InnerCollection => InnerList;
 
-        object ICollection.SyncRoot => ((ICollection)InnerStack).SyncRoot;
+        bool ICollection.IsSynchronized => InnerCollection.IsSynchronized;
+        object ICollection.SyncRoot => InnerCollection.SyncRoot;
 
-        int ICollection.Count => ((ICollection)InnerStack).Count;
+        int ICollection.Count => InnerCollection.Count;
 
-        int System.Collections.Generic.IReadOnlyCollection<TItems>.Count => ((IReadOnlyCollection<TItems>)InnerStack).Count;
+        int System.Collections.Generic.IReadOnlyCollection<TItems>.Count => InnerCollection.Count;
 
         public EnumerableStackCollection(in TStack stack) : base(stack) { /* Left empty. */ }
 
-        public void CopyTo(TItems[] array, int index) => InnerStack.CopyTo(array, index);
+        public void CopyTo(TItems[] array, int index) => InnerList.CopyTo(array, index);
 
-        public void CopyTo(Array array, int index) => InnerStack.CopyTo(array, index);
+        public void CopyTo(Array array, int index) => InnerList.CopyTo(array, index);
 
-        public System.Collections.Generic.IEnumerator<TItems> GetEnumerator() => InnerStack.GetEnumerator();
+        public System.Collections.Generic.IEnumerator<TItems> GetEnumerator() => InnerList.GetEnumerator();
+        System.Collections.IEnumerator IEnumerable.GetEnumerator() => InnerList.GetEnumerator();
 
-        System.Collections.IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)InnerStack).GetEnumerator();
-
-        public TItems[] ToArray() => InnerStack.ToArray();
+        public TItems[] ToArray() => InnerList.ToArray();
     }
 
     public class EnumerableStackCollection<T> : EnumerableStackCollection<IEnumerableStack<T>, T>
     {
         public EnumerableStackCollection(in IEnumerableStack<T> stack) : base(stack) { /* Left empty. */ }
-
         public EnumerableStackCollection() : this(new EnumerableStack<T>()) { /* Left empty. */ }
     }
 }

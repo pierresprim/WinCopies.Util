@@ -16,7 +16,6 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 #if WinCopies3 && CS7
-
 using System.Collections.Generic;
 
 using WinCopies.Collections.DotNetFix.Generic;
@@ -31,7 +30,7 @@ namespace WinCopies.Collections.Abstraction.Generic.Abstract
 
     public class List<T> : IList<T>
     {
-#region Properties
+        #region Properties
         protected System.Collections.Generic.IList<T> InnerList { get; }
 
         public int Count => InnerList.Count;
@@ -39,11 +38,11 @@ namespace WinCopies.Collections.Abstraction.Generic.Abstract
         public T this[int index] { get => InnerList[index]; set => InnerList[index] = value; }
 
         public bool IsReadOnly => InnerList.IsReadOnly;
-#endregion
+        #endregion
 
         public List(System.Collections.Generic.IList<T> innerList) => InnerList = innerList;
-
-#region Methods
+        
+        #region Methods
         public void Add(T item) => InnerList.Add(item);
 
         public bool Contains(T item) => InnerList.Contains(item);
@@ -65,8 +64,7 @@ namespace WinCopies.Collections.Abstraction.Generic.Abstract
         public bool Remove(T item) => InnerList.Remove(item);
 
         public void Clear() => InnerList.Clear();
-#endregion
+        #endregion
     }
 }
-
 #endif

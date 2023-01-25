@@ -21,12 +21,7 @@ using static WinCopies.Collections.ThrowHelper;
 
 namespace WinCopies.Collections.DotNetFix
 {
-    public abstract class SimpleLinkedListBase :
-#if WinCopies3
-            ISimpleLinkedListBase2
-#else
-            ISimpleLinkedListBase
-#endif
+    public abstract class SimpleLinkedListBase : ISimpleLinkedListBase2
     {
         private object _syncRoot;
 
@@ -39,31 +34,19 @@ namespace WinCopies.Collections.DotNetFix
 
         public bool HasItems => Count != 0;
 
-        object
-#if WinCopies3
-            ISimpleLinkedListBase2
-#else
-            ISimpleLinkedListBase
-#endif
-            .SyncRoot => _syncRoot
+        object ISimpleLinkedListBase2.SyncRoot => _syncRoot
 #if CS8
-                ??=
+            ??=
 #else
-                ?? (_syncRoot =
+            ?? (_syncRoot =
 #endif
-                Interlocked.CompareExchange(ref _syncRoot, new object(), null)
+            Interlocked.CompareExchange(ref _syncRoot, new object(), null)
 #if !CS8
-                )
+            )
 #endif
-                ;
+            ;
 
-        bool
-#if WinCopies3
-            ISimpleLinkedListBase2
-#else
-            ISimpleLinkedListBase
-#endif
-            .IsSynchronized => false;
+        bool ISimpleLinkedListBase2.IsSynchronized => false;
 
         public void Clear()
         {
@@ -74,11 +57,63 @@ namespace WinCopies.Collections.DotNetFix
             ClearItems();
         }
 
-#if !WinCopies3
-public
-#else
-        protected
-#endif
-            abstract void ClearItems();
+        protected abstract void ClearItems();
+    }
+
+    public abstract class SimpleLinkedListBase<T> : SimpleLinkedListBase where T : ISimpleLinkedListNode<T>
+    {
+        private uint _count = 0;
+
+        /// <summary>
+        /// Gets the number of items in the current list.
+        /// </summary>
+        public sealed override uint Count => _count;
+
+        public sealed override bool IsReadOnly => false;
+
+        protected internal T FirstItem { get; protected set; }
+
+        protected abstract void OnItemAdded();
+
+        /// <summary>
+        /// When overridden in a derived class, removes the first or last item from the current list, depending on the linked list type (FIFO/LIFO).
+        /// </summary>
+        protected abstract T RemoveItem();
+
+        protected void Increment(in bool actionAfter)
+        {
+            _count++;
+
+            if (actionAfter)
+
+                OnItemAdded();
+        }
+
+        protected void Decrement()
+        {
+            FirstItem = RemoveItem();
+
+            _count--;
+        }
+
+        protected sealed override void ClearItems()
+        {
+            T node, temp;
+
+            node = FirstItem;
+
+            while (node != null)
+            {
+                temp = node.Next;
+
+                node.Clear();
+
+                node = temp;
+            }
+
+            FirstItem = default;
+
+            _count = 0;
+        }
     }
 }

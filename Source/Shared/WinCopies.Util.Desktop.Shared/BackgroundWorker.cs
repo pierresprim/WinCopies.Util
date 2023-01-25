@@ -20,15 +20,12 @@ using System;
 using System.ComponentModel;
 using System.Threading;
 
+using WinCopies.Desktop;
+using WinCopies.Util;
+
 using static WinCopies.Util.Desktop.ThrowHelper;
 
-#if WinCopies3
-using WinCopies.Desktop;
-
 namespace WinCopies
-#else
-namespace WinCopies.Util
-#endif
 {
     /// <summary>
     /// Represents a BackgroundWorker that runs in a MTA thread by default and automatically stops on background when reports progress.
@@ -55,50 +52,46 @@ namespace WinCopies.Util
 
 
 
-        private Thread _Thread = null;
-
-        private readonly ApartmentState _ApartmentState = ApartmentState.MTA;
-
-        private readonly SynchronizationContext _SyncContext;
-
-        private readonly ManualResetEvent _event = new ManualResetEvent(true);
+        private Thread
+#if CS8
+            ?
+#endif
+            _thread = null;
+        private byte _bools;
+        private readonly ApartmentState _apartmentState = ApartmentState.MTA;
+        private readonly SynchronizationContext _syncContext;
+        private readonly ManualResetEvent _event = new
+#if !CS9
+            ManualResetEvent
+#endif
+            (true);
 
 
 
         /// <summary>
         /// Gets a value that indicates whether the working has been cancelled.
         /// </summary>
-        public bool IsCancelled { get; private set; } = false;
+        public bool IsCancelled { get => GetBit(0); private set => SetBit(0, value); }
 
         /// <summary>
         /// Gets a value that indicates whether the thread must try to cancel before finished the background tasks.
         /// </summary>
-        public bool CancellationPending { get; private set; } = false;
+        public bool CancellationPending { get => GetBit(1); private set => SetBit(1, value); }
 
-        ///// <para>FR: Obtient une valeur indiquant si le thread est occupé.</para>
         /// <summary>
         /// Gets a value that indicates whether the thread is busy.
         /// </summary>
-        public bool IsBusy { get; private set; } = false;
-
-        private readonly bool workerReportsProgress = false;
+        public bool IsBusy { get => GetBit(2); private set => SetBit(2, value); }
 
         /// <summary>
         /// Gets or sets a value that indicates whether the thread can notify of the progress.
         /// </summary>
-        public bool WorkerReportsProgress { get => workerReportsProgress; set => this.SetBackgroundWorkerProperty(nameof(WorkerReportsProgress), nameof(workerReportsProgress), value, typeof(BackgroundWorker), true); }
-
-        private readonly bool workerSupportsCancellation = false;
+        public bool WorkerReportsProgress { get => GetBit(3); set => SetBitSafe(3, value); }
 
         /// <summary>
         /// Gets or sets a value that indicates whether the thread supports the cancellation.
         /// </summary>
-        public bool WorkerSupportsCancellation
-        {
-            get => workerSupportsCancellation;
-
-            set => this.SetBackgroundWorkerProperty(nameof(WorkerReportsProgress), nameof(workerSupportsCancellation), value, typeof(BackgroundWorker), true);
-        }
+        public bool WorkerSupportsCancellation { get => GetBit(4); set => SetBitSafe(4, value); }
 
         /// <summary>
         /// Gets the current progress of the current <see cref="BackgroundWorker"/> in percent.
@@ -110,20 +103,20 @@ namespace WinCopies.Util
         /// </summary>
         public ApartmentState ApartmentState
         {
-            get => _ApartmentState;
+            get => _apartmentState;
 
             set
             {
-                if (_ApartmentState == value) return;
+                if (_apartmentState == value) return;
 
-                _ = value == ApartmentState.Unknown ? throw ThrowHelper.GetArgumentException(nameof(value)) : this.SetBackgroundWorkerProperty(nameof(ApartmentState), nameof(_ApartmentState), value, typeof(BackgroundWorker), true);
+                _ = value == ApartmentState.Unknown ? throw ThrowHelper.GetArgumentException(nameof(value)) : this.SetBackgroundWorkerProperty(nameof(ApartmentState), nameof(_apartmentState), value, typeof(BackgroundWorker), true);
             }
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BackgroundWorker"/> class.
         /// </summary>
-        public BackgroundWorker() => _SyncContext = SynchronizationContext.Current ?? new SynchronizationContext();
+        public BackgroundWorker() => _syncContext = SynchronizationContext.Current ?? new SynchronizationContext();
         // {
 
         // Reset()
@@ -142,7 +135,7 @@ namespace WinCopies.Util
         /// </param>
         public BackgroundWorker(ApartmentState apartmentState)
         {
-            _ApartmentState = apartmentState;
+            _apartmentState = apartmentState;
 
             // Reset()
 
@@ -150,7 +143,16 @@ namespace WinCopies.Util
 
             // _ReportProgress = True
 
-            _SyncContext = SynchronizationContext.Current ?? new SynchronizationContext();
+            _syncContext = SynchronizationContext.Current ?? new SynchronizationContext();
+        }
+
+        private bool GetBit(in byte pos) => _bools.GetBit(pos);
+        private void SetBit(in byte pos, in bool value) => UtilHelpers.SetBit(ref _bools, pos, value);
+        private void SetBitSafe(in byte pos, bool value)
+        {
+            if (this.SetBackgroundWorkerProperty(ref value, value, true))
+
+                SetBit(pos, value);
         }
 
         /// <summary>
@@ -166,8 +168,7 @@ namespace WinCopies.Util
 
                 Progress = 0;
 
-            _Thread = null;
-
+            _thread = null;
             IsBusy = false;
         }
 
@@ -184,11 +185,7 @@ namespace WinCopies.Util
         /// </param>
         public void RunWorkerAsync(object argument)
         {
-            if (IsBusy)
-
-                ThrowBackgroundWorkerIsBusyException();
-
-            Reset(false);
+            Reset(IsBusy ? throw GetBackgroundWorkerIsBusyException() : false);
 
             IsBusy = true;
 
@@ -196,11 +193,9 @@ namespace WinCopies.Util
 
             //Exception error = null;
 
-            _Thread = new Thread(() => ThreadStart(new DoWorkEventArgs(argument))) { IsBackground = true };
-
-            _Thread.SetApartmentState(_ApartmentState);
-
-            _Thread.Start();
+            _thread = new Thread(() => ThreadStart(new DoWorkEventArgs(argument))) { IsBackground = true };
+            _thread.SetApartmentState(_apartmentState);
+            _thread.Start();
         }
 
         /// <summary>
@@ -234,7 +229,7 @@ namespace WinCopies.Util
 
             Reset(isCancelled);
 
-            _SyncContext.Send(ThreadCompleted, new ValueTuple<object, Exception, bool>(e.Result, error, isCancelled));
+            _syncContext.Send(ThreadCompleted, new ValueTuple<object, Exception, bool>(e.Result, error, isCancelled));
         }
 
         /// <summary>
@@ -279,21 +274,13 @@ namespace WinCopies.Util
 
         private void Cancel(bool abort, object stateInfo)
         {
-            if (!WorkerSupportsCancellation)
-
-                ThrowBackgroundWorkerDoesNotSupportCancellationException();
-
-
-
-            if (_Thread == null || !IsBusy)
+            if (WorkerSupportsCancellation ? _thread == null || !IsBusy : throw GetBackgroundWorkerDoesNotSupportCancellationException())
 
                 return;
 
-
-
             if (abort)
 
-                _Thread.Abort(stateInfo);
+                _thread.Abort(stateInfo);
 
             //ThreadCompleted(new ValueTuple<object, Exception, bool>(null, null, true));
 
@@ -310,26 +297,6 @@ namespace WinCopies.Util
         /// </param>
         private void OnProgressChanged(object args) => ProgressChanged?.Invoke(this, args as ProgressChangedEventArgs);
 
-#if !WinCopies3
-        /// <summary>
-        /// Notifies of the progress.
-        /// </summary>
-        /// <param name="percentProgress">
-        /// Progress percentage.
-        /// </param>
-        public void ReportProgress(int percentProgress) => ReportProgress(percentProgress, null);
-
-        /// <summary>
-        /// Notifies of the progress.
-        /// </summary>
-        /// <param name="percentProgress">
-        /// Progress percentage.
-        /// </param>
-        /// <param name="userState">
-        /// User object.
-        /// </param>
-        public void ReportProgress(int percentProgress, object userState)
-#else
         /// <summary>
         /// Notifies of the progress.
         /// </summary>
@@ -348,30 +315,10 @@ namespace WinCopies.Util
         /// User object.
         /// </param>
         public void ReportProgress(int progressPercentage, object userState)
-#endif
-
         {
-            if (!WorkerReportsProgress)
+            Progress = WorkerReportsProgress ? progressPercentage : throw GetBackgroundWorkerDoesNotSupportProgressionNotificationException();
 
-                ThrowBackgroundWorkerDoesNotSupportProgressionNotificationException();
-
-            Progress =
-
-#if !WinCopies3
-
-                percentProgress
-
-#else
-
-progressPercentage
-
-#endif
-
-                ;
-
-            var e = new ProgressChangedEventArgs(Progress, userState);
-
-            _SyncContext.Send(OnProgressChanged, e);
+            _syncContext.Send(OnProgressChanged, new ProgressChangedEventArgs(Progress, userState));
         }
 
         /// <summary>
@@ -380,7 +327,6 @@ progressPercentage
         public void Suspend()
         {
             _ = _event.Reset();
-
             _ = _event.WaitOne();
         }
 
@@ -393,14 +339,6 @@ progressPercentage
         /// Gets a value that indicates whether the current <see cref="BackgroundWorker"/> is disposed.
         /// </summary>
         public bool IsDisposed { get; private set; }
-
-#if !WinCopies3
-        /// <summary>
-        /// Releases resources used by the <see cref="BackgroundWorker"/>.
-        /// </summary>
-        /// <exception cref="InvalidOperationException">The <see cref="BackgroundWorker"/> is busy and does not support cancellation.</exception>
-        public new void Dispose() => base.Dispose();
-#endif
 
         /// <summary>
         /// Releases the unmanaged resources used by the <see cref="BackgroundWorker"/> and optionally releases the managed resources.
@@ -533,11 +471,7 @@ progressPercentage
 
             public void PauseAsync()
             {
-                if (!_workerSupportsPausing)
-
-                    throw GetBackgroundWorkerDoesNotSupportPausingException();
-
-                if (IsBusy)
+                if (_workerSupportsPausing ? IsBusy : throw GetBackgroundWorkerDoesNotSupportPausingException())
 
                     PausePending = true;
             }

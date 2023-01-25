@@ -15,29 +15,29 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if WinCopies3
 using System;
 
 using WinCopies.Collections.DotNetFix;
+using WinCopies.Collections.Generic;
 
-namespace WinCopies.Collections.Generic
+namespace WinCopies.Collections
 {
-    public static partial class EnumerableHelper<T>
+    public static partial class EnumerableHelper
     {
         internal partial class LinkedList
         {
-            internal class Enumerator : Enumerator<ILinkedListNode>, IEnumeratorInfo2<ILinkedListNode>
+            internal class Enumerator<TInterface, TClass> : Enumerator<TInterface>, IEnumeratorInfo2<TInterface> where TClass : class, TInterface, ILinkedListNodeBase<TClass>
             {
-                private Node _current;
-                private Func<Node> _reset;
-                private Func<Node> _moveNext;
+                private TClass _current;
+                private Func<TClass> _reset;
+                private Func<TClass> _moveNext;
                 private Action __moveNext;
 
-                protected override ILinkedListNode CurrentOverride => _current;
+                protected override TInterface CurrentOverride => _current;
 
                 public override bool? IsResetSupported => true;
 
-                public Enumerator(Enumerable enumerable, EnumerationDirection enumerationDirection)
+                public Enumerator(ILinkedListBase<TClass> enumerable, in EnumerationDirection enumerationDirection)
                 {
                     switch (enumerationDirection)
                     {
@@ -64,11 +64,11 @@ namespace WinCopies.Collections.Generic
                 }
 
                 private void ResetMoveNext() => __moveNext = () =>
-                    {
-                        _current = _reset();
+                {
+                    _current = _reset();
 
-                        __moveNext = () => _current = _moveNext();
-                    };
+                    __moveNext = () => _current = _moveNext();
+                };
 
                 protected override bool MoveNextOverride()
                 {
@@ -90,7 +90,19 @@ namespace WinCopies.Collections.Generic
                     __moveNext = null;
                 }
             }
+
+            internal static Enumerator<ILinkedListNode, Node> GetNodeEnumerator(in Enumerable enumerable, in EnumerationDirection enumerationDirection) => new Enumerator<ILinkedListNode, Node>(enumerable, enumerationDirection);
+        }
+    }
+
+    namespace Generic
+    {
+        public static partial class EnumerableHelper<T>
+        {
+            internal partial class LinkedList
+            {
+                internal static EnumerableHelper.LinkedList.Enumerator<ILinkedListNode, Node> GetNodeEnumerator(in Enumerable enumerable, in EnumerationDirection enumerationDirection) => new EnumerableHelper.LinkedList.Enumerator<ILinkedListNode, Node>(enumerable, enumerationDirection);
+            }
         }
     }
 }
-#endif

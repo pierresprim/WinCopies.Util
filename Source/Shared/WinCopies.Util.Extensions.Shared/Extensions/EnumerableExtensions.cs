@@ -21,34 +21,21 @@ using System.Collections;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
+using WinCopies.Collections;
 using WinCopies.Collections.Generic;
 using WinCopies.Linq;
-
-#if WinCopies3
-using WinCopies.Collections;
 using WinCopies.Util;
-#endif
 
-using static WinCopies.
-#if WinCopies3
-    UtilHelpers;
 using static WinCopies.ThrowHelper;
+using static WinCopies.UtilHelpers;
 
 using static WinCopies.Consts
 #if WinCopies4
     .Common
 #endif
     ;
-#else
-    Util.Util;
-
-using WinCopies.Collections;
-#endif
 
 namespace WinCopies
-#if !WinCopies3
-.Util
-#endif
 {
     public static class EnumerableExtensions
     {
@@ -112,19 +99,7 @@ namespace WinCopies
 #endif
            <T> value, EqualityComparison<T> comparison, int? lowerBound, int? upperBound)
         {
-            if (lowerBound < 0)
-
-                throw new ArgumentOutOfRangeException(nameof(lowerBound));
-
-            if (upperBound < 0)
-
-                throw new ArgumentOutOfRangeException(nameof(upperBound));
-
-            if (lowerBound > upperBound)
-
-                throw new ArgumentException($"{nameof(lowerBound)} must be less than or equal to {nameof(upperBound)}.");
-
-            if (list.Count == 0 || value.Count == 0 || (upperBound.HasValue && upperBound.Value == 0))
+            if (lowerBound < 0 ? throw new ArgumentOutOfRangeException(nameof(lowerBound)) : upperBound < 0 ? throw new ArgumentOutOfRangeException(nameof(upperBound)) : lowerBound > upperBound ? throw new ArgumentException($"{nameof(lowerBound)} must be less than or equal to {nameof(upperBound)}.") : list.Count == 0 || value.Count == 0 || (upperBound.HasValue && upperBound.Value == 0))
 
                 return false;
 
@@ -262,7 +237,6 @@ namespace WinCopies
             return postLoopResultDelegate();
         }
 
-#if WinCopies3
         public static bool Validate<T>(this
 #if CS7
             System.Collections.Generic.IReadOnlyList
@@ -325,7 +299,6 @@ namespace WinCopies
 
             else return false; // throw new InvalidArgumentException($"{nameof(length)} must be less than or equal to {nameof(value)} and the total length of {nameof(startsWith)}, {nameof(skipLength)}, and {nameof(length)} must be less than or equal to the length of {nameof(list)}.");
         }
-#endif
     }
 }
 #endif

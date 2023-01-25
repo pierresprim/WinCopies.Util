@@ -19,80 +19,83 @@ using static WinCopies.Collections.ThrowHelper;
 
 namespace WinCopies.Collections.DotNetFix
 {
-
-    public abstract class SimpleLinkedList : SimpleLinkedListBase, ISimpleLinkedList
+    public abstract class SimpleLinkedList<T> : SimpleLinkedListBase<T>, ISimpleLinkedListCommon where T : ISimpleLinkedListNode<T>
     {
-        private uint _count = 0;
-
-        public sealed override bool IsReadOnly => false;
-
-        protected internal SimpleLinkedListNode FirstItem { get; private set; }
-
-        /// <summary>
-        /// Gets the number of items in the current list.
-        /// </summary>
-        public sealed override uint Count => _count;
-
-        /// <summary>
-        /// Adds a given item to the current list.
-        /// </summary>
-        /// <param name="value">The item to add.</param>
-        protected void Add(in object value)
+        private object OnRemove()
         {
-            if (IsReadOnly)
+            T firstItem = FirstItem;
 
-                throw GetReadOnlyListOrCollectionException();
+            object result = firstItem.Value;
 
-            FirstItem = AddItem(value, out bool actionAfter);
+            firstItem.Clear();
 
-            _count++;
+            Decrement();
 
-            if (actionAfter)
-
-                OnItemAdded();
+            return result;
         }
+
+        protected object PeekItem() => FirstItem.Value;
 
         /// <summary>
         /// When overridden in a derived class, adds a given item to the current list.
         /// </summary>
         /// <param name="value">The item to add.</param>
-        protected abstract SimpleLinkedListNode AddItem(object value, out bool actionAfter);
+        protected abstract T AddItem(object
+#if CS8
+            ?
+#endif
+            value, out bool actionAfter);
 
-        protected abstract void OnItemAdded();
+        public object Peek() => HasItems ? PeekItem() : throw GetEmptyListOrCollectionException();
 
-        private object OnRemove()
+        public bool TryPeek(out object result)
         {
-            object result = FirstItem.Value;
+            if (HasItems)
+            {
+                result = PeekItem();
 
-            FirstItem.Clear();
+                return true;
+            }
 
-            FirstItem = RemoveItem();
+            result = null;
 
-            _count--;
+            return false;
+        }
 
-            return result;
+        /// <summary>
+        /// Adds a given item to the current list.
+        /// </summary>
+        /// <param name="value">The item to add.</param>
+        public void Add(object
+#if CS8
+            ?
+#endif
+            value)
+        {
+            FirstItem = IsReadOnly ? throw GetReadOnlyListOrCollectionException() : AddItem(value, out bool actionAfter);
+
+            Increment(actionAfter);
         }
 
         /// <summary>
         /// Removes the first or last item from the current list, depending on the linked list type (FIFO/LIFO).
         /// </summary>
-        protected object Remove()
-        {
-            if (IsReadOnly)
-
-                throw GetReadOnlyListOrCollectionException();
-
-#if !WinCopies3
-            ThrowIfEmpty
-#else
-            ThrowIfEmptyListOrCollection
+        public object
+#if CS8
+            ?
 #endif
-                (this);
+            Remove()
+        {
+            ThrowIfEmptyListOrCollection(IsReadOnly ? throw GetReadOnlyListOrCollectionException() : this);
 
             return OnRemove();
         }
 
-        protected bool TryRemove(out object result)
+        public bool TryRemove(out object
+#if CS8
+            ?
+#endif
+            result)
         {
             if (IsReadOnly || Count == 0)
             {
@@ -105,53 +108,10 @@ namespace WinCopies.Collections.DotNetFix
 
             return true;
         }
+    }
 
-        /// <summary>
-        /// When overridden in a derived class, removes the first or last item from the current list, depending on the linked list type (FIFO/LIFO).
-        /// </summary>
-        protected abstract SimpleLinkedListNode RemoveItem();
-
-#if !WinCopies3
-        public
-#else
-            protected
-#endif
-            sealed override void ClearItems()
-        {
-            SimpleLinkedListNode node, temp;
-
-            node = FirstItem;
-
-            while (node != null)
-            {
-                temp = node.Next;
-
-                node.Clear();
-
-                node = temp;
-            }
-
-            FirstItem = null;
-
-            _count = 0;
-        }
-
-        protected object _Peek() => FirstItem.Value;
-
-        public object Peek() => _count > 0 ? _Peek() : throw GetEmptyListOrCollectionException();
-
-        public bool TryPeek(out object result)
-        {
-            if (_count > 0)
-            {
-                result = _Peek();
-
-                return true;
-            }
-
-            result = null;
-
-            return false;
-        }
+    public abstract class SimpleLinkedList : SimpleLinkedList<SimpleLinkedListNode>, ISimpleLinkedList
+    {
+        // Left empty.
     }
 }

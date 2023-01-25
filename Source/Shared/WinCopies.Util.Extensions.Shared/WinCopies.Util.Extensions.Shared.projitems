@@ -15,6 +15,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\If\If.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\If\ThrowHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EventDelegate.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\Array.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\EnumerableExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\StringExtensions.cs" />

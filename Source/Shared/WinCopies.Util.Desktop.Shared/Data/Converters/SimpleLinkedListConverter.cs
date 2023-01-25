@@ -22,48 +22,22 @@ using System.Windows.Data;
 using WinCopies.Collections.DotNetFix;
 using WinCopies.Collections.DotNetFix.Generic;
 
-#if WinCopies3
 using static WinCopies.Util.Data.ConverterHelper;
-#endif
 
 namespace WinCopies.Util.Data
 {
     [ValueConversion(typeof(ISimpleLinkedList), typeof(object))]
     public class SimpleLinkedListConverter : AlwaysConvertibleOneWayConverter<ISimpleLinkedList, object, object>
     {
-        public override
-#if WinCopies3
-        IReadOnlyConversionOptions
-#else
-        ConversionOptions
-#endif
-            ConvertOptions => ParameterCanBeNull;
+        public override IReadOnlyConversionOptions ConvertOptions => ParameterCanBeNull;
 
         protected override object Convert(ISimpleLinkedList value, object parameter, CultureInfo culture) => value.Peek();
-
-#if !WinCopies3
-        public override ConversionOptions ConvertBackOptions => throw new NotSupportedException();
-
-        protected override ISimpleLinkedList ConvertBack(object value, object parameter, CultureInfo culture) => throw new NotSupportedException();
-#endif
     }
 
     public class SimpleLinkedListConverter<T> : AlwaysConvertibleOneWayConverter<ISimpleLinkedList<T>, object, T>
     {
-        public override
-#if WinCopies3
-        IReadOnlyConversionOptions
-#else
-        ConversionOptions
-#endif
-            ConvertOptions => ParameterCanBeNull;
+        public override IReadOnlyConversionOptions ConvertOptions => ParameterCanBeNull;
 
         protected override T Convert(ISimpleLinkedList<T> value, object parameter, CultureInfo culture) => value.Peek();
-
-#if !WinCopies3
-        public override ConversionOptions ConvertBackOptions => throw new NotSupportedException();
-
-        protected override ISimpleLinkedList<T> ConvertBack(T value, object parameter, CultureInfo culture) => throw new NotSupportedException();
-#endif
     }
 }
