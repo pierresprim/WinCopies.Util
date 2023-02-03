@@ -47,7 +47,7 @@ namespace WinCopies.Collections.Generic
 
             public int Count => InnerDictionary.InnerKeys.Length;
 
-            public IEnumerable<TKey> Keys => InnerDictionary.InnerKeys.AsReadOnlyEnumerable();
+            public IEnumerable<TKey> Keys => InnerDictionary.InnerKeys.ToEnumerable();
 
             public IEnumerable<TValue> Values => GetValueEnumerable();
 

@@ -34,7 +34,7 @@ namespace WinCopies.Collections
         public interface IMultiTypeEnumerable<T, U> : System.Collections.Generic.IEnumerable<T>, IAsEnumerable<U> where T : U
         {
 #if CS8
-            System.Collections.Generic.IEnumerable<U> IAsEnumerable<U>.AsEnumerable() => this.As<T, U>();
+            System.Collections.Generic.IEnumerable<U> IAsEnumerable<U>.AsEnumerable() => this.ToEnumerable<T, U>();
 #else
             // Left empty.
 #endif

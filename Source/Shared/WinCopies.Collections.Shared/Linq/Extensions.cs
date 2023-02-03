@@ -31,6 +31,40 @@ namespace WinCopies.Linq
 {
     public static class Extensions
     {
+        public static int GetIndexOf<T>(this System.Collections.Generic.IEnumerable<T
+#if CS9
+            ?
+#endif
+            > enumerable, Predicate<T
+#if CS9
+            ?
+#endif
+            > predicate)
+        {
+            int i = -1;
+
+            foreach (T
+#if CS9
+                ?
+#endif
+                item in enumerable)
+            {
+                i++;
+
+                if (predicate(item))
+
+                    return i;
+            }
+
+            return -1;
+        }
+
+        public static int GetIndexOf<T>(this System.Collections.Generic.IEnumerable<T> enumerable, T value) => enumerable.GetIndexOf(value == null ?
+#if !CS9
+            (Predicate<T>)
+#endif
+            Delegates.EqualsNull<T> : item => value.Equals(item));
+
         public static bool None<T>(this System.Collections.Generic.IEnumerable<T> enumerable, Func<T, bool> func)
         {
             foreach (T value in enumerable)
@@ -222,7 +256,7 @@ namespace WinCopies.Linq
 
             return null;
         }
-
+#if !WinCopies4
         public static IEnumerable<T> AsReadOnlyEnumerable<T>(this IEnumerable<T> enumerable)
         {
             foreach (T
@@ -244,7 +278,7 @@ namespace WinCopies.Linq
 
                 yield return item;
         }
-
+#endif
         public static bool Any(this IEnumerable enumerable, Func<object, bool> func)
         {
             ThrowIfNull(enumerable, nameof(enumerable));
