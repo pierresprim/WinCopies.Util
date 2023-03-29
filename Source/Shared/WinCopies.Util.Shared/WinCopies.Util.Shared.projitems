@@ -46,8 +46,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Math.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\ObjectDisposingException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Path.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SelectionChangedEventArgs.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SingleInstance.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StringComparer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SucceededEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ValueTuple.cs" />
