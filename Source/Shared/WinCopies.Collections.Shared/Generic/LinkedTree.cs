@@ -529,7 +529,7 @@ namespace WinCopies.Collections.Generic
         }
 
         public void CopyTo(T[] array, int arrayIndex) => this.CopyTo(array, arrayIndex, Count);
-        public void CopyTo(Array array, int index) => this.CopyTo(array, index, Count);
+        public void CopyTo(System.Array array, int index) => this.CopyTo(array, index, Count);
 
 
 

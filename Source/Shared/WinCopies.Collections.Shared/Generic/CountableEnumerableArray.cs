@@ -16,7 +16,6 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using System;
-using System.Collections;
 
 using WinCopies.Collections.DotNetFix;
 using WinCopies.Collections.DotNetFix.Generic;
@@ -381,22 +380,51 @@ namespace WinCopies.Collections
 
     namespace Generic
     {
-        public class CountableEnumerableArray<T> : Extensions.Generic.IReadOnlyList<T>
+        public class Indexable<TArray, TItems> : System.Collections.Generic.IReadOnlyList<TItems>
+#if CS8
+            , WinCopies.Collections.DotNetFix.Generic.IEnumerable<TItems>
+#endif
+            where TArray : IIndexableR<TItems>, ICountable
         {
-            protected T[] Array { get; }
+            protected TArray Array { get; }
 
-            public int Count => Array.Length;
+            public int Count => Array.Count;
 
-            public T this[int index] => Array[index];
+            public TItems this[int index] => Array[index];
+
+            public Indexable(in TArray array) => Array = array
+#if CS9
+                ??
+#else
+                == null ?
+#endif
+                throw new ArgumentNullException(nameof(array))
+#if !CS9
+                : array
+#endif
+                ;
+
+            public System.Collections.Generic.IEnumerator<TItems> GetEnumerator() => new DotNetFix.Generic.ArrayEnumerator<TItems>(this);
+#if !CS8
+            IEnumerator SystemIEnumerable.GetEnumerator() => GetEnumerator();
+#endif
+        }
+        public class ReadOnlyCountableEnumerableArray<TArray, TItems> : Extensions.Generic.IReadOnlyList<TItems> where TArray : System.Collections.Generic.IReadOnlyList<TItems>
+        {
+            protected TArray Array { get; }
+
+            public int Count => Array.Count;
+
+            public TItems this[int index] => Array[index];
 #if !CS8
             object IIndexableR.this[int index] => this[index];
 #if !CS7
             object IReadOnlyList.this[int index] => this[index];
 #endif
 #endif
-            public CountableEnumerableArray(in T[] array) => Array = array;
+            public ReadOnlyCountableEnumerableArray(in TArray array) => Array = array;
 
-            public ICountableEnumeratorInfo<T> GetEnumerator() => new DotNetFix.Generic.ArrayEnumerator<T>(
+            public ICountableEnumeratorInfo<TItems> GetEnumerator() => new DotNetFix.Generic.ArrayEnumerator<TItems>(
 #if !CS7
                 this
 #else
@@ -404,21 +432,45 @@ namespace WinCopies.Collections
 #endif
                 );
 
-            ICountableEnumerator<T> Extensions.Generic.IReadOnlyList<T>.GetEnumerator() => GetEnumerator();
+            ICountableEnumerator<TItems> Extensions.Generic.IReadOnlyList<TItems>.GetEnumerator() => GetEnumerator();
             IEnumerator SystemIEnumerable.GetEnumerator() => GetEnumerator();
 #if !CS8
-            System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetEnumerator();
-            ICountableEnumerator<T> Enumeration.IEnumerable<ICountableEnumerator<T>>.GetEnumerator() => GetEnumerator();
+            System.Collections.Generic.IEnumerator<TItems> System.Collections.Generic.IEnumerable<TItems>.GetEnumerator() => GetEnumerator();
+            ICountableEnumerator<TItems> Enumeration.IEnumerable<ICountableEnumerator<TItems>>.GetEnumerator() => GetEnumerator();
             ICountableEnumerator Enumeration.IEnumerable<ICountableEnumerator>.GetEnumerator() => GetEnumerator();
 #endif
+        }
+        public class CountableEnumerableArray<TArray, TItems> : ReadOnlyCountableEnumerableArray<TArray, TItems>, IIndexableW<TItems> where TArray : System.Collections.Generic.IReadOnlyList<TItems>, IIndexableW<TItems>
+        {
+            public new TItems this[int index] { set => Array.AsFromType<IIndexableW<TItems>>()[index] = value; }
+#if !CS8
+            object IIndexableW.this[int index] { set => this[index] = (TItems)value; }
+#endif
+            public CountableEnumerableArray(in TArray array) : base(array) { }
+        }
+        public class ReadOnlyCountableEnumerableArray<T> : ReadOnlyCountableEnumerableArray<T[], T>
+        {
+            public ReadOnlyCountableEnumerableArray(in T[] array) : base(array) { /* Left empty. */ }
+        }
+        public class CountableEnumerableArray<T> : ReadOnlyCountableEnumerableArray<T[], T>, IIndexableW<T>
+        {
+            public new T this[int index] { set => Array[index] = value; }
+#if !CS8
+            object IIndexableW.this[int index] { set => this[index] = (T)value; }
+#endif
+            public CountableEnumerableArray(in T[] array) : base(array) { /* Left empty. */ }
+        }
+        public class CountableEnumerableList<T> : ReadOnlyCountableEnumerableArray<System.Collections.Generic.IReadOnlyList<T>, T>
+        {
+            public CountableEnumerableList(in System.Collections.Generic.IReadOnlyList<T> array) : base(array) { /* Left empty. */ }
         }
 
         public class UIntCountableEnumerableArray<T> : DotNetFix.Generic.IUIntCountableEnumerable<T>
         {
-            private readonly CountableEnumerableArray<T> _array;
+            private readonly CountableEnumerableList<T> _array;
 
-            public UIntCountableEnumerableArray(in T[] array) : this(new CountableEnumerableArray<T>(array)) { /* Left empty. */ }
-            public UIntCountableEnumerableArray(in CountableEnumerableArray<T> array) => _array = array;
+            public UIntCountableEnumerableArray(in System.Collections.Generic.IReadOnlyList<T> array) : this(new CountableEnumerableList<T>(array)) { /* Left empty. */ }
+            public UIntCountableEnumerableArray(in CountableEnumerableList<T> array) => _array = array;
 
             public uint Count => (uint)_array.Count;
 

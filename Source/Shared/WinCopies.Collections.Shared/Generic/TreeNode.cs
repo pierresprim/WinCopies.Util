@@ -491,7 +491,7 @@ namespace WinCopies.Collections
 
         }
 
-        void ICollection.CopyTo(Array array, int arrayIndex) => throw new NotImplementedException("Currently not implemented.");
+        void ICollection.CopyTo(System.Array array, int arrayIndex) => throw new NotImplementedException("Currently not implemented.");
 
         //{
 

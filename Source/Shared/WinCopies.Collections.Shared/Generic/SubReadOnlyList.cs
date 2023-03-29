@@ -18,6 +18,7 @@
 #if CS7
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
@@ -126,23 +127,15 @@ namespace WinCopies.Collections.Generic
             (this, DotNetFix.ArrayEnumerationOptions.Reverse);
     }
 
-    public abstract class ArrayArray<T, U> : IULongCountableEnumerable<T> where U : System.Collections.Generic.IReadOnlyList<T>
+    public abstract class ArrayArrayBase<T, U, V> : IULongCountableEnumerable<T> where U : System.Collections.Generic.IReadOnlyList<T> where V : System.Collections.Generic.IEnumerable<U>
     {
-        protected System.Collections.Generic.IEnumerable<U> InnerArrays { get; }
+        protected abstract V InnerArrays { get; }
 
-        public ulong Count { get; }
+        public abstract ulong Count { get; }
 
-        public ArrayArray(in System.Collections.Generic.IEnumerable<U> arrays) => Count = UtilHelpers.GetLength(array => array.Count, InnerArrays = arrays);
-
-        public ArrayArray(params U[] arrays) : this(arrays.AsEnumerable()) { /* Left empty. */ }
-
-        protected V GetValue<V>(in ulong index, in Func<U, ulong, V> func)
+        protected W GetValue<W>(in ulong index, in Func<U, ulong, W> func)
         {
-            if (index >= Count)
-
-                throw new IndexOutOfRangeException(nameof(index));
-
-            ulong length = 0;
+            ulong length = index >= Count ? throw new IndexOutOfRangeException(nameof(index)) : 0ul;
 
             foreach (U array in InnerArrays)
 
@@ -156,15 +149,71 @@ namespace WinCopies.Collections.Generic
 
             return default;
         }
+        protected W GetValue<W>(in ulong index, Func<U, int, W> func) => GetValue(index, (U array, ulong i) => func(array, (int)i));
 
-        protected V GetValue<V>(in ulong index, Func<U, int, V> func) => GetValue(index, (U array, ulong i) => func(array, (int)i));
-
+        protected Enumerator<W> GetEnumerator<W>(in W arrays) where W : IULongCountableEnumerable<T>, IULongIndexableR<T> => new
+#if !CS9
+            Enumerator<W>
+#endif
+            (arrays);
         public abstract IULongCountableEnumerator<T> GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 #if !CS8
         System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetEnumerator();
 #endif
+        protected class Enumerator<W> : Generic.Enumerator<T>, IULongCountableEnumerator<T> where W : IULongCountableEnumerable<T>, IULongIndexableR<T>
+        {
+            private T _current;
+            private ulong _currentIndex;
 
+            protected W InnerArrays { get; }
+
+            public ulong Count => InnerArrays.Count;
+
+            public override bool? IsResetSupported => true;
+
+            protected override T CurrentOverride => _current;
+
+            public Enumerator(in W arrays) => InnerArrays = arrays;
+
+            protected override bool MoveNextOverride()
+            {
+                if (_currentIndex < Count)
+                {
+                    _current = InnerArrays[_currentIndex++];
+
+                    return true;
+                }
+
+                return false;
+            }
+
+            protected override void ResetCurrent()
+            {
+                _current = default;
+                _currentIndex = 0;
+
+                base.ResetCurrent();
+            }
+
+            protected override void ResetOverride2() { /* Left empty. */ }
+        }
+    }
+
+    public abstract class ArrayArray<T, U, V> : ArrayArrayBase<T, U, V> where U : System.Collections.Generic.IReadOnlyList<T> where V : System.Collections.Generic.IEnumerable<U>
+    {
+        protected sealed override V InnerArrays { get; }
+
+        public sealed override ulong Count { get; }
+
+        protected ArrayArray(in V arrays) => Count = UtilHelpers.GetLength(array => array.Count, InnerArrays = arrays);
+    }
+
+    public abstract class ArrayArray<T, U> : ArrayArray<T, U, System.Collections.Generic.IEnumerable<U>> where U : System.Collections.Generic.IReadOnlyList<T>
+    {
+        protected ArrayArray(in System.Collections.Generic.IEnumerable<U> arrays) : base(arrays) { /* Left empty. */ }
+        protected ArrayArray(params U[] arrays) : this(arrays.AsEnumerable()) { /* Left empty. */ }
+#if !WinCopies4
         public class Enumerator<V> : Generic.Enumerator<T>, IULongCountableEnumerator<T> where V : IULongCountableEnumerable<T>, IULongIndexableR<T>
         {
             private T _current;
@@ -202,20 +251,157 @@ namespace WinCopies.Collections.Generic
 
             protected override void ResetOverride2() { /* Left empty. */ }
         }
+#endif
+    }
+
+    public class BufferedArray<T> : ArrayArrayBase<T, T[], System.Collections.Generic.IReadOnlyList<T[]>>, IULongIndexable<T>
+    {
+        private struct ArrayArray : System.Collections.Generic.IReadOnlyList<T[]>, IIndexableR<T[]>
+        {
+            private T[][]
+#if CS8
+                ?
+#endif
+                _array;
+
+            public T[] this[int index] => _array == null ? throw GetError(nameof(index)) : _array[index];
+
+            public T this[ulong index] { get => GetArray(index, out int position)[position]; set => GetArray(index, out int position)[position] = value; }
+
+            public int Count => _array == null ? 0 : _array.Length;
+
+            public int BufferLength { get; private set; }
+#if !CS8
+            object IIndexableR.this[int index] => this[index];
+#endif
+            public ArrayArray(in T[][]
+#if CS8
+                ?
+#endif
+                array, in int bufferLength)
+            {
+                _array = array;
+
+                BufferLength = bufferLength;
+            }
+
+            private readonly T[] GetArray(in ulong index, out int position)
+            {
+                var bufferLength = _array == null ? throw GetError(nameof(index)) : (ulong)BufferLength;
+
+                position = (int)(index % bufferLength);
+
+                return _array[(int)(index / bufferLength)];
+            }
+
+            public void Resize(int bufferCount)
+            {
+                if (bufferCount == 0)
+                {
+                    _array = null;
+
+                    return;
+                }
+
+                T[][] create() => new T[bufferCount][];
+
+                if (_array == null)
+                {
+                    _array = create();
+
+                    return;
+                }
+
+                if (bufferCount == _array.Length)
+
+                    return;
+
+                T[][] values = create();
+
+                System.Array.Copy(_array, values, bufferCount > _array.Length ? _array.Length : bufferCount);
+
+                _array = values;
+            }
+
+            public System.Collections.Generic.IEnumerator<T[]> GetEnumerator() => _array == null ? Linq.Enumerator.Empty<T[]>() : _array.AsEnumerable().GetEnumerator();
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        }
+
+        private ArrayArray _arrays;
+        private ulong _count;
+
+        protected sealed override System.Collections.Generic.IReadOnlyList<T[]> InnerArrays => _arrays;
+
+        public override ulong Count => _count;
+#if !CS8
+        object IULongIndexableR.this[ulong index] => this[index];
+        object IULongIndexableW.this[ulong index] { set => this[index] = (T)value; }
+#endif
+        public T this[ulong index] { get => ValidateIndex(index) ? _arrays[index] : throw GetError(nameof(index)); set => _arrays[ValidateIndex(index) ? index : throw GetError(nameof(index))] = value; }
+
+        public BufferedArray(in int bufferLength, in int bufferCount, in ulong length)
+        {
+            if (bufferLength <= 0)
+
+                OnError(nameof(bufferLength));
+
+            if (bufferCount < 0)
+
+                OnError(nameof(bufferCount));
+
+            T[][]
+#if CS8
+                ?
+#endif
+                array;
+
+            _count = length;
+
+            if (bufferCount == 0)
+
+                array = length == 0 ?
+#if !CS9
+                    (T[][])
+#endif
+                    null : throw GetError(nameof(length));
+
+            else
+            {
+                if (length > ((ulong)bufferLength * (ulong)bufferCount))
+
+                    OnError(nameof(length));
+
+                array = new T[bufferCount][];
+
+                for (int i = 0; i < array.Length; i++)
+
+                    array[i] = new T[bufferLength];
+            }
+
+            _arrays = new ArrayArray(array, bufferLength);
+        }
+        public BufferedArray(in int bufferLength, in ulong length) : this(bufferLength, (int)Math.GetBufferCount(length, bufferLength), length) { }
+
+        protected static Exception GetError(in string argumentName) => new ArgumentOutOfRangeException(argumentName);
+        protected static void OnError(in string argumentName) => throw GetError(argumentName);
+
+        protected bool ValidateIndex(in ulong index) => index < _count;
+
+        public void SetLength(in ulong length) => _arrays.Resize((int)Math.GetBufferCount(_count = length, _arrays.BufferLength));
+
+        public override IULongCountableEnumerator<T> GetEnumerator() => GetEnumerator(this);
     }
 
     public class ReadOnlyArrayArray<T> : ArrayArray<T, System.Collections.Generic.IReadOnlyList<T>>, IULongIndexableR<T>
     {
         public T this[ulong index] => GetValue(index, (System.Collections.Generic.IReadOnlyList<T> array, int i) => array[i]);
 #if !CS8
-        object IULongIndexableR.this[ulong index] => throw new NotImplementedException();
+        object IULongIndexableR.this[ulong index] => this[index];
 #endif
-
         public ReadOnlyArrayArray(in System.Collections.Generic.IEnumerable<System.Collections.Generic.IReadOnlyList<T>> arrays) : base(arrays) { /* Left empty. */ }
-
         public ReadOnlyArrayArray(params System.Collections.Generic.IReadOnlyList<T>[] arrays) : base(arrays) { /* Left empty. */ }
 
-        public override IULongCountableEnumerator<T> GetEnumerator() => new Enumerator<ReadOnlyArrayArray<T>>(this);
+        public override IULongCountableEnumerator<T> GetEnumerator() => GetEnumerator(this);
     }
 
     public class ArrayArray<T> : ArrayArray<T, T[]>, IULongIndexable<T>
@@ -226,15 +412,13 @@ namespace WinCopies.Collections.Generic
 
         object IULongIndexableW.this[ulong index] { set => this[index] = (T)value; }
 #endif
-
         public ArrayArray(in System.Collections.Generic.IEnumerable<T[]> arrays) : base(arrays) { /* Left empty. */ }
-
         public ArrayArray(params T[][] arrays) : base(arrays) { /* Left empty. */ }
 
-        public override IULongCountableEnumerator<T> GetEnumerator() => new Enumerator<ArrayArray<T>>(this);
+        public override IULongCountableEnumerator<T> GetEnumerator() => GetEnumerator(this);
     }
 
-    public class ReadOnlyArrayArray2<T> : ReadOnlyArrayArray<T>, IReadOnlyList<T>
+    public class ReadOnlyArrayArray2<T> : ReadOnlyArrayArray<T>, Extensions.Generic.IReadOnlyList<T>
     {
         public T this[int index] => this[(ulong)index];
 
@@ -257,10 +441,14 @@ namespace WinCopies.Collections.Generic
         public ReadOnlyArrayArray2(params System.Collections.Generic.IReadOnlyList<T>[] arrays) : this(arrays.AsEnumerable()) { /* Left empty. */ }
 
         public ICountableEnumerator<T> GetEnumerator2() => new Enumerator2<ReadOnlyArrayArray2<T>>(this);
-        ICountableEnumerator<T> IReadOnlyList<T>.GetEnumerator() => GetEnumerator2();
+        ICountableEnumerator<T> Extensions.Generic.IReadOnlyList<T>.GetEnumerator() => GetEnumerator2();
         System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator() => GetEnumerator();
-
-        public class Enumerator2<U> : Enumerator<U>, ICountableEnumerator<T> where U : IULongCountableEnumerable<T>, IReadOnlyList<T>, IULongIndexableR<T>
+#if WinCopies4
+        protected
+#else
+        public
+#endif
+            class Enumerator2<U> : Enumerator<U>, ICountableEnumerator<T> where U : IULongCountableEnumerable<T>, Extensions.Generic.IReadOnlyList<T>, IULongIndexableR<T>
         {
             int ICountable.Count => (int)Count;
 
