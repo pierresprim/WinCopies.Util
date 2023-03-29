@@ -98,6 +98,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\EnumerableExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\LinkedListExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\Misc.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)generic\arrays\CircularArray.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Generic\BuildersAndMergers\ArrayBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Collections.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\LinkedCollections\LinkedCollections.cs" />
@@ -163,5 +164,6 @@
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Enumeration\Enumerables\DotNetFix\" />
     <Folder Include="$(MSBuildThisFileDirectory)Generic\EnumerableHelper.Partial\LinkedList.Partial\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Generic\Arrays\" />
   </ItemGroup>
 </Project>
