@@ -19,12 +19,7 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices.ComTypes;
 
-using static WinCopies.
-#if WinCopies3
-    ThrowHelper;
-#else
-    Util.Util;
-#endif
+using static WinCopies.ThrowHelper;
 
 namespace WinCopies
 {
@@ -66,16 +61,11 @@ namespace WinCopies
         Consolidate = 8
     }
 
-    public interface IStream : WinCopies
-#if !WinCopies3
-        .Util
-#endif
-        .DotNetFix.IDisposable
+    public interface IStream : DotNetFix.IDisposable
     {
         ulong Position { get; }
 
         int Read(byte[] bytes, int length);
-
 #if CS8
         byte[] Read(int length, out int read)
         {
@@ -88,7 +78,6 @@ namespace WinCopies
 
         int Write(byte[] bytes) => Write(bytes ?? throw GetArgumentNullException(nameof(bytes)), bytes.Length);
 #endif
-
         int Write(byte[] bytes, int cb);
 
         void Seek(long move, SeekOrigin origin);
@@ -101,22 +90,12 @@ namespace WinCopies
         ulong Length { get; }
     }
 
-    public class NativeStream :
-#if WinCopies3
-        ICountableStream
-#else
-        IStream
-#endif
+    public class NativeStream : ICountableStream
     {
         private System.Runtime.InteropServices.ComTypes.IStream _stream;
         private ulong _position;
 
-#if WinCopies3
-        public
-#else
-        protected
-#endif
-            System.Runtime.InteropServices.ComTypes.IStream InnerStream => _stream ?? throw GetExceptionForDispose(false);
+        public System.Runtime.InteropServices.ComTypes.IStream InnerStream => _stream ?? throw GetExceptionForDispose(false);
 
         public ulong Position { get => IsDisposed ? throw GetExceptionForDispose(false) : _position; private set => _position = IsDisposed ? throw GetExceptionForDispose(false) : value; }
 
@@ -198,29 +177,17 @@ namespace WinCopies
         ~NativeStream() => Dispose(false);
     }
 
-    public class Stream :
-#if WinCopies3
-        ICountableStream
-#else
-IStream
-#endif
+    public class Stream : ICountableStream
     {
         private System.IO.Stream _stream;
 
-#if WinCopies3
-        public
-#else
-        protected
-#endif
-            System.IO.Stream InnerStream => _stream ?? throw GetExceptionForDispose(false);
+        public System.IO.Stream InnerStream => _stream ?? throw GetExceptionForDispose(false);
 
         ulong IStream.Position => (ulong)InnerStream.Position;
 
         public bool IsDisposed => _stream == null;
 
-#if WinCopies3
         ulong ICountableStream.Length => (ulong)InnerStream.Length;
-#endif
 
         public Stream(in System.IO.Stream stream) => _stream = stream;
 
@@ -242,7 +209,6 @@ IStream
             if (disposing)
             {
                 InnerStream.Flush();
-
                 InnerStream.Dispose();
 
                 _stream = null;
@@ -379,23 +345,9 @@ IStream
             public override void Delete() => throw new NotSupportedException("This stream does not support deletion.");
         }
 
-        public abstract class Stream
-#if WinCopies3
-            <T>
-#endif
-            : ExtendedStream
-#if WinCopies3
-            where T : System.IO.Stream
-#endif
+        public abstract class Stream<T> : ExtendedStream where T : System.IO.Stream
         {
-            protected
-#if WinCopies3
-                T
-#else
-                System.IO.Stream
-#endif
-                InnerStream
-            { get; }
+            protected T InnerStream { get; }
 
             public override bool CanSeek => InnerStream.CanSeek;
             public override bool CanRead => InnerStream.CanRead;
@@ -403,13 +355,7 @@ IStream
             public override long Length => InnerStream.Length;
             public override long Position { get => InnerStream.Position; set => InnerStream.Position = value; }
 
-            protected Stream(in
-#if WinCopies3
-                T
-#else
-                System.IO.Stream
-#endif
-                stream) => InnerStream = stream;
+            protected Stream(in T stream) => InnerStream = stream;
 
             public override void Flush() => InnerStream.Flush();
             public override int Read(byte[] buffer, int offset, int count) => InnerStream.Read(buffer, offset, count);
@@ -425,30 +371,13 @@ IStream
             }
         }
 
-        public class FileStream : Stream
-#if WinCopies3
-            <System.IO.FileStream>
-#endif
+        public class FileStream : Stream<System.IO.FileStream>
         {
-            public string Path
-#if WinCopies3
-                => InnerStream.Name;
-#else
-            { get; }
-#endif
+            public string Path => InnerStream.Name;
 
             public override bool CanDelete => true;
 
-            public FileStream(
-#if !WinCopies3
-                in string path,
-#endif
-                in System.IO.FileStream fileStream) : base(fileStream)
-#if WinCopies3
-                { /* Left empty. */ }
-#else
-                => Path = path;
-#endif
+            public FileStream(in System.IO.FileStream fileStream) : base(fileStream) { /* Left empty. */ }
 
             public override void Delete() => File.Delete(Path);
         }
