@@ -8,7 +8,7 @@
 		<RepositoryType>Git</RepositoryType>
 		<PackageReleaseNotes>See https://github.com/pierresprim/WinCopies.Util/blob/master/Changelog.md</PackageReleaseNotes>
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
-		<Copyright>Copyright © 2022 Pierre Sprimont</Copyright>
+		<Copyright>Copyright © 2023 Pierre Sprimont</Copyright>
 		<ProduceReferenceAssembly>true</ProduceReferenceAssembly>
 	</PropertyGroup>
 
@@ -55,6 +55,10 @@
 
 	<PropertyGroup Condition="'$(TargetFramework.TrimEnd(`0123456789-windows`))' == 'net7.'">
 		<DefineConstants>CS4;CS5;CS6;CS7;CS8;CS9;CS10;CS11;$(DefineConstants)</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(TargetFramework.TrimEnd(`0123456789-windows`))' == 'net8.'">
+		<DefineConstants>CS4;CS5;CS6;CS7;CS8;CS9;CS10;CS11;CS12;$(DefineConstants)</DefineConstants>
 		<LangVersion>preview</LangVersion>
 	</PropertyGroup>
 
