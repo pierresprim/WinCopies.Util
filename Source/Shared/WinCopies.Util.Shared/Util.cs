@@ -30,6 +30,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using WinCopies.Collections;
+using WinCopies.Extensions.Util;
 #endif
 using WinCopies.Util;
 
@@ -207,28 +208,188 @@ namespace WinCopies
             (version.Major, version.Minor, version.Build, version.Revision);
 
         public static bool operator ==(Version left, Version right) => left.Equals(right);
-
         public static bool operator !=(Version left, Version right) => !(left == right);
-
         public static bool operator <(Version left, Version right) => left.CompareTo(right) < 0;
-
         public static bool operator <=(Version left, Version right) => left.CompareTo(right) <= 0;
-
         public static bool operator >(Version left, Version right) => left.CompareTo(right) > 0;
-
         public static bool operator >=(Version left, Version right) => left.CompareTo(right) >= 0;
     }
-#else
+#endif
     public static class Array
     {
+        private static unsafe void Shift(ulong* sourcePtr, ulong* destinationPtr, ulong length)
+        {
+            bool check()
+            {
+                if (--length > 0)
+                {
+                    sourcePtr--;
+                    destinationPtr--;
+
+                    return true;
+                }
+
+                return false;
+            }
+
+            do
+
+                *destinationPtr = *sourcePtr;
+
+            while (check());
+        }
+        private static unsafe void Shift(byte* sourcePtr, byte* destinationPtr, ulong length)
+        {
+            bool processExtraBytes()
+            {
+                void move() => *destinationPtr = *sourcePtr;
+
+                void shift<T>() where T : unmanaged
+                {
+                    void decrementPtr(ref byte* ptr) => ptr -= sizeof(T) - 1;
+
+                    decrementPtr(ref sourcePtr);
+                    decrementPtr(ref destinationPtr);
+
+                    *((T*)destinationPtr) = *((T*)sourcePtr);
+                }
+
+                var extraBytes = (byte)(length % sizeof(long));
+
+            SWITCH:
+                switch (extraBytes)
+                {
+                    case 0:
+
+                        return false;
+
+                    case sizeof(int):
+
+                        shift<int>();
+
+                        break;
+
+                    case sizeof(short):
+
+                        shift<short>();
+
+                        break;
+
+                    case (sizeof(byte)):
+
+                        move();
+
+                        break;
+
+                    default:
+
+                        if ((extraBytes / sizeof(int)) == 0)
+                        {
+                            shift<short>();
+                            move();
+
+                            break;
+                        }
+
+                        shift<int>();
+
+                        extraBytes %= sizeof(int);
+
+                        goto SWITCH;
+                }
+
+                return true;
+            }
+
+            bool processedExtraBytes = processExtraBytes();
+
+            if ((length /= sizeof(long)) == 0)
+
+                return;
+
+            if (processedExtraBytes)
+            {
+                sourcePtr--;
+                destinationPtr--;
+            }
+
+            Shift((ulong*)sourcePtr, (ulong*)destinationPtr, length);
+        }
+        public static unsafe void Shift(in void* arrayPtr, ref ulong offset, in ulong length)
+        {
+            if (length == 0UL || (offset %= length) == 0UL)
+
+                return;
+
+            byte* sourcePtr = (byte*)arrayPtr + length - 1;
+            byte* destinationPtr = sourcePtr + offset;
+
+            Shift(sourcePtr, destinationPtr, length);
+        }
+        public static unsafe void Shift<T>(in T* arrayPtr, ref ulong offset, ref ulong length) where T : unmanaged
+        {
+            if (length == 0UL || (offset %= length) == 0UL)
+
+                return;
+
+            ulong _offset = offset *= (uint)sizeof(T);
+
+            Shift(arrayPtr, ref _offset, length *= (uint)sizeof(T));
+        }
+        public static unsafe void Shift<T>(in T[] array, in int start, ref ulong offset, ref ulong length) where T : unmanaged
+        {
+            int arrayLength = array.Length;
+
+            if (length == 0UL || (offset %= (uint)arrayLength) == 0UL)
+
+                return;
+
+            fixed (T* arrayPtr = start.Between(0, arrayLength, true, false) ? length.Between(0, (uint)(arrayLength -= start)) ? offset < (uint)arrayLength ? array : throw new ArgumentOutOfRangeException(nameof(offset)) : throw new ArgumentOutOfRangeException(nameof(length)) : throw new ArgumentOutOfRangeException(nameof(start)))
+
+                Shift(arrayPtr + start, ref offset, ref length);
+        }
+#if CS5
+        public static unsafe void Unshift(in void* arrayPtr, ref ulong offset, in ulong size, in ulong length) => Buffer.MemoryCopy(arrayPtr, (byte*)arrayPtr + offset, size, length);
+        public static unsafe void Unshift<T>(in T* arrayPtr, ref ulong offset, in ulong size, ref ulong length) where T : unmanaged
+        {
+            ulong _offset = offset *= (uint)sizeof(T);
+
+            Unshift(arrayPtr, ref _offset, (size - offset) * (uint)sizeof(T), length *= (uint)sizeof(T));
+        }
+        public static unsafe void Unshift<T>(in T[] array, in int start, ref ulong offset, ref ulong length) where T : unmanaged
+        {
+            fixed (T* arrayPtr = array)
+
+                Unshift(arrayPtr + start, ref offset, (ulong)array.Length, ref length);
+        }
+#endif
+#if !CS8
+        public static void Fill<T>(in T[] array, in T value)
+        {
+            for (int i = 0; i < array.Length; i++)
+
+                array[i] = value;
+        }
+#if !CS5
         private static class EmptyArray<T>
         {
             internal static readonly T[] Array = new T[0];
         }
 
         public static T[] Empty<T>() => EmptyArray<T>.Array;
-    }
 #endif
+#endif
+        public static T[] Repeat<T>(in T value, in int length)
+        {
+            var array = new T[length];
+#if CS8
+            System.Array.
+#endif
+            Fill(array, value);
+
+            return array;
+        }
+    }
     public interface ISortableItem<T> : IEquatable<T>, IComparable<T>, Collections.Generic.IComparable<T>
     {
 #if CS8
@@ -244,15 +405,157 @@ namespace WinCopies
     /// </summary>
     public static class UtilHelpers
     {
+        private static unsafe byte[] GetBytes<T>(in T* c, in int offset, int length) where T : unmanaged
+        {
+            byte[] bytes = new byte[length *= sizeof(T)];
+
+            Marshal.Copy((IntPtr)(c + offset), bytes, 0, length);
+
+            return bytes;
+        }
+        private static unsafe int GetLength<T>(in byte[] bytes, in string paramName) where T : unmanaged
+        {
+            int length = bytes.Length;
+
+            return length % sizeof(T) == 0 ? length / sizeof(T) : throw new ArgumentException("The length of the given array must be a multiple of sizeof(T).", paramName);
+        }
+
+        private static bool PreValidateGetBytes(in int offset, in int length)
+        {
+            ValidateOffset(offset);
+
+            return length < 0 ? throw new ArgumentOutOfRangeException(nameof(length)) : length == 0;
+        }
+        private static void PostValidateGetBytes(in int actualLength, in int offset, in int length)
+        {
+            ValidateOffset(offset, actualLength);
+
+            if (length > actualLength - offset)
+
+                throw new ArgumentOutOfRangeException(nameof(length));
+        }
+
+        private static void ValidateOffset(in int offset)
+        {
+            if (offset < 0)
+
+                throw new ArgumentOutOfRangeException(nameof(offset));
+        }
+        private static void ValidateOffset(in int offset, in int length)
+        {
+            if (offset >= length)
+
+                throw new ArgumentOutOfRangeException(nameof(offset));
+        }
+        private static void ValidateLength(in int length, in int actualLength)
+        {
+            if (length > actualLength)
+
+                throw new ArgumentOutOfRangeException(nameof(length));
+        }
+        private static unsafe void ValidateArray<T>(in byte[] bytes, in int offset, in int length) where T : unmanaged
+        {
+            ValidateOffset(offset, bytes.Length);
+            ValidateLength(length, (bytes.Length - offset) / sizeof(T));
+        }
+
+        public static unsafe byte[] GetBytes(in string s, in int offset, in int length)
+        {
+            if (PreValidateGetBytes(offset, length))
+
+                return
+#if CS5
+                    System
+#else
+                    WinCopies
+#endif
+                    .Array.Empty<byte>();
+
+            PostValidateGetBytes(s.Length, offset, length);
+
+            fixed (char* c = s)
+
+                return GetBytes(c, offset, length);
+        }
+        public static unsafe byte[] GetBytes(in string s) => GetBytes(s, 0, s.Length);
+        public static unsafe byte[] GetBytes<T>(in T[] atoms, in int offset, in int length) where T : unmanaged
+        {
+            if (PreValidateGetBytes(offset, length))
+
+                return
+#if CS5
+                    System
+#else
+                    WinCopies
+#endif
+                    .Array.Empty<byte>();
+
+            PostValidateGetBytes(atoms.Length, offset, length);
+
+            fixed (T* c = atoms)
+
+                return GetBytes(c, offset, length);
+        }
+        public static unsafe byte[] GetBytes<T>(in T[] atoms) where T : unmanaged => GetBytes(atoms, 0, atoms.Length);
+        public static unsafe byte[] GetBytes<T>(T c) where T : unmanaged => GetBytes(&c, 0, 1);
+
+        public static unsafe T GetAtom<T>(in byte[] bytes, in int offset = 0) where T : unmanaged
+        {
+            fixed (byte* b = bytes.Length < sizeof(T) ? throw new ArgumentException("The length of the given array must be greater than or equal to sizeof(T).", nameof(bytes)) : offset.Between(0, bytes.Length, true, false) && (bytes.Length - offset) >= sizeof(T) ? bytes : throw new ArgumentOutOfRangeException(nameof(offset)))
+
+                return *(T*)b;
+        }
+#if CS5
+        public static unsafe void GetAtoms<T>(in byte[] bytes, in T[] atoms, in int bytesOffset, in int atomsOffset, in int length) where T : unmanaged
+        {
+            if (PreValidateGetBytes(bytesOffset, length))
+
+                return;
+
+            ValidateOffset(atomsOffset);
+            ValidateArray<T>(bytes, bytesOffset, length);
+            ValidateOffset(atomsOffset, atoms.Length);
+
+            int actualAtomsLength = atoms.Length - atomsOffset;
+
+            ValidateLength(length, actualAtomsLength);
+
+            fixed (byte* pBytes = bytes)
+            fixed (T* pAtoms = atoms)
+
+                Buffer.MemoryCopy(pBytes + bytesOffset, pAtoms + atomsOffset, actualAtomsLength * sizeof(T), length);
+        }
+        public static unsafe void GetAtoms<T>(in byte[] bytes, in T[] atoms) where T : unmanaged => GetAtoms(bytes, atoms, 0, 0, bytes.Length / sizeof(T));
+        public static unsafe T[] GetAtoms<T>(in byte[] bytes, in int bytesOffset, in int atomsOffset, in int length) where T : unmanaged
+        {
+            var atoms = new T[length];
+
+            GetAtoms(bytes, atoms, bytesOffset, atomsOffset, length);
+
+            return atoms;
+        }
+        public static unsafe T[] GetAtoms<T>(in byte[] bytes) where T : unmanaged => GetAtoms<T>(bytes, 0, 0, GetLength<T>(bytes, nameof(bytes)));
+#endif
+        public static unsafe string GetString(in byte[] bytes, in int offset, in int length)
+        {
+            if (PreValidateGetBytes(offset, length))
+
+                return string.Empty;
+
+            ValidateArray<char>(bytes, offset, length);
+
+            fixed (byte* b = bytes)
+
+                return new string((char*)(b + offset), 0, length);
+        }
+        public static unsafe string GetString(in byte[] bytes) => GetString(bytes, 0, GetLength<char>(bytes, nameof(bytes)));
 #if !CS8
-        public static bool LessThan<T>(in  ISortableItem<T> item, in T other) => item.CompareTo(other) < 0;
+        public static bool LessThan<T>(in ISortableItem<T> item, in T other) => item.CompareTo(other) < 0;
         public static bool LessThanOrEqualTo<T>(in ISortableItem<T> item, in T other) => item.CompareTo(other) <= 0;
         public static bool GreaterThan<T>(in ISortableItem<T> item, in T other) => item.CompareTo(other) > 0;
         public static bool GreaterThanOrEqualTo<T>(in ISortableItem<T> item, in T other) => item.CompareTo(other) >= 0;
 #endif
-        internal static bool Compare<T>(in T _x, in T _y, in Predicate<T> x, in Predicate<T> y, in FuncIn<bool, bool, bool> func) => func(x(_x), y(_y));
-
-        public static bool Overlap(in int x, in int index, in int y) => x < y ? index.Between(x, y) : index.Outside(x, y);
+        public static bool Overlap(in int x, in int index, in int y) => x < y ? index.Between(x, y) : index.Outside(y, x);
 
         /// <summary>
         /// Increments <paramref name="index"/> circularly by one step. If <paramref name="index"/> is equal to <paramref name="maxLength"/> - 1, then it is reset to zero.
@@ -389,7 +692,7 @@ namespace WinCopies
                 return result;
             }
 
-            if (length.Between(2, totalLength - 1) && (length % totalLength) - 1 >= (length = totalLength - offset))
+            if (length.Between(2, totalLength - 1) && (length % totalLength) > (length = totalLength - offset))
 
                 return true;
 
@@ -459,16 +762,23 @@ namespace WinCopies
         /// <seealso cref="GetIndex(int, in int, ref int)"/>
         /// <seealso cref="IncrementCircularly(ref int, in int)"/>
         /// <seealso cref="DecrementCircularly(ref int, in int)"/>
-        public static void SetIndex(ref int start, in int totalLength, ref int offset)
+        public static void SetIndex(ref long start, in long totalLength, ref long offset)
         {
+            if (start.Between(0, totalLength, true, false) ? offset == 0 : throw new ArgumentOutOfRangeException(nameof(start)))
+
+                return;
+
             offset %= totalLength;
+
+            if (start == 0)
+            {
+                start = offset;
+
+                return;
+            }
 
             switch (offset)
             {
-                case 0:
-
-                    return;
-
                 case 1:
 
                     start = (start + 1) % totalLength;
@@ -484,17 +794,11 @@ namespace WinCopies
                 default:
 
                     if (offset > 0)
+                    {
+                        //long tmp = totalLength - start;
 
-                        if (start == 0 /*&& length == totalLength*/)
-
-                            start = offset;
-
-                        else
-                        {
-                            int tmp = totalLength - start;
-
-                            start = offset == tmp ? 0 : offset > tmp ? (start - (totalLength - offset)) : start + offset;
-                        }
+                        start = Math.IsAdditionResultInRange((ulong)start, (ulong)offset, long.MaxValue) ? (start + offset) % totalLength : unchecked(start + offset) + 1 /*offset == tmp ? 0 : offset > tmp ? (start - (totalLength - offset)) : start + offset*/;
+                    }
 
                     else
 
@@ -511,11 +815,28 @@ namespace WinCopies
         /// <param name="totalLength">The total length supported. An offset that would result to an overflow regarding the given index will be felt back to a corresponding offset that will not result to an overflow.</param>
         /// <param name="offset">The offset that represents the number of steps for the incrementation. This value can be any value supported by the <see cref="int"/> type. Negative values mean that this method will compute a decrementation. Overflow values will be felt back to a value between zero and the given length.</param>
         /// <seealso cref="SetIndex(ref int, in int, ref int)"/>
-        /// <seealso cref="IncrementCircularly2(ref int, in int)"/>
-        /// <seealso cref="DecrementCircularly2(ref int, in int)"/>
-        public static int GetIndex(int start, /*in int length,*/ in int totalLength, ref int offset)
+        /// <seealso cref="IncrementCircularly2(int, in int)"/>
+        /// <seealso cref="DecrementCircularly2(int, in int)"/>
+        public static long GetIndex(long start, /*in int length,*/ in long totalLength, ref long offset)
         {
             SetIndex(ref start, /*length,*/ totalLength, ref offset);
+
+            return start;
+        }
+
+        public static void SetIndex(ref int start, in int totalLength, ref int offset)
+        {
+            long _start = start;
+            long _offset = offset;
+
+            SetIndex(ref _start, totalLength, ref _offset);
+
+            start = (int)_start;
+            offset = (int)_offset;
+        }
+        public static int GetIndex(int start, /*in int length,*/ in int totalLength, ref int offset)
+        {
+            SetIndex(ref start, totalLength, ref offset);
 
             return start;
         }
@@ -1047,7 +1368,7 @@ namespace WinCopies
 #if CS8
 ??=
 #else
-                            =
+                                                =
 #endif
             defaultValue;
 
@@ -1070,7 +1391,7 @@ namespace WinCopies
 #if CS8
 ??=
 #else
-                                             =
+                                                                 =
 #endif
             func();
 
@@ -2533,7 +2854,7 @@ namespace WinCopies
 
         public static bool UpdateValue<T>(ref T value, in T newValue)
         {
-            if (object.Equals(value, newValue))
+            if (Equals(value, newValue))
 
                 return false;
 
@@ -2615,23 +2936,31 @@ namespace WinCopies
 #if CS9
             ?
 #endif
-            > predicate) where T : class
+            > predicate) where T : class =>
 #if CS9
-            => predicate(value is T _value ? _value : value == null ? null : throw GetInvalidTypeArgumentException(nameof(value)));
-#else
-
-        {
-            if (value is T _value)
-
-                return predicate(_value);
-
-            else if (value == null)
-
-                return predicate(null);
-
-            throw GetInvalidTypeArgumentException(nameof(value));
-        }
+            predicate(
 #endif
+            value is T _value ?
+#if !CS9
+            predicate(
+#endif
+                _value
+#if !CS9
+                )
+#endif
+            : value == null ?
+#if !CS9
+            predicate(
+#endif
+                null
+#if !CS9
+                )
+#endif
+            : throw GetInvalidTypeArgumentException(nameof(value))
+#if CS9
+        )
+#endif
+        ;
         public static bool PredicateVal<T>(object value, Predicate<T> predicate) where T : struct => predicate(value is T _value ? _value : throw GetInvalidTypeArgumentException(nameof(value)));
 
         public static bool UpdateValue<T>(ref T value, in T newValue, in Action action)
@@ -2732,17 +3061,19 @@ namespace WinCopies
 
             for (int i = 0; i < arrays.Length - 1; i++)
             {
-                _array = arrays[i];
-
-                _array.CopyTo(newArray, totalArraysIndex);
+                (_array = arrays[i]).CopyTo(newArray, totalArraysIndex);
 
                 totalArraysIndex += _array.Length;
             }
+
+            arrays[
 #if CS8
-            arrays[^1].CopyTo(newArray, totalArraysIndex);
+                ^
 #else
-            arrays[arrays.Length - 1].CopyTo(newArray, totalArraysIndex);
+                arrays.Length -
 #endif
+                1].CopyTo(newArray, totalArraysIndex);
+
             return newArray;
         }
 
@@ -2754,24 +3085,217 @@ namespace WinCopies
         /// <returns>A <see cref="bool"/> value that indicates whether the object given is from a numerical type.</returns>
         public static bool IsNumber(in object value)
         {
-            switch (value)
-            {
-                case byte _:
-                case sbyte _:
-                case short _:
-                case ushort _:
-                case int _:
-                case uint _:
-                case long _:
-                case ulong _:
-                case float _:
-                case double _:
-                case decimal _:
+#if CS9
+            return
+#else
+            if (
+#endif
+            value is null
+#if CS9
+            ? false : value switch
+#else
+            )
 
-                    return true;
-            }
+                return false;
+
+            switch (value)
+#endif
+            {
+#if !CS9
+                case
+#endif
+                byte _
+#if CS9
+                or
+#else
+            :
+            case 
+#endif
+                sbyte _
+#if CS9
+                or
+#else
+            :
+            case 
+#endif
+                short _
+#if CS9
+                or
+#else
+            :
+            case 
+#endif
+                ushort _
+#if CS9
+                or
+#else
+            :
+            case 
+#endif
+                int _
+#if CS9
+                or
+#else
+            :
+            case 
+#endif
+                uint _
+#if CS9
+                or
+#else
+            :
+            case 
+#endif
+                long _
+#if CS9
+                or
+#else
+            :
+            case 
+#endif
+                ulong _
+#if CS9
+                or
+#else
+            :
+            case 
+#endif
+                Int128 _
+#if CS9
+                or
+#else
+            :
+            case 
+#endif
+                UInt128 _
+#if CS9
+                or
+#else
+            :
+            case 
+#endif
+                float _
+#if CS9
+                or
+#else
+            :
+            case 
+#endif
+                double _
+#if CS9
+                or
+#else
+            :
+            case 
+#endif
+                decimal _
+#if CS9
+                or
+#else
+            :
+            case 
+#endif
+                Nullable<byte> _
+#if CS9
+                or
+#else
+            :
+            case 
+#endif
+                Nullable<sbyte> _
+#if CS9
+                or
+#else
+            :
+            case 
+#endif
+                Nullable<short> _
+#if CS9
+                or
+#else
+            :
+            case 
+#endif
+                Nullable<ushort> _
+#if CS9
+                or
+#else
+            :
+            case 
+#endif
+                Nullable<int> _
+#if CS9
+                or
+#else
+            :
+            case 
+#endif
+                Nullable<uint> _
+#if CS9
+                or
+#else
+            :
+            case 
+#endif
+                Nullable<long> _
+#if CS9
+                or
+#else
+            :
+            case 
+#endif
+                Nullable<ulong> _
+#if CS9
+                or
+#else
+            :
+            case 
+#endif
+                Nullable<Int128> _
+#if CS9
+                or
+#else
+            :
+            case 
+#endif
+                Nullable<UInt128> _
+#if CS9
+                or
+#else
+            :
+            case 
+#endif
+                Nullable<float> _
+#if CS9
+                or
+#else
+            :
+            case 
+#endif
+                Nullable<double> _
+#if CS9
+                or
+#else
+            :
+            case 
+#endif
+                Nullable<decimal> _
+#if CS9
+                =>
+#else
+            :
+            return
+#endif
+                    true,
+                _ => false
+#if CS9
+            };
+#else
+            ;
+        }
 
             return false;
+#endif
         }
 
         /// <summary>
@@ -2792,11 +3316,7 @@ namespace WinCopies
         {
             Type enumType = typeof(T);
 
-            if (enumType.GetCustomAttribute<FlagsAttribute>() == null)
-
-                throw new ArgumentException("Enum is not a 'flags' enum.");
-
-            Array array = Enum.GetValues(enumType);
+            System.Array array = enumType.GetCustomAttribute<FlagsAttribute>() == null ? throw new ArgumentException("Enum is not a 'flags' enum.") : Enum.GetValues(enumType);
 
             return enumType.GetEnumUnderlyingType().IsType(true, typeof(sbyte), typeof(short), typeof(int), typeof(long)) ? (T)Enum.ToObject(enumType, NumericArrayToLongValue(array)) : (T)Enum.ToObject(enumType, NumericArrayToULongValue(array));
         }
