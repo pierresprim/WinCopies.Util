@@ -16,6 +16,7 @@
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 
@@ -31,6 +32,18 @@ namespace WinCopies
     /// </summary>
     public static class ThrowHelper
     {
+        public static void ThrowOnInvalidArrayMoveOperation(in IList array, in string arrayArgumentName, in int x, in string xArgumentName, in int y, in string yArgumentName)
+        {
+            ThrowIfNull(array, arrayArgumentName);
+
+            if (array is System.Array _array)
+
+                ThrowIfMultidimensionalArray(_array, arrayArgumentName);
+
+            ThrowIfNOTBetween(x, 0, array.Count - 1, xArgumentName);
+            ThrowIfNOTBetween(y, 0, array.Count - 1, yArgumentName);
+        }
+
         public static void ThrowIfInvalidEnumValue<T>(in string parameterName, in T value, in T x, in T y) where T : Enum
         {
             if (value.EnumOutside(x, y))

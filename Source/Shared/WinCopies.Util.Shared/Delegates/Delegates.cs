@@ -303,6 +303,8 @@ namespace WinCopies
         public static void EmptyVoid<T>(T parameter) { }
         public static void EmptyVoid(ref object parameter) { }
         public static void EmptyVoid<T>(ref T parameter) { }
+        public static void EmptyVoidIn(in object parameter) { }
+        public static void EmptyVoidIn<T>(in T parameter) { }
 
         public static T
 #if CS9

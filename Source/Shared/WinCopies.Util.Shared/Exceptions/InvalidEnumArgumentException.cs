@@ -19,7 +19,6 @@ using System;
 using System.Runtime.Serialization;
 using System.Security;
 
-using WinCopies.Collections;
 using WinCopies.Util;
 
 namespace WinCopies
@@ -64,7 +63,6 @@ namespace WinCopies
         /// <remarks>This constructor will create a localized message saying that the <paramref name="argumentName"/> parameter was invalid because the value passed in was invalid, and that the value should be one of the values in the enumeration class.</remarks>
         public InvalidEnumArgumentException(string argumentName, int invalidValue, Type enumClass) : this(null, argumentName, invalidValue, enumClass) { }
 #endif
-
         // todo: also for ulong and uint
 
         /// <summary>
@@ -120,7 +118,7 @@ namespace WinCopies
         /// <param name="message">A custom message describing this exception.</param>
         /// <param name="argumentName">The name of the argument that caused the exception.</param>
         /// <param name="invalidValue">The value of the argument that failed.</param>
-        public InvalidEnumArgumentException(string message, string argumentName, Enum invalidValue) : base(argumentName, new EnumComparer().CompareToObject(invalidValue, int.MaxValue) <= 0 ? (int)invalidValue.GetNumValue() : 0, invalidValue.GetType())
+        public InvalidEnumArgumentException(string message, string argumentName, Enum invalidValue) : base(argumentName, invalidValue.GetNumValue() is int value ? value : 0, invalidValue.GetType())
         {
             _message = message;
 
