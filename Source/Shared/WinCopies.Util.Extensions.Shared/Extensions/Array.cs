@@ -17,12 +17,9 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 
 using WinCopies.Collections;
 using WinCopies.Collections.DotNetFix;
-using WinCopies.Collections.Generic;
 using WinCopies.Extensions.Util;
 
 namespace WinCopies.Extensions
@@ -36,7 +33,6 @@ namespace WinCopies.Extensions
                 array[@in] = array[@out];
             };
 
-        #region Lossless
         private sealed class LosslessShiftOverlapDelegate
         {
             private int _i;
@@ -59,7 +55,7 @@ namespace WinCopies.Extensions
             public void Move(int @out, int @in) => _action(@out, @in);
         }
 
-        private delegate bool LosslessShiftDelegate(in Action<int, int> action, out int lOut, out int rOut);
+        private delegate bool LosslessShiftDelegate(in Func<Action<int, int>> action, out int lOut, out int rOut);
 
         private static bool LosslessShift(this IList array, int start, int length, int offset, out int rOut, in LosslessShiftDelegate losslessShiftDelegate)
         {
@@ -67,7 +63,7 @@ namespace WinCopies.Extensions
             int i = 0;
             Action postWork;
             Func<int> func = null;
-            Action<int, int> action;
+            Func<Action<int, int>> action;
 
             void setIndex()
             {
@@ -88,16 +84,19 @@ namespace WinCopies.Extensions
 #endif
                     value = null;
 
-                Action<int, int> _action = (int @in, int @out) =>
+                action = () =>
                 {
-                    value = array[@in];
+                    Action<int, int> _action = (int @in, int @out) =>
+                    {
+                        value = array[@in];
 
-                    array[@in] = array[@out];
+                        array[@in] = array[@out];
 
-                    _action = array.GetShiftDelegate();
+                        _action = array.GetShiftDelegate();
+                    };
+
+                    return (int @in, int @out) => _action(@in, @out);
                 };
-
-                action = (int @in, int @out) => _action(@in, @out);
 
                 postWork = () =>
                 {
@@ -120,7 +119,15 @@ namespace WinCopies.Extensions
             {
                 IQueueBase queue = EnumerableHelper.GetQueue();
                 bool overlap;
-                action = (overlap = length > _offset) ? new LosslessShiftOverlapDelegate(array, queue, _offset).Move : array.GetLosslessShiftDelegate(queue);
+                action = (overlap = length > _offset) ? () => new LosslessShiftOverlapDelegate(array, queue, _offset).Move :
+#if !CS9
+                    (Func<Action<int, int>>)(
+#endif
+                    () => array.GetLosslessShiftDelegate(queue)
+#if !CS9
+                    )
+#endif
+                    ;
                 postWork = () =>
                 {
                     if (offset > 0)
@@ -173,7 +180,7 @@ namespace WinCopies.Extensions
             int _avoidOverflow = avoidOverflow;
             int _offset = 0;
 
-            bool result = array.LosslessShift(inStart, length, _offset = WinCopies.UtilHelpers.GetOffset(inStart, outStart, length), out rOut, (in Action<int, int> action, out int lOut, out int _rOut) => array.Shift(inStart, length, ref _offset, ref _avoidOverflow, action, out lOut, out _rOut));
+            bool result = array.LosslessShift(inStart, length, _offset = WinCopies.UtilHelpers.GetOffset(inStart, outStart, length), out rOut, (in Func<Action<int, int>> action, out int lOut, out int _rOut) => array.Shift(inStart, length, ref _offset, ref _avoidOverflow, action(), out lOut, out _rOut));
 
             outStart = _outStart;
             avoidOverflow = _avoidOverflow;
@@ -181,14 +188,49 @@ namespace WinCopies.Extensions
 
             return result;
         }
-
         public static bool LosslessShift(this IList array, int start, int length, ref int offset, ref int avoidOverflow, out int lOut, out int rOut)
         {
             int _offset = offset;
             int _avoidOverflow = avoidOverflow;
             int _lOut = -1;
 
-            bool result = array.LosslessShift(start, length, offset, out rOut, (in Action<int, int> action, out int __lOut, out int _rOut) =>
+            bool result = array.LosslessShift(start, length, offset, out rOut, (in Func<Action<int, int>> action, out int __lOut, out int _rOut) =>
+            {
+                bool _result = array.Shift(start, length, ref _offset, ref _avoidOverflow, action(), out _lOut, out _rOut);
+
+                __lOut = _lOut;
+
+                return _result;
+            });
+
+            offset = _offset;
+            avoidOverflow = _avoidOverflow;
+            lOut = _lOut;
+
+            return result;
+        }
+
+        public static bool LosslessShiftByPosition(this System.Array array, int inStart, int length, ref int outStart, ref int avoidOverflow, out int offset, out int rOut)
+        {
+            int _outStart = outStart;
+            int _avoidOverflow = avoidOverflow;
+            int _offset = 0;
+
+            bool result = array.LosslessShift(inStart, length, _offset = WinCopies.UtilHelpers.GetOffset(inStart, outStart, length), out rOut, (in Func<Action<int, int>> action, out int lOut, out int _rOut) => array.Shift(inStart, length, ref _offset, ref _avoidOverflow, action, out lOut, out _rOut));
+
+            outStart = _outStart;
+            avoidOverflow = _avoidOverflow;
+            offset = _offset;
+
+            return result;
+        }
+        public static bool LosslessShift(this System.Array array, int start, int length, ref int offset, ref int avoidOverflow, out int lOut, out int rOut)
+        {
+            int _offset = offset;
+            int _avoidOverflow = avoidOverflow;
+            int _lOut = -1;
+
+            bool result = array.LosslessShift(start, length, offset, out rOut, (in Func<Action<int, int>> action, out int __lOut, out int _rOut) =>
             {
                 bool _result = array.Shift(start, length, ref _offset, ref _avoidOverflow, action, out _lOut, out _rOut);
 
@@ -203,6 +245,42 @@ namespace WinCopies.Extensions
 
             return result;
         }
-        #endregion Lossless
+#if CS5
+        public static bool LosslessShiftByPosition<T>(this T[] array, int inStart, int length, ref int outStart, ref int avoidOverflow, out int offset, out int rOut) where T : unmanaged
+        {
+            int _outStart = outStart;
+            int _avoidOverflow = avoidOverflow;
+            int _offset = 0;
+
+            bool result = array.LosslessShift(inStart, length, _offset = WinCopies.UtilHelpers.GetOffset(inStart, outStart, length), out rOut, (in Func<Action<int, int>> action, out int lOut, out int _rOut) => array.Shift(inStart, length, ref _offset, ref _avoidOverflow, action, out lOut, out _rOut));
+
+            outStart = _outStart;
+            avoidOverflow = _avoidOverflow;
+            offset = _offset;
+
+            return result;
+        }
+        public static bool LosslessShift<T>(this T[] array, int start, int length, ref int offset, ref int avoidOverflow, out int lOut, out int rOut) where T : unmanaged
+        {
+            int _offset = offset;
+            int _avoidOverflow = avoidOverflow;
+            int _lOut = -1;
+
+            bool result = array.LosslessShift(start, length, offset, out rOut, (in Func<Action<int, int>> action, out int __lOut, out int _rOut) =>
+            {
+                bool _result = array.Shift(start, length, ref _offset, ref _avoidOverflow, action, out _lOut, out _rOut);
+
+                __lOut = _lOut;
+
+                return _result;
+            });
+
+            offset = _offset;
+            avoidOverflow = _avoidOverflow;
+            lOut = _lOut;
+
+            return result;
+        }
+#endif
     }
 }
