@@ -35,7 +35,7 @@ namespace WinCopies.Collections.DotNetFix
 
         protected ReadOnlyEnumerableSimpleLinkedList(in T list) : base(list) { /* Left empty. */ }
 
-        public void CopyTo(Array array, int arrayIndex) => EnumerableExtensions.CopyTo(this, array, arrayIndex, Count);
+        public void CopyTo(System.Array array, int arrayIndex) => EnumerableExtensions.CopyTo(this, array, arrayIndex, Count);
 
         public object[] ToArray() => InnerList.ToArray();
 
