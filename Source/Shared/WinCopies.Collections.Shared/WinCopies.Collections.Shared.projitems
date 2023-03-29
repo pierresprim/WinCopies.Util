@@ -22,6 +22,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)abstraction\Indexable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstraction\LinkedList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstraction\Lists.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)abstraction\LoopEnumerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstraction\SimpleLinkedLists.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\Dictionary\IDictionary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DotNetFix\Generic\Dictionary\Old.cs" />

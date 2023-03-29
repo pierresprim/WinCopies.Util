@@ -99,207 +99,6 @@ namespace WinCopies.Collections
         {
             new T Current { get; }
         }
-    }
-
-    namespace Abstraction.Generic
-    {
-        public abstract class LoopEnumerator<TEnumerator, TIn, TOut> : ILoopEnumerator<TOut> where TEnumerator : ILoopEnumerator<TIn>
-        {
-            protected TEnumerator Enumerator { get; }
-
-            public TOut Current => Convert(Enumerator.Current);
-
-            object
-#if CS8
-                ?
-#endif
-                ILoopEnumerator.Current => Current;
-
-            protected LoopEnumerator(in TEnumerator enumerator) => Enumerator = enumerator;
-
-            public void MovePrevious() => Enumerator.MovePrevious();
-            public void MoveNext() => Enumerator.MoveNext();
-
-            protected abstract TOut Convert(in TIn value);
-        }
-
-        public class LoopEnumeratorDelegate<TEnumerator, TIn, TOut> : LoopEnumerator<TEnumerator, TIn, TOut> where TEnumerator : ILoopEnumerator<TIn>
-        {
-            protected Converter<TIn, TOut> Selector { get; }
-
-            public LoopEnumeratorDelegate(in TEnumerator enumerator, in Converter<TIn, TOut> selector) : base(enumerator) => Selector = selector;
-
-            protected override TOut Convert(in TIn value) => Selector(value);
-        }
-    }
-
-    namespace AbstractionInterop.Generic
-    {
-        public abstract class LoopEnumerator<TEnumerator, TIn, TOut> : ILoopEnumerator<TOut> where TEnumerator : ILoopEnumerator<TIn> where TIn : TOut
-        {
-            protected TEnumerator Enumerator { get; }
-
-            public TOut Current => Enumerator.Current;
-
-            object
-#if CS8
-                ?
-#endif
-                ILoopEnumerator.Current => Current;
-
-            public LoopEnumerator(in TEnumerator enumerator) => Enumerator = enumerator;
-
-            public void MovePrevious() => Enumerator.MovePrevious();
-            public void MoveNext() => Enumerator.MoveNext();
-        }
-    }
-
-    public abstract class CircularArrayBase<T> : IEnumerable, IIndexableR, ICountable where T : IEnumerable
-    {
-        protected T List { get; }
-
-        public object
-#if CS8
-            ?
-#endif
-            this[int index] => GetAt(GetIndex(index));
-
-        public abstract int Count { get; }
-
-        public int Offset { get; }
-
-        public CircularArrayBase(in T list, in int offset)
-        {
-            List = list
-#if CS8
-                ??
-#else
-                == null ?
-#endif
-                throw new ArgumentNullException(nameof(list))
-#if !CS8
-                : list
-#endif
-                ;
-            Offset = offset % Count;
-        }
-
-        protected int GetIndex(int index)
-        {
-            int count = Count;
-            int offset = Offset;
-
-            return
-#if WinCopies3
-        UtilHelpers
-#else
-                WinCopies.Util.Util
-#endif
-            .GetIndex(index % count, count, ref offset);
-        }
-
-        protected abstract object
-#if CS8
-            ?
-#endif
-            GetAt(int index);
-
-        public abstract IEnumerator GetEnumerator();
-    }
-
-    public class CircularArray : CircularArrayBase<Array>, IIndexable
-    {
-        public new object
-#if CS8
-            ?
-#endif
-            this[int index]
-        { get => base[index]; set => List.SetValue(value, GetIndex(index)); }
-
-        public override int Count => List.Length;
-
-        public CircularArray(in Array array, in int offset) : base(array, offset) { /* Left empty. */ }
-
-        protected override object
-#if CS8
-            ?
-#endif
-            GetAt(int index) => List.GetValue(index);
-
-        public override IEnumerator GetEnumerator() => DotNetFix.ArrayEnumerator.Create(List, DotNetFix.ArrayEnumerationOptions.Circular, GetIndex(0));
-    }
-
-    namespace Generic
-    {
-        public abstract class CircularArrayBase<TItems, TList> : CircularArrayBase<TList>, System.Collections.Generic.IReadOnlyList<TItems>,
-#if CS8
-            DotNetFix
-#else
-            System.Collections
-#endif
-            .Generic.IEnumerable<TItems>, IIndexableR<TItems> where TList : IEnumerable<TItems>
-        {
-            public new TItems this[int index] => GetItemAt(GetIndex(index));
-
-            protected CircularArrayBase(in TList list, in int offset) : base(list, offset) { /* Left empty. */ }
-
-            protected abstract TItems GetItemAt(int index);
-            protected override object
-#if CS8
-                ?
-#endif
-                GetAt(int index) => GetItemAt(index);
-
-            public abstract IEnumerator<TItems> GetEnumeratorGeneric();
-            public override
-#if CS9
-                IEnumerator<TItems>
-#else
-                IEnumerator
-#endif
-                GetEnumerator() => GetEnumeratorGeneric();
-            IEnumerator<TItems> IEnumerable<TItems>.GetEnumerator() => GetEnumeratorGeneric();
-        }
-
-        public class CircularArray<TItems, TList> : CircularArrayBase<TItems, TList> where TList : System.Collections.Generic.IReadOnlyList<TItems>
-        {
-            public override int Count => List.Count;
-
-            public CircularArray(in TList list, in int offset) : base(list, offset) { /* Left empty. */ }
-
-            protected override TItems GetItemAt(int index) => List[index];
-
-            public override IEnumerator<TItems> GetEnumeratorGeneric() => DotNetFix.ArrayEnumerator.Create(List, DotNetFix.ArrayEnumerationOptions.Circular, GetIndex(0));
-        }
-
-        public class CircularReadOnlyList<T> : CircularArray<T, System.Collections.Generic.IReadOnlyList<T>>
-        {
-            public CircularReadOnlyList(in System.Collections.Generic.IReadOnlyList<T> list, in int offset) : base(list, offset) { /* Left empty. */ }
-        }
-
-        public class CircularArray<T> : CircularArray<T, T[]>, IIndexable<T>
-        {
-            public new T this[int index] { get => base[index]; set => List[GetIndex(index)] = value; }
-#if !CS8
-            object IIndexableW.this[int index] { set => this[index] = (T)value; }
-#endif
-            public CircularArray(in T[] array, in int offset) : base(array, offset) { /* Left empty. */ }
-        }
-
-        public class CircularList<T> : CircularArrayBase<T, IList<T>>, IIndexable<T>
-        {
-            public override int Count => List.Count;
-
-            public new T this[int index] { get => base[index]; set => List[GetIndex(index)] = value; }
-#if !CS8
-            object IIndexableW.this[int index] { set => this[index] = (T)value; }
-#endif
-            public CircularList(in IList<T> list, in int offset) : base(list, offset) { /* Left empty. */ }
-
-            protected override T GetItemAt(int index) => List[index];
-
-            public override IEnumerator<T> GetEnumeratorGeneric() => DotNetFix.ArrayEnumerator.Create(List, DotNetFix.ArrayEnumerationOptions.Circular, GetIndex(0));
-        }
 
         public class ListLoopEnumerator<T> : IReadOnlyListLoopEnumerator, ILoopEnumerator<T>
         {
@@ -361,7 +160,7 @@ namespace WinCopies.Collections
 
             public static System.Collections.Generic.IReadOnlyList<T> GetList()
             {
-                Array values = typeof(T).GetEnumValues();
+                System.Array values = typeof(T).GetEnumValues();
 
                 var list = new List<T>(values.Length);
 
@@ -375,6 +174,27 @@ namespace WinCopies.Collections
             }
 
             public EnumLoopEnumerator() : base(GetList()) { /* Left empty. */ }
+        }
+    }
+
+    namespace AbstractionInterop.Generic
+    {
+        public abstract class LoopEnumerator<TEnumerator, TIn, TOut> : ILoopEnumerator<TOut> where TEnumerator : ILoopEnumerator<TIn> where TIn : TOut
+        {
+            protected TEnumerator Enumerator { get; }
+
+            public TOut Current => Enumerator.Current;
+
+            object
+#if CS8
+                ?
+#endif
+                ILoopEnumerator.Current => Current;
+
+            public LoopEnumerator(in TEnumerator enumerator) => Enumerator = enumerator;
+
+            public void MovePrevious() => Enumerator.MovePrevious();
+            public void MoveNext() => Enumerator.MoveNext();
         }
     }
 }
