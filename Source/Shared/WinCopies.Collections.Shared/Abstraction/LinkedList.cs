@@ -262,7 +262,7 @@ namespace WinCopies.Collections.Abstraction.Generic
 
         void System.Collections.Generic.ICollection<T>.CopyTo(T[] array, int arrayIndex) => InnerList.CopyTo(array, arrayIndex);
 
-        void ICollection.CopyTo(Array array, int index) => InnerList.AsFromType<ICollection>().CopyTo(array, index);
+        void ICollection.CopyTo(System.Array array, int index) => InnerList.AsFromType<ICollection>().CopyTo(array, index);
 
         public bool Equals(LinkedList<T>
 #if CS8
