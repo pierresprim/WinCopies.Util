@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ActionRunners\TypeChecks.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ActionRunners\ValueChecks.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Console.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Convert.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Convertible.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\IProperty.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\ValueChangedEventArgs.cs" />
@@ -21,11 +22,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)Commands.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Comparers.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Diagnostics\Enums.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\ResourceNotFoundException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\Array.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ForLoop.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ItemsChangedEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Nullable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Regex.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StringExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Delegates\ActionDelegates.cs" />

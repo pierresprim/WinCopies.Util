@@ -22,17 +22,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 
-using static WinCopies
-#if WinCopies3
-    .ThrowHelper;
-#else
-    .Util.Util;
-#endif
+using static WinCopies.ThrowHelper;
 
 namespace WinCopies
-#if !WinCopies3
-    .Util
-#endif
 {
     public interface IReadOnlyValueObject : IEquatable<IReadOnlyValueObject>, System.IDisposable
     {
@@ -55,13 +47,7 @@ namespace WinCopies
     /// <summary>
     /// Represents a value container. See the <see cref="IValueObject{T}"/> for a generic version of this class.
     /// </summary>
-    public interface IValueObject : IReadOnlyValueObject,
-#if WinCopies3
-        DotNetFix
-#else
-        System
-#endif
-        .IDisposable
+    public interface IValueObject : IReadOnlyValueObject, DotNetFix.IDisposable
     {
         new object Value { get; set; }
     }
@@ -77,7 +63,6 @@ namespace WinCopies
         new T Value { get; set; }
     }
 
-#if WinCopies3
     public interface INamedObjectBase
     {
         /// <summary>
@@ -294,7 +279,6 @@ namespace WinCopies
     {
         // Left empty.
     }
-#endif
 
     public sealed class PropertyValueObject : IValueObject, IEquatable<PropertyValueObject>
     {
