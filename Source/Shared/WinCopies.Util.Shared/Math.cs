@@ -15,24 +15,28 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-using System;
 #if CS11
 using System.Numerics;
 #endif
-
-using static WinCopies.UtilHelpers;
 
 namespace WinCopies
 {
     public static class Math
     {
+        public static decimal GetBufferCount(in decimal length, in decimal bufferLength) => System.Math.Ceiling(length / bufferLength);
+
         public static uint GetLength(ulong n) => (uint)System.Math.Floor(System.Math.Log10(n) + 1);
 
         public static ulong Pow(in byte b, in byte power)
         {
-            if (power == 0) return 1UL;
+            switch (power)
+            {
+                case 0:
+                    return 1UL;
 
-            if (power == 1) return b;
+                case 1:
+                    return b;
+            }
 
             ulong result = (ulong)(b * b);
 
@@ -45,33 +49,30 @@ namespace WinCopies
 
         public static long Pow(in sbyte b, in sbyte power)
         {
-            if (power == 0) return 1L;
-
-            if (power == 1) return b;
-
-            if (power == -1)
-
-                return (long)(1 / b);
-
-            long result;
-
-            if (power < 0)
+            switch (power)
             {
-                if (power < -1)
-                {
-                    result = (long)(b * b);
+                case 0:
+                    return 1L;
 
-                    for (sbyte i = -3; i >= power; i--)
+                case 1:
+                    return b;
 
-                        result *= b;
-
-                    result = 1 / result;
-
-                    return result;
-                }
+                case -1:
+                    return 1 / b;
             }
 
-            result = b * b;
+            long result = b * b;
+
+            if (power < -1)
+            {
+                for (sbyte i = -3; i >= power; i--)
+
+                    result *= b;
+
+                result = 1 / result;
+
+                return result;
+            }
 
             for (sbyte i = 3; i <= power; i++)
 
@@ -82,9 +83,14 @@ namespace WinCopies
 
         public static ulong Pow(in ushort s, in ushort power)
         {
-            if (power == 0) return 1UL;
+            switch (power)
+            {
+                case 0:
+                    return 1UL;
 
-            if (power == 1) return s;
+                case 1:
+                    return s;
+            }
 
             ulong result = (ulong)(s * s);
 
@@ -97,33 +103,30 @@ namespace WinCopies
 
         public static long Pow(in short s, in short power)
         {
-            if (power == 0) return 1L;
-
-            if (power == 1) return s;
-
-            if (power == -1)
-
-                return (long)(1 / s);
-
-            long result;
-
-            if (power < 0)
+            switch (power)
             {
-                if (power < -1)
-                {
-                    result = (long)(s * s);
+                case 0:
+                    return 1L;
 
-                    for (short i = -3; i >= power; i--)
+                case 1:
+                    return s;
 
-                        result *= s;
-
-                    result = 1 / result;
-
-                    return result;
-                }
+                case -1:
+                    return 1 / s;
             }
 
-            result = s * s;
+            long result = s * s;
+
+            if (power < -1)
+            {
+                for (short i = -3; i >= power; i--)
+
+                    result *= s;
+
+                result = 1 / result;
+
+                return result;
+            }
 
             for (short i = 3; i <= power; i++)
 
@@ -134,11 +137,16 @@ namespace WinCopies
 
         public static ulong Pow(in uint i, in uint power)
         {
-            if (power == 0u) return 1UL;
+            switch (power)
+            {
+                case 0:
+                    return 1UL;
 
-            if (power == 1u) return i;
+                case 1:
+                    return i;
+            }
 
-            ulong result = (ulong)(i * i);
+            ulong result = i * i;
 
             for (uint _i = 3u; _i <= power; _i++)
 
@@ -149,33 +157,30 @@ namespace WinCopies
 
         public static long Pow(in int i, in int power)
         {
-            if (power == 0) return 1L;
-
-            if (power == 1) return i;
-
-            if (power == -1)
-
-                return (long)(1 / i);
-
-            long result;
-
-            if (power < 0)
+            switch (power)
             {
-                if (power < -1)
-                {
-                    result = (long)(i * i);
+                case 0:
+                    return 1L;
 
-                    for (int _i = -3; _i >= power; _i--)
+                case 1:
+                    return i;
 
-                        result *= i;
-
-                    result = 1 / result;
-
-                    return result;
-                }
+                case -1:
+                    return 1 / i;
             }
 
-            result = i * i;
+            long result = i * i;
+
+            if (power < -1)
+            {
+                for (int _i = -3; _i >= power; _i--)
+
+                    result *= i;
+
+                result = 1 / result;
+
+                return result;
+            }
 
             for (int _i = 3; _i <= power; _i++)
 
@@ -186,9 +191,14 @@ namespace WinCopies
 
         public static ulong Pow(in ulong value, in ulong power)
         {
-            if (power == 0) return 1UL;
+            switch (power)
+            {
+                case 0:
+                    return 1UL;
 
-            if (power == 1) return value;
+                case 1:
+                    return value;
+            }
 
             ulong result = value * value;
 
@@ -201,33 +211,30 @@ namespace WinCopies
 
         public static long Pow(in long value, in long power)
         {
-            if (power == 0) return 1L;
-
-            if (power == 1) return value;
-
-            if (power == -1)
-
-                return 1 / value;
-
-            long result;
-
-            if (power < 0)
+            switch (power)
             {
-                if (power < -1)
-                {
-                    result = value * value;
+                case 0:
+                    return 1L;
 
-                    for (long i = -3; i >= power; i--)
+                case 1:
+                    return value;
 
-                        result *= value;
-
-                    result = 1 / result;
-
-                    return result;
-                }
+                case -1:
+                    return 1 / value;
             }
 
-            result = value * value;
+            long result = value * value;
+
+            if (power < -1)
+            {
+                for (long i = -3; i >= power; i--)
+
+                    result *= value;
+
+                result = 1 / result;
+
+                return result;
+            }
 
             for (long i = 3; i <= power; i++)
 
@@ -238,33 +245,30 @@ namespace WinCopies
 
         public static float Pow(in float value, in float power)
         {
-            if (power == 0) return 1f;
-
-            if (power == 1) return value;
-
-            if (power == -1)
-
-                return 1 / value;
-
-            float result;
-
-            if (power < 0)
+            switch (power)
             {
-                if (power < -1)
-                {
-                    result = (float)(value * value);
+                case 0:
+                    return 1f;
 
-                    for (float i = -3; i >= power; i--)
+                case 1:
+                    return value;
 
-                        result *= value;
-
-                    result = 1 / result;
-
-                    return result;
-                }
+                case -1:
+                    return 1 / value;
             }
 
-            result = (float)(value * value);
+            float result = (float)(value * value);
+
+            if (power < -1)
+            {
+                for (float i = -3; i >= power; i--)
+
+                    result *= value;
+
+                result = 1 / result;
+
+                return result;
+            }
 
             for (float i = 3; i <= power; i++)
 
@@ -275,33 +279,30 @@ namespace WinCopies
 
         public static decimal Pow(in decimal value, in decimal power)
         {
-            if (power == 0) return 1m;
-
-            if (power == 1) return value;
-
-            if (power == -1)
-
-                return 1 / value;
-
-            decimal result;
-
-            if (power < 0)
+            switch (power)
             {
-                if (power < -1)
-                {
-                    result = value * value;
+                case 0:
+                    return 1m;
 
-                    for (decimal i = -3; i >= power; i--)
+                case 1:
+                    return value;
 
-                        result *= value;
-
-                    result = 1 / result;
-
-                    return result;
-                }
+                case -1:
+                    return 1 / value;
             }
 
-            result = value * value;
+            decimal result = value * value;
+
+            if (power < -1)
+            {
+                for (decimal i = -3; i >= power; i--)
+
+                    result *= value;
+
+                result = 1 / result;
+
+                return result;
+            }
 
             for (decimal i = 3; i <= power; i++)
 
@@ -377,13 +378,11 @@ namespace WinCopies
 
     public static class MathExtensions
     {
-        private static bool Between<T>(this
-#if !CS11
-            ISortableItem<
-#endif
+        private static bool Between<T>(in
+#if CS11
             T
-#if !CS11
-            >
+#else
+            dynamic
 #endif
             value, in T x, in T y, in bool bx, in bool by) where T :
 #if CS11
@@ -391,35 +390,13 @@ namespace WinCopies
 #else
             unmanaged
 #endif
-            => Compare(x, y, bx ?
-#if CS11
-            _value => value >= _value : _value => value > _value
-#else
-            value.GreaterThanOrEqualTo :
-#if !CS9
-                (Predicate<T>)
-#endif
-                value.GreaterThan
-#endif
-            , by ?
-#if CS11
-            _value => value <= _value : _value => value < _value
-#else
-            value.LessThanOrEqualTo :
-#if !CS9
-                (Predicate<T>)
-#endif
-                value.LessThan
-#endif
-                , Bool.AndIn);
+            => (bx ? (value >= x) : (value > x)) && (by ? (value <= y) : (value < y));
 
-        private static bool Outside<T>(this
-#if !CS11
-            ISortableItem<
-#endif
+        private static bool Outside<T>(in
+#if CS11
             T
-#if !CS11
-            >
+#else
+            dynamic
 #endif
             value, in T x, in T y, in bool bx, in bool by) where T :
 #if CS11
@@ -427,314 +404,30 @@ namespace WinCopies
 #else
             unmanaged
 #endif
-            => Compare(x, y, bx ?
-#if CS11
-            _value => value <= _value : _value => value < _value
-#else
-            value.LessThanOrEqualTo :
-#if !CS9
-                (Predicate<T>)
-#endif
-                value.LessThan
-#endif
-            , by ?
-#if CS11
-            _value => value >= _value : _value => value > _value
-#else
-            value.GreaterThanOrEqualTo :
-#if !CS9
-                (Predicate<T>)
-#endif
-                value.GreaterThan
-#endif
-                , Bool.OrIn);
+            => (bx ? (value <= x) : (value < x)) && (by ? (value >= y) : (value > y));
 
-        public static bool Between(this byte value, byte x, byte y, in bool bx = true, bool by = true) => Between
-#if CS11
-            <byte>
-#endif
-            (
-#if !CS11
-            Util.Extensions.NumberHelper.GetNumber(
-#endif
-            value
-#if !CS11
-            )
-#endif
-            , x, y, bx, by);
-        public static bool Between(this sbyte value, sbyte x, sbyte y, in bool bx = true, bool by = true) => Between
-#if CS11
-            <sbyte>
-#endif
-            (
-#if !CS11
-            Util.Extensions.NumberHelper.GetNumber(
-#endif
-            value
-#if !CS11
-            )
-#endif
-            , x, y, bx, by);
-        public static bool Between(this short value, short x, short y, in bool bx = true, bool by = true) => Between
-#if CS11
-            <short>
-#endif
-            (
-#if !CS11
-            Util.Extensions.NumberHelper.GetNumber(
-#endif
-            value
-#if !CS11
-            )
-#endif
-            , x, y, bx, by);
-        public static bool Between(this ushort value, ushort x, ushort y, in bool bx = true, bool by = true) => Between
-#if CS11
-            <ushort>
-#endif
-            (
-#if !CS11
-            Util.Extensions.NumberHelper.GetNumber(
-#endif
-            value
-#if !CS11
-            )
-#endif
-            , x, y, bx, by);
-        public static bool Between(this int value, int x, int y, in bool bx = true, bool by = true) => Between
-#if CS11
-            <int>
-#endif
-            (
-#if !CS11
-            Util.Extensions.NumberHelper.GetNumber(
-#endif
-            value
-#if !CS11
-            )
-#endif
-            , x, y, bx, by);
-        public static bool Between(this uint value, uint x, uint y, in bool bx = true, bool by = true) => Between
-#if CS11
-            <uint>
-#endif
-            (
-#if !CS11
-            Util.Extensions.NumberHelper.GetNumber(
-#endif
-            value
-#if !CS11
-            )
-#endif
-            , x, y, bx, by);
-        public static bool Between(this long value, long x, long y, in bool bx = true, bool by = true) => Between
-#if CS11
-            <long>
-#endif
-            (
-#if !CS11
-            Util.Extensions.NumberHelper.GetNumber(
-#endif
-            value
-#if !CS11
-            )
-#endif
-            , x, y, bx, by);
-        public static bool Between(this ulong value, ulong x, ulong y, in bool bx = true, bool by = true) => Between
-#if CS11
-            <ulong>
-#endif
-            (
-#if !CS11
-            Util.Extensions.NumberHelper.GetNumber(
-#endif
-            value
-#if !CS11
-            )
-#endif
-            , x, y, bx, by);
-        public static bool Between(this float value, float x, float y, in bool bx = true, bool by = true) => Between
-#if CS11
-            <float>
-#endif
-            (
-#if !CS11
-            Util.Extensions.NumberHelper.GetNumber(
-#endif
-            value
-#if !CS11
-            )
-#endif
-            , x, y, bx, by);
-        public static bool Between(this double value, double x, double y, in bool bx = true, bool by = true) => Between
-#if CS11
-            <double>
-#endif
-            (
-#if !CS11
-            Util.Extensions.NumberHelper.GetNumber(
-#endif
-            value
-#if !CS11
-            )
-#endif
-            , x, y, bx, by);
-        public static bool Between(this decimal value, decimal x, decimal y, in bool bx = true, bool by = true) => Between
-#if CS11
-            <decimal>
-#endif
-            (
-#if !CS11
-            Util.Extensions.NumberHelper.GetNumber(
-#endif
-            value
-#if !CS11
-            )
-#endif
-            , x, y, bx, by);
+        public static bool Between(this byte value, byte x, byte y, in bool bx = true, bool by = true) => Between<byte>(value, x, y, bx, by);
+        public static bool Between(this sbyte value, sbyte x, sbyte y, in bool bx = true, bool by = true) => Between<sbyte>(value, x, y, bx, by);
+        public static bool Between(this short value, short x, short y, in bool bx = true, bool by = true) => Between<short>(value, x, y, bx, by);
+        public static bool Between(this ushort value, ushort x, ushort y, in bool bx = true, bool by = true) => Between<ushort>(value, x, y, bx, by);
+        public static bool Between(this int value, int x, int y, in bool bx = true, bool by = true) => Between<int>(value, x, y, bx, by);
+        public static bool Between(this uint value, uint x, uint y, in bool bx = true, bool by = true) => Between<uint>(value, x, y, bx, by);
+        public static bool Between(this long value, long x, long y, in bool bx = true, bool by = true) => Between<long>(value, x, y, bx, by);
+        public static bool Between(this ulong value, ulong x, ulong y, in bool bx = true, bool by = true) => Between<ulong>(value, x, y, bx, by);
+        public static bool Between(this float value, float x, float y, in bool bx = true, bool by = true) => Between<float>(value, x, y, bx, by);
+        public static bool Between(this double value, double x, double y, in bool bx = true, bool by = true) => Between<double>(value, x, y, bx, by);
+        public static bool Between(this decimal value, decimal x, decimal y, in bool bx = true, bool by = true) => Between<decimal>(value, x, y, bx, by);
 
-        public static bool Outside(this byte value, byte x, byte y, in bool bx = true, bool by = true) => Outside
-#if CS11
-            <byte>
-#endif
-            (
-#if !CS11
-            Util.Extensions.NumberHelper.GetNumber(
-#endif
-            value
-#if !CS11
-            )
-#endif
-            , x, y, bx, by);
-        public static bool Outside(this sbyte value, sbyte x, sbyte y, in bool bx = true, bool by = true) => Outside
-#if CS11
-            <sbyte>
-#endif
-            (
-#if !CS11
-            Util.Extensions.NumberHelper.GetNumber(
-#endif
-            value
-#if !CS11
-            )
-#endif
-            , x, y, bx, by);
-        public static bool Outside(this short value, short x, short y, in bool bx = true, bool by = true) => Outside
-#if CS11
-            <short>
-#endif
-            (
-#if !CS11
-            Util.Extensions.NumberHelper.GetNumber(
-#endif
-            value
-#if !CS11
-            )
-#endif
-            , x, y, bx, by);
-        public static bool Outside(this ushort value, ushort x, ushort y, in bool bx = true, bool by = true) => Outside
-#if CS11
-            <ushort>
-#endif
-            (
-#if !CS11
-            Util.Extensions.NumberHelper.GetNumber(
-#endif
-            value
-#if !CS11
-            )
-#endif
-            , x, y, bx, by);
-        public static bool Outside(this int value, int x, int y, in bool bx = true, bool by = true) => Outside
-#if CS11
-            <int>
-#endif
-            (
-#if !CS11
-            Util.Extensions.NumberHelper.GetNumber(
-#endif
-            value
-#if !CS11
-            )
-#endif
-            , x, y, bx, by);
-        public static bool Outside(this uint value, uint x, uint y, in bool bx = true, bool by = true) => Outside
-#if CS11
-            <uint>
-#endif
-            (
-#if !CS11
-            Util.Extensions.NumberHelper.GetNumber(
-#endif
-            value
-#if !CS11
-            )
-#endif
-            , x, y, bx, by);
-        public static bool Outside(this long value, long x, long y, in bool bx = true, bool by = true) => Outside
-#if CS11
-            <long>
-#endif
-            (
-#if !CS11
-            Util.Extensions.NumberHelper.GetNumber(
-#endif
-            value
-#if !CS11
-            )
-#endif
-            , x, y, bx, by);
-        public static bool Outside(this ulong value, ulong x, ulong y, in bool bx = true, bool by = true) => Outside
-#if CS11
-            <ulong>
-#endif
-            (
-#if !CS11
-            Util.Extensions.NumberHelper.GetNumber(
-#endif
-            value
-#if !CS11
-            )
-#endif
-            , x, y, bx, by);
-        public static bool Outside(this float value, float x, float y, in bool bx = true, bool by = true) => Outside
-#if CS11
-            <float>
-#endif
-            (
-#if !CS11
-            Util.Extensions.NumberHelper.GetNumber(
-#endif
-            value
-#if !CS11
-            )
-#endif
-            , x, y, bx, by);
-        public static bool Outside(this double value, double x, double y, in bool bx = true, bool by = true) => Outside
-#if CS11
-            <double>
-#endif
-            (
-#if !CS11
-            Util.Extensions.NumberHelper.GetNumber(
-#endif
-            value
-#if !CS11
-            )
-#endif
-            , x, y, bx, by);
-        public static bool Outside(this decimal value, decimal x, decimal y, in bool bx = true, bool by = true) => Outside
-#if CS11
-            <decimal>
-#endif
-            (
-#if !CS11
-            Util.Extensions.NumberHelper.GetNumber(
-#endif
-            value
-#if !CS11
-            )
-#endif
-            , x, y, bx, by);
+        public static bool Outside(this byte value, byte x, byte y, in bool bx = true, bool by = true) => Outside<byte>(value, x, y, bx, by);
+        public static bool Outside(this sbyte value, sbyte x, sbyte y, in bool bx = true, bool by = true) => Outside<sbyte>(value, x, y, bx, by);
+        public static bool Outside(this short value, short x, short y, in bool bx = true, bool by = true) => Outside<short>(value, x, y, bx, by);
+        public static bool Outside(this ushort value, ushort x, ushort y, in bool bx = true, bool by = true) => Outside<ushort>(value, x, y, bx, by);
+        public static bool Outside(this int value, int x, int y, in bool bx = true, bool by = true) => Outside<int>(value, x, y, bx, by);
+        public static bool Outside(this uint value, uint x, uint y, in bool bx = true, bool by = true) => Outside<uint>(value, x, y, bx, by);
+        public static bool Outside(this long value, long x, long y, in bool bx = true, bool by = true) => Outside<long>(value, x, y, bx, by);
+        public static bool Outside(this ulong value, ulong x, ulong y, in bool bx = true, bool by = true) => Outside<ulong>(value, x, y, bx, by);
+        public static bool Outside(this float value, float x, float y, in bool bx = true, bool by = true) => Outside<float>(value, x, y, bx, by);
+        public static bool Outside(this double value, double x, double y, in bool bx = true, bool by = true) => Outside<double>(value, x, y, bx, by);
+        public static bool Outside(this decimal value, decimal x, decimal y, in bool bx = true, bool by = true) => Outside<decimal>(value, x, y, bx, by);
     }
 }
