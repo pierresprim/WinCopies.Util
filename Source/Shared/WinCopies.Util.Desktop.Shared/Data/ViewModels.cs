@@ -519,7 +519,7 @@ namespace WinCopies.Util.Data
 
         System.Collections.IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        void ICollection.CopyTo(Array array, int index) => Collections.EnumerableExtensions.CopyTo(this, array, index, Count);
+        void ICollection.CopyTo(System.Array array, int index) => Collections.EnumerableExtensions.CopyTo(this, array, index, Count);
 
         int IList.Add(object value)
         {
