@@ -2,9 +2,9 @@
 	<PropertyGroup>
 		<PackageId>WinCopies.Collections</PackageId>
 		<PackageTags>WinCopies</PackageTags>
-		<VersionPrefix>3.21</VersionPrefix>
-		<AssemblyVersion>3.21</AssemblyVersion>
-		<FileVersion>3.21</FileVersion>
+		<VersionPrefix>3.22</VersionPrefix>
+		<AssemblyVersion>3.22</AssemblyVersion>
+		<FileVersion>3.22</FileVersion>
 		<RootNamespace>WinCopies.Collections</RootNamespace>
 		<DefineConstants>WinCopies2;WinCopies3;$(DefineConstants)</DefineConstants>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
