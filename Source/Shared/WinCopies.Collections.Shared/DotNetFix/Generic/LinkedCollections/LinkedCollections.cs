@@ -69,7 +69,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
         public bool Contains(TItems item) => InnerCollection.Contains(item);
 
-        public void CopyTo(Array array, int index) => InnerList.AsFromType<ICollection>().CopyTo(array, index);
+        public void CopyTo(System.Array array, int index) => InnerList.AsFromType<ICollection>().CopyTo(array, index);
         public void CopyTo(TItems[] array, int arrayIndex) => InnerCollection.CopyTo(array, arrayIndex);
 
         public IUIntCountableEnumeratorInfo<TItems> GetEnumerator() => InnerEnumerable.GetEnumerator();
