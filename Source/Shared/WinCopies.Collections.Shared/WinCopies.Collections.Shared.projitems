@@ -19,6 +19,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Abstraction\Abstract\List.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstraction\ArrayEnumerable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstraction\Dictionary.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)abstraction\Indexable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstraction\LinkedList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstraction\Lists.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstraction\SimpleLinkedLists.cs" />
