@@ -680,7 +680,7 @@ namespace WinCopies.Collections.DotNetFix
 
                     array[arrayIndex++] = item;
             }
-            public void CopyTo(Array array, int index) => EnumerableExtensions.CopyTo(this, array, index, Count);
+            public void CopyTo(System.Array array, int index) => EnumerableExtensions.CopyTo(this, array, index, Count);
 
             protected bool OnNodeCoupleAction(in ILinkedListNode<T> x, in string xArgumentName, in ILinkedListNode<T> y, in string yArgumentName, in Func<LinkedListNode, LinkedListNode, bool> func) => x is LinkedListNode _x
                     ? y is LinkedListNode _y ? func(_x, _y) : throw (y == null ? GetArgumentNullException(xArgumentName) : GetNotContainedLinkedListNodeException(nameof(y)))
