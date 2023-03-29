@@ -63,7 +63,13 @@ namespace WinCopies.Linq
 #if !CS9
             (Predicate<T>)
 #endif
-            Delegates.EqualsNull<T> : item => value.Equals(item));
+            Delegates.
+#if WinCopies4
+            EqualsNull
+#else
+            CheckIfEqualsNull
+#endif
+            <T> : item => value.Equals(item));
 
         public static bool None<T>(this System.Collections.Generic.IEnumerable<T> enumerable, Func<T, bool> func)
         {
