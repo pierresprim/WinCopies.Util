@@ -137,7 +137,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
         /// <returns><see langword="true"/> if <paramref name="item"/> is found in the queue; otherwise, <see langword="false"/>.</returns>
         public bool Contains(TItems item) => InnerList.Contains(item);
 
-        void ICollection.CopyTo(Array array, int index) => InnerList.CopyTo(array, index);
+        void ICollection.CopyTo(System.Array array, int index) => InnerList.CopyTo(array, index);
 
         /// <summary>
         /// Copies the <see cref="QueueCollection{T}"/> elements to an existing one-dimensional <see cref="Array"/>, starting at the specified array index.

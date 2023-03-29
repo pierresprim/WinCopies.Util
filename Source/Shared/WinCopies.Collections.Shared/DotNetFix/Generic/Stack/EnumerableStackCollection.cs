@@ -37,7 +37,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
 
         public void CopyTo(TItems[] array, int index) => InnerList.CopyTo(array, index);
 
-        public void CopyTo(Array array, int index) => InnerList.CopyTo(array, index);
+        public void CopyTo(System.Array array, int index) => InnerList.CopyTo(array, index);
 
         public System.Collections.Generic.IEnumerator<TItems> GetEnumerator() => InnerList.GetEnumerator();
         System.Collections.IEnumerator IEnumerable.GetEnumerator() => InnerList.GetEnumerator();

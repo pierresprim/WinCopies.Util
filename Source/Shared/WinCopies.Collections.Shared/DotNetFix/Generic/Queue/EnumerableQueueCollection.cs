@@ -37,7 +37,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
         public EnumerableQueueCollection(in TQueue queue) : base(queue) { /* Left empty. */ }
 
         public void CopyTo(TItems[] array, int index) => InnerList.CopyTo(array, index);
-        public void CopyTo(Array array, int index) => InnerList.CopyTo(array, index);
+        public void CopyTo(System.Array array, int index) => InnerList.CopyTo(array, index);
 
         public System.Collections.Generic.IEnumerator<TItems> GetEnumerator() => InnerList.AsEnumerable().GetEnumerator();
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();

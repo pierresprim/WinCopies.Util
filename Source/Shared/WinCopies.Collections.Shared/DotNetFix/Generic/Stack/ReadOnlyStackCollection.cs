@@ -83,7 +83,7 @@ namespace WinCopies.Collections.DotNetFix.Generic
         /// <returns><see langword="true"/> if <paramref name="item"/> is found in the Stack; otherwise, <see langword="false"/>.</returns>
         public bool Contains(TItems item) => InnerList.Contains(item);
 
-        void ICollection.CopyTo(Array array, int index) => InnerList.CopyTo(array, index);
+        void ICollection.CopyTo(System.Array array, int index) => InnerList.CopyTo(array, index);
 
         /// <summary>
         /// Copies the <see cref="StackCollection{T}"/> elements to an existing one-dimensional <see cref="System.Array"/>, starting at the specified array index.
