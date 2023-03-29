@@ -45,7 +45,7 @@ namespace WinCopies.Collections
         /// </summary>
         /// <param name="array">The source table.</param>
         /// <param name="arrays">The tables to concatenate.</param>
-        /// <returns>The concatenatd array.</returns>
+        /// <returns>The concatenated array.</returns>
         public static object[] Append(this System.Array array, params System.Array[] arrays) => UtilHelpers.Concatenate((object[])array, arrays);
 
         public static ArrayList ToList(this object[] array, in int startIndex, in int length)
@@ -83,14 +83,6 @@ namespace WinCopies.Collections
         }
 
 
-
-        private static void ThrowOnInvalidArrayMoveOperation(in System.Array array, in string arrayArgumentName, in int x, in string xArgumentName, in int y, in string yArgumentName)
-        {
-            ThrowIfNull(array, arrayArgumentName);
-            ThrowIfMultidimensionalArray(array, arrayArgumentName);
-            ThrowIfNOTBetween(x, 0, array.Length - 1, xArgumentName);
-            ThrowIfNOTBetween(y, 0, array.Length - 1, yArgumentName);
-        }
 
         public static void Move(this System.Array array, int move, int at)
         {
@@ -162,7 +154,7 @@ namespace WinCopies.Collections
         {
             ThrowOnInvalidArrayMoveOperation(array, nameof(array), x, nameof(x), y, nameof(y));
 
-            if (array.Length <= 1 || x == y)
+            if (x == y)
 
                 return;
 
@@ -181,7 +173,7 @@ namespace WinCopies.Collections
         {
             ThrowOnInvalidArrayMoveOperation(array, nameof(array), x, nameof(x), y, nameof(y));
 
-            if (array.Length <= 1 || x == y)
+            if (x == y)
 
                 return;
 #if CS5

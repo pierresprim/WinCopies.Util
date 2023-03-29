@@ -15,14 +15,12 @@
  * You should have received a copy of the GNU General Public License
  * along with the WinCopies Framework.  If not, see <https://www.gnu.org/licenses/>. */
 
-#if WinCopies3
 using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 
 using WinCopies.Collections.DotNetFix.Generic;
-using WinCopies.Collections.Generic;
 
 using static WinCopies.ThrowHelper;
 
@@ -474,4 +472,3 @@ namespace WinCopies.Collections
         }
     }
 }
-#endif
