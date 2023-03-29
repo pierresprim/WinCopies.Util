@@ -432,14 +432,22 @@ namespace WinCopies
 
         public static bool Equals<T>(in INullableBase nullable, in T other, in Func<bool> func) => other == null ? !nullable.HasValue : func();
 
-        public static bool Equals(INullableBase nullable, INullableBase other) => Equals(nullable, other, () => nullable.HasValue ? other.HasValue && (nullable.Value == null ? other.Value == null : other.Value?.Equals(nullable.Value) == true) : !other.HasValue);
+        public static bool Equals(INullableBase nullable, INullableBase
+#if CS8
+            ?
+#endif
+            other) => Equals(nullable, other, () => nullable.HasValue ? other.HasValue && (nullable.Value == null ? other.Value == null : other.Value?.Equals(nullable.Value) == true) : !other.HasValue);
 
-        public static bool Equals<T>(INullableBase nullable, object obj) => Equals(nullable, obj, () => (obj is INullableBase _nullable && Equals(nullable, _nullable)) || (obj is T _obj && nullable.Value is T value && value.Equals(_obj)));
+        public static bool Equals<T>(INullableBase nullable, object
+#if CS8
+            ?
+#endif
+            obj) => Equals(nullable, obj, () => (obj is INullableBase _nullable && Equals(nullable, _nullable)) || (obj is T _obj && nullable.Value is T value && value.Equals(_obj)));
 
         public static int GetHashCode(in INullableBase nullable) => nullable.HasValue && nullable.Value != null ? nullable.Value.GetHashCode() : nullable.AsFromType<object>().GetHashCode();
     }
 
-    public struct Nullable : INullable
+    public readonly struct Nullable : INullable
     {
         private readonly object
 #if CS8
@@ -468,10 +476,24 @@ namespace WinCopies
 
         public override string ToString() => NullableHelper.ToString(this);
 
-        public bool Equals(INullableBase other) => NullableHelper.Equals(this, other);
-        public override bool Equals(object obj) => NullableHelper.Equals<object>(this, obj);
+        public bool Equals(INullableBase
+#if CS8
+            ?
+#endif
+            other) => NullableHelper.Equals(this, other);
+        public override bool Equals(object
+#if CS8
+            ?
+#endif
+            obj) => NullableHelper.Equals<object>(this, obj);
 
         public override int GetHashCode() => NullableHelper.GetHashCode(this);
+
+        public static bool operator ==(Nullable left, Nullable right) => left.Equals(right);
+        public static bool operator !=(Nullable left, Nullable right) => !(left == right);
+
+        public static bool operator ==(Nullable left, INullableBase right) => left.Equals(right);
+        public static bool operator !=(Nullable left, INullableBase right) => !(left == right);
     }
 
     public interface IAsEquatable<T>
@@ -509,7 +531,7 @@ namespace WinCopies
         { get; }
     }
 
-    public struct Nullable<T> : INullable<T
+    public readonly struct Nullable<T> : INullable<T
 #if CS9
             ?
 #endif
@@ -552,18 +574,30 @@ namespace WinCopies
 
         public override string ToString() => NullableHelper.ToString(this);
 
-        public bool Equals(INullable other) => NullableHelper.Equals(this, other);
+        public bool Equals(INullable
+#if CS8
+            ?
+#endif
+            other) => NullableHelper.Equals(this, other);
         public bool Equals(INullable<T
 #if CS9
             ?
 #endif
-            > other) => NullableHelper.Equals<T>(this, other);
+            >
+#if CS8
+            ?
+#endif
+            other) => NullableHelper.Equals<T>(this, other);
         public bool Equals(T
 #if CS9
             ?
 #endif
             other) => Equals(Value, other);
-        public override bool Equals(object obj) => NullableHelper.Equals<object>(this, obj);
+        public override bool Equals(object
+#if CS8
+            ?
+#endif
+            obj) => NullableHelper.Equals<object>(this, obj);
 
         public IEquatable<INullableBase
 #if CS8
@@ -599,6 +633,15 @@ namespace WinCopies
             ?
 #endif
             > value) => value.Value;
+
+        public static bool operator ==(Nullable<T> left, Nullable<T> right) => left.Equals(right);
+        public static bool operator !=(Nullable<T> left, Nullable<T> right) => !(left == right);
+
+        public static bool operator ==(Nullable<T> left, INullable right) => left.Equals(right);
+        public static bool operator !=(Nullable<T> left, INullable right) => !(left == right);
+
+        public static bool operator ==(Nullable<T> left, INullable<T> right) => left.Equals(right);
+        public static bool operator !=(Nullable<T> left, INullable<T> right) => !(left == right);
     }
 
     public interface IValueProviderBase : DotNetFix.IDisposable
@@ -690,6 +733,9 @@ namespace WinCopies
             (value);
 
         public void Dispose() => _value = null;
+
+        public static bool operator ==(NullableDisposable left, IValueProviderBase right) => left.Equals(right);
+        public static bool operator !=(NullableDisposable left, IValueProviderBase right) => !(left == right);
     }
 
     public struct NullableDisposable<T> : IValueProvider<T> where T : class
@@ -740,7 +786,7 @@ namespace WinCopies
 
         public static bool operator ==(NullableDisposable<T> left, IValueProviderBase right) => left.Equals(right);
         public static bool operator !=(NullableDisposable<T> left, IValueProviderBase right) => !(left == right);
-
+#if !WinCopies4
         public static bool operator ==(NullableDisposable<T> left, object
 #if CS8
             ?
@@ -751,6 +797,7 @@ namespace WinCopies
             ?
 #endif
             right) => !(left == right);
+#endif
     }
 
     public struct NullableDisposable2<T> : IValueProvider<T> where T : class, System.IDisposable
@@ -799,45 +846,15 @@ namespace WinCopies
         }
 
         void System.IDisposable.Dispose() => Dispose();
+
+        public static bool operator ==(NullableDisposable2<T> left, T right) => left.Equals(right);
+        public static bool operator !=(NullableDisposable2<T> left, T right) => !(left == right);
+
+        public static bool operator ==(NullableDisposable2<T> left, IValueProviderBase right) => left.Equals(right);
+        public static bool operator !=(NullableDisposable2<T> left, IValueProviderBase right) => !(left == right);
     }
 
     public delegate bool TaskAwaiterPredicate(ref bool cancel);
-
-    public class StreamInfo : System.IO.Stream, DotNetFix.IDisposable
-    {
-        protected System.IO.Stream Stream { get; }
-
-        public override bool CanRead => Stream.CanRead;
-
-        public override bool CanSeek => Stream.CanSeek;
-
-        public override bool CanWrite => Stream.CanWrite;
-
-        public override long Length => Stream.Length;
-
-        public override long Position { get => Stream.Position; set => Stream.Position = value; }
-
-        public bool IsDisposed { get; private set; }
-
-        public StreamInfo(in System.IO.Stream stream) => Stream = stream ?? throw GetArgumentNullException(nameof(stream));
-
-        public override void Flush() => Stream.Flush();
-
-        public override int Read(byte[] buffer, int offset, int count) => Stream.Read(buffer, offset, count);
-
-        public override long Seek(long offset, SeekOrigin origin) => Stream.Seek(offset, origin);
-
-        public override void SetLength(long value) => Stream.SetLength(value);
-
-        public override void Write(byte[] buffer, int offset, int count) => Stream.Write(buffer, offset, count);
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-
-            IsDisposed = true;
-        }
-    }
 
     public class BooleanEventArgs : EventArgs
     {

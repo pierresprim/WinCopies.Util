@@ -24,6 +24,42 @@ using static WinCopies.ThrowHelper;
 
 namespace WinCopies
 {
+    public class StreamInfo : System.IO.Stream, DotNetFix.IDisposable
+    {
+        protected System.IO.Stream Stream { get; }
+
+        public override bool CanRead => Stream.CanRead;
+
+        public override bool CanSeek => Stream.CanSeek;
+
+        public override bool CanWrite => Stream.CanWrite;
+
+        public override long Length => Stream.Length;
+
+        public override long Position { get => Stream.Position; set => Stream.Position = value; }
+
+        public bool IsDisposed { get; private set; }
+
+        public StreamInfo(in System.IO.Stream stream) => Stream = stream ?? throw GetArgumentNullException(nameof(stream));
+
+        public override void Flush() => Stream.Flush();
+
+        public override int Read(byte[] buffer, int offset, int count) => Stream.Read(buffer, offset, count);
+
+        public override long Seek(long offset, SeekOrigin origin) => Stream.Seek(offset, origin);
+
+        public override void SetLength(long value) => Stream.SetLength(value);
+
+        public override void Write(byte[] buffer, int offset, int count) => Stream.Write(buffer, offset, count);
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            IsDisposed = true;
+        }
+    }
+
     /// <summary>
     /// The <see cref="StreamCommit"/> enumeration constants specify the conditions for performing the commit operation in the IStorage::Commit and <see cref="System.Runtime.InteropServices.ComTypes.IStream.Seek(long, int, IntPtr)"/> methods.
     /// </summary>
