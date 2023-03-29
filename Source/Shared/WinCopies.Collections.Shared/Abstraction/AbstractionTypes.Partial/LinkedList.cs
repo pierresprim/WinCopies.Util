@@ -267,7 +267,7 @@ namespace WinCopies.Collections.AbstractionInterop.Generic
                 bool IReadOnlyCollectionBase<TDestination>.Contains(TDestination item) => Contains(item);
 
                 void System.Collections.Generic.ICollection<TDestination>.CopyTo(TDestination[] array, int arrayIndex) => InnerList.CopyTo(array, arrayIndex);
-                void ICollection.CopyTo(Array array, int index) => InnerList.CopyTo(array, index);
+                void ICollection.CopyTo(System.Array array, int index) => InnerList.CopyTo(array, index);
 
                 public bool Equals(ILinkedList<TDestination>
 #if CS8
