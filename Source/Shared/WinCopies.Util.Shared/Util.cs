@@ -103,7 +103,7 @@ namespace WinCopies
     }
 #endif
 #if CS5
-    public struct Version : IEquatable<Version>, IComparable<Version>
+    public readonly struct Version : IEquatable<Version>, IComparable<Version>
     {
         public enum VersionPart : byte
         {
@@ -149,7 +149,7 @@ namespace WinCopies
 
         public uint GetPart(VersionPart part)
         {
-            uint getValue(in ulong value) => UtilHelpers.GetValue(value, ((byte)part % 2) == 0, WinCopies.Util.Extensions.GetLowPart, WinCopies.Util.Extensions.GetHighPart);
+            uint getValue(in ulong value) => GetValue(value, ((byte)part % 2) == 0, Util.Extensions.GetLowPart, Util.Extensions.GetHighPart);
 
             return ((byte)part).Between((byte)VersionPart.Major, (byte)VersionPart.Revision, true, true) ? getValue(part < VersionPart.Build ? _highValue : _lowValue) : throw new InvalidEnumArgumentException(nameof(part), part);
         }
@@ -2902,6 +2902,11 @@ namespace WinCopies
             public const byte Int64 = Int32 << 1;
 
             public const byte HalfByteMaxValue = byte.MaxValue >> Int4;
+
+            public const byte HighPartHalfByteMaxValue = HalfByteMaxValue << Int4;
+            public const ushort HighPartByteMaxValue = byte.MaxValue << Int8;
+            public const uint HighPartShortMaxValue = (uint)ushort.MaxValue << Int16;
+            public const ulong HighPartIntMaxValue = uint.MaxValue << Int32;
         }
 #if WinCopies4
         namespace

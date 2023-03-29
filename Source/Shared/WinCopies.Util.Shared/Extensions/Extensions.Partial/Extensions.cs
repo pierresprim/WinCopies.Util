@@ -19,6 +19,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 #if CS5
@@ -50,6 +51,33 @@ namespace WinCopies.Util // To avoid name conflicts.
     /// </summary>
     public static partial class Extensions
     {
+        // Source: https://stackoverflow.com/a/21581418
+        public static void AddTo<T>(this T flag, ref T value, bool set) where T : Enum
+        {
+            Type type = typeof(T);
+            Type underlyingType = type.GetCustomAttributes<FlagsAttribute>().Any() ? Enum.GetUnderlyingType(type) : throw new ArgumentException("The given value is not a flags enum.");
+
+            // note: AsInt mean: math integer vs enum (not the c# int type)
+            dynamic valueAsInt = System.Convert.ChangeType(value, underlyingType);
+            dynamic flagAsInt = System.Convert.ChangeType(flag, underlyingType);
+
+            if (set)
+
+                valueAsInt |= flagAsInt;
+
+            else
+
+                valueAsInt &= ~flagAsInt;
+
+            value = (T)valueAsInt;
+        }
+        public static T SetFlag<T>(this T value, T flag, bool set) where T : Enum
+        {
+            flag.AddTo(ref value, set);
+
+            return value;
+        }
+
         public static void Invoke<T>(this ValueEventHandler<T> eventHandler, in object sender, in T value) => eventHandler?.Invoke(sender, new Data.EventArgs<T>(value));
 
         public static void ThrowIf<T>(this Exception
@@ -126,11 +154,31 @@ namespace WinCopies.Util // To avoid name conflicts.
         public static short AsHighPart(this short value) => unchecked((short)unchecked((ushort)value).AsHighPart());
         public static sbyte AsHighPart(this sbyte value) => unchecked((sbyte)unchecked((byte)value).AsHighPart());
 
-        private static T ShiftHighPart<T>(this
+        public static ulong AsLowPart(this ulong value) => value >> TypeSizes.Int32;
+        public static uint AsLowPart(this uint value) => value >> TypeSizes.Int16;
+        public static ushort AsLowPart(this ushort value) => (ushort)(value >> TypeSizes.Int8);
+        public static byte AsLowPart(this byte value) => (byte)(value >> TypeSizes.HalfByteMaxValue);
+
+        public static long AsLowPart(this long value) => unchecked((long)unchecked((ulong)value).AsHighPart());
+        public static int AsLowPart(this int value) => unchecked((int)unchecked((uint)value).AsHighPart());
+        public static short AsLowPart(this short value) => unchecked((short)unchecked((ushort)value).AsHighPart());
+        public static sbyte AsLowPart(this sbyte value) => unchecked((sbyte)unchecked((byte)value).AsHighPart());
+
+        public static ulong GetAsHighPart(this ulong value) => value & TypeSizes.HighPartIntMaxValue;
+        public static uint GetAsHighPart(this uint value) => value & TypeSizes.HighPartShortMaxValue;
+        public static ushort GetAsHighPart(this ushort value) => (ushort)(value & TypeSizes.HighPartByteMaxValue);
+        public static byte GetAsHighPart(this byte value) => (byte)(value & TypeSizes.HighPartHalfByteMaxValue);
+
+        public static long GetAsHighPart(this long value) => unchecked((long)unchecked((ulong)value).GetAsHighPart());
+        public static int GetAsHighPart(this int value) => unchecked((int)unchecked((uint)value).GetAsHighPart());
+        public static short GetAsHighPart(this short value) => unchecked((short)unchecked((ushort)value).GetAsHighPart());
+        public static sbyte GetAsHighPart(this sbyte value) => unchecked((sbyte)unchecked((byte)value).GetAsHighPart());
+
+        private static T ShiftHighPart<T>(in
 #if CS11
             T
 #else
-            IShiftable<T>
+            dynamic
 #endif
             value, in byte offset, in byte size) where T : unmanaged
 #if CS11
@@ -156,130 +204,110 @@ namespace WinCopies.Util // To avoid name conflicts.
 #else
         private
 #endif
-            static unsafe T ShiftHighPart<T>(this
+            static unsafe T ShiftHighPart<T>(
 #if CS11
-            T
+            this T
 #else
-            IShiftable<T>
+            in dynamic
 #endif
             value, in byte offset) where T : unmanaged
 #if CS11
             , IUnsignedNumber<T>, IShiftOperators<T, int, T>
 #endif
-            => value.ShiftHighPart(offset, (byte)sizeof(T));
+            => ShiftHighPart(value, offset, (byte)(sizeof(T) << 3));
 #if CS11
         public
 #else
         private
 #endif
-            static unsafe T GetHighPart<T>(this
+            static unsafe T GetHighPart<T>(
 #if CS11
-            T
+            this T
 #else
-            IShiftable<T>
+            in dynamic
 #endif
             value, in byte length) where T : unmanaged
 #if CS11
             , IUnsignedNumber<T>, IShiftOperators<T, int, T>
 #endif
         {
-            byte size = (byte)sizeof(T);
+            byte size = (byte)(sizeof(T) << 3);
 
-            return value.ShiftHighPart((byte)(size - length), size);
+            return ShiftHighPart(value, (byte)(size - length), size);
         }
 
-        private static T ShiftLowPart<T>(this
+        private static T ShiftLowPart<T>(in
 #if CS11
             T
 #else
-            IShiftable<T>
+            dynamic
 #endif
             value, in byte offset, in byte size) where T : unmanaged
 #if CS11
             , IUnsignedNumber<T>, IShiftOperators<T, int, T>
 #endif
-            => offset == 0 ? value
-#if !CS11
-            .InnerValue
-#endif
-            : offset == size ? default : offset > size ? throw new ArgumentOutOfRangeException(nameof(offset)) :
-#if CS11
-            (
-#endif
-            value
-#if CS11
-            <<
-#else
-            .Shift(
-#endif
-            offset)
-#if CS11
-            >> offset
-#endif
-            ;
+            => offset == 0 ? value : offset == size ? default : offset > size ? throw new ArgumentOutOfRangeException(nameof(offset)) : (value << offset) >> offset;
 #if CS11
         public
 #else
         private
 #endif
-            static unsafe T ShiftLowPart<T>(this
+            static unsafe T ShiftLowPart<T>(
 #if CS11
-            T
+            this T
 #else
-            IShiftable<T>
+            in dynamic
 #endif
             value, in byte offset) where T : unmanaged
 #if CS11
             , IUnsignedNumber<T>, IShiftOperators<T, int, T>
 #endif
-            => value.ShiftLowPart(offset, (byte)sizeof(T));
+            => ShiftLowPart(value, offset, (byte)(sizeof(T) << 3));
 #if CS11
         public
 #else
         private
 #endif
-            static unsafe T GetLowPart<T>(this
+            static unsafe T GetLowPart<T>(
 #if CS11
-            T
+            this T
 #else
-            IShiftable<T>
+            in dynamic
 #endif
             value, in byte length) where T : unmanaged
 #if CS11
             , IUnsignedNumber<T>, IShiftOperators<T, int, T>
 #endif
         {
-            byte size = (byte)sizeof(T);
+            byte size = (byte)(sizeof(T) << 3);
 
-            return value.ShiftLowPart((byte)(size - length));
+            return ShiftLowPart(value, (byte)(size - length), size);
         }
 
         #region (U)Int64
         #region UInt64
         public static uint GetHighPart(this ulong value) => (uint)(value >> TypeSizes.Int32);
 #if !CS11
-        public static ulong ShiftHighPart(this ulong value, in byte offset) => NumberHelper.GetShiftableR(value).ShiftHighPart(offset);
-        public static ulong GetHighPart(this ulong value, in byte length) => NumberHelper.GetShiftableR(value).GetHighPart(length);
+        public static ulong ShiftHighPart(this ulong value, in byte offset) => ShiftHighPart<ulong>(value, offset);
+        public static ulong GetHighPart(this ulong value, in byte length) => GetHighPart<ulong>(value, length);
 #endif
-
         public static uint GetLowPart(this ulong value) => (uint)(value & uint.MaxValue);
 #if !CS11
-        public static ulong ShiftLowPart(this ulong value, in byte offset) => NumberHelper.GetShiftableL(value).ShiftLowPart(offset);
-        public static ulong GetLowPart(this ulong value, in byte length) => NumberHelper.GetShiftableL(value).GetLowPart(length);
+        public static ulong ShiftLowPart(this ulong value, in byte offset) => ShiftLowPart<ulong>(value, offset);
+        public static ulong GetLowPart(this ulong value, in byte length) => GetLowPart<ulong>(value, length);
 #endif
-
-        public static ulong SetHighPart(this ulong value, in uint newHighPart) => newHighPart.ToHighPart() | (value & TypeSizes.Int32);
+        public static ulong SetHighPart(this ulong value, in uint newHighPart) => newHighPart.ToHighPart() | (value & uint.MaxValue);
         public static ulong SetLowPart(this ulong value, in uint newLowPart) => value.GetHighPart().Concatenate(newLowPart);
         #endregion UInt64
 
         #region Int64
         public static int GetHighPart(this long value) => unchecked((int)unchecked((ulong)value).GetHighPart());
-        public static long ShiftHighPart(this long value, in byte offset) => unchecked((long)unchecked((ulong)value).ShiftHighPart(offset));
-        public static long GetHighPart(this long value, in byte length) => unchecked((long)unchecked((ulong)value).GetHighPart(length));
+        public static long ShiftHighPart(this long value, in byte offset) => unchecked((long)ShiftHighPart(unchecked((ulong)value), offset));
+        public static long GetHighPart(this long value, in byte length) => unchecked((long)GetHighPart(unchecked((ulong)value), length));
 
         public static int GetLowPart(this long value) => unchecked((int)unchecked((ulong)value).GetLowPart());
-        public static long ShiftLowPart(this long value, in byte offset) => unchecked((long)unchecked((ulong)value).ShiftLowPart(offset));
-        public static long GetLowPart(this long value, in byte length) => unchecked((long)unchecked((ulong)value).GetLowPart(length));
+        public static long ShiftLowPart(this long value, in byte offset) => unchecked((long)ShiftLowPart(unchecked((ulong)value), offset));
+        public static long GetLowPart(this long value, in byte length) => unchecked((long)GetLowPart(unchecked((ulong)value), length));
 
         public static long SetHighPart(this long value, in int newHighPart) => unchecked((long)unchecked((ulong)value).SetHighPart(unchecked((uint)newHighPart)));
         public static long SetLowPart(this long value, in int newLowPart) => unchecked((long)unchecked((ulong)value).SetLowPart(unchecked((uint)newLowPart)));
@@ -290,28 +318,26 @@ namespace WinCopies.Util // To avoid name conflicts.
         #region UInt32
         public static ushort GetHighPart(this uint value) => (ushort)(value >> TypeSizes.Int16);
 #if !CS11
-        public static uint ShiftHighPart(this uint value, in byte offset) => NumberHelper.GetShiftableR(value).ShiftHighPart(offset);
-        public static uint GetHighPart(this uint value, in byte length) => NumberHelper.GetShiftableR(value).GetHighPart(length);
+        public static uint ShiftHighPart(this uint value, in byte offset) => ShiftHighPart<uint>(value, offset);
+        public static uint GetHighPart(this uint value, in byte length) => GetHighPart<uint>(value, length);
 #endif
-
         public static ushort GetLowPart(this uint value) => (ushort)(value & ushort.MaxValue);
 #if !CS11
-        public static uint ShiftLowPart(this uint value, in byte offset) => NumberHelper.GetShiftableL(value).ShiftLowPart(offset);
-        public static uint GetLowPart(this uint value, in byte length) => NumberHelper.GetShiftableL(value).GetLowPart(length);
+        public static uint ShiftLowPart(this uint value, in byte offset) => ShiftLowPart<uint>(value, offset);
+        public static uint GetLowPart(this uint value, in byte length) => GetLowPart<uint>(value, length);
 #endif
-
-        public static uint SetHighPart(this uint value, in ushort newHighPart) => newHighPart.ToHighPart() | (value & TypeSizes.Int16);
+        public static uint SetHighPart(this uint value, in ushort newHighPart) => newHighPart.ToHighPart() | (value & ushort.MaxValue);
         public static uint SetLowPart(this uint value, in ushort newLowPart) => value.GetHighPart().Concatenate(newLowPart);
         #endregion UInt32
 
         #region Int32
         public static short GetHighPart(this int value) => unchecked((short)unchecked((uint)value).GetHighPart());
-        public static int ShiftHighPart(this int value, in byte offset) => unchecked((int)unchecked((uint)value).ShiftHighPart(offset));
-        public static int GetHighPart(this int value, in byte length) => unchecked((int)unchecked((uint)value).GetHighPart(length));
+        public static int ShiftHighPart(this int value, in byte offset) => unchecked((int)ShiftHighPart(unchecked((uint)value), offset));
+        public static int GetHighPart(this int value, in byte length) => unchecked((int)GetHighPart(unchecked((uint)value), length));
 
         public static short GetLowPart(this int value) => unchecked((short)unchecked((uint)value).GetLowPart());
-        public static int ShiftLowPart(this int value, in byte offset) => unchecked((int)unchecked((uint)value).ShiftLowPart(offset));
-        public static int GetLowPart(this int value, in byte length) => unchecked((int)unchecked((uint)value).GetLowPart(length));
+        public static int ShiftLowPart(this int value, in byte offset) => unchecked((int)ShiftLowPart(unchecked((uint)value), offset));
+        public static int GetLowPart(this int value, in byte length) => unchecked((int)GetLowPart(unchecked((uint)value), length));
 
         public static int SetHighPart(this int value, in short newHighPart) => unchecked((int)unchecked((uint)value).SetHighPart(unchecked((ushort)newHighPart)));
         public static int SetLowPart(this int value, in short newLowPart) => unchecked((int)unchecked((uint)value).SetLowPart(unchecked((ushort)newLowPart)));
@@ -322,28 +348,26 @@ namespace WinCopies.Util // To avoid name conflicts.
         #region UInt16
         public static byte GetHighPart(this ushort value) => (byte)(value >> TypeSizes.Int8);
 #if !CS11
-        public static ushort ShiftHighPart(this ushort value, in byte offset) => NumberHelper.GetShiftableR(value).ShiftHighPart(offset);
-        public static ushort GetHighPart(this ushort value, in byte length) => NumberHelper.GetShiftableR(value).GetHighPart(length);
+        public static ushort ShiftHighPart(this ushort value, in byte offset) => ShiftHighPart<ushort>(value, offset);
+        public static ushort GetHighPart(this ushort value, in byte length) => GetHighPart<ushort>(value, length);
 #endif
-
         public static byte GetLowPart(this ushort value) => (byte)(value & byte.MaxValue);
 #if !CS11
-        public static ushort ShiftLowPart(this ushort value, in byte offset) => NumberHelper.GetShiftableL(value).ShiftLowPart(offset);
-        public static ushort GetLowPart(this ushort value, in byte length) => NumberHelper.GetShiftableL(value).GetLowPart(length);
+        public static ushort ShiftLowPart(this ushort value, in byte offset) => ShiftLowPart<ushort>(value, offset);
+        public static ushort GetLowPart(this ushort value, in byte length) => GetLowPart<ushort>(value, length);
 #endif
-
-        public static ushort SetHighPart(this ushort value, in byte newHighPart) => (ushort)(newHighPart.ToUInt16HighPart() | ((uint)value & TypeSizes.Int8));
+        public static ushort SetHighPart(this ushort value, in byte newHighPart) => (ushort)(newHighPart.ToUInt16HighPart() | ((uint)value & byte.MaxValue));
         public static ushort SetLowPart(this ushort value, in byte newLowPart) => value.GetHighPart().Concatenate(newLowPart);
         #endregion UInt16
 
         #region Int16
         public static sbyte GetHighPart(this short value) => unchecked((sbyte)unchecked((ushort)value).GetHighPart());
-        public static short ShiftHighPart(this short value, in byte offset) => unchecked((short)unchecked((ushort)value).ShiftHighPart(offset));
-        public static short GetHighPart(this short value, in byte length) => unchecked((short)unchecked((ushort)value).GetHighPart(length));
+        public static short ShiftHighPart(this short value, in byte offset) => unchecked((short)ShiftHighPart(unchecked((ushort)value), offset));
+        public static short GetHighPart(this short value, in byte length) => unchecked((short)GetHighPart(unchecked((ushort)value), length));
 
         public static sbyte GetLowPart(this short value) => unchecked((sbyte)unchecked((ushort)value).GetLowPart());
-        public static short ShiftLowPart(this short value, in byte offset) => unchecked((short)unchecked((ushort)value).ShiftLowPart(offset));
-        public static short GetLowPart(this short value, in byte length) => unchecked((short)unchecked((ushort)value).GetLowPart(length));
+        public static short ShiftLowPart(this short value, in byte offset) => unchecked((short)ShiftLowPart(unchecked((ushort)value), offset));
+        public static short GetLowPart(this short value, in byte length) => unchecked((short)GetLowPart(unchecked((ushort)value), length));
 
         public static short SetHighPart(this short value, in sbyte newHighPart) => unchecked((short)unchecked((ushort)value).SetHighPart(unchecked((byte)newHighPart)));
         public static short SetLowPart(this short value, in sbyte newLowPart) => unchecked((short)unchecked((ushort)value).SetLowPart(unchecked((byte)newLowPart)));
@@ -354,28 +378,26 @@ namespace WinCopies.Util // To avoid name conflicts.
         #region UInt8
         public static byte GetHighPart(this byte value) => (byte)(value >> TypeSizes.Int4);
 #if !CS11
-        public static byte ShiftHighPart(this byte value, in byte offset) => NumberHelper.GetShiftableR(value).ShiftHighPart(offset);
-        public static byte GetHighPart(this byte value, in byte length) => NumberHelper.GetShiftableR(value).GetHighPart(length);
+        public static byte ShiftHighPart(this byte value, in byte offset) => ShiftHighPart<byte>(value, offset);
+        public static byte GetHighPart(this byte value, in byte length) => GetHighPart<byte>(value, length);
 #endif
-
         public static byte GetLowPart(this byte value) => (byte)(value & TypeSizes.HalfByteMaxValue);
 #if !CS11
-        public static byte ShiftLowPart(this byte value, in byte offset) => NumberHelper.GetShiftableL(value).ShiftLowPart(offset);
-        public static byte GetLowPart(this byte value, in byte length) => NumberHelper.GetShiftableL(value).GetLowPart(length);
+        public static byte ShiftLowPart(this byte value, in byte offset) => ShiftLowPart<byte>(value, offset);
+        public static byte GetLowPart(this byte value, in byte length) => GetLowPart<byte>(value, length);
 #endif
-
         public static byte SetHighPart(this byte value, in byte newHighPart) => (byte)(newHighPart.ToUInt8HighPart() | ((uint)value & TypeSizes.HalfByteMaxValue));
         public static byte SetLowPart(this byte value, in byte newLowPart) => value.GetHighPart().ConcatenateHalfParts(newLowPart);
         #endregion UInt8
 
         #region Int8
         public static sbyte GetHighPart(this sbyte value) => unchecked((sbyte)unchecked((byte)value).GetHighPart());
-        public static sbyte ShiftHighPart(this sbyte value, in byte offset) => unchecked((sbyte)unchecked((byte)value).ShiftHighPart(offset));
-        public static sbyte GetHighPart(this sbyte value, in byte length) => unchecked((sbyte)unchecked((byte)value).GetHighPart(length));
+        public static sbyte ShiftHighPart(this sbyte value, in byte offset) => unchecked((sbyte)ShiftHighPart(unchecked((byte)value), offset));
+        public static sbyte GetHighPart(this sbyte value, in byte length) => unchecked((sbyte)GetHighPart(unchecked((byte)value), length));
 
         public static sbyte GetLowPart(this sbyte value) => unchecked((sbyte)unchecked((byte)value).GetLowPart());
-        public static sbyte ShiftLowPart(this sbyte value, in byte offset) => unchecked((sbyte)unchecked((byte)value).ShiftLowPart(offset));
-        public static sbyte GetLowPart(this sbyte value, in byte length) => unchecked((sbyte)unchecked((byte)value).GetLowPart(length));
+        public static sbyte ShiftLowPart(this sbyte value, in byte offset) => unchecked((sbyte)ShiftLowPart(unchecked((byte)value), offset));
+        public static sbyte GetLowPart(this sbyte value, in byte length) => unchecked((sbyte)GetLowPart(unchecked((byte)value), length));
 
         public static sbyte SetHighPart(this sbyte value, in sbyte newHighPart) => unchecked((sbyte)unchecked((byte)value).SetHighPart(unchecked((byte)newHighPart)));
         public static sbyte SetLowPart(this sbyte value, in sbyte newLowPart) => unchecked((sbyte)unchecked((byte)value).SetLowPart(unchecked((byte)newLowPart)));
@@ -681,16 +703,7 @@ namespace WinCopies.Util // To avoid name conflicts.
         }
 
         #region Bitwise Action
-        private static void BitwiseAction(in byte pos, in byte limit, in Action action)
-        {
-            if (pos >= 0 && pos <= limit)
-
-                action();
-
-            else
-
-                throw new IndexOutOfRangeException();
-        }
+        private static void BitwiseAction(in byte pos, in byte limit, in Action action) => (pos >= 0 && pos <= limit ? action : throw new IndexOutOfRangeException())();
 
         #region UI8
         private static bool GetBit(in byte pos, byte mask, Func<int> func)
@@ -996,8 +1009,11 @@ namespace WinCopies.Util // To avoid name conflicts.
         public static bool IsConstant(this FieldInfo f) => f.IsStatic && f.IsLiteral && !f.IsInitOnly;
 
         public static IEnumerable<FieldInfo> GetConstants(this Type type) => type.GetFields().Where(IsConstant);
-        public static IEnumerable<FieldInfo> GetRealFields(this Type type) => type.GetFields().Where(f => !f.IsConstant());
-
+        public static IEnumerable<FieldInfo> GetActualFields(this Type type) => type.GetFields().Where(f => !f.IsConstant());
+#if !CS4
+        [Obsolete("Replaced with GetActualFields method.")]
+        public static IEnumerable<FieldInfo> GetRealFields(this Type type) => type.GetActualFields();
+#endif
         public static string GetRealName(this Type type) => type.GetRealGenericTypeParameterLength() == 0 ? type.Name : type.Name.Remove(type.Name.IndexOf('`'));
 
         public static byte GetRealGenericTypeParameterLength(this Type type)
@@ -1008,21 +1024,23 @@ namespace WinCopies.Util // To avoid name conflicts.
 
             int i = type.Name.IndexOf('`');
 
-            return i > -1 ? byte.Parse(type.Name.Substring(i + 1)) : new byte();
+            return i > -1 ? byte.Parse(type.Name.
+#if CS8
+                AsSpan
+#else
+                Substring
+#endif
+                (i + 1)) : new byte();
         }
 
         public static bool ContainsRealGenericParameters(this Type type) => type.GetRealGenericTypeParameterLength() > 0;
 
         public static bool IsStruct(this Type type) => type.IsValueType && !type.IsEnum;
-
         public static bool IsReferenceType(this Type type) => type.IsClass || type.IsInterface;
-
         public static bool IsPublicType(this Type type) => type.IsPublic || type.IsNestedPublic;
-
         public static bool IsTypeNestedFamily(this Type type) => type.IsNestedFamily || type.IsNestedFamORAssem;
 
         public static ConstructorInfo GetTypeConstructor(this Type type, params Type[] types) => type.GetConstructor(types);
-
         public static ConstructorInfo
 #if CS8
                 ?
@@ -1098,7 +1116,6 @@ namespace WinCopies.Util // To avoid name conflicts.
             return result;
         }
 #endif
-
         public static void ForEach<T>(this IEnumerable<T> enumerable, in Func<T, bool> predicate, in Action<T> action)
         {
             foreach (T item in enumerable)
@@ -1144,7 +1161,6 @@ namespace WinCopies.Util // To avoid name conflicts.
             return result;
         }
 #endif
-
         public static void ForEach<T>(this IEnumerable<T> enumerable, in FuncIn<T, bool> predicate, in ActionIn<T> action)
         {
             foreach (T item in enumerable)
@@ -2197,7 +2213,7 @@ namespace WinCopies.Util // To avoid name conflicts.
         /// <exception cref="InvalidOperationException">The declaring types of the given property and field name doesn't correspond. OR The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
         /// <exception cref="ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
         /// <exception cref="Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="ArgumentException"/> otherwise.</exception>
-        public static (bool propertyChanged, IDisposable oldValue) DisposeAndSetProperty(this object obj, string propertyName, string fieldName, IDisposable newValue, Type declaringType, in bool throwIfReadOnly = true, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, string paramName = null, in bool setOnlyIfNotNull = false, in bool throwIfNull = false, FieldValidateValueCallback validateValueCallback = null, in bool throwIfValidationFails = false, FieldValueChangedCallback valueChangedCallback = null)
+        public static (bool propertyChanged, System.IDisposable oldValue) DisposeAndSetProperty(this object obj, string propertyName, string fieldName, System.IDisposable newValue, Type declaringType, in bool throwIfReadOnly = true, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, string paramName = null, in bool setOnlyIfNotNull = false, in bool throwIfNull = false, FieldValidateValueCallback validateValueCallback = null, in bool throwIfValidationFails = false, FieldValueChangedCallback valueChangedCallback = null)
         {
             //BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic |
             //             BindingFlags.Static | BindingFlags.Instance |
@@ -2234,7 +2250,7 @@ namespace WinCopies.Util // To avoid name conflicts.
 
             FieldInfo field = GetField(fieldName, declaringType, bindingFlags);
 
-            var previousValue = (IDisposable)field.GetValue(obj);
+            var previousValue = (System.IDisposable)field.GetValue(obj);
 
             if (!CheckPropertySetIntegrity(declaringType, propertyName, out string methodName, 3, bindingFlags))
 
@@ -2244,7 +2260,7 @@ namespace WinCopies.Util // To avoid name conflicts.
 
             return !property.CanWrite || property.SetMethod == null
                 ? throwIfReadOnly ? throw new InvalidOperationException(string.Format("This property is read-only. Property name: {0}, declaring type: {1}.", propertyName, declaringType)) : (false, previousValue)
-                : ((bool, IDisposable))obj.SetField(field, previousValue, newValue, paramName, setOnlyIfNotNull, throwIfNull, true, validateValueCallback, throwIfValidationFails, valueChangedCallback);
+                : ((bool, System.IDisposable))obj.SetField(field, previousValue, newValue, paramName, setOnlyIfNotNull, throwIfNull, true, validateValueCallback, throwIfValidationFails, valueChangedCallback);
         }
 
         /// <summary>
@@ -2266,11 +2282,11 @@ namespace WinCopies.Util // To avoid name conflicts.
         /// <exception cref="InvalidOperationException">The given property is read-only and <paramref name="throwIfReadOnly"/> is set to <see langword="true"/>.</exception>
         /// <exception cref="ArgumentNullException">The new value is null and <paramref name="throwIfNull"/> is set to <see langword="true"/>.</exception>
         /// <exception cref="Exception"><paramref name="validateValueCallback"/> failed and <paramref name="throwIfValidationFails"/> is set to <see langword="true"/>. This exception is the exception that was returned by <paramref name="validateValueCallback"/> if it was not null or an <see cref="ArgumentException"/> otherwise.</exception>
-        public static (bool propertyChanged, IDisposable oldValue) DisposeAndSetProperty(this object obj, string propertyName, IDisposable newValue, Type declaringType, in bool throwIfReadOnly = true, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, string paramName = null, in bool setOnlyIfNotNull = false, in bool throwIfNull = false, PropertyValidateValueCallback validateValueCallback = null, in bool throwIfValidationFails = false, PropertyValueChangedCallback valueChangedCallback = null)
+        public static (bool propertyChanged,System. IDisposable oldValue) DisposeAndSetProperty(this object obj, string propertyName, System.IDisposable newValue, Type declaringType, in bool throwIfReadOnly = true, BindingFlags bindingFlags = DefaultBindingFlagsForPropertySet, string paramName = null, in bool setOnlyIfNotNull = false, in bool throwIfNull = false, PropertyValidateValueCallback validateValueCallback = null, in bool throwIfValidationFails = false, PropertyValueChangedCallback valueChangedCallback = null)
         {
             PropertyInfo property = GetProperty(propertyName, declaringType, bindingFlags);
 
-            var previousValue = (IDisposable)property.GetValue(obj);
+            var previousValue = (System.IDisposable)property.GetValue(obj);
 
             if (!property.CanWrite || property.SetMethod == null)
 
@@ -2334,7 +2350,7 @@ namespace WinCopies.Util // To avoid name conflicts.
 
         // public static object GetNumValue(this Enum @enum) => GetNumValue(@enum, @enum.ToString());
 
-        // todo : to test if Math.Log(Convert.ToInt64(flagsEnum), 2) == 'SomeInt64'; (no float, double ...) would be faster.
+        // todo : test if Math.Log(Convert.ToInt64(flagsEnum), 2) == 'SomeInt64'; (no float, double ...) would be faster.
 
 #if CS6
         ///// <summary>
@@ -2444,47 +2460,23 @@ namespace WinCopies.Util // To avoid name conflicts.
 #if CS11
         public static bool Between<T>(this T
 #else
-        private static bool _Between<T>(this ISortableItem<T>
+        private static bool _Between<T>(in dynamic
 #endif
             value, in T x, in T y)
 #if CS11
             where T : IComparisonOperators<T, T, bool>
 #endif
-            => Compare(x, y,
-#if CS11
-            _value => value >= _value
-#else
-            value.GreaterThanOrEqualTo
-#endif
-            ,
-#if CS11
-            _value => value <= _value
-#else
-            value.LessThanOrEqualTo
-#endif
-                , Bool.AndIn);
+            => value >= x && value <= y;
 #if CS11
         public static bool Outside<T>(this T
 #else
-        private static bool _Outside<T>(this ISortableItem<T>
+        private static bool _Outside<T>(in dynamic
 #endif
             value, in T x, in T y)
 #if CS11
             where T : IComparisonOperators<T, T, bool>
 #endif
-            => Compare(x, y,
-#if CS11
-            _value => value <= _value
-#else
-            value.LessThanOrEqualTo
-#endif
-            ,
-#if CS11
-            _value => value >= _value
-#else
-            value.GreaterThanOrEqualTo
-#endif
-                , Bool.OrIn);
+            => value <= x && value >= y;
 #if !CS11
         /// <summary>
         /// Checks if a number is between two given numbers.
@@ -2493,7 +2485,7 @@ namespace WinCopies.Util // To avoid name conflicts.
         /// <param name="x">The left operand.</param>
         /// <param name="y">The right operand.</param>
         /// <returns><see langword="true"/> if <paramref name="b"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        public static bool Between(this sbyte value, in sbyte x, in sbyte y) => _Between(NumberHelper.GetNumber(value), x, y);
+        public static bool Between(this sbyte value, in sbyte x, in sbyte y) => _Between(value, x, y);
 
         /// <summary>
         /// Checks if a number is between two given numbers.
@@ -2502,7 +2494,7 @@ namespace WinCopies.Util // To avoid name conflicts.
         /// <param name="x">The left operand.</param>
         /// <param name="y">The right operand.</param>
         /// <returns><see langword="true"/> if <paramref name="b"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        public static bool Between(this byte value, in byte x, in byte y) => _Between(NumberHelper.GetNumber(value), x, y);
+        public static bool Between(this byte value, in byte x, in byte y) => _Between(value, x, y);
 
         /// <summary>
         /// Checks if a number is between two given numbers.
@@ -2511,7 +2503,7 @@ namespace WinCopies.Util // To avoid name conflicts.
         /// <param name="x">The left operand.</param>
         /// <param name="y">The right operand.</param>
         /// <returns><see langword="true"/> if <paramref name="s"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        public static bool Between(this short value, in short x, in short y) => _Between(NumberHelper.GetNumber(value), x, y);
+        public static bool Between(this short value, in short x, in short y) => _Between(value, x, y);
 
         /// <summary>
         /// Checks if a number is between two given numbers.
@@ -2520,7 +2512,7 @@ namespace WinCopies.Util // To avoid name conflicts.
         /// <param name="x">The left operand.</param>
         /// <param name="y">The right operand.</param>
         /// <returns><see langword="true"/> if <paramref name="s"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        public static bool Between(this ushort value, in ushort x, in ushort y) => _Between(NumberHelper.GetNumber(value), x, y);
+        public static bool Between(this ushort value, in ushort x, in ushort y) => _Between(value, x, y);
 
         /// <summary>
         /// Checks if a number is between two given numbers.
@@ -2529,7 +2521,7 @@ namespace WinCopies.Util // To avoid name conflicts.
         /// <param name="x">The left operand.</param>
         /// <param name="y">The right operand.</param>
         /// <returns><see langword="true"/> if <paramref name="i"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        public static bool Between(this int value, in int x, in int y) => _Between(NumberHelper.GetNumber(value), x, y);
+        public static bool Between(this int value, in int x, in int y) => _Between(value, x, y);
 
         /// <summary>
         /// Checks if a number is between two given numbers.
@@ -2538,7 +2530,7 @@ namespace WinCopies.Util // To avoid name conflicts.
         /// <param name="x">The left operand.</param>
         /// <param name="y">The right operand.</param>
         /// <returns><see langword="true"/> if <paramref name="i"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        public static bool Between(this uint value, in uint x, in uint y) => _Between(NumberHelper.GetNumber(value), x, y);
+        public static bool Between(this uint value, in uint x, in uint y) => _Between(value, x, y);
 
         /// <summary>
         /// Checks if a number is between two given numbers.
@@ -2547,7 +2539,7 @@ namespace WinCopies.Util // To avoid name conflicts.
         /// <param name="x">The left operand.</param>
         /// <param name="y">The right operand.</param>
         /// <returns><see langword="true"/> if <paramref name="l"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        public static bool Between(this long value, in long x, in long y) => _Between(NumberHelper.GetNumber(value), x, y);
+        public static bool Between(this long value, in long x, in long y) => _Between(value, x, y);
 
         /// <summary>
         /// Checks if a number is between two given numbers.
@@ -2556,7 +2548,7 @@ namespace WinCopies.Util // To avoid name conflicts.
         /// <param name="x">The left operand.</param>
         /// <param name="y">The right operand.</param>
         /// <returns><see langword="true"/> if <paramref name="l"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        public static bool Between(this ulong value, in ulong x, in ulong y) => _Between(NumberHelper.GetNumber(value), x, y);
+        public static bool Between(this ulong value, in ulong x, in ulong y) => _Between(value, x, y);
 
         /// <summary>
         /// Checks if a number is between two given numbers.
@@ -2565,7 +2557,7 @@ namespace WinCopies.Util // To avoid name conflicts.
         /// <param name="x">The left operand.</param>
         /// <param name="y">The right operand.</param>
         /// <returns><see langword="true"/> if <paramref name="f"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        public static bool Between(this float value, in float x, in float y) => _Between(NumberHelper.GetNumber(value), x, y);
+        public static bool Between(this float value, in float x, in float y) => _Between(value, x, y);
 
         /// <summary>
         /// Checks if a number is between two given numbers.
@@ -2574,7 +2566,7 @@ namespace WinCopies.Util // To avoid name conflicts.
         /// <param name="x">The left operand.</param>
         /// <param name="y">The right operand.</param>
         /// <returns><see langword="true"/> if <paramref name="d"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        public static bool Between(this double value, in double x, in double y) => _Between(NumberHelper.GetNumber(value), x, y);
+        public static bool Between(this double value, in double x, in double y) => _Between(value, x, y);
 
         /// <summary>
         /// Checks if a number is between two given numbers.
@@ -2583,78 +2575,40 @@ namespace WinCopies.Util // To avoid name conflicts.
         /// <param name="x">The left operand.</param>
         /// <param name="y">The right operand.</param>
         /// <returns><see langword="true"/> if <paramref name="d"/> is between <paramref name="x"/> and <paramref name="y"/>, otherwise <see langword="false"/>.</returns>
-        public static bool Between(this decimal value, in decimal x, in decimal y) => _Between(NumberHelper.GetNumber(value), x, y);
+        public static bool Between(this decimal value, in decimal x, in decimal y) => _Between(value, x, y);
 #endif
-        public static bool EnumBetween<T>(this T value, in T x, in T y) where T : Enum =>
+        public static bool EnumBetween<T>(this T value, in T x, in T y) where T : Enum
 #if CS11
-            Between
+        {
+            dynamic _value = value;
+
+            return _value >= (dynamic)x && _value <= (dynamic)y;
+        }
 #else
-            _Between
+            => _Between(value, x, y);
+
+        public static bool Outside(this sbyte value, in sbyte x, in sbyte y) => _Outside(value, x, y);
+        public static bool Outside(this byte value, in byte x, in byte y) => _Outside(value, x, y);
+        public static bool Outside(this short value, in short x, in short y) => _Outside(value, x, y);
+        public static bool Outside(this ushort value, in ushort x, in ushort y) => _Outside(value, x, y);
+        public static bool Outside(this int value, in int x, in int y) => _Outside(value, x, y);
+        public static bool Outside(this uint value, in uint x, in uint y) => _Outside(value, x, y);
+        public static bool Outside(this long value, in long x, in long y) => _Outside(value, x, y);
+        public static bool Outside(this ulong value, in ulong x, in ulong y) => _Outside(value, x, y);
+        public static bool Outside(this float value, in float x, in float y) => _Outside(value, x, y);
+        public static bool Outside(this double value, in double x, in double y) => _Outside(value, x, y);
+        public static bool Outside(this decimal value, in decimal x, in decimal y) => _Outside(value, x, y);
 #endif
-            (NumberHelper.GetNumber(value),
+        public static bool EnumOutside<T>(this T value, in T x, in T y) where T : Enum
 #if CS11
-                NumberHelper.GetNumber(
-#endif
-                x
-#if CS11
-                )
-#endif
-                ,
-#if CS11
-                NumberHelper.GetNumber(
-#endif
-                y
-#if CS11
-                )
-#endif
-                );
-#if !CS11
-        public static bool Outside(this sbyte value, in sbyte x, in sbyte y) => _Outside(NumberHelper.GetNumber(value), x, y);
+        {
+            dynamic _value = value;
 
-        public static bool Outside(this byte value, in byte x, in byte y) => _Outside(NumberHelper.GetNumber(value), x, y);
-
-        public static bool Outside(this short value, in short x, in short y) => _Outside(NumberHelper.GetNumber(value), x, y);
-
-        public static bool Outside(this ushort value, in ushort x, in ushort y) => _Outside(NumberHelper.GetNumber(value), x, y);
-
-        public static bool Outside(this int value, in int x, in int y) => _Outside(NumberHelper.GetNumber(value), x, y);
-
-        public static bool Outside(this uint value, in uint x, in uint y) => _Outside(NumberHelper.GetNumber(value), x, y);
-
-        public static bool Outside(this long value, in long x, in long y) => _Outside(NumberHelper.GetNumber(value), x, y);
-
-        public static bool Outside(this ulong value, in ulong x, in ulong y) => _Outside(NumberHelper.GetNumber(value), x, y);
-
-        public static bool Outside(this float value, in float x, in float y) => _Outside(NumberHelper.GetNumber(value), x, y);
-
-        public static bool Outside(this double value, in double x, in double y) => _Outside(NumberHelper.GetNumber(value), x, y);
-
-        public static bool Outside(this decimal value, in decimal x, in decimal y) => _Outside(NumberHelper.GetNumber(value), x, y);
-#endif
-        public static bool EnumOutside<T>(this T value, in T x, in T y) where T : Enum =>
-#if CS11
-            Outside
+            return _value <= (dynamic)x || _value >= (dynamic)y;
+        }
 #else
-            _Outside
+            => _Outside(value, x, y);
 #endif
-            (NumberHelper.GetNumber(value),
-#if CS11
-                NumberHelper.GetNumber(
-#endif
-                x
-#if CS11
-                )
-#endif
-                ,
-#if CS11
-                NumberHelper.GetNumber(
-#endif
-                y
-#if CS11
-                )
-#endif
-                );
-
         public static void SplitValues<T, U, TContainer>(this IEnumerable<T> enumerable, in bool skipEmptyEnumerables, IValueSplitFactory<T, U, TContainer> splitFactory, params T[] separators) where T : struct where U : IEnumerable<T>
         {
             ThrowIfNull(enumerable, nameof(enumerable));
@@ -2841,6 +2795,76 @@ namespace WinCopies.Util // To avoid name conflicts.
                 action();
 
             return sb.ToString();
+        }
+
+        public readonly struct Enum<T> : ISortableItem<T>, ISortableItem<Enum<T>>
+#if CS11
+            , IComparisonOperators<Enum<T>, T, bool>, IComparisonOperators<Enum<T>, Enum<T>, bool>
+#endif
+            where T : Enum
+        {
+            private readonly T _value;
+
+            public Enum(in T value) => _value = value;
+
+            public bool Equals(T
+#if CS9
+                ?
+#endif
+                other) => _value.Equals(other);
+            public int CompareTo(T
+#if CS9
+                ?
+#endif
+                other) => _value.CompareTo(other);
+
+            public bool Equals(Enum<T> other) => Equals(other._value);
+            public int CompareTo(Enum<T> other) => CompareTo(other._value);
+
+            public static bool operator ==(Enum<T> left, T
+#if CS9
+                ?
+#endif
+                right) => left.Equals(right);
+            public static bool operator !=(Enum<T> left, T
+#if CS9
+                ?
+#endif
+                right) => !(left == right);
+            public static bool operator <(Enum<T> left, T right) => left.CompareTo(right) < 0;
+            public static bool operator >(Enum<T> left, T right) => left.CompareTo(right) > 0;
+            public static bool operator <=(Enum<T> left, T right) => left.CompareTo(right) <= 0;
+            public static bool operator >=(Enum<T> left, T right) => left.CompareTo(right) >= 0;
+
+            public static bool operator ==(Enum<T> left, Enum<T> right) => left == right._value;
+            public static bool operator !=(Enum<T> left, Enum<T> right) => !(left == right);
+            public static bool operator <(Enum<T> left, Enum<T> right) => left < right._value;
+            public static bool operator >(Enum<T> left, Enum<T> right) => left > right._value;
+            public static bool operator <=(Enum<T> left, Enum<T> right) => left <= right._value;
+            public static bool operator >=(Enum<T> left, Enum<T> right) => left >= right._value;
+
+            public override bool Equals(
+#if CS8
+                [NotNullWhen(true)]
+#endif
+                object
+#if CS8
+                ?
+#endif
+                obj) => (obj is T item && Equals(item)) || (obj is Enum<T> value && Equals(value));
+
+            public override int GetHashCode() => _value.GetHashCode();
+#if !CS8
+            public bool LessThan(T other) => UtilHelpers.LessThan(this, other);
+            public bool LessThanOrEqualTo(T other) => UtilHelpers.LessThanOrEqualTo(this, other);
+            public bool GreaterThan(T other) => UtilHelpers.GreaterThan(this, other);
+            public bool GreaterThanOrEqualTo(T other) => UtilHelpers.GreaterThanOrEqualTo(this, other);
+
+            public bool LessThan(Enum<T> other) => UtilHelpers.LessThan(this, other);
+            public bool LessThanOrEqualTo(Enum<T> other) => UtilHelpers.LessThanOrEqualTo(this, other);
+            public bool GreaterThan(Enum<T> other) => UtilHelpers.GreaterThan(this, other);
+            public bool GreaterThanOrEqualTo(Enum<T> other) => UtilHelpers.GreaterThanOrEqualTo(this, other);
+#endif
         }
     }
 }
