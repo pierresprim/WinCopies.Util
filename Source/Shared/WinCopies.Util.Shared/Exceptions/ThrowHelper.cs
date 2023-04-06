@@ -130,7 +130,7 @@ namespace WinCopies
             ?
 #endif
             obj, in string argumentName) => obj is T _obj ? _obj : throw new TypeArgumentException<T>(obj?.GetType(), argumentName);
-
+#if !CS10
         public static void ThrowIfNull(object
 #if CS8
                 ?
@@ -141,7 +141,7 @@ namespace WinCopies
 
                 throw GetArgumentNullException(paramName);
         }
-
+#endif
         public static T GetResultOrThrowIfNull<T>(Func<T
 #if CS8
                 ?
