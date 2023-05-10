@@ -7,20 +7,10 @@ using WinCopies.Util;
 
 using static System.Console;
 
-using static WinCopies.
-#if WinCopies3
-    UtilHelpers;
-using static WinCopies
-#else
-    Util.Util;
-using static WinCopies.Util
-#endif
-    .ThrowHelper;
+using static WinCopies.UtilHelpers;
+using static WinCopies.ThrowHelper;
 
 namespace WinCopies
-#if !WinCopies3
-    .Util
-#endif
 {
     public struct ConsoleLogger
     {
@@ -49,12 +39,7 @@ namespace WinCopies
         ?
 #endif
         server, bool? increment, ConsoleColor? consoleColor = null);
-#if !WinCopies3
-}
 
-namespace WinCopies
-{
-#endif
     namespace Extensions
     {
         public enum LoggingLevel
@@ -136,7 +121,7 @@ namespace WinCopies
 #else
                         )
 #endif
-                        {
+                            {
 #if !CS8
                             case
 #endif
@@ -230,7 +215,6 @@ namespace WinCopies
 
             public FileLogger(in StreamWriter writer, in byte initialTabsCount = 0) : base(initialTabsCount) => Writer = writer;
             public FileLogger(in string path, in byte initialTabsCount = 0) : this(new StreamWriter(path), initialTabsCount) { /* Left empty. */ }
-
 #if CS5
             public FileLogger(in byte initialTabsCount = 0) : this(GetPath(), initialTabsCount) { /* Left empty. */ }
 
@@ -243,13 +227,11 @@ namespace WinCopies
                 return Path.Combine(path, $"{Guid.NewGuid()}.log");
             }
 #endif
-
             public static Logger GetLogger(in StreamWriter writer, in byte initialTabsCount = 0) => new FileLogger(writer, initialTabsCount).WriteLineAndFlush;
             public static Logger GetLogger(in string path, in byte initialTabsCount = 0) => new FileLogger(path, initialTabsCount).WriteLineAndFlush;
 #if CS5
             public static Logger GetLogger(in byte initialTabsCount = 0) => new FileLogger(initialTabsCount).WriteLineAndFlush;
 #endif
-
             protected override void WriteLineOverride(string
 #if CS8
                 ?
@@ -274,12 +256,7 @@ namespace WinCopies
 #endif
             message, bool? increment, LoggingLevel level);
     }
-#if !WinCopies3
-}
-
-namespace WinCopies.Util
-{
-#elif WinCopies4
+#if WinCopies4
     namespace Util
     {
 #endif
@@ -456,7 +433,6 @@ namespace WinCopies.Util
 
                 while (func());
             }
-
 #if CS5
             public static void WriteMenu<T>(params KeyValuePair<string, T>[] menu) => WriteMenu(menu.AsFromType<IReadOnlyList<KeyValuePair<string, T>>>());
 
