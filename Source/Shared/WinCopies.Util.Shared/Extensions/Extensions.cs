@@ -1132,6 +1132,9 @@ namespace WinCopies.Util // To avoid name conflicts.
 
         private static void ActionFromLast<T>(this T array, in int indexation, in Func<int> func, in ActionIn<int> action)
         {
+#if CS10
+            ArgumentNullException.
+#endif
             ThrowIfNull(array, nameof(array));
 
             int count = func();
