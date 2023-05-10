@@ -25,6 +25,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)EventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\ResourceNotFoundException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\Array.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\Bitwise.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ForLoop.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ItemsChangedEventArgs.cs" />

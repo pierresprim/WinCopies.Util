@@ -30,23 +30,43 @@ namespace WinCopies.Util
 
         public static ulong AsHighPart(this ulong value) => value << TypeSizes.Int32;
         public static uint AsHighPart(this uint value) => value << TypeSizes.Int16;
-        public static ushort AsHighPart(this ushort value) => (ushort)(value << TypeSizes.Int8);
-        public static byte AsHighPart(this byte value) => (byte)(value << TypeSizes.HalfByteMaxValue);
+        public static ushort AsHighPart(this ushort value) => unchecked((ushort)(value << TypeSizes.Int8));
+        public static byte AsHighPart(this byte value) => unchecked((byte)(value << TypeSizes.HalfByteMaxValue));
 
-        public static long AsHighPart(this long value) => unchecked((long)unchecked((ulong)value).AsHighPart());
-        public static int AsHighPart(this int value) => unchecked((int)unchecked((uint)value).AsHighPart());
-        public static short AsHighPart(this short value) => unchecked((short)unchecked((ushort)value).AsHighPart());
-        public static sbyte AsHighPart(this sbyte value) => unchecked((sbyte)unchecked((byte)value).AsHighPart());
+        public static long AsHighPart(this long value) => value << TypeSizes.Int32;
+        public static int AsHighPart(this int value) => value << TypeSizes.Int16;
+        public static short AsHighPart(this short value) => unchecked((short)(value << TypeSizes.Int8));
+        public static sbyte AsHighPart(this sbyte value) => unchecked((sbyte)(value << TypeSizes.HalfByteMaxValue));
 
         public static ulong AsLowPart(this ulong value) => value >> TypeSizes.Int32;
         public static uint AsLowPart(this uint value) => value >> TypeSizes.Int16;
         public static ushort AsLowPart(this ushort value) => (ushort)(value >> TypeSizes.Int8);
         public static byte AsLowPart(this byte value) => (byte)(value >> TypeSizes.HalfByteMaxValue);
 
-        public static long AsLowPart(this long value) => unchecked((long)unchecked((ulong)value).AsHighPart());
-        public static int AsLowPart(this int value) => unchecked((int)unchecked((uint)value).AsHighPart());
-        public static short AsLowPart(this short value) => unchecked((short)unchecked((ushort)value).AsHighPart());
-        public static sbyte AsLowPart(this sbyte value) => unchecked((sbyte)unchecked((byte)value).AsHighPart());
+        public static long AsLowPart(this long value) =>
+#if CS11
+            value >>> TypeSizes.Int32;
+#else
+            unchecked((long)unchecked((ulong)value).AsLowPart());
+#endif
+        public static int AsLowPart(this int value) =>
+#if CS11
+            value >>> TypeSizes.Int16;
+#else
+            unchecked((int)unchecked((uint)value).AsLowPart());
+#endif
+        public static short AsLowPart(this short value) =>
+#if CS11
+            (short)(value >>> TypeSizes.Int8);
+#else
+            unchecked((short)unchecked((ushort)value).AsLowPart());
+#endif
+        public static sbyte AsLowPart(this sbyte value) =>
+#if CS11
+            (sbyte)(value >>> TypeSizes.HalfByteMaxValue);
+#else
+            unchecked((sbyte)unchecked((byte)value).AsLowPart());
+#endif
 
         public static ulong GetAsHighPart(this ulong value) => value & TypeSizes.HighPartIntMaxValue;
         public static uint GetAsHighPart(this uint value) => value & TypeSizes.HighPartShortMaxValue;
