@@ -27,6 +27,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\Array.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\Bitwise.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\Extensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)extensions\HttpStream.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ForLoop.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ItemsChangedEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Nullable.cs" />

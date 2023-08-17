@@ -138,39 +138,10 @@ namespace WinCopies.Util // To avoid name conflicts.
         public static string ToString(this uint i, in byte toBase) => unchecked((int)i).ToString(toBase, System.Convert.ToString);
         public static string ToString(this long l, in byte toBase) => l.ToString(toBase, System.Convert.ToString);
         public static string ToString(this ulong l, in byte toBase) => unchecked((long)l).ToString(toBase, System.Convert.ToString);
-        public static string ToString(this char c, in byte toBase) => ((short)c).ToString(toBase, System.Convert.ToString);
-#if CS8
-        private class HttpStream : System.IO.Stream
-        {
-            private readonly long? _length;
-
-            private readonly System.IO.Stream _stream;
-
-            public override bool CanRead => _stream.CanRead;
-
-            public override bool CanSeek => _stream.CanSeek;
-
-            public override bool CanWrite => _stream.CanWrite;
-
-            public override long Length => _length.HasValue ? _length.Value : -1;
-
-            public override long Position { get => _stream.Position; set => _stream.Position = value; }
-
-            public HttpStream(in System.IO.Stream stream, in long? length)
-            {
-                _stream = stream;
-                _length = length;
-            }
-
-            public override void Flush() => _stream.Flush();
-            public override int Read(byte[] buffer, int offset, int count) => _stream.Read(buffer, offset, count);
-            public override long Seek(long offset, SeekOrigin origin) => _stream.Seek(offset, origin);
-            public override void SetLength(long value) => _stream.SetLength(value);
-            public override void Write(byte[] buffer, int offset, int count) => _stream.Write(buffer, offset, count);
-        }
+        public static string ToString(this char c, in byte toBase) => unchecked((short)c).ToString(toBase, System.Convert.ToString);
 
         public static async System.Threading.Tasks.Task<System.IO.Stream> GetStreamWithLengthAsync(this System.Net.Http.HttpClient httpClient, string url) => new HttpStream(await httpClient.GetStreamAsync(url), GetHttpFileSize(url, httpClient));
-#endif
+
         public static Action GetAction(this Func<Action> func) => () => func()();
         public static Action<T> GetAction<T>(this Func<Action<T>> func) => value => func()(value);
         public static ActionIn<T> GetAction<T>(this Func<ActionIn<T>> func) => (in T value) => func()(value);
